@@ -3,7 +3,7 @@
 echo "Start deploy."
 
 cd ws
-if [[ -e _site ]]] ; then
+if [[ -e _site ]] ; then
   rm -rfd _site
 fi
 
