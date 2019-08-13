@@ -9,6 +9,10 @@ cd ..
 echo "Copy to docs/"
 rsync -auv ws/_site/ docs
 
+echo "Copy CNAME to docs/"
+cp CNAME docs/
+
+
 echo "Commit and push"
 git add .
 git commit -m "Deploy:"
