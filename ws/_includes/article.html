@@ -1,0 +1,14 @@
+<div class="article thumbnail">
+  <a href="{{ post.url }}">
+    <img src="https://via.placeholder.com/300x150" alt="{{ post.title }}" style="img-responsive">
+    <div class="caption">
+      <h2>{{ post.title }}</h2>
+      <ul class="list-inline">
+        <li class="list-inline-item secondary-text">{{ post.date | date: "%Y-%-m-%-d" }}</li>
+        {% for tag in post.tags %}
+          <li class="list-inline-item"><a href="{{ baseurl }}/tags#{{ tag | slugize }}">{{ tag }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+  </a>
+</div>

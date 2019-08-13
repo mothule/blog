@@ -13,28 +13,58 @@
 # you will see them accessed via {{ site.title }}, {{ site.email }}, and so on.
 # You can create any custom variable you would like, and they will be accessible
 # in the templates via {{ site.myvariable }}.
-title: Your awesome title
-email: your-email@example.com
-description: >- # this means to ignore newlines until "baseurl:"
-  Write an awesome description for your new site here. You can edit this
-  line in _config.yml. It will appear in your document head meta (for
-  Google search results) and in your feed.xml site description.
+
+
+title: もちゅろぐ
+subtitle: iOS,サーバ開発の技術ブログ
+description: iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ
 baseurl: "" # the subpath of your site, e.g. /blog
-url: "" # the base hostname & protocol for your site, e.g. http://example.com
-twitter_username: jekyllrb
-github_username:  jekyll
+url: "https://blog.mothule.com" # the base hostname & protocol for your site, e.g. http://example.com
+site_image: /assets/images/site-image.png
+
+# Profile
+github_username: mothule
+twitter:
+  username: mothule
+  card: summary
+user_image: /assets/images/user-profile.jpg
+user_description: Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言
+
+# Marketing
+google_analytics: "UA-18620984-3"
+
+# System settings
+lang: 'ja-JP'
+timezone: Asia/Tokyo
+encoding: utf-8
 
 # Build settings
+highlighter: rouge
 markdown: kramdown
-#theme: minima
-# theme: jekyll-theme-architect
-theme: leonids
 plugins:
   - jekyll-feed
-    #- jekyll-remote-theme
+  - jekyll-sitemap
+  - jekyll-seo-tag
+  - jekyll-paginate
+strict_front_matter: true
+permalink: /:categories/:title
+exclude: [docs]
 
-    #remote_theme: renyuanz/leonids
+# Page settings
+paginate: 5
 
+# Page variables
+bootstrap_url: https://stackpath.bootstrapcdn.com/bootstrap/4.3.1
+
+defaults:
+  -
+    scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+      image:
+        path: /assets/images/site-image.png
 
 # Exclude from processing.
 # The following items will not be processed, by default. Create a custom list

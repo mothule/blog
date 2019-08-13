@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    {% if page.title != site.title %}
+      <title>{{ page.title }} - {{ site.title }}</title>
+    {% else %}
+      <title>{{ site.title }} - {{ site.subtitle }}</title>
+    {% endif %}
+
+    {% seo title=false %}
+    <meta name="twitter:title" content="{{ page.title }}">
+    <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+    <meta name="twitter:image" content="{{ page.image.path | default: site.site_image }}">
+
+    <link href="{{ site.bootstrap_url }}/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    {% include google-analytics.html %}
+    {% feed_meta %}
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          {% include header.html %}
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            {{ content }}
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          {% include side-menu.html %}
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        {% include footer.html %}
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
