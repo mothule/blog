@@ -1,3 +1,3 @@
 # TODO
-
-- hatena export から jekyll 変換調査
+- push
+- 記事を1つ書く(はてなブログからGitHub Pagesに引っ越した理由)
