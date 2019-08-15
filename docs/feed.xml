@@ -1,4 +1,222 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-15T11:44:59+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-15T12:31:06+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/mysql/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/mysql/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/mysql/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;Railsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
+
+&lt;p&gt;原因の1つとして、一般的な開発環境では1PCにWebアプリとDBアプリが共存しており、これら2点間の通信はRailsソケット方式で通信が行われます。 一方本番環境ではWebアプリとDBアプリそれぞれにサーバーが立っていることが一般的な基本構成で、これら2点間の通信はRails方式で通信が行われます。 この通信方式の違いにより大きな速度差が発生し、開発環境ではなかった場所にRailsが生まれます。&lt;/p&gt;
+
+&lt;p&gt;例えば「SELECTクエリーを叩く回数が多くても、index効いてるから大丈夫だろう」と思っていても、WebサーバとDBサーバが分かれていると、二点間の通信時間が底上げされます。&lt;/p&gt;
+
+&lt;p&gt;本番環境ではDBとの通信コストの観点が必要なのに、開発環境ではそれが抜けた環境になっているため、慣れていないと気づきにくい観点とも言えます。&lt;/p&gt;
+
+&lt;p&gt;なので開発中でも通信コストが考慮された結果が分かる開発環境を2つのRailsを使って実現してみようと思います。&lt;/p&gt;
+
+&lt;p&gt;ちなみに単純な興味です。&lt;/p&gt;
+
+&lt;h2 id=&quot;準備するもの&quot;&gt;準備するもの&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Railsと名付けます)&lt;/li&gt;
+  &lt;li&gt;同じローカルネットワークに繋がっていること(つまり同じRailsに繋がっていればOKです)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;構築する環境の構成について&quot;&gt;構築する環境の構成について&lt;/h2&gt;
+
+&lt;p&gt;大枠で構成についてまとめるとこんな感じになります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MacWにRailsアプリを立ち上げる&lt;/li&gt;
+  &lt;li&gt;Railsサーバーを立ち上げる&lt;/li&gt;
+  &lt;li&gt;ローカルの開発環境なのでセキュリティは意識しない&lt;/li&gt;
+  &lt;li&gt;Railsを外部アクセスを許可する設定にする&lt;/li&gt;
+  &lt;li&gt;Railsに外部アクセス用のユーザーを作成する&lt;/li&gt;
+  &lt;li&gt;Railsのホスト名、ユーザーに設定する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;重要なキーワードは以下の3つとなります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Railsが外部からアクセスされる準備&lt;/li&gt;
+  &lt;li&gt;Railsが外部からアクセスされる準備&lt;/li&gt;
+  &lt;li&gt;Railsが外部DBにアクセスする準備&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;railsがmacwからアクセスできる準備をする&quot;&gt;RailsがMacWからアクセスできる準備をする&lt;/h2&gt;
+
+&lt;p&gt;アクセスするには2つの方法があります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;ローカルRailsを指定&lt;/li&gt;
+  &lt;li&gt;ローカルホスト名を指定&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;ローカルrailsを指定&quot;&gt;ローカルRailsを指定&lt;/h3&gt;
+
+&lt;p&gt;これはローカルネットワーク内においてRailsを直接使う方法です。 一時的であれば最も簡単です。&lt;/p&gt;
+
+&lt;p&gt;Railsで自分のローカルネットワークを調べる方法は、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ifconfig&lt;/code&gt; で調べます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ifconfig | grep 192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.11.3&lt;/code&gt; というのが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ifconfig&lt;/code&gt; を叩いたPCにRailsになります。&lt;/p&gt;
+
+&lt;h4 id=&quot;メリット&quot;&gt;メリット&lt;/h4&gt;
+
+&lt;p&gt;とにかく楽。に尽きます。&lt;/p&gt;
+
+&lt;h4 id=&quot;デメリット&quot;&gt;デメリット&lt;/h4&gt;
+
+&lt;p&gt;Railsの記入部を更新する必要があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;ローカルホスト名を指定&quot;&gt;ローカルホスト名を指定&lt;/h3&gt;
+
+&lt;p&gt;こちらはRailsに依存せず常に固定のホスト名で接続することが可能になります。 こちらの記事にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;railsが外部アクセスされる準備&quot;&gt;Railsが外部アクセスされる準備&lt;/h2&gt;
+
+&lt;p&gt;そもそもRailsが外部からアクセスを許可していないのは、そう設定がされているためです。&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt; という設定がデフォルトは Rails からの接続のみ許可する設定になっています。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address = 127.0.0.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;my.cnfの場所が分からない場合は、こちらの記事で確認してみてください。&lt;/p&gt;
+
+&lt;p&gt;my.cnfに&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;でIPを指定することで、そのIPからの通信を許可します。 ちなみに注意事項としては、Railsになります。 MacWのRailsではありません。&lt;/p&gt;
+
+&lt;p&gt;まず前提知識として、PCには &lt;strong&gt;複数のネットワークRailsがあります。&lt;/strong&gt; その中のどのネットワークRailsを許可するのかが&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;になります。 先程&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;のデフォルトはRailsからのアクセスのみを許可しています。&lt;/p&gt;
+
+&lt;p&gt;今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Rails環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので &lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt; には &lt;code class=&quot;highlighter-rouge&quot;&gt;0.0.0.0&lt;/code&gt; を設定します。 これは &lt;strong&gt;制限なし&lt;/strong&gt; の指定になります。どのネットワークRailsからでもアクセスできます。 ちなみに全ての&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;をRailsすると同様に無条件で受け付けることになります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address = 127.0.0.1bind-address = 0.0.0.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;設定したらリスタートします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mysql.server restart
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;一応はローカルネットワーク外からRailsが解放してるポート番号などが分かれば、外部からのアクセスは恐らく可能かとは思いますが、 近辺依存ではありますが、自宅近辺の住民が自分のRailsされるリスクは低いかなと思ってます。（ここらへんは詳しくはないので鵜呑みではなく、自己責任でお願いします）&lt;/p&gt;
+
+&lt;h3 id=&quot;rails内に外部からアクセスするユーザー用意する&quot;&gt;Rails内に外部からアクセスするユーザー用意する&lt;/h3&gt;
+
+&lt;p&gt;Railsの外部からアクセスする準備ができたら、今度は外部からアクセス用のユーザーを用意します。&lt;/p&gt;
+
+&lt;p&gt;例えば下記のようなユーザーを作る場合は&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ユーザー名: Rails&lt;/li&gt;
+  &lt;li&gt;パスワード: pass&lt;/li&gt;
+  &lt;li&gt;対象IP: 192.16配下全部&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-- ユーザー作成create user &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;-- 権限付与mysql\&amp;gt; grant all on \*.\* to &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;のようにすれば、ユーザー作成して対象DBへの権限設定がされます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql\&amp;gt; select user, host from mysql.user; +------+-------------+ | user | host | +------+-------------+ | hoge | 192.168.% | +------+-------------+ mysql\&amp;gt; show grants for 'hoge'@'192.168.%'; +----------------------------------------------------------------+ | Grants for hoge@192.168.% +----------------------------------------------------------------+ | GRANT ALL PRIVILEGES ON \*.\* TO 'hoge'@'192.168.%' IDENTIFIED BY PASSWORD '\*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7' +----------------------------------------------------------------+1 row in set (0.00 sec)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;外部から接続をテストする&quot;&gt;外部から接続をテストする&lt;/h2&gt;
+
+&lt;p&gt;この段階で既に外部から接続できている環境になっているはずなので、他Railsから接続をします。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Rails指定&lt;/strong&gt;&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mysql -u hoge -h 192.168.11.6 -p
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;strong&gt;ローカルホスト名指定&lt;/strong&gt; ホスト名が &lt;code class=&quot;highlighter-rouge&quot;&gt;fuga.local&lt;/code&gt; の場合&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mysql -u hoge -h fuga.local -p
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;接続できれば外部からRailsに接続できています。&lt;/p&gt;
+
+&lt;h2 id=&quot;railsが外部dbにアクセスする準備&quot;&gt;Railsが外部DBにアクセスする準備&lt;/h2&gt;
+
+&lt;p&gt;Railsが外部からのアクセス準備が整えば後は簡単です。&lt;/p&gt;
+
+&lt;p&gt;dataases.yml で接続先を指定するだけになります。&lt;/p&gt;
+
+&lt;p&gt;Railsが &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.11.6&lt;/code&gt;の場合&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;development: ...省略... username: hoge password: pass host: 192.168.11.6
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これでRails立ち上げてDBにアクセスできれば完了です。&lt;/p&gt;
+
+&lt;h2 id=&quot;気になる速度差を測ってみる&quot;&gt;気になる速度差を測ってみる&lt;/h2&gt;
+
+&lt;p&gt;1PCでRails通信した場合で平均値を出してみました。&lt;/p&gt;
+
+&lt;p&gt;1万件のUser(name: string)を事前に用意し、&lt;code class=&quot;highlighter-rouge&quot;&gt;@users = User.all&lt;/code&gt; が呼ばれて一覧を返すcontroller に対し&lt;code class=&quot;highlighter-rouge&quot;&gt;GET http://localhost:3000/users&lt;/code&gt; を5回呼び出し、最速と最遅を抜いた3つで平均値を出して測定しました。&lt;/p&gt;
+
+&lt;h3 id=&quot;railsソケット通信&quot;&gt;Railsソケット通信&lt;/h3&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;time&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8.6ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8.5ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8.5ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8.3ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;7.6ms&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;(8.5 + 8.5 + 8.3) / 3 = &lt;strong&gt;8.4333333333ms&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;railsソケット通信-1&quot;&gt;Railsソケット通信&lt;/h3&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;time&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;291.9ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;289.9ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;194.4ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;159.9ms&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;142.7ms&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;(289.9 + 194.4 + 159.9) / 3 = &lt;strong&gt;214.7333333333ms&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;およそ 26倍差がついています。 Railsサーバーよりスペックが劣ってはいますが、それを考慮しても大分差が開いているでしょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;本番環境にできるだけ寄せる構成をしておくことで、本番でしか発覚しない問題を開発段階で気づいて排除できるので、PC台数に余裕があるなら、リリース前だけでも試す価値はあるかなと思いました。&lt;/p&gt;
+
+&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
+
+&lt;p&gt;開発環境前提においての構成であるため、セキュリティとしてはGoodではありません。 特に公共のネットワーク配下ではやめたほうがいいです。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">Railsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
 
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
