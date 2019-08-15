@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Homebrewで過去バージョンにダウングレードする2つの方法 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Homebrewで過去バージョンにダウングレードする2つの方法" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="Homebrewで過去バージョンにダウングレードする2つの方法" />
+<meta property="og:description" content="Homebrewで過去バージョンにダウングレードする2つの方法" />
+<link rel="canonical" href="https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade" />
+<meta property="og:url" content="https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-07-23T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade","headline":"Homebrewで過去バージョンにダウングレードする2つの方法","dateModified":"2019-07-23T00:00:00+09:00","datePublished":"2019-07-23T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade"},"description":"Homebrewで過去バージョンにダウングレードする2つの方法","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="twitter:title" content="Homebrewで過去バージョンにダウングレードする2つの方法">
+    <meta name="twitter:description" content="Homebrewで過去バージョンにダウングレードする2つの方法">
+    <meta name="twitter:image" content="/assets/images/site-image.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#mac">Mac</a>
+      
+    
+      
+        / <a href="/tags#homebrew">Homebrew</a>
+      
+    
+      
+        / Homebrewで過去バージョンにダウングレードする2つの方法
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Homebrewで過去バージョンにダウングレードする2つの方法</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-7-23</li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">mac</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#homebrew">homebrew</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#旧バージョンに戻すには2つの方法がある">旧バージョンに戻すには2つの方法がある</a>
+    <ul>
+      <li><a href="#戻したいバージョンがあるかどうか確認する方法">戻したいバージョンがあるかどうか確認する方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#brew-switch-で過去バージョンに戻す">brew switch で過去バージョンに戻す</a></li>
+  <li><a href="#過去コミットから過去バージョンに戻す">過去コミットから過去バージョンに戻す</a>
+    <ul>
+      <li><a href="#1-homebrewが管理してるformulra-ディレクトリまで移動">1. Homebrewが管理してるFormulra ディレクトリまで移動</a></li>
+      <li><a href="#2-対象コミットをログから探す">2. 対象コミットをログから探す</a></li>
+      <li><a href="#3-revisionを使って状態を戻す">3. revisionを使って状態を戻す</a></li>
+      <li><a href="#4-brew-install-で古いバージョンをインストール">4. brew install で古いバージョンをインストール</a></li>
+    </ul>
+  </li>
+</ul>
+  </div>
+
+  <ul>
+  <li>以前 <code class="highlighter-rouge">brew upgrade</code> で tig のバージョンを最新にして raedline のバージョンズレを解決しました。</li>
+  <li>以前 <code class="highlighter-rouge">brew switch</code> で readline のバージョンを8から7にして、byebug などのバージョンズレを解決しました。</li>
+</ul>
+
+<p>今、 tig や vim の最新バージョンが readline 8 を求めていて立ち上がらなくなりました。 😭
+原因は上記で述べたとおり明らかです。</p>
+
+<p>なので今回はtigのバージョンを戻す方法についてまとめました。</p>
+
+<h2 id="旧バージョンに戻すには2つの方法がある">旧バージョンに戻すには2つの方法がある</h2>
+
+<p>1つは <code class="highlighter-rouge">brew switch</code> こちらはローカル環境に既にバージョンがある場合に有効な手段で、対応方法も一番楽です。
+もう1つは Homebrewが管理するFormulaのディレクトリに移動して過去コミットからインストールする方法です。</p>
+
+<h3 id="戻したいバージョンがあるかどうか確認する方法">戻したいバージョンがあるかどうか確認する方法</h3>
+
+<p><strong>バージョンが複数個ある場合</strong></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew info readline
+readline: stable 8.0.0 <span class="o">(</span>bottled<span class="o">)</span> <span class="o">[</span>keg-only]
+Library <span class="k">for </span>command-line editing
+https://tiswww.case.edu/php/chet/readline/rltop.html
+/usr/local/Cellar/readline/7.0.3 <span class="o">(</span>46 files, 2MB<span class="o">)</span>
+  Poured from bottle on 2017-03-01 at 12:13:07
+/usr/local/Cellar/readline/7.0.3_1 <span class="o">(</span>46 files, 1.5MB<span class="o">)</span>
+  Poured from bottle on 2017-07-24 at 15:28:46
+/usr/local/Cellar/readline/8.0.0_1 <span class="o">(</span>48 files, 1.5MB<span class="o">)</span>
+  Poured from bottle on 2019-07-20 at 00:58:47
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/readline.rb
+</code></pre></div></div>
+
+<p>このように複数のバージョンが並びます。</p>
+
+<p><strong>バージョンが1つしかない場合</strong></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew info vim
+vim: stable 8.1.1700 <span class="o">(</span>bottled<span class="o">)</span>, HEAD
+Vi <span class="s1">'workalike'</span> with many additional features
+https://www.vim.org/
+Conflicts with:
+  ex-vi <span class="o">(</span>because vim and ex-vi both install bin/ex and bin/view<span class="o">)</span>
+  macvim <span class="o">(</span>because vim and macvim both install vi<span class="k">*</span> binaries<span class="o">)</span>
+/usr/local/Cellar/vim/8.1.1700 <span class="o">(</span>1,858 files, 31.6MB<span class="o">)</span> <span class="k">*</span>
+  Poured from bottle on 2019-07-22 at 14:17:51
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
+</code></pre></div></div>
+<p>このように1つしかありません。</p>
+
+<h2 id="brew-switch-で過去バージョンに戻す">brew switch で過去バージョンに戻す</h2>
+
+<p>例えば先程のraedlineパッケージではバージョンが 7.0.3, 7.0.3_1, 8.0.0_1 の 3つがありました。
+7.0.3のバージョンに戻したい場合は</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew switch readline 7.0.3
+</code></pre></div></div>
+<p>とするだけです。とても簡単です。</p>
+
+<h2 id="過去コミットから過去バージョンに戻す">過去コミットから過去バージョンに戻す</h2>
+
+<h3 id="1-homebrewが管理してるformulra-ディレクトリまで移動">1. Homebrewが管理してるFormulra ディレクトリまで移動</h3>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/
+</code></pre></div></div>
+
+<h3 id="2-対象コミットをログから探す">2. 対象コミットをログから探す</h3>
+<p>パッケージコミッターにも依存はする方法ですが、大抵のコミットコメントにはバージョンが記載されているのでそれを判断材料として使います。</p>
+
+<p>下記はtigの過去コミットを見る方法です。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git log <span class="nt">--oneline</span> tig.rb
+d78647bc40 tig: update 2.4.1_1 bottle.
+fbe673161b tig: revision <span class="k">for </span>readline
+e95a3b91ab tig: remove options
+df6f2b649a tig: update 2.4.1 bottle.
+facc8a40ea tig: update 2.4.1 bottle.
+009a1200d7 tig 2.4.1
+41252c196e tig: update 2.4.0 bottle.
+3b28425d00 tig 2.4.0
+512758e6eb Rubocop 0.57.1 style fixes <span class="o">(</span><span class="c">#28754)</span>
+4c2daf9fcc tig: update 2.3.3 bottle.
+e411457d18 tig 2.3.3
+1991799148 tig: depend on asciidoc and xmlto at build <span class="nb">time </span><span class="k">for </span>head <span class="o">(</span><span class="c">#23125)</span>
+44e7d526bb tig: update 2.3.2_1 bottle.
+49e5f3c6df tig: always install the man page
+c4e608238a tig: update 2.3.2 bottle.
+df952f5043 tig 2.3.2
+183cd1cbff tig: update 2.3.1 bottle.
+297d3e1fe3 tig 2.3.1
+16ebe5f184 Use “squiggly” heredocs.
+4656c441f0 tig: update homepage <span class="o">(</span><span class="c">#18797)</span>
+6785440dfc tig: update 2.3.0 bottle.
+7df31fa61e tig 2.3.0
+b40258bbe9 tig: update 2.2.2 bottle.
+7474d02246 tig: update 2.2.2 bottle.
+e8c547a5d9 tig 2.2.2
+920db41da7 <span class="o">(</span>grafted<span class="o">)</span> youtube-dl: update 2017.02.28 bottle.
+</code></pre></div></div>
+
+<p>各行先頭の英数字羅列はgit の revision番号です。その後ろがコミット時のコメントです。
+どのバージョンに戻すのは分かっている場合は、コメントを参考にバージョンを見つけ、そのrevision番号を使いますが、
+今回はどのバージョンで回復するのか分かりにくいので１つ前のバージョン 2.4.0 に戻します。</p>
+
+<p>この場合、 <code class="highlighter-rouge">41252c196e tig: update 2.4.0 bottle.</code> これが前のバージョンだと思われます。</p>
+
+<h3 id="3-revisionを使って状態を戻す">3. revisionを使って状態を戻す</h3>
+
+<p>先程目星をつけたrevision番号(<code class="highlighter-rouge">41252c196e</code>)を使います。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git checkout 41252c196e tig.rb
+</code></pre></div></div>
+<p>これでtigは古いバージョンをインストールする状態になりました。</p>
+
+<h3 id="4-brew-install-で古いバージョンをインストール">4. brew install で古いバージョンをインストール</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install tig
+</code></pre></div></div>
+
+<p>既にインストール済みだと怒られ、その後親切に unlink しろと言われるので従います。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew unlink tig
+</code></pre></div></div>
+
+<p>改めてインストールします</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install tig
+</code></pre></div></div>
+
+<p>無事成功したら確認します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew info tig
+tig: stable 2.4.0 <span class="o">(</span>bottled<span class="o">)</span>, HEAD
+Text interface <span class="k">for </span>Git repositories
+https://jonas.github.io/tig/
+/usr/local/Cellar/tig/2.4.0 <span class="o">(</span>15 files, 855.4KB<span class="o">)</span> <span class="k">*</span>
+  Poured from bottle on 2019-07-23 at 13:04:55
+/usr/local/Cellar/tig/2.4.1_1 <span class="o">(</span>15 files, 855.7KB<span class="o">)</span>
+  Poured from bottle on 2019-07-22 at 14:09:16
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/tig.rb
+</code></pre></div></div>
+
+<p>バージョンが2つ並び <code class="highlighter-rouge">*</code> がついてる方が現在のバージョンになります。
+ちなみに <code class="highlighter-rouge">$ git checkout 41252c196e tig.rb</code> で <code class="highlighter-rouge">tig.rb</code> が古いファイルになっていますが、
+これは戻しても問題ありません。</p>
+
+<p>ちなみに戻すと <code class="highlighter-rouge">$ brew info tig</code> の最初の1行目のバージョンも変わります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git reset head <span class="o">&amp;&amp;</span> git checkout <span class="nb">.</span>
+Unstaged changes after reset:
+M	Formula/tig.rb
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew info tig
+tig: stable 2.4.1 <span class="o">(</span>bottled<span class="o">)</span>, HEAD
+</code></pre></div></div>
+
+<p>これでようやくreadlineの乱とはおさらばできそうです。 😇</p>
+
+<p><a href="https://qiita.com/nghryuki/items/7d65d8f55ea65b95310d">参考</a></p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ruby/rails/active-record/ruby-rails-activerecord">ActiveRecordでpluckとselectしてpluckに変化はあるか？</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">Mac上でRailsとMySQLのサーバー分けたい</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/tools/regexp/regexp-not-expression">正規表現で否定を表現する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/how-to-use-ngrok">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

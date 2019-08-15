@@ -1,4 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-16T02:34:54+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-16T03:13:09+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;に速度差や消費メモリ差はあるのか？&lt;/p&gt;
+
+&lt;h2 id=&quot;sqlは同じ&quot;&gt;SQLは同じ&lt;/h2&gt;
+
+&lt;p&gt;出力されるSQLはどちらも同じでした。&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;`name`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;速度は微妙な変化&quot;&gt;速度は微妙な変化&lt;/h2&gt;
+
+&lt;p&gt;90万件に対して行った結果&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;pluckのみ&lt;/th&gt;
+      &lt;th&gt;select+pluck&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3228&lt;/td&gt;
+      &lt;td&gt;3349&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3152&lt;/td&gt;
+      &lt;td&gt;2972&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3126&lt;/td&gt;
+      &lt;td&gt;3370&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3101&lt;/td&gt;
+      &lt;td&gt;3144&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3271&lt;/td&gt;
+      &lt;td&gt;2945&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3454&lt;/td&gt;
+      &lt;td&gt;3227&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3120&lt;/td&gt;
+      &lt;td&gt;3306&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3488&lt;/td&gt;
+      &lt;td&gt;3577&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3046&lt;/td&gt;
+      &lt;td&gt;3072&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3228&lt;/td&gt;
+      &lt;td&gt;3413&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms&lt;/p&gt;
+
+&lt;h2 id=&quot;しかしselectは確実に処理されてる&quot;&gt;しかしselectは確実に処理されてる&lt;/h2&gt;
+
+&lt;p&gt;SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。&lt;/p&gt;
+
+&lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
+
+&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。
 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。
 しかし、そんなときに便利なのがngrokというサービスです。&lt;/p&gt;
@@ -48,90 +130,7 @@ ngrok &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Binary&lt;span class=&quot;o
 
 &lt;p&gt;ngrokに通信を介しているため、セキュアなデータなどもngrok側は見えているかと思われます。 しかし、ngrok側はそれを秘匿性を守秘していたとしても、ngrok側が脆弱性があれば、そこから意図せずデータが漏洩することは可能性はあります。&lt;/p&gt;
 
-&lt;p&gt;そのため、認証などテストする場合はどうでもいいテストアカウトでやることを紹介する以上、推奨します。つまり自己責任です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="ngrok" /><category term="ats" /><summary type="html">RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。 しかし、そんなときに便利なのがngrokというサービスです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-05-how-to-use-ngrok.png" /></entry><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
-
-&lt;p&gt;いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。&lt;/p&gt;
-
-&lt;h2 id=&quot;書き方&quot;&gt;書き方&lt;/h2&gt;
-&lt;p&gt;結論から先に書きます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;^(?!.\*\&amp;lt;ここに検索ワード\&amp;gt;).+$
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;何が起きているのか&quot;&gt;何が起きているのか？&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;^ : 行の先頭を表す&lt;/li&gt;
-  &lt;li&gt;( : グルーピング&lt;/li&gt;
-  &lt;li&gt;?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。&lt;/li&gt;
-  &lt;li&gt;.* : 任意の文字列(0文字以上)&lt;/li&gt;
-  &lt;li&gt;) : グルーピング&lt;/li&gt;
-  &lt;li&gt;.+ : 任意の文字列(1文字以上)&lt;/li&gt;
-  &lt;li&gt;$: 行の末尾を表す&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;試してみる&quot;&gt;試してみる&lt;/h2&gt;
-
-&lt;p&gt;色々と削って動きを見てみることしました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお
-かきくけこ
-あい
-あ
-い
-いう
-
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;に対して色々試してみる。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;正規表現&lt;/th&gt;
-      &lt;th&gt;結果&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;「あ」の入っていない文字列と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)$&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;空改行のみヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あい).&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;「あい」の入っていない行の1文字目と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!いう).*&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行の先頭に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).*&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう)&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行の先頭がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;()は()内の文字を1文字として扱う. セットみたいなイメージ.&lt;/li&gt;
-  &lt;li&gt;?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる&lt;/li&gt;
-  &lt;li&gt;(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
+&lt;p&gt;そのため、認証などテストする場合はどうでもいいテストアカウトでやることを紹介する以上、推奨します。つまり自己責任です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="ngrok" /><category term="ats" /><summary type="html">RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。 しかし、そんなときに便利なのがngrokというサービスです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-05-how-to-use-ngrok.png" /></entry><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
 
 &lt;p&gt;原因の1つとして、一般的な開発環境では1PCにWebアプリとDBアプリが共存しており、これら2点間の通信はUnixドメインソケット方式で通信が行われます。 一方本番環境ではWebアプリとDBアプリそれぞれにサーバーが立っていることが一般的な基本構成で、これら2点間の通信はTCP/IP方式で通信が行われます。 この通信方式の違いにより大きな速度差が発生し、開発環境ではなかった場所にボトルネックが生まれます。&lt;/p&gt;
 
@@ -368,89 +367,90 @@ mysql\&amp;gt; show grants for 'hoge'@'192.168.%';
 
 &lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
 
-&lt;p&gt;開発環境前提においての構成であるため、セキュリティとしてはGoodではありません。 特に公共のネットワーク配下ではやめたほうがいいです。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+&lt;p&gt;開発環境前提においての構成であるため、セキュリティとしてはGoodではありません。 特に公共のネットワーク配下ではやめたほうがいいです。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;p&gt;いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;書き方&quot;&gt;書き方&lt;/h2&gt;
+&lt;p&gt;結論から先に書きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;^(?!.\*\&amp;lt;ここに検索ワード\&amp;gt;).+$
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;と&lt;/p&gt;
+&lt;h2 id=&quot;何が起きているのか&quot;&gt;何が起きているのか？&lt;/h2&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;ul&gt;
+  &lt;li&gt;^ : 行の先頭を表す&lt;/li&gt;
+  &lt;li&gt;( : グルーピング&lt;/li&gt;
+  &lt;li&gt;?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。&lt;/li&gt;
+  &lt;li&gt;.* : 任意の文字列(0文字以上)&lt;/li&gt;
+  &lt;li&gt;) : グルーピング&lt;/li&gt;
+  &lt;li&gt;.+ : 任意の文字列(1文字以上)&lt;/li&gt;
+  &lt;li&gt;$: 行の末尾を表す&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;試してみる&quot;&gt;試してみる&lt;/h2&gt;
+
+&lt;p&gt;色々と削って動きを見てみることしました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお
+かきくけこ
+あい
+あ
+い
+いう
+
+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;に速度差や消費メモリ差はあるのか？&lt;/p&gt;
-
-&lt;h2 id=&quot;sqlは同じ&quot;&gt;SQLは同じ&lt;/h2&gt;
-
-&lt;p&gt;出力されるSQLはどちらも同じでした。&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;`name`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;速度は微妙な変化&quot;&gt;速度は微妙な変化&lt;/h2&gt;
-
-&lt;p&gt;90万件に対して行った結果&lt;/p&gt;
+&lt;p&gt;に対して色々試してみる。&lt;/p&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
     &lt;tr&gt;
-      &lt;th&gt;pluckのみ&lt;/th&gt;
-      &lt;th&gt;select+pluck&lt;/th&gt;
+      &lt;th&gt;正規表現&lt;/th&gt;
+      &lt;th&gt;結果&lt;/th&gt;
     &lt;/tr&gt;
   &lt;/thead&gt;
   &lt;tbody&gt;
     &lt;tr&gt;
-      &lt;td&gt;3228&lt;/td&gt;
-      &lt;td&gt;3349&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;「あ」の入っていない文字列と空改行がヒットする&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;3152&lt;/td&gt;
-      &lt;td&gt;2972&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)$&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;空改行のみヒットする&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;3126&lt;/td&gt;
-      &lt;td&gt;3370&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あい).&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;「あい」の入っていない行の1文字目と空改行がヒットする&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;3101&lt;/td&gt;
-      &lt;td&gt;3144&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!いう).*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行の先頭に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;3271&lt;/td&gt;
-      &lt;td&gt;2945&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;3454&lt;/td&gt;
-      &lt;td&gt;3227&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行がヒットする&lt;/td&gt;
     &lt;/tr&gt;
     &lt;tr&gt;
-      &lt;td&gt;3120&lt;/td&gt;
-      &lt;td&gt;3306&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3488&lt;/td&gt;
-      &lt;td&gt;3577&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3046&lt;/td&gt;
-      &lt;td&gt;3072&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3228&lt;/td&gt;
-      &lt;td&gt;3413&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行の先頭がヒットする&lt;/td&gt;
     &lt;/tr&gt;
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;()は()内の文字を1文字として扱う. セットみたいなイメージ.&lt;/li&gt;
+  &lt;li&gt;?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる&lt;/li&gt;
+  &lt;li&gt;(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h2 id=&quot;しかしselectは確実に処理されてる&quot;&gt;しかしselectは確実に処理されてる&lt;/h2&gt;
-
-&lt;p&gt;SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。&lt;/p&gt;
-
-&lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
-
-&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法</title><link href="https://blog.mothule.com/mac/how-to-access-localhost-from-ios" rel="alternate" type="text/html" title="iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/mac/how-to-access-localhost-from-ios</id><content type="html" xml:base="https://blog.mothule.com/mac/how-to-access-localhost-from-ios">&lt;p&gt;MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。
+&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法</title><link href="https://blog.mothule.com/mac/how-to-access-localhost-from-ios" rel="alternate" type="text/html" title="iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/mac/how-to-access-localhost-from-ios</id><content type="html" xml:base="https://blog.mothule.com/mac/how-to-access-localhost-from-ios">&lt;p&gt;MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。
 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。
 今回はその方法についてまとました。&lt;/p&gt;
 
@@ -534,7 +534,35 @@ Use Ctrl-C to stop
 
 &lt;p&gt;下図はXcodeでInfo.plistを開いた画像です。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot; width=&quot;100%&quot; alt=&quot;ATS一部無効化設定&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="ios" /><category term="mac" /><summary type="html">MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。 今回はその方法についてまとました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length" rel="alternate" type="text/html" title="MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">&lt;p&gt;charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot; width=&quot;100%&quot; alt=&quot;ATS一部無効化設定&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="ios" /><category term="mac" /><summary type="html">MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。 今回はその方法についてまとました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">MySQLのmy.cnfの場所を見つける</title><link href="https://blog.mothule.com/mysql/mysql-find-mycnf" rel="alternate" type="text/html" title="MySQLのmy.cnfの場所を見つける" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/mysql/mysql-find-mycnf</id><content type="html" xml:base="https://blog.mothule.com/mysql/mysql-find-mycnf">&lt;p&gt;初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。
+しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。&lt;/p&gt;
+
+&lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;my.cnf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ヘルプに書いてる&quot;&gt;ヘルプに書いてる&lt;/h2&gt;
+
+&lt;p&gt;実はヘルプを見ると長文の中にひっそり書かれています。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;
+...省略...
+
+Default options are &lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;from the following files &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;the given order:
+/etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf
+The following groups are &lt;span class=&quot;nb&quot;&gt;read&lt;/span&gt;: mysql client
+
+...省略...
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なので後は検索して抽出すれば欲しい情報をちょっとブサイクですが表示することができます。
+↓だと3行目ですね。左から順に読み込まれます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;my.cnf
+                      order of preference, my.cnf, &lt;span class=&quot;nv&quot;&gt;$MYSQL_TCP_PORT&lt;/span&gt;,
+/etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="mysql" /><summary type="html">初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。 しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length" rel="alternate" type="text/html" title="MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">&lt;p&gt;charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。&lt;/p&gt;
 
 &lt;p&gt;ちなみに環境はRails5系 + MySQL5.6系環境で、&lt;code class=&quot;highlighter-rouge&quot;&gt;databases.yml&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;encoding&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;utf8mb4&lt;/code&gt;にすると &lt;code class=&quot;highlighter-rouge&quot;&gt;db:migrate&lt;/code&gt;でエラーが出ます。&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Mysql2::Error: Index column size too large. The maximum column size is 767 bytes.
@@ -749,4 +777,176 @@ innodb_large_prefix
   &lt;li&gt;migrationの各create_tableにoptions追加&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;で解決するのでやってみると思ってたより楽です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
+&lt;p&gt;で解決するのでやってみると思ってたより楽です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix" rel="alternate" type="text/html" title="Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた" /><published>2019-07-30T00:00:00+09:00</published><updated>2019-07-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix">&lt;p&gt;MySQLを最新ではなく5.6で環境構築する機会がありました。
+その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。&lt;/p&gt;
+
+&lt;h2 id=&quot;従来は-with-ldflagsと-with-cppflags指定だった&quot;&gt;従来は –with-ldflagsと –with-cppflags指定だった&lt;/h2&gt;
+
+&lt;p&gt;自分が知っている方法はldflagsとcppflagsでOpenSSLのヘッダーファイル群のパスとライブラリファイル群のパスを指定する方法でした。&lt;/p&gt;
+
+&lt;p&gt;しかし、この方法だとエラーが発生するようになっていました。
+エラーはそのコマンドは存在しないと怒られます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; build.mysql2 &lt;span class=&quot;nt&quot;&gt;--with-mysql-config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/opt/mysql@5.6/bin/mysql_config &lt;span class=&quot;nt&quot;&gt;--with-ldflags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt;/usr/local/opt/openssl/lib &lt;span class=&quot;nt&quot;&gt;--with-cppflags&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt;/usr/local/opt/openssl/include
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;今回は-with-opt-dir指定&quot;&gt;今回は –with-opt-dir指定&lt;/h2&gt;
+
+&lt;p&gt;上記オプション指定でエラーが発生すると候補が出て、もしやと思い試したところうまく動きました。
+次の&lt;code class=&quot;highlighter-rouge&quot;&gt;--with-opt-dir&lt;/code&gt;でOpenSSLのパスを指定する方法で試すと動きます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; build.mysql2 &lt;span class=&quot;nt&quot;&gt;--with-opt-dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/opt/openssl
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="mysql" /><summary type="html">MySQLを最新ではなく5.6で環境構築する機会がありました。 その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">Homebrewで過去バージョンにダウングレードする2つの方法</title><link href="https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade" rel="alternate" type="text/html" title="Homebrewで過去バージョンにダウングレードする2つの方法" /><published>2019-07-23T00:00:00+09:00</published><updated>2019-07-23T00:00:00+09:00</updated><id>https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade</id><content type="html" xml:base="https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade">&lt;ul&gt;
+  &lt;li&gt;以前 &lt;code class=&quot;highlighter-rouge&quot;&gt;brew upgrade&lt;/code&gt; で tig のバージョンを最新にして raedline のバージョンズレを解決しました。&lt;/li&gt;
+  &lt;li&gt;以前 &lt;code class=&quot;highlighter-rouge&quot;&gt;brew switch&lt;/code&gt; で readline のバージョンを8から7にして、byebug などのバージョンズレを解決しました。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;今、 tig や vim の最新バージョンが readline 8 を求めていて立ち上がらなくなりました。 😭
+原因は上記で述べたとおり明らかです。&lt;/p&gt;
+
+&lt;p&gt;なので今回はtigのバージョンを戻す方法についてまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;旧バージョンに戻すには2つの方法がある&quot;&gt;旧バージョンに戻すには2つの方法がある&lt;/h2&gt;
+
+&lt;p&gt;1つは &lt;code class=&quot;highlighter-rouge&quot;&gt;brew switch&lt;/code&gt; こちらはローカル環境に既にバージョンがある場合に有効な手段で、対応方法も一番楽です。
+もう1つは Homebrewが管理するFormulaのディレクトリに移動して過去コミットからインストールする方法です。&lt;/p&gt;
+
+&lt;h3 id=&quot;戻したいバージョンがあるかどうか確認する方法&quot;&gt;戻したいバージョンがあるかどうか確認する方法&lt;/h3&gt;
+
+&lt;p&gt;&lt;strong&gt;バージョンが複数個ある場合&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info readline
+readline: stable 8.0.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;keg-only]
+Library &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;command-line editing
+https://tiswww.case.edu/php/chet/readline/rltop.html
+/usr/local/Cellar/readline/7.0.3 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;46 files, 2MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Poured from bottle on 2017-03-01 at 12:13:07
+/usr/local/Cellar/readline/7.0.3_1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;46 files, 1.5MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Poured from bottle on 2017-07-24 at 15:28:46
+/usr/local/Cellar/readline/8.0.0_1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;48 files, 1.5MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Poured from bottle on 2019-07-20 at 00:58:47
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/readline.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このように複数のバージョンが並びます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;バージョンが1つしかない場合&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info vim
+vim: stable 8.1.1700 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, HEAD
+Vi &lt;span class=&quot;s1&quot;&gt;'workalike'&lt;/span&gt; with many additional features
+https://www.vim.org/
+Conflicts with:
+  ex-vi &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;because vim and ex-vi both install bin/ex and bin/view&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  macvim &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;because vim and macvim both install vi&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; binaries&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+/usr/local/Cellar/vim/8.1.1700 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1,858 files, 31.6MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+  Poured from bottle on 2019-07-22 at 14:17:51
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;このように1つしかありません。&lt;/p&gt;
+
+&lt;h2 id=&quot;brew-switch-で過去バージョンに戻す&quot;&gt;brew switch で過去バージョンに戻す&lt;/h2&gt;
+
+&lt;p&gt;例えば先程のraedlineパッケージではバージョンが 7.0.3, 7.0.3_1, 8.0.0_1 の 3つがありました。
+7.0.3のバージョンに戻したい場合は&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew switch readline 7.0.3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;とするだけです。とても簡単です。&lt;/p&gt;
+
+&lt;h2 id=&quot;過去コミットから過去バージョンに戻す&quot;&gt;過去コミットから過去バージョンに戻す&lt;/h2&gt;
+
+&lt;h3 id=&quot;1-homebrewが管理してるformulra-ディレクトリまで移動&quot;&gt;1. Homebrewが管理してるFormulra ディレクトリまで移動&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;2-対象コミットをログから探す&quot;&gt;2. 対象コミットをログから探す&lt;/h3&gt;
+&lt;p&gt;パッケージコミッターにも依存はする方法ですが、大抵のコミットコメントにはバージョンが記載されているのでそれを判断材料として使います。&lt;/p&gt;
+
+&lt;p&gt;下記はtigの過去コミットを見る方法です。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;--oneline&lt;/span&gt; tig.rb
+d78647bc40 tig: update 2.4.1_1 bottle.
+fbe673161b tig: revision &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;readline
+e95a3b91ab tig: remove options
+df6f2b649a tig: update 2.4.1 bottle.
+facc8a40ea tig: update 2.4.1 bottle.
+009a1200d7 tig 2.4.1
+41252c196e tig: update 2.4.0 bottle.
+3b28425d00 tig 2.4.0
+512758e6eb Rubocop 0.57.1 style fixes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#28754)&lt;/span&gt;
+4c2daf9fcc tig: update 2.3.3 bottle.
+e411457d18 tig 2.3.3
+1991799148 tig: depend on asciidoc and xmlto at build &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;head &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#23125)&lt;/span&gt;
+44e7d526bb tig: update 2.3.2_1 bottle.
+49e5f3c6df tig: always install the man page
+c4e608238a tig: update 2.3.2 bottle.
+df952f5043 tig 2.3.2
+183cd1cbff tig: update 2.3.1 bottle.
+297d3e1fe3 tig 2.3.1
+16ebe5f184 Use “squiggly” heredocs.
+4656c441f0 tig: update homepage &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#18797)&lt;/span&gt;
+6785440dfc tig: update 2.3.0 bottle.
+7df31fa61e tig 2.3.0
+b40258bbe9 tig: update 2.2.2 bottle.
+7474d02246 tig: update 2.2.2 bottle.
+e8c547a5d9 tig 2.2.2
+920db41da7 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;grafted&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; youtube-dl: update 2017.02.28 bottle.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;各行先頭の英数字羅列はgit の revision番号です。その後ろがコミット時のコメントです。
+どのバージョンに戻すのは分かっている場合は、コメントを参考にバージョンを見つけ、そのrevision番号を使いますが、
+今回はどのバージョンで回復するのか分かりにくいので１つ前のバージョン 2.4.0 に戻します。&lt;/p&gt;
+
+&lt;p&gt;この場合、 &lt;code class=&quot;highlighter-rouge&quot;&gt;41252c196e tig: update 2.4.0 bottle.&lt;/code&gt; これが前のバージョンだと思われます。&lt;/p&gt;
+
+&lt;h3 id=&quot;3-revisionを使って状態を戻す&quot;&gt;3. revisionを使って状態を戻す&lt;/h3&gt;
+
+&lt;p&gt;先程目星をつけたrevision番号(&lt;code class=&quot;highlighter-rouge&quot;&gt;41252c196e&lt;/code&gt;)を使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git checkout 41252c196e tig.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;これでtigは古いバージョンをインストールする状態になりました。&lt;/p&gt;
+
+&lt;h3 id=&quot;4-brew-install-で古いバージョンをインストール&quot;&gt;4. brew install で古いバージョンをインストール&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install tig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;既にインストール済みだと怒られ、その後親切に unlink しろと言われるので従います。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew unlink tig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;改めてインストールします&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install tig
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;無事成功したら確認します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info tig
+tig: stable 2.4.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, HEAD
+Text interface &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Git repositories
+https://jonas.github.io/tig/
+/usr/local/Cellar/tig/2.4.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;15 files, 855.4KB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
+  Poured from bottle on 2019-07-23 at 13:04:55
+/usr/local/Cellar/tig/2.4.1_1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;15 files, 855.7KB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  Poured from bottle on 2019-07-22 at 14:09:16
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/tig.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;バージョンが2つ並び &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; がついてる方が現在のバージョンになります。
+ちなみに &lt;code class=&quot;highlighter-rouge&quot;&gt;$ git checkout 41252c196e tig.rb&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;tig.rb&lt;/code&gt; が古いファイルになっていますが、
+これは戻しても問題ありません。&lt;/p&gt;
+
+&lt;p&gt;ちなみに戻すと &lt;code class=&quot;highlighter-rouge&quot;&gt;$ brew info tig&lt;/code&gt; の最初の1行目のバージョンも変わります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git reset head &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git checkout &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+Unstaged changes after reset:
+M	Formula/tig.rb
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info tig
+tig: stable 2.4.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, HEAD
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これでようやくreadlineの乱とはおさらばできそうです。 😇&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://qiita.com/nghryuki/items/7d65d8f55ea65b95310d&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="homebrew" /><summary type="html">以前 brew upgrade で tig のバージョンを最新にして raedline のバージョンズレを解決しました。 以前 brew switch で readline のバージョンを8から7にして、byebug などのバージョンズレを解決しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
