@@ -1,4 +1,80 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-15T20:54:00+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;Railsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-15T20:54:58+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
+
+&lt;p&gt;いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;書き方&quot;&gt;書き方&lt;/h2&gt;
+&lt;p&gt;結論から先に書きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;^(?!.\*\&amp;lt;ここに検索ワード\&amp;gt;).+$
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;何が起きているのか&quot;&gt;何が起きているのか？&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;^ : 行の先頭を表す&lt;/li&gt;
+  &lt;li&gt;( : グルーピング&lt;/li&gt;
+  &lt;li&gt;?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。&lt;/li&gt;
+  &lt;li&gt;.* : 任意の文字列(0文字以上)&lt;/li&gt;
+  &lt;li&gt;) : グルーピング&lt;/li&gt;
+  &lt;li&gt;.+ : 任意の文字列(1文字以上)&lt;/li&gt;
+  &lt;li&gt;$: 行の末尾を表す&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;試してみる&quot;&gt;試してみる&lt;/h2&gt;
+
+&lt;p&gt;色々と削って動きを見てみることしました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお かきくけこ あい あ い いう
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;に対して色々試してみる。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;正規表現&lt;/th&gt;
+      &lt;th&gt;結果&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;「あ」の入っていない文字列と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)$&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;空改行のみヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あい).&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;「あい」の入っていない行の1文字目と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!いう).*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行の先頭に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行の先頭がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;()は()内の文字を1文字として扱う. セットみたいなイメージ.&lt;/li&gt;
+  &lt;li&gt;?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる&lt;/li&gt;
+  &lt;li&gt;(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;Railsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
 
 &lt;p&gt;原因の1つとして、一般的な開発環境では1PCにWebアプリとDBアプリが共存しており、これら2点間の通信はRailsソケット方式で通信が行われます。 一方本番環境ではWebアプリとDBアプリそれぞれにサーバーが立っていることが一般的な基本構成で、これら2点間の通信はRails方式で通信が行われます。 この通信方式の違いにより大きな速度差が発生し、開発環境ではなかった場所にRailsが生まれます。&lt;/p&gt;
 
