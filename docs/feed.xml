@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-15T20:54:58+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-15T22:40:01+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
 
 &lt;p&gt;いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。&lt;/p&gt;
 
@@ -24,7 +24,14 @@
 
 &lt;p&gt;色々と削って動きを見てみることしました。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお かきくけこ あい あ い いう
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお
+かきくけこ
+あい
+あ
+い
+いう
+
+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;に対して色々試してみる。&lt;/p&gt;
@@ -129,7 +136,7 @@
 
 &lt;p&gt;Railsで自分のローカルネットワークを調べる方法は、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ifconfig&lt;/code&gt; で調べます。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ifconfig | grep 192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ifconfig | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.11.3&lt;/code&gt; というのが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ifconfig&lt;/code&gt; を叩いたPCにRailsになります。&lt;/p&gt;
@@ -150,7 +157,7 @@
 
 &lt;p&gt;そもそもRailsが外部からアクセスを許可していないのは、そう設定がされているためです。&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt; という設定がデフォルトは Rails からの接続のみ許可する設定になっています。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address = 127.0.0.1
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 127.0.0.1
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;my.cnfの場所が分からない場合は、こちらの記事で確認してみてください。&lt;/p&gt;
@@ -161,12 +168,12 @@
 
 &lt;p&gt;今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Rails環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので &lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt; には &lt;code class=&quot;highlighter-rouge&quot;&gt;0.0.0.0&lt;/code&gt; を設定します。 これは &lt;strong&gt;制限なし&lt;/strong&gt; の指定になります。どのネットワークRailsからでもアクセスできます。 ちなみに全ての&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;をRailsすると同様に無条件で受け付けることになります。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ cat /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address = 127.0.0.1bind-address = 0.0.0.0
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 127.0.0.1bind-address &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0.0.0.0
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;設定したらリスタートします。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mysql.server restart
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql.server restart
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;一応はローカルネットワーク外からRailsが解放してるポート番号などが分かれば、外部からのアクセスは恐らく可能かとは思いますが、 近辺依存ではありますが、自宅近辺の住民が自分のRailsされるリスクは低いかなと思ってます。（ここらへんは詳しくはないので鵜呑みではなく、自己責任でお願いします）&lt;/p&gt;
@@ -183,12 +190,27 @@
   &lt;li&gt;対象IP: 192.16配下全部&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-- ユーザー作成create user &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;-- 権限付与mysql\&amp;gt; grant all on \*.\* to &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-- ユーザー作成
+mysql&amp;gt; create user &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;
+-- 権限付与
+mysql&amp;gt; grant all on \*.\* to &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;のようにすれば、ユーザー作成して対象DBへの権限設定がされます。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql\&amp;gt; select user, host from mysql.user; +------+-------------+ | user | host | +------+-------------+ | hoge | 192.168.% | +------+-------------+ mysql\&amp;gt; show grants for 'hoge'@'192.168.%'; +----------------------------------------------------------------+ | Grants for hoge@192.168.% +----------------------------------------------------------------+ | GRANT ALL PRIVILEGES ON \*.\* TO 'hoge'@'192.168.%' IDENTIFIED BY PASSWORD '\*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7' +----------------------------------------------------------------+1 row in set (0.00 sec)
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; select user, host from mysql.user;
++------+-------------+
+| user | host |
++------+-------------+
+| hoge | 192.168.% |
++------+-------------+
+
+mysql\&amp;gt; show grants for 'hoge'@'192.168.%';
++----------------------------------------------------------------+
+| Grants for hoge@192.168.%
++----------------------------------------------------------------+
+| GRANT ALL PRIVILEGES ON \*.\* TO 'hoge'@'192.168.%' IDENTIFIED BY PASSWORD '\*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7'
++----------------------------------------------------------------+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;h2 id=&quot;外部から接続をテストする&quot;&gt;外部から接続をテストする&lt;/h2&gt;
@@ -197,12 +219,12 @@
 
 &lt;p&gt;&lt;strong&gt;Rails指定&lt;/strong&gt;&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mysql -u hoge -h 192.168.11.6 -p
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; hoge &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; 192.168.11.6 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;&lt;strong&gt;ローカルホスト名指定&lt;/strong&gt; ホスト名が &lt;code class=&quot;highlighter-rouge&quot;&gt;fuga.local&lt;/code&gt; の場合&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ mysql -u hoge -h fuga.local -p
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; hoge &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; fuga.local &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;接続できれば外部からRailsに接続できています。&lt;/p&gt;
@@ -215,7 +237,11 @@
 
 &lt;p&gt;Railsが &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.11.6&lt;/code&gt;の場合&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;development: ...省略... username: hoge password: pass host: 192.168.11.6
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;development&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;...省略...&lt;/span&gt;
+  &lt;span class=&quot;s&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;hoge&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pass&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;192.168.11.6&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;これでRails立ち上げてDBにアクセスできれば完了です。&lt;/p&gt;
@@ -226,7 +252,7 @@
 
 &lt;p&gt;1万件のUser(name: string)を事前に用意し、&lt;code class=&quot;highlighter-rouge&quot;&gt;@users = User.all&lt;/code&gt; が呼ばれて一覧を返すcontroller に対し&lt;code class=&quot;highlighter-rouge&quot;&gt;GET http://localhost:3000/users&lt;/code&gt; を5回呼び出し、最速と最遅を抜いた3つで平均値を出して測定しました。&lt;/p&gt;
 
-&lt;h3 id=&quot;railsソケット通信&quot;&gt;Railsソケット通信&lt;/h3&gt;
+&lt;h3 id=&quot;ドメインソケット通信&quot;&gt;ドメインソケット通信&lt;/h3&gt;
 
 &lt;table&gt;
   &lt;thead&gt;
@@ -255,7 +281,7 @@
 
 &lt;p&gt;(8.5 + 8.5 + 8.3) / 3 = &lt;strong&gt;8.4333333333ms&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;railsソケット通信-1&quot;&gt;Railsソケット通信&lt;/h3&gt;
+&lt;h3 id=&quot;tcpip通信&quot;&gt;TCP/IP通信&lt;/h3&gt;
 
 &lt;table&gt;
   &lt;thead&gt;

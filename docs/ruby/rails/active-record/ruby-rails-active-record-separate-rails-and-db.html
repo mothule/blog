@@ -164,8 +164,8 @@
   <li><a href="#railsが外部dbにアクセスする準備">Railsが外部DBにアクセスする準備</a></li>
   <li><a href="#気になる速度差を測ってみる">気になる速度差を測ってみる</a>
     <ul>
-      <li><a href="#railsソケット通信">Railsソケット通信</a></li>
-      <li><a href="#railsソケット通信-1">Railsソケット通信</a></li>
+      <li><a href="#ドメインソケット通信">ドメインソケット通信</a></li>
+      <li><a href="#tcpip通信">TCP/IP通信</a></li>
     </ul>
   </li>
   <li><a href="#まとめ">まとめ</a></li>
@@ -228,7 +228,7 @@
 
 <p>Railsで自分のローカルネットワークを調べる方法は、 <code class="highlighter-rouge">ifconfig</code> で調べます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ifconfig | grep 192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ifconfig | <span class="nb">grep </span>192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
 </code></pre></div></div>
 
 <p><code class="highlighter-rouge">192.168.11.3</code> というのが、 <code class="highlighter-rouge">ifconfig</code> を叩いたPCにRailsになります。</p>
@@ -249,7 +249,7 @@
 
 <p>そもそもRailsが外部からアクセスを許可していないのは、そう設定がされているためです。<code class="highlighter-rouge">bind-address</code> という設定がデフォルトは Rails からの接続のみ許可する設定になっています。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address = 127.0.0.1
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address <span class="o">=</span> 127.0.0.1
 </code></pre></div></div>
 
 <p>my.cnfの場所が分からない場合は、こちらの記事で確認してみてください。</p>
@@ -260,12 +260,12 @@
 
 <p>今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Rails環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので <code class="highlighter-rouge">bind-address</code> には <code class="highlighter-rouge">0.0.0.0</code> を設定します。 これは <strong>制限なし</strong> の指定になります。どのネットワークRailsからでもアクセスできます。 ちなみに全ての<code class="highlighter-rouge">bind-address</code>をRailsすると同様に無条件で受け付けることになります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ cat /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address = 127.0.0.1bind-address = 0.0.0.0
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address <span class="o">=</span> 127.0.0.1bind-address <span class="o">=</span> 0.0.0.0
 </code></pre></div></div>
 
 <p>設定したらリスタートします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mysql.server restart
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql.server restart
 </code></pre></div></div>
 
 <p>一応はローカルネットワーク外からRailsが解放してるポート番号などが分かれば、外部からのアクセスは恐らく可能かとは思いますが、 近辺依存ではありますが、自宅近辺の住民が自分のRailsされるリスクは低いかなと思ってます。（ここらへんは詳しくはないので鵜呑みではなく、自己責任でお願いします）</p>
@@ -282,12 +282,27 @@
   <li>対象IP: 192.16配下全部</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- ユーザー作成create user "hoge"@"192.168.%" identified by "pass";-- 権限付与mysql\&gt; grant all on \*.\* to "hoge"@"192.168.%" identified by "pass";
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- ユーザー作成
+mysql&gt; create user "hoge"@"192.168.%" identified by "pass";
+-- 権限付与
+mysql&gt; grant all on \*.\* to "hoge"@"192.168.%" identified by "pass";
 </code></pre></div></div>
 
 <p>のようにすれば、ユーザー作成して対象DBへの権限設定がされます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql\&gt; select user, host from mysql.user; +------+-------------+ | user | host | +------+-------------+ | hoge | 192.168.% | +------+-------------+ mysql\&gt; show grants for 'hoge'@'192.168.%'; +----------------------------------------------------------------+ | Grants for hoge@192.168.% +----------------------------------------------------------------+ | GRANT ALL PRIVILEGES ON \*.\* TO 'hoge'@'192.168.%' IDENTIFIED BY PASSWORD '\*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7' +----------------------------------------------------------------+1 row in set (0.00 sec)
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; select user, host from mysql.user;
++------+-------------+
+| user | host |
++------+-------------+
+| hoge | 192.168.% |
++------+-------------+
+
+mysql\&gt; show grants for 'hoge'@'192.168.%';
++----------------------------------------------------------------+
+| Grants for hoge@192.168.%
++----------------------------------------------------------------+
+| GRANT ALL PRIVILEGES ON \*.\* TO 'hoge'@'192.168.%' IDENTIFIED BY PASSWORD '\*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7'
++----------------------------------------------------------------+
 </code></pre></div></div>
 
 <h2 id="外部から接続をテストする">外部から接続をテストする</h2>
@@ -296,12 +311,12 @@
 
 <p><strong>Rails指定</strong></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mysql -u hoge -h 192.168.11.6 -p
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> hoge <span class="nt">-h</span> 192.168.11.6 <span class="nt">-p</span>
 </code></pre></div></div>
 
 <p><strong>ローカルホスト名指定</strong> ホスト名が <code class="highlighter-rouge">fuga.local</code> の場合</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ mysql -u hoge -h fuga.local -p
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> hoge <span class="nt">-h</span> fuga.local <span class="nt">-p</span>
 </code></pre></div></div>
 
 <p>接続できれば外部からRailsに接続できています。</p>
@@ -314,7 +329,11 @@
 
 <p>Railsが <code class="highlighter-rouge">192.168.11.6</code>の場合</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>development: ...省略... username: hoge password: pass host: 192.168.11.6
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">development</span><span class="pi">:</span>
+  <span class="s">...省略...</span>
+  <span class="s">username</span><span class="pi">:</span> <span class="s">hoge</span>
+  <span class="na">password</span><span class="pi">:</span> <span class="s">pass</span>
+  <span class="na">host</span><span class="pi">:</span> <span class="s">192.168.11.6</span>
 </code></pre></div></div>
 
 <p>これでRails立ち上げてDBにアクセスできれば完了です。</p>
@@ -325,7 +344,7 @@
 
 <p>1万件のUser(name: string)を事前に用意し、<code class="highlighter-rouge">@users = User.all</code> が呼ばれて一覧を返すcontroller に対し<code class="highlighter-rouge">GET http://localhost:3000/users</code> を5回呼び出し、最速と最遅を抜いた3つで平均値を出して測定しました。</p>
 
-<h3 id="railsソケット通信">Railsソケット通信</h3>
+<h3 id="ドメインソケット通信">ドメインソケット通信</h3>
 
 <table>
   <thead>
@@ -354,7 +373,7 @@
 
 <p>(8.5 + 8.5 + 8.3) / 3 = <strong>8.4333333333ms</strong></p>
 
-<h3 id="railsソケット通信-1">Railsソケット通信</h3>
+<h3 id="tcpip通信">TCP/IP通信</h3>
 
 <table>
   <thead>
