@@ -120,6 +120,8 @@
 
 <div class="post-content">
 
+  
+
   <div class="post-content-title border-bottom mb-4">
     <h1>Mac上でRailsとMySQLのサーバー分けたい</h1>
 
@@ -144,9 +146,9 @@
     <ul>
   <li><a href="#準備するもの">準備するもの</a></li>
   <li><a href="#構築する環境の構成について">構築する環境の構成について</a></li>
-  <li><a href="#railsがmacwからアクセスできる準備をする">RailsがMacWからアクセスできる準備をする</a>
+  <li><a href="#macdがmacwからアクセスできる準備をする">MacDがMacWからアクセスできる準備をする</a>
     <ul>
-      <li><a href="#ローカルrailsを指定">ローカルRailsを指定</a>
+      <li><a href="#ローカルipアドレスを指定">ローカルIPアドレスを指定</a>
         <ul>
           <li><a href="#メリット">メリット</a></li>
           <li><a href="#デメリット">デメリット</a></li>
@@ -155,16 +157,16 @@
       <li><a href="#ローカルホスト名を指定">ローカルホスト名を指定</a></li>
     </ul>
   </li>
-  <li><a href="#railsが外部アクセスされる準備">Railsが外部アクセスされる準備</a>
+  <li><a href="#mysqlが外部アクセスされる準備">MySQLが外部アクセスされる準備</a>
     <ul>
-      <li><a href="#rails内に外部からアクセスするユーザー用意する">Rails内に外部からアクセスするユーザー用意する</a></li>
+      <li><a href="#mysql内に外部からアクセスするユーザー用意する">MySQL内に外部からアクセスするユーザー用意する</a></li>
     </ul>
   </li>
   <li><a href="#外部から接続をテストする">外部から接続をテストする</a></li>
   <li><a href="#railsが外部dbにアクセスする準備">Railsが外部DBにアクセスする準備</a></li>
   <li><a href="#気になる速度差を測ってみる">気になる速度差を測ってみる</a>
     <ul>
-      <li><a href="#ドメインソケット通信">ドメインソケット通信</a></li>
+      <li><a href="#unixドメインソケット通信">Unixドメインソケット通信</a></li>
       <li><a href="#tcpip通信">TCP/IP通信</a></li>
     </ul>
   </li>
@@ -173,23 +175,23 @@
 </ul>
   </div>
 
-  <p>Railsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</p>
+  <p>開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</p>
 
-<p>原因の1つとして、一般的な開発環境では1PCにWebアプリとDBアプリが共存しており、これら2点間の通信はRailsソケット方式で通信が行われます。 一方本番環境ではWebアプリとDBアプリそれぞれにサーバーが立っていることが一般的な基本構成で、これら2点間の通信はRails方式で通信が行われます。 この通信方式の違いにより大きな速度差が発生し、開発環境ではなかった場所にRailsが生まれます。</p>
+<p>原因の1つとして、一般的な開発環境では1PCにWebアプリとDBアプリが共存しており、これら2点間の通信はUnixドメインソケット方式で通信が行われます。 一方本番環境ではWebアプリとDBアプリそれぞれにサーバーが立っていることが一般的な基本構成で、これら2点間の通信はTCP/IP方式で通信が行われます。 この通信方式の違いにより大きな速度差が発生し、開発環境ではなかった場所にボトルネックが生まれます。</p>
 
 <p>例えば「SELECTクエリーを叩く回数が多くても、index効いてるから大丈夫だろう」と思っていても、WebサーバとDBサーバが分かれていると、二点間の通信時間が底上げされます。</p>
 
 <p>本番環境ではDBとの通信コストの観点が必要なのに、開発環境ではそれが抜けた環境になっているため、慣れていないと気づきにくい観点とも言えます。</p>
 
-<p>なので開発中でも通信コストが考慮された結果が分かる開発環境を2つのRailsを使って実現してみようと思います。</p>
+<p>なので開発中でも通信コストが考慮された結果が分かる開発環境を2つのMacを使って実現してみようと思います。</p>
 
 <p>ちなみに単純な興味です。</p>
 
 <h2 id="準備するもの">準備するもの</h2>
 
 <ul>
-  <li>Railsと名付けます)</li>
-  <li>同じローカルネットワークに繋がっていること(つまり同じRailsに繋がっていればOKです)</li>
+  <li>Mac 2台(名称としてMacWとMacDと名付けます)</li>
+  <li>同じローカルネットワークに繋がっていること(つまり同じWi-Fiに繋がっていればOKです)</li>
 </ul>
 
 <h2 id="構築する環境の構成について">構築する環境の構成について</h2>
@@ -198,40 +200,40 @@
 
 <ul>
   <li>MacWにRailsアプリを立ち上げる</li>
-  <li>Railsサーバーを立ち上げる</li>
+  <li>MacDにMySQLサーバーを立ち上げる</li>
   <li>ローカルの開発環境なのでセキュリティは意識しない</li>
-  <li>Railsを外部アクセスを許可する設定にする</li>
-  <li>Railsに外部アクセス用のユーザーを作成する</li>
-  <li>Railsのホスト名、ユーザーに設定する</li>
+  <li>MySQLを外部アクセスを許可する設定にする</li>
+  <li>MySQLに外部アクセス用のユーザーを作成する</li>
+  <li>RailsアプリのDB接続先をMacDのホスト名、ユーザーに設定する</li>
 </ul>
 
 <p>重要なキーワードは以下の3つとなります。</p>
 
 <ul>
-  <li>Railsが外部からアクセスされる準備</li>
-  <li>Railsが外部からアクセスされる準備</li>
+  <li>MacDが外部からアクセスされる準備</li>
+  <li>MySQLが外部からアクセスされる準備</li>
   <li>Railsが外部DBにアクセスする準備</li>
 </ul>
 
-<h2 id="railsがmacwからアクセスできる準備をする">RailsがMacWからアクセスできる準備をする</h2>
+<h2 id="macdがmacwからアクセスできる準備をする">MacDがMacWからアクセスできる準備をする</h2>
 
 <p>アクセスするには2つの方法があります。</p>
 
 <ol>
-  <li>ローカルRailsを指定</li>
+  <li>ローカルIPアドレスを指定</li>
   <li>ローカルホスト名を指定</li>
 </ol>
 
-<h3 id="ローカルrailsを指定">ローカルRailsを指定</h3>
+<h3 id="ローカルipアドレスを指定">ローカルIPアドレスを指定</h3>
 
-<p>これはローカルネットワーク内においてRailsを直接使う方法です。 一時的であれば最も簡単です。</p>
+<p>これはローカルネットワーク内においてIPアドレスを直接使う方法です。 一時的であれば最も簡単です。</p>
 
-<p>Railsで自分のローカルネットワークを調べる方法は、 <code class="highlighter-rouge">ifconfig</code> で調べます。</p>
+<p>Macで自分のローカルネットワークを調べる方法は、 <code class="highlighter-rouge">ifconfig</code> で調べます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ifconfig | <span class="nb">grep </span>192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">192.168.11.3</code> というのが、 <code class="highlighter-rouge">ifconfig</code> を叩いたPCにRailsになります。</p>
+<p><code class="highlighter-rouge">192.168.11.3</code> というのが、 <code class="highlighter-rouge">ifconfig</code> を叩いたPCにIPアドレスになります。</p>
 
 <h4 id="メリット">メリット</h4>
 
@@ -239,26 +241,26 @@
 
 <h4 id="デメリット">デメリット</h4>
 
-<p>Railsの記入部を更新する必要があります。</p>
+<p>IPアドレスの記入部を更新する必要があります。</p>
 
 <h3 id="ローカルホスト名を指定">ローカルホスト名を指定</h3>
 
-<p>こちらはRailsに依存せず常に固定のホスト名で接続することが可能になります。 こちらの記事にまとめてあります。</p>
+<p>こちらはMac自身にホスト名を定義することで、IPアドレスに依存せず常に固定のホスト名で接続することが可能になります。 こちらの記事にまとめてあります。</p>
 
-<h2 id="railsが外部アクセスされる準備">Railsが外部アクセスされる準備</h2>
+<h2 id="mysqlが外部アクセスされる準備">MySQLが外部アクセスされる準備</h2>
 
-<p>そもそもRailsが外部からアクセスを許可していないのは、そう設定がされているためです。<code class="highlighter-rouge">bind-address</code> という設定がデフォルトは Rails からの接続のみ許可する設定になっています。</p>
+<p>そもそもMySQLが外部からアクセスを許可していないのは、そう設定がされているためです。<code class="highlighter-rouge">bind-address</code> という設定がデフォルトは 127.0.0.1 つまり localhost からの接続のみ許可する設定になっています。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address <span class="o">=</span> 127.0.0.1
 </code></pre></div></div>
 
 <p>my.cnfの場所が分からない場合は、こちらの記事で確認してみてください。</p>
 
-<p>my.cnfに<code class="highlighter-rouge">bind-address</code>でIPを指定することで、そのIPからの通信を許可します。 ちなみに注意事項としては、Railsになります。 MacWのRailsではありません。</p>
+<p>my.cnfに<code class="highlighter-rouge">bind-address</code>でIPを指定することで、そのIPからの通信を許可します。 ちなみに注意事項としては、MacDのIPアドレスになります。 MacWのIPアドレスではありません。</p>
 
-<p>まず前提知識として、PCには <strong>複数のネットワークRailsがあります。</strong> その中のどのネットワークRailsを許可するのかが<code class="highlighter-rouge">bind-address</code>になります。 先程<code class="highlighter-rouge">bind-address</code>のデフォルトはRailsからのアクセスのみを許可しています。</p>
+<p>まず前提知識として、PCには <strong>複数のネットワークインターフェイスがあります。</strong> その中のどのネットワークインターフェイスを許可するのかが<code class="highlighter-rouge">bind-address</code>になります。 先程<code class="highlighter-rouge">bind-address</code>のデフォルトはlocalhostと説明したように、デフォルトではlocalhostからのアクセスのみを許可しています。</p>
 
-<p>今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Rails環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので <code class="highlighter-rouge">bind-address</code> には <code class="highlighter-rouge">0.0.0.0</code> を設定します。 これは <strong>制限なし</strong> の指定になります。どのネットワークRailsからでもアクセスできます。 ちなみに全ての<code class="highlighter-rouge">bind-address</code>をRailsすると同様に無条件で受け付けることになります。</p>
+<p>今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Wi-Fi環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので <code class="highlighter-rouge">bind-address</code> には <code class="highlighter-rouge">0.0.0.0</code> を設定します。 これは <strong>制限なし</strong> の指定になります。どのネットワークインターフェイスからでもアクセスできます。 ちなみに全ての<code class="highlighter-rouge">bind-address</code>をコメントアウトすると同様に無条件で受け付けることになります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address <span class="o">=</span> 127.0.0.1bind-address <span class="o">=</span> 0.0.0.0
 </code></pre></div></div>
@@ -268,29 +270,29 @@
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql.server restart
 </code></pre></div></div>
 
-<p>一応はローカルネットワーク外からRailsが解放してるポート番号などが分かれば、外部からのアクセスは恐らく可能かとは思いますが、 近辺依存ではありますが、自宅近辺の住民が自分のRailsされるリスクは低いかなと思ってます。（ここらへんは詳しくはないので鵜呑みではなく、自己責任でお願いします）</p>
+<p>一応はローカルネットワーク外からルーターのグローバルネットワークのIPとMacDのローカルIP、MySQLが解放してるポート番号などが分かれば、外部からのアクセスは恐らく可能かとは思いますが、 近辺依存ではありますが、自宅近辺の住民が自分のWi-Fi不正アクセスされるリスクは低いかなと思ってます。（ここらへんは詳しくはないので鵜呑みではなく、自己責任でお願いします）</p>
 
-<h3 id="rails内に外部からアクセスするユーザー用意する">Rails内に外部からアクセスするユーザー用意する</h3>
+<h3 id="mysql内に外部からアクセスするユーザー用意する">MySQL内に外部からアクセスするユーザー用意する</h3>
 
-<p>Railsの外部からアクセスする準備ができたら、今度は外部からアクセス用のユーザーを用意します。</p>
+<p>MySQLの外部からアクセスする準備ができたら、今度は外部からアクセス用のユーザーを用意します。</p>
 
 <p>例えば下記のようなユーザーを作る場合は</p>
 
 <ul>
-  <li>ユーザー名: Rails</li>
+  <li>ユーザー名: hoge</li>
   <li>パスワード: pass</li>
   <li>対象IP: 192.16配下全部</li>
 </ul>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- ユーザー作成
-mysql&gt; create user "hoge"@"192.168.%" identified by "pass";
+create user "hoge"@"192.168.%" identified by "pass";
 -- 権限付与
-mysql&gt; grant all on \*.\* to "hoge"@"192.168.%" identified by "pass";
+mysql\&gt; grant all on \*.\* to "hoge"@"192.168.%" identified by "pass";
 </code></pre></div></div>
 
 <p>のようにすれば、ユーザー作成して対象DBへの権限設定がされます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; select user, host from mysql.user;
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql\&gt; select user, host from mysql.user;
 +------+-------------+
 | user | host |
 +------+-------------+
@@ -307,9 +309,9 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
 
 <h2 id="外部から接続をテストする">外部から接続をテストする</h2>
 
-<p>この段階で既に外部から接続できている環境になっているはずなので、他Railsから接続をします。</p>
+<p>この段階で既に外部から接続できている環境になっているはずなので、他Macから接続をします。</p>
 
-<p><strong>Rails指定</strong></p>
+<p><strong>IPアドレス指定</strong></p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> hoge <span class="nt">-h</span> 192.168.11.6 <span class="nt">-p</span>
 </code></pre></div></div>
@@ -319,32 +321,32 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> hoge <span class="nt">-h</span> fuga.local <span class="nt">-p</span>
 </code></pre></div></div>
 
-<p>接続できれば外部からRailsに接続できています。</p>
+<p>接続できれば外部からMySQLに接続できています。</p>
 
 <h2 id="railsが外部dbにアクセスする準備">Railsが外部DBにアクセスする準備</h2>
 
-<p>Railsが外部からのアクセス準備が整えば後は簡単です。</p>
+<p>MySQLが外部からのアクセス準備が整えば後は簡単です。</p>
 
 <p>dataases.yml で接続先を指定するだけになります。</p>
 
-<p>Railsが <code class="highlighter-rouge">192.168.11.6</code>の場合</p>
+<p>IPアドレスが <code class="highlighter-rouge">192.168.11.6</code>の場合</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">development</span><span class="pi">:</span>
-  <span class="s">...省略...</span>
-  <span class="s">username</span><span class="pi">:</span> <span class="s">hoge</span>
+  <span class="na">username</span><span class="pi">:</span> <span class="s">hoge</span>
   <span class="na">password</span><span class="pi">:</span> <span class="s">pass</span>
   <span class="na">host</span><span class="pi">:</span> <span class="s">192.168.11.6</span>
 </code></pre></div></div>
+<p>他は省略してます。</p>
 
 <p>これでRails立ち上げてDBにアクセスできれば完了です。</p>
 
 <h2 id="気になる速度差を測ってみる">気になる速度差を測ってみる</h2>
 
-<p>1PCでRails通信した場合で平均値を出してみました。</p>
+<p>1PCでUnixドメインソケット通信した場合と2PCでTCP/IP通信した場合で平均値を出してみました。</p>
 
 <p>1万件のUser(name: string)を事前に用意し、<code class="highlighter-rouge">@users = User.all</code> が呼ばれて一覧を返すcontroller に対し<code class="highlighter-rouge">GET http://localhost:3000/users</code> を5回呼び出し、最速と最遅を抜いた3つで平均値を出して測定しました。</p>
 
-<h3 id="ドメインソケット通信">ドメインソケット通信</h3>
+<h3 id="unixドメインソケット通信">Unixドメインソケット通信</h3>
 
 <table>
   <thead>
@@ -402,7 +404,7 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
 
 <p>(289.9 + 194.4 + 159.9) / 3 = <strong>214.7333333333ms</strong></p>
 
-<p>およそ 26倍差がついています。 Railsサーバーよりスペックが劣ってはいますが、それを考慮しても大分差が開いているでしょう。</p>
+<p>およそ 26倍差がついています。 MySQLサーバーがRailsサーバーよりスペックが劣ってはいますが、それを考慮しても大分差が開いているでしょう。</p>
 
 <h2 id="まとめ">まとめ</h2>
 
@@ -432,6 +434,10 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
     
       <ul>
         <li><a href="/tools/regexp/regexp-not-expression">正規表現で否定を表現する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/how-to-use-ngrok">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</a></li>
       </ul>
     
   </div>
@@ -465,6 +471,12 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
     Tag list
   </div>
   <div>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
     
       <a href="/tags#tools">tools</a>
     
