@@ -10,23 +10,27 @@ COLOR_OFF=${COLOR_ESC}${COLOR_ESC_END}
 function info() {
   printf "${COLOR_YELLOW}$1${COLOR_OFF}"
 }
+function log() {
+  printf "$1"
+}
 
 
 info "Start deploy."
-printf "${COLOR_YELLOW}Start deploy.${COLOR_OFF}"
 
 cd ws
 JEKYLL_ENV=production bundle exec jekyll build
 cd ..
 
-echo "Copy to docs/"
+info "Copy to docs/"
 rsync -auv ws/_site/ docs
 
-echo "Copy CNAME to docs/"
+info "Copy CNAME to docs/"
 cp CNAME docs/
 
 
-echo "Commit and push"
+info "Commit and push"
 git add .
 git commit -m "Deploy:"
 git push
+
+info "Finished deploy."
