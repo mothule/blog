@@ -4,29 +4,29 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-      <title>Welcome to Jekyll! - もちゅろぐ</title>
+      <title>ActiveRecordでpluckとselectしてpluckに変化はあるか？ - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="Welcome to Jekyll!" />
+<meta property="og:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="Jekyllの初期ページ" />
-<meta property="og:description" content="Jekyllの初期ページ" />
-<link rel="canonical" href="https://blog.mothule.com/jekyll/welcome-to-jekyll" />
-<meta property="og:url" content="https://blog.mothule.com/jekyll/welcome-to-jekyll" />
+<meta name="description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
 <meta property="og:site_name" content="もちゅろぐ" />
 <meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-08-11T17:38:18+09:00" />
+<meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/jekyll/welcome-to-jekyll","headline":"Welcome to Jekyll!","dateModified":"2019-08-11T17:38:18+09:00","datePublished":"2019-08-11T17:38:18+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/jekyll/welcome-to-jekyll"},"description":"Jekyllの初期ページ","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord","headline":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","dateModified":"2019-08-05T00:00:00+09:00","datePublished":"2019-08-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord"},"description":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <meta name="twitter:title" content="Welcome to Jekyll!">
-    <meta name="twitter:description" content="Jekyllの初期ページ">
+    <meta name="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+    <meta name="twitter:description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
     <meta name="twitter:image" content="/assets/images/site-image.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -98,11 +98,19 @@
     <a href="/">Home</a>
     
       
-        / <a href="/tags#jekyll">Jekyll</a>
+        / <a href="/tags#ruby">Ruby</a>
       
     
       
-        / Welcome to jekyll
+        / <a href="/tags#rails">Rails</a>
+      
+    
+      
+        / <a href="/tags#active-record">Active-record</a>
+      
+    
+      
+        / Ruby rails activerecord
       
     
   
@@ -113,13 +121,17 @@
 <div class="post-content">
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>Welcome to Jekyll!</h1>
+    <h1>ActiveRecordでpluckとselectしてpluckに変化はあるか？</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
-        <li class="list-inline-item">2019-8-11</li>
+        <li class="list-inline-item">2019-8-5</li>
         
-          <li class="list-inline-item"><a href="/tags#jekyll">jekyll</a></li>
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#active-record">active-record</a></li>
         
       </ul>
     </div>
@@ -127,23 +139,95 @@
 
   <div class="post-content-toc">
     <p>Table of Contents</p>
-    
+    <ul>
+  <li><a href="#sqlは同じ">SQLは同じ</a></li>
+  <li><a href="#速度は微妙な変化">速度は微妙な変化</a></li>
+  <li><a href="#しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</a></li>
+  <li><a href="#結論">結論</a></li>
+</ul>
   </div>
 
-  <p>You’ll find this post in your <code class="highlighter-rouge">_posts</code> directory. Go ahead and edit it and re-build the site to see your changes. You can rebuild the site in many different ways, but the most common way is to run <code class="highlighter-rouge">jekyll serve</code>, which launches a web server and auto-regenerates your site when a file is updated.</p>
+  <p>ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</p>
 
-<p>To add new posts, simply add a file in the <code class="highlighter-rouge">_posts</code> directory that follows the convention <code class="highlighter-rouge">YYYY-MM-DD-name-of-post.ext</code> and includes the necessary front matter. Take a look at the source for this post to get an idea about how it works.</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="ss">:name</span><span class="p">).</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+</code></pre></div></div>
 
-<p>Jekyll also offers powerful support for code snippets:</p>
+<p>と</p>
 
-<figure class="highlight"><pre><code class="language-ruby" data-lang="ruby"><span class="k">def</span> <span class="nf">print_hi</span><span class="p">(</span><span class="nb">name</span><span class="p">)</span>
-  <span class="nb">puts</span> <span class="s2">"Hi, </span><span class="si">#{</span><span class="nb">name</span><span class="si">}</span><span class="s2">"</span>
-<span class="k">end</span>
-<span class="n">print_hi</span><span class="p">(</span><span class="s1">'Tom'</span><span class="p">)</span>
-<span class="c1">#=&gt; prints 'Hi, Tom' to STDOUT.</span></code></pre></figure>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+</code></pre></div></div>
 
-<p>Check out the <a href="https://jekyllrb.com/docs/home">Jekyll docs</a> for more info on how to get the most out of Jekyll. File all bugs/feature requests at <a href="https://github.com/jekyll/jekyll">Jekyll’s GitHub repo</a>. If you have questions, you can ask them on <a href="https://talk.jekyllrb.com/">Jekyll Talk</a>.</p>
+<p>に速度差や消費メモリ差はあるのか？</p>
 
+<h2 id="sqlは同じ">SQLは同じ</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>(55.2ms) SELECT `users`.`name` FROM `users` ↳ app/controllers/users\_controller.rb:10 (60.7ms) SELECT `users`.`name` FROM `users` ↳ app/controllers/users\_controller.rb:9
+</code></pre></div></div>
+
+<h2 id="速度は微妙な変化">速度は微妙な変化</h2>
+
+<p>90万件に対して行った結果</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>pluckのみ</th>
+      <th>select+pluck</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>3228</td>
+      <td>3349</td>
+    </tr>
+    <tr>
+      <td>3152</td>
+      <td>2972</td>
+    </tr>
+    <tr>
+      <td>3126</td>
+      <td>3370</td>
+    </tr>
+    <tr>
+      <td>3101</td>
+      <td>3144</td>
+    </tr>
+    <tr>
+      <td>3271</td>
+      <td>2945</td>
+    </tr>
+    <tr>
+      <td>3454</td>
+      <td>3227</td>
+    </tr>
+    <tr>
+      <td>3120</td>
+      <td>3306</td>
+    </tr>
+    <tr>
+      <td>3488</td>
+      <td>3577</td>
+    </tr>
+    <tr>
+      <td>3046</td>
+      <td>3072</td>
+    </tr>
+    <tr>
+      <td>3228</td>
+      <td>3413</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms</p>
+
+<h2 id="しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</h2>
+
+<p>SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。</p>
+
+<h2 id="結論">結論</h2>
+
+<p>実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 <strong>pluckを呼ぶのであれば,selectは呼ぶ必要はない。</strong></p>
 
 
   <div class="post-content-share">
@@ -160,7 +244,7 @@
   <div class="related-posts-body">
     
       <ul>
-        <li><a href="/ruby/rails/active-record/ruby-rails-activerecord">ActiveRecordでpluckとselectしてpluckに変化はあるか？</a></li>
+        <li><a href="/jekyll/welcome-to-jekyll">Welcome to Jekyll!</a></li>
       </ul>
     
   </div>
