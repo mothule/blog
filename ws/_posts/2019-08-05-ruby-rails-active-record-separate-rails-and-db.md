@@ -2,7 +2,7 @@
 title: Mac上でRailsとMySQLのサーバー分けたい
 description: Mac上でRailsとMySQLのサーバー分けたい
 date: 2019-08-05
-categories: ruby rails active-record mysql
+categories: ruby rails active-record
 tags: ruby rails active-record mysql
 ---
 Railsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い...」「想定より遅い...」なんて経験ありませんか？
