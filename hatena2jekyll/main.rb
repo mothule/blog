@@ -119,9 +119,14 @@ p "Article count: #{articles.count}"
 
 # remove hatena keyword links, because no necessary
 articles.each do |article|
-  pattern = /\<a class="keyword" href="http:\/\/d\.hatena\.ne\.jp\/keyword\/.*">(.*)<\/a>/i
+  pattern = %r{<a class="keyword" href="http://d.hatena.ne.jp/keyword/(.*)">\1</a>}
+  pattern2 = %r{<a class="keyword" href="http://d.hatena.ne.jp/keyword/.*">(.*)</a>}
   if article.body =~ pattern
-    article.body.gsub!(pattern, $1)
+    article.body.gsub!(pattern) { $1 }
+  end
+
+  if article.body =~ pattern2
+    article.body.gsub!(pattern2) { $1 }
   end
 end
 
