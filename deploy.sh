@@ -8,10 +8,10 @@ COLOR_CYAN=${COLOR_ESC}36${COLOR_ESC_END}
 COLOR_OFF=${COLOR_ESC}${COLOR_ESC_END}
 
 function info() {
-  printf "${COLOR_YELLOW}$1${COLOR_OFF}"
+  printf "${COLOR_YELLOW}$1${COLOR_OFF}\n"
 }
 function log() {
-  printf "$1"
+  printf "$1\n"
 }
 
 
