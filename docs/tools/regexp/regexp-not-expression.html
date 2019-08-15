@@ -4,17 +4,17 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-      <title>ActiveRecordでpluckとselectしてpluckに変化はあるか？ - もちゅろぐ</title>
+      <title>正規表現で否定を表現する - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:title" content="正規表現で否定を表現する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
-<meta property="og:description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
+<meta name="description" content="正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。" />
+<meta property="og:description" content="正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/regexp/regexp-not-expression" />
+<meta property="og:url" content="https://blog.mothule.com/tools/regexp/regexp-not-expression" />
 <meta property="og:site_name" content="もちゅろぐ" />
 <meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
 <meta property="og:type" content="article" />
@@ -22,11 +22,11 @@
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord","headline":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","dateModified":"2019-08-05T00:00:00+09:00","datePublished":"2019-08-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord"},"description":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/regexp/regexp-not-expression","headline":"正規表現で否定を表現する","dateModified":"2019-08-05T00:00:00+09:00","datePublished":"2019-08-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/regexp/regexp-not-expression"},"description":"正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <meta name="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
-    <meta name="twitter:description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+    <meta name="twitter:title" content="正規表現で否定を表現する">
+    <meta name="twitter:description" content="正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。">
     <meta name="twitter:image" content="/assets/images/site-image.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -98,19 +98,15 @@
     <a href="/">Home</a>
     
       
-        / <a href="/tags#ruby">Ruby</a>
+        / <a href="/tags#tools">Tools</a>
       
     
       
-        / <a href="/tags#rails">Rails</a>
+        / <a href="/tags#regexp">Regexp</a>
       
     
       
-        / <a href="/tags#active-record">Active-record</a>
-      
-    
-      
-        / ActiveRecordでpluckとselectしてpluckに変化はあるか？
+        / 正規表現で否定を表現する
       
     
   
@@ -121,17 +117,15 @@
 <div class="post-content">
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>ActiveRecordでpluckとselectしてpluckに変化はあるか？</h1>
+    <h1>正規表現で否定を表現する</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
         <li class="list-inline-item">2019-8-5</li>
         
-          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+          <li class="list-inline-item"><a href="/tags#tools">tools</a></li>
         
-          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
-        
-          <li class="list-inline-item"><a href="/tags#active-record">active-record</a></li>
+          <li class="list-inline-item"><a href="/tags#regexp">regexp</a></li>
         
       </ul>
     </div>
@@ -140,96 +134,89 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#sqlは同じ">SQLは同じ</a></li>
-  <li><a href="#速度は微妙な変化">速度は微妙な変化</a></li>
-  <li><a href="#しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</a></li>
-  <li><a href="#結論">結論</a></li>
+  <li><a href="#書き方">書き方</a></li>
+  <li><a href="#何が起きているのか">何が起きているのか？</a></li>
+  <li><a href="#試してみる">試してみる</a></li>
 </ul>
   </div>
 
-  <p>ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</p>
+  <p>常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="ss">:name</span><span class="p">).</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<p>いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。</p>
+
+<h2 id="書き方">書き方</h2>
+<p>結論から先に書きます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^(?!.\*\&lt;ここに検索ワード\&gt;).+$
 </code></pre></div></div>
 
-<p>と</p>
+<h2 id="何が起きているのか">何が起きているのか？</h2>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<ul>
+  <li>^ : 行の先頭を表す</li>
+  <li>( : グルーピング</li>
+  <li>?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。</li>
+  <li>.* : 任意の文字列(0文字以上)</li>
+  <li>) : グルーピング</li>
+  <li>.+ : 任意の文字列(1文字以上)</li>
+  <li>$: 行の末尾を表す</li>
+</ul>
+
+<h2 id="試してみる">試してみる</h2>
+
+<p>色々と削って動きを見てみることしました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>あいうえお かきくけこ あい あ い いう
 </code></pre></div></div>
 
-<p>に速度差や消費メモリ差はあるのか？</p>
-
-<h2 id="sqlは同じ">SQLは同じ</h2>
-
-<p>出力されるSQLはどちらも同じでした。</p>
-
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="nv">`users`</span><span class="p">.</span><span class="nv">`name`</span> <span class="k">FROM</span> <span class="nv">`users`</span>
-</code></pre></div></div>
-
-<h2 id="速度は微妙な変化">速度は微妙な変化</h2>
-
-<p>90万件に対して行った結果</p>
+<p>に対して色々試してみる。</p>
 
 <table>
   <thead>
     <tr>
-      <th>pluckのみ</th>
-      <th>select+pluck</th>
+      <th>正規表現</th>
+      <th>結果</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <td>3228</td>
-      <td>3349</td>
+      <td><code class="highlighter-rouge">^(?!あ)</code></td>
+      <td>「あ」の入っていない文字列と空改行がヒットする</td>
     </tr>
     <tr>
-      <td>3152</td>
-      <td>2972</td>
+      <td><code class="highlighter-rouge">^(?!あ)$</code></td>
+      <td>空改行のみヒットする</td>
     </tr>
     <tr>
-      <td>3126</td>
-      <td>3370</td>
+      <td><code class="highlighter-rouge">^(?!あい).</code></td>
+      <td>「あい」の入っていない行の1文字目と空改行がヒットする</td>
     </tr>
     <tr>
-      <td>3101</td>
-      <td>3144</td>
+      <td><code class="highlighter-rouge">^(?!いう).*</code></td>
+      <td>行の先頭に「いう」の入っていない行と空改行がヒットする</td>
     </tr>
     <tr>
-      <td>3271</td>
-      <td>2945</td>
+      <td><code class="highlighter-rouge">^(?!.*いう).*</code></td>
+      <td>行に「いう」の入っていない行と空改行がヒットする</td>
     </tr>
     <tr>
-      <td>3454</td>
-      <td>3227</td>
+      <td><code class="highlighter-rouge">^(?!.*いう).+</code></td>
+      <td>行に「いう」の入っていない行がヒットする</td>
     </tr>
     <tr>
-      <td>3120</td>
-      <td>3306</td>
-    </tr>
-    <tr>
-      <td>3488</td>
-      <td>3577</td>
-    </tr>
-    <tr>
-      <td>3046</td>
-      <td>3072</td>
-    </tr>
-    <tr>
-      <td>3228</td>
-      <td>3413</td>
+      <td><code class="highlighter-rouge">^(?!.*いう)</code></td>
+      <td>行に「いう」の入っていない行の先頭がヒットする</td>
     </tr>
   </tbody>
 </table>
 
-<p>pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms</p>
+<ul>
+  <li>()は()内の文字を1文字として扱う. セットみたいなイメージ.</li>
+  <li>?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる</li>
+  <li>(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの</li>
+</ul>
 
-<h2 id="しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</h2>
-
-<p>SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。</p>
-
-<h2 id="結論">結論</h2>
-
-<p>実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 <strong>pluckを呼ぶのであれば,selectは呼ぶ必要はない。</strong></p>
+<p>つまり<strong><code class="highlighter-rouge">^(?!.*いう).+$</code>とは「いう否定セット」の入っていない１文字以上を検索となる</strong></p>
 
 
   <div class="post-content-share">
@@ -246,11 +233,11 @@
   <div class="related-posts-body">
     
       <ul>
-        <li><a href="/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">Mac上でRailsとMySQLのサーバー分けたい</a></li>
+        <li><a href="/ruby/rails/active-record/ruby-rails-activerecord">ActiveRecordでpluckとselectしてpluckに変化はあるか？</a></li>
       </ul>
     
       <ul>
-        <li><a href="/tools/regexp/regexp-not-expression">正規表現で否定を表現する</a></li>
+        <li><a href="/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">Mac上でRailsとMySQLのサーバー分けたい</a></li>
       </ul>
     
   </div>
