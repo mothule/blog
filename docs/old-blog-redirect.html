@@ -1,0 +1,36 @@
+<script type="text/javascript" language="javascript">
+ 　　var domain = "https://blog.mothule.com/";
+    var redirectMap = {
+      "https://mothulog.hateblo.jp/entry/ruby/rails/activerecord": "https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord",
+      "https://mothulog.hateblo.jp/entry/regex-not-expression": "https://blog.mothule.com/tools/regexp/regexp-not-expression",
+      "https://mothulog.hateblo.jp/entry/how-to-use-ngrok": "https://blog.mothule.com/ios/how-to-use-ngrok",
+      "https://mothulog.hateblo.jp/entry/ruby/rails/access-by-outside": "https://blog.mothule.com/mac/how-to-access-localhost-from-ios",
+      "https://mothulog.hateblo.jp/entry/ruby/rails/activerecord/fix-mysql56-encode-utf8mb4-key-too-length": "https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length",
+      "https://mothulog.hateblo.jp/entry/mysql/find-mycnf": "https://blog.mothule.com/mysql/mysql-find-mycnf",
+      "https://mothulog.hateblo.jp/entry/mac/how-to-use-scp": "https://blog.mothule.com/mac/mac-how-to-use-scp",
+      "https://mothulog.hateblo.jp/entry/ruby/rails/mysql56-mysql2-error-fix": "https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix",
+      "https://mothulog.hateblo.jp/entry/mac/homebrew/uses-installed": "https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed",
+      "https://mothulog.hateblo.jp/entry/mac/homebrew/how-to-downgrade": "https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade",
+      "https://mothulog.hateblo.jp/entry/ruby/rails/activerecord/check-table-exists-diff": "https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-check-table-exists-diff",
+      "https://mothulog.hateblo.jp/entry/engineering/mind-and-behavior-for-team": ""
+
+    };
+
+    var url = redirectMap[location.href]
+    if( url ){
+        document.write("<h2 style='font-size:32px;color:red;'>新しいサイトに移転しました。</h2>");
+        document.write("<h3>数秒後に自動で移動します。</h3>");
+        // リンクhtmlの書き出し
+     　　document.write("<a href=\"" + url + "\">" + url + "</a></p>");
+
+     // リダイレクト
+    　　setTimeout("redirect()", 3000);　// 5 sec
+    　　function redirect(){
+    　　 　location.href = url;
+    　　}
+
+    // canonical の書き換え
+   　　var link = document.getElementsByTagName("link")[0];
+   　　link.href = url;
+    }
+</script>

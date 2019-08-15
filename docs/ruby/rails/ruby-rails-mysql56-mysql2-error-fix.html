@@ -4,29 +4,29 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-      <title>正規表現で否定を表現する - もちゅろぐ</title>
+      <title>Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="正規表現で否定を表現する" />
+<meta property="og:title" content="Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。" />
-<meta property="og:description" content="正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。" />
-<link rel="canonical" href="https://blog.mothule.com/tools/regexp/regexp-not-expression" />
-<meta property="og:url" content="https://blog.mothule.com/tools/regexp/regexp-not-expression" />
+<meta name="description" content="MySQLを最新ではなく5.6で環境構築する機会がありました。その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。" />
+<meta property="og:description" content="MySQLを最新ではなく5.6で環境構築する機会がありました。その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix" />
 <meta property="og:site_name" content="もちゅろぐ" />
 <meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
+<meta property="article:published_time" content="2019-07-30T00:00:00+09:00" />
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/regexp/regexp-not-expression","headline":"正規表現で否定を表現する","dateModified":"2019-08-05T00:00:00+09:00","datePublished":"2019-08-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/regexp/regexp-not-expression"},"description":"正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix","headline":"Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた","dateModified":"2019-07-30T00:00:00+09:00","datePublished":"2019-07-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix"},"description":"MySQLを最新ではなく5.6で環境構築する機会がありました。その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
-    <meta name="twitter:title" content="正規表現で否定を表現する">
-    <meta name="twitter:description" content="正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。">
+    <meta name="twitter:title" content="Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた">
+    <meta name="twitter:description" content="MySQLを最新ではなく5.6で環境構築する機会がありました。その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。">
     <meta name="twitter:image" content="/assets/images/site-image.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
@@ -98,15 +98,15 @@
     <a href="/">Home</a>
     
       
-        / <a href="/tags#tools">Tools</a>
+        / <a href="/tags#ruby">Ruby</a>
       
     
       
-        / <a href="/tags#regexp">Regexp</a>
+        / <a href="/tags#rails">Rails</a>
       
     
       
-        / 正規表現で否定を表現する
+        / Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた
       
     
   
@@ -119,15 +119,17 @@
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>正規表現で否定を表現する</h1>
+    <h1>Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
-        <li class="list-inline-item">2019-8-5</li>
+        <li class="list-inline-item">2019-7-30</li>
         
-          <li class="list-inline-item"><a href="/tags#tools">tools</a></li>
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
         
-          <li class="list-inline-item"><a href="/tags#regexp">regexp</a></li>
+          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mysql">mysql</a></li>
         
       </ul>
     </div>
@@ -136,96 +138,31 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#書き方">書き方</a></li>
-  <li><a href="#何が起きているのか">何が起きているのか？</a></li>
-  <li><a href="#試してみる">試してみる</a></li>
+  <li><a href="#従来は-with-ldflagsと-with-cppflags指定だった">従来は –with-ldflagsと –with-cppflags指定だった</a></li>
+  <li><a href="#今回は-with-opt-dir指定">今回は –with-opt-dir指定</a></li>
 </ul>
   </div>
 
-  <p>常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</p>
+  <p>MySQLを最新ではなく5.6で環境構築する機会がありました。
+その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。</p>
 
-<p>いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。</p>
+<h2 id="従来は-with-ldflagsと-with-cppflags指定だった">従来は –with-ldflagsと –with-cppflags指定だった</h2>
 
-<h2 id="書き方">書き方</h2>
-<p>結論から先に書きます。</p>
+<p>自分が知っている方法はldflagsとcppflagsでOpenSSLのヘッダーファイル群のパスとライブラリファイル群のパスを指定する方法でした。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^(?!.\*\&lt;ここに検索ワード\&gt;).+$
+<p>しかし、この方法だとエラーが発生するようになっていました。
+エラーはそのコマンドは存在しないと怒られます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nt">--local</span> build.mysql2 <span class="nt">--with-mysql-config</span><span class="o">=</span>/usr/local/opt/mysql@5.6/bin/mysql_config <span class="nt">--with-ldflags</span><span class="o">=</span><span class="nt">-L</span>/usr/local/opt/openssl/lib <span class="nt">--with-cppflags</span><span class="o">=</span><span class="nt">-I</span>/usr/local/opt/openssl/include
 </code></pre></div></div>
 
-<h2 id="何が起きているのか">何が起きているのか？</h2>
+<h2 id="今回は-with-opt-dir指定">今回は –with-opt-dir指定</h2>
 
-<ul>
-  <li>^ : 行の先頭を表す</li>
-  <li>( : グルーピング</li>
-  <li>?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。</li>
-  <li>.* : 任意の文字列(0文字以上)</li>
-  <li>) : グルーピング</li>
-  <li>.+ : 任意の文字列(1文字以上)</li>
-  <li>$: 行の末尾を表す</li>
-</ul>
+<p>上記オプション指定でエラーが発生すると候補が出て、もしやと思い試したところうまく動きました。
+次の<code class="highlighter-rouge">--with-opt-dir</code>でOpenSSLのパスを指定する方法で試すと動きます。</p>
 
-<h2 id="試してみる">試してみる</h2>
-
-<p>色々と削って動きを見てみることしました。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>あいうえお
-かきくけこ
-あい
-あ
-い
-いう
-
-
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nt">--local</span> build.mysql2 <span class="nt">--with-opt-dir</span><span class="o">=</span>/usr/local/opt/openssl
 </code></pre></div></div>
-
-<p>に対して色々試してみる。</p>
-
-<table>
-  <thead>
-    <tr>
-      <th>正規表現</th>
-      <th>結果</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><code class="highlighter-rouge">^(?!あ)</code></td>
-      <td>「あ」の入っていない文字列と空改行がヒットする</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">^(?!あ)$</code></td>
-      <td>空改行のみヒットする</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">^(?!あい).</code></td>
-      <td>「あい」の入っていない行の1文字目と空改行がヒットする</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">^(?!いう).*</code></td>
-      <td>行の先頭に「いう」の入っていない行と空改行がヒットする</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">^(?!.*いう).*</code></td>
-      <td>行に「いう」の入っていない行と空改行がヒットする</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">^(?!.*いう).+</code></td>
-      <td>行に「いう」の入っていない行がヒットする</td>
-    </tr>
-    <tr>
-      <td><code class="highlighter-rouge">^(?!.*いう)</code></td>
-      <td>行に「いう」の入っていない行の先頭がヒットする</td>
-    </tr>
-  </tbody>
-</table>
-
-<ul>
-  <li>()は()内の文字を1文字として扱う. セットみたいなイメージ.</li>
-  <li>?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる</li>
-  <li>(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの</li>
-</ul>
-
-<p>つまり<strong><code class="highlighter-rouge">^(?!.*いう).+$</code>とは「いう否定セット」の入っていない１文字以上を検索となる</strong></p>
 
 
   <div class="post-content-share">
@@ -250,15 +187,15 @@
       </ul>
     
       <ul>
+        <li><a href="/tools/regexp/regexp-not-expression">正規表現で否定を表現する</a></li>
+      </ul>
+    
+      <ul>
         <li><a href="/ios/how-to-use-ngrok">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</a></li>
       </ul>
     
       <ul>
         <li><a href="/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</a></li>
-      </ul>
-    
-      <ul>
-        <li><a href="/mysql/mysql-find-mycnf">MySQLのmy.cnfの場所を見つける</a></li>
       </ul>
     
   </div>
