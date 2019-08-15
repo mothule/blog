@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-16T02:03:41+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-16T02:34:54+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。
 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。
 しかし、そんなときに便利なのがngrokというサービスです。&lt;/p&gt;
@@ -450,4 +450,303 @@ mysql\&amp;gt; show grants for 'hoge'@'192.168.%';
 
 &lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
 
-&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
+&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法</title><link href="https://blog.mothule.com/mac/how-to-access-localhost-from-ios" rel="alternate" type="text/html" title="iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/mac/how-to-access-localhost-from-ios</id><content type="html" xml:base="https://blog.mothule.com/mac/how-to-access-localhost-from-ios">&lt;p&gt;MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。
+わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。
+今回はその方法についてまとました。&lt;/p&gt;
+
+&lt;h2 id=&quot;localhost接続には条件があります&quot;&gt;localhost接続には条件があります&lt;/h2&gt;
+
+&lt;p&gt;この方法には１つ条件があります。&lt;/p&gt;
+
+&lt;p&gt;MacとiPhoneのネット回線が&lt;strong&gt;同じWi-Fi環境下&lt;/strong&gt;であること&lt;/p&gt;
+
+&lt;p&gt;満たさないと今回説明する方法では実現できません。&lt;/p&gt;
+
+&lt;h2 id=&quot;macのシステム環境設定で共有を設定する&quot;&gt;Macのシステム環境設定で共有を設定する&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-1.png&quot; width=&quot;100%&quot; alt=&quot;システム環境設定の共有画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;上図はシステム環境設定の共有を開いた画面になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;共有を有効にする&quot;&gt;共有を有効にする&lt;/h3&gt;
+&lt;p&gt;まず左側のチェックボックスの&lt;strong&gt;いずれか&lt;/strong&gt;をONにしてください。
+1つだけでいいですし、例えば下図のように実質共有不可能にしても構いません。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-2.png&quot; width=&quot;100%&quot; alt=&quot;共有の有効&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;ローカルホスト名を設定する&quot;&gt;ローカルホスト名を設定する&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-3.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-3.png&quot; width=&quot;100%&quot; alt=&quot;ローカルホスト名の設定&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;例えば上図のようになっていた場合、&lt;strong&gt;ローカルホスト名とは「mothule-mbp.local」&lt;/strong&gt;のことを言います。
+これが実際のアドレス代わりとなり、&lt;code class=&quot;highlighter-rouge&quot;&gt;http://mothule-mbp.local:3000&lt;/code&gt; のようにアクセスするとポート3000に対して &lt;code class=&quot;highlighter-rouge&quot;&gt;GET /&lt;/code&gt; リクエストを投げます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;しかし注意事項があります。&lt;/strong&gt;&lt;br /&gt;
+上記のようにハイフン(&lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;)が入ってると動かないので取り除く必要があります。&lt;/p&gt;
+
+&lt;p&gt;画面右の「編集…」ボタンからローカルホスト名を変更することができるので、ハイフンを除去した名前にしてください。&lt;/p&gt;
+
+&lt;p&gt;これでローカルネットワークにおいてアドレスの準備が済みました。
+しかしこのままでは何も反応しないので、上モノとしてRailsアプリを用意します。
+ちなみにRailsアプリでなくともPHPアプリでも何でもいいです。&lt;/p&gt;
+
+&lt;h2 id=&quot;railsアプリを適当に用意する&quot;&gt;Railsアプリを適当に用意する&lt;/h2&gt;
+
+&lt;p&gt;今回の目的はlocalhostへのアクセスなので、ここは適当なアプリを用意していいです。&lt;/p&gt;
+
+&lt;p&gt;ただし立ち上げ時のオプションに &lt;code class=&quot;highlighter-rouge&quot;&gt;-b&lt;/code&gt; つまりバインディングを次のように指定してください。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/rails s &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 0.0.0.0
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Booting Puma
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Rails 5.2.3 application starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;development
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Run &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;rails server &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more startup options
+Puma starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;single mode...
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Version 3.12.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby 2.6.2-p47&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, codename: Llamas &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;Pajamas
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Min threads: 5, max threads: 5
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Environment: development
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Listening on tcp://0.0.0.0:3000
+Use Ctrl-C to stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;アプリを起動すると &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;ではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;0.0.0.0:3000&lt;/code&gt; でリッスンしました。
+ここで先程設定した&lt;strong&gt;ローカルホスト名&lt;/strong&gt;を使います。
+仮にローカルホスト名が「mothule.local」だとして、&lt;code class=&quot;highlighter-rouge&quot;&gt;http://mothule.local:3000/&lt;/code&gt; にアクセスしてみます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-4.jpg&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-4.jpg&quot; width=&quot;50%&quot; alt=&quot;サーバー起動画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;無事アクセスできました。&lt;/p&gt;
+
+&lt;h3 id=&quot;-b-0000-の意味&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt; の意味&lt;/h3&gt;
+
+&lt;p&gt;これはデフォルトでは &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt; になっており、localhost経路以外でのアクセスはできません。
+しかし 0.0.0.0 を指定することでこれを全公開することになり、同一ネットーワークでかつIPが分かれば、どの端末でも誰でもアクセスできます。
+そのため注意事項としては、公共のWi-Fi環境下ではやらないほうがいいです。&lt;/p&gt;
+
+&lt;h2 id=&quot;ローカルネットワークのipアドレス直でもアクセスできる&quot;&gt;ローカルネットワークのIPアドレス直でもアクセスできる&lt;/h2&gt;
+
+&lt;p&gt;今回はローカルホスト名を使いましたが、そもそも上記で説明したように全公開になっているので、Railsアプリが立ち上がっているPCのIPアドレスでもアクセスできます。
+「http://192.168.11.3:3000」みたいに。 IPは ifconfig で確認できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;safariではなくアプリならats無効化する&quot;&gt;SafariではなくアプリならATS無効化する&lt;/h2&gt;
+
+&lt;p&gt;もしiPhoneアプリからRailsアプリに接続する場合は、 ATSを無効化することでアクセスできます。&lt;/p&gt;
+
+&lt;p&gt;下図はXcodeでInfo.plistを開いた画像です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot; width=&quot;100%&quot; alt=&quot;ATS一部無効化設定&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="ios" /><category term="mac" /><summary type="html">MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。 今回はその方法についてまとました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length" rel="alternate" type="text/html" title="MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">&lt;p&gt;charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。&lt;/p&gt;
+
+&lt;p&gt;ちなみに環境はRails5系 + MySQL5.6系環境で、&lt;code class=&quot;highlighter-rouge&quot;&gt;databases.yml&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;encoding&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;utf8mb4&lt;/code&gt;にすると &lt;code class=&quot;highlighter-rouge&quot;&gt;db:migrate&lt;/code&gt;でエラーが出ます。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Mysql2::Error: Index column size too large. The maximum column size is 767 bytes.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;新しいアプリを用意するたびに忘れ対応方法だけを調べて対応するといった、行きあたりばったりの対応ばかりしてたので、今回メモ兼調査をしてみることにしました。&lt;/p&gt;
+
+&lt;h2 id=&quot;そもそもなぜ767バイトなのか&quot;&gt;そもそもなぜ767バイトなのか？&lt;/h2&gt;
+
+&lt;p&gt;そもそもなんで767バイトなのか気になりますよね。&lt;/p&gt;
+
+&lt;p&gt;まずencodingがutf8の場合1文字は3バイトです。
+しかし、これがutf8mb4だと1文字4バイトになるため、 255 * 4 = 1020バイトとなり、767バイトをオーバーしてしまいます。&lt;/p&gt;
+
+&lt;p&gt;では、255という数字はどこから来てるかというと、
+ActiveRecordのテーブル定義で使う &lt;code class=&quot;highlighter-rouge&quot;&gt;t.string&lt;/code&gt; は MySQLだと &lt;code class=&quot;highlighter-rouge&quot;&gt;VARCHAR(255)&lt;/code&gt; に変換されます。ここの最大数から来てます。&lt;/p&gt;
+
+&lt;p&gt;じゃぁなぜ255なのか？というと
+MySQL(InnoDB)では最大値が767バイト制限がそもそも敷かれています。
+&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.6/ja/innodb-restrictions.html&quot;&gt;公式サイト&lt;/a&gt;ではこう書いてあります。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;デフォルトでは、単一カラムインデックスのインデックスキーを最大で 767 バイトにすることができます。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;続けてこう書いてあります。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;たとえば、UTF-8 文字セットと文字ごとに最大 3 バイトを使用すると仮定すれば、TEXT または VARCHAR カラム上で 255 文字よりも長いカラムプリフィクスインデックスを使用すると、この制限に達する可能性があります。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;つまり ActiveRecordが &lt;code class=&quot;highlighter-rouge&quot;&gt;VARCHAR(255)&lt;/code&gt; にしているのは、この制限を超えないためですね。
+しかし&lt;code class=&quot;highlighter-rouge&quot;&gt;databases.yml&lt;/code&gt; の &lt;code class=&quot;highlighter-rouge&quot;&gt;encoding&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;t.string&lt;/code&gt; に反映されないのは少し不便かと思いますね。
+MySQL(InnoDB) + utf8mb4 で &lt;code class=&quot;highlighter-rouge&quot;&gt;db:migrate&lt;/code&gt; が呼ばれたら、 &lt;code class=&quot;highlighter-rouge&quot;&gt;VARCHCAR(191)&lt;/code&gt;にするかもしくは、警告してくれると便利なのになぁと思いました。&lt;/p&gt;
+
+&lt;h3 id=&quot;原因から見えてくる対処法2つ&quot;&gt;原因から見えてくる対処法2つ&lt;/h3&gt;
+
+&lt;p&gt;原因が分かったところで、解決方法は次の２つが候補として挙げられます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;対象カラムの文字最大数を制限する&lt;/li&gt;
+  &lt;li&gt;カラムのcharsetをutf8に戻す&lt;/li&gt;
+  &lt;li&gt;MySQLのキー最大長を伸ばす&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;対象カラムの文字最大数を制限する&quot;&gt;対象カラムの文字最大数を制限する&lt;/h2&gt;
+&lt;p&gt;1つは目は対象となるカラムに対して文字数を制限することで1020バイトを超えないようにする方法です。
+指定しなければ &lt;code class=&quot;highlighter-rouge&quot;&gt;VARCHAR(255)&lt;/code&gt; なら指定すればいいって考えですね。&lt;/p&gt;
+
+&lt;p&gt;この場合の最大文字数は767 / 4 = 191.75なので、 191文字にすることでエラーを回避できます。
+例えばテーブル&lt;code class=&quot;highlighter-rouge&quot;&gt;users&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt;カラムに対して制限かけたい場合は、コードにするとこんな感じですね。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CreateUsers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Migration&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;change&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;create_table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;limit: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;191&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamps&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;add_index&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;カラムのcharsetをutf8に戻す&quot;&gt;カラムのcharsetをutf8に戻す&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;encoding&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;utf8mb4&lt;/code&gt; にすると全部のテーブル対象になるので、一部カラムだけを &lt;code class=&quot;highlighter-rouge&quot;&gt;utf8&lt;/code&gt; にしようって話です。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CreateUsers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Migration&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;change&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;create_table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;charset: :utf8&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamps&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;add_index&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;mysqlのキー最大長を伸ばす&quot;&gt;MySQLのキー最大長を伸ばす&lt;/h2&gt;
+
+&lt;p&gt;MySQLにはキーの最大長を拡張する機能があります。その機能を使うことでキー最大長を&lt;strong&gt;3072&lt;/strong&gt;バイトまで伸ばすことができます。(つまりutf8mb4だと3072 / 4 = 768文字ですね)&lt;/p&gt;
+
+&lt;h3 id=&quot;innodb_large_prefix-で-3072バイトに伸ばす&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_large_prefix&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;3072&lt;/code&gt;バイトに伸ばす&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_large_prefix&lt;/code&gt;オプションを指定することで、長さの制限が3072バイトに伸ばせます。
+以下&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.6/ja/innodb-restrictions.html&quot;&gt;公式&lt;/a&gt;より&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;innodb_large_prefix 構成オプションを有効にすると、DYNAMIC および COMPRESSED 行フォーマットを使用する InnoDB テーブルで、この長さ制限が 3072 バイトに上昇します。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;しかし、いくつか制限があります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ストレージエンジンが InnoDB であること&lt;/li&gt;
+  &lt;li&gt;行フォーマットが &lt;code class=&quot;highlighter-rouge&quot;&gt;DYNAMIC&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;COMPRESSED&lt;/code&gt; であること&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;まずストレージエンジンについてですが、MySQLのデフォルトストレージエンジンは、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;MySQL5.5&lt;/code&gt;以前は&lt;code class=&quot;highlighter-rouge&quot;&gt;MyISAM&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;MySQL5.5&lt;/code&gt;以上は&lt;code class=&quot;highlighter-rouge&quot;&gt;InnoDB&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;になります。&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.6/ja/innodb-default-se.html&quot;&gt;公式&lt;/a&gt;
+ストレージエンジンの変更方法は今回は省略します。(自分が使うのは5.6だったので)&lt;/p&gt;
+
+&lt;h3 id=&quot;innodb_file_formatをbarracudaにする&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_file_format&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;Barracuda&lt;/code&gt;にする&lt;/h3&gt;
+
+&lt;p&gt;行フォーマットはMySQL5.0.3以降(InnoDB)のデフォルトは &lt;code class=&quot;highlighter-rouge&quot;&gt;COMPACT&lt;/code&gt;になっているので、これを&lt;code class=&quot;highlighter-rouge&quot;&gt;DYNAMIC&lt;/code&gt;か&lt;code class=&quot;highlighter-rouge&quot;&gt;COMPRESSED&lt;/code&gt;へ変える必要があります。
+そして&lt;code class=&quot;highlighter-rouge&quot;&gt;DYNAMIC&lt;/code&gt;か&lt;code class=&quot;highlighter-rouge&quot;&gt;COMPRESSED&lt;/code&gt; に変更するには、ファイルフォーマット(&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_file_format&lt;/code&gt;)が&lt;code class=&quot;highlighter-rouge&quot;&gt;Barracuda&lt;/code&gt;である必要があります。
+なぜなら&lt;code class=&quot;highlighter-rouge&quot;&gt;Antelope&lt;/code&gt;では対応しておらず&lt;code class=&quot;highlighter-rouge&quot;&gt;Barracuda&lt;/code&gt;が対応しているフォーマットだからです。&lt;/p&gt;
+
+&lt;p&gt;これは&lt;a href=&quot;https://dev.mysql.com/doc/refman/5.6/ja/innodb-file-format-enabling.html&quot;&gt;公式&lt;/a&gt;に書いてあります。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;innodb_file_format パラメータは現在、Antelope および Barracuda ファイル形式をサポートしています。テーブル圧縮や新しい DYNAMIC 行フォーマットなどの、Barracuda ファイル形式によってサポートされる機能を利用する新しいテーブルを作成するには、innodb_file_format を BARRACUDA に設定します。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;またデフォルトが &lt;code class=&quot;highlighter-rouge&quot;&gt;Antelope&lt;/code&gt;だということも続けて記載されてあります。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;可能な場合、新しいテーブルには Barracuda 形式を使用することをお勧めしますが、MySQL 5.5 では、異なる MySQL リリースを含むレプリケーション構成との最大限の互換性のために、デフォルトのファイル形式は引き続き Antelope です。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;ちなみに &lt;code class=&quot;highlighter-rouge&quot;&gt;MySQL5.7&lt;/code&gt;以降は &lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_file_format&lt;/code&gt;のデフォルトは&lt;code class=&quot;highlighter-rouge&quot;&gt;Barracuda&lt;/code&gt; になるのでこの変更は不要になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;innodb_file_per_tableを有効にする&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_file_per_table&lt;/code&gt;を有効にする&lt;/h3&gt;
+
+&lt;p&gt;また &lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_file_per_table&lt;/code&gt;オプションがOFFだと &lt;code class=&quot;highlighter-rouge&quot;&gt;Baraccuda&lt;/code&gt;が適用されず &lt;code class=&quot;highlighter-rouge&quot;&gt;Antelope&lt;/code&gt;になるので、このオプションもONにします。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;MySQL5.6.6&lt;/code&gt;以上ならデフォルトONなのでこの記述は不要ですが、パッチバージョンによる変更で気づいてる方は少ないかと思うので、明示的に記述しておいてもいいかと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;つまりまとめると&quot;&gt;つまりまとめると&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MySQL 5.6
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_file_per_table&lt;/code&gt; を有効化して &lt;code class=&quot;highlighter-rouge&quot;&gt;Barracuda&lt;/code&gt;が使える準備&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_file_format&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;Barracuda&lt;/code&gt; に変更して &lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_large_prefix&lt;/code&gt;が使える準備&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_large_prefix&lt;/code&gt; を有効化&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;MySQL 5.7
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;innodb_large_prefix&lt;/code&gt; を有効化&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;となります。&lt;/p&gt;
+
+&lt;h2 id=&quot;オプションをmycnf-で指定する&quot;&gt;オプションをmy.cnf で指定する&lt;/h2&gt;
+
+&lt;p&gt;コマンドラインでMySQL起動時にオプション指定でも可能ですが、&lt;code class=&quot;highlighter-rouge&quot;&gt;my.cnf&lt;/code&gt;の方が楽なのでそっちで指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;my.cnf&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;innodb_file_per_table = 1
+innodb_file_format = Barracuda
+innodb_large_prefix
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;my.cnf&lt;/code&gt;の場所が分からない場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;$ mysql --help | grep my.cnf&lt;/code&gt; でパスが並ぶので好きな場所の &lt;code class=&quot;highlighter-rouge&quot;&gt;my.cnf&lt;/code&gt; に追記してください。&lt;/p&gt;
+
+&lt;p&gt;保存したら MySQLを再起動します。&lt;/p&gt;
+
+&lt;h2 id=&quot;rails側も弄る必要がある&quot;&gt;Rails側も弄る必要がある&lt;/h2&gt;
+
+&lt;p&gt;これで終わりではありません。MySQL側の準備が整っただけであり、テーブル作成する側つまりRails側の設定が必要になります。&lt;/p&gt;
+
+&lt;p&gt;と言ってもテーブルが1つ2つであれば単純です。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;create_table&lt;/code&gt;メソッドに &lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt;で指定するだけです。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;CreateUsers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ActiveRecord&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Migration&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;change&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;create_table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;options: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'ROW_FORMAT=DYNAMIC'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;null: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamps&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+    &lt;span class=&quot;n&quot;&gt;add_index&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ここまで来てテーブルを作成すると、無事エラーは出なくなりutf8mb4として動きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show create table users;
++-------+-----------------------------------------------------------+
+| Table | Create Table                                                                                                                                                                                                                                                                                    |
++-------+-----------------------------------------------------------+
+| users | CREATE TABLE `users` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) DEFAULT NULL,
+  `created_at` datetime NOT NULL,
+  `updated_at` datetime NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `index_users_on_name` (`name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=DYNAMIC |
++-------+-----------------------------------------------------------+
+1 row in set (0.00 sec)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ちなみに既存テーブルの場合はALTER TABLEで変更する必要があります。&lt;/p&gt;
+
+&lt;p&gt;キー長を伸ばす方法は長々と面倒に思えますが、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;my.cnfに3行追加&lt;/li&gt;
+  &lt;li&gt;migrationの各create_tableにoptions追加&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;で解決するのでやってみると思ってたより楽です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
