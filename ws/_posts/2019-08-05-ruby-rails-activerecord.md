@@ -5,6 +5,7 @@ date: 2019-08-05
 categories: ruby rails active-record
 tags: ruby rails active-record
 ---
+
 ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。
 
 ```ruby
@@ -21,8 +22,10 @@ User.pluck(:name)
 
 ## SQLは同じ
 
-```
-(55.2ms) SELECT `users`.`name` FROM `users` ↳ app/controllers/users\_controller.rb:10 (60.7ms) SELECT `users`.`name` FROM `users` ↳ app/controllers/users\_controller.rb:9
+出力されるSQLはどちらも同じでした。
+
+```sql
+SELECT `users`.`name` FROM `users`
 ```
 
 ## 速度は微妙な変化
