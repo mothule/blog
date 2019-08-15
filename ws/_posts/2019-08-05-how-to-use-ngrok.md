@@ -25,7 +25,19 @@ RailsアプリとiOSアプリを同時開発してると、デバッグ機能が
 ### インストール
 
 ```sh
-$ brew cask info ngrok ngrok: latest https://ngrok.com/ /usr/local/Caskroom/ngrok/latest (24.6MB)From: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/ngrok.rb==\> Name ngrok==\> Artifacts ngrok (Binary)
+$ brew cask install ngrok
+```
+
+```sh
+$ brew cask info ngrok
+ngrok: latest
+https://ngrok.com/
+/usr/local/Caskroom/ngrok/latest (24.6MB)
+From: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/ngrok.rb
+==> Name
+ngrok
+==> Artifacts
+ngrok (Binary)
 ```
 
 ### 使い方
