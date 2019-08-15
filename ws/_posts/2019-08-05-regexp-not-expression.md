@@ -4,7 +4,6 @@ description: 正規表現で否定を表現する方法と、それぞれ何が�
 date: 2019-08-05
 categories: tools regexp
 tags: tools regexp
-draft: true
 ---
 常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。
 
