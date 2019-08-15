@@ -21,6 +21,9 @@ cd ws
 JEKYLL_ENV=production bundle exec jekyll build
 cd ..
 
+info "Create docs folder"
+mkdir docs
+
 info "Copy to docs/"
 rsync -auv ws/_site/ docs
 
