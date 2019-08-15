@@ -4,7 +4,7 @@
     <a href="/">Home</a>
     {% for crumb in crumbs offset: 1 %}
       {% if forloop.last %}
-        / {{ crumb | replace:'-', ' ' | remove: '.html' | capitalize }}
+        / {{ page.title }}
       {% else %}
         / <a href="{{baseurl}}/tags#{{ crumb }}">{{ crumb | capitalize }}</a>
       {% endif %}
