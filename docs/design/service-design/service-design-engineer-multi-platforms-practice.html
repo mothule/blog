@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="WebフロントエンドエンジニアとiOSエンジニアとAndroidエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話. 自分はUI/UXデザイナーでもグラフィックデザイナーでもないBtoC向けサービス作るのが好きなエンジニアです。今回会社でクライアントエンジニア向けにプラットフォーム横断するサービスのおいてプラットフォーム横断すべき情報とすべきではない情報について考える機会があったので記事にしました。 みなさんはiOSなのにAndroidみたいなアラート、 AndroidなのにiOSみたいなダイアログボックスをデザイナーから依頼されてアラートやダイアログをフルカスタマイズして実装した経験はないだろうか？" />
+<meta property="og:description" content="WebフロントエンドエンジニアとiOSエンジニアとAndroidエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話. 自分はUI/UXデザイナーでもグラフィックデザイナーでもないBtoC向けサービス作るのが好きなエンジニアです。今回会社でクライアントエンジニア向けにプラットフォーム横断するサービスのおいてプラットフォーム横断すべき情報とすべきではない情報について考える機会があったので記事にしました。 みなさんはiOSなのにAndroidみたいなアラート、 AndroidなのにiOSみたいなダイアログボックスをデザイナーから依頼されてアラートやダイアログをフルカスタマイズして実装した経験はないだろうか？" />
+<link rel="canonical" href="https://blog.mothule.com/design/service-design/service-design-engineer-multi-platforms-practice" />
+<meta property="og:url" content="https://blog.mothule.com/design/service-design/service-design-engineer-multi-platforms-practice" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-01-15T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/design/service-design/service-design-engineer-multi-platforms-practice","headline":"WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話","dateModified":"2019-01-15T00:00:00+09:00","datePublished":"2019-01-15T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/design/service-design/service-design-engineer-multi-platforms-practice"},"description":"WebフロントエンドエンジニアとiOSエンジニアとAndroidエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話. 自分はUI/UXデザイナーでもグラフィックデザイナーでもないBtoC向けサービス作るのが好きなエンジニアです。今回会社でクライアントエンジニア向けにプラットフォーム横断するサービスのおいてプラットフォーム横断すべき情報とすべきではない情報について考える機会があったので記事にしました。 みなさんはiOSなのにAndroidみたいなアラート、 AndroidなのにiOSみたいなダイアログボックスをデザイナーから依頼されてアラートやダイアログをフルカスタマイズして実装した経験はないだろうか？","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="twitter:title" content="WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話">
+    <meta name="twitter:description" content="WebフロントエンドエンジニアとiOSエンジニアとAndroidエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話. 自分はUI/UXデザイナーでもグラフィックデザイナーでもないBtoC向けサービス作るのが好きなエンジニアです。今回会社でクライアントエンジニア向けにプラットフォーム横断するサービスのおいてプラットフォーム横断すべき情報とすべきではない情報について考える機会があったので記事にしました。 みなさんはiOSなのにAndroidみたいなアラート、 AndroidなのにiOSみたいなダイアログボックスをデザイナーから依頼されてアラートやダイアログをフルカスタマイズして実装した経験はないだろうか？">
+    <meta name="twitter:image" content="/assets/images/site-image.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#design">Design</a>
+      
+    
+      
+        / <a href="/tags#service-design">Service-design</a>
+      
+    
+      
+        / WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-1-15</li>
+        
+          <li class="list-inline-item"><a href="/tags#service-design">service-design</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#design">design</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#背景">背景</a></li>
+  <li><a href="#質問">質問</a></li>
+  <li><a href="#例えばアラートと言われたら最初に浮かぶイメージは何ですか">例えばアラートと言われたら最初に浮かぶイメージは何ですか？</a></li>
+  <li><a href="#もう一つエラー通知と言われたら何が浮かびますか">もう一つ、エラー通知と言われたら何が浮かびますか？</a></li>
+  <li><a href="#表現方法はプラットフォーム間で比べると大きく異なるがプラットフォーム内で比べると統一されてる">表現方法はプラットフォーム間で比べると大きく異なるが、プラットフォーム内で比べると統一されてる</a></li>
+  <li><a href="#この前提の上で次の仕様があったら">この前提の上で次の仕様があったら</a>
+    <ul>
+      <li><a href="#補足各プラットフォームの表現方法は一例です">補足：各プラットフォームの表現方法は一例です</a></li>
+    </ul>
+  </li>
+  <li><a href="#もう一度質問web-ios-android-も全く同じダイアログボックスをデザインして使うメリットはあるか">もう一度質問、Web, iOS, Android も全く同じダイアログボックスをデザインして使うメリットはあるか？</a>
+    <ul>
+      <li><a href="#例えば">例えば</a></li>
+      <li><a href="#例2">例2</a></li>
+    </ul>
+  </li>
+  <li><a href="#では仕様満たせばデザインは完全独立していいのか">では仕様満たせばデザインは完全独立していいのか？</a>
+    <ul>
+      <li><a href="#例えばピンクをベースカラーとしたサービスがあったとする">例えばピンクをベースカラーとしたサービスがあったとする</a></li>
+      <li><a href="#もっと簡単に言うと">もっと簡単に言うと</a></li>
+    </ul>
+  </li>
+  <li><a href="#そもそもデザインは誰向けなのか考える">そもそもデザインは誰向けなのか考える</a></li>
+  <li><a href="#だけど仕様はプラットフォーム跨いで合わせないと不便になる">だけど仕様はプラットフォーム跨いで合わせないと不便になる</a></li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+
+  <h2 id="背景">背景</h2>
+<p>自分はUI/UXデザイナーでもグラフィックデザイナーでもないBtoC向けサービス作るのが好きなエンジニアです。
+今回会社でクライアントエンジニア向けにプラットフォーム横断するサービスのおいてプラットフォーム横断すべき情報とすべきではない情報について考える機会があったので記事にしました。</p>
+
+<h2 id="質問">質問</h2>
+<p>みなさんはiOSなのにAndroidみたいなアラート、 AndroidなのにiOSみたいなダイアログボックスをデザイナーから依頼されてアラートやダイアログをフルカスタマイズして実装した経験はないだろうか？</p>
+
+<p>私も経験あります。 あれ意味分からないですよね。 メリットよりデメリットの方が大きいです。</p>
+
+<h2 id="例えばアラートと言われたら最初に浮かぶイメージは何ですか">例えばアラートと言われたら最初に浮かぶイメージは何ですか？</h2>
+<ul>
+  <li>Webフロントエンドエンジニア「ブラウザ上部に表示されるしょっぱいボックス」</li>
+  <li>iOSエンジニア「画面中央にポップアップで出てくるいわゆるダイアログボックス」</li>
+  <li>Androidエンジニア「iOSと同じくダイアログボックス」</li>
+</ul>
+
+<h2 id="もう一つエラー通知と言われたら何が浮かびますか">もう一つ、エラー通知と言われたら何が浮かびますか？</h2>
+<ul>
+  <li>Webフロントエンドエンジニア「エラー文言を帯やフォーム毎の下に表示。またはCSSゴリゴリの自作ダイアログボックス」</li>
+  <li>iOSエンジニア「アラート、もしくはサードパーティの自作ビュー」</li>
+  <li>Androidエンジニア「アラート、もしくはトースト」</li>
+</ul>
+
+<h2 id="表現方法はプラットフォーム間で比べると大きく異なるがプラットフォーム内で比べると統一されてる">表現方法はプラットフォーム間で比べると大きく異なるが、プラットフォーム内で比べると統一されてる</h2>
+<p>このように同じアラートやエラー通知と言ってもプラットフォームによって表現方法は一致しません。
+だけどその表現方法は<strong>プラットフォーム毎のユーザーからしたら標準で見慣れた物です。</strong></p>
+
+<p>つまり <strong>プラットフォーム間と比べるとバラバラだけど、アプリ内の表現方法は一致してますし、他アプリでも見たことある表現方法です。</strong></p>
+
+<h2 id="この前提の上で次の仕様があったら">この前提の上で次の仕様があったら</h2>
+<p><code class="highlighter-rouge">「ユーザーに入力不備エラーを通知する」</code>と仕様があったら、各プラットフォームの表現方法は違います。</p>
+
+<ul>
+  <li>Webフロントエンドエンジニア「入力フォームの下に赤文字で文言を表示する」</li>
+  <li>iOSエンジニア「アラート(UIAlert)、自作ビューで文言を表示する。文字色は通常色だがエラーアイコンがついてたりする」</li>
+  <li>Androidエンジニア「アラート(AlertDialog)、トーストでiOSと似たように表示する」</li>
+</ul>
+
+<p><strong>つまり仕様は3プラットフォーム同じだけど、仕様の表現は3プラットフォーム異なります。</strong></p>
+
+<h3 id="補足各プラットフォームの表現方法は一例です">補足：各プラットフォームの表現方法は一例です</h3>
+<p>例に上げたプラットフォーム毎の表現方法はトレンドやデザインコンセプトによって変わります。
+しかし各アプリ内においては統一されています。</p>
+
+<h2 id="もう一度質問web-ios-android-も全く同じダイアログボックスをデザインして使うメリットはあるか">もう一度質問、Web, iOS, Android も全く同じダイアログボックスをデザインして使うメリットはあるか？</h2>
+<p><strong>ない</strong></p>
+
+<p>たとえあったとしても、そのプラットフォームの標準やトレンドからズレた表現をユーザーに見せることで <strong>ユーザーはその表現への学習コストがかかる</strong></p>
+
+<h3 id="例えば">例えば</h3>
+<p>アラートのYes/Noボタンの配置はプラットフォームによって異なるバージョンが存在します。
+iOSユーザーにAndroid向けのYes/No配置を見せると、iOSユーザーは操作を間違える。
+なぜなら他iOSアプリとYes/No配置が逆だから。
+これはUX最悪です。</p>
+
+<h3 id="例2">例2</h3>
+<p>Macアプリであるアプリだけウィンドウ左上の 「閉じる/最大化/最小化」ボタンが右上にあったらどう思うかと同じです。</p>
+
+<h2 id="では仕様満たせばデザインは完全独立していいのか">では仕様満たせばデザインは完全独立していいのか？</h2>
+<p>サービスデザインにおいてテーマカラーに違反して、サービス全体としての一体感が薄れます。</p>
+
+<h3 id="例えばピンクをベースカラーとしたサービスがあったとする">例えばピンクをベースカラーとしたサービスがあったとする</h3>
+<ul>
+  <li>そこにLPのデザインの全体色が水色だったら？</li>
+  <li>外部のクレカ決済サービス使うためそこへ遷移したら青色だったら？</li>
+</ul>
+
+<h3 id="もっと簡単に言うと">もっと簡単に言うと</h3>
+<p>cookpadのWebアプリ版とiOSアプリ版を見れば分かります。</p>
+
+<h2 id="そもそもデザインは誰向けなのか考える">そもそもデザインは誰向けなのか考える</h2>
+<ul>
+  <li>AndroidとiOSのデザインをあわせた所で、Androidアプリを使うユーザーからしたらiOSのデザインが合わさってる恩恵は受けません。</li>
+  <li>WebとiOSのデザインをあわせた所で、iOSユーザーは見慣れない操作を体験しなければいけません。</li>
+  <li>PC版WebとiOSデザインをあわせた所で、ポインティングデバイスが違いすぎてUXは最悪です。</li>
+</ul>
+
+<p><strong>各プラットフォームのユーザーに快適で見慣れて受け入れやすいデザインにしていくべきです。</strong></p>
+
+<h2 id="だけど仕様はプラットフォーム跨いで合わせないと不便になる">だけど仕様はプラットフォーム跨いで合わせないと不便になる</h2>
+<p>WebのSEO強化でユーザー集客し、アプリ版へ導線ひく方法は一般的だと思います。</p>
+
+<p>「Webで使ってみて便利だからアプリも使ってみよう」と思ったユーザーがアプリを使ったところ
+「Webで使ってた機能がアプリではない」「Webで覚えた用語がアプリじゃ全然違う用語で使いにくい」
+といった残念なUXになります。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>上記を整理すると</p>
+
+<ul>
+  <li>全体のデザインガイドラインは全プラットフォーム準拠すべき</li>
+  <li>仕様やUXの表現はプラットフォーム毎に適切でかつ統一した方法にすべき</li>
+  <li>仕様やUXはプラットフォーム横断で合わせるべき（ただし独占仕様などは例外）</li>
+</ul>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ruby/rails/active-record/ruby-rails-activerecord">ActiveRecordでpluckとselectしてpluckに変化はあるか？</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">Mac上でRailsとMySQLのサーバー分けたい</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/tools/regexp/regexp-not-expression">正規表現で否定を表現する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/how-to-use-ngrok">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#rxswift-scheduler">rxswift-scheduler</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
