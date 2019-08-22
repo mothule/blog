@@ -4,6 +4,7 @@ description: ActiveRecordでpluckとselectしてpluckに変化はあるか？
 date: 2019-08-05
 categories: tools git tig
 tags: tools git tig
+draft: true
 ---
 
 gitツールtigを使って色々できるけど、普段は同じような操作しかしないので、いざ必要になると操作方法を忘れてしまうので、メモ代わりに集めていくことにしました。
