@@ -4,7 +4,6 @@ description: Webアーキテクチャとモバイルアーキテクチャをご�
 date: 2016-10-18
 categories: notebook
 tags: program-design 
-draft: true
 ---
 ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。
 私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。

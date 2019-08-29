@@ -4,7 +4,6 @@ description: readlineの更新でエラーが出るようになったらbrew swi
 date: 2019-07-23
 categories: mac homebrew
 tags: mac homebrew
-draft: true
 ---
 以前[tigが動かなくなる件]({% post_url 2019-07-22-fix-tig-lib-not-loaded %})をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。
 

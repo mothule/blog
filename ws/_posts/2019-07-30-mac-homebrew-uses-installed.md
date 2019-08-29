@@ -4,7 +4,6 @@ description: 長いことHomebrewに色々とインストールしてると、�
 date: 2019-07-30
 categories: mac homebrew
 tags: mac homebrew
-draft: true
 ---
 長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？
 `$ brew list -l` で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、

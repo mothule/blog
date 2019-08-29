@@ -4,7 +4,6 @@ description: ActiveRecordでテーブルの存在を確認する2つの方法と
 date: 2019-07-22
 categories: ruby rails active-record
 tags: ruby rails active-record
-draft: true
 ---
 あまり頻度は高くないので忘れることが多いメソッドです。
 

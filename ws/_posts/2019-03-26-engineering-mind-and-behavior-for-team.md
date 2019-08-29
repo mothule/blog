@@ -6,7 +6,6 @@ categories: notebook
 tags: notebook
 image:
   path: /assets/images/2019-03-26-engineering-mind-and-behavior-for-team.png
-draft: true
 ---
 普段プログラマという仕事をしつつそれ以外のことをしてることもあり、それの一部について考えまとめたもの。
 

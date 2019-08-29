@@ -4,7 +4,6 @@ description: MacからMacへscpを使う方法
 date: 2019-08-02
 categories: mac
 tags: mac
-draft: true
 ---
 MacからLinuxに対してscpを使うことをよくあるのですが、Macに対してscpを使おうとしたときに躓いたのでまとめました。
 ちなみに送信元はMacでなくとも何でもいいです。

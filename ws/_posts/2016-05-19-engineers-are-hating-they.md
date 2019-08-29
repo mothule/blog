@@ -4,7 +4,6 @@ description: エンジニアの心を折るのは容易いエンジニアって�
 date: 2016-05-19
 categories: notebook
 tags: notebook
-draft: true
 ---
 
 エンジニアって職業柄、仕様を曖昧にすることができず、全容を知る必要があります。

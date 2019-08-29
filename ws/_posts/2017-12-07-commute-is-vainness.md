@@ -4,7 +4,6 @@ description: 年収500万の人は通勤で毎年23万円分の時間を使っ�
 date: 2017-12-07
 categories: notebook remote-work
 tags: notebook remote-work
-draft: true
 ---
 
 例えば次の都内にいそうなモデルケースの年収をもとに、通勤コストを求めてみました。
