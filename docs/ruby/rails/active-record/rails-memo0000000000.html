@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>ActiveRecordでpluckとselectしてpluckに変化はあるか？ - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/active-record/rails-memo0000000000" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/active-record/rails-memo0000000000" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ruby/rails/active-record/rails-memo0000000000","headline":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","dateModified":"2019-08-05T00:00:00+09:00","datePublished":"2019-08-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/rails-memo0000000000"},"description":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+    <meta name="twitter:description" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+    <meta name="twitter:image" content="/assets/images/site-image.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ruby">Ruby</a>
+      
+    
+      
+        / <a href="/tags#rails">Rails</a>
+      
+    
+      
+        / <a href="/tags#active-record">Active-record</a>
+      
+    
+      
+        / ActiveRecordでpluckとselectしてpluckに変化はあるか？
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>ActiveRecordでpluckとselectしてpluckに変化はあるか？</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-8-5</li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#active-record">active-record</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#サーバーセキュリティ対策">サーバーセキュリティ対策</a></li>
+  <li><a href="#postgresqlのinformation表示">PostgreSQLのInformation表示</a>
+      - {:.} <a href="#postgresqlの消費容量を確認する方法">PostgreSQLの消費容量を確認する方法</a>
+    <ul>
+      <li><a href="#監視">監視</a>
+        <ul>
+          <li><a href="#種類">種類</a></li>
+          <li><a href="#人気なサービス">人気なサービス</a>
+            <ul>
+              <li><a href="#エラー監視系">エラー監視系</a></li>
+              <li><a href="#サーバ監視系">サーバ監視系</a></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li><a href="#zabbix">Zabbix</a></li>
+      <li><a href="#mackerel">Mackerel</a></li>
+      <li><a href="#new-relic">New Relic</a></li>
+    </ul>
+  </li>
+  <li><a href="#ssh-メモ">ssh メモ</a>
+    <ul>
+      <li><a href="#ssh-フォルダ内の説明">~/.ssh フォルダ内の説明</a></li>
+      <li><a href="#config">config</a></li>
+      <li><a href="#id_rsa--id_rsapub">id_rsa / id_rsa.pub</a></li>
+      <li><a href="#known_hosts">known_hosts</a></li>
+      <li><a href="#are-you-sure-you-want-to-continue-connecting-yesno-をスキップ">Are you sure you want to continue connecting (yes/no)? をスキップ</a></li>
+      <li><a href="#permission-denied-publickey">Permission denied (publickey).</a></li>
+    </ul>
+  </li>
+</ul>
+  </div>
+
+  <h1 id="サーバーセキュリティ対策">サーバーセキュリティ対策</h1>
+
+<ul>
+  <li>sshでのrootログインを無効化</li>
+  <li>sshログインを公開鍵認証方式に変える</li>
+  <li>yum-cron で 定期的な yum update</li>
+  <li>firewalld で不要なポートを閉じる</li>
+  <li>SSHのデフォルトポートを変更する</li>
+</ul>
+
+<h1 id="postgresqlのinformation表示">PostgreSQLのInformation表示</h1>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>heroku pg:info <span class="nt">--app</span> kawakatei-heroku
+</code></pre></div></div>
+
+<p>テーブル一覧表示</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="se">\d</span>t<span class="p">;</span>
+</code></pre></div></div>
+
+<h3 id="postgresqlの消費容量を確認する方法">PostgreSQLの消費容量を確認する方法</h3>
+<p>テーブルのブロックサイズを確認</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># show block_size;</span>
+</code></pre></div></div>
+
+<p>テーブルのページ数を表示</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># SELECT relname, relfilenode, relpages from pg_class;</span>
+</code></pre></div></div>
+<p>relpagesの値 * ブロックサイズ</p>
+
+<h2 id="監視">監視</h2>
+
+<h3 id="種類">種類</h3>
+<ul>
+  <li>アラート検知</li>
+  <li>
+    <p>モニタリング</p>
+  </li>
+  <li>死活監視
+    <ul>
+      <li>故障やトラブルにいち早く気づくための仕組み</li>
+    </ul>
+  </li>
+  <li>性能監視
+    <ul>
+      <li>サーバリソースの時系列での推移を知る仕組み</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="人気なサービス">人気なサービス</h3>
+
+<h4 id="エラー監視系">エラー監視系</h4>
+<ul>
+  <li>Bugsnag
+    <ul>
+      <li>gem入れてgenerator叩いてinitializer生成</li>
+    </ul>
+  </li>
+  <li>Honeybadger</li>
+  <li>Airbrake</li>
+</ul>
+
+<h4 id="サーバ監視系">サーバ監視系</h4>
+<ul>
+  <li>Mackerel
+    <ul>
+      <li>有料</li>
+    </ul>
+  </li>
+  <li>New Relic
+    <ul>
+      <li>パフォーマンス監視ツール</li>
+      <li>無料プランは制限あり</li>
+    </ul>
+  </li>
+  <li>Datadog
+    <ul>
+      <li>無料プランあり</li>
+    </ul>
+  </li>
+  <li>Nagios</li>
+  <li>Zabbix
+    <ul>
+      <li>死活監視</li>
+    </ul>
+  </li>
+  <li>Munin
+    <ul>
+      <li>性能監視</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="zabbix">Zabbix</h2>
+
+<p>サーバー、ネットワーク、アプリケーションを集中監視するOSS総合監視ツール
+監視、障害検知、通知機能を備えてる。
+監視とグラフ作成の両方行えるツール</p>
+
+<p>アクティブ監視
+監視対象サーバにエージェントがインストールされ、各種リソースや性能を監視サーバに報告する機能.
+監視対象サーバーが増えてもポーリングによるボトルネックは解決できる</p>
+
+<h2 id="mackerel">Mackerel</h2>
+
+<h2 id="new-relic">New Relic</h2>
+
+<p>Linux 基礎コマンド</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>useradd &lt;user name&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>passwd <span class="o">[</span>user name]
+</code></pre></div></div>
+<p>ユーザ名未指定だと自分のパスワード変更する。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> /etc/passwd
+</code></pre></div></div>
+<p>ユーザー情報が1行1ユーザーで格納される。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id &lt;user name&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>userdel <span class="o">[</span><span class="nt">-r</span><span class="o">]</span> &lt;user name&gt;
+</code></pre></div></div>
+<p>-r: ホームディレクトリごと削除する</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>groupadd &lt;group name&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>usermod <span class="nt">-G</span> &lt;group name&gt; &lt;user_name&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>groupdel &lt;group name&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">cat</span> /etc/group
+</code></pre></div></div>
+<p>グループ情報が1グループ1行で格納される。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chown &lt;user name&gt; &lt;file or directory&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>chgrp &lt;group name&gt; &lt;file or directory&gt;
+</code></pre></div></div>
+
+<p>変数をエクスポートすることで定義したシェルから起動したシェルや実行したコマンドから変数を参照できるようになる。
+これを環境変数と呼ぶ。</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">var2</span><span class="o">=</span>cdn
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>locate &lt;file pattern&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps
+</code></pre></div></div>
+<p>|オプション|説明|
+|—|—|
+|a|全ユーザーのプロセス表示|
+|u|ユーザー名表示|
+|x|全端末のプロセス表示|</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps aux | head <span class="nt">-n</span> 5
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1  19232  1500 ?        Ss   12:54   0:00 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    12:54   0:00 <span class="o">[</span>kthreadd]
+root         3  0.0  0.0      0     0 ?        S    12:54   0:00 <span class="o">[</span>migration/0]
+root         4  0.0  0.0      0     0 ?        S    12:54   0:00 <span class="o">[</span>ksoftirqd/0]
+</code></pre></div></div>
+
+<p>プロセスの親子関係を表示</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mothule@centos ~]<span class="nv">$ </span>pstree
+init─┬─auditd───<span class="o">{</span>auditd<span class="o">}</span>
+     ├─crond
+     ├─dhclient
+     ├─login───bash
+     ├─master─┬─pickup
+     │        └─qmgr
+     ├─5<span class="k">*</span><span class="o">[</span>mingetty]
+     ├─rsyslogd───3<span class="k">*</span><span class="o">[{</span>rsyslogd<span class="o">}]</span>
+     ├─sshd───sshd───sshd───bash─┬─less
+     │                           └─pstree
+     └─udevd───2<span class="k">*</span><span class="o">[</span>udevd]
+</code></pre></div></div>
+
+<p>プロセスに送るシグナル表</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名</th>
+      <th>動作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>9</td>
+      <td>KILL</td>
+      <td>強制終了</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>TERM</td>
+      <td>終了(デフォルト)</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>COUNT</td>
+      <td>再開</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>STOP</td>
+      <td>一時停止</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>シグナル送信は kill コマンドを使う</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">kill </span>28000
+</code></pre></div></div>
+
+<p>IDではなくシグナル名を指定する場合は</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-s</span> TERM 28000
+</code></pre></div></div>
+
+<p>プロセスIDではなくプロセス名でシグナル送信したい場合は</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>killall <span class="nt">-15</span> xclock
+</code></pre></div></div>
+<p>のようにする -15 は シグナルID</p>
+
+<p>ユーザー側の処理単位をジョブ
+1ジョブで複数プロセスが走るので 1ジョブ=1プロセスではない
+実行中のジョブ一覧</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">jobs</span>
+</code></pre></div></div>
+
+<p>コマンドの末尾に &amp; をつけるとバックグラウンドで実行する</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>less hoge.txt &amp;
+</code></pre></div></div>
+
+<p>Ctrl+Z でジョブは一時停止状態になる
+一時停止状態のジョブを再開するには
+fg [%ジョブID]</p>
+
+<p>バックグラウンドで再開するには
+bg [%ジョブID]</p>
+
+<p>/etc/hosts にはIPアドレスとホスト名の対応が記述する
+/etc/resolv.conf には利用するDNSサーバやドメイン名を指定する
+/etc/sysconfig/network にはネットワークの基本情報を設定する</p>
+
+<p>公開鍵認証方式でsshログイン
+公開鍵は接続先
+秘密鍵は接続元
+.sshのパーミッションは700
+.ssh/authorized_keys は 600
+公開鍵は
+cat ~/.ssh/id_rsa.pub » ~/.ssh/authorized_keys
+で登録
+rm ~/.ssh/id_rsa.pub で不要になった元の公開鍵を削除</p>
+
+<p>パスワード認証を禁止する
+/etc/ssh/sshd_config を vimで編集する
+PasswordAuthentication no
+PubkeyAuthentication yes
+にする</p>
+
+<p>scp でクライアントからサーバーへ転送する方法
+scp <コピー元> <コピー先>
+リモート先は [サーバーのユーザーID][サーバーアドレス]:<パス> で表す</パス></コピー先></コピー元></p>
+
+<h1 id="ssh-メモ">ssh メモ</h1>
+
+<h2 id="ssh-フォルダ内の説明">~/.ssh フォルダ内の説明</h2>
+
+<ul>
+  <li>config</li>
+  <li>id_rsa</li>
+  <li>id_rsa.pub</li>
+  <li>know_hosts</li>
+</ul>
+
+<h2 id="config">config</h2>
+<p>sshクライアントの設定ファイル。
+接続先情報が一覧化されている。
+ここで定義しておくことで ssh コマンドのオプション省略することも可能</p>
+
+<h2 id="id_rsa--id_rsapub">id_rsa / id_rsa.pub</h2>
+<p><code class="highlighter-rouge">ssh-keygen</code> で生成した秘密鍵と公開鍵</p>
+
+<h2 id="known_hosts">known_hosts</h2>
+<p>接続経験のあるサーバのSSHサーバ証明書が格納される。</p>
+
+<h2 id="are-you-sure-you-want-to-continue-connecting-yesno-をスキップ">Are you sure you want to continue connecting (yes/no)? をスキップ</h2>
+<p>~/.ssh/config の接続先ホストに <code class="highlighter-rouge">StrictHostKeyChecking no</code> を設定することでスキップできる</p>
+
+<h2 id="permission-denied-publickey">Permission denied (publickey).</h2>
+<p>サーバー側とクライアント側の公開鍵と秘密鍵が一致していないことがよくある原因。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">CocoaPodsをrbenv+bundlerで管理する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/tools/git/git-merge-p4merge">p4mergeでgit mergeの衝突を解決する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rails/rack/rails-extension">RackとRack Middlewareを知ることでRailsの一部仕組みを理解する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/swift/rxswift/ios-swift-rxswift-scheduler-basic">RxSwift Schedulerの一覧と使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/swift/rxswift/ios-swift-rxswfit-basic">RxSwiftの基本を動かして理解する</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#rxswift-scheduler">rxswift-scheduler</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
