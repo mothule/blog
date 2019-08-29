@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>CocoaPodsをrbenv+bundlerで管理する - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="CocoaPodsをrbenv+bundlerで管理する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。" />
+<meta property="og:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
+<meta property="og:url" content="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-08-30T00:00:00+09:00" />
+<meta name="twitter:card" content="summary" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler","headline":"CocoaPodsをrbenv+bundlerで管理する","dateModified":"2019-08-30T00:00:00+09:00","datePublished":"2019-08-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler"},"description":"iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+    <meta name="twitter:title" content="CocoaPodsをrbenv+bundlerで管理する">
+    <meta name="twitter:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず `$ gem install cocoapods` で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。">
+    <meta name="twitter:image" content="/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="/assets/css/styles.css">
+    <link rel="stylesheet" href="/assets/css/syntax.css">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#cocoapods">Cocoapods</a>
+      
+    
+      
+        / CocoaPodsをrbenv+bundlerで管理する
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" alt="CocoaPodsをrbenv+bundlerで管理する">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>CocoaPodsをrbenv+bundlerで管理する</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-8-30</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#cocoapods">cocoapods</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#bundler">bundler</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#結論">結論</a></li>
+  <li><a href="#rbenvでruby管理してgem管理はbundler">rbenvでRuby管理してgem管理はbundler</a>
+    <ul>
+      <li><a href="#gemとはrubyが提供するライブラリ単位">gemとはRubyが提供するライブラリ単位</a></li>
+      <li><a href="#rubyバージョン毎にgemがインストールされている">Rubyバージョン毎にgemがインストールされている</a></li>
+    </ul>
+  </li>
+  <li><a href="#rubyバージョン管理はrbenv">Rubyバージョン管理はrbenv</a></li>
+  <li><a href="#bundler-で-cocoapodsを動かす">bundler で CocoaPodsを動かす</a>
+    <ul>
+      <li><a href="#bundlerでcocoapodsをインストールする">bundlerでCocoaPodsをインストールする</a></li>
+      <li><a href="#bundlerでcocoapodsを動かす">bundlerでCocoaPodsを動かす</a></li>
+    </ul>
+  </li>
+  <li><a href="#rbenv-に-binstubs-をインストール">rbenv に binstubs をインストール</a></li>
+  <li><a href="#cocoapodsのバージョンアップはbundler操作">CocoaPodsのバージョンアップはbundler操作</a></li>
+  <li><a href="#rubyバージョンはrbenv操作">Rubyバージョンはrbenv操作</a></li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+
+  <p>iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
+CocoaPods単体であれば特に考えず <code class="highlighter-rouge">$ gem install cocoapods</code> で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、
+fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</p>
+
+<p>なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、
+チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては
+人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。</p>
+
+<p>このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。</p>
+
+<h2 id="結論">結論</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>xcode-select <span class="nt">--install</span>
+<span class="nv">$ </span>brew install rbenv ruby-build
+rbenv install <span class="nt">--list</span> でインストールしたいバージョンを決める
+<span class="nv">$ </span>rbenv install <span class="o">[</span>Ruby version]
+<span class="nv">$ </span>gem install bundler
+<span class="nv">$ </span>bundle init
+Gemfileに gem <span class="s1">'cocoapods'</span> を追加.バージョン指定はCocoaPodsと同じ.
+<span class="nv">$ </span>git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
+<span class="nv">$ </span>bundle install <span class="nt">--path</span><span class="o">=</span>vendor/bundle <span class="nt">--binstubs</span><span class="o">=</span>vendor/bin
+<span class="nv">$ </span>pod install
+</code></pre></div></div>
+
+<h2 id="rbenvでruby管理してgem管理はbundler">rbenvでRuby管理してgem管理はbundler</h2>
+
+<p>bundlerの前にRubyバージョンを管理するためにrbenvを入れて、RubyバージョンとbundlerバージョンとCocoaPodsバージョンをあわせます。</p>
+
+<ul>
+  <li>rbenv が Ruby 管理</li>
+  <li>Ruby の bundler gem が CocoaPods gem 管理</li>
+</ul>
+
+<p>って感じです。 これだけだと分からないので、一つずつ説明していきます。</p>
+
+<h3 id="gemとはrubyが提供するライブラリ単位">gemとはRubyが提供するライブラリ単位</h3>
+
+<p>gemはRubyが提供するライブラリの単位です。
+これはRubyのバージョン毎にgemが管理されています。
+例えば Ruby 2.3のgem一覧と Ruby 2.6のgem一覧はインストールされているgemは異なります。</p>
+
+<p>現在のRubyのバージョンは <code class="highlighter-rouge">$ ruby -v</code> で確認できます。
+そして、このバージョンにインストールされているgem一覧は、<code class="highlighter-rouge">$ gem list</code> で確認できます。
+例えば自分が作っているアプリの環境は次のような感じです。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ruby <span class="nt">-v</span>
+ruby 2.5.3p105 <span class="o">(</span>2018-10-18 revision 65156<span class="o">)</span> <span class="o">[</span>x86_64-darwin18]
+
+<span class="nv">$ </span>gem list
+
+<span class="k">***</span> LOCAL GEMS <span class="k">***</span>
+
+bigdecimal <span class="o">(</span>default: 1.3.4<span class="o">)</span>
+bundler <span class="o">(</span>1.17.3<span class="o">)</span>
+cmath <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+csv <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+date <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+dbm <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+did_you_mean <span class="o">(</span>1.2.0<span class="o">)</span>
+etc <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+fcntl <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+fiddle <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+fileutils <span class="o">(</span>default: 1.0.2<span class="o">)</span>
+gdbm <span class="o">(</span>default: 2.0.0<span class="o">)</span>
+io-console <span class="o">(</span>default: 0.4.6<span class="o">)</span>
+ipaddr <span class="o">(</span>default: 1.2.0<span class="o">)</span>
+json <span class="o">(</span>default: 2.1.0<span class="o">)</span>
+minitest <span class="o">(</span>5.10.3<span class="o">)</span>
+net-telnet <span class="o">(</span>0.1.1<span class="o">)</span>
+openssl <span class="o">(</span>default: 2.1.2<span class="o">)</span>
+power_assert <span class="o">(</span>1.1.1<span class="o">)</span>
+psych <span class="o">(</span>default: 3.0.2<span class="o">)</span>
+rake <span class="o">(</span>12.3.0<span class="o">)</span>
+rdoc <span class="o">(</span>default: 6.0.1<span class="o">)</span>
+scanf <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+sdbm <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+stringio <span class="o">(</span>default: 0.0.1<span class="o">)</span>
+strscan <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+test-unit <span class="o">(</span>3.2.7<span class="o">)</span>
+webrick <span class="o">(</span>default: 1.4.2<span class="o">)</span>
+xmlrpc <span class="o">(</span>0.3.0<span class="o">)</span>
+zlib <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+</code></pre></div></div>
+
+<p>上記見ると分かるように<code class="highlighter-rouge">bundler</code>も一つのgemです。
+このbundlerを使うことで他のgemのバージョン管理を行うことができます。</p>
+
+<h3 id="rubyバージョン毎にgemがインストールされている">Rubyバージョン毎にgemがインストールされている</h3>
+<p><strong>つまりRubyバージョンも合わせる必要があります。</strong></p>
+
+<p>例えばAさんが環境構築したとき<code class="highlighter-rouge">Ruby</code>バージョンは<code class="highlighter-rouge">2.0</code>でした。
+<code class="highlighter-rouge">CocoaPods</code>は<code class="highlighter-rouge">Ruby 2.0</code>の構文で書かれたバージョンをインストールできるようになります。
+2年後,Bさんがチーム参画し、環境構築したら<code class="highlighter-rouge">Ruby</code>バージョンは<code class="highlighter-rouge">2.5</code>でした。
+<code class="highlighter-rouge">CocoaPods</code>は<code class="highlighter-rouge">Ruby 2.5</code>の構文で書かれたバージョンをインストールできるようになります。
+その結果、Aさんの<code class="highlighter-rouge">CocoaPods</code>の最新バージョン<code class="highlighter-rouge">1.2</code>ですが、Bさんの<code class="highlighter-rouge">CocoaPods</code>は最新バージョンは<code class="highlighter-rouge">2.1</code>でした。
+Bさんは<code class="highlighter-rouge">CocoaPods</code>をAさんと同じ<code class="highlighter-rouge">1.2</code>に合わせたくとも、<code class="highlighter-rouge">Ruby 2.5</code>では動かず…なんてことが起こりえます。</p>
+
+<p><strong>そのため、Rubyバージョンをあわせておく必要があります。</strong></p>
+
+<p>※↑例なので、バージョンや互換性は適当です。</p>
+
+<h2 id="rubyバージョン管理はrbenv">Rubyバージョン管理はrbenv</h2>
+
+<p><code class="highlighter-rouge">rbenv</code>は<code class="highlighter-rouge">Homebrew</code>でインストールできます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install rbenv ruby-build
+</code></pre></div></div>
+<p>(もしxcrunとかでエラーが出るようであれば <code class="highlighter-rouge">$ xcode-select --instal</code> を実行して xcodeパッケージツールのインストールをしてみてください。)</p>
+
+<p><code class="highlighter-rouge">$ rbenv versions</code>を実行すると、今rbenvが管理してるRubyのバージョン一覧が表示され、 <code class="highlighter-rouge">*</code> がつくバージョンが現在のRubyバージョンになります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv versions
+  system
+  2.1.10
+  2.1.2
+  2.2.1
+<span class="k">*</span> 2.3.0 <span class="o">(</span><span class="nb">set </span>by /Users/mothule/.rbenv/version<span class="o">)</span>
+  2.3.6
+  2.3.7
+  2.4.4
+  2.5.1
+  2.5.3
+  2.6.2
+</code></pre></div></div>
+<p>これをiOSプロジェクトだけ2.5.3にしたい場合は、次のコマンドを実行して生成されたファイルをiOSプロジェクト配下(git管理下)においてください。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv <span class="nb">local </span>2.5.3
+</code></pre></div></div>
+<p>このコマンドを実行すると <code class="highlighter-rouge">.ruby-version</code>というファイルが生成され、もう一度Rubyバージョンを確認すると次のようになります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv versions
+  system
+  2.1.10
+  2.1.2
+  2.2.1
+  2.3.0
+  2.3.6
+  2.3.7
+  2.4.4
+  2.5.1
+<span class="k">*</span> 2.5.3 <span class="o">(</span><span class="nb">set </span>by /Users/mothule/workspace/ios-project/.ruby-version<span class="o">)</span>
+  2.6.2
+</code></pre></div></div>
+<p>このようにRubyバージョン2.5.3が動くようになっています。 これは <code class="highlighter-rouge">.ruby-version</code>でバージョン指定されているためです。
+ちなみに <code class="highlighter-rouge">.ruby-version</code>は <code class="highlighter-rouge">2.5.3</code> と書いてあるだけです。
+<strong>この <code class="highlighter-rouge">.ruby-version</code>をgit管理し、各開発環境がrbenvを使えば、Rubyバージョンを合わせることができます。</strong></p>
+
+<h2 id="bundler-で-cocoapodsを動かす">bundler で CocoaPodsを動かす</h2>
+
+<h3 id="bundlerでcocoapodsをインストールする">bundlerでCocoaPodsをインストールする</h3>
+
+<p><code class="highlighter-rouge">$ gem install cocoapods</code>ではなく<code class="highlighter-rouge">bundle install</code>で<code class="highlighter-rouge">cocoapods</code>をインストールします。
+そのためにbundlerが管理するファイル<code class="highlighter-rouge">Gemfile</code>を<code class="highlighter-rouge">$ bundle init</code>で作ります。
+エディタで<code class="highlighter-rouge">Gemfile</code>を開くと次のようにgemを追加します。</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s2">"cocoapods"</span>
+</code></pre></div></div>
+<p>保存後に <code class="highlighter-rouge">$ bunlder install --path=vendor/bundle</code>を実行すると, <code class="highlighter-rouge">cocoapods</code>がインストールされます。
+<code class="highlighter-rouge">--path=vendor/bundle</code>とはgemのインストール場所を示すオプションで、iosプロジェクト配下にvendor/bundleフォルダを作成し、その中に <code class="highlighter-rouge">cocoapods</code> のコードがインストールされます。
+この <code class="highlighter-rouge">vendor/</code> は Gemfileがあれば再現可能なので git管理下から外しても構いません。</p>
+
+<h3 id="bundlerでcocoapodsを動かす">bundlerでCocoaPodsを動かす</h3>
+
+<p>bundler配下のgemを動かすには<code class="highlighter-rouge">$ bunlder exec command</code>のフォーマットに従わなくてはなりません。
+例えば <code class="highlighter-rouge">pod install</code>のインストールを実行するには、 <code class="highlighter-rouge">$ bundle exec pod install</code> となります。
+これは少し手間ですね。次のプラグインをインストールすることで <code class="highlighter-rouge">bundle exec</code>の部分を省くことができます。</p>
+
+<h2 id="rbenv-に-binstubs-をインストール">rbenv に binstubs をインストール</h2>
+<p>直接CocoaPodsをインストールした場合は、パスが通っているため <code class="highlighter-rouge">pod install</code>のように実行することができますが、
+<code class="highlighter-rouge">bundler</code>によってインストールした場合は、パスが通っていないため <code class="highlighter-rouge">pod install</code> を実行しても違うCocoaPodsのgemが動いてしまいます。(直接インストールしたCocoaPodsが動く)
+これをパスを通してくれるようになるプラグインが rbenv-binstubsです。<code class="highlighter-rouge">bundle exec</code>が不要になります。
+プラグインインストールは次の場所にgit cloneで配置するだけです。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
+</code></pre></div></div>
+
+<p>また<code class="highlighter-rouge">bundle install</code> にオプションを追加して再実行します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle install <span class="nt">--path</span><span class="o">=</span>vendor/bundle <span class="nt">--binstubs</span><span class="o">=</span>vendor/bin
+</code></pre></div></div>
+
+<p>こうすることで、 <code class="highlighter-rouge">bundler</code> によってインストールgemにもパスが通るようになるため<code class="highlighter-rouge">pod install</code>だけで、bundler管轄のcocoapodsが呼べるようになります。</p>
+
+<h2 id="cocoapodsのバージョンアップはbundler操作">CocoaPodsのバージョンアップはbundler操作</h2>
+<p>bundlerによって管理されたcocoapodsをバージョンアップする場合は、
+<code class="highlighter-rouge">$ bundler update</code>で管轄gemをバージョン指定ルールに従った最新版にアップデートします。</p>
+
+<h2 id="rubyバージョンはrbenv操作">Rubyバージョンはrbenv操作</h2>
+<p>CocoaPodsや別ソフトウェアによりRubyバージョンを上げる必要がある場合は、 rbenv で新しくインストールし <code class="highlighter-rouge">.ruby-version</code>を変更することでバージョンを変えることができます。
+Rubyバージョンを更新した場合は、 <code class="highlighter-rouge">$ gem install bunlder</code> で <code class="highlighter-rouge">bundler</code> のインストール後に <code class="highlighter-rouge">$ bundle install</code>で新しいRubyバージョンでのbundlerとcocoapodsのインストールが必要になります。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
+今回のような開発環境整備に役立てることができるようになります。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/tools/git/git-merge-p4merge">p4mergeでgit mergeの衝突を解決する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rails/rack/rails-extension">RackとRack Middlewareを知ることでRailsの一部仕組みを理解する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/swift/rxswift/ios-swift-rxswift-scheduler-basic">RxSwift Schedulerの一覧と使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/swift/rxswift/ios-swift-rxswfit-basic">RxSwiftの基本を動かして理解する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/carthage/ios-carthage">Carthage逆引き集</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#rxswift-scheduler">rxswift-scheduler</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

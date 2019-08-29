@@ -1,219 +1,190 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-16T17:22:06+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-08-30T00:37:43+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CocoaPodsをrbenv+bundlerで管理する</title><link href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" rel="alternate" type="text/html" title="CocoaPodsをrbenv+bundlerで管理する" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler</id><content type="html" xml:base="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">&lt;p&gt;iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
+CocoaPods単体であれば特に考えず &lt;code class=&quot;highlighter-rouge&quot;&gt;$ gem install cocoapods&lt;/code&gt; で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、
+fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、
+チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては
+人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。&lt;/p&gt;
 
-&lt;p&gt;と&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;に速度差や消費メモリ差はあるのか？&lt;/p&gt;
-
-&lt;h2 id=&quot;sqlは同じ&quot;&gt;SQLは同じ&lt;/h2&gt;
-
-&lt;p&gt;出力されるSQLはどちらも同じでした。&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;`name`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;速度は微妙な変化&quot;&gt;速度は微妙な変化&lt;/h2&gt;
-
-&lt;p&gt;90万件に対して行った結果&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;pluckのみ&lt;/th&gt;
-      &lt;th&gt;select+pluck&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3228&lt;/td&gt;
-      &lt;td&gt;3349&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3152&lt;/td&gt;
-      &lt;td&gt;2972&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3126&lt;/td&gt;
-      &lt;td&gt;3370&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3101&lt;/td&gt;
-      &lt;td&gt;3144&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3271&lt;/td&gt;
-      &lt;td&gt;2945&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3454&lt;/td&gt;
-      &lt;td&gt;3227&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3120&lt;/td&gt;
-      &lt;td&gt;3306&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3488&lt;/td&gt;
-      &lt;td&gt;3577&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3046&lt;/td&gt;
-      &lt;td&gt;3072&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3228&lt;/td&gt;
-      &lt;td&gt;3413&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms&lt;/p&gt;
-
-&lt;h2 id=&quot;しかしselectは確実に処理されてる&quot;&gt;しかしselectは確実に処理されてる&lt;/h2&gt;
-
-&lt;p&gt;SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。&lt;/p&gt;
+&lt;p&gt;このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。&lt;/p&gt;
 
 &lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
 
-&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
-
-&lt;p&gt;いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。&lt;/p&gt;
-
-&lt;h2 id=&quot;書き方&quot;&gt;書き方&lt;/h2&gt;
-&lt;p&gt;結論から先に書きます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;^(?!.\*\&amp;lt;ここに検索ワード\&amp;gt;).+$
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;xcode-select &lt;span class=&quot;nt&quot;&gt;--install&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install rbenv ruby-build
+rbenv install &lt;span class=&quot;nt&quot;&gt;--list&lt;/span&gt; でインストールしたいバージョンを決める
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv install &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Ruby version]
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install bundler
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle init
+Gemfileに gem &lt;span class=&quot;s1&quot;&gt;'cocoapods'&lt;/span&gt; を追加.バージョン指定はCocoaPodsと同じ.
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bundle &lt;span class=&quot;nt&quot;&gt;--binstubs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bin
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;pod install
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;何が起きているのか&quot;&gt;何が起きているのか？&lt;/h2&gt;
+&lt;h2 id=&quot;rbenvでruby管理してgem管理はbundler&quot;&gt;rbenvでRuby管理してgem管理はbundler&lt;/h2&gt;
+
+&lt;p&gt;bundlerの前にRubyバージョンを管理するためにrbenvを入れて、RubyバージョンとbundlerバージョンとCocoaPodsバージョンをあわせます。&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;^ : 行の先頭を表す&lt;/li&gt;
-  &lt;li&gt;( : グルーピング&lt;/li&gt;
-  &lt;li&gt;?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。&lt;/li&gt;
-  &lt;li&gt;.* : 任意の文字列(0文字以上)&lt;/li&gt;
-  &lt;li&gt;) : グルーピング&lt;/li&gt;
-  &lt;li&gt;.+ : 任意の文字列(1文字以上)&lt;/li&gt;
-  &lt;li&gt;$: 行の末尾を表す&lt;/li&gt;
+  &lt;li&gt;rbenv が Ruby 管理&lt;/li&gt;
+  &lt;li&gt;Ruby の bundler gem が CocoaPods gem 管理&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h2 id=&quot;試してみる&quot;&gt;試してみる&lt;/h2&gt;
+&lt;p&gt;って感じです。 これだけだと分からないので、一つずつ説明していきます。&lt;/p&gt;
 
-&lt;p&gt;色々と削って動きを見てみることしました。&lt;/p&gt;
+&lt;h3 id=&quot;gemとはrubyが提供するライブラリ単位&quot;&gt;gemとはRubyが提供するライブラリ単位&lt;/h3&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお
-かきくけこ
-あい
-あ
-い
-いう
+&lt;p&gt;gemはRubyが提供するライブラリの単位です。
+これはRubyのバージョン毎にgemが管理されています。
+例えば Ruby 2.3のgem一覧と Ruby 2.6のgem一覧はインストールされているgemは異なります。&lt;/p&gt;
 
+&lt;p&gt;現在のRubyのバージョンは &lt;code class=&quot;highlighter-rouge&quot;&gt;$ ruby -v&lt;/code&gt; で確認できます。
+そして、このバージョンにインストールされているgem一覧は、&lt;code class=&quot;highlighter-rouge&quot;&gt;$ gem list&lt;/code&gt; で確認できます。
+例えば自分が作っているアプリの環境は次のような感じです。&lt;/p&gt;
 
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ruby &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
+ruby 2.5.3p105 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2018-10-18 revision 65156&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;x86_64-darwin18]
+
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem list
+
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; LOCAL GEMS &lt;span class=&quot;k&quot;&gt;***&lt;/span&gt;
+
+bigdecimal &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.3.4&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+bundler &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.17.3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+cmath &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+csv &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+date &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+dbm &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+did_you_mean &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+etc &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+fcntl &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+fiddle &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+fileutils &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+gdbm &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 2.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+io-console &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 0.4.6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+ipaddr &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+json &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 2.1.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+minitest &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;5.10.3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+net-telnet &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.1.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+openssl &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 2.1.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+power_assert &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1.1.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+psych &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 3.0.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rake &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;12.3.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+rdoc &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 6.0.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+scanf &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+sdbm &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+stringio &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 0.0.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+strscan &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+test-unit &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3.2.7&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+webrick &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.4.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+xmlrpc &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.3.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+zlib &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;default: 1.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;に対して色々試してみる。&lt;/p&gt;
+&lt;p&gt;上記見ると分かるように&lt;code class=&quot;highlighter-rouge&quot;&gt;bundler&lt;/code&gt;も一つのgemです。
+このbundlerを使うことで他のgemのバージョン管理を行うことができます。&lt;/p&gt;
 
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;正規表現&lt;/th&gt;
-      &lt;th&gt;結果&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;「あ」の入っていない文字列と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)$&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;空改行のみヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あい).&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;「あい」の入っていない行の1文字目と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!いう).*&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行の先頭に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).*&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう)&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行の先頭がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;h3 id=&quot;rubyバージョン毎にgemがインストールされている&quot;&gt;Rubyバージョン毎にgemがインストールされている&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;つまりRubyバージョンも合わせる必要があります。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;()は()内の文字を1文字として扱う. セットみたいなイメージ.&lt;/li&gt;
-  &lt;li&gt;?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる&lt;/li&gt;
-  &lt;li&gt;(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;例えばAさんが環境構築したとき&lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby&lt;/code&gt;バージョンは&lt;code class=&quot;highlighter-rouge&quot;&gt;2.0&lt;/code&gt;でした。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;CocoaPods&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby 2.0&lt;/code&gt;の構文で書かれたバージョンをインストールできるようになります。
+2年後,Bさんがチーム参画し、環境構築したら&lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby&lt;/code&gt;バージョンは&lt;code class=&quot;highlighter-rouge&quot;&gt;2.5&lt;/code&gt;でした。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;CocoaPods&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby 2.5&lt;/code&gt;の構文で書かれたバージョンをインストールできるようになります。
+その結果、Aさんの&lt;code class=&quot;highlighter-rouge&quot;&gt;CocoaPods&lt;/code&gt;の最新バージョン&lt;code class=&quot;highlighter-rouge&quot;&gt;1.2&lt;/code&gt;ですが、Bさんの&lt;code class=&quot;highlighter-rouge&quot;&gt;CocoaPods&lt;/code&gt;は最新バージョンは&lt;code class=&quot;highlighter-rouge&quot;&gt;2.1&lt;/code&gt;でした。
+Bさんは&lt;code class=&quot;highlighter-rouge&quot;&gt;CocoaPods&lt;/code&gt;をAさんと同じ&lt;code class=&quot;highlighter-rouge&quot;&gt;1.2&lt;/code&gt;に合わせたくとも、&lt;code class=&quot;highlighter-rouge&quot;&gt;Ruby 2.5&lt;/code&gt;では動かず…なんてことが起こりえます。&lt;/p&gt;
 
-&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
-特にブレイクポイント機能があれば、バグの原因追求が迅速になります。
-しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。
-しかし、そんなときに便利なのがngrokというサービスです。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;そのため、Rubyバージョンをあわせておく必要があります。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;ngrok&quot;&gt;ngrok&lt;/h2&gt;
+&lt;p&gt;※↑例なので、バージョンや互換性は適当です。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;https://ngrok.com/&quot;&gt;ngrok - secure introspectable tunnels to localhost&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;rubyバージョン管理はrbenv&quot;&gt;Rubyバージョン管理はrbenv&lt;/h2&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;認証不要(認証もあるけど)&lt;/li&gt;
-  &lt;li&gt;ngrokサービスがランダムなブレークポイントアクセスできるURLを用意してくれる&lt;/li&gt;
-  &lt;li&gt;そのランダムURLにアクセスすると&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;にブレークポイントーディングしてくれる&lt;/li&gt;
-  &lt;li&gt;数時間立つとURLが無効化する&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rbenv&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;Homebrew&lt;/code&gt;でインストールできます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install rbenv ruby-build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;(もしxcrunとかでエラーが出るようであれば &lt;code class=&quot;highlighter-rouge&quot;&gt;$ xcode-select --instal&lt;/code&gt; を実行して xcodeパッケージツールのインストールをしてみてください。)&lt;/p&gt;
 
-&lt;h3 id=&quot;インストール&quot;&gt;インストール&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ rbenv versions&lt;/code&gt;を実行すると、今rbenvが管理してるRubyのバージョン一覧が表示され、 &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; がつくバージョンが現在のRubyバージョンになります。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv versions
+  system
+  2.1.10
+  2.1.2
+  2.2.1
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; 2.3.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;by /Users/mothule/.rbenv/version&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  2.3.6
+  2.3.7
+  2.4.4
+  2.5.1
+  2.5.3
+  2.6.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;これをiOSプロジェクトだけ2.5.3にしたい場合は、次のコマンドを実行して生成されたファイルをiOSプロジェクト配下(git管理下)においてください。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;2.5.3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;このコマンドを実行すると &lt;code class=&quot;highlighter-rouge&quot;&gt;.ruby-version&lt;/code&gt;というファイルが生成され、もう一度Rubyバージョンを確認すると次のようになります。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv versions
+  system
+  2.1.10
+  2.1.2
+  2.2.1
+  2.3.0
+  2.3.6
+  2.3.7
+  2.4.4
+  2.5.1
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; 2.5.3 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set &lt;/span&gt;by /Users/mothule/workspace/ios-project/.ruby-version&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+  2.6.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;このようにRubyバージョン2.5.3が動くようになっています。 これは &lt;code class=&quot;highlighter-rouge&quot;&gt;.ruby-version&lt;/code&gt;でバージョン指定されているためです。
+ちなみに &lt;code class=&quot;highlighter-rouge&quot;&gt;.ruby-version&lt;/code&gt;は &lt;code class=&quot;highlighter-rouge&quot;&gt;2.5.3&lt;/code&gt; と書いてあるだけです。
+&lt;strong&gt;この &lt;code class=&quot;highlighter-rouge&quot;&gt;.ruby-version&lt;/code&gt;をgit管理し、各開発環境がrbenvを使えば、Rubyバージョンを合わせることができます。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask install ngrok
+&lt;h2 id=&quot;bundler-で-cocoapodsを動かす&quot;&gt;bundler で CocoaPodsを動かす&lt;/h2&gt;
+
+&lt;h3 id=&quot;bundlerでcocoapodsをインストールする&quot;&gt;bundlerでCocoaPodsをインストールする&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ gem install cocoapods&lt;/code&gt;ではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;で&lt;code class=&quot;highlighter-rouge&quot;&gt;cocoapods&lt;/code&gt;をインストールします。
+そのためにbundlerが管理するファイル&lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle init&lt;/code&gt;で作ります。
+エディタで&lt;code class=&quot;highlighter-rouge&quot;&gt;Gemfile&lt;/code&gt;を開くと次のようにgemを追加します。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;cocoapods&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;保存後に &lt;code class=&quot;highlighter-rouge&quot;&gt;$ bunlder install --path=vendor/bundle&lt;/code&gt;を実行すると, &lt;code class=&quot;highlighter-rouge&quot;&gt;cocoapods&lt;/code&gt;がインストールされます。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;--path=vendor/bundle&lt;/code&gt;とはgemのインストール場所を示すオプションで、iosプロジェクト配下にvendor/bundleフォルダを作成し、その中に &lt;code class=&quot;highlighter-rouge&quot;&gt;cocoapods&lt;/code&gt; のコードがインストールされます。
+この &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt; は Gemfileがあれば再現可能なので git管理下から外しても構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;bundlerでcocoapodsを動かす&quot;&gt;bundlerでCocoaPodsを動かす&lt;/h3&gt;
+
+&lt;p&gt;bundler配下のgemを動かすには&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bunlder exec command&lt;/code&gt;のフォーマットに従わなくてはなりません。
+例えば &lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;のインストールを実行するには、 &lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle exec pod install&lt;/code&gt; となります。
+これは少し手間ですね。次のプラグインをインストールすることで &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle exec&lt;/code&gt;の部分を省くことができます。&lt;/p&gt;
+
+&lt;h2 id=&quot;rbenv-に-binstubs-をインストール&quot;&gt;rbenv に binstubs をインストール&lt;/h2&gt;
+&lt;p&gt;直接CocoaPodsをインストールした場合は、パスが通っているため &lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;のように実行することができますが、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;bundler&lt;/code&gt;によってインストールした場合は、パスが通っていないため &lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt; を実行しても違うCocoaPodsのgemが動いてしまいます。(直接インストールしたCocoaPodsが動く)
+これをパスを通してくれるようになるプラグインが rbenv-binstubsです。&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle exec&lt;/code&gt;が不要になります。
+プラグインインストールは次の場所にgit cloneで配置するだけです。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask info ngrok
-ngrok: latest
-https://ngrok.com/
-/usr/local/Caskroom/ngrok/latest &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;24.6MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-From: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/ngrok.rb
-&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Name
-ngrok
-&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Artifacts
-ngrok &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Binary&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;p&gt;また&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle install&lt;/code&gt; にオプションを追加して再実行します。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;bundle install &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bundle &lt;span class=&quot;nt&quot;&gt;--binstubs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bin
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;使い方&quot;&gt;使い方&lt;/h3&gt;
+&lt;p&gt;こうすることで、 &lt;code class=&quot;highlighter-rouge&quot;&gt;bundler&lt;/code&gt; によってインストールgemにもパスが通るようになるため&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;だけで、bundler管轄のcocoapodsが呼べるようになります。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ ngrok http 3000&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;のURLが発行されます。&lt;/p&gt;
+&lt;h2 id=&quot;cocoapodsのバージョンアップはbundler操作&quot;&gt;CocoaPodsのバージョンアップはbundler操作&lt;/h2&gt;
+&lt;p&gt;bundlerによって管理されたcocoapodsをバージョンアップする場合は、
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundler update&lt;/code&gt;で管轄gemをバージョン指定ルールに従った最新版にアップデートします。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h2 id=&quot;rubyバージョンはrbenv操作&quot;&gt;Rubyバージョンはrbenv操作&lt;/h2&gt;
+&lt;p&gt;CocoaPodsや別ソフトウェアによりRubyバージョンを上げる必要がある場合は、 rbenv で新しくインストールし &lt;code class=&quot;highlighter-rouge&quot;&gt;.ruby-version&lt;/code&gt;を変更することでバージョンを変えることができます。
+Rubyバージョンを更新した場合は、 &lt;code class=&quot;highlighter-rouge&quot;&gt;$ gem install bunlder&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;bundler&lt;/code&gt; のインストール後に &lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle install&lt;/code&gt;で新しいRubyバージョンでのbundlerとcocoapodsのインストールが必要になります。&lt;/p&gt;
 
-&lt;p&gt;この場合、&lt;code class=&quot;highlighter-rouge&quot;&gt;https://f1092809.ngrok.io&lt;/code&gt; というURLが一時的にブレークポイントーディングしてくれます。 8時間経過するとURLは無効になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組み&quot;&gt;仕組み&lt;/h3&gt;
-
-&lt;p&gt;本来であれば、ngrokはローカルネットワーク上にあるサーバーを遠隔地からアクセスできるようにする外から内へアクセスを可能にするサービスです。&lt;/p&gt;
-
-&lt;p&gt;これをローカルAPIサーバーと同一ローカルネットワーク上にあるiPhoneが、一旦外部のURLにアクセスし、再びローカルネットワーク上のAPIサーバーにアクセスすることで、開発中にローカルAPIにHTTPSでアクセスする仕組みです。&lt;/p&gt;
-
-&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
-
-&lt;p&gt;ngrokに通信を介しているため、セキュアなデータなどもngrok側は見えているかと思われます。 しかし、ngrok側はそれを秘匿性を守秘していたとしても、ngrok側が脆弱性があれば、そこから意図せずデータが漏洩することは可能性はあります。&lt;/p&gt;
-
-&lt;p&gt;そのため、認証などテストする場合はどうでもいいテストアカウトでやることを紹介する以上、推奨します。つまり自己責任です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="ngrok" /><category term="ats" /><summary type="html">RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。 しかし、そんなときに便利なのがngrokというサービスです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-05-how-to-use-ngrok.png" /></entry><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
+今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
 
 &lt;p&gt;原因の1つとして、一般的な開発環境では1PCにWebアプリとDBアプリが共存しており、これら2点間の通信はUnixドメインソケット方式で通信が行われます。 一方本番環境ではWebアプリとDBアプリそれぞれにサーバーが立っていることが一般的な基本構成で、これら2点間の通信はTCP/IP方式で通信が行われます。 この通信方式の違いにより大きな速度差が発生し、開発環境ではなかった場所にボトルネックが生まれます。&lt;/p&gt;
 
@@ -450,7 +421,222 @@ mysql\&amp;gt; show grants for 'hoge'@'192.168.%';
 
 &lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
 
-&lt;p&gt;開発環境前提においての構成であるため、セキュリティとしてはGoodではありません。 特に公共のネットワーク配下ではやめたほうがいいです。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length" rel="alternate" type="text/html" title="MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">&lt;p&gt;charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。&lt;/p&gt;
+&lt;p&gt;開発環境前提においての構成であるため、セキュリティとしてはGoodではありません。 特に公共のネットワーク配下ではやめたほうがいいです。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
+
+&lt;p&gt;いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;書き方&quot;&gt;書き方&lt;/h2&gt;
+&lt;p&gt;結論から先に書きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;^(?!.\*\&amp;lt;ここに検索ワード\&amp;gt;).+$
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;何が起きているのか&quot;&gt;何が起きているのか？&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;^ : 行の先頭を表す&lt;/li&gt;
+  &lt;li&gt;( : グルーピング&lt;/li&gt;
+  &lt;li&gt;?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。&lt;/li&gt;
+  &lt;li&gt;.* : 任意の文字列(0文字以上)&lt;/li&gt;
+  &lt;li&gt;) : グルーピング&lt;/li&gt;
+  &lt;li&gt;.+ : 任意の文字列(1文字以上)&lt;/li&gt;
+  &lt;li&gt;$: 行の末尾を表す&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;試してみる&quot;&gt;試してみる&lt;/h2&gt;
+
+&lt;p&gt;色々と削って動きを見てみることしました。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお
+かきくけこ
+あい
+あ
+い
+いう
+
+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;に対して色々試してみる。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;正規表現&lt;/th&gt;
+      &lt;th&gt;結果&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;「あ」の入っていない文字列と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)$&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;空改行のみヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あい).&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;「あい」の入っていない行の1文字目と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!いう).*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行の先頭に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).*&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう)&lt;/code&gt;&lt;/td&gt;
+      &lt;td&gt;行に「いう」の入っていない行の先頭がヒットする&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;()は()内の文字を1文字として扱う. セットみたいなイメージ.&lt;/li&gt;
+  &lt;li&gt;?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる&lt;/li&gt;
+  &lt;li&gt;(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
+特にブレイクポイント機能があれば、バグの原因追求が迅速になります。
+しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。
+しかし、そんなときに便利なのがngrokというサービスです。&lt;/p&gt;
+
+&lt;h2 id=&quot;ngrok&quot;&gt;ngrok&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://ngrok.com/&quot;&gt;ngrok - secure introspectable tunnels to localhost&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;認証不要(認証もあるけど)&lt;/li&gt;
+  &lt;li&gt;ngrokサービスがランダムなブレークポイントアクセスできるURLを用意してくれる&lt;/li&gt;
+  &lt;li&gt;そのランダムURLにアクセスすると&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;にブレークポイントーディングしてくれる&lt;/li&gt;
+  &lt;li&gt;数時間立つとURLが無効化する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;インストール&quot;&gt;インストール&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask install ngrok
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask info ngrok
+ngrok: latest
+https://ngrok.com/
+/usr/local/Caskroom/ngrok/latest &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;24.6MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+From: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/ngrok.rb
+&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Name
+ngrok
+&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Artifacts
+ngrok &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Binary&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;使い方&quot;&gt;使い方&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ ngrok http 3000&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;のURLが発行されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;この場合、&lt;code class=&quot;highlighter-rouge&quot;&gt;https://f1092809.ngrok.io&lt;/code&gt; というURLが一時的にブレークポイントーディングしてくれます。 8時間経過するとURLは無効になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組み&quot;&gt;仕組み&lt;/h3&gt;
+
+&lt;p&gt;本来であれば、ngrokはローカルネットワーク上にあるサーバーを遠隔地からアクセスできるようにする外から内へアクセスを可能にするサービスです。&lt;/p&gt;
+
+&lt;p&gt;これをローカルAPIサーバーと同一ローカルネットワーク上にあるiPhoneが、一旦外部のURLにアクセスし、再びローカルネットワーク上のAPIサーバーにアクセスすることで、開発中にローカルAPIにHTTPSでアクセスする仕組みです。&lt;/p&gt;
+
+&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
+
+&lt;p&gt;ngrokに通信を介しているため、セキュアなデータなどもngrok側は見えているかと思われます。 しかし、ngrok側はそれを秘匿性を守秘していたとしても、ngrok側が脆弱性があれば、そこから意図せずデータが漏洩することは可能性はあります。&lt;/p&gt;
+
+&lt;p&gt;そのため、認証などテストする場合はどうでもいいテストアカウトでやることを紹介する以上、推奨します。つまり自己責任です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="ngrok" /><category term="ats" /><summary type="html">RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。 しかし、そんなときに便利なのがngrokというサービスです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-05-how-to-use-ngrok.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;に速度差や消費メモリ差はあるのか？&lt;/p&gt;
+
+&lt;h2 id=&quot;sqlは同じ&quot;&gt;SQLは同じ&lt;/h2&gt;
+
+&lt;p&gt;出力されるSQLはどちらも同じでした。&lt;/p&gt;
+
+&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;`name`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;速度は微妙な変化&quot;&gt;速度は微妙な変化&lt;/h2&gt;
+
+&lt;p&gt;90万件に対して行った結果&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;pluckのみ&lt;/th&gt;
+      &lt;th&gt;select+pluck&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3228&lt;/td&gt;
+      &lt;td&gt;3349&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3152&lt;/td&gt;
+      &lt;td&gt;2972&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3126&lt;/td&gt;
+      &lt;td&gt;3370&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3101&lt;/td&gt;
+      &lt;td&gt;3144&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3271&lt;/td&gt;
+      &lt;td&gt;2945&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3454&lt;/td&gt;
+      &lt;td&gt;3227&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3120&lt;/td&gt;
+      &lt;td&gt;3306&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3488&lt;/td&gt;
+      &lt;td&gt;3577&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3046&lt;/td&gt;
+      &lt;td&gt;3072&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3228&lt;/td&gt;
+      &lt;td&gt;3413&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms&lt;/p&gt;
+
+&lt;h2 id=&quot;しかしselectは確実に処理されてる&quot;&gt;しかしselectは確実に処理されてる&lt;/h2&gt;
+
+&lt;p&gt;SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。&lt;/p&gt;
+
+&lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
+
+&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length" rel="alternate" type="text/html" title="MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length">&lt;p&gt;charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。&lt;/p&gt;
 
 &lt;p&gt;ちなみに環境はRails5系 + MySQL5.6系環境で、&lt;code class=&quot;highlighter-rouge&quot;&gt;databases.yml&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;encoding&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;utf8mb4&lt;/code&gt;にすると &lt;code class=&quot;highlighter-rouge&quot;&gt;db:migrate&lt;/code&gt;でエラーが出ます。&lt;/p&gt;
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Mysql2::Error: Index column size too large. The maximum column size is 767 bytes.
@@ -879,157 +1065,4 @@ Use Ctrl-C to stop
 次の&lt;code class=&quot;highlighter-rouge&quot;&gt;--with-opt-dir&lt;/code&gt;でOpenSSLのパスを指定する方法で試すと動きます。&lt;/p&gt;
 
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; build.mysql2 &lt;span class=&quot;nt&quot;&gt;--with-opt-dir&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/usr/local/opt/openssl
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="mysql" /><summary type="html">MySQLを最新ではなく5.6で環境構築する機会がありました。 その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">Homebrewで過去バージョンにダウングレードする2つの方法</title><link href="https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade" rel="alternate" type="text/html" title="Homebrewで過去バージョンにダウングレードする2つの方法" /><published>2019-07-23T00:00:00+09:00</published><updated>2019-07-23T00:00:00+09:00</updated><id>https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade</id><content type="html" xml:base="https://blog.mothule.com/mac/homebrew/mac-homebrew-how-to-downgrade">&lt;ul&gt;
-  &lt;li&gt;以前 &lt;code class=&quot;highlighter-rouge&quot;&gt;brew upgrade&lt;/code&gt; で tig のバージョンを最新にして raedline のバージョンズレを解決しました。&lt;/li&gt;
-  &lt;li&gt;以前 &lt;code class=&quot;highlighter-rouge&quot;&gt;brew switch&lt;/code&gt; で readline のバージョンを8から7にして、byebug などのバージョンズレを解決しました。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;今、 tig や vim の最新バージョンが readline 8 を求めていて立ち上がらなくなりました。 😭
-原因は上記で述べたとおり明らかです。&lt;/p&gt;
-
-&lt;p&gt;なので今回はtigのバージョンを戻す方法についてまとめました。&lt;/p&gt;
-
-&lt;h2 id=&quot;旧バージョンに戻すには2つの方法がある&quot;&gt;旧バージョンに戻すには2つの方法がある&lt;/h2&gt;
-
-&lt;p&gt;1つは &lt;code class=&quot;highlighter-rouge&quot;&gt;brew switch&lt;/code&gt; こちらはローカル環境に既にバージョンがある場合に有効な手段で、対応方法も一番楽です。
-もう1つは Homebrewが管理するFormulaのディレクトリに移動して過去コミットからインストールする方法です。&lt;/p&gt;
-
-&lt;h3 id=&quot;戻したいバージョンがあるかどうか確認する方法&quot;&gt;戻したいバージョンがあるかどうか確認する方法&lt;/h3&gt;
-
-&lt;p&gt;&lt;strong&gt;バージョンが複数個ある場合&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info readline
-readline: stable 8.0.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;keg-only]
-Library &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;command-line editing
-https://tiswww.case.edu/php/chet/readline/rltop.html
-/usr/local/Cellar/readline/7.0.3 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;46 files, 2MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  Poured from bottle on 2017-03-01 at 12:13:07
-/usr/local/Cellar/readline/7.0.3_1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;46 files, 1.5MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  Poured from bottle on 2017-07-24 at 15:28:46
-/usr/local/Cellar/readline/8.0.0_1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;48 files, 1.5MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  Poured from bottle on 2019-07-20 at 00:58:47
-From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/readline.rb
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このように複数のバージョンが並びます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;バージョンが1つしかない場合&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info vim
-vim: stable 8.1.1700 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, HEAD
-Vi &lt;span class=&quot;s1&quot;&gt;'workalike'&lt;/span&gt; with many additional features
-https://www.vim.org/
-Conflicts with:
-  ex-vi &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;because vim and ex-vi both install bin/ex and bin/view&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  macvim &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;because vim and macvim both install vi&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; binaries&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-/usr/local/Cellar/vim/8.1.1700 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1,858 files, 31.6MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
-  Poured from bottle on 2019-07-22 at 14:17:51
-From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/vim.rb
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;このように1つしかありません。&lt;/p&gt;
-
-&lt;h2 id=&quot;brew-switch-で過去バージョンに戻す&quot;&gt;brew switch で過去バージョンに戻す&lt;/h2&gt;
-
-&lt;p&gt;例えば先程のraedlineパッケージではバージョンが 7.0.3, 7.0.3_1, 8.0.0_1 の 3つがありました。
-7.0.3のバージョンに戻したい場合は&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew switch readline 7.0.3
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;とするだけです。とても簡単です。&lt;/p&gt;
-
-&lt;h2 id=&quot;過去コミットから過去バージョンに戻す&quot;&gt;過去コミットから過去バージョンに戻す&lt;/h2&gt;
-
-&lt;h3 id=&quot;1-homebrewが管理してるformulra-ディレクトリまで移動&quot;&gt;1. Homebrewが管理してるFormulra ディレクトリまで移動&lt;/h3&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; /usr/local/Homebrew/Library/Taps/homebrew/homebrew-core/Formula/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;2-対象コミットをログから探す&quot;&gt;2. 対象コミットをログから探す&lt;/h3&gt;
-&lt;p&gt;パッケージコミッターにも依存はする方法ですが、大抵のコミットコメントにはバージョンが記載されているのでそれを判断材料として使います。&lt;/p&gt;
-
-&lt;p&gt;下記はtigの過去コミットを見る方法です。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;--oneline&lt;/span&gt; tig.rb
-d78647bc40 tig: update 2.4.1_1 bottle.
-fbe673161b tig: revision &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;readline
-e95a3b91ab tig: remove options
-df6f2b649a tig: update 2.4.1 bottle.
-facc8a40ea tig: update 2.4.1 bottle.
-009a1200d7 tig 2.4.1
-41252c196e tig: update 2.4.0 bottle.
-3b28425d00 tig 2.4.0
-512758e6eb Rubocop 0.57.1 style fixes &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#28754)&lt;/span&gt;
-4c2daf9fcc tig: update 2.3.3 bottle.
-e411457d18 tig 2.3.3
-1991799148 tig: depend on asciidoc and xmlto at build &lt;span class=&quot;nb&quot;&gt;time &lt;/span&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;head &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#23125)&lt;/span&gt;
-44e7d526bb tig: update 2.3.2_1 bottle.
-49e5f3c6df tig: always install the man page
-c4e608238a tig: update 2.3.2 bottle.
-df952f5043 tig 2.3.2
-183cd1cbff tig: update 2.3.1 bottle.
-297d3e1fe3 tig 2.3.1
-16ebe5f184 Use “squiggly” heredocs.
-4656c441f0 tig: update homepage &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;c&quot;&gt;#18797)&lt;/span&gt;
-6785440dfc tig: update 2.3.0 bottle.
-7df31fa61e tig 2.3.0
-b40258bbe9 tig: update 2.2.2 bottle.
-7474d02246 tig: update 2.2.2 bottle.
-e8c547a5d9 tig 2.2.2
-920db41da7 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;grafted&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; youtube-dl: update 2017.02.28 bottle.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;各行先頭の英数字羅列はgit の revision番号です。その後ろがコミット時のコメントです。
-どのバージョンに戻すのは分かっている場合は、コメントを参考にバージョンを見つけ、そのrevision番号を使いますが、
-今回はどのバージョンで回復するのか分かりにくいので１つ前のバージョン 2.4.0 に戻します。&lt;/p&gt;
-
-&lt;p&gt;この場合、 &lt;code class=&quot;highlighter-rouge&quot;&gt;41252c196e tig: update 2.4.0 bottle.&lt;/code&gt; これが前のバージョンだと思われます。&lt;/p&gt;
-
-&lt;h3 id=&quot;3-revisionを使って状態を戻す&quot;&gt;3. revisionを使って状態を戻す&lt;/h3&gt;
-
-&lt;p&gt;先程目星をつけたrevision番号(&lt;code class=&quot;highlighter-rouge&quot;&gt;41252c196e&lt;/code&gt;)を使います。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git checkout 41252c196e tig.rb
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;これでtigは古いバージョンをインストールする状態になりました。&lt;/p&gt;
-
-&lt;h3 id=&quot;4-brew-install-で古いバージョンをインストール&quot;&gt;4. brew install で古いバージョンをインストール&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install tig
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;既にインストール済みだと怒られ、その後親切に unlink しろと言われるので従います。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew unlink tig
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;改めてインストールします&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install tig
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;無事成功したら確認します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info tig
-tig: stable 2.4.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, HEAD
-Text interface &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;Git repositories
-https://jonas.github.io/tig/
-/usr/local/Cellar/tig/2.4.0 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;15 files, 855.4KB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;
-  Poured from bottle on 2019-07-23 at 13:04:55
-/usr/local/Cellar/tig/2.4.1_1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;15 files, 855.7KB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-  Poured from bottle on 2019-07-22 at 14:09:16
-From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/tig.rb
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;バージョンが2つ並び &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; がついてる方が現在のバージョンになります。
-ちなみに &lt;code class=&quot;highlighter-rouge&quot;&gt;$ git checkout 41252c196e tig.rb&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;tig.rb&lt;/code&gt; が古いファイルになっていますが、
-これは戻しても問題ありません。&lt;/p&gt;
-
-&lt;p&gt;ちなみに戻すと &lt;code class=&quot;highlighter-rouge&quot;&gt;$ brew info tig&lt;/code&gt; の最初の1行目のバージョンも変わります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git reset head &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git checkout &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
-Unstaged changes after reset:
-M	Formula/tig.rb
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew info tig
-tig: stable 2.4.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;bottled&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, HEAD
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これでようやくreadlineの乱とはおさらばできそうです。 😇&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://qiita.com/nghryuki/items/7d65d8f55ea65b95310d&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="homebrew" /><summary type="html">以前 brew upgrade で tig のバージョンを最新にして raedline のバージョンズレを解決しました。 以前 brew switch で readline のバージョンを8から7にして、byebug などのバージョンズレを解決しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="mysql" /><summary type="html">MySQLを最新ではなく5.6で環境構築する機会がありました。 その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
