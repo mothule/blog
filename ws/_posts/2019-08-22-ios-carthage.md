@@ -3,7 +3,7 @@ title: Carthage逆引き集
 description: TODO
 date: 2019-08-22
 categories: ios carthage
-tags: iois carthage
+tags: ios carthage
 draft: true
 ---
 
