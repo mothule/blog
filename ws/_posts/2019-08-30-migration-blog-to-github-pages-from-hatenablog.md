@@ -4,6 +4,8 @@ description: 長年利用していた`はてなブログ`からGitHub Pages上�
 date: 2019-08-30
 categories: notebook
 tags: notebook jekyll github-pages
+image:
+  path: /assets/images/2019-08-30-migration-blog-to-github-pages-from-hatenablog.png
 ---
 長年利用していた`はてなブログ`からGitHub Pages上でJekyllを使った静的生成サイトに移行しました。
 この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて
