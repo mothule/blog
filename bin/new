@@ -1,3 +1,38 @@
 #!/bin/bash
 
 set -ue
+
+function usage() {
+  echo '`new` is a shell script that create markdown file.'
+  echo ''
+  echo "  Usage: new <title>"
+  echo ''
+}
+
+
+if [[ ! $# == 1 ]] ; then
+  usage
+  exit 1
+fi
+
+title=$1
+date=`date "+%Y-%m-%d"`
+file_path="./ws/_posts/$date-$title.md"
+
+if [[ -e $file_path ]] ; then
+  echo "Error: $file is already exists."
+  exit 1
+fi
+
+if touch $file_path ; then
+  echo "Created $file_path."
+fi
+
+echo '---' > $file_path
+echo "title: TODO" >> $file_path
+echo "description: TODO" >> $file_path
+echo "date: $date" >> $file_path
+echo "categories: TODO" >> $file_path
+echo "tags: TODO" >> $file_path
+echo "---" >> $file_path
+echo "TODO: リード文" >> $file_path
