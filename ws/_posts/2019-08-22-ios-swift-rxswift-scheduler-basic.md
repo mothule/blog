@@ -1,13 +1,11 @@
 ---
 title: RxSwift Schedulerの一覧と使い方
-description:
+description: TODO
 date: 2019-08-22
 categories: ios swift rxswift
 tags: ios swift rxswift
 draft: true
 ---
-
-# RxSwift Scheduler(スケジューラ)の一覧と使い方
 
 RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。
 

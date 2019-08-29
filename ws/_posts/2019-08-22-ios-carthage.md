@@ -1,13 +1,13 @@
 ---
 title: Carthage逆引き集
-description:
+description: TODO
 date: 2019-08-22
 categories: ios carthage
 tags: iois carthage
 draft: true
 ---
 
-# Carthage チートシート
+TODO:リード文
 
 **update**
 ```bash

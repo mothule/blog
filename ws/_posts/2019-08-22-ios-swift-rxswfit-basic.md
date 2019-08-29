@@ -1,13 +1,13 @@
 ---
 title: RxSwiftの基本を動かして理解する
-description: ActiveRecordでpluckとselectしてpluckに変化はあるか？
+description: TODO
 date: 2019-08-22
 categories: ios swift rxswift
 tags: ios swift rxswift
 draft: true
 ---
 
-# ステップアップRxSwift
+TODO:リード文
 
 マーブルダイアグラム
 

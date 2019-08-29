@@ -1,6 +1,6 @@
 ---
-title: ActiveRecordでpluckとselectしてpluckに変化はあるか？
-description: ActiveRecordでpluckとselectしてpluckに変化はあるか？
+title: rablの基本
+description: TODO
 date: 2019-08-05
 categories: ruby rails active-record
 tags: ruby rails active-record
@@ -28,7 +28,7 @@ object, collection, attributesを使う。
 
 #### モデル単体をViewに出す
 
-```ruby
+```rubyÂ
 @user = User.first
 ```
 
