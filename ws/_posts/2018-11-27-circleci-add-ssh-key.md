@@ -3,7 +3,7 @@ title: CircleCIで別途SSHキーを追加して使う方法
 description: CircleCIで別途SSHキーを追加して使う方法. 最近CircleCIを使って定期実行的なことをするために弄り始めました。CircleCI が自動で生成＆登録してる鍵は read-only CircleCIを使ってサーバーにデプロイしたい場合やGitHubへpushしたい場合は、 自動生成＆登録されるSSH Keyでは権限が足りずエラーになります。別途SSH Keyを登録して利用することで上記のような目的を達成できるようになります。
 date: 2018-11-27
 categories: ci circleci
-tags: circleci ssh
+tags: circleci ssh ci
 ---
 最近CircleCIを使って定期実行的なことをするために弄り始めました。
 

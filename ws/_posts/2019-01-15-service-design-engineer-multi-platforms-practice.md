@@ -3,7 +3,7 @@ title: WebとiOSとAndroidのエンジニアが最低限知るべきマルチプ
 description: WebフロントエンドエンジニアとiOSエンジニアとAndroidエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話. 自分はUI/UXデザイナーでもグラフィックデザイナーでもないBtoC向けサービス作るのが好きなエンジニアです。今回会社でクライアントエンジニア向けにプラットフォーム横断するサービスのおいてプラットフォーム横断すべき情報とすべきではない情報について考える機会があったので記事にしました。 みなさんはiOSなのにAndroidみたいなアラート、 AndroidなのにiOSみたいなダイアログボックスをデザイナーから依頼されてアラートやダイアログをフルカスタマイズして実装した経験はないだろうか？
 
 date: 2019-01-15
-categories: design/service-design
+categories: design service-design
 tags: service-design design
 ---
 

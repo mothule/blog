@@ -3,7 +3,7 @@ title: Webアーキテクチャとモバイルアーキテクチャをごっち�
 description: Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない
 date: 2016-10-18
 categories: notebook
-tags: program-design 
+tags: program-design notebook
 ---
 ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。
 私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。

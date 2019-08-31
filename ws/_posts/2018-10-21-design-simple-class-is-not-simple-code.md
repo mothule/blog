@@ -3,7 +3,7 @@ title: クラス名にSimpleやEasyがついててもクラス内コードが単
 description: クラス名にSimpleやEasyがついててもクラス内コードが単純なわけではない
 date: 2018-10-21
 categories: notebook program-design
-tags: program-design
+tags: program-design notebook
 ---
 クラス名は目的やできることや塊を表現する。  
 そのためクラス名にSimpleやEasyがついてる場合
