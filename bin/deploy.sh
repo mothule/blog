@@ -35,7 +35,8 @@ if [[ ! -d './docs' ]] ; then
 fi
 
 info "Copy to docs/"
-rsync -av --delete ws/_site/ docs
+rsync -auv --delete ws/_site/ docs
+rsync -auv --delete ws/_site/ docs
 
 info "Copy CNAME to docs/"
 cp CNAME docs/
