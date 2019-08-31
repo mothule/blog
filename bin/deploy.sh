@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -ue
+
 COLOR_ESC="\e["
 COLOR_ESC_END="m"
 COLOR_YELLOW=${COLOR_ESC}33${COLOR_ESC_END}
@@ -9,6 +11,9 @@ COLOR_OFF=${COLOR_ESC}${COLOR_ESC_END}
 
 function info() {
   printf "${COLOR_YELLOW}$1${COLOR_OFF}\n"
+}
+function error() {
+  printf "${COLOR_PURPLE}$1${COLOR_OFF}\n"
 }
 function log() {
   printf "$1\n"
@@ -21,11 +26,16 @@ cd ws
 JEKYLL_ENV=production bundle exec jekyll build
 cd ..
 
-info "Create docs folder"
-mkdir docs
+if [[ ! -d './docs' ]] ; then
+  if mkdir docs ; then
+    info "Created a docs folder"
+  else
+    error "Failed to create docs folder"
+  fi
+fi
 
 info "Copy to docs/"
-rsync -auv ws/_site/ docs
+rsync -auv --delete ws/_site/ docs
 
 info "Copy CNAME to docs/"
 cp CNAME docs/
@@ -37,3 +47,4 @@ git commit -m "Deploy:"
 git push
 
 info "Finished deploy."
+exit 0
