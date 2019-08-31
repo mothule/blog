@@ -7,7 +7,7 @@ if [[ 'blog' -eq ${currentDirectory} ]] ; then
   if [[ -e './ws/_site' ]] ; then
     echo "Failed remove _site folder"
   else
-    echo "Success."
+    echo "Successfully delete _site folder."
   fi
 else
   echo "Current directory isn't blog/"
