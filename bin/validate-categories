@@ -1,0 +1,22 @@
+#!/usr/bin/env ruby
+
+puts 'Categores validates.'
+
+Dir.glob('./ws/_posts/*.md') do |post_path|
+  text = File.read(post_path)
+  text = text
+    .sub(/^---$/, '')
+    .sub(/^---$/, '$$$')
+    .split('$$$').first
+
+  categories = text.match(/categories: (.*)/).captures.first.split(' ')
+  tags = text.match(/tags: (.*)/).captures.first.split(' ')
+
+  categories.each do |category|
+    unless tags.include?(category)
+      raise "Not found #{category} in tags. #{tags} #{post_path}"
+    end
+  end
+end
+
+puts 'Finish validation.'
