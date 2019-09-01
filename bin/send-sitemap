@@ -1,11 +1,8 @@
 #!/bin/bash
 
 ret=`http -h get 'https://www.google.com/ping?sitemap=https://blog.mothule.com/sitemap.xml' | head -n 1 | awk '{ print $2 }' | xargs`
-
-if [[ ret == 200 ]] ; then
-  echo 'Successful'
-  exit 0
+if [[ $ret -eq 200 ]] ; then
+    echo 'Successfully'
 else
-  echo 'Failed'
-  exit 1
+    echo 'Failure'
 fi
