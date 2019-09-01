@@ -4,10 +4,9 @@ puts 'Categores validates.'
 
 Dir.glob('./ws/_posts/*.md') do |post_path|
   text = File.read(post_path)
-  text = text
-    .sub(/^---$/, '')
-    .sub(/^---$/, '$$$')
-    .split('$$$').first
+  text = text.sub(/^---$/, '')
+             .sub(/^---$/, '$$$')
+             .split('$$$').first
 
   categories = text.match(/categories: (.*)/).captures.first.split(' ')
   tags = text.match(/tags: (.*)/).captures.first.split(' ')
