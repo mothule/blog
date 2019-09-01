@@ -1,78 +1,72 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-01T16:37:51+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</title><link href="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog" rel="alternate" type="text/html" title="はてなブログからJekyllを使ったGitHub Pagesに移行した理由" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog</id><content type="html" xml:base="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog">&lt;p&gt;長年利用していた&lt;code class=&quot;highlighter-rouge&quot;&gt;はてなブログ&lt;/code&gt;からGitHub Pages上でJekyllを使った静的生成サイトに移行しました。
-この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて
-まとめてあります。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-02T01:01:02+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">p4mergeでgit mergeの衝突を解決する</title><link href="https://blog.mothule.com/tools/git/git-merge-p4merge" rel="alternate" type="text/html" title="p4mergeでgit mergeの衝突を解決する" /><published>2019-09-02T00:00:00+09:00</published><updated>2019-09-02T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/git/git-merge-p4merge</id><content type="html" xml:base="https://blog.mothule.com/tools/git/git-merge-p4merge">&lt;p&gt;gitを使っていると必ず出くわすことになるコンフリクト。
+機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。
+衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。
+今回はGUIでグラフィカルに衝突解決を行うツール&lt;strong&gt;p4merge&lt;/strong&gt;について紹介します。&lt;/p&gt;
 
-&lt;h2 id=&quot;移行したかった理由&quot;&gt;移行したかった理由&lt;/h2&gt;
+&lt;h2 id=&quot;guiでマージするならp4merge&quot;&gt;GUIでマージするならp4merge&lt;/h2&gt;
 
+&lt;p&gt;p4mergeをGitの衝突解決ツールとして設定すると、衝突時にp4mergeでグラフィカルにマージを行うことができます。&lt;/p&gt;
+
+&lt;h3 id=&quot;p4merge-のいいところ&quot;&gt;p4merge のいいところ&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;カスタマイズが非常にやりにくかった&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;衝突位置にだけ移動するショートカットが用意されている&lt;/li&gt;
+  &lt;li&gt;衝突ソース毎に背景色が違うので見分けがつく&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;細かい理由はありますが、この1点が常に不便で作りたいサイトが作れない煩わしさがありました。&lt;/p&gt;
+&lt;h2 id=&quot;インストール方法&quot;&gt;インストール方法&lt;/h2&gt;
 
-&lt;p&gt;パンくずリストを配置したい.グロナビを配置したい.関連記事による回遊率を上げたい.toc置きたい.
-決められた場所ではなくもっと全体的に自由に改変したい。
-という欲が常に付きまとい、CSSやJavascriptを弄るなどして我慢していましたが、&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://www.perforce.com/ja/zhipin/helix-core-apps/merge-diff-tool-p4merge&quot;&gt;公式サイト&lt;/a&gt;からOSを選んでダウンロードします。&lt;/p&gt;
 
-&lt;p&gt;移行先について調べてしまったら追加で&lt;/p&gt;
+&lt;h2 id=&quot;p4mergeが起動するように設定&quot;&gt;p4mergeが起動するように設定&lt;/h2&gt;
 
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.gitconfig&lt;/code&gt; を次のように設定します。他の無関係な設定は省いています。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;merge]
+  tool &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; p4merge
+  keepBackup &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;mergetool &lt;span class=&quot;s2&quot;&gt;&quot;p4merge&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+  path &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /Applications/p4merge.app/Contents/MacOS/p4merge
+  cmd &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; p4merge &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$BASE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOCAL&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$REMOTE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$MERGED&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  keepTemporaries &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false
+  &lt;/span&gt;trustExitCode &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false
+  &lt;/span&gt;keepBackup &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;このように設定すると、 &lt;code class=&quot;highlighter-rouge&quot;&gt;$ git mergetool&lt;/code&gt; と実行すれば、 p4merge　が起動します。&lt;/p&gt;
+
+&lt;p&gt;もし、マージではなく比較でも p4merge を使いたい場合は次のように設定します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;diff]
+  tool &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; vimdiff
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;difftool]
+	prompt &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+
+&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;difftool &lt;span class=&quot;s2&quot;&gt;&quot;p4merge&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
+	cmd &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /Applications/p4merge.app/Contents/MacOS/p4merge &lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOCAL&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$REMOTE&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;
+	trustExitCode &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この設定では、&lt;/p&gt;
 &lt;ul&gt;
-  &lt;li&gt;記事に対して自動処理を挟みたい時に挟めるなど実現可能性を確保しておきたい&lt;/li&gt;
-  &lt;li&gt;自分のブランディングに対して独自ドメインが必須だが、無料アカウントではできない&lt;/li&gt;
-  &lt;li&gt;得た知識で自分でSEO対応したブログを作ってみたい&lt;/li&gt;
-  &lt;li&gt;Ruby製ツールに慣れることでRubyスキルもあげれるかもしれない。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ git diff&lt;/code&gt; を実行すればユニファイド型式で表示され、&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ git difftool&lt;/code&gt;を実行すれば vimdiff で表示され、&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ git difftool -t p4merge&lt;/code&gt;を実行すれば p4merge で表示されます。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;などの欲も出てきて、移行することを決断しました。
-ちなみにこのように移行について深刻に悩んだのは5回目ぐらいです。&lt;/p&gt;
+&lt;h2 id=&quot;p4mergeの設定&quot;&gt;p4mergeの設定&lt;/h2&gt;
 
-&lt;h3 id=&quot;移行先にgithub-pagesを選んだ理由&quot;&gt;移行先にGitHub Pagesを選んだ理由&lt;/h3&gt;
-&lt;p&gt;ホスティング先をGitHub Pagesを選んだ理由は至ってシンプルで、技術ブログっぽいしエンジニアっぽいって理由なだけです。&lt;/p&gt;
+&lt;p&gt;p4merge自身の設定についてです。デフォルトでも使うことは可能ですが、いくつか設定をしておくことで余計な穴にハマらず使えるかと思います。&lt;/p&gt;
 
-&lt;h2 id=&quot;静的サイト生成ツールにjekyllを選んだ理由&quot;&gt;静的サイト生成ツールにJekyllを選んだ理由&lt;/h2&gt;
-
-&lt;h3 id=&quot;もともとはmiddlemanを予定していました&quot;&gt;もともとはMiddlemanを予定していました&lt;/h3&gt;
-&lt;p&gt;理由はRubyで書かれたツールで、View周りをHamlで書くことができたためです。
-しかし、Middlemanを調べると同じようにMiddlemanから別ツールに移行する記事もありました。
-それら記事はプレビューや記事速度が遅すぎるという理由でHUGOに移行していました。
-HUGOはGolang製でGo言語の処理速度により記事生成やプレビューがとにかく早い。が売りでした。
-しかし自分はこれを検討はしたものの採用はしませんでした。なぜならGo言語についてあまり構文を理解していないので、
-プラグイン作成とかちょっとしたView内コードを書くなどカスタマイズしたいときにGo言語が障害となりうると思っていたからです。
-実際サンプル覗いてもGo言語特有に&lt;code class=&quot;highlighter-rouge&quot;&gt;ret, error := hoge&lt;/code&gt; というエラーとレスポンスの同時受け取りが目に入り、却下しました。&lt;/p&gt;
-
-&lt;h3 id=&quot;他にどんなツールがあるから調べた&quot;&gt;他にどんなツールがあるから調べた&lt;/h3&gt;
-&lt;p&gt;もともと知っているツールが少なかったこともあって、一度全体的に静的サイト生成ツールについて情報収集を行いました。
-結果Ruby製でMiddlemanとJekyllがありました。&lt;/p&gt;
-
-&lt;p&gt;このときMiddlemanではなくJekyllに揺れた理由として&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-02-git-merge-p4merge-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-02-git-merge-p4merge-1.png&quot; width=&quot;75%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;MiddlemanのRepositoryが動いていない&lt;/li&gt;
-  &lt;li&gt;JekyllはGitHub Pagesが公式サポートしている&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;の2点です。&lt;/p&gt;
-
-&lt;h2 id=&quot;jekyllはmasterにpushすれば自動生成される仕組みがある&quot;&gt;Jekyllはmasterにpushすれば自動生成される仕組みがある&lt;/h2&gt;
-
-&lt;p&gt;Jekyllにはgithubが用意するgemに則ったサイト構成であれば、masterにpushするだけであとの生成は、github側が自動で生成してくれるらしいです。
-自分もその恩恵にあやかろうと思っていたのですが、対象のRuby言語バージョンが低くて、流石にここまで低いバージョンでメンテやカスタマイズしたくないなと思い、
-自分でdeploy用スクリプトを用意して運用しています。&lt;/p&gt;
-
-&lt;h2 id=&quot;jekyllのviewがliquidで苦労する&quot;&gt;JekyllのViewがLiquidで苦労する&lt;/h2&gt;
-
-&lt;p&gt;JekyllのViewはLiquidという慣れないビューエンジンを使っており、最初大変でしたが、
-&lt;a href=&quot;https://jekyllrb-ja.github.io/docs/&quot;&gt;Jekyllのサイト&lt;/a&gt;が日本語で書いてあり結構分かりやすかったので、
-チュートリアルをやったりして覚えました。&lt;/p&gt;
-
-&lt;h2 id=&quot;カスタムタグがrubyで書ける&quot;&gt;カスタムタグがRubyで書ける&lt;/h2&gt;
-&lt;p&gt;Markdown中に記載できるタグを自作ができて、かつRubyで処理を書くので、Rubyに触る機会が増やす目的は達成できたかなと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;ドメインにはムームードメインを使った&quot;&gt;ドメインにはムームードメインを使った&lt;/h2&gt;
-&lt;p&gt;自分用のドメインを買うのにもどこがいいか調べた結果ムームードメインにしました。
-もともとはGMOのどれかにしようと目星は付けていましたが、
-同じ親会社のサービスであるお名前.comは代理公開が有料だったので、ムームードメインにしました。
-GMOに絞った理由は、ドメインという運用において数多く、そして長く運用している＝安定性が高い。という決断です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="jekyll" /><category term="github-pages" /><summary type="html">長年利用していたはてなブログからGitHub Pages上でJekyllを使った静的生成サイトに移行しました。 この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて まとめてあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-migration-blog-to-github-pages-from-hatenablog.png" /></entry><entry><title type="html">CocoaPodsをrbenv+bundlerで管理する</title><link href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" rel="alternate" type="text/html" title="CocoaPodsをrbenv+bundlerで管理する" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler</id><content type="html" xml:base="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">&lt;p&gt;iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
+  &lt;li&gt;フォントは日本語対応フォントにする&lt;/li&gt;
+  &lt;li&gt;文字が重なる場合はフォントを等倍にする&lt;/li&gt;
+  &lt;li&gt;encode は utf-8(厳密にはファイルと合わせる)&lt;/li&gt;
+  &lt;li&gt;改行タイプはシステムと合わせる(厳密にはgit commit時に自動変換オプションもあるのでそっちの兼ね合いも必要)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Comparison method&lt;/code&gt; は 改行差異とスペース幅を無視する(ここは好みの問題でもある)&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="tools" /><category term="git" /><category term="p4merge" /><summary type="html">gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-02-git-merge-p4merge.png" /></entry><entry><title type="html">CocoaPodsをrbenv+bundlerで管理する</title><link href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" rel="alternate" type="text/html" title="CocoaPodsをrbenv+bundlerで管理する" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler</id><content type="html" xml:base="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">&lt;p&gt;iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
 CocoaPods単体であれば特に考えず &lt;code class=&quot;highlighter-rouge&quot;&gt;$ gem install cocoapods&lt;/code&gt; で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、
 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。&lt;/p&gt;
 
@@ -258,7 +252,81 @@ Rubyバージョンを更新した場合は、 &lt;code class=&quot;highlighter-
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
-今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</title><link href="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog" rel="alternate" type="text/html" title="はてなブログからJekyllを使ったGitHub Pagesに移行した理由" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog</id><content type="html" xml:base="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog">&lt;p&gt;長年利用していた&lt;code class=&quot;highlighter-rouge&quot;&gt;はてなブログ&lt;/code&gt;からGitHub Pages上でJekyllを使った静的生成サイトに移行しました。
+この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて
+まとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;移行したかった理由&quot;&gt;移行したかった理由&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;カスタマイズが非常にやりにくかった&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;細かい理由はありますが、この1点が常に不便で作りたいサイトが作れない煩わしさがありました。&lt;/p&gt;
+
+&lt;p&gt;パンくずリストを配置したい.グロナビを配置したい.関連記事による回遊率を上げたい.toc置きたい.
+決められた場所ではなくもっと全体的に自由に改変したい。
+という欲が常に付きまとい、CSSやJavascriptを弄るなどして我慢していましたが、&lt;/p&gt;
+
+&lt;p&gt;移行先について調べてしまったら追加で&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;記事に対して自動処理を挟みたい時に挟めるなど実現可能性を確保しておきたい&lt;/li&gt;
+  &lt;li&gt;自分のブランディングに対して独自ドメインが必須だが、無料アカウントではできない&lt;/li&gt;
+  &lt;li&gt;得た知識で自分でSEO対応したブログを作ってみたい&lt;/li&gt;
+  &lt;li&gt;Ruby製ツールに慣れることでRubyスキルもあげれるかもしれない。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などの欲も出てきて、移行することを決断しました。
+ちなみにこのように移行について深刻に悩んだのは5回目ぐらいです。&lt;/p&gt;
+
+&lt;h3 id=&quot;移行先にgithub-pagesを選んだ理由&quot;&gt;移行先にGitHub Pagesを選んだ理由&lt;/h3&gt;
+&lt;p&gt;ホスティング先をGitHub Pagesを選んだ理由は至ってシンプルで、技術ブログっぽいしエンジニアっぽいって理由なだけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;静的サイト生成ツールにjekyllを選んだ理由&quot;&gt;静的サイト生成ツールにJekyllを選んだ理由&lt;/h2&gt;
+
+&lt;h3 id=&quot;もともとはmiddlemanを予定していました&quot;&gt;もともとはMiddlemanを予定していました&lt;/h3&gt;
+&lt;p&gt;理由はRubyで書かれたツールで、View周りをHamlで書くことができたためです。
+しかし、Middlemanを調べると同じようにMiddlemanから別ツールに移行する記事もありました。
+それら記事はプレビューや記事速度が遅すぎるという理由でHUGOに移行していました。
+HUGOはGolang製でGo言語の処理速度により記事生成やプレビューがとにかく早い。が売りでした。
+しかし自分はこれを検討はしたものの採用はしませんでした。なぜならGo言語についてあまり構文を理解していないので、
+プラグイン作成とかちょっとしたView内コードを書くなどカスタマイズしたいときにGo言語が障害となりうると思っていたからです。
+実際サンプル覗いてもGo言語特有に&lt;code class=&quot;highlighter-rouge&quot;&gt;ret, error := hoge&lt;/code&gt; というエラーとレスポンスの同時受け取りが目に入り、却下しました。&lt;/p&gt;
+
+&lt;h3 id=&quot;他にどんなツールがあるから調べた&quot;&gt;他にどんなツールがあるから調べた&lt;/h3&gt;
+&lt;p&gt;もともと知っているツールが少なかったこともあって、一度全体的に静的サイト生成ツールについて情報収集を行いました。
+結果Ruby製でMiddlemanとJekyllがありました。&lt;/p&gt;
+
+&lt;p&gt;このときMiddlemanではなくJekyllに揺れた理由として&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MiddlemanのRepositoryが動いていない&lt;/li&gt;
+  &lt;li&gt;JekyllはGitHub Pagesが公式サポートしている&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の2点です。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyllはmasterにpushすれば自動生成される仕組みがある&quot;&gt;Jekyllはmasterにpushすれば自動生成される仕組みがある&lt;/h2&gt;
+
+&lt;p&gt;Jekyllにはgithubが用意するgemに則ったサイト構成であれば、masterにpushするだけであとの生成は、github側が自動で生成してくれるらしいです。
+自分もその恩恵にあやかろうと思っていたのですが、対象のRuby言語バージョンが低くて、流石にここまで低いバージョンでメンテやカスタマイズしたくないなと思い、
+自分でdeploy用スクリプトを用意して運用しています。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyllのviewがliquidで苦労する&quot;&gt;JekyllのViewがLiquidで苦労する&lt;/h2&gt;
+
+&lt;p&gt;JekyllのViewはLiquidという慣れないビューエンジンを使っており、最初大変でしたが、
+&lt;a href=&quot;https://jekyllrb-ja.github.io/docs/&quot;&gt;Jekyllのサイト&lt;/a&gt;が日本語で書いてあり結構分かりやすかったので、
+チュートリアルをやったりして覚えました。&lt;/p&gt;
+
+&lt;h2 id=&quot;カスタムタグがrubyで書ける&quot;&gt;カスタムタグがRubyで書ける&lt;/h2&gt;
+&lt;p&gt;Markdown中に記載できるタグを自作ができて、かつRubyで処理を書くので、Rubyに触る機会が増やす目的は達成できたかなと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;ドメインにはムームードメインを使った&quot;&gt;ドメインにはムームードメインを使った&lt;/h2&gt;
+&lt;p&gt;自分用のドメインを買うのにもどこがいいか調べた結果ムームードメインにしました。
+もともとはGMOのどれかにしようと目星は付けていましたが、
+同じ親会社のサービスであるお名前.comは代理公開が有料だったので、ムームードメインにしました。
+GMOに絞った理由は、ドメインという運用において数多く、そして長く運用している＝安定性が高い。という決断です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="jekyll" /><category term="github-pages" /><summary type="html">長年利用していたはてなブログからGitHub Pages上でJekyllを使った静的生成サイトに移行しました。 この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて まとめてあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-migration-blog-to-github-pages-from-hatenablog.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
 
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -985,88 +1053,4 @@ hoge.txt                                  100%  227    17.8KB/s   00:00
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scp &lt;span class=&quot;nt&quot;&gt;-C&lt;/span&gt; /tmp/hoge.txt mothule@192.168.11.6:/tmp
 ssh: connect to host 192.168.11.6 port 22: Connection refused
 lost connection
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="mac" /><summary type="html">MacからLinuxに対してscpを使うことをよくあるのですが、Macに対してscpを使おうとしたときに躓いたのでまとめました。 ちなみに送信元はMacでなくとも何でもいいです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法</title><link href="https://blog.mothule.com/mac/how-to-access-localhost-from-ios" rel="alternate" type="text/html" title="iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法" /><published>2019-08-02T00:00:00+09:00</published><updated>2019-08-02T00:00:00+09:00</updated><id>https://blog.mothule.com/mac/how-to-access-localhost-from-ios</id><content type="html" xml:base="https://blog.mothule.com/mac/how-to-access-localhost-from-ios">&lt;p&gt;MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。
-わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。
-今回はその方法についてまとました。&lt;/p&gt;
-
-&lt;h2 id=&quot;localhost接続には条件があります&quot;&gt;localhost接続には条件があります&lt;/h2&gt;
-
-&lt;p&gt;この方法には１つ条件があります。&lt;/p&gt;
-
-&lt;p&gt;MacとiPhoneのネット回線が&lt;strong&gt;同じWi-Fi環境下&lt;/strong&gt;であること&lt;/p&gt;
-
-&lt;p&gt;満たさないと今回説明する方法では実現できません。&lt;/p&gt;
-
-&lt;h2 id=&quot;macのシステム環境設定で共有を設定する&quot;&gt;Macのシステム環境設定で共有を設定する&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-1.png&quot; width=&quot;100%&quot; alt=&quot;システム環境設定の共有画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;上図はシステム環境設定の共有を開いた画面になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;共有を有効にする&quot;&gt;共有を有効にする&lt;/h3&gt;
-&lt;p&gt;まず左側のチェックボックスの&lt;strong&gt;いずれか&lt;/strong&gt;をONにしてください。
-1つだけでいいですし、例えば下図のように実質共有不可能にしても構いません。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-2.png&quot; width=&quot;100%&quot; alt=&quot;共有の有効&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;ローカルホスト名を設定する&quot;&gt;ローカルホスト名を設定する&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-3.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-3.png&quot; width=&quot;100%&quot; alt=&quot;ローカルホスト名の設定&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;例えば上図のようになっていた場合、&lt;strong&gt;ローカルホスト名とは「mothule-mbp.local」&lt;/strong&gt;のことを言います。
-これが実際のアドレス代わりとなり、&lt;code class=&quot;highlighter-rouge&quot;&gt;http://mothule-mbp.local:3000&lt;/code&gt; のようにアクセスするとポート3000に対して &lt;code class=&quot;highlighter-rouge&quot;&gt;GET /&lt;/code&gt; リクエストを投げます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;しかし注意事項があります。&lt;/strong&gt;&lt;br /&gt;
-上記のようにハイフン(&lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;)が入ってると動かないので取り除く必要があります。&lt;/p&gt;
-
-&lt;p&gt;画面右の「編集…」ボタンからローカルホスト名を変更することができるので、ハイフンを除去した名前にしてください。&lt;/p&gt;
-
-&lt;p&gt;これでローカルネットワークにおいてアドレスの準備が済みました。
-しかしこのままでは何も反応しないので、上モノとしてRailsアプリを用意します。
-ちなみにRailsアプリでなくともPHPアプリでも何でもいいです。&lt;/p&gt;
-
-&lt;h2 id=&quot;railsアプリを適当に用意する&quot;&gt;Railsアプリを適当に用意する&lt;/h2&gt;
-
-&lt;p&gt;今回の目的はlocalhostへのアクセスなので、ここは適当なアプリを用意していいです。&lt;/p&gt;
-
-&lt;p&gt;ただし立ち上げ時のオプションに &lt;code class=&quot;highlighter-rouge&quot;&gt;-b&lt;/code&gt; つまりバインディングを次のように指定してください。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/rails s &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 0.0.0.0
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Booting Puma
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Rails 5.2.3 application starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;development
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Run &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;rails server &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more startup options
-Puma starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;single mode...
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Version 3.12.1 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby 2.6.2-p47&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, codename: Llamas &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;Pajamas
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Min threads: 5, max threads: 5
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Environment: development
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Listening on tcp://0.0.0.0:3000
-Use Ctrl-C to stop
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;アプリを起動すると &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;ではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;0.0.0.0:3000&lt;/code&gt; でリッスンしました。
-ここで先程設定した&lt;strong&gt;ローカルホスト名&lt;/strong&gt;を使います。
-仮にローカルホスト名が「mothule.local」だとして、&lt;code class=&quot;highlighter-rouge&quot;&gt;http://mothule.local:3000/&lt;/code&gt; にアクセスしてみます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-4.jpg&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-4.jpg&quot; width=&quot;50%&quot; alt=&quot;サーバー起動画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;無事アクセスできました。&lt;/p&gt;
-
-&lt;h3 id=&quot;-b-0000-の意味&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt; の意味&lt;/h3&gt;
-
-&lt;p&gt;これはデフォルトでは &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt; になっており、localhost経路以外でのアクセスはできません。
-しかし 0.0.0.0 を指定することでこれを全公開することになり、同一ネットーワークでかつIPが分かれば、どの端末でも誰でもアクセスできます。
-そのため注意事項としては、公共のWi-Fi環境下ではやらないほうがいいです。&lt;/p&gt;
-
-&lt;h2 id=&quot;ローカルネットワークのipアドレス直でもアクセスできる&quot;&gt;ローカルネットワークのIPアドレス直でもアクセスできる&lt;/h2&gt;
-
-&lt;p&gt;今回はローカルホスト名を使いましたが、そもそも上記で説明したように全公開になっているので、Railsアプリが立ち上がっているPCのIPアドレスでもアクセスできます。
-「http://192.168.11.3:3000」みたいに。 IPは ifconfig で確認できます。&lt;/p&gt;
-
-&lt;h2 id=&quot;safariではなくアプリならats無効化する&quot;&gt;SafariではなくアプリならATS無効化する&lt;/h2&gt;
-
-&lt;p&gt;もしiPhoneアプリからRailsアプリに接続する場合は、 ATSを無効化することでアクセスできます。&lt;/p&gt;
-
-&lt;p&gt;下図はXcodeでInfo.plistを開いた画像です。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png&quot; width=&quot;100%&quot; alt=&quot;ATS一部無効化設定&quot; /&gt;&lt;/a&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="ios" /><category term="mac" /><summary type="html">MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。 今回はその方法についてまとました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="mac" /><summary type="html">MacからLinuxに対してscpを使うことをよくあるのですが、Macに対してscpを使おうとしたときに躓いたのでまとめました。 ちなみに送信元はMacでなくとも何でもいいです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>

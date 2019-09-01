@@ -11,8 +11,8 @@
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="CircleCIで別途SSHキーを追加して使う方法" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="CircleCIで別途SSHキーを追加して使う方法. 最近CircleCIを使って定期実行的なことをするために弄り始めました。CircleCI が自動で生成＆登録してる鍵は read-only CircleCIを使ってサーバーにデプロイしたい場合やGitHubへpushしたい場合は、 自動生成＆登録されるSSH Keyでは権限が足りずエラーになります。別途SSH Keyを登録して利用することで上記のような目的を達成できるようになります。" />
-<meta property="og:description" content="CircleCIで別途SSHキーを追加して使う方法. 最近CircleCIを使って定期実行的なことをするために弄り始めました。CircleCI が自動で生成＆登録してる鍵は read-only CircleCIを使ってサーバーにデプロイしたい場合やGitHubへpushしたい場合は、 自動生成＆登録されるSSH Keyでは権限が足りずエラーになります。別途SSH Keyを登録して利用することで上記のような目的を達成できるようになります。" />
+<meta name="description" content="最近CircleCIを使って定期実行的なことをするために弄り始めました。" />
+<meta property="og:description" content="最近CircleCIを使って定期実行的なことをするために弄り始めました。" />
 <link rel="canonical" href="https://blog.mothule.com/ci/circleci/circleci-add-ssh-key" />
 <meta property="og:url" content="https://blog.mothule.com/ci/circleci/circleci-add-ssh-key" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -22,14 +22,14 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key","headline":"CircleCIで別途SSHキーを追加して使う方法","dateModified":"2018-11-27T00:00:00+09:00","datePublished":"2018-11-27T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key"},"description":"CircleCIで別途SSHキーを追加して使う方法. 最近CircleCIを使って定期実行的なことをするために弄り始めました。CircleCI が自動で生成＆登録してる鍵は read-only CircleCIを使ってサーバーにデプロイしたい場合やGitHubへpushしたい場合は、 自動生成＆登録されるSSH Keyでは権限が足りずエラーになります。別途SSH Keyを登録して利用することで上記のような目的を達成できるようになります。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key","headline":"CircleCIで別途SSHキーを追加して使う方法","dateModified":"2018-11-27T00:00:00+09:00","datePublished":"2018-11-27T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key"},"description":"最近CircleCIを使って定期実行的なことをするために弄り始めました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
     <meta name="twitter:title" content="CircleCIで別途SSHキーを追加して使う方法">
-    <meta name="twitter:description" content="CircleCIで別途SSHキーを追加して使う方法. 最近CircleCIを使って定期実行的なことをするために弄り始めました。CircleCI が自動で生成＆登録してる鍵は read-only CircleCIを使ってサーバーにデプロイしたい場合やGitHubへpushしたい場合は、 自動生成＆登録されるSSH Keyでは権限が足りずエラーになります。別途SSH Keyを登録して利用することで上記のような目的を達成できるようになります。">
+    <meta name="twitter:description" content="最近CircleCIを使って定期実行的なことをするために弄り始めました。">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/site-image.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -192,6 +192,10 @@
   <div class="related-posts-body">
     
       <ul>
+        <li><a href="/tools/git/git-merge-p4merge">p4mergeでgit mergeの衝突を解決する</a></li>
+      </ul>
+    
+      <ul>
         <li><a href="/notebook/migration-blog-to-github-pages-from-hatenablog">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</a></li>
       </ul>
     
@@ -205,10 +209,6 @@
     
       <ul>
         <li><a href="/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">Mac上でRailsとMySQLのサーバー分けたい</a></li>
-      </ul>
-    
-      <ul>
-        <li><a href="/tools/regexp/regexp-not-expression">正規表現で否定を表現する</a></li>
       </ul>
     
   </div>
@@ -314,6 +314,8 @@
       <a href="/tags#jekyll">jekyll</a>
     
       <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
     
   </div>
 </div>
