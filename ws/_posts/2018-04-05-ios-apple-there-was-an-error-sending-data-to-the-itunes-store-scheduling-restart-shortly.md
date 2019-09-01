@@ -1,6 +1,5 @@
 ---
 title: App Storeへのアップロードで There was an error sending data to the iTunes Store. Scheduling restart shortly が出たので解決した
-date: 2018-04-05
 categories: ios
 tags: ios
 image:

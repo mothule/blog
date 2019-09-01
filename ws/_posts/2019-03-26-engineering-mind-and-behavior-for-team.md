@@ -1,6 +1,5 @@
 ---
 title: 健全なチームの成熟のために自分が意識していること
-date: 2019-03-26
 categories: notebook
 tags: notebook
 image:

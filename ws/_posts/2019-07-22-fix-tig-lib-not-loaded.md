@@ -1,6 +1,5 @@
 ---
 title: "dylod: Library not loaded でtigが起動しない状態から動くまで"
-date: 2019-07-22
 categories: tools tig
 tags: git tig homebrew tools
 ---

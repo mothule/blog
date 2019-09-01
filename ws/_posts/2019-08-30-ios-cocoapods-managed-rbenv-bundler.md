@@ -1,6 +1,5 @@
 ---
 title: CocoaPodsをrbenv+bundlerで管理する
-date: 2019-08-30
 categories: ios cocoapods
 tags: ios cocoapods rbenv bundler
 image:

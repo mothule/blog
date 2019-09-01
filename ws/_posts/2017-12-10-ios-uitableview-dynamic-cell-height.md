@@ -1,6 +1,5 @@
 ---
 title: UITableViewのセルの高さを動的に変更する
-date: 2017-12-10
 categories: ios uitableview
 tags: ios swift uitableview
 image:

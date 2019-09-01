@@ -1,6 +1,5 @@
 ---
 title: カバレッジがもたらす災い。カバレッジ率なんてゴミ箱に捨てて、みんなで飲みに行け。
-date: 2016-10-23
 categories: notebook
 tags: notebook
 ---

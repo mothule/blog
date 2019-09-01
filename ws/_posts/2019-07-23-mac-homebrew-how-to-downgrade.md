@@ -1,6 +1,5 @@
 ---
 title: Homebrewで過去バージョンにダウングレードする2つの方法
-date: 2019-07-23
 categories: mac homebrew
 tags: mac homebrew
 ---

@@ -1,6 +1,5 @@
 ---
 title: MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応
-date: 2019-08-02
 categories: ruby rails active-record
 tags: ruby rails active-record mysql
 ---

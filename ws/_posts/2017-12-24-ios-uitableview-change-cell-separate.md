@@ -1,7 +1,5 @@
 ---
 title: UITableViewのセル間の境界線を変更する
-date: 2017-12-24
-draft: true
 categories: ios uitableview
 tags: ios uitableview
 image:

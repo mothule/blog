@@ -1,6 +1,5 @@
 ---
 title: CircleCIで別途SSHキーを追加して使う方法
-date: 2018-11-27
 categories: ci circleci
 tags: circleci ssh ci
 ---

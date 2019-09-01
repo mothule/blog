@@ -1,6 +1,5 @@
 ---
 title: 年収500万の人は通勤で毎年23万円分の時間を使っている
-date: 2017-12-07
 categories: notebook remote-work
 tags: notebook remote-work
 ---

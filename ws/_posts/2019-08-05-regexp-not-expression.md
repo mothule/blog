@@ -1,6 +1,5 @@
 ---
 title: 正規表現で否定を表現する
-date: 2019-08-05
 categories: tools regexp
 tags: tools regexp
 ---

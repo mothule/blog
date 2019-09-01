@@ -1,6 +1,5 @@
 ---
 title: Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた
-date: 2019-07-30
 categories: ruby rails
 tags: ruby rails mysql
 ---

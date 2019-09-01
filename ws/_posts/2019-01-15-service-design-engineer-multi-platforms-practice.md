@@ -1,6 +1,5 @@
 ---
 title: WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話
-date: 2019-01-15
 categories: design service-design
 tags: service-design design
 ---

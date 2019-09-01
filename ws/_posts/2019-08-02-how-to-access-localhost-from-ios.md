@@ -1,6 +1,5 @@
 ---
 title: iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法
-date: 2019-08-02
 categories: mac
 tags: ruby rails ios mac
 ---

@@ -1,6 +1,5 @@
 ---
 title: Homebrewで使われているかを解決する
-date: 2019-07-30
 categories: mac homebrew
 tags: mac homebrew
 ---

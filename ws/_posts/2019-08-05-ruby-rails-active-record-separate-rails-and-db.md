@@ -1,6 +1,5 @@
 ---
 title: Mac上でRailsとMySQLのサーバー分けたい
-date: 2019-08-05
 categories: ruby rails active-record
 tags: ruby rails active-record mysql
 ---

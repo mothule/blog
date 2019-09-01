@@ -1,6 +1,5 @@
 ---
 title: cronの書き方
-date: 2018-12-17
 categories: tools
 tags: tools cron
 ---

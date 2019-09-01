@@ -1,6 +1,5 @@
 ---
 title: エンジニアは矛盾した行動でユーザーや自分を裏切る企画や営業に辟易しやすい。
-date: 2016-05-19
 categories: notebook
 tags: notebook
 ---

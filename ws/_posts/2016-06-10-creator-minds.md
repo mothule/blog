@@ -1,6 +1,5 @@
 ---
 title: ソフトウェアエンジニアが持つべきモノづくりの考え方
-date: 2016-06-10
 categories: notebook
 tags: notebook
 ---

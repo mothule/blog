@@ -1,6 +1,5 @@
 ---
 title: Optional<String>をExtension化したのにエラーになって役に立たなかった話
-date: 2018-08-15
 categories: ios swift
 tags: ios swift
 ---

@@ -1,6 +1,5 @@
 ---
 title: MySQLのmy.cnfの場所を見つける
-date: 2019-08-02
 categories: mysql
 tags: mysql
 ---

@@ -1,6 +1,5 @@
 ---
 title: クライアントエンジニアにはcurlよりHTTPieがお薦め
-date: 2019-02-24
 categories: tools httpie
 tags: tools httpie
 image:

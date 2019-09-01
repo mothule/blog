@@ -1,6 +1,5 @@
 ---
 title: はてなブログからJekyllを使ったGitHub Pagesに移行した理由
-date: 2019-08-30
 categories: notebook
 tags: notebook jekyll github-pages
 image:
