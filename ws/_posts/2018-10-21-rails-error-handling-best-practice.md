@@ -1,6 +1,5 @@
 ---
 title: RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた
-description: RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた
 date: 2018-10-21
 categories: ruby rails
 tags: rails rails-controller ruby

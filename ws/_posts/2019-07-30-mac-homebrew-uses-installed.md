@@ -1,6 +1,5 @@
 ---
 title: Homebrewで使われているかを解決する
-description: 長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？`$ brew list -l` で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、「これ何で入れたんだっけ？」と思うパッケージが結構います。その場合は次のコマンドでどのパッケージで使われているのか分かります。`$ brew uses --installed <formula>`
 date: 2019-07-30
 categories: mac homebrew
 tags: mac homebrew

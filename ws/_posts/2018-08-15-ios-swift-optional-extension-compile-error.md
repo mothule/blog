@@ -1,6 +1,5 @@
 ---
 title: Optional<String>をExtension化したのにエラーになって役に立たなかった話
-description: Optional<String>をExtension化したのにエラーになって立たなかった話. nil結合演算子はコンパイルが重くなる要因だし、見た目としてもよくないから解決したいと考えてた。そこで Optional を拡張してそのコードを次のようにカプセル化した。これなら nil結合演算子も使わずにコード量も抑えられる。
 date: 2018-08-15
 categories: ios swift
 tags: ios swift

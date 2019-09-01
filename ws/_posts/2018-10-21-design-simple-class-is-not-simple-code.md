@@ -1,6 +1,5 @@
 ---
 title: クラス名にSimpleやEasyがついててもクラス内コードが単純なわけではない
-description: クラス名にSimpleやEasyがついててもクラス内コードが単純なわけではない
 date: 2018-10-21
 categories: notebook program-design
 tags: program-design notebook

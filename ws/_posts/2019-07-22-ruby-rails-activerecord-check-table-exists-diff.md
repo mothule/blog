@@ -1,6 +1,5 @@
 ---
 title: ActiveRecordでテーブルの存在を確認する2つの方法とその違い
-description: ActiveRecordでテーブルの存在を確認する2つの方法とその違い
 date: 2019-07-22
 categories: ruby rails active-record
 tags: ruby rails active-record

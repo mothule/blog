@@ -1,6 +1,5 @@
 ---
 title: UITableViewで一番下までスクロールする方法
-description: UITableViewで一番下のセルまでスクロールする方法についてまとめました。UITableView#scrollToRow(at:at:animated)を使います。第一引数のIndexPathにはrowとsectionを指定します。この時にデータ配列から一番最後を指定することで一番下のセルまでスクロールできるようになります。もしセクションが複数個の場合は、一番最後のセクション番号を指定しないといけません。セクションは固定であれば数えて一番最後のセクション、動的であれば元となるデータ配列の一番最後を指定してください。
 date: 2017-12-15
 categories: ios uitableview
 tags: ios uitableview

@@ -1,6 +1,5 @@
 ---
 title: UITableViewのセル間の境界線を変更する
-description: UITableViewのセル間の境界線を変更する。セル間の境界線のスタイルと色と開始位置／終了位置を変更する方法です。凝ったことはせずデフォルトの機能だけで実現することができます。
 date: 2017-12-24
 draft: true
 categories: ios uitableview

@@ -1,6 +1,5 @@
 ---
 title: Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた
-description: MySQLを最新ではなく5.6で環境構築する機会がありました。その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。
 date: 2019-07-30
 categories: ruby rails
 tags: ruby rails mysql

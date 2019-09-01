@@ -1,6 +1,5 @@
 ---
 title: Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない
-description: Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない
 date: 2016-10-18
 categories: notebook
 tags: program-design notebook

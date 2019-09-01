@@ -1,6 +1,5 @@
 ---
 title: 忘れるのに定期的に必要になるMySQLコマンド
-description: 忘れるのに定期的に必要になるMySQLコマンド
 date: 2019-08-02
 categories: mysql
 tags: mysql

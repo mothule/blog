@@ -1,6 +1,5 @@
 ---
 title: MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応
-description: MySQL5.6でActiveRecordのencodingがutf8mb4だとMysql2 Error Index column size too large. The maximum column size is 767 bytes.とエラーが出るようになりました。この問題の対応についてメモ兼調査することにしました。
 date: 2019-08-02
 categories: ruby rails active-record
 tags: ruby rails active-record mysql

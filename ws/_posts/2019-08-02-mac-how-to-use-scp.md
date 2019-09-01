@@ -1,6 +1,5 @@
 ---
 title: MacからMacへscpを使う方法
-description: MacからMacへscpを使う方法
 date: 2019-08-02
 categories: mac
 tags: mac

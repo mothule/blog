@@ -1,6 +1,5 @@
 ---
 title: ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする
-description: RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。特にブレイクポイント機能があれば、バグの原因追求が迅速になります。しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。しかし、そんなときに便利なのがngrokというサービスです。
 date: 2019-08-05
 categories: ios
 tags: ios ngrok ats

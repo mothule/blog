@@ -1,6 +1,5 @@
 ---
 title: 正規表現で否定を表現する
-description: 正規表現で否定を表現する方法と、それぞれ何が行われているのかを分解して自分なりにまとめてみました。
 date: 2019-08-05
 categories: tools regexp
 tags: tools regexp

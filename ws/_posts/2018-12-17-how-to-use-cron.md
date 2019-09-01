@@ -1,6 +1,5 @@
 ---
 title: cronの書き方
-description: cronの書き方. crond だけでなく何かと色んな所で出てくる cron 記法 毎回検索しても欲しい記法見つけるのに時間かかるのでほぼ自分用に書いた。
 date: 2018-12-17
 categories: tools
 tags: tools cron

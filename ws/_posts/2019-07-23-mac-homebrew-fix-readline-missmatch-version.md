@@ -1,6 +1,5 @@
 ---
 title: readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ
-description: readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ
 date: 2019-07-23
 categories: mac homebrew
 tags: mac homebrew

@@ -1,6 +1,5 @@
 ---
 title: 画面外へスライドアニメすると表示が消えてからスライドするのはSafeAreaが原因
-description: 画面外へスライドアニメすると表示が消えてからスライドするのはSafeAreaが原因
 date: 2019-01-05
 categories: ios uiview
 tags: ios swift uiview ios-safearea
