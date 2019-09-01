@@ -1,6 +1,5 @@
 ---
 title: CocoaPodsをrbenv+bundlerで管理する
-description: iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず `$ gem install cocoapods` で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。
 date: 2019-08-30
 categories: ios cocoapods
 tags: ios cocoapods rbenv bundler
