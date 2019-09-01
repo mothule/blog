@@ -1,24 +1,22 @@
 ---
 title: RackとRack Middlewareを知ることでRailsの一部仕組みを理解する
-description: Railsの挙動を拡張するには3つの方法があり、今回はその中で `Rack Middleware` で拡張する基本や拡張先となるRackに関する仕組みについて調べました。この記事でRailsとRackサーバーの関係やRackそのものについてやRackに沿った拡張`Rack Middleware`について理解が深まると思います。
-date: 2019-08-25
 categories: ruby rails rack
 tags: ruby rails rack rack-middleware
-draft: true
 ---
 
-Railsの挙動を拡張するには3つの方法があり、今回はその中で `Rack Middleware` で拡張する基本や拡張先となるRackに関する仕組みについて調べました。
-この記事でRailsとRackサーバーの関係やRackそのものについてやRackに沿った拡張`Rack Middleware`について理解が深まると思います。
+Railsの挙動を拡張するには3つの方法があります。
 
 1. Rack Middleware
 1. Railtie
-1. その他
+1. その他, CLIなど
+
+今回は `Rack Middleware` で拡張するときの基本や拡張先となる`Rack`の仕組みについて調べました。  
+この記事でRailsとRackサーバーの関係や、Rack自体の知識とRackに準拠した拡張`Rack Middleware`について初めの一歩程度は理解が深まると思います。
 
 ## Rackとは規約
 
-Rakeとは、Web server と Ruby framework 間をつなぐ規約、取り決めです。
-PythonのPSGIの規約を参考に登場し、
-Rubyで実装されたサーバーとアプリの差異を埋める緩衝材みたいな存在です。
+Rackとは大雑把にまとめると、Web server と Ruby framework 間をつなぐ規約、取り決めです。  
+PythonのPSGIの規約を参考に登場し、サーバーとRubyで実装されたアプリの差異を埋める緩衝材みたいな存在です。
 
 ### 規約について
 `.ru`を拡張子のRubyファイルを用意し、決まったシグネチャとレスポンスを返すメソッドを用意することでRackとして機能します。
@@ -27,7 +25,7 @@ Rubyで実装されたサーバーとアプリの差異を埋める緩衝材み�
 - レスポンスは次の3つを含む配列を返す
   - HTTPステータスコード
   - ヘッダー情報が格納されたHash
-  - eachに反応するオブジェクト 
+  - コンテンツオブジェクト
 
 つまり最小コードで表すと次のコードになります。
 
@@ -55,7 +53,7 @@ Rackアプリに機能を追加するミドルウェアです。
 $ gem install rack
 ```
 
-`rack`をインストールすることで`rackup`というコマンドが使えるようになります。
+`rack`をインストールすることで`rackup`というコマンドが使えるようになります。  
 先程の `config.ru` を `rakeup` で呼ぶことでサーバーが起動します。
 
 ```sh
@@ -66,7 +64,7 @@ $ rackup config.ru
 
 ## Rack Middlewareを作ってみる
 
-Rake Middlewareとは先程のRackアプリに対して、処理を追加するプログラムです。
+Rack Middlewareとは先程のRackアプリに対して、処理を追加するプログラムです。  
 次のような `ReplaceWords` クラスを `use ReplaceWords` と呼ぶことで
 処理を追加することができます。
 
@@ -84,12 +82,13 @@ class ReplaceWords
 end
 
 App = lambda do |env|
-  [200, {'Content-Type' => 'text/html}, ['Hello, Rake world!']]
+  [200, {'Content-Type' => 'text/html'}, ['Hello, Rack world!']]
 end
 
 use ReplaceWords
 run App
 ```
+
 
 ### Rack Middlewareには制約がある
 
@@ -99,6 +98,7 @@ Rack同様にミドルウェアにもシグネチャとレスポンスを守る�
 - Rackアプリ同様に、 Hashを引数とした`call`メソッドがある
 
 この制約を守っていれば、パイプのように連結することも可能になります。
+
 下記は2つのRack Middlewareを連結したことになります。
 
 ```ruby
@@ -119,6 +119,7 @@ env、`call`の第一引数には、リクエスト情報が格納されてい�
 ### Rack Middlewareにおけるenvの活用
 
 Rack Middlewareを連結することでenvはContext情報のように取り回され続きます。
+
 そのため env に値を追加すれば、次のRack Middlewareでその値を使うことができます。
 
 ## RailsのRack Middlewareを確認
@@ -127,7 +128,7 @@ Rack Middlewareを連結することでenvはContext情報のように取り回�
 $ bin/rake middleware
 ```
 
-のrakeコマンドで `use` 部分一覧を表示します。
+のrakeコマンドで `use` 部分一覧を表示します。  
 RailsのRackがどのようなMiddlewareを経てRailsに渡ってきてるのか興味がある方は調べてみると面白いかもしれません。
 
 ## RailsでRack Middlewareを追加する
@@ -144,5 +145,5 @@ end
 ## まとめ
 
 RackやRack Middlewareを知ることで、Railsの拡張性の高さや実際にどうやって拡張されているのかを知ることができたと思います。
-このように普段ほとんど関わることのない機能であっても知ることで色んな所の仕組みが理解できるようになるのはおもしろいですね。
 
+このように普段ほとんど関わることのない機能であっても知ることで色んな所の仕組みが理解できるようになるのはおもしろいですね。
