@@ -10,8 +10,11 @@
     {% endif %}
 
     {% seo title=false %}
+
+    {% assign twitter_description = page.description | default: page.excerpt | default: site.description %}
+    {% assign twitter_description = twitter_description | markdownify | strip_html | strip_newlines | escape_once %}
     <meta name="twitter:title" content="{{ page.title }}">
-    <meta name="twitter:description" content="{{ page.description | default: site.description }}">
+    <meta name="twitter:description" content="{{ twitter_description }}">
     <meta name="twitter:image:src" content="{{ page.image.path | default: site.site_image | absolute_url }}">
 
     <link href="{{ site.bootstrap_url }}/css/bootstrap.min.css"
