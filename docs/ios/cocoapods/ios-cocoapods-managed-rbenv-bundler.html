@@ -11,8 +11,8 @@
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="CocoaPodsをrbenv+bundlerで管理する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。" />
-<meta property="og:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。" />
+<meta name="description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。" />
+<meta property="og:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。" />
 <link rel="canonical" href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
 <meta property="og:url" content="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -22,20 +22,23 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler","headline":"CocoaPodsをrbenv+bundlerで管理する","dateModified":"2019-08-30T00:00:00+09:00","datePublished":"2019-08-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler"},"description":"iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler","headline":"CocoaPodsをrbenv+bundlerで管理する","dateModified":"2019-08-30T00:00:00+09:00","datePublished":"2019-08-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler"},"description":"iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
+
+    
+    
     <meta name="twitter:title" content="CocoaPodsをrbenv+bundlerで管理する">
-    <meta name="twitter:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず `$ gem install cocoapods` で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。">
+    <meta name="twitter:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
-    <link rel="stylesheet" href="/assets/css/styles.css">
-    <link rel="stylesheet" href="/assets/css/syntax.css">
-    <link rel="apple-touch-icon" sizes="180x180" href="/assets/images/apple-touch-icon.png">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
     
   <!-- Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
