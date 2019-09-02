@@ -6,6 +6,9 @@ categories: ruby rails active-record
 tags: ruby rails active-record
 draft: true
 ---
+# なるべく楽にはてなブログからJekyllに移行する方法
+
+
 
 # 複数のGitHub Pagesにそれぞれサブドメインを割り振る
 
@@ -31,7 +34,7 @@ mothule.com
 
 # GitHub Pagesに独自ドメインのサブドメインを
 
-## CNAMEレコードとALIASレコードの違い
+
 
 
 

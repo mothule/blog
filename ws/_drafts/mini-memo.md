@@ -7,10 +7,13 @@ tags: ruby rails active-record
 draft: true
 ---
 
-# ちょっとした負荷テストをする
 
-```sh
-parallel -j 10 --verbose ruby stress_tester.rb walk {} ::: "user0" "user1" "user2" "user3" "user4" "user5" "user6" "user7" "user8" "user9"
-```
+# mac の場合 gnu-sed を落としたほうが何かと都合がいい
 
-# ActiveRecordの slow query を検知する
+
+# sedで部分抽出をする
+は-rをつける
+sed -r 's/^.*\.(.*)$/\1/'
+
+# rubyスクリプトをコマンドのように呼ぶ方法
+シェバングでrubyを指定する.

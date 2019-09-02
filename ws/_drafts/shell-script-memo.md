@@ -1,26 +1,16 @@
----
-title: ActiveRecordでpluckとselectしてpluckに変化はあるか？
-description: ActiveRecordでpluckとselectしてpluckに変化はあるか？
-date: 2019-08-05
-categories: ruby rails active-record
-tags: ruby rails active-record
-draft: true
----
-
-# なるべく楽にはてなブログからJekyllに移行する方法
-
-# mac の場合 gnu-sed を落としたほうが何かと都合がいい
-
-
-# sedで部分抽出をする
-は-rをつける
-sed -r 's/^.*\.(.*)$/\1/'
-
 # シェルスクリプトこれだけは知っとけリーディング
+
 
 
 変数宣言
 VARIABLE=1
+
+
+変数をエクスポートすることで定義したシェルから起動したシェルや実行したコマンドから変数を参照できるようになる。
+これを環境変数と呼ぶ。
+```bash
+export var2=cdn
+```
 
 変数参照
 echo $VARIABLE
