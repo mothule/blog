@@ -3,7 +3,7 @@ title: iOSDC Japan 2019に行くメリットについて考えてみた
 categories: ios
 tags: ios report
 image:
-  path: /assets/images/2019-09-06-ios-iosdc-japan-2019-pro.png
+  path: /assets/images/2019-09-05-ios-iosdc-japan-2019-pro.png
 ---
 9月5日から7日までの3日間で開催されるiOSDC Japan 2019の初日に参加しました。
 初日は前夜祭ということで、トークは2つ参加で終わる短さでした。
