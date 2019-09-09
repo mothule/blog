@@ -2,10 +2,13 @@
 title: エンジニアが個の価値向上のために継続するべき10個の行動
 categories: notebook
 tags: notebook
+image:
+  path: /assets/images/2019-09-10-necessary-continual-behavior-for-engineer.png
 ---
 これは私自身の過去の経験を経てこれからの自分のために、これを継続することがエンジニアとして生きていくために、  
 エンジニアという人間で居続けられるために、エンジニアだからできて、そして必要だと思う重要な行動10個について  
 まとめてみました。
+
 
 ## エンジニアにとって何を重要だと決めるか？
 
