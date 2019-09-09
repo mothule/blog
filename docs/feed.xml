@@ -1,4 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-09T20:05:55+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話</title><link href="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc" rel="alternate" type="text/html" title="360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話" /><published>2019-09-07T00:00:00+09:00</published><updated>2019-09-07T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc</id><content type="html" xml:base="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc">&lt;p&gt;GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-10T00:01:56+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Nimbleでenum(Associated Value)の自作matcher作って可読性を上げる</title><link href="https://blog.mothule.com/swift/test/swift-nimble-associated-valued-enum-custom-matcher" rel="alternate" type="text/html" title="Nimbleでenum(Associated Value)の自作matcher作って可読性を上げる" /><published>2019-09-09T00:00:00+09:00</published><updated>2019-09-09T00:00:00+09:00</updated><id>https://blog.mothule.com/swift/test/swift-nimble-associated-valued-enum-custom-matcher</id><content type="html" xml:base="https://blog.mothule.com/swift/test/swift-nimble-associated-valued-enum-custom-matcher">&lt;p&gt;テストフレームワークでQuickとマッチャーにNimbleを使って開発する人は多いのではないかと思います。&lt;/p&gt;
+
+&lt;p&gt;通常のenumであればテストは別に困ることはないのですが、それがAssociated Valueとなると話が180度変わります。
+そのまま対策せずゴリ押しでテストコードを書くと、後で気持ち悪いテストコードを目にすることになるので、
+少しでも健全で見やすいテストコードを書く方法について書いています。&lt;/p&gt;
+
+&lt;h2 id=&quot;テストターゲットは次のモデル&quot;&gt;テストターゲットは次のモデル&lt;/h2&gt;
+&lt;p&gt;次のようなAssociated Valueなenumがあったとします。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;enum&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;boolean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;特に何もしないでテストを書いた場合&quot;&gt;特に何もしないでテストを書いた場合&lt;/h2&gt;
+
+&lt;p&gt;この状態のままテストをする場合、次のようなコードになると思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;VariableTypeSpec.swift&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableTypeSpec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;QuickSpec&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;VariableTypeSpec&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nf&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;              
+                &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;nf&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                    &lt;span class=&quot;nf&quot;&gt;fail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;equatable-protocolを採用する&quot;&gt;Equatable protocolを採用する&lt;/h2&gt;
+
+&lt;p&gt;これを解決するには, Equatable protocol を VariableType に採用することでよりシンプルな書き方が可能になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;VariableType.swift&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Equatable&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;lhs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;rhs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;switch&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;lhs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rhs&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;integer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;float&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;boolean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;left&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;boolean&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)):&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;left&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;right&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;VariableTypeSpec.swift&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableTypeSpec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;QuickSpec&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;spec&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;describe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;VariableTypeSpec&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;nf&quot;&gt;it&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;nf&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;custom-matcher-を用意する&quot;&gt;Custom Matcher を用意する&lt;/h2&gt;
+
+&lt;p&gt;今のままで十分可読性は良いのですが、もし &lt;code class=&quot;highlighter-rouge&quot;&gt;Equatable&lt;/code&gt; だけでは厳しい場合やエラー時のメッセージの情報を増やしたい場合は
+Custom Matcherを用意するといいでしょう。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Predicate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Predicate&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;expression&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Expression&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;throws&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PredicateResult&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;message&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ExpectationMessage&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;expectedActualValueTo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;message &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;try&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expression&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;evaluate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PredicateResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;actual&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PredicateResult&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;status&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fail&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このようにルールに準拠したメソッドを用意することで次のようにNimbleでMatcherとして使えるようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;expect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;VariableType&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;expected&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;まぁこれは &lt;code class=&quot;highlighter-rouge&quot;&gt;equal()&lt;/code&gt; とほぼ同じMatcherになりますね。&lt;/p&gt;
+
+&lt;h2 id=&quot;テストコードをプロダクションに含む是非について&quot;&gt;テストコードをプロダクションに含む是非について&lt;/h2&gt;
+
+&lt;p&gt;私は追加することは構わないと思います。&lt;/p&gt;
+
+&lt;p&gt;なぜならSwiftのMockingはマニュアルモッキングを推奨していますが、&lt;br /&gt;
+マニュアルモッキング用にprotocolを用意してMockを作ることが、既にテストコードが設計レベルで組み込まれているからです。&lt;/p&gt;
+
+&lt;p&gt;本来ならprotocolを挟まずともよい部分にも関わらずprotocol化したり、DIで依存性注入したりと、
+「なんのためにその実装を書いているのか？」と考えればテスタビリティを上げるためです。&lt;/p&gt;
+
+&lt;p&gt;であれば、今更テストコードがプロダクションに入ることになんの違和感を持ちましょうか。&lt;/p&gt;
+
+&lt;p&gt;違和感を感じる暇があれば、テストコードの暴発と本番時のみ動くコードを減らす労力に回したほうがマシです。&lt;/p&gt;
+
+&lt;p&gt;これは仕方がないことです。Swiftという言語仕様がテスタビリティを下げているので従うしかなく、&lt;br /&gt;
+私達が求めるテスタビリティまで向上させるには必要せざる得ない対応策だと思います。&lt;/p&gt;</content><author><name></name></author><category term="swift" /><category term="test" /><category term="nimble" /><summary type="html">テストフレームワークでQuickとマッチャーにNimbleを使って開発する人は多いのではないかと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-09-swift-nimble-associated-valued-enum-custom-matcher.png" /></entry><entry><title type="html">360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話</title><link href="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc" rel="alternate" type="text/html" title="360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話" /><published>2019-09-07T00:00:00+09:00</published><updated>2019-09-07T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc</id><content type="html" xml:base="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc">&lt;p&gt;GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。&lt;/p&gt;
 
 &lt;h2 id=&quot;きっかけ&quot;&gt;きっかけ&lt;/h2&gt;
 
@@ -647,81 +754,7 @@ RailsのRackがどのようなMiddlewareを経てRailsに渡ってきてるの�
 
 &lt;p&gt;RackやRack Middlewareを知ることで、Railsの拡張性の高さや実際にどうやって拡張されているのかを知ることができたと思います。&lt;/p&gt;
 
-&lt;p&gt;このように普段ほとんど関わることのない機能であっても知ることで色んな所の仕組みが理解できるようになるのはおもしろいですね。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="rack" /><category term="rack-middleware" /><summary type="html">Railsの挙動を拡張するには3つの方法があります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</title><link href="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog" rel="alternate" type="text/html" title="はてなブログからJekyllを使ったGitHub Pagesに移行した理由" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog</id><content type="html" xml:base="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog">&lt;p&gt;長年利用していた&lt;code class=&quot;highlighter-rouge&quot;&gt;はてなブログ&lt;/code&gt;からGitHub Pages上でJekyllを使った静的生成サイトに移行しました。
-この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて
-まとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;移行したかった理由&quot;&gt;移行したかった理由&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;カスタマイズが非常にやりにくかった&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;細かい理由はありますが、この1点が常に不便で作りたいサイトが作れない煩わしさがありました。&lt;/p&gt;
-
-&lt;p&gt;パンくずリストを配置したい.グロナビを配置したい.関連記事による回遊率を上げたい.toc置きたい.
-決められた場所ではなくもっと全体的に自由に改変したい。
-という欲が常に付きまとい、CSSやJavascriptを弄るなどして我慢していましたが、&lt;/p&gt;
-
-&lt;p&gt;移行先について調べてしまったら追加で&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;記事に対して自動処理を挟みたい時に挟めるなど実現可能性を確保しておきたい&lt;/li&gt;
-  &lt;li&gt;自分のブランディングに対して独自ドメインが必須だが、無料アカウントではできない&lt;/li&gt;
-  &lt;li&gt;得た知識で自分でSEO対応したブログを作ってみたい&lt;/li&gt;
-  &lt;li&gt;Ruby製ツールに慣れることでRubyスキルもあげれるかもしれない。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などの欲も出てきて、移行することを決断しました。
-ちなみにこのように移行について深刻に悩んだのは5回目ぐらいです。&lt;/p&gt;
-
-&lt;h3 id=&quot;移行先にgithub-pagesを選んだ理由&quot;&gt;移行先にGitHub Pagesを選んだ理由&lt;/h3&gt;
-&lt;p&gt;ホスティング先をGitHub Pagesを選んだ理由は至ってシンプルで、技術ブログっぽいしエンジニアっぽいって理由なだけです。&lt;/p&gt;
-
-&lt;h2 id=&quot;静的サイト生成ツールにjekyllを選んだ理由&quot;&gt;静的サイト生成ツールにJekyllを選んだ理由&lt;/h2&gt;
-
-&lt;h3 id=&quot;もともとはmiddlemanを予定していました&quot;&gt;もともとはMiddlemanを予定していました&lt;/h3&gt;
-&lt;p&gt;理由はRubyで書かれたツールで、View周りをHamlで書くことができたためです。
-しかし、Middlemanを調べると同じようにMiddlemanから別ツールに移行する記事もありました。
-それら記事はプレビューや記事速度が遅すぎるという理由でHUGOに移行していました。
-HUGOはGolang製でGo言語の処理速度により記事生成やプレビューがとにかく早い。が売りでした。
-しかし自分はこれを検討はしたものの採用はしませんでした。なぜならGo言語についてあまり構文を理解していないので、
-プラグイン作成とかちょっとしたView内コードを書くなどカスタマイズしたいときにGo言語が障害となりうると思っていたからです。
-実際サンプル覗いてもGo言語特有に&lt;code class=&quot;highlighter-rouge&quot;&gt;ret, error := hoge&lt;/code&gt; というエラーとレスポンスの同時受け取りが目に入り、却下しました。&lt;/p&gt;
-
-&lt;h3 id=&quot;他にどんなツールがあるから調べた&quot;&gt;他にどんなツールがあるから調べた&lt;/h3&gt;
-&lt;p&gt;もともと知っているツールが少なかったこともあって、一度全体的に静的サイト生成ツールについて情報収集を行いました。
-結果Ruby製でMiddlemanとJekyllがありました。&lt;/p&gt;
-
-&lt;p&gt;このときMiddlemanではなくJekyllに揺れた理由として&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MiddlemanのRepositoryが動いていない&lt;/li&gt;
-  &lt;li&gt;JekyllはGitHub Pagesが公式サポートしている&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;の2点です。&lt;/p&gt;
-
-&lt;h2 id=&quot;jekyllはmasterにpushすれば自動生成される仕組みがある&quot;&gt;Jekyllはmasterにpushすれば自動生成される仕組みがある&lt;/h2&gt;
-
-&lt;p&gt;Jekyllにはgithubが用意するgemに則ったサイト構成であれば、masterにpushするだけであとの生成は、github側が自動で生成してくれるらしいです。
-自分もその恩恵にあやかろうと思っていたのですが、対象のRuby言語バージョンが低くて、流石にここまで低いバージョンでメンテやカスタマイズしたくないなと思い、
-自分でdeploy用スクリプトを用意して運用しています。&lt;/p&gt;
-
-&lt;h2 id=&quot;jekyllのviewがliquidで苦労する&quot;&gt;JekyllのViewがLiquidで苦労する&lt;/h2&gt;
-
-&lt;p&gt;JekyllのViewはLiquidという慣れないビューエンジンを使っており、最初大変でしたが、
-&lt;a href=&quot;https://jekyllrb-ja.github.io/docs/&quot;&gt;Jekyllのサイト&lt;/a&gt;が日本語で書いてあり結構分かりやすかったので、
-チュートリアルをやったりして覚えました。&lt;/p&gt;
-
-&lt;h2 id=&quot;カスタムタグがrubyで書ける&quot;&gt;カスタムタグがRubyで書ける&lt;/h2&gt;
-&lt;p&gt;Markdown中に記載できるタグを自作ができて、かつRubyで処理を書くので、Rubyに触る機会が増やす目的は達成できたかなと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;ドメインにはムームードメインを使った&quot;&gt;ドメインにはムームードメインを使った&lt;/h2&gt;
-&lt;p&gt;自分用のドメインを買うのにもどこがいいか調べた結果ムームードメインにしました。
-もともとはGMOのどれかにしようと目星は付けていましたが、
-同じ親会社のサービスであるお名前.comは代理公開が有料だったので、ムームードメインにしました。
-GMOに絞った理由は、ドメインという運用において数多く、そして長く運用している＝安定性が高い。という決断です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="jekyll" /><category term="github-pages" /><summary type="html">長年利用していたはてなブログからGitHub Pages上でJekyllを使った静的生成サイトに移行しました。 この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて まとめてあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-migration-blog-to-github-pages-from-hatenablog.png" /></entry><entry><title type="html">CocoaPodsをrbenv+bundlerで管理する</title><link href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" rel="alternate" type="text/html" title="CocoaPodsをrbenv+bundlerで管理する" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler</id><content type="html" xml:base="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">&lt;p&gt;iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
+&lt;p&gt;このように普段ほとんど関わることのない機能であっても知ることで色んな所の仕組みが理解できるようになるのはおもしろいですね。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="rack" /><category term="rack-middleware" /><summary type="html">Railsの挙動を拡張するには3つの方法があります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">CocoaPodsをrbenv+bundlerで管理する</title><link href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" rel="alternate" type="text/html" title="CocoaPodsをrbenv+bundlerで管理する" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler</id><content type="html" xml:base="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">&lt;p&gt;iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
 CocoaPods単体であれば特に考えず &lt;code class=&quot;highlighter-rouge&quot;&gt;$ gem install cocoapods&lt;/code&gt; で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、
 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。&lt;/p&gt;
 
@@ -907,7 +940,131 @@ Rubyバージョンを更新した場合は、 &lt;code class=&quot;highlighter-
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
-今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</title><link href="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog" rel="alternate" type="text/html" title="はてなブログからJekyllを使ったGitHub Pagesに移行した理由" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog</id><content type="html" xml:base="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog">&lt;p&gt;長年利用していた&lt;code class=&quot;highlighter-rouge&quot;&gt;はてなブログ&lt;/code&gt;からGitHub Pages上でJekyllを使った静的生成サイトに移行しました。
+この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて
+まとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;移行したかった理由&quot;&gt;移行したかった理由&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;カスタマイズが非常にやりにくかった&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;細かい理由はありますが、この1点が常に不便で作りたいサイトが作れない煩わしさがありました。&lt;/p&gt;
+
+&lt;p&gt;パンくずリストを配置したい.グロナビを配置したい.関連記事による回遊率を上げたい.toc置きたい.
+決められた場所ではなくもっと全体的に自由に改変したい。
+という欲が常に付きまとい、CSSやJavascriptを弄るなどして我慢していましたが、&lt;/p&gt;
+
+&lt;p&gt;移行先について調べてしまったら追加で&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;記事に対して自動処理を挟みたい時に挟めるなど実現可能性を確保しておきたい&lt;/li&gt;
+  &lt;li&gt;自分のブランディングに対して独自ドメインが必須だが、無料アカウントではできない&lt;/li&gt;
+  &lt;li&gt;得た知識で自分でSEO対応したブログを作ってみたい&lt;/li&gt;
+  &lt;li&gt;Ruby製ツールに慣れることでRubyスキルもあげれるかもしれない。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などの欲も出てきて、移行することを決断しました。
+ちなみにこのように移行について深刻に悩んだのは5回目ぐらいです。&lt;/p&gt;
+
+&lt;h3 id=&quot;移行先にgithub-pagesを選んだ理由&quot;&gt;移行先にGitHub Pagesを選んだ理由&lt;/h3&gt;
+&lt;p&gt;ホスティング先をGitHub Pagesを選んだ理由は至ってシンプルで、技術ブログっぽいしエンジニアっぽいって理由なだけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;静的サイト生成ツールにjekyllを選んだ理由&quot;&gt;静的サイト生成ツールにJekyllを選んだ理由&lt;/h2&gt;
+
+&lt;h3 id=&quot;もともとはmiddlemanを予定していました&quot;&gt;もともとはMiddlemanを予定していました&lt;/h3&gt;
+&lt;p&gt;理由はRubyで書かれたツールで、View周りをHamlで書くことができたためです。
+しかし、Middlemanを調べると同じようにMiddlemanから別ツールに移行する記事もありました。
+それら記事はプレビューや記事速度が遅すぎるという理由でHUGOに移行していました。
+HUGOはGolang製でGo言語の処理速度により記事生成やプレビューがとにかく早い。が売りでした。
+しかし自分はこれを検討はしたものの採用はしませんでした。なぜならGo言語についてあまり構文を理解していないので、
+プラグイン作成とかちょっとしたView内コードを書くなどカスタマイズしたいときにGo言語が障害となりうると思っていたからです。
+実際サンプル覗いてもGo言語特有に&lt;code class=&quot;highlighter-rouge&quot;&gt;ret, error := hoge&lt;/code&gt; というエラーとレスポンスの同時受け取りが目に入り、却下しました。&lt;/p&gt;
+
+&lt;h3 id=&quot;他にどんなツールがあるから調べた&quot;&gt;他にどんなツールがあるから調べた&lt;/h3&gt;
+&lt;p&gt;もともと知っているツールが少なかったこともあって、一度全体的に静的サイト生成ツールについて情報収集を行いました。
+結果Ruby製でMiddlemanとJekyllがありました。&lt;/p&gt;
+
+&lt;p&gt;このときMiddlemanではなくJekyllに揺れた理由として&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MiddlemanのRepositoryが動いていない&lt;/li&gt;
+  &lt;li&gt;JekyllはGitHub Pagesが公式サポートしている&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の2点です。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyllはmasterにpushすれば自動生成される仕組みがある&quot;&gt;Jekyllはmasterにpushすれば自動生成される仕組みがある&lt;/h2&gt;
+
+&lt;p&gt;Jekyllにはgithubが用意するgemに則ったサイト構成であれば、masterにpushするだけであとの生成は、github側が自動で生成してくれるらしいです。
+自分もその恩恵にあやかろうと思っていたのですが、対象のRuby言語バージョンが低くて、流石にここまで低いバージョンでメンテやカスタマイズしたくないなと思い、
+自分でdeploy用スクリプトを用意して運用しています。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyllのviewがliquidで苦労する&quot;&gt;JekyllのViewがLiquidで苦労する&lt;/h2&gt;
+
+&lt;p&gt;JekyllのViewはLiquidという慣れないビューエンジンを使っており、最初大変でしたが、
+&lt;a href=&quot;https://jekyllrb-ja.github.io/docs/&quot;&gt;Jekyllのサイト&lt;/a&gt;が日本語で書いてあり結構分かりやすかったので、
+チュートリアルをやったりして覚えました。&lt;/p&gt;
+
+&lt;h2 id=&quot;カスタムタグがrubyで書ける&quot;&gt;カスタムタグがRubyで書ける&lt;/h2&gt;
+&lt;p&gt;Markdown中に記載できるタグを自作ができて、かつRubyで処理を書くので、Rubyに触る機会が増やす目的は達成できたかなと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;ドメインにはムームードメインを使った&quot;&gt;ドメインにはムームードメインを使った&lt;/h2&gt;
+&lt;p&gt;自分用のドメインを買うのにもどこがいいか調べた結果ムームードメインにしました。
+もともとはGMOのどれかにしようと目星は付けていましたが、
+同じ親会社のサービスであるお名前.comは代理公開が有料だったので、ムームードメインにしました。
+GMOに絞った理由は、ドメインという運用において数多く、そして長く運用している＝安定性が高い。という決断です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="jekyll" /><category term="github-pages" /><summary type="html">長年利用していたはてなブログからGitHub Pages上でJekyllを使った静的生成サイトに移行しました。 この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて まとめてあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-migration-blog-to-github-pages-from-hatenablog.png" /></entry><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
+特にブレイクポイント機能があれば、バグの原因追求が迅速になります。
+しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。
+しかし、そんなときに便利なのがngrokというサービスです。&lt;/p&gt;
+
+&lt;h2 id=&quot;ngrok&quot;&gt;ngrok&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://ngrok.com/&quot;&gt;ngrok - secure introspectable tunnels to localhost&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;認証不要(認証もあるけど)&lt;/li&gt;
+  &lt;li&gt;ngrokサービスがランダムなブレークポイントアクセスできるURLを用意してくれる&lt;/li&gt;
+  &lt;li&gt;そのランダムURLにアクセスすると&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;にブレークポイントーディングしてくれる&lt;/li&gt;
+  &lt;li&gt;数時間立つとURLが無効化する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;インストール&quot;&gt;インストール&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask install ngrok
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask info ngrok
+ngrok: latest
+https://ngrok.com/
+/usr/local/Caskroom/ngrok/latest &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;24.6MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+From: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/ngrok.rb
+&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Name
+ngrok
+&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Artifacts
+ngrok &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Binary&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;使い方&quot;&gt;使い方&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ ngrok http 3000&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;のURLが発行されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;この場合、&lt;code class=&quot;highlighter-rouge&quot;&gt;https://f1092809.ngrok.io&lt;/code&gt; というURLが一時的にブレークポイントーディングしてくれます。 8時間経過するとURLは無効になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組み&quot;&gt;仕組み&lt;/h3&gt;
+
+&lt;p&gt;本来であれば、ngrokはローカルネットワーク上にあるサーバーを遠隔地からアクセスできるようにする外から内へアクセスを可能にするサービスです。&lt;/p&gt;
+
+&lt;p&gt;これをローカルAPIサーバーと同一ローカルネットワーク上にあるiPhoneが、一旦外部のURLにアクセスし、再びローカルネットワーク上のAPIサーバーにアクセスすることで、開発中にローカルAPIにHTTPSでアクセスする仕組みです。&lt;/p&gt;
+
+&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
+
+&lt;p&gt;ngrokに通信を介しているため、セキュアなデータなどもngrok側は見えているかと思われます。 しかし、ngrok側はそれを秘匿性を守秘していたとしても、ngrok側が脆弱性があれば、そこから意図せずデータが漏洩することは可能性はあります。&lt;/p&gt;
+
+&lt;p&gt;そのため、認証などテストする場合はどうでもいいテストアカウトでやることを紹介する以上、推奨します。つまり自己責任です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="ngrok" /><category term="ats" /><summary type="html">RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。 しかし、そんなときに便利なのがngrokというサービスです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-05-how-to-use-ngrok.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
 
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -989,324 +1146,4 @@ Rubyバージョンを更新した場合は、 &lt;code class=&quot;highlighter-
 
 &lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
 
-&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">Mac上でRailsとMySQLのサーバー分けたい</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db" rel="alternate" type="text/html" title="Mac上でRailsとMySQLのサーバー分けたい" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db">&lt;p&gt;開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？&lt;/p&gt;
-
-&lt;p&gt;原因の1つとして、一般的な開発環境では1PCにWebアプリとDBアプリが共存しており、これら2点間の通信はUnixドメインソケット方式で通信が行われます。 一方本番環境ではWebアプリとDBアプリそれぞれにサーバーが立っていることが一般的な基本構成で、これら2点間の通信はTCP/IP方式で通信が行われます。 この通信方式の違いにより大きな速度差が発生し、開発環境ではなかった場所にボトルネックが生まれます。&lt;/p&gt;
-
-&lt;p&gt;例えば「SELECTクエリーを叩く回数が多くても、index効いてるから大丈夫だろう」と思っていても、WebサーバとDBサーバが分かれていると、二点間の通信時間が底上げされます。&lt;/p&gt;
-
-&lt;p&gt;本番環境ではDBとの通信コストの観点が必要なのに、開発環境ではそれが抜けた環境になっているため、慣れていないと気づきにくい観点とも言えます。&lt;/p&gt;
-
-&lt;p&gt;なので開発中でも通信コストが考慮された結果が分かる開発環境を2つのMacを使って実現してみようと思います。&lt;/p&gt;
-
-&lt;p&gt;ちなみに単純な興味です。&lt;/p&gt;
-
-&lt;h2 id=&quot;準備するもの&quot;&gt;準備するもの&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Mac 2台(名称としてMacWとMacDと名付けます)&lt;/li&gt;
-  &lt;li&gt;同じローカルネットワークに繋がっていること(つまり同じWi-Fiに繋がっていればOKです)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;構築する環境の構成について&quot;&gt;構築する環境の構成について&lt;/h2&gt;
-
-&lt;p&gt;大枠で構成についてまとめるとこんな感じになります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MacWにRailsアプリを立ち上げる&lt;/li&gt;
-  &lt;li&gt;MacDにMySQLサーバーを立ち上げる&lt;/li&gt;
-  &lt;li&gt;ローカルの開発環境なのでセキュリティは意識しない&lt;/li&gt;
-  &lt;li&gt;MySQLを外部アクセスを許可する設定にする&lt;/li&gt;
-  &lt;li&gt;MySQLに外部アクセス用のユーザーを作成する&lt;/li&gt;
-  &lt;li&gt;RailsアプリのDB接続先をMacDのホスト名、ユーザーに設定する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;重要なキーワードは以下の3つとなります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MacDが外部からアクセスされる準備&lt;/li&gt;
-  &lt;li&gt;MySQLが外部からアクセスされる準備&lt;/li&gt;
-  &lt;li&gt;Railsが外部DBにアクセスする準備&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;macdがmacwからアクセスできる準備をする&quot;&gt;MacDがMacWからアクセスできる準備をする&lt;/h2&gt;
-
-&lt;p&gt;アクセスするには2つの方法があります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;ローカルIPアドレスを指定&lt;/li&gt;
-  &lt;li&gt;ローカルホスト名を指定&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;ローカルipアドレスを指定&quot;&gt;ローカルIPアドレスを指定&lt;/h3&gt;
-
-&lt;p&gt;これはローカルネットワーク内においてIPアドレスを直接使う方法です。 一時的であれば最も簡単です。&lt;/p&gt;
-
-&lt;p&gt;Macで自分のローカルネットワークを調べる方法は、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ifconfig&lt;/code&gt; で調べます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ifconfig | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.11.3&lt;/code&gt; というのが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;ifconfig&lt;/code&gt; を叩いたPCにIPアドレスになります。&lt;/p&gt;
-
-&lt;h4 id=&quot;メリット&quot;&gt;メリット&lt;/h4&gt;
-
-&lt;p&gt;とにかく楽。に尽きます。&lt;/p&gt;
-
-&lt;h4 id=&quot;デメリット&quot;&gt;デメリット&lt;/h4&gt;
-
-&lt;p&gt;IPアドレスの記入部を更新する必要があります。&lt;/p&gt;
-
-&lt;h3 id=&quot;ローカルホスト名を指定&quot;&gt;ローカルホスト名を指定&lt;/h3&gt;
-
-&lt;p&gt;こちらはMac自身にホスト名を定義することで、IPアドレスに依存せず常に固定のホスト名で接続することが可能になります。 こちらの記事にまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;mysqlが外部アクセスされる準備&quot;&gt;MySQLが外部アクセスされる準備&lt;/h2&gt;
-
-&lt;p&gt;そもそもMySQLが外部からアクセスを許可していないのは、そう設定がされているためです。&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt; という設定がデフォルトは 127.0.0.1 つまり localhost からの接続のみ許可する設定になっています。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 127.0.0.1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;my.cnfの場所が分からない場合は、こちらの記事で確認してみてください。&lt;/p&gt;
-
-&lt;p&gt;my.cnfに&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;でIPを指定することで、そのIPからの通信を許可します。 ちなみに注意事項としては、MacDのIPアドレスになります。 MacWのIPアドレスではありません。&lt;/p&gt;
-
-&lt;p&gt;まず前提知識として、PCには &lt;strong&gt;複数のネットワークインターフェイスがあります。&lt;/strong&gt; その中のどのネットワークインターフェイスを許可するのかが&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;になります。 先程&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;のデフォルトはlocalhostと説明したように、デフォルトではlocalhostからのアクセスのみを許可しています。&lt;/p&gt;
-
-&lt;p&gt;今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Wi-Fi環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので &lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt; には &lt;code class=&quot;highlighter-rouge&quot;&gt;0.0.0.0&lt;/code&gt; を設定します。 これは &lt;strong&gt;制限なし&lt;/strong&gt; の指定になります。どのネットワークインターフェイスからでもアクセスできます。 ちなみに全ての&lt;code class=&quot;highlighter-rouge&quot;&gt;bind-address&lt;/code&gt;をコメントアウトすると同様に無条件で受け付けることになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 127.0.0.1bind-address &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; 0.0.0.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;設定したらリスタートします。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql.server restart
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;一応はローカルネットワーク外からルーターのグローバルネットワークのIPとMacDのローカルIP、MySQLが解放してるポート番号などが分かれば、外部からのアクセスは恐らく可能かとは思いますが、 近辺依存ではありますが、自宅近辺の住民が自分のWi-Fi不正アクセスされるリスクは低いかなと思ってます。（ここらへんは詳しくはないので鵜呑みではなく、自己責任でお願いします）&lt;/p&gt;
-
-&lt;h3 id=&quot;mysql内に外部からアクセスするユーザー用意する&quot;&gt;MySQL内に外部からアクセスするユーザー用意する&lt;/h3&gt;
-
-&lt;p&gt;MySQLの外部からアクセスする準備ができたら、今度は外部からアクセス用のユーザーを用意します。&lt;/p&gt;
-
-&lt;p&gt;例えば下記のようなユーザーを作る場合は&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ユーザー名: hoge&lt;/li&gt;
-  &lt;li&gt;パスワード: pass&lt;/li&gt;
-  &lt;li&gt;対象IP: 192.16配下全部&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;-- ユーザー作成
-create user &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;
--- 権限付与
-mysql\&amp;gt; grant all on \*.\* to &quot;hoge&quot;@&quot;192.168.%&quot; identified by &quot;pass&quot;;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;のようにすれば、ユーザー作成して対象DBへの権限設定がされます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql\&amp;gt; select user, host from mysql.user;
-+------+-------------+
-| user | host |
-+------+-------------+
-| hoge | 192.168.% |
-+------+-------------+
-
-mysql\&amp;gt; show grants for 'hoge'@'192.168.%';
-+----------------------------------------------------------------+
-| Grants for hoge@192.168.%
-+----------------------------------------------------------------+
-| GRANT ALL PRIVILEGES ON \*.\* TO 'hoge'@'192.168.%' IDENTIFIED BY PASSWORD '\*196BDEDE2AE4F84CA44C47D54D78478C7E2BD7B7'
-+----------------------------------------------------------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;外部から接続をテストする&quot;&gt;外部から接続をテストする&lt;/h2&gt;
-
-&lt;p&gt;この段階で既に外部から接続できている環境になっているはずなので、他Macから接続をします。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;IPアドレス指定&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; hoge &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; 192.168.11.6 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;ローカルホスト名指定&lt;/strong&gt; ホスト名が &lt;code class=&quot;highlighter-rouge&quot;&gt;fuga.local&lt;/code&gt; の場合&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysql &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; hoge &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; fuga.local &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;接続できれば外部からMySQLに接続できています。&lt;/p&gt;
-
-&lt;h2 id=&quot;railsが外部dbにアクセスする準備&quot;&gt;Railsが外部DBにアクセスする準備&lt;/h2&gt;
-
-&lt;p&gt;MySQLが外部からのアクセス準備が整えば後は簡単です。&lt;/p&gt;
-
-&lt;p&gt;dataases.yml で接続先を指定するだけになります。&lt;/p&gt;
-
-&lt;p&gt;IPアドレスが &lt;code class=&quot;highlighter-rouge&quot;&gt;192.168.11.6&lt;/code&gt;の場合&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;development&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;username&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;hoge&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;pass&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;host&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;192.168.11.6&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;他は省略してます。&lt;/p&gt;
-
-&lt;p&gt;これでRails立ち上げてDBにアクセスできれば完了です。&lt;/p&gt;
-
-&lt;h2 id=&quot;気になる速度差を測ってみる&quot;&gt;気になる速度差を測ってみる&lt;/h2&gt;
-
-&lt;p&gt;1PCでUnixドメインソケット通信した場合と2PCでTCP/IP通信した場合で平均値を出してみました。&lt;/p&gt;
-
-&lt;p&gt;1万件のUser(name: string)を事前に用意し、&lt;code class=&quot;highlighter-rouge&quot;&gt;@users = User.all&lt;/code&gt; が呼ばれて一覧を返すcontroller に対し&lt;code class=&quot;highlighter-rouge&quot;&gt;GET http://localhost:3000/users&lt;/code&gt; を5回呼び出し、最速と最遅を抜いた3つで平均値を出して測定しました。&lt;/p&gt;
-
-&lt;h3 id=&quot;unixドメインソケット通信&quot;&gt;Unixドメインソケット通信&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;time&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;8.6ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;8.5ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;8.5ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;8.3ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;7.6ms&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;(8.5 + 8.5 + 8.3) / 3 = &lt;strong&gt;8.4333333333ms&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;tcpip通信&quot;&gt;TCP/IP通信&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;time&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;291.9ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;289.9ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;194.4ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;159.9ms&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;142.7ms&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;(289.9 + 194.4 + 159.9) / 3 = &lt;strong&gt;214.7333333333ms&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;およそ 26倍差がついています。 MySQLサーバーがRailsサーバーよりスペックが劣ってはいますが、それを考慮しても大分差が開いているでしょう。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;本番環境にできるだけ寄せる構成をしておくことで、本番でしか発覚しない問題を開発段階で気づいて排除できるので、PC台数に余裕があるなら、リリース前だけでも試す価値はあるかなと思いました。&lt;/p&gt;
-
-&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
-
-&lt;p&gt;開発環境前提においての構成であるため、セキュリティとしてはGoodではありません。 特に公共のネットワーク配下ではやめたほうがいいです。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><category term="mysql" /><summary type="html">開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">正規表現で否定を表現する</title><link href="https://blog.mothule.com/tools/regexp/regexp-not-expression" rel="alternate" type="text/html" title="正規表現で否定を表現する" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/regexp/regexp-not-expression</id><content type="html" xml:base="https://blog.mothule.com/tools/regexp/regexp-not-expression">&lt;p&gt;常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。&lt;/p&gt;
-
-&lt;p&gt;いっつも検索していろんなサイトにお世話になっているけれど、訪れるサイトはいつもバラバラで、欲しい情報を見つけるのに時間がかかる。そんな毎日なので、自分用に否定表現用の記事を用意しました。&lt;/p&gt;
-
-&lt;h2 id=&quot;書き方&quot;&gt;書き方&lt;/h2&gt;
-&lt;p&gt;結論から先に書きます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;^(?!.\*\&amp;lt;ここに検索ワード\&amp;gt;).+$
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;何が起きているのか&quot;&gt;何が起きているのか？&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;^ : 行の先頭を表す&lt;/li&gt;
-  &lt;li&gt;( : グルーピング&lt;/li&gt;
-  &lt;li&gt;?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。&lt;/li&gt;
-  &lt;li&gt;.* : 任意の文字列(0文字以上)&lt;/li&gt;
-  &lt;li&gt;) : グルーピング&lt;/li&gt;
-  &lt;li&gt;.+ : 任意の文字列(1文字以上)&lt;/li&gt;
-  &lt;li&gt;$: 行の末尾を表す&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;試してみる&quot;&gt;試してみる&lt;/h2&gt;
-
-&lt;p&gt;色々と削って動きを見てみることしました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;あいうえお
-かきくけこ
-あい
-あ
-い
-いう
-
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;に対して色々試してみる。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;正規表現&lt;/th&gt;
-      &lt;th&gt;結果&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;「あ」の入っていない文字列と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あ)$&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;空改行のみヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!あい).&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;「あい」の入っていない行の1文字目と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!いう).*&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行の先頭に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).*&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行と空改行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう)&lt;/code&gt;&lt;/td&gt;
-      &lt;td&gt;行に「いう」の入っていない行の先頭がヒットする&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;()は()内の文字を1文字として扱う. セットみたいなイメージ.&lt;/li&gt;
-  &lt;li&gt;?!は否定の先読み、後ろの続く言葉がヒットしないなら真となる&lt;/li&gt;
-  &lt;li&gt;(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
+&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
