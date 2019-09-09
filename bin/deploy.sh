@@ -23,6 +23,7 @@ function log() {
 info "Start deploy."
 
 cd ws
+info "Build blog contents for production."
 JEKYLL_ENV=production bundle exec jekyll build
 cd ..
 
@@ -32,10 +33,13 @@ if [[ ! -d './docs' ]] ; then
   else
     error "Failed to create docs folder"
   fi
+else
+  log "/docs folder already existing."
 fi
 
+sleep 2s
+
 info "Copy to docs/"
-rsync -auv --delete ws/_site/ docs
 rsync -auv --delete ws/_site/ docs
 
 info "Copy CNAME to docs/"
