@@ -25,6 +25,7 @@ info "Start deploy."
 cd ws
 info "Build blog contents for production."
 JEKYLL_ENV=production bundle exec jekyll build
+JEKYLL_ENV=production bundle exec jekyll build
 cd ..
 
 if [[ ! -d './docs' ]] ; then
@@ -37,7 +38,7 @@ else
   log "/docs folder already existing."
 fi
 
-sleep 2s
+sleep 4s
 
 info "Copy to docs/"
 rsync -auv --delete ws/_site/ docs
