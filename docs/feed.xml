@@ -1,4 +1,309 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-06T01:31:20+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOSDC Japan 2019に行くメリットについて考えてみた</title><link href="https://blog.mothule.com/ios/ios-iosdc-japan-2019-pro" rel="alternate" type="text/html" title="iOSDC Japan 2019に行くメリットについて考えてみた" /><published>2019-09-05T00:00:00+09:00</published><updated>2019-09-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/ios-iosdc-japan-2019-pro</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-iosdc-japan-2019-pro">&lt;p&gt;9月5日から7日までの3日間で開催されるiOSDC Japan 2019の初日に参加しました。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-09T19:41:53+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話</title><link href="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc" rel="alternate" type="text/html" title="360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話" /><published>2019-09-07T00:00:00+09:00</published><updated>2019-09-07T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc</id><content type="html" xml:base="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc">&lt;p&gt;GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。&lt;/p&gt;
+
+&lt;h2 id=&quot;きっかけ&quot;&gt;きっかけ&lt;/h2&gt;
+
+&lt;p&gt;先日国内最大のiOS開発者カンファレンス iOSDC Japan 2019に参加して、AVFoundationを使っているセッションばかり聞いていたら
+「自分も何か発表できるネタないかな？発表してみたいな。」とウズウズした結果、過去の自作ライブラリで人気がある360度パノラマ画像ビューワーをSwift5に追従して動くようにして、実現方法などについてスライド纏めれば、ちょっとした登壇とかできそうだなと思ったことがきっかけです。&lt;/p&gt;
+
+&lt;p&gt;この自作ライブラリは以前&lt;a href=&quot;https://qiita.com/mothule/items/026bac1cf1fc229d0c4d&quot;&gt;Qiita&lt;/a&gt;に書いてあります&lt;/p&gt;
+
+&lt;h2 id=&quot;swift5に変えたが動かず&quot;&gt;Swift5に変えたが動かず&lt;/h2&gt;
+
+&lt;p&gt;ライブラリのSwift言語はSwift3なので古いな〜と思いつつSwift5にして、ビルドが通ったので実行したのですが、画面が白いままで全く何も表示されませんでした。&lt;/p&gt;
+
+&lt;p&gt;原因がいまいち分からず、情報集めるため公式ドキュメントを覗いたら驚愕しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-1.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;oh…&lt;/strong&gt; なんとほぼ全部が &lt;code class=&quot;highlighter-rouge&quot;&gt;Deprecated&lt;/code&gt; ラベルがついてました。&lt;/p&gt;
+
+&lt;p&gt;これでは折角ライブラリのSwiftを追従させても、追従したとは言えません。
+Swiftバージョンだけでなく、描画周りも一新することにしました。&lt;/p&gt;
+
+&lt;h2 id=&quot;scenekitってのが出てた&quot;&gt;SceneKitってのが出てた&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/documentation&quot;&gt;公式サイト&lt;/a&gt;を１つに戻って見てみたらSceneKitと呼ばれるフレームワークを見つけました。
+googleで調べてもGLKitは影を潜めMetalやSceneKit,ARKitが並んでいます。&lt;/p&gt;
+
+&lt;h3 id=&quot;scenekitは3dゲームやコンテンツの上位レイヤー開発キット&quot;&gt;SceneKitは3Dゲームやコンテンツの上位レイヤー開発キット&lt;/h3&gt;
+
+&lt;p&gt;GLKitが低レイヤーだとすれば、SceneKitは上位レイヤーに当たります。
+GLKitが描画エンジンだとすれば、SceneKitはゲームエンジンといったところでしょうか。
+また描画だけでなくアニメーション,物理演算などもサポートしています。&lt;/p&gt;
+
+&lt;p&gt;SceneKitは描画テクノロジーにはGLKitやMetalが使われています。
+OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテンツ作りに特化しやすい開発キットってことですね。
+それゆえ、GLKitを直接使われるよりは新しく提供したSceneKitを使うようGLKitを非推奨にしたのかもしれません。&lt;/p&gt;
+
+&lt;p&gt;GLKitと異なりSceneKitではOpenGLを直接操作するのではなく、Sceneと呼ばれる単位で描画環境の構築を行います。&lt;br /&gt;
+そしてこのScene内はNodeと呼ばれるディレクトリのような階層構造で描画オブジェクトを管理しています。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-2.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;
+↑ &lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnscene&quot;&gt;公式&lt;/a&gt;より抜粋&lt;/p&gt;
+
+&lt;p&gt;映画の1シーンと捉えると理解がしやすいかと思います。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ロケ地で撮影 : landscapeNode&lt;/li&gt;
+  &lt;li&gt;俳優が立つ : characterNode&lt;/li&gt;
+  &lt;li&gt;カメラで撮影 : cameraNode&lt;/li&gt;
+  &lt;li&gt;照明で照らす : lightNode&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;scnnodeはデザインとしては多少強引な何でもボックス&quot;&gt;SCNNodeはデザインとしては多少強引な何でもボックス&lt;/h3&gt;
+
+&lt;p&gt;このNodeと呼ばれるものは&lt;code class=&quot;highlighter-rouge&quot;&gt;SCNNode&lt;/code&gt;一つで上の全てのオブジェクトをサポートしている
+設計としては多少強引な何でもボックスです。&lt;/p&gt;
+
+&lt;p&gt;なぜなら&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ライト&lt;/li&gt;
+  &lt;li&gt;カメラ&lt;/li&gt;
+  &lt;li&gt;アニメーション&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;へのアクセスプロパティを持っており、設定によってどれにでもなり得るからです。
+ただこのような設計にしたのは、Nodeによる階層構造をシンプルにしたかったかもしれません。&lt;/p&gt;
+
+&lt;h2 id=&quot;scenekitで360度パノラマ画像ビューワーを実装する&quot;&gt;SceneKitで360度パノラマ画像ビューワーを実装する&lt;/h2&gt;
+
+&lt;p&gt;ではSceneKitを使った360度パノラマ画像ビューワーの実装について説明します。
+全容は&lt;a href=&quot;https://github.com/mothule/RNSphereImageViewer&quot;&gt;GitHub/RNSphereImageViewer&lt;/a&gt;で確認できます。
+数ファイルしかないので、億劫にならないかと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;scnviewでsceneの描画先を決める&quot;&gt;SCNViewでSceneの描画先を決める&lt;/h3&gt;
+
+&lt;p&gt;先の説明の通り、Sceneで描画計画を立てたら、それを実際に反映する先が必要になります。
+映画でいうと映画館のスクリーンといったところです。&lt;/p&gt;
+
+&lt;p&gt;これはSCNViewと呼ばれる&lt;code class=&quot;highlighter-rouge&quot;&gt;UIView&lt;/code&gt;のサブクラスを対象ViewControllerのviewに代入すれば終わりです。
+以下は&lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidLoad()&lt;/code&gt;の抜粋です.&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;open&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 1. スクリーン先をviewにする&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sceneView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 2. SCNSceneRendererDelegateで毎フレームフックする&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delegate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 3. FPS指定&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;preferredFramesPerSecond&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configuration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fps&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// FPSはSceneKitが管理している&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rendersContinuously&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// これをtrueにしないと毎フレーム更新が呼ばれない&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 4. その他&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backgroundColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gray&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 何も描画してないときの背景色. ライトとは違う色にすることをオススメします&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoenablesDefaultLighting&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;showsStatistics&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+
+  &lt;span class=&quot;c1&quot;&gt;// 以下省略&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;1-スクリーン先をviewにする&quot;&gt;1. スクリーン先をviewにする&lt;/h4&gt;
+
+&lt;p&gt;self.viewに対し SCNViewを指定することで投影先(スクリーン先)を設定します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sceneView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;SCNViewの初期化メソッドは、frameは描画領域、optionsは MetalやOpenGLなど&lt;code class=&quot;highlighter-rouge&quot;&gt;SCNRenderer&lt;/code&gt;に渡すオプションになります。&lt;br /&gt;
+このoptionsは&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnrenderer/1518404-init&quot;&gt;MetalのSCNRenderer&lt;/a&gt;や&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnrenderer/1518408-init&quot;&gt;OpenGLのSCNRenderer&lt;/a&gt;は将来向けの拡張オプションでまだ使われていないようです。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kt&quot;&gt;SCNView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CGRect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;2-scnscenerendererdelegateで毎フレームフックする&quot;&gt;2. SCNSceneRendererDelegateで毎フレームフックする&lt;/h4&gt;
+&lt;p&gt;SCNView.delegateは &lt;code class=&quot;highlighter-rouge&quot;&gt;SCNSceneRendererDelegate&lt;/code&gt; protocolになります。
+これを採用すれば、SceneKitが行っている描画やアニメ処理、物理演算といったタイミングにフックすることができます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;delegate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h5 id=&quot;scenekitがフレーム毎にしていること&quot;&gt;SceneKitがフレーム毎にしていること&lt;/h5&gt;
+&lt;p&gt;SceneKitが何を行っているかについては、&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnscenerendererdelegate&quot;&gt;公式&lt;/a&gt;にて解説されています。&lt;br /&gt;
+下の図は1フレーム※で行われている処理と各フックタイミングの解説です。&lt;br /&gt;
+※ 60FPSだとしたら、 1 / 60 ≒ 0.01667秒毎に呼ばれる。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-3.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-3.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;今回は更新毎にカメラ制御などをしたいので&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnscenerendererdelegate/1522937-renderer&quot;&gt;func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval)&lt;/a&gt;を使います。&lt;/p&gt;
+
+&lt;h5 id=&quot;デフォルトだと動かないと更新されない&quot;&gt;デフォルトだと動かないと更新されない&lt;/h5&gt;
+
+&lt;p&gt;SceneKitはデフォルト値だと、描画物やアニメ、物理演算など前フレームより変化がないと更新が実行されず、
+同様にdelegateによるフックも呼び出されません。&lt;/p&gt;
+
+&lt;p&gt;これでは1フレーム毎に動かしたい、一定時間たったら動くなど、時間軸による制御が不可能なので、常にこれが呼ばれるようにする必要があります。
+これは&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously&quot;&gt;SCNView.rendersContinuously&lt;/a&gt;として用意されてるので、これを&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;にすれば,後述するFPS値のレートで更新処理が行われます。&lt;/p&gt;
+
+&lt;h4 id=&quot;3-fps指定&quot;&gt;3. FPS指定&lt;/h4&gt;
+
+&lt;p&gt;FPSはSceneKitが管理しており、この値レートに従って更新されます。&lt;br /&gt;
+その値プロパティが&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnview/1621205-preferredframespersecond&quot;&gt;preferredFramesPerSecond&lt;/a&gt;となります。&lt;br /&gt;
+この値はデフォルトでは60FPSとなっています。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;preferredFramesPerSecond&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configuration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fps&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rendersContinuously&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;注意点が2点あり、FPSは処理負荷に依存するモニター値であるため、ここの値が実際のFPS値となるものではなく、指標としてのFPSとなります。
+つまり60FPSであれば0.01秒に1回描画を行うように動きます。&lt;br /&gt;
+またもう1点は、与えられたFPSにそのまま適用するのではなくSceneKit内部で定めたできるだけ近いFPSを選択するようです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously&quot;&gt;rendersContinuously&lt;/a&gt;は先程述べたように、これを&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;にしないと毎回FPSレートに呼ばれなくなります。&lt;/p&gt;
+
+&lt;h4 id=&quot;4-その他&quot;&gt;4. その他&lt;/h4&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;backgroundColor&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;gray&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// 何も描画してないときの背景色. ライトとは違う色にすることをオススメします&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;autoenablesDefaultLighting&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;showsStatistics&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;backgroundColor&lt;/code&gt;自体に説明は特に不要ですが、アドバイスとしては、SCNLightの色とは異なる色にしておくことをオススメします。
+なぜなら最初の実装中は、ライトと同じ色にしていると描画されているのかどうか分からないためです。&lt;/p&gt;
+
+&lt;p&gt;例えば、背景を白、ライトを白の場合にしたとしましょう。&lt;br /&gt;
+この場合、 画面が真っ白だった場合に&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;そもそもオブジェクトが描画されていない&lt;/li&gt;
+  &lt;li&gt;描画されているが陰影処理が未適用まはライトが強すぎて視覚認識できない&lt;/li&gt;
+  &lt;li&gt;カメラが違う方向向いていてスクリーンに投影されていない&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;など複数要因が浮上し、原因特定に時間がかかるためです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnscenerenderer/1523812-autoenablesdefaultlighting&quot;&gt;autoenablesDefaultLighting&lt;/a&gt;はSceneに自動でライトを追加するかどうかを決めます。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;の場合、ライトなしかambientライトのみのときに、omnidirectionalなライトを自動で追加、配置します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522763-showsstatistics&quot;&gt;showsStatistics&lt;/a&gt;はstatisticsを表示するフラグです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;にして実行すると画面下にオーバーレイでviewが表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-4.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-4.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;左側の+をタップすると、上記で解説したSceneKitがに行っている処理区分に分かれた負荷が表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-5.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-5.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;カメラをセット&quot;&gt;カメラをセット&lt;/h3&gt;
+
+&lt;p&gt;viewの準備が出来たら、sceneを用意しnodeを追加してく作業になります。&lt;/p&gt;
+
+&lt;p&gt;まずカメラを追加します。最初にカメラである理由はなく、モデルやライトが先でも問題はないです。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;scene&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNScene&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sceneView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scene&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;scene&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cameraNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cameraNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;camera&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNCamera&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cameraNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;position&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNVector3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cameraNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;camera&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fieldOfView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CGFloat&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configuration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;fovy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cameraNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;camera&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zFar&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Double&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;configuration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;zoomOutMax&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;scene&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rootNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;addChildNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cameraNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;cameraNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cameraNode&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;SCNode&lt;/code&gt;という箱にcameraに対して &lt;code class=&quot;highlighter-rouge&quot;&gt;SCNCamera&lt;/code&gt;をセットしたことでカメラとして使います。ダックタイピングみたいですね。。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;position&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;SCNCamera&lt;/code&gt;の位置となります。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;camera&lt;/code&gt;のFOVとZ-Farの値を設定します。
+この値がなんなのかは、&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scncamera&quot;&gt;公式&lt;/a&gt;に解説があります。
+ざっくり説明するとFOVが視野でZ-Farが見える距離です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-6.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-6.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ちなみにFloatだったりSCNFloatだったりCGFloatだったりと型が統一されていません。ここらへんは後々統一されるといいですね。&lt;/p&gt;
+
+&lt;h3 id=&quot;球体モデルに画像を貼る&quot;&gt;球体モデルに画像を貼る&lt;/h3&gt;
+&lt;p&gt;今回はGLKitで作ったときとは異なり、球体モデルは自作ではなくプリセットSCNSphereを使いました。
+もしSCNSphereのTexture UV値が頂点情報になかったり、値がでたらめだったら、従来どおり自作する予定でした。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sphere&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNSphere&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;radius&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sphere&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;segmentCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configuration&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;segmentCount&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;findImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;configuration&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sphere&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;materials&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;diffuse&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;contents&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sphere&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;materials&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isDoubleSided&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sphereNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;geometry&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;  &lt;span class=&quot;n&quot;&gt;sphere&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;scene&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rootNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;addChildNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sphereNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;modelNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sphereNode&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;球体を作成し、画像を球体が持つマテリアル情報のdiffuse陰影に適用します。
+diffuseに関しては&lt;a href=&quot;https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse&quot;&gt;SCNMaterial.diffuse&lt;/a&gt;に説明があります。&lt;/p&gt;
+
+&lt;p&gt;とりあえず覚えることとしてはdiffuseは基礎カラーまたはテクスチャとして捉えといても構いません。&lt;br /&gt;
+diffuseの他にambientやmetalness,specularなどシェーダーがありますが、これらはシェーダー言語で自作することも可能です。&lt;br /&gt;
+とりあえず基本だから用意してくれているってだけです。&lt;br /&gt;
+頑張れば下図のような川瀬式シェーダーも可能になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-7.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-07-ios-scene-kit-abc-7.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;
+(図は[Kawase 2003]より)&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;isDoubleSided&lt;/code&gt; はポリゴン面の法線を無視して両面に画像を表示するように支持しています。
+これは360度パノラマ画像は球体の中から見ることを基本としてるためです。
+本来であれば球体の法線を逆ベクトルにする方法もあるのですが、SCNSphereは予めモデリングされたものなので面毎に法線を反転となると再生成となり、元の球体自作と変わらないので、今回の形をとりました。&lt;/p&gt;
+
+&lt;h3 id=&quot;ambientライトを用意&quot;&gt;ambientライトを用意&lt;/h3&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ambientLightNode&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ambientLightNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;light&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNLight&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ambientLightNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;light&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;type&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ambient&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;ambientLightNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;light&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;color&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIColor&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;white&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;scene&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rootNode&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;addChildNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ambientLightNode&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;これは既に読めると思うので特に説明はせず省きます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;magnificationFilter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CALayerContentsFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linear&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;layer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;minificationFilter&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CALayerContentsFilter&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;linear&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;これは受け取ったレイヤーに対する拡大と縮小時の補間フィルターアルゴリズムの選定です。&lt;/p&gt;
+
+&lt;h3 id=&quot;scnscenerendererdelegateでフレーム更新を受け取る&quot;&gt;SCNSceneRendererDelegateでフレーム更新を受け取る&lt;/h3&gt;
+
+&lt;p&gt;前述したとおり、VCに対してSCNSceneRendererDelegateを採用しています。
+GLKitのときの違いとしては、前回時間の算出方法が異なります。&lt;br /&gt;
+SceneKitでは自分で保持し算出する必要があります。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;renderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;renderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SCNSceneRenderer&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;updateAtTime&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;time&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TimeInterval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;timeSinceLastUpdate&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;previousTime&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;defer&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;previousTime&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;time&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;c1&quot;&gt;// 省略&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;また回転行列がYawPitchRollではなく任意軸になっているため、
+Yawの回転比率に応じて、PitchとRollの値をcos/sinでだしてPitch軸を回転させていたのに対して&lt;br /&gt;
+任意軸となるため、そのままだと実質Roll軸の回転となってしまいます。&lt;/p&gt;
+
+&lt;p&gt;そのためカメラの上下回転に関しては、カメラの横のベクトルが必要となるので、元々求めている前ベクトルとYベクトルの２つを外積することで
+カメラの横ベクトルを算出し、それを回転の任意軸として設定することで、カメラの上下回転を実現しました。&lt;/p&gt;
+
+&lt;h3 id=&quot;あとは同じ&quot;&gt;あとは同じ&lt;/h3&gt;
+
+&lt;p&gt;あとはほとんど前回と同じになります。&lt;/p&gt;
+
+&lt;h2 id=&quot;glkitと異なり躓いたポイント&quot;&gt;GLKitと異なり躓いたポイント&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;動かないとupdateが呼ばれない&lt;/li&gt;
+  &lt;li&gt;回転行列がYawPitchRollの3軸ではなく任意軸&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;以上, 実際にやってみたら躓きポイント、特に回転行列APIが任意軸になってる部分で大分気づくのに時間がかかりました。
+今回GLKitからSceneKitに差し替えたことで、SceneKitの手軽さを体験できたことは良かったなと思いました。&lt;/p&gt;
+
+&lt;p&gt;Unityであればリソースアセット管理とそれの編集などトータル的に勝ってはいますが、
+ここまでグラフィカルエンジンのことを気にせず3Dコンテンツに集中できるとなると、ちょっと元ゲーム開発者としてはゲームを作ってみようかなと心がソワソワしました。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="scene-kit" /><category term="swift" /><summary type="html">GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">iOSDC Japan 2019に行くメリットについて考えてみた</title><link href="https://blog.mothule.com/ios/ios-iosdc-japan-2019-pro" rel="alternate" type="text/html" title="iOSDC Japan 2019に行くメリットについて考えてみた" /><published>2019-09-05T00:00:00+09:00</published><updated>2019-09-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/ios-iosdc-japan-2019-pro</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-iosdc-japan-2019-pro">&lt;p&gt;9月5日から7日までの3日間で開催されるiOSDC Japan 2019の初日に参加しました。
 初日は前夜祭ということで、トークは2つ参加で終わる短さでした。&lt;/p&gt;
 
 &lt;h2 id=&quot;私は普段勉強会にほとんど参加しません&quot;&gt;私は普段勉強会にほとんど参加しません&lt;/h2&gt;
@@ -8,7 +313,7 @@
 トークで全てが分からなくても、スライドにはアウトラインとアピールの２つが入っていることが必須であるため、
 その２つがあればそこから自分で知識を吸収することは十分に可能です。&lt;/p&gt;
 
-&lt;h3 id=&quot;リスナーとスピーカー間にメリット差が天地&quot;&gt;リスナーとスピーカー間にメリット差が天地&lt;/h3&gt;
+&lt;h3 id=&quot;リスナーとスピーカー間のメリット差が天地&quot;&gt;リスナーとスピーカー間のメリット差が天地&lt;/h3&gt;
 
 &lt;p&gt;スピーカーとして参加するのはとても意義があるメリットの多い行為だと思います。
 なぜなら、スピーカーとして発表するスライドを作成するために必要な調査や得た知識を体系的にまとめあげ
@@ -342,7 +647,81 @@ RailsのRackがどのようなMiddlewareを経てRailsに渡ってきてるの�
 
 &lt;p&gt;RackやRack Middlewareを知ることで、Railsの拡張性の高さや実際にどうやって拡張されているのかを知ることができたと思います。&lt;/p&gt;
 
-&lt;p&gt;このように普段ほとんど関わることのない機能であっても知ることで色んな所の仕組みが理解できるようになるのはおもしろいですね。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="rack" /><category term="rack-middleware" /><summary type="html">Railsの挙動を拡張するには3つの方法があります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">CocoaPodsをrbenv+bundlerで管理する</title><link href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" rel="alternate" type="text/html" title="CocoaPodsをrbenv+bundlerで管理する" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler</id><content type="html" xml:base="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">&lt;p&gt;iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
+&lt;p&gt;このように普段ほとんど関わることのない機能であっても知ることで色んな所の仕組みが理解できるようになるのはおもしろいですね。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="rack" /><category term="rack-middleware" /><summary type="html">Railsの挙動を拡張するには3つの方法があります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</title><link href="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog" rel="alternate" type="text/html" title="はてなブログからJekyllを使ったGitHub Pagesに移行した理由" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog</id><content type="html" xml:base="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog">&lt;p&gt;長年利用していた&lt;code class=&quot;highlighter-rouge&quot;&gt;はてなブログ&lt;/code&gt;からGitHub Pages上でJekyllを使った静的生成サイトに移行しました。
+この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて
+まとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;移行したかった理由&quot;&gt;移行したかった理由&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;カスタマイズが非常にやりにくかった&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;細かい理由はありますが、この1点が常に不便で作りたいサイトが作れない煩わしさがありました。&lt;/p&gt;
+
+&lt;p&gt;パンくずリストを配置したい.グロナビを配置したい.関連記事による回遊率を上げたい.toc置きたい.
+決められた場所ではなくもっと全体的に自由に改変したい。
+という欲が常に付きまとい、CSSやJavascriptを弄るなどして我慢していましたが、&lt;/p&gt;
+
+&lt;p&gt;移行先について調べてしまったら追加で&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;記事に対して自動処理を挟みたい時に挟めるなど実現可能性を確保しておきたい&lt;/li&gt;
+  &lt;li&gt;自分のブランディングに対して独自ドメインが必須だが、無料アカウントではできない&lt;/li&gt;
+  &lt;li&gt;得た知識で自分でSEO対応したブログを作ってみたい&lt;/li&gt;
+  &lt;li&gt;Ruby製ツールに慣れることでRubyスキルもあげれるかもしれない。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などの欲も出てきて、移行することを決断しました。
+ちなみにこのように移行について深刻に悩んだのは5回目ぐらいです。&lt;/p&gt;
+
+&lt;h3 id=&quot;移行先にgithub-pagesを選んだ理由&quot;&gt;移行先にGitHub Pagesを選んだ理由&lt;/h3&gt;
+&lt;p&gt;ホスティング先をGitHub Pagesを選んだ理由は至ってシンプルで、技術ブログっぽいしエンジニアっぽいって理由なだけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;静的サイト生成ツールにjekyllを選んだ理由&quot;&gt;静的サイト生成ツールにJekyllを選んだ理由&lt;/h2&gt;
+
+&lt;h3 id=&quot;もともとはmiddlemanを予定していました&quot;&gt;もともとはMiddlemanを予定していました&lt;/h3&gt;
+&lt;p&gt;理由はRubyで書かれたツールで、View周りをHamlで書くことができたためです。
+しかし、Middlemanを調べると同じようにMiddlemanから別ツールに移行する記事もありました。
+それら記事はプレビューや記事速度が遅すぎるという理由でHUGOに移行していました。
+HUGOはGolang製でGo言語の処理速度により記事生成やプレビューがとにかく早い。が売りでした。
+しかし自分はこれを検討はしたものの採用はしませんでした。なぜならGo言語についてあまり構文を理解していないので、
+プラグイン作成とかちょっとしたView内コードを書くなどカスタマイズしたいときにGo言語が障害となりうると思っていたからです。
+実際サンプル覗いてもGo言語特有に&lt;code class=&quot;highlighter-rouge&quot;&gt;ret, error := hoge&lt;/code&gt; というエラーとレスポンスの同時受け取りが目に入り、却下しました。&lt;/p&gt;
+
+&lt;h3 id=&quot;他にどんなツールがあるから調べた&quot;&gt;他にどんなツールがあるから調べた&lt;/h3&gt;
+&lt;p&gt;もともと知っているツールが少なかったこともあって、一度全体的に静的サイト生成ツールについて情報収集を行いました。
+結果Ruby製でMiddlemanとJekyllがありました。&lt;/p&gt;
+
+&lt;p&gt;このときMiddlemanではなくJekyllに揺れた理由として&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;MiddlemanのRepositoryが動いていない&lt;/li&gt;
+  &lt;li&gt;JekyllはGitHub Pagesが公式サポートしている&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の2点です。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyllはmasterにpushすれば自動生成される仕組みがある&quot;&gt;Jekyllはmasterにpushすれば自動生成される仕組みがある&lt;/h2&gt;
+
+&lt;p&gt;Jekyllにはgithubが用意するgemに則ったサイト構成であれば、masterにpushするだけであとの生成は、github側が自動で生成してくれるらしいです。
+自分もその恩恵にあやかろうと思っていたのですが、対象のRuby言語バージョンが低くて、流石にここまで低いバージョンでメンテやカスタマイズしたくないなと思い、
+自分でdeploy用スクリプトを用意して運用しています。&lt;/p&gt;
+
+&lt;h2 id=&quot;jekyllのviewがliquidで苦労する&quot;&gt;JekyllのViewがLiquidで苦労する&lt;/h2&gt;
+
+&lt;p&gt;JekyllのViewはLiquidという慣れないビューエンジンを使っており、最初大変でしたが、
+&lt;a href=&quot;https://jekyllrb-ja.github.io/docs/&quot;&gt;Jekyllのサイト&lt;/a&gt;が日本語で書いてあり結構分かりやすかったので、
+チュートリアルをやったりして覚えました。&lt;/p&gt;
+
+&lt;h2 id=&quot;カスタムタグがrubyで書ける&quot;&gt;カスタムタグがRubyで書ける&lt;/h2&gt;
+&lt;p&gt;Markdown中に記載できるタグを自作ができて、かつRubyで処理を書くので、Rubyに触る機会が増やす目的は達成できたかなと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;ドメインにはムームードメインを使った&quot;&gt;ドメインにはムームードメインを使った&lt;/h2&gt;
+&lt;p&gt;自分用のドメインを買うのにもどこがいいか調べた結果ムームードメインにしました。
+もともとはGMOのどれかにしようと目星は付けていましたが、
+同じ親会社のサービスであるお名前.comは代理公開が有料だったので、ムームードメインにしました。
+GMOに絞った理由は、ドメインという運用において数多く、そして長く運用している＝安定性が高い。という決断です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="jekyll" /><category term="github-pages" /><summary type="html">長年利用していたはてなブログからGitHub Pages上でJekyllを使った静的生成サイトに移行しました。 この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて まとめてあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-migration-blog-to-github-pages-from-hatenablog.png" /></entry><entry><title type="html">CocoaPodsをrbenv+bundlerで管理する</title><link href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" rel="alternate" type="text/html" title="CocoaPodsをrbenv+bundlerで管理する" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler</id><content type="html" xml:base="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler">&lt;p&gt;iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
 CocoaPods単体であれば特に考えず &lt;code class=&quot;highlighter-rouge&quot;&gt;$ gem install cocoapods&lt;/code&gt; で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、
 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。&lt;/p&gt;
 
@@ -528,81 +907,7 @@ Rubyバージョンを更新した場合は、 &lt;code class=&quot;highlighter-
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
-今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</title><link href="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog" rel="alternate" type="text/html" title="はてなブログからJekyllを使ったGitHub Pagesに移行した理由" /><published>2019-08-30T00:00:00+09:00</published><updated>2019-08-30T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog</id><content type="html" xml:base="https://blog.mothule.com/notebook/migration-blog-to-github-pages-from-hatenablog">&lt;p&gt;長年利用していた&lt;code class=&quot;highlighter-rouge&quot;&gt;はてなブログ&lt;/code&gt;からGitHub Pages上でJekyllを使った静的生成サイトに移行しました。
-この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて
-まとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;移行したかった理由&quot;&gt;移行したかった理由&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;カスタマイズが非常にやりにくかった&lt;/strong&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;細かい理由はありますが、この1点が常に不便で作りたいサイトが作れない煩わしさがありました。&lt;/p&gt;
-
-&lt;p&gt;パンくずリストを配置したい.グロナビを配置したい.関連記事による回遊率を上げたい.toc置きたい.
-決められた場所ではなくもっと全体的に自由に改変したい。
-という欲が常に付きまとい、CSSやJavascriptを弄るなどして我慢していましたが、&lt;/p&gt;
-
-&lt;p&gt;移行先について調べてしまったら追加で&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;記事に対して自動処理を挟みたい時に挟めるなど実現可能性を確保しておきたい&lt;/li&gt;
-  &lt;li&gt;自分のブランディングに対して独自ドメインが必須だが、無料アカウントではできない&lt;/li&gt;
-  &lt;li&gt;得た知識で自分でSEO対応したブログを作ってみたい&lt;/li&gt;
-  &lt;li&gt;Ruby製ツールに慣れることでRubyスキルもあげれるかもしれない。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などの欲も出てきて、移行することを決断しました。
-ちなみにこのように移行について深刻に悩んだのは5回目ぐらいです。&lt;/p&gt;
-
-&lt;h3 id=&quot;移行先にgithub-pagesを選んだ理由&quot;&gt;移行先にGitHub Pagesを選んだ理由&lt;/h3&gt;
-&lt;p&gt;ホスティング先をGitHub Pagesを選んだ理由は至ってシンプルで、技術ブログっぽいしエンジニアっぽいって理由なだけです。&lt;/p&gt;
-
-&lt;h2 id=&quot;静的サイト生成ツールにjekyllを選んだ理由&quot;&gt;静的サイト生成ツールにJekyllを選んだ理由&lt;/h2&gt;
-
-&lt;h3 id=&quot;もともとはmiddlemanを予定していました&quot;&gt;もともとはMiddlemanを予定していました&lt;/h3&gt;
-&lt;p&gt;理由はRubyで書かれたツールで、View周りをHamlで書くことができたためです。
-しかし、Middlemanを調べると同じようにMiddlemanから別ツールに移行する記事もありました。
-それら記事はプレビューや記事速度が遅すぎるという理由でHUGOに移行していました。
-HUGOはGolang製でGo言語の処理速度により記事生成やプレビューがとにかく早い。が売りでした。
-しかし自分はこれを検討はしたものの採用はしませんでした。なぜならGo言語についてあまり構文を理解していないので、
-プラグイン作成とかちょっとしたView内コードを書くなどカスタマイズしたいときにGo言語が障害となりうると思っていたからです。
-実際サンプル覗いてもGo言語特有に&lt;code class=&quot;highlighter-rouge&quot;&gt;ret, error := hoge&lt;/code&gt; というエラーとレスポンスの同時受け取りが目に入り、却下しました。&lt;/p&gt;
-
-&lt;h3 id=&quot;他にどんなツールがあるから調べた&quot;&gt;他にどんなツールがあるから調べた&lt;/h3&gt;
-&lt;p&gt;もともと知っているツールが少なかったこともあって、一度全体的に静的サイト生成ツールについて情報収集を行いました。
-結果Ruby製でMiddlemanとJekyllがありました。&lt;/p&gt;
-
-&lt;p&gt;このときMiddlemanではなくJekyllに揺れた理由として&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;MiddlemanのRepositoryが動いていない&lt;/li&gt;
-  &lt;li&gt;JekyllはGitHub Pagesが公式サポートしている&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;の2点です。&lt;/p&gt;
-
-&lt;h2 id=&quot;jekyllはmasterにpushすれば自動生成される仕組みがある&quot;&gt;Jekyllはmasterにpushすれば自動生成される仕組みがある&lt;/h2&gt;
-
-&lt;p&gt;Jekyllにはgithubが用意するgemに則ったサイト構成であれば、masterにpushするだけであとの生成は、github側が自動で生成してくれるらしいです。
-自分もその恩恵にあやかろうと思っていたのですが、対象のRuby言語バージョンが低くて、流石にここまで低いバージョンでメンテやカスタマイズしたくないなと思い、
-自分でdeploy用スクリプトを用意して運用しています。&lt;/p&gt;
-
-&lt;h2 id=&quot;jekyllのviewがliquidで苦労する&quot;&gt;JekyllのViewがLiquidで苦労する&lt;/h2&gt;
-
-&lt;p&gt;JekyllのViewはLiquidという慣れないビューエンジンを使っており、最初大変でしたが、
-&lt;a href=&quot;https://jekyllrb-ja.github.io/docs/&quot;&gt;Jekyllのサイト&lt;/a&gt;が日本語で書いてあり結構分かりやすかったので、
-チュートリアルをやったりして覚えました。&lt;/p&gt;
-
-&lt;h2 id=&quot;カスタムタグがrubyで書ける&quot;&gt;カスタムタグがRubyで書ける&lt;/h2&gt;
-&lt;p&gt;Markdown中に記載できるタグを自作ができて、かつRubyで処理を書くので、Rubyに触る機会が増やす目的は達成できたかなと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;ドメインにはムームードメインを使った&quot;&gt;ドメインにはムームードメインを使った&lt;/h2&gt;
-&lt;p&gt;自分用のドメインを買うのにもどこがいいか調べた結果ムームードメインにしました。
-もともとはGMOのどれかにしようと目星は付けていましたが、
-同じ親会社のサービスであるお名前.comは代理公開が有料だったので、ムームードメインにしました。
-GMOに絞った理由は、ドメインという運用において数多く、そして長く運用している＝安定性が高い。という決断です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="jekyll" /><category term="github-pages" /><summary type="html">長年利用していたはてなブログからGitHub Pages上でJekyllを使った静的生成サイトに移行しました。 この記事ではなぜ移行したのか？なぜJekyllなのか？なぜGitHub Pagesなのか？といった選定理由や移行理由などについて まとめてあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-migration-blog-to-github-pages-from-hatenablog.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
+今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
 
 &lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
@@ -1004,54 +1309,4 @@ mysql\&amp;gt; show grants for 'hoge'@'192.168.%';
   &lt;li&gt;(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする</title><link href="https://blog.mothule.com/ios/how-to-use-ngrok" rel="alternate" type="text/html" title="ngrokで楽にATS無効化せずローカルAPIにHTTPSでアクセスする" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/how-to-use-ngrok</id><content type="html" xml:base="https://blog.mothule.com/ios/how-to-use-ngrok">&lt;p&gt;RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。
-特にブレイクポイント機能があれば、バグの原因追求が迅速になります。
-しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。
-しかし、そんなときに便利なのがngrokというサービスです。&lt;/p&gt;
-
-&lt;h2 id=&quot;ngrok&quot;&gt;ngrok&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://ngrok.com/&quot;&gt;ngrok - secure introspectable tunnels to localhost&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;認証不要(認証もあるけど)&lt;/li&gt;
-  &lt;li&gt;ngrokサービスがランダムなブレークポイントアクセスできるURLを用意してくれる&lt;/li&gt;
-  &lt;li&gt;そのランダムURLにアクセスすると&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost&lt;/code&gt;にブレークポイントーディングしてくれる&lt;/li&gt;
-  &lt;li&gt;数時間立つとURLが無効化する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;インストール&quot;&gt;インストール&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask install ngrok
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew cask info ngrok
-ngrok: latest
-https://ngrok.com/
-/usr/local/Caskroom/ngrok/latest &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;24.6MB&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-From: https://github.com/Homebrew/homebrew-cask/blob/master/Casks/ngrok.rb
-&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Name
-ngrok
-&lt;span class=&quot;o&quot;&gt;==&amp;gt;&lt;/span&gt; Artifacts
-ngrok &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;Binary&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;使い方&quot;&gt;使い方&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ ngrok http 3000&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:3000&lt;/code&gt;のURLが発行されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-08-05-runing-ngrok.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;この場合、&lt;code class=&quot;highlighter-rouge&quot;&gt;https://f1092809.ngrok.io&lt;/code&gt; というURLが一時的にブレークポイントーディングしてくれます。 8時間経過するとURLは無効になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組み&quot;&gt;仕組み&lt;/h3&gt;
-
-&lt;p&gt;本来であれば、ngrokはローカルネットワーク上にあるサーバーを遠隔地からアクセスできるようにする外から内へアクセスを可能にするサービスです。&lt;/p&gt;
-
-&lt;p&gt;これをローカルAPIサーバーと同一ローカルネットワーク上にあるiPhoneが、一旦外部のURLにアクセスし、再びローカルネットワーク上のAPIサーバーにアクセスすることで、開発中にローカルAPIにHTTPSでアクセスする仕組みです。&lt;/p&gt;
-
-&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
-
-&lt;p&gt;ngrokに通信を介しているため、セキュアなデータなどもngrok側は見えているかと思われます。 しかし、ngrok側はそれを秘匿性を守秘していたとしても、ngrok側が脆弱性があれば、そこから意図せずデータが漏洩することは可能性はあります。&lt;/p&gt;
-
-&lt;p&gt;そのため、認証などテストする場合はどうでもいいテストアカウトでやることを紹介する以上、推奨します。つまり自己責任です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="ngrok" /><category term="ats" /><summary type="html">RailsアプリとiOSアプリを同時開発してると、デバッグ機能が非常に重要になります。 特にブレイクポイント機能があれば、バグの原因追求が迅速になります。 しかしLINE Botだったり、iOSのATSだったり、HTTPSが必須のケースでローカルAPIは難しい話です。 しかし、そんなときに便利なのがngrokというサービスです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-05-how-to-use-ngrok.png" /></entry></feed>
+&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;^(?!.*いう).+$&lt;/code&gt;とは「いう否定セット」の入っていない１文字以上を検索となる&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="regexp" /><summary type="html">常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>

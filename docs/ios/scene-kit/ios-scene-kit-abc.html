@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。" />
+<meta property="og:description" content="GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc" />
+<meta property="og:url" content="https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-07T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc","headline":"360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話","dateModified":"2019-09-07T00:00:00+09:00","datePublished":"2019-09-07T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc"},"description":"GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話">
+    <meta name="twitter:description" content="GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/site-image.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#scene-kit">Scene-kit</a>
+      
+    
+      
+        / 360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-7</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#scene-kit">scene-kit</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#swift">swift</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#きっかけ">きっかけ</a></li>
+  <li><a href="#swift5に変えたが動かず">Swift5に変えたが動かず</a></li>
+  <li><a href="#scenekitってのが出てた">SceneKitってのが出てた</a>
+    <ul>
+      <li><a href="#scenekitは3dゲームやコンテンツの上位レイヤー開発キット">SceneKitは3Dゲームやコンテンツの上位レイヤー開発キット</a></li>
+      <li><a href="#scnnodeはデザインとしては多少強引な何でもボックス">SCNNodeはデザインとしては多少強引な何でもボックス</a></li>
+    </ul>
+  </li>
+  <li><a href="#scenekitで360度パノラマ画像ビューワーを実装する">SceneKitで360度パノラマ画像ビューワーを実装する</a>
+    <ul>
+      <li><a href="#scnviewでsceneの描画先を決める">SCNViewでSceneの描画先を決める</a>
+        <ul>
+          <li><a href="#1-スクリーン先をviewにする">1. スクリーン先をviewにする</a></li>
+          <li><a href="#2-scnscenerendererdelegateで毎フレームフックする">2. SCNSceneRendererDelegateで毎フレームフックする</a>
+            <ul>
+              <li><a href="#scenekitがフレーム毎にしていること">SceneKitがフレーム毎にしていること</a></li>
+              <li><a href="#デフォルトだと動かないと更新されない">デフォルトだと動かないと更新されない</a></li>
+            </ul>
+          </li>
+          <li><a href="#3-fps指定">3. FPS指定</a></li>
+          <li><a href="#4-その他">4. その他</a></li>
+        </ul>
+      </li>
+      <li><a href="#カメラをセット">カメラをセット</a></li>
+      <li><a href="#球体モデルに画像を貼る">球体モデルに画像を貼る</a></li>
+      <li><a href="#ambientライトを用意">ambientライトを用意</a></li>
+      <li><a href="#scnscenerendererdelegateでフレーム更新を受け取る">SCNSceneRendererDelegateでフレーム更新を受け取る</a></li>
+      <li><a href="#あとは同じ">あとは同じ</a></li>
+    </ul>
+  </li>
+  <li><a href="#glkitと異なり躓いたポイント">GLKitと異なり躓いたポイント</a></li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+
+  <p>GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。</p>
+
+<h2 id="きっかけ">きっかけ</h2>
+
+<p>先日国内最大のiOS開発者カンファレンス iOSDC Japan 2019に参加して、AVFoundationを使っているセッションばかり聞いていたら
+「自分も何か発表できるネタないかな？発表してみたいな。」とウズウズした結果、過去の自作ライブラリで人気がある360度パノラマ画像ビューワーをSwift5に追従して動くようにして、実現方法などについてスライド纏めれば、ちょっとした登壇とかできそうだなと思ったことがきっかけです。</p>
+
+<p>この自作ライブラリは以前<a href="https://qiita.com/mothule/items/026bac1cf1fc229d0c4d">Qiita</a>に書いてあります</p>
+
+<h2 id="swift5に変えたが動かず">Swift5に変えたが動かず</h2>
+
+<p>ライブラリのSwift言語はSwift3なので古いな〜と思いつつSwift5にして、ビルドが通ったので実行したのですが、画面が白いままで全く何も表示されませんでした。</p>
+
+<p>原因がいまいち分からず、情報集めるため公式ドキュメントを覗いたら驚愕しました。</p>
+
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc-1.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc-1.png" width="50%" /></a></p>
+
+<p><strong>oh…</strong> なんとほぼ全部が <code class="highlighter-rouge">Deprecated</code> ラベルがついてました。</p>
+
+<p>これでは折角ライブラリのSwiftを追従させても、追従したとは言えません。
+Swiftバージョンだけでなく、描画周りも一新することにしました。</p>
+
+<h2 id="scenekitってのが出てた">SceneKitってのが出てた</h2>
+
+<p><a href="https://developer.apple.com/documentation">公式サイト</a>を１つに戻って見てみたらSceneKitと呼ばれるフレームワークを見つけました。
+googleで調べてもGLKitは影を潜めMetalやSceneKit,ARKitが並んでいます。</p>
+
+<h3 id="scenekitは3dゲームやコンテンツの上位レイヤー開発キット">SceneKitは3Dゲームやコンテンツの上位レイヤー開発キット</h3>
+
+<p>GLKitが低レイヤーだとすれば、SceneKitは上位レイヤーに当たります。
+GLKitが描画エンジンだとすれば、SceneKitはゲームエンジンといったところでしょうか。
+また描画だけでなくアニメーション,物理演算などもサポートしています。</p>
+
+<p>SceneKitは描画テクノロジーにはGLKitやMetalが使われています。
+OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテンツ作りに特化しやすい開発キットってことですね。
+それゆえ、GLKitを直接使われるよりは新しく提供したSceneKitを使うようGLKitを非推奨にしたのかもしれません。</p>
+
+<p>GLKitと異なりSceneKitではOpenGLを直接操作するのではなく、Sceneと呼ばれる単位で描画環境の構築を行います。<br />
+そしてこのScene内はNodeと呼ばれるディレクトリのような階層構造で描画オブジェクトを管理しています。</p>
+
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc-2.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc-2.png" width="100%" /></a>
+↑ <a href="https://developer.apple.com/documentation/scenekit/scnscene">公式</a>より抜粋</p>
+
+<p>映画の1シーンと捉えると理解がしやすいかと思います。</p>
+
+<ul>
+  <li>ロケ地で撮影 : landscapeNode</li>
+  <li>俳優が立つ : characterNode</li>
+  <li>カメラで撮影 : cameraNode</li>
+  <li>照明で照らす : lightNode</li>
+</ul>
+
+<h3 id="scnnodeはデザインとしては多少強引な何でもボックス">SCNNodeはデザインとしては多少強引な何でもボックス</h3>
+
+<p>このNodeと呼ばれるものは<code class="highlighter-rouge">SCNNode</code>一つで上の全てのオブジェクトをサポートしている
+設計としては多少強引な何でもボックスです。</p>
+
+<p>なぜなら</p>
+
+<ul>
+  <li>ライト</li>
+  <li>カメラ</li>
+  <li>アニメーション</li>
+</ul>
+
+<p>へのアクセスプロパティを持っており、設定によってどれにでもなり得るからです。
+ただこのような設計にしたのは、Nodeによる階層構造をシンプルにしたかったかもしれません。</p>
+
+<h2 id="scenekitで360度パノラマ画像ビューワーを実装する">SceneKitで360度パノラマ画像ビューワーを実装する</h2>
+
+<p>ではSceneKitを使った360度パノラマ画像ビューワーの実装について説明します。
+全容は<a href="https://github.com/mothule/RNSphereImageViewer">GitHub/RNSphereImageViewer</a>で確認できます。
+数ファイルしかないので、億劫にならないかと思います。</p>
+
+<h3 id="scnviewでsceneの描画先を決める">SCNViewでSceneの描画先を決める</h3>
+
+<p>先の説明の通り、Sceneで描画計画を立てたら、それを実際に反映する先が必要になります。
+映画でいうと映画館のスクリーンといったところです。</p>
+
+<p>これはSCNViewと呼ばれる<code class="highlighter-rouge">UIView</code>のサブクラスを対象ViewControllerのviewに代入すれば終わりです。
+以下は<code class="highlighter-rouge">viewDidLoad()</code>の抜粋です.</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">open</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+  <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+  <span class="c1">// 1. スクリーン先をviewにする</span>
+  <span class="k">let</span> <span class="nv">sceneView</span> <span class="o">=</span> <span class="kt">SCNView</span><span class="p">()</span>
+  <span class="k">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">sceneView</span>
+
+  <span class="c1">// 2. SCNSceneRendererDelegateで毎フレームフックする</span>
+  <span class="n">sceneView</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+
+  <span class="c1">// 3. FPS指定</span>
+  <span class="n">sceneView</span><span class="o">.</span><span class="n">preferredFramesPerSecond</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">fps</span> <span class="c1">// FPSはSceneKitが管理している</span>
+  <span class="n">sceneView</span><span class="o">.</span><span class="n">rendersContinuously</span> <span class="o">=</span> <span class="kc">true</span> <span class="c1">// これをtrueにしないと毎フレーム更新が呼ばれない</span>
+
+  <span class="c1">// 4. その他</span>
+  <span class="n">sceneView</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="n">gray</span> <span class="c1">// 何も描画してないときの背景色. ライトとは違う色にすることをオススメします</span>
+  <span class="n">sceneView</span><span class="o">.</span><span class="n">autoenablesDefaultLighting</span> <span class="o">=</span> <span class="kc">true</span>
+  <span class="n">sceneView</span><span class="o">.</span><span class="n">showsStatistics</span> <span class="o">=</span> <span class="kc">true</span>
+
+  <span class="c1">// 以下省略</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="1-スクリーン先をviewにする">1. スクリーン先をviewにする</h4>
+
+<p>self.viewに対し SCNViewを指定することで投影先(スクリーン先)を設定します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">sceneView</span> <span class="o">=</span> <span class="kt">SCNView</span><span class="p">()</span>
+<span class="k">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">sceneView</span>
+</code></pre></div></div>
+
+<p>SCNViewの初期化メソッドは、frameは描画領域、optionsは MetalやOpenGLなど<code class="highlighter-rouge">SCNRenderer</code>に渡すオプションになります。<br />
+このoptionsは<a href="https://developer.apple.com/documentation/scenekit/scnrenderer/1518404-init">MetalのSCNRenderer</a>や<a href="https://developer.apple.com/documentation/scenekit/scnrenderer/1518408-init">OpenGLのSCNRenderer</a>は将来向けの拡張オプションでまだ使われていないようです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">SCNView</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">frame</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h4 id="2-scnscenerendererdelegateで毎フレームフックする">2. SCNSceneRendererDelegateで毎フレームフックする</h4>
+<p>SCNView.delegateは <code class="highlighter-rouge">SCNSceneRendererDelegate</code> protocolになります。
+これを採用すれば、SceneKitが行っている描画やアニメ処理、物理演算といったタイミングにフックすることができます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sceneView</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+</code></pre></div></div>
+
+<h5 id="scenekitがフレーム毎にしていること">SceneKitがフレーム毎にしていること</h5>
+<p>SceneKitが何を行っているかについては、<a href="https://developer.apple.com/documentation/scenekit/scnscenerendererdelegate">公式</a>にて解説されています。<br />
+下の図は1フレーム※で行われている処理と各フックタイミングの解説です。<br />
+※ 60FPSだとしたら、 1 / 60 ≒ 0.01667秒毎に呼ばれる。</p>
+
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc-3.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc-3.png" width="100%" /></a></p>
+
+<p>今回は更新毎にカメラ制御などをしたいので<a href="https://developer.apple.com/documentation/scenekit/scnscenerendererdelegate/1522937-renderer">func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval)</a>を使います。</p>
+
+<h5 id="デフォルトだと動かないと更新されない">デフォルトだと動かないと更新されない</h5>
+
+<p>SceneKitはデフォルト値だと、描画物やアニメ、物理演算など前フレームより変化がないと更新が実行されず、
+同様にdelegateによるフックも呼び出されません。</p>
+
+<p>これでは1フレーム毎に動かしたい、一定時間たったら動くなど、時間軸による制御が不可能なので、常にこれが呼ばれるようにする必要があります。
+これは<a href="https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously">SCNView.rendersContinuously</a>として用意されてるので、これを<code class="highlighter-rouge">true</code>にすれば,後述するFPS値のレートで更新処理が行われます。</p>
+
+<h4 id="3-fps指定">3. FPS指定</h4>
+
+<p>FPSはSceneKitが管理しており、この値レートに従って更新されます。<br />
+その値プロパティが<a href="https://developer.apple.com/documentation/scenekit/scnview/1621205-preferredframespersecond">preferredFramesPerSecond</a>となります。<br />
+この値はデフォルトでは60FPSとなっています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sceneView</span><span class="o">.</span><span class="n">preferredFramesPerSecond</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">fps</span>
+<span class="n">sceneView</span><span class="o">.</span><span class="n">rendersContinuously</span> <span class="o">=</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p>注意点が2点あり、FPSは処理負荷に依存するモニター値であるため、ここの値が実際のFPS値となるものではなく、指標としてのFPSとなります。
+つまり60FPSであれば0.01秒に1回描画を行うように動きます。<br />
+またもう1点は、与えられたFPSにそのまま適用するのではなくSceneKit内部で定めたできるだけ近いFPSを選択するようです。</p>
+
+<p><a href="https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously">rendersContinuously</a>は先程述べたように、これを<code class="highlighter-rouge">true</code>にしないと毎回FPSレートに呼ばれなくなります。</p>
+
+<h4 id="4-その他">4. その他</h4>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sceneView</span><span class="o">.</span><span class="n">backgroundColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="n">gray</span> <span class="c1">// 何も描画してないときの背景色. ライトとは違う色にすることをオススメします</span>
+<span class="n">sceneView</span><span class="o">.</span><span class="n">autoenablesDefaultLighting</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="n">sceneView</span><span class="o">.</span><span class="n">showsStatistics</span> <span class="o">=</span> <span class="kc">true</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">backgroundColor</code>自体に説明は特に不要ですが、アドバイスとしては、SCNLightの色とは異なる色にしておくことをオススメします。
+なぜなら最初の実装中は、ライトと同じ色にしていると描画されているのかどうか分からないためです。</p>
+
+<p>例えば、背景を白、ライトを白の場合にしたとしましょう。<br />
+この場合、 画面が真っ白だった場合に</p>
+
+<ul>
+  <li>そもそもオブジェクトが描画されていない</li>
+  <li>描画されているが陰影処理が未適用まはライトが強すぎて視覚認識できない</li>
+  <li>カメラが違う方向向いていてスクリーンに投影されていない</li>
+</ul>
+
+<p>など複数要因が浮上し、原因特定に時間がかかるためです。</p>
+
+<p><a href="https://developer.apple.com/documentation/scenekit/scnscenerenderer/1523812-autoenablesdefaultlighting">autoenablesDefaultLighting</a>はSceneに自動でライトを追加するかどうかを決めます。
+<code class="highlighter-rouge">true</code>の場合、ライトなしかambientライトのみのときに、omnidirectionalなライトを自動で追加、配置します。</p>
+
+<p><a href="https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522763-showsstatistics">showsStatistics</a>はstatisticsを表示するフラグです。</p>
+
+<p><code class="highlighter-rouge">true</code>にして実行すると画面下にオーバーレイでviewが表示されます。</p>
+
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc-4.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc-4.png" width="100%" /></a></p>
+
+<p>左側の+をタップすると、上記で解説したSceneKitがに行っている処理区分に分かれた負荷が表示されます。</p>
+
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc-5.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc-5.png" width="100%" /></a></p>
+
+<h3 id="カメラをセット">カメラをセット</h3>
+
+<p>viewの準備が出来たら、sceneを用意しnodeを追加してく作業になります。</p>
+
+<p>まずカメラを追加します。最初にカメラである理由はなく、モデルやライトが先でも問題はないです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">scene</span> <span class="o">=</span> <span class="kt">SCNScene</span><span class="p">()</span>
+<span class="n">sceneView</span><span class="o">.</span><span class="n">scene</span> <span class="o">=</span> <span class="n">scene</span>
+
+<span class="k">let</span> <span class="nv">cameraNode</span> <span class="o">=</span> <span class="kt">SCNNode</span><span class="p">()</span>
+<span class="n">cameraNode</span><span class="o">.</span><span class="n">camera</span> <span class="o">=</span> <span class="kt">SCNCamera</span><span class="p">()</span>
+<span class="n">cameraNode</span><span class="o">.</span><span class="n">position</span> <span class="o">=</span> <span class="kt">SCNVector3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">cameraNode</span><span class="o">.</span><span class="n">camera</span><span class="o">!.</span><span class="n">fieldOfView</span> <span class="o">=</span> <span class="kt">CGFloat</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">fovy</span><span class="p">)</span>
+<span class="n">cameraNode</span><span class="o">.</span><span class="n">camera</span><span class="o">!.</span><span class="n">zFar</span> <span class="o">=</span> <span class="kt">Double</span><span class="p">(</span><span class="n">configuration</span><span class="o">.</span><span class="n">zoomOutMax</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">rootNode</span><span class="o">.</span><span class="nf">addChildNode</span><span class="p">(</span><span class="n">cameraNode</span><span class="p">)</span>
+<span class="k">self</span><span class="o">.</span><span class="n">cameraNode</span> <span class="o">=</span> <span class="n">cameraNode</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">SCNode</code>という箱にcameraに対して <code class="highlighter-rouge">SCNCamera</code>をセットしたことでカメラとして使います。ダックタイピングみたいですね。。
+<code class="highlighter-rouge">position</code>は<code class="highlighter-rouge">SCNCamera</code>の位置となります。
+<code class="highlighter-rouge">camera</code>のFOVとZ-Farの値を設定します。
+この値がなんなのかは、<a href="https://developer.apple.com/documentation/scenekit/scncamera">公式</a>に解説があります。
+ざっくり説明するとFOVが視野でZ-Farが見える距離です。</p>
+
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc-6.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc-6.png" width="100%" /></a></p>
+
+<p>ちなみにFloatだったりSCNFloatだったりCGFloatだったりと型が統一されていません。ここらへんは後々統一されるといいですね。</p>
+
+<h3 id="球体モデルに画像を貼る">球体モデルに画像を貼る</h3>
+<p>今回はGLKitで作ったときとは異なり、球体モデルは自作ではなくプリセットSCNSphereを使いました。
+もしSCNSphereのTexture UV値が頂点情報になかったり、値がでたらめだったら、従来どおり自作する予定でした。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">sphere</span> <span class="o">=</span> <span class="kt">SCNSphere</span><span class="p">(</span><span class="nv">radius</span><span class="p">:</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">segmentCount</span> <span class="o">=</span> <span class="n">configuration</span><span class="o">.</span><span class="n">segmentCount</span>
+
+<span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="nf">findImage</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">configuration</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">first</span><span class="p">?</span><span class="o">.</span><span class="n">diffuse</span><span class="o">.</span><span class="n">contents</span> <span class="o">=</span> <span class="n">image</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">materials</span><span class="o">.</span><span class="n">first</span><span class="p">?</span><span class="o">.</span><span class="n">isDoubleSided</span> <span class="o">=</span> <span class="kc">true</span>
+<span class="k">let</span> <span class="nv">sphereNode</span> <span class="o">=</span> <span class="kt">SCNNode</span><span class="p">(</span><span class="nv">geometry</span><span class="p">:</span>  <span class="n">sphere</span><span class="p">)</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">rootNode</span><span class="o">.</span><span class="nf">addChildNode</span><span class="p">(</span><span class="n">sphereNode</span><span class="p">)</span>
+<span class="n">modelNode</span> <span class="o">=</span> <span class="n">sphereNode</span>
+</code></pre></div></div>
+
+<p>球体を作成し、画像を球体が持つマテリアル情報のdiffuse陰影に適用します。
+diffuseに関しては<a href="https://developer.apple.com/documentation/scenekit/scnmaterial/1462589-diffuse">SCNMaterial.diffuse</a>に説明があります。</p>
+
+<p>とりあえず覚えることとしてはdiffuseは基礎カラーまたはテクスチャとして捉えといても構いません。<br />
+diffuseの他にambientやmetalness,specularなどシェーダーがありますが、これらはシェーダー言語で自作することも可能です。<br />
+とりあえず基本だから用意してくれているってだけです。<br />
+頑張れば下図のような川瀬式シェーダーも可能になります。</p>
+
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc-7.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc-7.png" width="100%" /></a>
+(図は[Kawase 2003]より)</p>
+
+<p><code class="highlighter-rouge">isDoubleSided</code> はポリゴン面の法線を無視して両面に画像を表示するように支持しています。
+これは360度パノラマ画像は球体の中から見ることを基本としてるためです。
+本来であれば球体の法線を逆ベクトルにする方法もあるのですが、SCNSphereは予めモデリングされたものなので面毎に法線を反転となると再生成となり、元の球体自作と変わらないので、今回の形をとりました。</p>
+
+<h3 id="ambientライトを用意">ambientライトを用意</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">ambientLightNode</span> <span class="o">=</span> <span class="kt">SCNNode</span><span class="p">()</span>
+<span class="n">ambientLightNode</span><span class="o">.</span><span class="n">light</span> <span class="o">=</span> <span class="kt">SCNLight</span><span class="p">()</span>
+<span class="n">ambientLightNode</span><span class="o">.</span><span class="n">light</span><span class="o">!.</span><span class="n">type</span> <span class="o">=</span> <span class="o">.</span><span class="n">ambient</span>
+<span class="n">ambientLightNode</span><span class="o">.</span><span class="n">light</span><span class="o">!.</span><span class="n">color</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="n">white</span>
+<span class="n">scene</span><span class="o">.</span><span class="n">rootNode</span><span class="o">.</span><span class="nf">addChildNode</span><span class="p">(</span><span class="n">ambientLightNode</span><span class="p">)</span>
+</code></pre></div></div>
+<p>これは既に読めると思うので特に説明はせず省きます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">magnificationFilter</span> <span class="o">=</span> <span class="kt">CALayerContentsFilter</span><span class="o">.</span><span class="n">linear</span>
+<span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">layer</span><span class="o">.</span><span class="n">minificationFilter</span> <span class="o">=</span> <span class="kt">CALayerContentsFilter</span><span class="o">.</span><span class="n">linear</span>
+</code></pre></div></div>
+<p>これは受け取ったレイヤーに対する拡大と縮小時の補間フィルターアルゴリズムの選定です。</p>
+
+<h3 id="scnscenerendererdelegateでフレーム更新を受け取る">SCNSceneRendererDelegateでフレーム更新を受け取る</h3>
+
+<p>前述したとおり、VCに対してSCNSceneRendererDelegateを採用しています。
+GLKitのときの違いとしては、前回時間の算出方法が異なります。<br />
+SceneKitでは自分で保持し算出する必要があります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">renderer</span><span class="p">(</span><span class="n">_</span> <span class="nv">renderer</span><span class="p">:</span> <span class="kt">SCNSceneRenderer</span><span class="p">,</span> <span class="n">updateAtTime</span> <span class="nv">time</span><span class="p">:</span> <span class="kt">TimeInterval</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">timeSinceLastUpdate</span> <span class="o">=</span> <span class="n">time</span> <span class="o">-</span> <span class="n">previousTime</span>
+    <span class="k">defer</span> <span class="p">{</span>
+        <span class="n">previousTime</span> <span class="o">=</span> <span class="n">time</span>
+    <span class="p">}</span>
+    <span class="c1">// 省略</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>また回転行列がYawPitchRollではなく任意軸になっているため、
+Yawの回転比率に応じて、PitchとRollの値をcos/sinでだしてPitch軸を回転させていたのに対して<br />
+任意軸となるため、そのままだと実質Roll軸の回転となってしまいます。</p>
+
+<p>そのためカメラの上下回転に関しては、カメラの横のベクトルが必要となるので、元々求めている前ベクトルとYベクトルの２つを外積することで
+カメラの横ベクトルを算出し、それを回転の任意軸として設定することで、カメラの上下回転を実現しました。</p>
+
+<h3 id="あとは同じ">あとは同じ</h3>
+
+<p>あとはほとんど前回と同じになります。</p>
+
+<h2 id="glkitと異なり躓いたポイント">GLKitと異なり躓いたポイント</h2>
+
+<ul>
+  <li>動かないとupdateが呼ばれない</li>
+  <li>回転行列がYawPitchRollの3軸ではなく任意軸</li>
+</ul>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>以上, 実際にやってみたら躓きポイント、特に回転行列APIが任意軸になってる部分で大分気づくのに時間がかかりました。
+今回GLKitからSceneKitに差し替えたことで、SceneKitの手軽さを体験できたことは良かったなと思いました。</p>
+
+<p>Unityであればリソースアセット管理とそれの編集などトータル的に勝ってはいますが、
+ここまでグラフィカルエンジンのことを気にせず3Dコンテンツに集中できるとなると、ちょっと元ゲーム開発者としてはゲームを作ってみようかなと心がソワソワしました。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/ios-iosdc-japan-2019-pro">iOSDC Japan 2019に行くメリットについて考えてみた</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/linux/centos/linux-user-control-commands">LinuxのCentOSでユーザー操作</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/tools/git/git-merge-p4merge">p4mergeでgit mergeの衝突を解決する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rails/rack/rails-rack-middleware-extension">RackとRack Middlewareを知ることでRailsの一部仕組みを理解する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/notebook/migration-blog-to-github-pages-from-hatenablog">はてなブログからJekyllを使ったGitHub Pagesに移行した理由</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
