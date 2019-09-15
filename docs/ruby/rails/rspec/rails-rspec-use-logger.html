@@ -4,32 +4,32 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-      <title>Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた - もちゅろぐ</title>
+      <title>Railsのloggerでテストがうまく動かないときに - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた" />
+<meta property="og:title" content="Railsのloggerでテストがうまく動かないときに" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="MySQLを最新ではなく5.6で環境構築する機会がありました。 その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。" />
-<meta property="og:description" content="MySQLを最新ではなく5.6で環境構築する機会がありました。 その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix" />
+<meta name="description" content="仕事でRailsのloggerがちゃんと出力されているかrspecでテストしたいなと思い調べたのですが、 ネットで見つかる方法だと想定した通りに動かず、同僚に教えてもらった方法で今回はことを得たので、 他にも同様に困っている人向けに書いてます。" />
+<meta property="og:description" content="仕事でRailsのloggerがちゃんと出力されているかrspecでテストしたいなと思い調べたのですが、 ネットで見つかる方法だと想定した通りに動かず、同僚に教えてもらった方法で今回はことを得たので、 他にも同様に困っている人向けに書いてます。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/rspec/rails-rspec-use-logger" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/rspec/rails-rspec-use-logger" />
 <meta property="og:site_name" content="もちゅろぐ" />
 <meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-07-30T00:00:00+09:00" />
+<meta property="article:published_time" content="2019-07-17T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix","headline":"Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた","dateModified":"2019-07-30T00:00:00+09:00","datePublished":"2019-07-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql56-mysql2-error-fix"},"description":"MySQLを最新ではなく5.6で環境構築する機会がありました。 その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ruby/rails/rspec/rails-rspec-use-logger","headline":"Railsのloggerでテストがうまく動かないときに","dateModified":"2019-07-17T00:00:00+09:00","datePublished":"2019-07-17T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/rspec/rails-rspec-use-logger"},"description":"仕事でRailsのloggerがちゃんと出力されているかrspecでテストしたいなと思い調べたのですが、 ネットで見つかる方法だと想定した通りに動かず、同僚に教えてもらった方法で今回はことを得たので、 他にも同様に困っている人向けに書いてます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた">
-    <meta name="twitter:description" content="MySQLを最新ではなく5.6で環境構築する機会がありました。その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。">
+    <meta name="twitter:title" content="Railsのloggerでテストがうまく動かないときに">
+    <meta name="twitter:description" content="仕事でRailsのloggerがちゃんと出力されているかrspecでテストしたいなと思い調べたのですが、ネットで見つかる方法だと想定した通りに動かず、同僚に教えてもらった方法で今回はことを得たので、他にも同様に困っている人向けに書いてます。">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/site-image.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -112,7 +112,11 @@
       
     
       
-        / Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた
+        / <a href="/tags#rspec">Rspec</a>
+      
+    
+      
+        / Railsのloggerでテストがうまく動かないときに
       
     
   
@@ -125,17 +129,17 @@
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>Railsとmysql@5.6で発生するmysql2インストールエラーの対処法が変わってた</h1>
+    <h1>Railsのloggerでテストがうまく動かないときに</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
-        <li class="list-inline-item">2019-7-30</li>
+        <li class="list-inline-item">2019-7-17</li>
         
           <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
         
           <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
         
-          <li class="list-inline-item"><a href="/tags#mysql">mysql</a></li>
+          <li class="list-inline-item"><a href="/tags#rspec">rspec</a></li>
         
       </ul>
     </div>
@@ -144,31 +148,42 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#従来は-with-ldflagsと-with-cppflags指定だった">従来は –with-ldflagsと –with-cppflags指定だった</a></li>
-  <li><a href="#今回は-with-opt-dir指定">今回は –with-opt-dir指定</a></li>
+  <li><a href="#やりたいこと">やりたいこと</a></li>
+  <li><a href="#ネットで見かける方法">ネットで見かける方法</a></li>
+  <li><a href="#今回の方法">今回の方法</a></li>
 </ul>
   </div>
 
-  <p>MySQLを最新ではなく5.6で環境構築する機会がありました。
-その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。</p>
+  <p>仕事でRailsのloggerがちゃんと出力されているかrspecでテストしたいなと思い調べたのですが、
+ネットで見つかる方法だと想定した通りに動かず、同僚に教えてもらった方法で今回はことを得たので、
+他にも同様に困っている人向けに書いてます。</p>
 
-<h2 id="従来は-with-ldflagsと-with-cppflags指定だった">従来は –with-ldflagsと –with-cppflags指定だった</h2>
+<h2 id="やりたいこと">やりたいこと</h2>
 
-<p>自分が知っている方法はldflagsとcppflagsでOpenSSLのヘッダーファイル群のパスとライブラリファイル群のパスを指定する方法でした。</p>
+<p>controller で呼ばれているログを取りたい。</p>
 
-<p>しかし、この方法だとエラーが発生するようになっていました。
-エラーはそのコマンドは存在しないと怒られます。</p>
+<h2 id="ネットで見かける方法">ネットで見かける方法</h2>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nt">--local</span> build.mysql2 <span class="nt">--with-mysql-config</span><span class="o">=</span>/usr/local/opt/mysql@5.6/bin/mysql_config <span class="nt">--with-ldflags</span><span class="o">=</span><span class="nt">-L</span>/usr/local/opt/openssl/lib <span class="nt">--with-cppflags</span><span class="o">=</span><span class="nt">-I</span>/usr/local/opt/openssl/include
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expect</span><span class="p">(</span><span class="no">Rails</span><span class="p">.</span><span class="nf">logger</span><span class="p">).</span><span class="nf">to</span> <span class="n">receive</span><span class="p">(</span><span class="ss">:debug</span><span class="p">).</span><span class="nf">with</span><span class="p">(</span><span class="s2">"test"</span><span class="p">)</span>
 </code></pre></div></div>
 
-<h2 id="今回は-with-opt-dir指定">今回は –with-opt-dir指定</h2>
+<p>しかしこれだと想定した挙動を示してくれず… 😭</p>
 
-<p>上記オプション指定でエラーが発生すると候補が出て、もしやと思い試したところうまく動きました。
-次の<code class="highlighter-rouge">--with-opt-dir</code>でOpenSSLのパスを指定する方法で試すと動きます。</p>
+<h2 id="今回の方法">今回の方法</h2>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nt">--local</span> build.mysql2 <span class="nt">--with-opt-dir</span><span class="o">=</span>/usr/local/opt/openssl
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">expect_any_instance_of</span><span class="p">(</span><span class="no">HogeController</span><span class="p">).</span><span class="nf">to</span> <span class="n">receive</span><span class="p">(</span><span class="ss">:log_for_hoge</span><span class="p">)</span>
 </code></pre></div></div>
+
+<p>テスト対象controllerは次のようになっている必要があります。</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">HogeController</span> <span class="o">&lt;</span> <span class="no">ApplicationController</span>
+  <span class="kp">private</span>
+
+  <span class="k">def</span> <span class="nf">log_for_hoge</span>
+    <span class="n">logger</span><span class="p">.</span><span class="nf">debug</span><span class="p">(</span><span class="s2">"ほげほげ〜"</span><span class="p">)</span>
+  <span class="k">end</span>
+<span class="k">end</span>
+</code></pre></div></div>
+<p>監視対象メソッドは private メソッドでも問題ありません。</p>
 
 
   <div class="post-content-share">
