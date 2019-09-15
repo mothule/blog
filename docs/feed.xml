@@ -1,98 +1,121 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-15T19:14:42+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">原因と対応「Error: RuboCop found unsupported Ruby version 2.1」</title><link href="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version" rel="alternate" type="text/html" title="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version">&lt;p&gt;先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-15T20:40:55+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">実装の速度を養うトレーニングサポートツールを作った</title><link href="https://blog.mothule.com/tools/tools-training-support-tools-urcoach" rel="alternate" type="text/html" title="実装の速度を養うトレーニングサポートツールを作った" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/tools-training-support-tools-urcoach</id><content type="html" xml:base="https://blog.mothule.com/tools/tools-training-support-tools-urcoach">&lt;p&gt;新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。&lt;br /&gt;
+プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。&lt;/p&gt;
 
-&lt;h2 id=&quot;rubocopでエラーが発生&quot;&gt;RuboCopでエラーが発生&lt;/h2&gt;
+&lt;p&gt;そしてエンジニアを生業にする以上、&lt;strong&gt;実装速度と品質は最重要指標&lt;/strong&gt; です。
+しかしながら、新しい言語やフレームワークなどでは実装速度が大幅に落ち込みます。
+今回はこの実装速度を及第点に近づけるためのツールを作ってみたので紹介します。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle exec rubocop&lt;/code&gt; を実行したら次のようなエラーが発生しました。&lt;/p&gt;
+&lt;h2 id=&quot;実装において速度は重要なスキルの一つ&quot;&gt;実装において速度は重要なスキルの一つ&lt;/h2&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop
-Error: RuboCop found unsupported Ruby version 2.1 &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;TargetRubyVersion&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; parameter &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; 2.1-compatible analysis was dropped after version 0.58.
-Supported versions: 2.3, 2.4, 2.5, 2.6, 2.7
+&lt;p&gt;さきほども書きましたが実装速度は重要です。
+なぜならエンジニアは流れの早い時間軸で生きるクリエイティブ職業です。
+それゆえ速度が足りないとニーズに追いつけず実装完了した頃には無用の長物になりかねません。
+そのようなエンジニアは品質としては決して高くはありません。&lt;/p&gt;
+
+&lt;h2 id=&quot;実装速度の向上は慣れるが真理&quot;&gt;実装速度の向上は慣れるが真理&lt;/h2&gt;
+
+&lt;p&gt;つまり言語やフレームワークなどに使い慣れるということです。&lt;br /&gt;
+慣れるとは、&lt;strong&gt;意識せずとも知識を引き出せて、余裕がある状態です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;覚えたてと違い、知識の引き出し場所を探す速度が超速だからこそ、設計や脳内フローで立ち止まらず早く実装に取り掛かれます。&lt;br /&gt;
+既に経験のあるパターンであれば実装イメージも即座に思い浮かべられます。&lt;/p&gt;
+
+&lt;p&gt;そして、あまり意識せずとも実装イメージがつくからこそ余裕が生まれ、今まで見落としていた知識や観点に気づきまた一歩スキルが向上します。&lt;/p&gt;
+
+&lt;h2 id=&quot;ツール説明&quot;&gt;ツール説明&lt;/h2&gt;
+
+&lt;p&gt;ツール名は&lt;code class=&quot;highlighter-rouge&quot;&gt;Your coach&lt;/code&gt;です。
+&lt;a href=&quot;https://github.com/mothule/urcoach&quot;&gt;mothule/urcoach&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;今はまだgem化していないのでgitからcloneするなどしてお使いください。&lt;/p&gt;
+
+&lt;p&gt;例えば次のようにコマンドを実行すると&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ruby urcoach &lt;span class=&quot;nt&quot;&gt;--level&lt;/span&gt; normal &lt;span class=&quot;nt&quot;&gt;--time&lt;/span&gt; 60
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;登録されてあるトレーニングプランの中から条件に一致するプランをランダムで提示してくれます。
+&lt;a href=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;
+プラン提示&lt;/p&gt;
 
-&lt;p&gt;2.1？ 自分の環境では rbenv で .ruby-version を使っており、 2.6.2 を使っていました。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; .ruby-version
-2.6.2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;更新は-yamlをいじれば反映される&quot;&gt;更新は yamlをいじれば反映される&lt;/h3&gt;
+&lt;p&gt;プランを追加したり変更したい場合は同梱するyamlファイルを編集すれば反映されます。
+そのため自分専用のプランを作ることも可能です。&lt;/p&gt;
 
-&lt;h3 id=&quot;targetrubyversion-を指定し忘れ&quot;&gt;TargetRubyVersion を指定し忘れ&lt;/h3&gt;
-&lt;p&gt;TargetRubyVersion指定するのを忘れてたので .rubocop.yml に追記しました。&lt;/p&gt;
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion &lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
+&lt;p&gt;rubyに慣れるためrailsを使わずCLIツールを作成しました。
+まだまだできたばかりなので不足を感じますが、ドッグフーディングしつつ少しずつ育てるのもありかなと考えています。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ruby" /><summary type="html">新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。 プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-tools-training-support-tools-urcoach.jpg" /></entry><entry><title type="html">フルリモート1年半で知った、ただ1つの最重要なルーチン</title><link href="https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one" rel="alternate" type="text/html" title="フルリモート1年半で知った、ただ1つの最重要なルーチン" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one</id><content type="html" xml:base="https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one">&lt;h2 id=&quot;運動&quot;&gt;運動&lt;/h2&gt;
 
-&lt;p&gt;しかし問題は解決せず…&lt;/p&gt;
+&lt;p&gt;以上です。&lt;/p&gt;
 
-&lt;h2 id=&quot;エラーをちゃんと読むと分かる&quot;&gt;エラーをちゃんと読むと分かる&lt;/h2&gt;
-&lt;p&gt;一行目の半分あたりを読んだ後に1行目終わりから2行目初めにパスが記載されていたので、それ以外の箇所をきちんと読んでいませんでした。
-問題が起きてる場所が &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;/code&gt; と書いており自分の場所ではない。
-しかも 何やら .rubocop.yml が配置されている。
-中身を見ると次のような指定がされています。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml
-inherit_from: .rubocop_todo.yml
+&lt;p&gt;分からない人向けに順を追って説明します。&lt;/p&gt;
 
-AllCops:
-  DisplayCopNames: &lt;span class=&quot;nb&quot;&gt;true
-  &lt;/span&gt;DisplayStyleGuide: &lt;span class=&quot;nb&quot;&gt;true
-  &lt;/span&gt;TargetRubyVersion: &lt;span class=&quot;s2&quot;&gt;&quot;2.1&quot;&lt;/span&gt;
-  Exclude:
-    - &lt;span class=&quot;s2&quot;&gt;&quot;spec/**/*&quot;&lt;/span&gt;
-    - &lt;span class=&quot;s2&quot;&gt;&quot;vendor/**/*&quot;&lt;/span&gt;
-Documentation:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+&lt;h2 id=&quot;フルリモート1年半の環境&quot;&gt;フルリモート1年半の環境&lt;/h2&gt;
 
-&lt;/span&gt;HashSyntax:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+&lt;p&gt;今は私が働いている会社ではフルリモートで正社員をしています。&lt;br /&gt;
+私がフルリモートを始めたのは2018年3月の後半、つまりおそよ1年半近くフルリモートで仕事をしています。&lt;/p&gt;
 
-&lt;/span&gt;MethodName:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+&lt;p&gt;週に1回、会社に顔だしてオフィスにいるメンバーと雑談したり、マネージャーと少しおしゃべりしたり。&lt;br /&gt;
+必須ではなく大体任意で出社しています。都内から離脱したらこの行動はやらなくなるでしょう。&lt;/p&gt;
 
-&lt;/span&gt;StringLiterals:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;その間、私はずっと自宅 ⇔ 保育園の毎日で、自宅ではほぼ椅子に座りっぱなしです。&lt;br /&gt;
+日中はトイレ、昼食で立ち上がる程度でしょうか。&lt;/p&gt;
 
-&lt;p&gt;どうやら raibow gem では &lt;code class=&quot;highlighter-rouge&quot;&gt;TargetRubyVersion&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;2.1&lt;/code&gt; を指定してあることで、互換性エラーが起きていました。
-エラー文「2.1-compatible analysis was dropped after version 0.58.」と書いてあるように RubCop version 0.58 以降では 2.1互換性を破棄しています。&lt;/p&gt;
+&lt;p&gt;体力は地を抜けて底抜けに落ちていきました。&lt;br /&gt;
+食事制限しても、痩せにくい体質と急激に変化しました。&lt;br /&gt;
+ここまで変化すると進化と言っても過言ではないです。&lt;br /&gt;
+いや、厳密には現代社会に適用できていない変化なので退化なのかもしれません。&lt;/p&gt;
 
-&lt;p&gt;インストールした RubCop のバージョンは0.72.0でした。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
-0.72.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;なぜエラーが起きたのか&quot;&gt;なぜエラーが起きたのか？&lt;/h2&gt;
-&lt;p&gt;普段自分が作っている別のrailsアプリとかでは、このような問題は起きていません。
-しかしRuboCopがgems内まで解析しようとしていることはエラーから判断できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.rubocop.yml&lt;/code&gt; でもgemは見ないように設定しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これ今見ると恥ずかしいミスです。。&lt;/p&gt;
-
-&lt;h3 id=&quot;指定方法を間違えている&quot;&gt;指定方法を間違えている&lt;/h3&gt;
-
-&lt;p&gt;実は gems内の解析を除外する指定方法が間違っており正しくははこうでした。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/**/*&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt;でも下のtmp同様に除外されると勘違いしていました。
-おそらく.gitignoreで指定フォルダを無視する設定をした後だったのか原因かもしれません。&lt;/p&gt;
-
-&lt;h2 id=&quot;rubocop-found-unsupported-ruby-version-21-の原因と対応方法のまとめ&quot;&gt;RuboCop found unsupported Ruby version 2.1 の原因と対応方法のまとめ&lt;/h2&gt;
+&lt;h2 id=&quot;体力が落ちて変化したもの&quot;&gt;体力が落ちて変化したもの&lt;/h2&gt;
 
 &lt;ul&gt;
-  &lt;li&gt;原因：gem内も解析対象となっている&lt;/li&gt;
-  &lt;li&gt;対応：.rubocop.ymlで&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/**/*&lt;/code&gt;のように除外指定をする&lt;/li&gt;
-  &lt;li&gt;まとめ：エラー文をちゃんと読む&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="ruby" /><category term="rubocop" /><summary type="html">先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png" /></entry><entry><title type="html">今さらCarthage入門</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage" rel="alternate" type="text/html" title="今さらCarthage入門" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage">&lt;p&gt;ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。&lt;/p&gt;
+  &lt;li&gt;体の柔軟性&lt;/li&gt;
+  &lt;li&gt;筋力&lt;/li&gt;
+  &lt;li&gt;体力&lt;/li&gt;
+  &lt;li&gt;集中力&lt;/li&gt;
+  &lt;li&gt;冷静さ&lt;/li&gt;
+  &lt;li&gt;ポジティブ／ネガティブといった思考&lt;/li&gt;
+  &lt;li&gt;センス&lt;/li&gt;
+  &lt;li&gt;記憶力&lt;/li&gt;
+  &lt;li&gt;体重&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;つまり心身共にジワジワと朽ちていきました。&lt;/p&gt;
+
+&lt;p&gt;これが急激に落ちると危機感を覚え、もっと早く行動にうつせたのかもしれませんが、&lt;br /&gt;
+自分自身、自覚症状が殆どないまま「太ったなぁ〜痩せないとな〜歳取ったな〜」程度にしか思っていませんでした。&lt;/p&gt;
+
+&lt;h2 id=&quot;運動で得られるもの&quot;&gt;運動で得られるもの&lt;/h2&gt;
+
+&lt;p&gt;体力が落ちて変化したものすべて。&lt;/p&gt;
+
+&lt;p&gt;しかし加齢もあると思うので100%回復は見込めないと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;体力は集中力冷静記憶の根源である&quot;&gt;体力は集中力・冷静・記憶の根源である&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;勉強を継続しようにも体力が尽きてると眠くて続きません&lt;/li&gt;
+  &lt;li&gt;朝はやく起きようにも一度尽きた体力は回復に時間がかかります&lt;/li&gt;
+  &lt;li&gt;睡眠の質が悪く回復力が低いです&lt;/li&gt;
+  &lt;li&gt;何か集中しようにも続きません&lt;/li&gt;
+  &lt;li&gt;ネガティブが一度体に浴びると、復帰するのに時間がかかります&lt;/li&gt;
+  &lt;li&gt;効率よく動こうにも記憶力と集中力がないためセンスがなくなります&lt;/li&gt;
+  &lt;li&gt;アイデアもひらめくのに時間がかかります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;↑を見ると胡散臭いなと自分でも思いますが、まだ体力があった頃から考えると、認めざる得ません。&lt;/p&gt;
+
+&lt;p&gt;具体的な証明は私はできませんが、やっぱ以前よりslackの言動はネガティブに落ちるケースが増えたと実感します。&lt;/p&gt;
+
+&lt;h2 id=&quot;なぜ気づいたのか&quot;&gt;なぜ気づいたのか？&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;過去の自分コードを読んだ時、今のコンディションでは閃かない、理解に時間がかかると思う場面が&lt;strong&gt;増えた&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;健康診断の結果で振り返るきっかけを得た&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;色々と必要とか見かけますが、一番怖いのは体力の低下による全能力の低下です。&lt;br /&gt;
+とにかくリモートワーカーは仕事もだけど、運動する時間を確保しましょう。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><summary type="html">運動</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-notebook-remote-worker-need-thinkg-just-one.jpg" /></entry><entry><title type="html">今さらCarthage入門</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage" rel="alternate" type="text/html" title="今さらCarthage入門" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage">&lt;p&gt;ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。&lt;/p&gt;
 
 &lt;p&gt;そんな人たち向けに改めてCarthageとは何か？どう便利なのか？どう使うのか？についてまとめてみました。&lt;br /&gt;
 なお、iOSアプリに主軸を置いて説明しています。&lt;/p&gt;
@@ -370,51 +393,101 @@ Carthage/Checkouts
 &lt;p&gt;当然ながら、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;公式&lt;/a&gt;には記載がされているので暇があったら少しずつ追うのもいいかもしれません。
 README.mdだけでなく&lt;a href=&quot;https://github.com/Carthage/Carthage/tree/master/Documentation&quot;&gt;Documentation&lt;/a&gt;もあるので見落とさず。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;シンプルなまま対応ライブラリが増えるといいですね。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png" /></entry><entry><title type="html">実装の速度を養うトレーニングサポートツールを作った</title><link href="https://blog.mothule.com/tools/tools-training-support-tools-urcoach" rel="alternate" type="text/html" title="実装の速度を養うトレーニングサポートツールを作った" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/tools-training-support-tools-urcoach</id><content type="html" xml:base="https://blog.mothule.com/tools/tools-training-support-tools-urcoach">&lt;p&gt;新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。&lt;br /&gt;
-プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;シンプルなまま対応ライブラリが増えるといいですね。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png" /></entry><entry><title type="html">原因と対応「Error: RuboCop found unsupported Ruby version 2.1」</title><link href="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version" rel="alternate" type="text/html" title="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version">&lt;p&gt;先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。&lt;/p&gt;
 
-&lt;p&gt;そしてエンジニアを生業にする以上、&lt;strong&gt;実装速度と品質は最重要指標&lt;/strong&gt; です。
-しかしながら、新しい言語やフレームワークなどでは実装速度が大幅に落ち込みます。
-今回はこの実装速度を及第点に近づけるためのツールを作ってみたので紹介します。&lt;/p&gt;
+&lt;h2 id=&quot;rubocopでエラーが発生&quot;&gt;RuboCopでエラーが発生&lt;/h2&gt;
 
-&lt;h2 id=&quot;実装において速度は重要なスキルの一つ&quot;&gt;実装において速度は重要なスキルの一つ&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle exec rubocop&lt;/code&gt; を実行したら次のようなエラーが発生しました。&lt;/p&gt;
 
-&lt;p&gt;さきほども書きましたが実装速度は重要です。
-なぜならエンジニアは流れの早い時間軸で生きるクリエイティブ職業です。
-それゆえ速度が足りないとニーズに追いつけず実装完了した頃には無用の長物になりかねません。
-そのようなエンジニアは品質としては決して高くはありません。&lt;/p&gt;
-
-&lt;h2 id=&quot;実装速度の向上は慣れるが真理&quot;&gt;実装速度の向上は慣れるが真理&lt;/h2&gt;
-
-&lt;p&gt;つまり言語やフレームワークなどに使い慣れるということです。&lt;br /&gt;
-慣れるとは、&lt;strong&gt;意識せずとも知識を引き出せて、余裕がある状態です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;覚えたてと違い、知識の引き出し場所を探す速度が超速だからこそ、設計や脳内フローで立ち止まらず早く実装に取り掛かれます。&lt;br /&gt;
-既に経験のあるパターンであれば実装イメージも即座に思い浮かべられます。&lt;/p&gt;
-
-&lt;p&gt;そして、あまり意識せずとも実装イメージがつくからこそ余裕が生まれ、今まで見落としていた知識や観点に気づきまた一歩スキルが向上します。&lt;/p&gt;
-
-&lt;h2 id=&quot;ツール説明&quot;&gt;ツール説明&lt;/h2&gt;
-
-&lt;p&gt;ツール名は&lt;code class=&quot;highlighter-rouge&quot;&gt;Your coach&lt;/code&gt;です。
-&lt;a href=&quot;https://github.com/mothule/urcoach&quot;&gt;mothule/urcoach&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;今はまだgem化していないのでgitからcloneするなどしてお使いください。&lt;/p&gt;
-
-&lt;p&gt;例えば次のようにコマンドを実行すると&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ruby urcoach &lt;span class=&quot;nt&quot;&gt;--level&lt;/span&gt; normal &lt;span class=&quot;nt&quot;&gt;--time&lt;/span&gt; 60
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop
+Error: RuboCop found unsupported Ruby version 2.1 &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;TargetRubyVersion&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; parameter &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; 2.1-compatible analysis was dropped after version 0.58.
+Supported versions: 2.3, 2.4, 2.5, 2.6, 2.7
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;登録されてあるトレーニングプランの中から条件に一致するプランをランダムで提示してくれます。
-&lt;a href=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;
-プラン提示&lt;/p&gt;
 
-&lt;h3 id=&quot;更新は-yamlをいじれば反映される&quot;&gt;更新は yamlをいじれば反映される&lt;/h3&gt;
-&lt;p&gt;プランを追加したり変更したい場合は同梱するyamlファイルを編集すれば反映されます。
-そのため自分専用のプランを作ることも可能です。&lt;/p&gt;
+&lt;p&gt;2.1？ 自分の環境では rbenv で .ruby-version を使っており、 2.6.2 を使っていました。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; .ruby-version
+2.6.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
-&lt;p&gt;rubyに慣れるためrailsを使わずCLIツールを作成しました。
-まだまだできたばかりなので不足を感じますが、ドッグフーディングしつつ少しずつ育てるのもありかなと考えています。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ruby" /><summary type="html">新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。 プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-tools-training-support-tools-urcoach.jpg" /></entry><entry><title type="html">エンジニアが個の価値向上のために継続するべき10個の行動</title><link href="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer" rel="alternate" type="text/html" title="エンジニアが個の価値向上のために継続するべき10個の行動" /><published>2019-09-10T00:00:00+09:00</published><updated>2019-09-10T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer</id><content type="html" xml:base="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer">&lt;p&gt;これは私自身の過去の経験を経てこれからの自分のために、これを継続することがエンジニアとして生きていくために、&lt;br /&gt;
+&lt;h3 id=&quot;targetrubyversion-を指定し忘れ&quot;&gt;TargetRubyVersion を指定し忘れ&lt;/h3&gt;
+&lt;p&gt;TargetRubyVersion指定するのを忘れてたので .rubocop.yml に追記しました。&lt;/p&gt;
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion &lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;しかし問題は解決せず…&lt;/p&gt;
+
+&lt;h2 id=&quot;エラーをちゃんと読むと分かる&quot;&gt;エラーをちゃんと読むと分かる&lt;/h2&gt;
+&lt;p&gt;一行目の半分あたりを読んだ後に1行目終わりから2行目初めにパスが記載されていたので、それ以外の箇所をきちんと読んでいませんでした。
+問題が起きてる場所が &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;/code&gt; と書いており自分の場所ではない。
+しかも 何やら .rubocop.yml が配置されている。
+中身を見ると次のような指定がされています。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: &lt;span class=&quot;nb&quot;&gt;true
+  &lt;/span&gt;DisplayStyleGuide: &lt;span class=&quot;nb&quot;&gt;true
+  &lt;/span&gt;TargetRubyVersion: &lt;span class=&quot;s2&quot;&gt;&quot;2.1&quot;&lt;/span&gt;
+  Exclude:
+    - &lt;span class=&quot;s2&quot;&gt;&quot;spec/**/*&quot;&lt;/span&gt;
+    - &lt;span class=&quot;s2&quot;&gt;&quot;vendor/**/*&quot;&lt;/span&gt;
+Documentation:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+
+&lt;/span&gt;HashSyntax:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+
+&lt;/span&gt;MethodName:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+
+&lt;/span&gt;StringLiterals:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;どうやら raibow gem では &lt;code class=&quot;highlighter-rouge&quot;&gt;TargetRubyVersion&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;2.1&lt;/code&gt; を指定してあることで、互換性エラーが起きていました。
+エラー文「2.1-compatible analysis was dropped after version 0.58.」と書いてあるように RubCop version 0.58 以降では 2.1互換性を破棄しています。&lt;/p&gt;
+
+&lt;p&gt;インストールした RubCop のバージョンは0.72.0でした。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
+0.72.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;なぜエラーが起きたのか&quot;&gt;なぜエラーが起きたのか？&lt;/h2&gt;
+&lt;p&gt;普段自分が作っている別のrailsアプリとかでは、このような問題は起きていません。
+しかしRuboCopがgems内まで解析しようとしていることはエラーから判断できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.rubocop.yml&lt;/code&gt; でもgemは見ないように設定しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これ今見ると恥ずかしいミスです。。&lt;/p&gt;
+
+&lt;h3 id=&quot;指定方法を間違えている&quot;&gt;指定方法を間違えている&lt;/h3&gt;
+
+&lt;p&gt;実は gems内の解析を除外する指定方法が間違っており正しくははこうでした。&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/**/*&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt;でも下のtmp同様に除外されると勘違いしていました。
+おそらく.gitignoreで指定フォルダを無視する設定をした後だったのか原因かもしれません。&lt;/p&gt;
+
+&lt;h2 id=&quot;rubocop-found-unsupported-ruby-version-21-の原因と対応方法のまとめ&quot;&gt;RuboCop found unsupported Ruby version 2.1 の原因と対応方法のまとめ&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;原因：gem内も解析対象となっている&lt;/li&gt;
+  &lt;li&gt;対応：.rubocop.ymlで&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/**/*&lt;/code&gt;のように除外指定をする&lt;/li&gt;
+  &lt;li&gt;まとめ：エラー文をちゃんと読む&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ruby" /><category term="rubocop" /><summary type="html">先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png" /></entry><entry><title type="html">エンジニアが個の価値向上のために継続するべき10個の行動</title><link href="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer" rel="alternate" type="text/html" title="エンジニアが個の価値向上のために継続するべき10個の行動" /><published>2019-09-10T00:00:00+09:00</published><updated>2019-09-10T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer</id><content type="html" xml:base="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer">&lt;p&gt;これは私自身の過去の経験を経てこれからの自分のために、これを継続することがエンジニアとして生きていくために、&lt;br /&gt;
 エンジニアという人間で居続けられるために、エンジニアだからできて、そして必要だと思う重要な行動10個について&lt;br /&gt;
 まとめてみました。&lt;/p&gt;
 
@@ -1143,149 +1216,4 @@ hoge:x:1000:
   &lt;li&gt;encode は utf-8(厳密にはファイルと合わせる)&lt;/li&gt;
   &lt;li&gt;改行タイプはシステムと合わせる(厳密にはgit commit時に自動変換オプションもあるのでそっちの兼ね合いも必要)&lt;/li&gt;
   &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Comparison method&lt;/code&gt; は 改行差異とスペース幅を無視する(ここは好みの問題でもある)&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="tools" /><category term="git" /><category term="p4merge" /><summary type="html">gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-02-git-merge-p4merge.png" /></entry><entry><title type="html">RackとRack Middlewareを知ることでRailsの一部仕組みを理解する</title><link href="https://blog.mothule.com/ruby/rails/rack/rails-rack-middleware-extension" rel="alternate" type="text/html" title="RackとRack Middlewareを知ることでRailsの一部仕組みを理解する" /><published>2019-09-01T00:00:00+09:00</published><updated>2019-09-01T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/rack/rails-rack-middleware-extension</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/rack/rails-rack-middleware-extension">&lt;p&gt;Railsの挙動を拡張するには3つの方法があります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Rack Middleware&lt;/li&gt;
-  &lt;li&gt;Railtie&lt;/li&gt;
-  &lt;li&gt;その他, CLIなど&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;今回は &lt;code class=&quot;highlighter-rouge&quot;&gt;Rack Middleware&lt;/code&gt; で拡張するときの基本や拡張先となる&lt;code class=&quot;highlighter-rouge&quot;&gt;Rack&lt;/code&gt;の仕組みについて調べました。&lt;br /&gt;
-この記事でRailsとRackサーバーの関係や、Rack自体の知識とRackに準拠した拡張&lt;code class=&quot;highlighter-rouge&quot;&gt;Rack Middleware&lt;/code&gt;について初めの一歩程度は理解が深まると思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;rackとは規約&quot;&gt;Rackとは規約&lt;/h2&gt;
-
-&lt;p&gt;Rackとは大雑把にまとめると、Web server と Ruby framework 間をつなぐ規約、取り決めです。&lt;br /&gt;
-PythonのPSGIの規約を参考に登場し、サーバーとRubyで実装されたアプリの差異を埋める緩衝材みたいな存在です。&lt;/p&gt;
-
-&lt;h3 id=&quot;規約について&quot;&gt;規約について&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.ru&lt;/code&gt;を拡張子のRubyファイルを用意し、決まったシグネチャとレスポンスを返すメソッドを用意することでRackとして機能します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;シグネチャはHashを引数にした&lt;code class=&quot;highlighter-rouge&quot;&gt;call&lt;/code&gt;メソッド&lt;/li&gt;
-  &lt;li&gt;レスポンスは次の3つを含む配列を返す
-    &lt;ul&gt;
-      &lt;li&gt;HTTPステータスコード&lt;/li&gt;
-      &lt;li&gt;ヘッダー情報が格納されたHash&lt;/li&gt;
-      &lt;li&gt;コンテンツオブジェクト&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;つまり最小コードで表すと次のコードになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;config.ru&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Content-Type'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'text/html'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Hello, world'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;ul&gt;
-  &lt;li&gt;引数Hashは慣習として&lt;code class=&quot;highlighter-rouge&quot;&gt;env&lt;/code&gt;がネーミングされます。&lt;/li&gt;
-  &lt;li&gt;次のコード例では、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Proc#call&lt;/code&gt; によりシグネチャの制約を満たしています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;rack-middlewareはいわばパイプ&quot;&gt;Rack Middlewareはいわばパイプ&lt;/h2&gt;
-
-&lt;p&gt;Rack MiddlewareとはRackの規約に準拠し、
-Rackアプリに機能を追加するミドルウェアです。&lt;/p&gt;
-
-&lt;h2 id=&quot;rackアプリケーションを作ってみる&quot;&gt;Rackアプリケーションを作ってみる&lt;/h2&gt;
-
-&lt;p&gt;文章だけではイメージはしにくいので、実際に動く簡単なRackアプリを作ってみます。&lt;/p&gt;
-
-&lt;p&gt;ますRackアプリを作る上で便利クラスなどが集まったgemを用意する&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install rack
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;rack&lt;/code&gt;をインストールすることで&lt;code class=&quot;highlighter-rouge&quot;&gt;rackup&lt;/code&gt;というコマンドが使えるようになります。&lt;br /&gt;
-先程の &lt;code class=&quot;highlighter-rouge&quot;&gt;config.ru&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;rakeup&lt;/code&gt; で呼ぶことでサーバーが起動します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rackup config.ru
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;※ &lt;code class=&quot;highlighter-rouge&quot;&gt;config.ru&lt;/code&gt; であればそもそも指定が不要で &lt;code class=&quot;highlighter-rouge&quot;&gt;rakeup&lt;/code&gt; だけでいい。&lt;/p&gt;
-
-&lt;h2 id=&quot;rack-middlewareを作ってみる&quot;&gt;Rack Middlewareを作ってみる&lt;/h2&gt;
-
-&lt;p&gt;Rack Middlewareとは先程のRackアプリに対して、処理を追加するプログラムです。&lt;br /&gt;
-次のような &lt;code class=&quot;highlighter-rouge&quot;&gt;ReplaceWords&lt;/code&gt; クラスを &lt;code class=&quot;highlighter-rouge&quot;&gt;use ReplaceWords&lt;/code&gt; と呼ぶことで
-処理を追加することができます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;ReplaceWords&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;initialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@app&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;http_status_code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@app&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;call&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;gsub!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/rake/i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rack'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;http_status_code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;body&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;App&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;lambda&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;env&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Content-Type'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'text/html'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'Hello, Rack world!'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ReplaceWords&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;App&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;rack-middlewareには制約がある&quot;&gt;Rack Middlewareには制約がある&lt;/h3&gt;
-
-&lt;p&gt;Rack同様にミドルウェアにもシグネチャとレスポンスを守る必要があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Rackアプリを引数とした&lt;code class=&quot;highlighter-rouge&quot;&gt;initialize&lt;/code&gt;メソッドがある&lt;/li&gt;
-  &lt;li&gt;Rackアプリ同様に、 Hashを引数とした&lt;code class=&quot;highlighter-rouge&quot;&gt;call&lt;/code&gt;メソッドがある&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;この制約を守っていれば、パイプのように連結することも可能になります。&lt;/p&gt;
-
-&lt;p&gt;下記は2つのRack Middlewareを連結したことになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ReplaceWords&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;UpperWords&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;run&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;App&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このようにパイプライン、ストリームのように連結して受け取った値を次に渡すことができるのは、制約を守っているためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;envの中身&quot;&gt;envの中身&lt;/h2&gt;
-&lt;p&gt;env、&lt;code class=&quot;highlighter-rouge&quot;&gt;call&lt;/code&gt;の第一引数には、リクエスト情報が格納されている。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;アクセスパス&lt;/li&gt;
-  &lt;li&gt;IPアドレス&lt;/li&gt;
-  &lt;li&gt;Acceptなどのヘッダー&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;rack-middlewareにおけるenvの活用&quot;&gt;Rack Middlewareにおけるenvの活用&lt;/h3&gt;
-
-&lt;p&gt;Rack Middlewareを連結することでenvはContext情報のように取り回され続きます。&lt;/p&gt;
-
-&lt;p&gt;そのため env に値を追加すれば、次のRack Middlewareでその値を使うことができます。&lt;/p&gt;
-
-&lt;h2 id=&quot;railsのrack-middlewareを確認&quot;&gt;RailsのRack Middlewareを確認&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/rake middleware
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;のrakeコマンドで &lt;code class=&quot;highlighter-rouge&quot;&gt;use&lt;/code&gt; 部分一覧を表示します。&lt;br /&gt;
-RailsのRackがどのようなMiddlewareを経てRailsに渡ってきてるのか興味がある方は調べてみると面白いかもしれません。&lt;/p&gt;
-
-&lt;h2 id=&quot;railsでrack-middlewareを追加する&quot;&gt;RailsでRack Middlewareを追加する&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;config.ru&lt;/code&gt;を編集ではなく、 &lt;code class=&quot;highlighter-rouge&quot;&gt;config/application.rb&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;config/envrionments/*.rb&lt;/code&gt; ファイルの中で &lt;code class=&quot;highlighter-rouge&quot;&gt;use&lt;/code&gt; で登録します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;module&lt;/span&gt; &lt;span class=&quot;nn&quot;&gt;Hoge&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Application&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;::&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Application&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;middleware&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;use&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;LogMiddleware&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;RackやRack Middlewareを知ることで、Railsの拡張性の高さや実際にどうやって拡張されているのかを知ることができたと思います。&lt;/p&gt;
-
-&lt;p&gt;このように普段ほとんど関わることのない機能であっても知ることで色んな所の仕組みが理解できるようになるのはおもしろいですね。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="rack" /><category term="rack-middleware" /><summary type="html">Railsの挙動を拡張するには3つの方法があります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><category term="tools" /><category term="git" /><category term="p4merge" /><summary type="html">gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-02-git-merge-p4merge.png" /></entry></feed>
