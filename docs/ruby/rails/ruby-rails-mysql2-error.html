@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac) - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac)" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="前提環境" />
+<meta property="og:description" content="前提環境" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-03-22T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error","headline":"rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac)","dateModified":"2019-03-22T00:00:00+09:00","datePublished":"2019-03-22T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error"},"description":"前提環境","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac)">
+    <meta name="twitter:description" content="前提環境">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/site-image.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ruby">Ruby</a>
+      
+    
+      
+        / <a href="/tags#rails">Rails</a>
+      
+    
+      
+        / rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac)
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac)</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-3-22</li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mysql">mysql</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#前提環境">前提環境</a></li>
+  <li><a href="#rails-new-のときに-mysql-を指定">rails new のときに mysql を指定</a></li>
+  <li><a href="#rails-newでmysql2のインストールが失敗する">rails newでmysql2のインストールが失敗する</a></li>
+  <li><a href="#brewでopensslがインストールされてなければopensslをインストールする">brewでopensslがインストールされてなければ、opensslをインストールする</a></li>
+  <li><a href="#bundle-configでmysql2のビルドオプションを変更する">bundle configでmysql2のビルドオプションを変更する</a></li>
+  <li><a href="#rails-newでのbundle-installをしないようにする">rails newでのbundle installをしないようにする</a></li>
+  <li><a href="#改めてbundle-configでmysql2のビルドコンフィグを設定">改めてbundle configでmysql2のビルドコンフィグを設定</a></li>
+  <li><a href="#bundle-installを実行">bundle installを実行</a></li>
+</ul>
+  </div>
+
+  <h2 id="前提環境">前提環境</h2>
+
+<ul>
+  <li>MacOS Mojave 10.14.2</li>
+  <li>Ruby 2.3.7
+    <ul>
+      <li>rbenvでインストール</li>
+    </ul>
+  </li>
+  <li>MySQL 5.6.37
+    <ul>
+      <li>homebrewでインストール</li>
+    </ul>
+  </li>
+  <li>rails 5.0.7.2</li>
+</ul>
+
+<p>上記構成でrailsアプリを作るときに初めからdatabaseをMySQLにしたら、いくつか失敗したのでその解消法についてまとめます。</p>
+
+<h2 id="rails-new-のときに-mysql-を指定">rails new のときに mysql を指定</h2>
+<p>デフォルトだとsqliteになってdatabase.ymlを書き直さないといけないので初めからdatabaseをmysqlに指定したい場合</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails new &lt;app name&gt; <span class="nt">-d</span> mysql
+</code></pre></div></div>
+<p>または</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails new &lt;app name&gt; <span class="nt">-database</span><span class="o">=</span>mysql
+</code></pre></div></div>
+
+<h2 id="rails-newでmysql2のインストールが失敗する">rails newでmysql2のインストールが失敗する</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails new &lt;app name&gt; <span class="nt">-d</span> mysql
+...
+Fetching mysql2 0.5.2
+Installing mysql2 0.5.2 with native extensions
+Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
+...
+checking <span class="k">for </span>rb_absint_size<span class="o">()</span>... yes
+checking <span class="k">for </span>rb_absint_singlebit_p<span class="o">()</span>... yes
+checking <span class="k">for </span>rb_wait_for_single_fd<span class="o">()</span>... yes
+<span class="nt">-----</span>
+Using mysql_config at /usr/local/opt/mysql@5.6/bin/mysql_config
+<span class="nt">-----</span>
+checking <span class="k">for </span>mysql.h... yes
+checking <span class="k">for </span>errmsg.h... yes
+checking <span class="k">for </span>SSL_MODE_DISABLED <span class="k">in </span>mysql.h... no
+checking <span class="k">for </span>MYSQL_OPT_SSL_ENFORCE <span class="k">in </span>mysql.h... no
+checking <span class="k">for </span>MYSQL.net.vio <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>MYSQL.net.pvio <span class="k">in </span>mysql.h... no
+checking <span class="k">for </span>MYSQL_ENABLE_CLEARTEXT_PLUGIN <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>SERVER_QUERY_NO_GOOD_INDEX_USED <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>SERVER_QUERY_NO_INDEX_USED <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>SERVER_QUERY_WAS_SLOW <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>MYSQL_OPTION_MULTI_STATEMENTS_ON <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>MYSQL_OPTION_MULTI_STATEMENTS_OFF <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>my_bool <span class="k">in </span>mysql.h... yes
+<span class="nt">-----</span>
+Do not know how to <span class="nb">set </span>rpath on your system, <span class="k">if </span>MySQL libraries are not <span class="k">in </span>path mysql2 may not load
+<span class="nt">-----</span>
+<span class="nt">-----</span>
+Setting libpath to /usr/local/opt/mysql@5.6/lib
+<span class="nt">-----</span>
+creating Makefile
+
+To see why this extension failed to compile, please check the mkmf.log which can be found here:
+
+  /Users/mothule/.rbenv/versions/2.3.7/lib/ruby/gems/2.3.0/extensions/x86_64-darwin-18/2.3.0-static/mysql2-0.5.2/mkmf.log
+
+current directory: /Users/mothule/.rbenv/versions/2.3.7/lib/ruby/gems/2.3.0/gems/mysql2-0.5.2/ext/mysql2
+make <span class="s2">"DESTDIR="</span> clean
+
+current directory: /Users/mothule/.rbenv/versions/2.3.7/lib/ruby/gems/2.3.0/gems/mysql2-0.5.2/ext/mysql2
+make <span class="s2">"DESTDIR="</span>
+compiling client.c
+compiling infile.c
+compiling mysql2_ext.c
+compiling result.c
+compiling statement.c
+linking shared-object mysql2/mysql2.bundle
+ld: library not found <span class="k">for</span> <span class="nt">-lssl</span>
+clang: error: linker <span class="nb">command </span>failed with <span class="nb">exit </span>code 1 <span class="o">(</span>use <span class="nt">-v</span> to see invocation<span class="o">)</span>
+make: <span class="k">***</span> <span class="o">[</span>mysql2.bundle] Error 1
+
+make failed, <span class="nb">exit </span>code 2
+
+Gem files will remain installed <span class="k">in</span> /Users/mothule/.rbenv/versions/2.3.7/lib/ruby/gems/2.3.0/gems/mysql2-0.5.2 <span class="k">for </span>inspection.
+Results logged to /Users/mothule/.rbenv/versions/2.3.7/lib/ruby/gems/2.3.0/extensions/x86_64-darwin-18/2.3.0-static/mysql2-0.5.2/gem_make.out
+
+An error occurred <span class="k">while </span>installing mysql2 <span class="o">(</span>0.5.2<span class="o">)</span>, and Bundler cannot <span class="k">continue</span><span class="nb">.</span>
+Make sure that <span class="sb">`</span>gem install mysql2 <span class="nt">-v</span> <span class="s1">'0.5.2'</span> <span class="nt">--source</span> <span class="s1">'https://rubygems.org/'</span><span class="sb">`</span> succeeds before bundling.
+
+In Gemfile:
+  mysql2
+         run  bundle <span class="nb">exec </span>spring binstub <span class="nt">--all</span>
+Could not find gem <span class="s1">'mysql2 (&lt; 0.6.0, &gt;= 0.3.18)'</span> <span class="k">in </span>any of the gem sources listed <span class="k">in </span>your Gemfile.
+</code></pre></div></div>
+
+<p>↑よく見ると、どうやら失敗してそうなのはOpenSSL周りが怪しそう↓</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>checking for SSL_MODE_DISABLED in mysql.h... no
+checking for MYSQL_OPT_SSL_ENFORCE in mysql.h... no
+...
+ld: library not found for -lssl
+</code></pre></div></div>
+
+<h2 id="brewでopensslがインストールされてなければopensslをインストールする">brewでopensslがインストールされてなければ、opensslをインストールする</h2>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install openssl
+</code></pre></div></div>
+
+<h2 id="bundle-configでmysql2のビルドオプションを変更する">bundle configでmysql2のビルドオプションを変更する</h2>
+<p>bundleに対してmysql2インストール時に先程インストールしたopnesslのlibとheaderのパスを指定すれば良いらしい
+<strong>しかしbundleはおろかrails newも未実行なのでbundle configはできない。</strong></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nt">--local</span> build.mysql2 <span class="s2">"--with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include"</span>
+</code></pre></div></div>
+
+<h2 id="rails-newでのbundle-installをしないようにする">rails newでのbundle installをしないようにする</h2>
+<p>mysql2へのビルドコンフィグを設定できるためにbundle installはスキップさせたい。
+これは簡単に出来る。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>rails new &lt;app name&gt; <span class="nt">--skip-bundle</span>
+</code></pre></div></div>
+<p>これだけでbundle installが実行されなくなる。</p>
+
+<h2 id="改めてbundle-configでmysql2のビルドコンフィグを設定">改めてbundle configでmysql2のビルドコンフィグを設定</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nt">--local</span> build.mysql2 <span class="s2">"--with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include"</span>
+</code></pre></div></div>
+
+<h2 id="bundle-installを実行">bundle installを実行</h2>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle install <span class="nt">-j4</span> <span class="nt">--path</span><span class="o">=</span>vendor/bundle
+</code></pre></div></div>
+
+<p>これで初期状態からmysqlをdatabaseにしたrailsアプリが出来上がると思います。</p>
+
+<p>うまくいかない場合は別の要因かもしれません。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/tools/tools-training-support-tools-urcoach">実装の速度を養うトレーニングサポートツールを作った</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version">原因と対応「Error: RuboCop found unsupported Ruby version 2.1」</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/carthage/ios-carthage">今さらCarthage入門</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/notebook/necessary-continual-behavior-for-engineer">エンジニアが個の価値向上のために継続するべき10個の行動</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/swift/test/swift-nimble-associated-valued-enum-custom-matcher">Nimbleでenum(Associated Value)の自作matcher作って可読性を上げる</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
