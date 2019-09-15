@@ -3,7 +3,7 @@ title: フルリモート1年半で知った、ただ1つの最重要なルー�
 categories: notebook
 tags: notebook remote-work
 image:
-  path: /assets/images/2019-09-15-notebook-remote-worker-need-thinkg-just-one.jpg
+  path: /assets/images/2019-09-15-notebook-remote-worker-need-thinkg-just-one.JPG
 ---
 ## 運動
 
