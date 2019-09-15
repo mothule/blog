@@ -1,4 +1,282 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-10T04:47:14+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">エンジニアが個の価値向上のために継続するべき10個の行動</title><link href="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer" rel="alternate" type="text/html" title="エンジニアが個の価値向上のために継続するべき10個の行動" /><published>2019-09-10T00:00:00+09:00</published><updated>2019-09-10T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer</id><content type="html" xml:base="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer">&lt;p&gt;これは私自身の過去の経験を経てこれからの自分のために、これを継続することがエンジニアとして生きていくために、&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-15T16:08:13+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">今さらCarthage入門</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage" rel="alternate" type="text/html" title="今さらCarthage入門" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage">&lt;p&gt;ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。&lt;/p&gt;
+
+&lt;p&gt;そんな人たち向けに改めてCarthageとは何か？どう便利なのか？どう使うのか？についてまとめてみました。&lt;br /&gt;
+なお、iOSアプリに主軸を置いて説明しています。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとはswift製ライブラリ管理ツール&quot;&gt;CarthageとはSwift製ライブラリ管理ツール&lt;/h2&gt;
+
+&lt;p&gt;Carthageとは、Swift製のライブラリ管理ツールです。&lt;/p&gt;
+
+&lt;p&gt;CocoaPodsと同様の立ち位置で、ライブラリ管理に便利なツールとなります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsの違い&quot;&gt;CarthageとCocoaPodsの違い&lt;/h2&gt;
+
+&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
+
+&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、
+プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
+
+&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に Podsプロジェクト(Pods.xcodeproj)が作成されており、
+その中にライブラリとなるソースコードが含まれています。
+ビルドすることでPodsプロジェクト内のソースコードも一緒にビルドされて、対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
+
+&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
+
+&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクしたりはしません。
+つまり、リンク処理は自分で行う必要があります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageの利点&quot;&gt;Carthageの利点&lt;/h2&gt;
+
+&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
+&lt;p&gt;フレームワークのリンク構築を自分で行う必要がある、Carthageの利点は&lt;strong&gt;ビルド時間の短縮&lt;/strong&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;Carthageはコマンド実行するとライブラリをインストールしてフレームワークを作成します。
+その作成されたフレームワークを、プロジェクトにリンクすることになるため、
+つまり事前にフレームワークを作っておくことで、プロジェクトに対してのビルド時間が短くできます。&lt;/p&gt;
+
+&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
+&lt;p&gt;ここでそれぞれのビルド時間を測定してみました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
+  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
+  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;環境&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CocoaPods&lt;/td&gt;
+      &lt;td&gt;3.208s&lt;/td&gt;
+      &lt;td&gt;3.492s&lt;/td&gt;
+      &lt;td&gt;3.308s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Carthage&lt;/td&gt;
+      &lt;td&gt;1.478s&lt;/td&gt;
+      &lt;td&gt;1.765s&lt;/td&gt;
+      &lt;td&gt;1.60725s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;vanilla&lt;/td&gt;
+      &lt;td&gt;0.932s&lt;/td&gt;
+      &lt;td&gt;1.143s&lt;/td&gt;
+      &lt;td&gt;1.04967s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcodeの仕様変更に影響しにくい&quot;&gt;Xcodeの仕様変更に影響しにくい&lt;/h3&gt;
+
+&lt;p&gt;Xcode内部の設定や仕様変更が行われるとCocoaPodsの場合は、ワークスペースや設定などを作成・更新をするため
+ときとして動かないケースに出くわします。この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
+
+&lt;p&gt;その点、Carthageはフレームワークを作成するだけなので、フレームワークの仕様が破壊変更されるなど、Xcodeの変更の影響を受けにくいので
+開発安定性はCocoaPodsより勝っているとも言えます。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageの欠点&quot;&gt;Carthageの欠点&lt;/h2&gt;
+
+&lt;p&gt;旨味の多いCarthageですが、欠点としては、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;対応ライブラリがCocoaPodsより少ない&lt;/li&gt;
+  &lt;li&gt;初期導入が少々面倒&lt;/li&gt;
+  &lt;li&gt;フレームワークの削除が少々面倒&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の２つを上げておきます。&lt;/p&gt;
+
+&lt;p&gt;フレームワークの削除は、リンクを外す処理が必要になるため、その手間分面倒ということになります。
+CocoaPodsの場合、Podfileから削除してインストールするだけで自動でリンクを外してくれます。&lt;/p&gt;
+
+&lt;p&gt;そして、対応ライブラリが少ないというのは、今の所一番痛い課題かと思います。
+これに関しては今後時間による量が増えるのを期待するしかなさそうです。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageを導入する&quot;&gt;Carthageを導入する&lt;/h2&gt;
+
+&lt;p&gt;ではCarthageの概要や利点について説明したので、実際に導入する手順について説明します。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Carghageをインストール&lt;/li&gt;
+  &lt;li&gt;Cartfileにインストールしたいライブラリを記入&lt;/li&gt;
+  &lt;li&gt;コマンド実行&lt;/li&gt;
+  &lt;li&gt;リンク設定&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;carghageをインストール&quot;&gt;Carghageをインストール&lt;/h3&gt;
+
+&lt;p&gt;最も手軽なHomebrewでインストールします。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install carthage
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;インストールされない場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;$ brew update&lt;/code&gt; 実行後の再実行してみてください。&lt;/p&gt;
+
+&lt;h3 id=&quot;cartfileを用意してライブラリを記入&quot;&gt;Cartfileを用意してライブラリを記入&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Cartfileファイルの用意&lt;/li&gt;
+  &lt;li&gt;Cartfileの編集&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の順番でCartfileを作成します。&lt;/p&gt;
+
+&lt;h4 id=&quot;cartfile作成&quot;&gt;Cartfile作成&lt;/h4&gt;
+
+&lt;p&gt;対象プロジェクトがあるディレクトリ上に &lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt; を作成してください。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &amp;lt;your xcode project&amp;gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;touch Cartfile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;※ touch: Cartfileという名前のファイルを作るだけのコマンドです。中身は空です。&lt;/p&gt;
+
+&lt;h4 id=&quot;cartfile編集&quot;&gt;Cartfile編集&lt;/h4&gt;
+
+&lt;p&gt;テキストエディタでインストールしたいライブラリを追記します。
+例えば SwiftyJSON であれば次のようにします。
+これは githubのSwiftyJSONユーザーのSwiftyJSONレポジトリーを指しています。 &lt;a href=&quot;https://github.com/SwiftyJSON/SwiftyJSON&quot;&gt;SwifthJSON&lt;/a&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;Cartfile
+github &lt;span class=&quot;s2&quot;&gt;&quot;SwiftyJSON/SwiftyJSON&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;コマンドでインストールする&quot;&gt;コマンドでインストールする&lt;/h4&gt;
+
+&lt;p&gt;記入が終わったら保存して下記コマンドを実行します。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;carthage update &lt;span class=&quot;nt&quot;&gt;--platform&lt;/span&gt; iOS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--platfrom iOS&lt;/code&gt;というオプションは作成するフレームワークをiOSのみに指定するオプションです。
+これがない場合、ライブラリによっては、OSXやwatchOS用もビルドが走ります。今回は使わないのでiOS指定をしています。&lt;/p&gt;
+
+&lt;p&gt;下記は、自分の環境で実行したときの結果です。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;carthage update &lt;span class=&quot;nt&quot;&gt;--platform&lt;/span&gt; iOS
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; Cloning SwiftyJSON
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; Checking out SwiftyJSON at &lt;span class=&quot;s2&quot;&gt;&quot;5.0.0&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; xcodebuild output can be found &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /var/folders/45/7f_wlrcs3xv6rmstcz2l5_000000gn/T/carthage-xcodebuild.MQ3JFo.log
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; Building scheme &lt;span class=&quot;s2&quot;&gt;&quot;SwiftyJSON iOS&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;SwiftyJSON.xcworkspace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;プロジェクトにフレームワークをリンクする&quot;&gt;プロジェクトにフレームワークをリンクする&lt;/h3&gt;
+
+&lt;p&gt;コマンドによってフレームワークが作成されますが、まだプロジェクトにはリンクされていません。
+プロジェクトに対してフレームワーク使うよう設定する必要があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;フレームワークをリンクする&quot;&gt;フレームワークをリンクする&lt;/h3&gt;
+
+&lt;p&gt;プロジェクトのターゲットのGeneralを開いて、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Linked frameworks and Libraries&lt;/code&gt; を ＋ ボタンを押してください。
+&lt;a href=&quot;/assets/images/2019-09-15-ios-carthage-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-ios-carthage-1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;フレームワーク／ライブラリの選択画面が出るので、&lt;code class=&quot;highlighter-rouge&quot;&gt;Add Other...&lt;/code&gt; ボタンを押してください。
+&lt;a href=&quot;/assets/images/2019-09-15-ios-carthage-2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-ios-carthage-2.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ここで先程作成したフレームワークを指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-15-ios-carthage-3.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-ios-carthage-3.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;なおフレームワークは&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; Carthage/Build/iOS
+total 288
+&lt;span class=&quot;nt&quot;&gt;-rw-------&lt;/span&gt;  1 mothule  staff  73046  9 15 14:31 11B6ADD2-B8F8-3816-830A-C3C0B53B18B2.bcsymbolmap
+&lt;span class=&quot;nt&quot;&gt;-rw-------&lt;/span&gt;  1 mothule  staff  70266  9 15 14:31 36F8ED49-B83F-3A70-B0D4-DED92A0D89E2.bcsymbolmap
+drwxr-xr-x  6 mothule  staff    192  9 15 14:31 SwiftyJSON.framework
+drwxr-xr-x  3 mothule  staff     96  9 15 14:31 SwiftyJSON.framework.dSYM
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;に作成されています。
+次の図のように追加されていればOKです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-15-ios-carthage-4.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-ios-carthage-4.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;次に &lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;上の ＋ ボタンを押して &lt;code class=&quot;highlighter-rouge&quot;&gt;New Run Script Phase&lt;/code&gt; を選んでください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-15-ios-carthage-5.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-ios-carthage-5.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Script&lt;/code&gt;フェイズが作成されるので、中にコマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-15-ios-carthage-6.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-ios-carthage-6.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ちなみにこの &lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt; を実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
+  Referenced from: /Users/mothule/Library/Developer/CoreSimulator/Devices/1DB7E7C4-D7CD-44BA-B3F9-F66DC4E5EC51/data/Containers/Bundle/Application/6B0FDFCC-9D12-47D5-9B74-B837BE8FC983/UseCarthage.app/UseCarthage
+  Reason: image not found
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;まとめて指定も可能&quot;&gt;まとめて指定も可能&lt;/h3&gt;
+
+&lt;p&gt;Inputfilesに各フレームワーク毎にパス追記せずとも、xcfilelistという拡張子で指定することで一律管理も可能です。
+手順は&lt;a href=&quot;https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos&quot;&gt;公式&lt;/a&gt;に記載されています。
+番号5~9になります。英語ですが、英語読めなくとも手順は読み取れると思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;デバッグについて&quot;&gt;デバッグについて&lt;/h2&gt;
+
+&lt;p&gt;事前に構築されたフレームワークは、フレームワークが構築されたPC以外でのステップ実行などはできません。
+その場合は、&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;carthage update &lt;span class=&quot;nt&quot;&gt;--platform&lt;/span&gt; iOS &lt;span class=&quot;nt&quot;&gt;--no-use-binaries&lt;/span&gt; &amp;lt;library name&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;で解決することができます。&lt;/p&gt;
+
+&lt;h2 id=&quot;cartfileの記法について&quot;&gt;Cartfileの記法について&lt;/h2&gt;
+
+&lt;h3 id=&quot;ライブラリのバージョン指定&quot;&gt;ライブラリのバージョン指定&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;github &quot;SwiftyJSON&quot; ~&amp;gt; 4.2.0
+github &quot;Hoge&quot; &amp;gt;= 4.2.0
+github &quot;Fuga&quot; == 4.2.0
+github &quot;Nuga&quot; &quot;ブランチ or タグ or revision&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;のように指定が可能です。
+&lt;a href=&quot;https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;github以外からライブラリインストール&quot;&gt;GitHub以外からライブラリインストール&lt;/h3&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;github &quot;https://enterprise.local/hoge/fuga/perfect-library&quot; # GitHub Enterprise
+git &quot;https://enterprise.local/hoge/fuga/perfect-me.git&quot; # Other Git repositories
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;テスト環境限定のライブラリインストール&quot;&gt;テスト環境限定のライブラリインストール&lt;/h2&gt;
+&lt;p&gt;テストでしか使用しないフレームワークは通常のCartfileではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.private&lt;/code&gt;ファイルを用意して、インストールします。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ touch Cartfile.private
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;中身の書き方は通常のCartfileと変わりません。&lt;/p&gt;
+
+&lt;p&gt;注意点としては、プロジェクトへのリンク設定で、ターゲットをテストに対して行うことを忘れずに。&lt;/p&gt;
+
+&lt;h2 id=&quot;git管理について&quot;&gt;git管理について&lt;/h2&gt;
+&lt;p&gt;作成されたフレームワークやその他データに関して全てのgit管理する必要はありません。
+使うのはフレームワーク成果物だけで、それ以外の途中データは、再現可能なデータであるため.gitignoreに追加しても大丈夫です。&lt;/p&gt;
+
+&lt;p&gt;私の環境では次のようにしています。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# Carthage
+Carthage/Checkouts
+!Carthage/Build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;以上がCarthageの入門記事になります。&lt;/p&gt;
+
+&lt;p&gt;他にも色々な機能や仕様を含んでおりますが、全部を紹介すると、入門として知っても慣れず、腹落ちしにくいかと思うので省きました。&lt;/p&gt;
+
+&lt;p&gt;当然ながら、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;公式&lt;/a&gt;には記載がされているので暇があったら少しずつ追うのもいいかもしれません。
+README.mdだけでなく&lt;a href=&quot;https://github.com/Carthage/Carthage/tree/master/Documentation&quot;&gt;Documentation&lt;/a&gt;もあるので見落とさず。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;シンプルなまま対応ライブラリが増えるといいですね。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png" /></entry><entry><title type="html">エンジニアが個の価値向上のために継続するべき10個の行動</title><link href="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer" rel="alternate" type="text/html" title="エンジニアが個の価値向上のために継続するべき10個の行動" /><published>2019-09-10T00:00:00+09:00</published><updated>2019-09-10T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer</id><content type="html" xml:base="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer">&lt;p&gt;これは私自身の過去の経験を経てこれからの自分のために、これを継続することがエンジニアとして生きていくために、&lt;br /&gt;
 エンジニアという人間で居続けられるために、エンジニアだからできて、そして必要だと思う重要な行動10個について&lt;br /&gt;
 まとめてみました。&lt;/p&gt;
 
@@ -1132,86 +1410,4 @@ Rubyバージョンを更新した場合は、 &lt;code class=&quot;highlighter-
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 &lt;p&gt;iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
-今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry><entry><title type="html">ActiveRecordでpluckとselectしてpluckに変化はあるか？</title><link href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" rel="alternate" type="text/html" title="ActiveRecordでpluckとselectしてpluckに変化はあるか？" /><published>2019-08-05T00:00:00+09:00</published><updated>2019-08-05T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord">&lt;p&gt;ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;select&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;と&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;pluck&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;に速度差や消費メモリ差はあるのか？&lt;/p&gt;
-
-&lt;h2 id=&quot;sqlは同じ&quot;&gt;SQLは同じ&lt;/h2&gt;
-
-&lt;p&gt;出力されるSQLはどちらも同じでした。&lt;/p&gt;
-
-&lt;div class=&quot;language-sql highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;SELECT&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;`name`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;FROM&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;`users`&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;速度は微妙な変化&quot;&gt;速度は微妙な変化&lt;/h2&gt;
-
-&lt;p&gt;90万件に対して行った結果&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;pluckのみ&lt;/th&gt;
-      &lt;th&gt;select+pluck&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3228&lt;/td&gt;
-      &lt;td&gt;3349&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3152&lt;/td&gt;
-      &lt;td&gt;2972&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3126&lt;/td&gt;
-      &lt;td&gt;3370&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3101&lt;/td&gt;
-      &lt;td&gt;3144&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3271&lt;/td&gt;
-      &lt;td&gt;2945&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3454&lt;/td&gt;
-      &lt;td&gt;3227&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3120&lt;/td&gt;
-      &lt;td&gt;3306&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3488&lt;/td&gt;
-      &lt;td&gt;3577&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3046&lt;/td&gt;
-      &lt;td&gt;3072&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;3228&lt;/td&gt;
-      &lt;td&gt;3413&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms&lt;/p&gt;
-
-&lt;h2 id=&quot;しかしselectは確実に処理されてる&quot;&gt;しかしselectは確実に処理されてる&lt;/h2&gt;
-
-&lt;p&gt;SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。&lt;/p&gt;
-
-&lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
-
-&lt;p&gt;実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 &lt;strong&gt;pluckを呼ぶのであれば,selectは呼ぶ必要はない。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="active-record" /><summary type="html">ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
+今回のような開発環境整備に役立てることができるようになります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="cocoapods" /><category term="rbenv" /><category term="bundler" /><summary type="html">iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" /></entry></feed>

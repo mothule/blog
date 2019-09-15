@@ -1,0 +1,673 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>今さらCarthage入門 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="今さらCarthage入門" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。" />
+<meta property="og:description" content="ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage" />
+<meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-15T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"今さらCarthage入門","dateModified":"2019-09-15T00:00:00+09:00","datePublished":"2019-09-15T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"description":"ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="今さらCarthage入門">
+    <meta name="twitter:description" content="ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#carthage">Carthage</a>
+      
+    
+      
+        / 今さらCarthage入門
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-15-ios-carthage.png" alt="今さらCarthage入門">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>今さらCarthage入門</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-15</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#carthage">carthage</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#carthageとはswift製ライブラリ管理ツール">CarthageとはSwift製ライブラリ管理ツール</a></li>
+  <li><a href="#carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</a>
+    <ul>
+      <li><a href="#cocoapods">CocoaPods</a></li>
+      <li><a href="#carthage">Carthage</a></li>
+    </ul>
+  </li>
+  <li><a href="#carthageの利点">Carthageの利点</a>
+    <ul>
+      <li><a href="#ビルド時間の短縮">ビルド時間の短縮</a>
+        <ul>
+          <li><a href="#速度差を測定してみる">速度差を測定してみる</a></li>
+        </ul>
+      </li>
+      <li><a href="#xcodeの仕様変更に影響しにくい">Xcodeの仕様変更に影響しにくい</a></li>
+    </ul>
+  </li>
+  <li><a href="#carthageの欠点">Carthageの欠点</a></li>
+  <li><a href="#carthageを導入する">Carthageを導入する</a>
+    <ul>
+      <li><a href="#carghageをインストール">Carghageをインストール</a></li>
+      <li><a href="#cartfileを用意してライブラリを記入">Cartfileを用意してライブラリを記入</a>
+        <ul>
+          <li><a href="#cartfile作成">Cartfile作成</a></li>
+          <li><a href="#cartfile編集">Cartfile編集</a></li>
+          <li><a href="#コマンドでインストールする">コマンドでインストールする</a></li>
+        </ul>
+      </li>
+      <li><a href="#プロジェクトにフレームワークをリンクする">プロジェクトにフレームワークをリンクする</a></li>
+      <li><a href="#フレームワークをリンクする">フレームワークをリンクする</a></li>
+      <li><a href="#まとめて指定も可能">まとめて指定も可能</a></li>
+    </ul>
+  </li>
+  <li><a href="#デバッグについて">デバッグについて</a></li>
+  <li><a href="#cartfileの記法について">Cartfileの記法について</a>
+    <ul>
+      <li><a href="#ライブラリのバージョン指定">ライブラリのバージョン指定</a></li>
+      <li><a href="#github以外からライブラリインストール">GitHub以外からライブラリインストール</a></li>
+    </ul>
+  </li>
+  <li><a href="#テスト環境限定のライブラリインストール">テスト環境限定のライブラリインストール</a></li>
+  <li><a href="#git管理について">git管理について</a></li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+
+  <p>ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。</p>
+
+<p>そんな人たち向けに改めてCarthageとは何か？どう便利なのか？どう使うのか？についてまとめてみました。<br />
+なお、iOSアプリに主軸を置いて説明しています。</p>
+
+<h2 id="carthageとはswift製ライブラリ管理ツール">CarthageとはSwift製ライブラリ管理ツール</h2>
+
+<p>Carthageとは、Swift製のライブラリ管理ツールです。</p>
+
+<p>CocoaPodsと同様の立ち位置で、ライブラリ管理に便利なツールとなります。</p>
+
+<h2 id="carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</h2>
+
+<h3 id="cocoapods">CocoaPods</h3>
+
+<p>CocoaPodsは<code class="highlighter-rouge">$ pod install</code>でライブラリをインストールすると、対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、
+プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。</p>
+
+<p>作成されたワークスペースには、対象プロジェクトとは別に Podsプロジェクト(Pods.xcodeproj)が作成されており、
+その中にライブラリとなるソースコードが含まれています。
+ビルドすることでPodsプロジェクト内のソースコードも一緒にビルドされて、対象プロジェクトにはフレームワークとしてリンクされます。</p>
+
+<p>リンク処理も全てCocoaPodsが自動で行ってくれます。</p>
+
+<h3 id="carthage">Carthage</h3>
+
+<p>Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクしたりはしません。
+つまり、リンク処理は自分で行う必要があります。</p>
+
+<h2 id="carthageの利点">Carthageの利点</h2>
+
+<h3 id="ビルド時間の短縮">ビルド時間の短縮</h3>
+<p>フレームワークのリンク構築を自分で行う必要がある、Carthageの利点は<strong>ビルド時間の短縮</strong>になります。</p>
+
+<p>Carthageはコマンド実行するとライブラリをインストールしてフレームワークを作成します。
+その作成されたフレームワークを、プロジェクトにリンクすることになるため、
+つまり事前にフレームワークを作っておくことで、プロジェクトに対してのビルド時間が短くできます。</p>
+
+<h4 id="速度差を測定してみる">速度差を測定してみる</h4>
+<p>ここでそれぞれのビルド時間を測定してみました。</p>
+
+<ul>
+  <li>測定は最初の5回は慣らし、5回目から数回測定。</li>
+  <li>測定ではRebuild(Clean+Build)で測定する。</li>
+  <li>インストールライブラリはSwiftJSON。</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>環境</th>
+      <th>min</th>
+      <th>max</th>
+      <th>avg</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CocoaPods</td>
+      <td>3.208s</td>
+      <td>3.492s</td>
+      <td>3.308s</td>
+    </tr>
+    <tr>
+      <td>Carthage</td>
+      <td>1.478s</td>
+      <td>1.765s</td>
+      <td>1.60725s</td>
+    </tr>
+    <tr>
+      <td>vanilla</td>
+      <td>0.932s</td>
+      <td>1.143s</td>
+      <td>1.04967s</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。</p>
+
+<h3 id="xcodeの仕様変更に影響しにくい">Xcodeの仕様変更に影響しにくい</h3>
+
+<p>Xcode内部の設定や仕様変更が行われるとCocoaPodsの場合は、ワークスペースや設定などを作成・更新をするため
+ときとして動かないケースに出くわします。この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。</p>
+
+<p>その点、Carthageはフレームワークを作成するだけなので、フレームワークの仕様が破壊変更されるなど、Xcodeの変更の影響を受けにくいので
+開発安定性はCocoaPodsより勝っているとも言えます。</p>
+
+<h2 id="carthageの欠点">Carthageの欠点</h2>
+
+<p>旨味の多いCarthageですが、欠点としては、</p>
+
+<ul>
+  <li>対応ライブラリがCocoaPodsより少ない</li>
+  <li>初期導入が少々面倒</li>
+  <li>フレームワークの削除が少々面倒</li>
+</ul>
+
+<p>の２つを上げておきます。</p>
+
+<p>フレームワークの削除は、リンクを外す処理が必要になるため、その手間分面倒ということになります。
+CocoaPodsの場合、Podfileから削除してインストールするだけで自動でリンクを外してくれます。</p>
+
+<p>そして、対応ライブラリが少ないというのは、今の所一番痛い課題かと思います。
+これに関しては今後時間による量が増えるのを期待するしかなさそうです。</p>
+
+<h2 id="carthageを導入する">Carthageを導入する</h2>
+
+<p>ではCarthageの概要や利点について説明したので、実際に導入する手順について説明します。</p>
+
+<ol>
+  <li>Carghageをインストール</li>
+  <li>Cartfileにインストールしたいライブラリを記入</li>
+  <li>コマンド実行</li>
+  <li>リンク設定</li>
+</ol>
+
+<p>になります。</p>
+
+<h3 id="carghageをインストール">Carghageをインストール</h3>
+
+<p>最も手軽なHomebrewでインストールします。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install carthage
+</code></pre></div></div>
+<p>インストールされない場合は <code class="highlighter-rouge">$ brew update</code> 実行後の再実行してみてください。</p>
+
+<h3 id="cartfileを用意してライブラリを記入">Cartfileを用意してライブラリを記入</h3>
+
+<ul>
+  <li>Cartfileファイルの用意</li>
+  <li>Cartfileの編集</li>
+</ul>
+
+<p>の順番でCartfileを作成します。</p>
+
+<h4 id="cartfile作成">Cartfile作成</h4>
+
+<p>対象プロジェクトがあるディレクトリ上に <code class="highlighter-rouge">Cartfile</code> を作成してください。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> &lt;your xcode project&gt;
+<span class="nv">$ </span>touch Cartfile
+</code></pre></div></div>
+
+<p>※ touch: Cartfileという名前のファイルを作るだけのコマンドです。中身は空です。</p>
+
+<h4 id="cartfile編集">Cartfile編集</h4>
+
+<p>テキストエディタでインストールしたいライブラリを追記します。
+例えば SwiftyJSON であれば次のようにします。
+これは githubのSwiftyJSONユーザーのSwiftyJSONレポジトリーを指しています。 <a href="https://github.com/SwiftyJSON/SwiftyJSON">SwifthJSON</a></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>Cartfile
+github <span class="s2">"SwiftyJSON/SwiftyJSON"</span>
+</code></pre></div></div>
+
+<h4 id="コマンドでインストールする">コマンドでインストールする</h4>
+
+<p>記入が終わったら保存して下記コマンドを実行します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS
+</code></pre></div></div>
+<p><code class="highlighter-rouge">--platfrom iOS</code>というオプションは作成するフレームワークをiOSのみに指定するオプションです。
+これがない場合、ライブラリによっては、OSXやwatchOS用もビルドが走ります。今回は使わないのでiOS指定をしています。</p>
+
+<p>下記は、自分の環境で実行したときの結果です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS
+<span class="k">***</span> Cloning SwiftyJSON
+<span class="k">***</span> Checking out SwiftyJSON at <span class="s2">"5.0.0"</span>
+<span class="k">***</span> xcodebuild output can be found <span class="k">in</span> /var/folders/45/7f_wlrcs3xv6rmstcz2l5_000000gn/T/carthage-xcodebuild.MQ3JFo.log
+<span class="k">***</span> Building scheme <span class="s2">"SwiftyJSON iOS"</span> <span class="k">in </span>SwiftyJSON.xcworkspace
+</code></pre></div></div>
+
+<h3 id="プロジェクトにフレームワークをリンクする">プロジェクトにフレームワークをリンクする</h3>
+
+<p>コマンドによってフレームワークが作成されますが、まだプロジェクトにはリンクされていません。
+プロジェクトに対してフレームワーク使うよう設定する必要があります。</p>
+
+<h3 id="フレームワークをリンクする">フレームワークをリンクする</h3>
+
+<p>プロジェクトのターゲットのGeneralを開いて、 <code class="highlighter-rouge">Linked frameworks and Libraries</code> を ＋ ボタンを押してください。
+<a href="/assets/images/2019-09-15-ios-carthage-1.png"><img src="/assets/images/2019-09-15-ios-carthage-1.png" width="100%" /></a></p>
+
+<p>フレームワーク／ライブラリの選択画面が出るので、<code class="highlighter-rouge">Add Other...</code> ボタンを押してください。
+<a href="/assets/images/2019-09-15-ios-carthage-2.png"><img src="/assets/images/2019-09-15-ios-carthage-2.png" width="100%" /></a></p>
+
+<p>ここで先程作成したフレームワークを指定します。</p>
+
+<p><a href="/assets/images/2019-09-15-ios-carthage-3.png"><img src="/assets/images/2019-09-15-ios-carthage-3.png" width="100%" /></a></p>
+
+<p>なおフレームワークは</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> Carthage/Build/iOS
+total 288
+<span class="nt">-rw-------</span>  1 mothule  staff  73046  9 15 14:31 11B6ADD2-B8F8-3816-830A-C3C0B53B18B2.bcsymbolmap
+<span class="nt">-rw-------</span>  1 mothule  staff  70266  9 15 14:31 36F8ED49-B83F-3A70-B0D4-DED92A0D89E2.bcsymbolmap
+drwxr-xr-x  6 mothule  staff    192  9 15 14:31 SwiftyJSON.framework
+drwxr-xr-x  3 mothule  staff     96  9 15 14:31 SwiftyJSON.framework.dSYM
+</code></pre></div></div>
+<p>に作成されています。
+次の図のように追加されていればOKです。</p>
+
+<p><a href="/assets/images/2019-09-15-ios-carthage-4.png"><img src="/assets/images/2019-09-15-ios-carthage-4.png" width="100%" /></a></p>
+
+<p>次に <code class="highlighter-rouge">Build Phases</code>上の ＋ ボタンを押して <code class="highlighter-rouge">New Run Script Phase</code> を選んでください。</p>
+
+<p><a href="/assets/images/2019-09-15-ios-carthage-5.png"><img src="/assets/images/2019-09-15-ios-carthage-5.png" width="100%" /></a></p>
+
+<p><code class="highlighter-rouge">Run Script</code>フェイズが作成されるので、中にコマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。</p>
+
+<p><a href="/assets/images/2019-09-15-ios-carthage-6.png"><img src="/assets/images/2019-09-15-ios-carthage-6.png" width="100%" /></a></p>
+
+<p>ちなみにこの <code class="highlighter-rouge">carthage copy-frameworks</code> を実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
+  Referenced from: /Users/mothule/Library/Developer/CoreSimulator/Devices/1DB7E7C4-D7CD-44BA-B3F9-F66DC4E5EC51/data/Containers/Bundle/Application/6B0FDFCC-9D12-47D5-9B74-B837BE8FC983/UseCarthage.app/UseCarthage
+  Reason: image not found
+</code></pre></div></div>
+
+<h3 id="まとめて指定も可能">まとめて指定も可能</h3>
+
+<p>Inputfilesに各フレームワーク毎にパス追記せずとも、xcfilelistという拡張子で指定することで一律管理も可能です。
+手順は<a href="https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos">公式</a>に記載されています。
+番号5~9になります。英語ですが、英語読めなくとも手順は読み取れると思います。</p>
+
+<h2 id="デバッグについて">デバッグについて</h2>
+
+<p>事前に構築されたフレームワークは、フレームワークが構築されたPC以外でのステップ実行などはできません。
+その場合は、</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span> &lt;library name&gt;
+</code></pre></div></div>
+<p>で解決することができます。</p>
+
+<h2 id="cartfileの記法について">Cartfileの記法について</h2>
+
+<h3 id="ライブラリのバージョン指定">ライブラリのバージョン指定</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "SwiftyJSON" ~&gt; 4.2.0
+github "Hoge" &gt;= 4.2.0
+github "Fuga" == 4.2.0
+github "Nuga" "ブランチ or タグ or revision"
+</code></pre></div></div>
+
+<p>のように指定が可能です。
+<a href="https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement">参考</a></p>
+
+<h3 id="github以外からライブラリインストール">GitHub以外からライブラリインストール</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "https://enterprise.local/hoge/fuga/perfect-library" # GitHub Enterprise
+git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
+</code></pre></div></div>
+
+<h2 id="テスト環境限定のライブラリインストール">テスト環境限定のライブラリインストール</h2>
+<p>テストでしか使用しないフレームワークは通常のCartfileではなく<code class="highlighter-rouge">Cartfile.private</code>ファイルを用意して、インストールします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch Cartfile.private
+</code></pre></div></div>
+
+<p>中身の書き方は通常のCartfileと変わりません。</p>
+
+<p>注意点としては、プロジェクトへのリンク設定で、ターゲットをテストに対して行うことを忘れずに。</p>
+
+<h2 id="git管理について">git管理について</h2>
+<p>作成されたフレームワークやその他データに関して全てのgit管理する必要はありません。
+使うのはフレームワーク成果物だけで、それ以外の途中データは、再現可能なデータであるため.gitignoreに追加しても大丈夫です。</p>
+
+<p>私の環境では次のようにしています。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Carthage
+Carthage/Checkouts
+!Carthage/Build
+</code></pre></div></div>
+
+<h2 id="まとめ">まとめ</h2>
+
+<p>以上がCarthageの入門記事になります。</p>
+
+<p>他にも色々な機能や仕様を含んでおりますが、全部を紹介すると、入門として知っても慣れず、腹落ちしにくいかと思うので省きました。</p>
+
+<p>当然ながら、<a href="https://github.com/Carthage/Carthage">公式</a>には記載がされているので暇があったら少しずつ追うのもいいかもしれません。
+README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/master/Documentation">Documentation</a>もあるので見落とさず。</p>
+
+<p><code class="highlighter-rouge">Carthage</code>シンプルなまま対応ライブラリが増えるといいですね。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/notebook/necessary-continual-behavior-for-engineer">エンジニアが個の価値向上のために継続するべき10個の行動</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/swift/test/swift-nimble-associated-valued-enum-custom-matcher">Nimbleでenum(Associated Value)の自作matcher作って可読性を上げる</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/scene-kit/ios-scene-kit-abc">360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/ios-iosdc-japan-2019-pro">iOSDC Japan 2019に行くメリットについて考えてみた</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/linux/centos/linux-user-control-commands">LinuxのCentOSでユーザー操作</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
