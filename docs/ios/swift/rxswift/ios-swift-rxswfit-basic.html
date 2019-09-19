@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>RxSwiftの基本を動かして理解する - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="RxSwiftの基本を動かして理解する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？ 私もその一人でした。ネットで見かける記事を読み解いても" />
+<meta property="og:description" content="RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？ 私もその一人でした。ネットで見かける記事を読み解いても" />
+<link rel="canonical" href="https://blog.mothule.com/ios/swift/rxswift/ios-swift-rxswfit-basic" />
+<meta property="og:url" content="https://blog.mothule.com/ios/swift/rxswift/ios-swift-rxswfit-basic" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-18-ios-swift-rxswfit-basic.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-18T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/swift/rxswift/ios-swift-rxswfit-basic","headline":"RxSwiftの基本を動かして理解する","dateModified":"2019-09-18T00:00:00+09:00","datePublished":"2019-09-18T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-18-ios-swift-rxswfit-basic.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/rxswift/ios-swift-rxswfit-basic"},"description":"RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？ 私もその一人でした。ネットで見かける記事を読み解いても","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="RxSwiftの基本を動かして理解する">
+    <meta name="twitter:description" content="RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？私もその一人でした。ネットで見かける記事を読み解いても">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-18-ios-swift-rxswfit-basic.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <div class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#swift">Swift</a>
+      
+    
+      
+        / <a href="/tags#rxswift">Rxswift</a>
+      
+    
+      
+        / RxSwiftの基本を動かして理解する
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-18-ios-swift-rxswfit-basic.png" alt="RxSwiftの基本を動かして理解する">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>RxSwiftの基本を動かして理解する</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-18</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#swift">swift</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rxswift">rxswift</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#背景">背景</a>
+    <ul>
+      <li><a href="#最近のios開発事情">最近のiOS開発事情</a></li>
+      <li><a href="#rxswiftはちょっとした課題のちょっとした提案">RxSwiftはちょっとした課題のちょっとした提案</a></li>
+      <li><a href="#この記事ではとっかかりを掴む">この記事ではとっかかりを掴む</a></li>
+    </ul>
+  </li>
+  <li><a href="#前提">前提</a>
+    <ul>
+      <li><a href="#この記事の読み方">この記事の読み方</a></li>
+      <li><a href="#注意点">注意点</a></li>
+    </ul>
+  </li>
+  <li><a href="#rxswiftはオブザーバーパターンとパイプライン">RxSwiftはオブザーバーパターンとパイプライン</a></li>
+  <li><a href="#イベントを報告する者とイベントを受け取る者">イベントを報告する者とイベントを受け取る者</a>
+    <ul>
+      <li><a href="#整理">整理</a></li>
+    </ul>
+  </li>
+  <li><a href="#イベントを報告してイベントを受け取る">イベントを報告してイベントを受け取る</a>
+    <ul>
+      <li><a href="#整理-1">整理</a></li>
+    </ul>
+  </li>
+  <li><a href="#他のobservertypeの採用クラス">他のObserverTypeの採用クラス</a>
+    <ul>
+      <li><a href="#publishrelay">PublishRelay</a></li>
+      <li><a href="#behaviorsubject">BehaviorSubject</a></li>
+    </ul>
+  </li>
+  <li><a href="#イベントの報告に経路に手を加える">イベントの報告に経路に手を加える</a>
+    <ul>
+      <li><a href="#filter-条件満たすイベントのみ連絡する">filter: 条件満たすイベントのみ連絡する</a></li>
+      <li><a href="#map-イベント情報を変換して連絡する">map: イベント情報を変換して連絡する</a></li>
+    </ul>
+  </li>
+  <li><a href="#講読を解除する">講読を解除する</a>
+    <ul>
+      <li><a href="#disposebag">DisposeBag</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+
+  <p>RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？<br />
+私もその一人でした。ネットで見かける記事を読み解いても</p>
+
+<ul>
+  <li>公式の英文をそのまま直訳しただけの説明</li>
+  <li>公式の順序通りの説明順番</li>
+  <li>正しい言葉に拘り過ぎて「パルスのファルシのルシがパージでコクーン」みたいな用語だけが独り歩き</li>
+  <li>マーブルダイアグラムという慣れないし、慣れてもやっぱり直感で理解できないグラフに説明を丸投げ</li>
+</ul>
+
+<p>などなど読み手に負担がかかった記事が多く「なんでこんなに分かりにくいのだろう？なぜか腹落ちしない」と何度も思いました。</p>
+
+<p>なので自分が学習を通して「これを最初に腹落ちしないとダメじゃん」と思うアプローチで、RxSwiftを説明する記事を書きました。</p>
+
+<h2 id="背景">背景</h2>
+
+<p>ざっくりとRxSwiftの立ち位置やこの記事で得られる知識について簡単に説明します。</p>
+
+<h3 id="最近のios開発事情">最近のiOS開発事情</h3>
+<p>iOSはSwiftに加え、RxSwift、MVVM、そしてSwiftUI。
+iOSはAndroidと異なり明確なアーキテクチャを提示やサポートをしません。
+そのため実装が群雄割拠になり、案件や会社によってバラバラでどんどん覚える量が増えています。</p>
+
+<p>スクール上がりの経験1年ちょいでもiOSアプリは作れますが、
+メンテナンス、チーム、大規模、テスタビリティ、バグ抑制、レビューなど求められる要件に対して、適切なデザインを提示できるには相応のスキルを必要とされます。</p>
+
+<p>つまりiOSアプリはSDKと言語仕様の上に明確なフレームワークが存在しないため、上記で上げた項目の品質がブレやすく、そしてエンジニアによって依存します。</p>
+
+<p><a href="/assets/images/2019-09-18-ios-swift-rxswfit-basic-1.png"><img src="/assets/images/2019-09-18-ios-swift-rxswfit-basic-1.png" width="100%" /></a>
+<em>iOSにはアーキテクチャ指針が明確ではない</em></p>
+
+<h3 id="rxswiftはちょっとした課題のちょっとした提案">RxSwiftはちょっとした課題のちょっとした提案</h3>
+
+<p>RxSwiftは解決策をある程度強制します。<br />
+アーキテクチャもMVVMが最適解として選択されます。<br />
+RxSwiftが提示するレールにチームが従うことで、無数にある実装においてルールを強制することができます。</p>
+
+<p>RxSwiftは従来の処理フローの繋がりが集約・視覚化されない問題を解決する１つのアプローチです。<br />
+そのアプローチ方法について理解することがRxSwiftを使用する上で必須となっています。</p>
+
+<p>しかし、この知識に正面からぶつかると難解な動きや構造をするモデルに心を折られてしまいます。</p>
+
+<h3 id="この記事ではとっかかりを掴む">この記事ではとっかかりを掴む</h3>
+
+<p>この記事を通して、コードを動かして理解することで、体系的な知識の点、そしてそれを繋ぐ線を少しずつ構築し、難解なモデルに対して戦える密度の薄い体系知識を得られればなと思います。</p>
+
+<p>ネットで拾えるRxSwiftの記事はどれもオリジナルでもあるのかと、思うような似たような解説記事ばかりなので、私なりに噛み砕いて説明します。</p>
+
+<p>まず巨大なモデルを理解するには、大きさを知るために <strong>ざっくりイメージできる</strong> ことが大事です。</p>
+
+<p>粒度は少しずつ細かくして、少しずつ詳細を把握していくべきです。</p>
+
+<h2 id="前提">前提</h2>
+
+<ul>
+  <li>RxSwift 5.x</li>
+  <li>Swift 5.x</li>
+</ul>
+
+<h3 id="この記事の読み方">この記事の読み方</h3>
+
+<p>この記事だけでRxSwiftについて理解する記事ではありません。<br />
+この記事だけで完結するほど精巧に作られていませんし、RxSwiftはそんなに単純ではないです。</p>
+
+<p>タイトルの通り実際にまたRxSwiftを使ったプロジェクトを用意し、動かしながら読むことを推奨します。<br />
+RxSwiftのコード自体もあるとなお良いと思います。</p>
+
+<h3 id="注意点">注意点</h3>
+
+<p>この記事では全てについて説明は<strong>していません。</strong></p>
+
+<p>目的は<strong>ざっくりイメージできる</strong>ことを重視しています。</p>
+
+<p>RxSwiftとはなにか？を知ったときに得るイメージを崩さないように記事を書いてあるので、専門用語や実践的なノウハウについては記載していません。
+また説明順序に関しても、私が学習を通して、このセクションをこの順序でやったほうが分かりやすいはず。という判断で記事を書いてあります。</p>
+
+<h2 id="rxswiftはオブザーバーパターンとパイプライン">RxSwiftはオブザーバーパターンとパイプライン</h2>
+
+<p>デザインパターンの１つであるオブザーバーパターンと、シェルでよく使うパイプ(<code class="highlighter-rouge">|</code>)を使って、<br />
+<strong>イベントにリアクションを連結するイメージです。</strong></p>
+
+<p>他のサイトなどでRxSwiftについてざっくり概要を知った人たちが考えるRxSwiftとは<br />
+<strong>「イベントを監視し、動きがあれば逐一報告し、報告を受けたものが何らかの反応をする」</strong><br />
+という説明で大体が納得できるのではないでしょうか？</p>
+
+<p>つまり「RxSwiftとはオブザーバーパターンを使っている」というイメージが強くあることで、<br />
+読み手側はオブザーバーの<strong>イベントを報告する者</strong>と<strong>イベントを受け取る者</strong>はどれか？をキーに文章を読むのではないでしょうか？</p>
+
+<p>しかしそれが返って邪魔となり道に迷っているのではないかと私は思います。</p>
+
+<h2 id="イベントを報告する者とイベントを受け取る者">イベントを報告する者とイベントを受け取る者</h2>
+<p>たくさんあるクラスのなかでまず覚えるべきは<code class="highlighter-rouge">Observable</code>です。<br />
+そして採用している<code class="highlighter-rouge">ObservableType</code> プロトコルです。</p>
+
+<p><code class="highlighter-rouge">ObservableType.subscribe</code> がイベントを受け取るための講読手続きになります。<br />
+なので <code class="highlighter-rouge">ObservableType</code> を採用しているクラスは全て、 <strong>イベントを受け取る者</strong> となります。<br />
+つまり<code class="highlighter-rouge">Observable</code>は <strong>イベントを受け取る者</strong> です。</p>
+
+<p>では、<strong>イベントを報告する者</strong> は誰でしょうか。</p>
+
+<p>それは <code class="highlighter-rouge">ObservableType.subscribe</code>の引数が採用している<code class="highlighter-rouge">ObserverType</code>です。<br />
+<code class="highlighter-rouge">ObservableType</code>と<code class="highlighter-rouge">ObserverType</code>かなり似てるので、注意して読んでください。</p>
+
+<p><code class="highlighter-rouge">ObserverType</code>プロトコルは <code class="highlighter-rouge">on</code> メソッドを持っており、これを使って報告をしています。<br />
+つまり <code class="highlighter-rouge">ObserverType</code>を採用しているクラスは全て、 <strong>イベントを報告する者</strong> となります。</p>
+
+<h3 id="整理">整理</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">ObservableType</code> が <strong>イベントを受け取る者</strong></li>
+  <li><code class="highlighter-rouge">ObserverType</code> が <strong>イベントを報告する者</strong></li>
+  <li>つまり <code class="highlighter-rouge">Observable</code>は <strong>イベントを受け取る者</strong></li>
+</ul>
+
+<h2 id="イベントを報告してイベントを受け取る">イベントを報告してイベントを受け取る</h2>
+
+<p>イベントを報告する者と受け取る者の２つがあることは分かりました。<br />
+イベントを受け取る者のクラスは<code class="highlighter-rouge">Observable</code>でした。<br />
+ではイベントを報告する者のクラスは何でしょう？</p>
+
+<p><code class="highlighter-rouge">ObserverType</code>を採用しているクラスを探すと出てきます。</p>
+
+<p>今回はその中からよく使う <code class="highlighter-rouge">PublishSubject</code> を使います。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">subject</span> <span class="o">=</span> <span class="kt">PublishSubject</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onCompleted</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">onNext</code>と<code class="highlighter-rouge">onCompleted</code>は <code class="highlighter-rouge">on</code> メソッドに <code class="highlighter-rouge">next</code>状態と<code class="highlighter-rouge">completed</code>状態をそれぞれ報告しています。
+ただのラッパーメソッドです。</p>
+
+<p>これだけでは <strong>イベントを報告する者</strong> だけで <strong>イベントを受け取る者</strong> がいません。<br />
+しかも、イベントを受け取る者が報告する者に対し、講読する手続きも必要になります。</p>
+
+<p><code class="highlighter-rouge">PublishSubject</code>の定義へジャンプすると次のような定義になっています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">PublishSubject</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span>
+    <span class="p">:</span> <span class="kt">Observable</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span>
+    <span class="p">,</span> <span class="kt">SubjectType</span>
+    <span class="p">,</span> <span class="kt">Cancelable</span>
+    <span class="p">,</span> <span class="kt">ObserverType</span>
+    <span class="p">,</span> <span class="kt">SynchronizedUnsubscribeType</span> <span class="p">{</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>なんと、<code class="highlighter-rouge">PublishSubject</code>は、 <code class="highlighter-rouge">Observable</code> を採用しています。
+つまり <strong>イベントを受け取る者</strong> でもあったのです。</p>
+
+<p>そのため<code class="highlighter-rouge">PublishSubject</code>1つで、次のような <strong>報告</strong> と <strong>受け取り</strong> ができます。</p>
+
+<p>次のコードは、<code class="highlighter-rouge">next</code> <code class="highlighter-rouge">completed</code> <code class="highlighter-rouge">disposed</code> それぞれの状態に対してハンドリングしています。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">subject</span><span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">in</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onNext:  </span><span class="se">\(</span><span class="n">text</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onError</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onError: "</span><span class="p">,</span> <span class="nv">$0</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onCompleted</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onCompleted"</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onDisposed</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onDisposed"</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"B"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"C"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onCompleted</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><em>Output</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+onNext:  B
+onNext:  C
+onCompleted
+onDisposed
+</code></pre></div></div>
+
+<p>ちなみに途中でエラーイベントを報告した場合、講読は終了します。
+例えば先程のコードの一部を次のように <code class="highlighter-rouge">onError</code> を挟むと結果が変わります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"B"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onError</span><span class="p">(</span><span class="kt">NSError</span><span class="p">(</span><span class="nv">domain</span><span class="p">:</span> <span class="s">"domain"</span><span class="p">,</span> <span class="nv">code</span><span class="p">:</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="nv">userInfo</span><span class="p">:</span> <span class="kc">nil</span><span class="p">))</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"C"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onCompleted</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><em>Output</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+onNext:  B
+onError:  The operation couldn’t be completed. (domain error -1.)
+onDisposed
+</code></pre></div></div>
+
+<p>このように<code class="highlighter-rouge">C</code>イベントは報告されず、<code class="highlighter-rouge">completed</code>も報告されません。<br />
+そして<code class="highlighter-rouge">disposed</code>が報告され講読終了となります。</p>
+
+<h3 id="整理-1">整理</h3>
+
+<ul>
+  <li><code class="highlighter-rouge">PublishSubject</code> は <strong>報告する者</strong> でもあり <strong>受け取る者</strong></li>
+  <li>エラーが起きたら講読は終了する</li>
+</ul>
+
+<h2 id="他のobservertypeの採用クラス">他のObserverTypeの採用クラス</h2>
+
+<p>PublishSubject以外に<code class="highlighter-rouge">ObserverType</code>を採用してるクラスについて簡単に説明します。</p>
+
+<h3 id="publishrelay">PublishRelay</h3>
+
+<p>PublishSubjectのラッパーです。
+PublishSubjectの<code class="highlighter-rouge">onNext</code>, <code class="highlighter-rouge">onCompleted</code>, <code class="highlighter-rouge">onError</code>はなく、<code class="highlighter-rouge">accept</code>のみになります。
+この<code class="highlighter-rouge">accept</code>の中身は<code class="highlighter-rouge">onNext</code>となります。
+結果的にエラーや完了のイベントを流せないので、実質エラーや完了で終了できなくなります。</p>
+
+<h3 id="behaviorsubject">BehaviorSubject</h3>
+
+<p>PublishSubjectに状態を持たせたようなクラスです。
+BehaviorSubjectは最後に報告した値を保持しています。
+保持しているのでsubscribeしたらその状態も通知します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">sub</span> <span class="o">=</span> <span class="kt">BehaviorSubject</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">(</span><span class="nv">value</span><span class="p">:</span> <span class="s">"ABC"</span><span class="p">)</span>
+
+<span class="n">sub</span><span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onNext: "</span><span class="p">,</span> <span class="nv">$0</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onError</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onError: "</span><span class="p">,</span> <span class="nv">$0</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onCompleted</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onCompleted"</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onDisposed</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onDisposed"</span><span class="p">)</span>
+<span class="p">})</span>
+
+<span class="n">sub</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"D"</span><span class="p">)</span>
+<span class="nf">print</span><span class="p">(</span><span class="k">try!</span> <span class="n">sub</span><span class="o">.</span><span class="nf">value</span><span class="p">())</span>
+<span class="n">sub</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"E"</span><span class="p">)</span>
+<span class="n">sub</span><span class="o">.</span><span class="nf">onCompleted</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><em>Output</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  ABC
+onNext:  D
+D
+onNext:  E
+onCompleted
+onDisposed
+</code></pre></div></div>
+
+<h2 id="イベントの報告に経路に手を加える">イベントの報告に経路に手を加える</h2>
+
+<p>RxSwiftでは、報告する者がイベントを受け取る者に通知する経路を加工することができます。</p>
+
+<h3 id="filter-条件満たすイベントのみ連絡する">filter: 条件満たすイベントのみ連絡する</h3>
+
+<p><code class="highlighter-rouge">filter</code>を通すことで、イベントを受け取る者への連絡を制限することができます。<br />
+次のコードは、3文字以下のみを連絡しています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">source</span> <span class="o">=</span> <span class="kt">PublishRelay</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
+
+<span class="n">source</span>
+    <span class="o">.</span><span class="nf">filter</span><span class="p">({</span> <span class="nv">$0</span><span class="o">.</span><span class="n">count</span> <span class="o">&lt;=</span> <span class="mi">3</span> <span class="p">})</span>
+    <span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"onNext: "</span><span class="p">,</span> <span class="nv">$0</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"12"</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"!$#"</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"1234"</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"ABCDE"</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"ABC"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><em>Output</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+onNext:  12
+onNext:  !$#
+onNext:  ABC
+</code></pre></div></div>
+
+<h3 id="map-イベント情報を変換して連絡する">map: イベント情報を変換して連絡する</h3>
+
+<p><code class="highlighter-rouge">map</code>を通すことで、イベントを連絡する者が持つデータを加工して、受け取る者へ通知できます。
+次のコードは整数から文字列に変換して連絡しています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">source</span> <span class="o">=</span> <span class="kt">PublishRelay</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="n">source</span>
+    <span class="o">.</span><span class="nf">map</span><span class="p">({</span> <span class="s">"</span><span class="se">\(</span><span class="nv">$0</span><span class="se">)</span><span class="s">"</span> <span class="p">})</span>
+    <span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"onNext: "</span><span class="p">,</span> <span class="nv">$0</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><em>Output</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  1
+onNext:  2
+onNext:  3
+</code></pre></div></div>
+
+<h2 id="講読を解除する">講読を解除する</h2>
+<p>受け取る者が報告する者から、データを受け取る講読手続きがあるように、反対に講読を解除する処理もあります。</p>
+
+<p>次のコードでは、途中で<code class="highlighter-rouge">dispose</code>を読んだことで、それ以降のイベントが届いていません。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">subject</span> <span class="o">=</span> <span class="kt">PublishSubject</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">in</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onNext:  </span><span class="se">\(</span><span class="n">text</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onCompleted</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onCompleted"</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onDisposed</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"Disposed"</span><span class="p">)</span>
+<span class="p">})</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"B"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">dispose</span><span class="p">()</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"C"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"D"</span><span class="p">)</span>
+<span class="n">subject</span><span class="o">.</span><span class="nf">onCompleted</span><span class="p">()</span>
+</code></pre></div></div>
+
+<p><em>Output</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+onNext:  B
+</code></pre></div></div>
+
+<p>この講読の解除は、明示的に呼び出して解除する方法ですが、エラーや完了イベントを受け取った場合も講読を解除します。</p>
+
+<h3 id="disposebag">DisposeBag</h3>
+
+<p>他の購読解除のタイミングとして、データの連絡する者が開放されるケースがあります。
+このようなケースで自身の開放タイミングで保持するdisposableをまとめて解除してくれるのがこのクラスです。</p>
+
+<p>次のコードでは、<code class="highlighter-rouge">DisposeBag</code>に講読先のdisposableを入れておき、講読途中でnilを渡してメモリ解放をすることで<br />
+「DisposeBagの開放タイミングでバッグ内のdisposableを全て開放する」特性を再現しています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">source</span> <span class="o">=</span> <span class="kt">PublishRelay</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
+<span class="k">let</span> <span class="nv">disposable</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onNext: "</span><span class="p">,</span> <span class="nv">$0</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onError</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onError: "</span><span class="p">,</span> <span class="nv">$0</span><span class="o">.</span><span class="n">localizedDescription</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onCompleted</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onCompleted"</span><span class="p">)</span>
+<span class="p">},</span> <span class="nv">onDisposed</span><span class="p">:</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="s">"onDisposed"</span><span class="p">)</span>
+<span class="p">})</span>
+
+
+<span class="k">var</span> <span class="nv">bag</span><span class="p">:</span> <span class="kt">DisposeBag</span><span class="p">?</span> <span class="o">=</span> <span class="kt">DisposeBag</span><span class="p">()</span>
+<span class="n">bag</span><span class="p">?</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">disposable</span><span class="p">)</span>
+
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
+<span class="n">bag</span> <span class="o">=</span> <span class="kc">nil</span>
+<span class="n">source</span><span class="o">.</span><span class="nf">accept</span><span class="p">(</span><span class="s">"B"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><em>Output</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+onDisposed
+</code></pre></div></div>
+
+<p>通常であれば、上記コードのようにnilを渡すといった意識した開放はせずとも、<code class="highlighter-rouge">DisposeBag</code>インスタンスのスコープアウトや親クラスの開放で、意識をせずとも開放をしてくれます。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>以上がRxSwiftの基礎を動かして理解する説明です。</p>
+
+<p>記事の内容に加え、手を動かしながらやったことで、RxSwiftに抱くオブサーバーのイメージを崩さずRxSwiftの基礎中の基礎を理解できたのではないかと思います。</p>
+
+<p>まだ <code class="highlighter-rouge">Driver</code>, <code class="highlighter-rouge">Scheduler</code>, <code class="highlighter-rouge">Cold/Hot</code> など山程あるのですが、それは別記事として投稿したら、ここにリンクを貼ろうと思います。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/tools/tools-training-support-tools-urcoach">実装の速度を養うトレーニングサポートツールを作った</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version">原因と対応「Error: RuboCop found unsupported Ruby version 2.1」</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/notebook/notebook-remote-worker-need-thinkg-just-one">フルリモート1年半で知った、ただ1つの最重要なルーチン</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/carthage/ios-carthage">今さらCarthage入門</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/notebook/necessary-continual-behavior-for-engineer">エンジニアが個の価値向上のために継続するべき10個の行動</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </div>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <div class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
