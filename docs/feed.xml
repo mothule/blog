@@ -1,48 +1,467 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-18T02:29:26+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">実装の速度を養うトレーニングサポートツールを作った</title><link href="https://blog.mothule.com/tools/tools-training-support-tools-urcoach" rel="alternate" type="text/html" title="実装の速度を養うトレーニングサポートツールを作った" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/tools-training-support-tools-urcoach</id><content type="html" xml:base="https://blog.mothule.com/tools/tools-training-support-tools-urcoach">&lt;p&gt;新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。&lt;br /&gt;
-プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-09-20T00:16:30+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">RxSwiftの基本を動かして理解する</title><link href="https://blog.mothule.com/ios/swift/rxswift/ios-swift-rxswfit-basic" rel="alternate" type="text/html" title="RxSwiftの基本を動かして理解する" /><published>2019-09-18T00:00:00+09:00</published><updated>2019-09-18T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/swift/rxswift/ios-swift-rxswfit-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/rxswift/ios-swift-rxswfit-basic">&lt;p&gt;RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？&lt;br /&gt;
+私もその一人でした。ネットで見かける記事を読み解いても&lt;/p&gt;
 
-&lt;p&gt;そしてエンジニアを生業にする以上、&lt;strong&gt;実装速度と品質は最重要指標&lt;/strong&gt; です。
-しかしながら、新しい言語やフレームワークなどでは実装速度が大幅に落ち込みます。
-今回はこの実装速度を及第点に近づけるためのツールを作ってみたので紹介します。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;公式の英文をそのまま直訳しただけの説明&lt;/li&gt;
+  &lt;li&gt;公式の順序通りの説明順番&lt;/li&gt;
+  &lt;li&gt;正しい言葉に拘り過ぎて「パルスのファルシのルシがパージでコクーン」みたいな用語だけが独り歩き&lt;/li&gt;
+  &lt;li&gt;マーブルダイアグラムという慣れないし、慣れてもやっぱり直感で理解できないグラフに説明を丸投げ&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;h2 id=&quot;実装において速度は重要なスキルの一つ&quot;&gt;実装において速度は重要なスキルの一つ&lt;/h2&gt;
+&lt;p&gt;などなど読み手に負担がかかった記事が多く「なんでこんなに分かりにくいのだろう？なぜか腹落ちしない」と何度も思いました。&lt;/p&gt;
 
-&lt;p&gt;さきほども書きましたが実装速度は重要です。
-なぜならエンジニアは流れの早い時間軸で生きるクリエイティブ職業です。
-それゆえ速度が足りないとニーズに追いつけず実装完了した頃には無用の長物になりかねません。
-そのようなエンジニアは品質としては決して高くはありません。&lt;/p&gt;
+&lt;p&gt;なので自分が学習を通して「これを最初に腹落ちしないとダメじゃん」と思うアプローチで、RxSwiftを説明する記事を書きました。&lt;/p&gt;
 
-&lt;h2 id=&quot;実装速度の向上は慣れるが真理&quot;&gt;実装速度の向上は慣れるが真理&lt;/h2&gt;
+&lt;h2 id=&quot;背景&quot;&gt;背景&lt;/h2&gt;
 
-&lt;p&gt;つまり言語やフレームワークなどに使い慣れるということです。&lt;br /&gt;
-慣れるとは、&lt;strong&gt;意識せずとも知識を引き出せて、余裕がある状態です。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;ざっくりとRxSwiftの立ち位置やこの記事で得られる知識について簡単に説明します。&lt;/p&gt;
 
-&lt;p&gt;覚えたてと違い、知識の引き出し場所を探す速度が超速だからこそ、設計や脳内フローで立ち止まらず早く実装に取り掛かれます。&lt;br /&gt;
-既に経験のあるパターンであれば実装イメージも即座に思い浮かべられます。&lt;/p&gt;
+&lt;h3 id=&quot;最近のios開発事情&quot;&gt;最近のiOS開発事情&lt;/h3&gt;
+&lt;p&gt;iOSはSwiftに加え、RxSwift、MVVM、そしてSwiftUI。
+iOSはAndroidと異なり明確なアーキテクチャを提示やサポートをしません。
+そのため実装が群雄割拠になり、案件や会社によってバラバラでどんどん覚える量が増えています。&lt;/p&gt;
 
-&lt;p&gt;そして、あまり意識せずとも実装イメージがつくからこそ余裕が生まれ、今まで見落としていた知識や観点に気づきまた一歩スキルが向上します。&lt;/p&gt;
+&lt;p&gt;スクール上がりの経験1年ちょいでもiOSアプリは作れますが、
+メンテナンス、チーム、大規模、テスタビリティ、バグ抑制、レビューなど求められる要件に対して、適切なデザインを提示できるには相応のスキルを必要とされます。&lt;/p&gt;
 
-&lt;h2 id=&quot;ツール説明&quot;&gt;ツール説明&lt;/h2&gt;
+&lt;p&gt;つまりiOSアプリはSDKと言語仕様の上に明確なフレームワークが存在しないため、上記で上げた項目の品質がブレやすく、そしてエンジニアによって依存します。&lt;/p&gt;
 
-&lt;p&gt;ツール名は&lt;code class=&quot;highlighter-rouge&quot;&gt;Your coach&lt;/code&gt;です。
-&lt;a href=&quot;https://github.com/mothule/urcoach&quot;&gt;mothule/urcoach&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-18-ios-swift-rxswfit-basic-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-18-ios-swift-rxswfit-basic-1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;
+&lt;em&gt;iOSにはアーキテクチャ指針が明確ではない&lt;/em&gt;&lt;/p&gt;
 
-&lt;p&gt;今はまだgem化していないのでgitからcloneするなどしてお使いください。&lt;/p&gt;
+&lt;h3 id=&quot;rxswiftはちょっとした課題のちょっとした提案&quot;&gt;RxSwiftはちょっとした課題のちょっとした提案&lt;/h3&gt;
 
-&lt;p&gt;例えば次のようにコマンドを実行すると&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ruby urcoach &lt;span class=&quot;nt&quot;&gt;--level&lt;/span&gt; normal &lt;span class=&quot;nt&quot;&gt;--time&lt;/span&gt; 60
+&lt;p&gt;RxSwiftは解決策をある程度強制します。&lt;br /&gt;
+アーキテクチャもMVVMが最適解として選択されます。&lt;br /&gt;
+RxSwiftが提示するレールにチームが従うことで、無数にある実装においてルールを強制することができます。&lt;/p&gt;
+
+&lt;p&gt;RxSwiftは従来の処理フローの繋がりが集約・視覚化されない問題を解決する１つのアプローチです。&lt;br /&gt;
+そのアプローチ方法について理解することがRxSwiftを使用する上で必須となっています。&lt;/p&gt;
+
+&lt;p&gt;しかし、この知識に正面からぶつかると難解な動きや構造をするモデルに心を折られてしまいます。&lt;/p&gt;
+
+&lt;h3 id=&quot;この記事ではとっかかりを掴む&quot;&gt;この記事ではとっかかりを掴む&lt;/h3&gt;
+
+&lt;p&gt;この記事を通して、コードを動かして理解することで、体系的な知識の点、そしてそれを繋ぐ線を少しずつ構築し、難解なモデルに対して戦える密度の薄い体系知識を得られればなと思います。&lt;/p&gt;
+
+&lt;p&gt;ネットで拾えるRxSwiftの記事はどれもオリジナルでもあるのかと、思うような似たような解説記事ばかりなので、私なりに噛み砕いて説明します。&lt;/p&gt;
+
+&lt;p&gt;まず巨大なモデルを理解するには、大きさを知るために &lt;strong&gt;ざっくりイメージできる&lt;/strong&gt; ことが大事です。&lt;/p&gt;
+
+&lt;p&gt;粒度は少しずつ細かくして、少しずつ詳細を把握していくべきです。&lt;/p&gt;
+
+&lt;h2 id=&quot;前提&quot;&gt;前提&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RxSwift 5.x&lt;/li&gt;
+  &lt;li&gt;Swift 5.x&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;この記事の読み方&quot;&gt;この記事の読み方&lt;/h3&gt;
+
+&lt;p&gt;この記事だけでRxSwiftについて理解する記事ではありません。&lt;br /&gt;
+この記事だけで完結するほど精巧に作られていませんし、RxSwiftはそんなに単純ではないです。&lt;/p&gt;
+
+&lt;p&gt;タイトルの通り実際にまたRxSwiftを使ったプロジェクトを用意し、動かしながら読むことを推奨します。&lt;br /&gt;
+RxSwiftのコード自体もあるとなお良いと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;注意点&quot;&gt;注意点&lt;/h3&gt;
+
+&lt;p&gt;この記事では全てについて説明は&lt;strong&gt;していません。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;目的は&lt;strong&gt;ざっくりイメージできる&lt;/strong&gt;ことを重視しています。&lt;/p&gt;
+
+&lt;p&gt;RxSwiftとはなにか？を知ったときに得るイメージを崩さないように記事を書いてあるので、専門用語や実践的なノウハウについては記載していません。
+また説明順序に関しても、私が学習を通して、このセクションをこの順序でやったほうが分かりやすいはず。という判断で記事を書いてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;rxswiftはオブザーバーパターンとパイプライン&quot;&gt;RxSwiftはオブザーバーパターンとパイプライン&lt;/h2&gt;
+
+&lt;p&gt;デザインパターンの１つであるオブザーバーパターンと、シェルでよく使うパイプ(&lt;code class=&quot;highlighter-rouge&quot;&gt;|&lt;/code&gt;)を使って、&lt;br /&gt;
+&lt;strong&gt;イベントにリアクションを連結するイメージです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;他のサイトなどでRxSwiftについてざっくり概要を知った人たちが考えるRxSwiftとは&lt;br /&gt;
+&lt;strong&gt;「イベントを監視し、動きがあれば逐一報告し、報告を受けたものが何らかの反応をする」&lt;/strong&gt;&lt;br /&gt;
+という説明で大体が納得できるのではないでしょうか？&lt;/p&gt;
+
+&lt;p&gt;つまり「RxSwiftとはオブザーバーパターンを使っている」というイメージが強くあることで、&lt;br /&gt;
+読み手側はオブザーバーの&lt;strong&gt;イベントを報告する者&lt;/strong&gt;と&lt;strong&gt;イベントを受け取る者&lt;/strong&gt;はどれか？をキーに文章を読むのではないでしょうか？&lt;/p&gt;
+
+&lt;p&gt;しかしそれが返って邪魔となり道に迷っているのではないかと私は思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;イベントを報告する者とイベントを受け取る者&quot;&gt;イベントを報告する者とイベントを受け取る者&lt;/h2&gt;
+&lt;p&gt;たくさんあるクラスのなかでまず覚えるべきは&lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt;です。&lt;br /&gt;
+そして採用している&lt;code class=&quot;highlighter-rouge&quot;&gt;ObservableType&lt;/code&gt; プロトコルです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObservableType.subscribe&lt;/code&gt; がイベントを受け取るための講読手続きになります。&lt;br /&gt;
+なので &lt;code class=&quot;highlighter-rouge&quot;&gt;ObservableType&lt;/code&gt; を採用しているクラスは全て、 &lt;strong&gt;イベントを受け取る者&lt;/strong&gt; となります。&lt;br /&gt;
+つまり&lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt;は &lt;strong&gt;イベントを受け取る者&lt;/strong&gt; です。&lt;/p&gt;
+
+&lt;p&gt;では、&lt;strong&gt;イベントを報告する者&lt;/strong&gt; は誰でしょうか。&lt;/p&gt;
+
+&lt;p&gt;それは &lt;code class=&quot;highlighter-rouge&quot;&gt;ObservableType.subscribe&lt;/code&gt;の引数が採用している&lt;code class=&quot;highlighter-rouge&quot;&gt;ObserverType&lt;/code&gt;です。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;ObservableType&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;ObserverType&lt;/code&gt;かなり似てるので、注意して読んでください。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObserverType&lt;/code&gt;プロトコルは &lt;code class=&quot;highlighter-rouge&quot;&gt;on&lt;/code&gt; メソッドを持っており、これを使って報告をしています。&lt;br /&gt;
+つまり &lt;code class=&quot;highlighter-rouge&quot;&gt;ObserverType&lt;/code&gt;を採用しているクラスは全て、 &lt;strong&gt;イベントを報告する者&lt;/strong&gt; となります。&lt;/p&gt;
+
+&lt;h3 id=&quot;整理&quot;&gt;整理&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObservableType&lt;/code&gt; が &lt;strong&gt;イベントを受け取る者&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObserverType&lt;/code&gt; が &lt;strong&gt;イベントを報告する者&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;つまり &lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt;は &lt;strong&gt;イベントを受け取る者&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;イベントを報告してイベントを受け取る&quot;&gt;イベントを報告してイベントを受け取る&lt;/h2&gt;
+
+&lt;p&gt;イベントを報告する者と受け取る者の２つがあることは分かりました。&lt;br /&gt;
+イベントを受け取る者のクラスは&lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt;でした。&lt;br /&gt;
+ではイベントを報告する者のクラスは何でしょう？&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ObserverType&lt;/code&gt;を採用しているクラスを探すと出てきます。&lt;/p&gt;
+
+&lt;p&gt;今回はその中からよく使う &lt;code class=&quot;highlighter-rouge&quot;&gt;PublishSubject&lt;/code&gt; を使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;subject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PublishSubject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;登録されてあるトレーニングプランの中から条件に一致するプランをランダムで提示してくれます。
-&lt;a href=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;
-プラン提示&lt;/p&gt;
 
-&lt;h3 id=&quot;更新は-yamlをいじれば反映される&quot;&gt;更新は yamlをいじれば反映される&lt;/h3&gt;
-&lt;p&gt;プランを追加したり変更したい場合は同梱するyamlファイルを編集すれば反映されます。
-そのため自分専用のプランを作ることも可能です。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;onNext&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;onCompleted&lt;/code&gt;は &lt;code class=&quot;highlighter-rouge&quot;&gt;on&lt;/code&gt; メソッドに &lt;code class=&quot;highlighter-rouge&quot;&gt;next&lt;/code&gt;状態と&lt;code class=&quot;highlighter-rouge&quot;&gt;completed&lt;/code&gt;状態をそれぞれ報告しています。
+ただのラッパーメソッドです。&lt;/p&gt;
 
-&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
-&lt;p&gt;rubyに慣れるためrailsを使わずCLIツールを作成しました。
-まだまだできたばかりなので不足を感じますが、ドッグフーディングしつつ少しずつ育てるのもありかなと考えています。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ruby" /><summary type="html">新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。 プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-tools-training-support-tools-urcoach.jpg" /></entry><entry><title type="html">フルリモート1年半で知った、ただ1つの最重要なルーチン</title><link href="https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one" rel="alternate" type="text/html" title="フルリモート1年半で知った、ただ1つの最重要なルーチン" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one</id><content type="html" xml:base="https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one">&lt;h2 id=&quot;運動&quot;&gt;運動&lt;/h2&gt;
+&lt;p&gt;これだけでは &lt;strong&gt;イベントを報告する者&lt;/strong&gt; だけで &lt;strong&gt;イベントを受け取る者&lt;/strong&gt; がいません。&lt;br /&gt;
+しかも、イベントを受け取る者が報告する者に対し、講読する手続きも必要になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PublishSubject&lt;/code&gt;の定義へジャンプすると次のような定義になっています。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;final&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PublishSubject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Element&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Observable&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Element&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SubjectType&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Cancelable&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ObserverType&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;SynchronizedUnsubscribeType&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;なんと、&lt;code class=&quot;highlighter-rouge&quot;&gt;PublishSubject&lt;/code&gt;は、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Observable&lt;/code&gt; を採用しています。
+つまり &lt;strong&gt;イベントを受け取る者&lt;/strong&gt; でもあったのです。&lt;/p&gt;
+
+&lt;p&gt;そのため&lt;code class=&quot;highlighter-rouge&quot;&gt;PublishSubject&lt;/code&gt;1つで、次のような &lt;strong&gt;報告&lt;/strong&gt; と &lt;strong&gt;受け取り&lt;/strong&gt; ができます。&lt;/p&gt;
+
+&lt;p&gt;次のコードは、&lt;code class=&quot;highlighter-rouge&quot;&gt;next&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;completed&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;disposed&lt;/code&gt; それぞれの状態に対してハンドリングしています。&lt;/p&gt;
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onNext:  &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onError: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localizedDescription&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onCompleted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onDisposed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onDisposed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Output&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;onNext:  A
+onNext:  B
+onNext:  C
+onCompleted
+onDisposed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ちなみに途中でエラーイベントを報告した場合、講読は終了します。
+例えば先程のコードの一部を次のように &lt;code class=&quot;highlighter-rouge&quot;&gt;onError&lt;/code&gt; を挟むと結果が変わります。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;NSError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;domain&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;domain&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;code&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;userInfo&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Output&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;onNext:  A
+onNext:  B
+onError:  The operation couldn’t be completed. (domain error -1.)
+onDisposed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このように&lt;code class=&quot;highlighter-rouge&quot;&gt;C&lt;/code&gt;イベントは報告されず、&lt;code class=&quot;highlighter-rouge&quot;&gt;completed&lt;/code&gt;も報告されません。&lt;br /&gt;
+そして&lt;code class=&quot;highlighter-rouge&quot;&gt;disposed&lt;/code&gt;が報告され講読終了となります。&lt;/p&gt;
+
+&lt;h3 id=&quot;整理-1&quot;&gt;整理&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;PublishSubject&lt;/code&gt; は &lt;strong&gt;報告する者&lt;/strong&gt; でもあり &lt;strong&gt;受け取る者&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;エラーが起きたら講読は終了する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;他のobservertypeの採用クラス&quot;&gt;他のObserverTypeの採用クラス&lt;/h2&gt;
+
+&lt;p&gt;PublishSubject以外に&lt;code class=&quot;highlighter-rouge&quot;&gt;ObserverType&lt;/code&gt;を採用してるクラスについて簡単に説明します。&lt;/p&gt;
+
+&lt;h3 id=&quot;publishrelay&quot;&gt;PublishRelay&lt;/h3&gt;
+
+&lt;p&gt;PublishSubjectのラッパーです。
+PublishSubjectの&lt;code class=&quot;highlighter-rouge&quot;&gt;onNext&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;onCompleted&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;onError&lt;/code&gt;はなく、&lt;code class=&quot;highlighter-rouge&quot;&gt;accept&lt;/code&gt;のみになります。
+この&lt;code class=&quot;highlighter-rouge&quot;&gt;accept&lt;/code&gt;の中身は&lt;code class=&quot;highlighter-rouge&quot;&gt;onNext&lt;/code&gt;となります。
+結果的にエラーや完了のイベントを流せないので、実質エラーや完了で終了できなくなります。&lt;/p&gt;
+
+&lt;h3 id=&quot;behaviorsubject&quot;&gt;BehaviorSubject&lt;/h3&gt;
+
+&lt;p&gt;PublishSubjectに状態を持たせたようなクラスです。
+BehaviorSubjectは最後に報告した値を保持しています。
+保持しているのでsubscribeしたらその状態も通知します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sub&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;BehaviorSubject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;ABC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onNext: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onError: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localizedDescription&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onCompleted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onDisposed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onDisposed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;D&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;try!&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;())&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;E&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;sub&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Output&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;onNext:  ABC
+onNext:  D
+D
+onNext:  E
+onCompleted
+onDisposed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;イベントの報告に経路に手を加える&quot;&gt;イベントの報告に経路に手を加える&lt;/h2&gt;
+
+&lt;p&gt;RxSwiftでは、報告する者がイベントを受け取る者に通知する経路を加工することができます。&lt;/p&gt;
+
+&lt;h3 id=&quot;filter-条件満たすイベントのみ連絡する&quot;&gt;filter: 条件満たすイベントのみ連絡する&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;filter&lt;/code&gt;を通すことで、イベントを受け取る者への連絡を制限することができます。&lt;br /&gt;
+次のコードは、3文字以下のみを連絡しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PublishRelay&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onNext: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;12&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;!$#&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1234&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ABCDE&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ABC&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Output&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;onNext:  A
+onNext:  12
+onNext:  !$#
+onNext:  ABC
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;map-イベント情報を変換して連絡する&quot;&gt;map: イベント情報を変換して連絡する&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;map&lt;/code&gt;を通すことで、イベントを連絡する者が持つデータを加工して、受け取る者へ通知できます。
+次のコードは整数から文字列に変換して連絡しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PublishRelay&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onNext: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Output&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;onNext:  1
+onNext:  2
+onNext:  3
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;講読を解除する&quot;&gt;講読を解除する&lt;/h2&gt;
+&lt;p&gt;受け取る者が報告する者から、データを受け取る講読手続きがあるように、反対に講読を解除する処理もあります。&lt;/p&gt;
+
+&lt;p&gt;次のコードでは、途中で&lt;code class=&quot;highlighter-rouge&quot;&gt;dispose&lt;/code&gt;を読んだことで、それ以降のイベントが届いていません。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;subject&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PublishSubject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onNext:  &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onCompleted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onDisposed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Disposed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dispose&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;D&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Output&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;onNext:  A
+onNext:  B
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この講読の解除は、明示的に呼び出して解除する方法ですが、エラーや完了イベントを受け取った場合も講読を解除します。&lt;/p&gt;
+
+&lt;h3 id=&quot;disposebag&quot;&gt;DisposeBag&lt;/h3&gt;
+
+&lt;p&gt;他の購読解除のタイミングとして、データの連絡する者が開放されるケースがあります。
+このようなケースで自身の開放タイミングで保持するdisposableをまとめて解除してくれるのがこのクラスです。&lt;/p&gt;
+
+&lt;p&gt;次のコードでは、&lt;code class=&quot;highlighter-rouge&quot;&gt;DisposeBag&lt;/code&gt;に講読先のdisposableを入れておき、講読途中でnilを渡してメモリ解放をすることで&lt;br /&gt;
+「DisposeBagの開放タイミングでバッグ内のdisposableを全て開放する」特性を再現しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;source&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;PublishRelay&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;disposable&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;subscribe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;onNext&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onNext: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onError&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onError: &quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;localizedDescription&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onCompleted&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onCompleted&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;onDisposed&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;onDisposed&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+
+
+&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;bag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DisposeBag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DisposeBag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bag&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;disposable&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bag&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;source&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;accept&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;Output&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;onNext:  A
+onDisposed
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;通常であれば、上記コードのようにnilを渡すといった意識した開放はせずとも、&lt;code class=&quot;highlighter-rouge&quot;&gt;DisposeBag&lt;/code&gt;インスタンスのスコープアウトや親クラスの開放で、意識をせずとも開放をしてくれます。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;以上がRxSwiftの基礎を動かして理解する説明です。&lt;/p&gt;
+
+&lt;p&gt;記事の内容に加え、手を動かしながらやったことで、RxSwiftに抱くオブサーバーのイメージを崩さずRxSwiftの基礎中の基礎を理解できたのではないかと思います。&lt;/p&gt;
+
+&lt;p&gt;まだ &lt;code class=&quot;highlighter-rouge&quot;&gt;Driver&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Scheduler&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;Cold/Hot&lt;/code&gt; など山程あるのですが、それは別記事として投稿したら、ここにリンクを貼ろうと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="rxswift" /><summary type="html">RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？ 私もその一人でした。ネットで見かける記事を読み解いても</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-18-ios-swift-rxswfit-basic.png" /></entry><entry><title type="html">原因と対応「Error: RuboCop found unsupported Ruby version 2.1」</title><link href="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version" rel="alternate" type="text/html" title="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version">&lt;p&gt;先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;rubocopでエラーが発生&quot;&gt;RuboCopでエラーが発生&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle exec rubocop&lt;/code&gt; を実行したら次のようなエラーが発生しました。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop
+Error: RuboCop found unsupported Ruby version 2.1 &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;TargetRubyVersion&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; parameter &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; 2.1-compatible analysis was dropped after version 0.58.
+Supported versions: 2.3, 2.4, 2.5, 2.6, 2.7
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;2.1？ 自分の環境では rbenv で .ruby-version を使っており、 2.6.2 を使っていました。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; .ruby-version
+2.6.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;targetrubyversion-を指定し忘れ&quot;&gt;TargetRubyVersion を指定し忘れ&lt;/h3&gt;
+&lt;p&gt;TargetRubyVersion指定するのを忘れてたので .rubocop.yml に追記しました。&lt;/p&gt;
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion &lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;しかし問題は解決せず…&lt;/p&gt;
+
+&lt;h2 id=&quot;エラーをちゃんと読むと分かる&quot;&gt;エラーをちゃんと読むと分かる&lt;/h2&gt;
+&lt;p&gt;一行目の半分あたりを読んだ後に1行目終わりから2行目初めにパスが記載されていたので、それ以外の箇所をきちんと読んでいませんでした。
+問題が起きてる場所が &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;/code&gt; と書いており自分の場所ではない。
+しかも 何やら .rubocop.yml が配置されている。
+中身を見ると次のような指定がされています。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml
+inherit_from: .rubocop_todo.yml
+
+AllCops:
+  DisplayCopNames: &lt;span class=&quot;nb&quot;&gt;true
+  &lt;/span&gt;DisplayStyleGuide: &lt;span class=&quot;nb&quot;&gt;true
+  &lt;/span&gt;TargetRubyVersion: &lt;span class=&quot;s2&quot;&gt;&quot;2.1&quot;&lt;/span&gt;
+  Exclude:
+    - &lt;span class=&quot;s2&quot;&gt;&quot;spec/**/*&quot;&lt;/span&gt;
+    - &lt;span class=&quot;s2&quot;&gt;&quot;vendor/**/*&quot;&lt;/span&gt;
+Documentation:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+
+&lt;/span&gt;HashSyntax:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+
+&lt;/span&gt;MethodName:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false
+
+&lt;/span&gt;StringLiterals:
+  Enabled: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;どうやら raibow gem では &lt;code class=&quot;highlighter-rouge&quot;&gt;TargetRubyVersion&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;2.1&lt;/code&gt; を指定してあることで、互換性エラーが起きていました。
+エラー文「2.1-compatible analysis was dropped after version 0.58.」と書いてあるように RubCop version 0.58 以降では 2.1互換性を破棄しています。&lt;/p&gt;
+
+&lt;p&gt;インストールした RubCop のバージョンは0.72.0でした。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
+0.72.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;なぜエラーが起きたのか&quot;&gt;なぜエラーが起きたのか？&lt;/h2&gt;
+&lt;p&gt;普段自分が作っている別のrailsアプリとかでは、このような問題は起きていません。
+しかしRuboCopがgems内まで解析しようとしていることはエラーから判断できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.rubocop.yml&lt;/code&gt; でもgemは見ないように設定しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これ今見ると恥ずかしいミスです。。&lt;/p&gt;
+
+&lt;h3 id=&quot;指定方法を間違えている&quot;&gt;指定方法を間違えている&lt;/h3&gt;
+
+&lt;p&gt;実は gems内の解析を除外する指定方法が間違っており正しくははこうでした。&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/**/*&lt;/span&gt;
+    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt;でも下のtmp同様に除外されると勘違いしていました。
+おそらく.gitignoreで指定フォルダを無視する設定をした後だったのか原因かもしれません。&lt;/p&gt;
+
+&lt;h2 id=&quot;rubocop-found-unsupported-ruby-version-21-の原因と対応方法のまとめ&quot;&gt;RuboCop found unsupported Ruby version 2.1 の原因と対応方法のまとめ&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;原因：gem内も解析対象となっている&lt;/li&gt;
+  &lt;li&gt;対応：.rubocop.ymlで&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/**/*&lt;/code&gt;のように除外指定をする&lt;/li&gt;
+  &lt;li&gt;まとめ：エラー文をちゃんと読む&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ruby" /><category term="rubocop" /><summary type="html">先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png" /></entry><entry><title type="html">フルリモート1年半で知った、ただ1つの最重要なルーチン</title><link href="https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one" rel="alternate" type="text/html" title="フルリモート1年半で知った、ただ1つの最重要なルーチン" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one</id><content type="html" xml:base="https://blog.mothule.com/notebook/notebook-remote-worker-need-thinkg-just-one">&lt;h2 id=&quot;運動&quot;&gt;運動&lt;/h2&gt;
 
 &lt;p&gt;以上です。&lt;/p&gt;
 
@@ -393,101 +812,51 @@ Carthage/Checkouts
 &lt;p&gt;当然ながら、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;公式&lt;/a&gt;には記載がされているので暇があったら少しずつ追うのもいいかもしれません。
 README.mdだけでなく&lt;a href=&quot;https://github.com/Carthage/Carthage/tree/master/Documentation&quot;&gt;Documentation&lt;/a&gt;もあるので見落とさず。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;シンプルなまま対応ライブラリが増えるといいですね。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png" /></entry><entry><title type="html">原因と対応「Error: RuboCop found unsupported Ruby version 2.1」</title><link href="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version" rel="alternate" type="text/html" title="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version">&lt;p&gt;先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;シンプルなまま対応ライブラリが増えるといいですね。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage.png" /></entry><entry><title type="html">実装の速度を養うトレーニングサポートツールを作った</title><link href="https://blog.mothule.com/tools/tools-training-support-tools-urcoach" rel="alternate" type="text/html" title="実装の速度を養うトレーニングサポートツールを作った" /><published>2019-09-15T00:00:00+09:00</published><updated>2019-09-15T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/tools-training-support-tools-urcoach</id><content type="html" xml:base="https://blog.mothule.com/tools/tools-training-support-tools-urcoach">&lt;p&gt;新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。&lt;br /&gt;
+プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。&lt;/p&gt;
 
-&lt;h2 id=&quot;rubocopでエラーが発生&quot;&gt;RuboCopでエラーが発生&lt;/h2&gt;
+&lt;p&gt;そしてエンジニアを生業にする以上、&lt;strong&gt;実装速度と品質は最重要指標&lt;/strong&gt; です。
+しかしながら、新しい言語やフレームワークなどでは実装速度が大幅に落ち込みます。
+今回はこの実装速度を及第点に近づけるためのツールを作ってみたので紹介します。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle exec rubocop&lt;/code&gt; を実行したら次のようなエラーが発生しました。&lt;/p&gt;
+&lt;h2 id=&quot;実装において速度は重要なスキルの一つ&quot;&gt;実装において速度は重要なスキルの一つ&lt;/h2&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop
-Error: RuboCop found unsupported Ruby version 2.1 &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;TargetRubyVersion&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; parameter &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt; 2.1-compatible analysis was dropped after version 0.58.
-Supported versions: 2.3, 2.4, 2.5, 2.6, 2.7
+&lt;p&gt;さきほども書きましたが実装速度は重要です。
+なぜならエンジニアは流れの早い時間軸で生きるクリエイティブ職業です。
+それゆえ速度が足りないとニーズに追いつけず実装完了した頃には無用の長物になりかねません。
+そのようなエンジニアは品質としては決して高くはありません。&lt;/p&gt;
+
+&lt;h2 id=&quot;実装速度の向上は慣れるが真理&quot;&gt;実装速度の向上は慣れるが真理&lt;/h2&gt;
+
+&lt;p&gt;つまり言語やフレームワークなどに使い慣れるということです。&lt;br /&gt;
+慣れるとは、&lt;strong&gt;意識せずとも知識を引き出せて、余裕がある状態です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;覚えたてと違い、知識の引き出し場所を探す速度が超速だからこそ、設計や脳内フローで立ち止まらず早く実装に取り掛かれます。&lt;br /&gt;
+既に経験のあるパターンであれば実装イメージも即座に思い浮かべられます。&lt;/p&gt;
+
+&lt;p&gt;そして、あまり意識せずとも実装イメージがつくからこそ余裕が生まれ、今まで見落としていた知識や観点に気づきまた一歩スキルが向上します。&lt;/p&gt;
+
+&lt;h2 id=&quot;ツール説明&quot;&gt;ツール説明&lt;/h2&gt;
+
+&lt;p&gt;ツール名は&lt;code class=&quot;highlighter-rouge&quot;&gt;Your coach&lt;/code&gt;です。
+&lt;a href=&quot;https://github.com/mothule/urcoach&quot;&gt;mothule/urcoach&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;今はまだgem化していないのでgitからcloneするなどしてお使いください。&lt;/p&gt;
+
+&lt;p&gt;例えば次のようにコマンドを実行すると&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ruby urcoach &lt;span class=&quot;nt&quot;&gt;--level&lt;/span&gt; normal &lt;span class=&quot;nt&quot;&gt;--time&lt;/span&gt; 60
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;登録されてあるトレーニングプランの中から条件に一致するプランをランダムで提示してくれます。
+&lt;a href=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-15-tools-training-support-tools-urcoach-1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;
+プラン提示&lt;/p&gt;
 
-&lt;p&gt;2.1？ 自分の環境では rbenv で .ruby-version を使っており、 2.6.2 を使っていました。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; .ruby-version
-2.6.2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;更新は-yamlをいじれば反映される&quot;&gt;更新は yamlをいじれば反映される&lt;/h3&gt;
+&lt;p&gt;プランを追加したり変更したい場合は同梱するyamlファイルを編集すれば反映されます。
+そのため自分専用のプランを作ることも可能です。&lt;/p&gt;
 
-&lt;h3 id=&quot;targetrubyversion-を指定し忘れ&quot;&gt;TargetRubyVersion を指定し忘れ&lt;/h3&gt;
-&lt;p&gt;TargetRubyVersion指定するのを忘れてたので .rubocop.yml に追記しました。&lt;/p&gt;
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion &lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;しかし問題は解決せず…&lt;/p&gt;
-
-&lt;h2 id=&quot;エラーをちゃんと読むと分かる&quot;&gt;エラーをちゃんと読むと分かる&lt;/h2&gt;
-&lt;p&gt;一行目の半分あたりを読んだ後に1行目終わりから2行目初めにパスが記載されていたので、それ以外の箇所をきちんと読んでいませんでした。
-問題が起きてる場所が &lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml&lt;/code&gt; と書いており自分の場所ではない。
-しかも 何やら .rubocop.yml が配置されている。
-中身を見ると次のような指定がされています。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml
-inherit_from: .rubocop_todo.yml
-
-AllCops:
-  DisplayCopNames: &lt;span class=&quot;nb&quot;&gt;true
-  &lt;/span&gt;DisplayStyleGuide: &lt;span class=&quot;nb&quot;&gt;true
-  &lt;/span&gt;TargetRubyVersion: &lt;span class=&quot;s2&quot;&gt;&quot;2.1&quot;&lt;/span&gt;
-  Exclude:
-    - &lt;span class=&quot;s2&quot;&gt;&quot;spec/**/*&quot;&lt;/span&gt;
-    - &lt;span class=&quot;s2&quot;&gt;&quot;vendor/**/*&quot;&lt;/span&gt;
-Documentation:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false
-
-&lt;/span&gt;HashSyntax:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false
-
-&lt;/span&gt;MethodName:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false
-
-&lt;/span&gt;StringLiterals:
-  Enabled: &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;どうやら raibow gem では &lt;code class=&quot;highlighter-rouge&quot;&gt;TargetRubyVersion&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;2.1&lt;/code&gt; を指定してあることで、互換性エラーが起きていました。
-エラー文「2.1-compatible analysis was dropped after version 0.58.」と書いてあるように RubCop version 0.58 以降では 2.1互換性を破棄しています。&lt;/p&gt;
-
-&lt;p&gt;インストールした RubCop のバージョンは0.72.0でした。&lt;/p&gt;
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rubocop &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
-0.72.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;なぜエラーが起きたのか&quot;&gt;なぜエラーが起きたのか？&lt;/h2&gt;
-&lt;p&gt;普段自分が作っている別のrailsアプリとかでは、このような問題は起きていません。
-しかしRuboCopがgems内まで解析しようとしていることはエラーから判断できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.rubocop.yml&lt;/code&gt; でもgemは見ないように設定しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これ今見ると恥ずかしいミスです。。&lt;/p&gt;
-
-&lt;h3 id=&quot;指定方法を間違えている&quot;&gt;指定方法を間違えている&lt;/h3&gt;
-
-&lt;p&gt;実は gems内の解析を除外する指定方法が間違っており正しくははこうでした。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;AllCops&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;TargetRubyVersion&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;2.6.2&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Exclude&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;vendor/**/*&lt;/span&gt;
-    &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;tmp/**/*&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/&lt;/code&gt;でも下のtmp同様に除外されると勘違いしていました。
-おそらく.gitignoreで指定フォルダを無視する設定をした後だったのか原因かもしれません。&lt;/p&gt;
-
-&lt;h2 id=&quot;rubocop-found-unsupported-ruby-version-21-の原因と対応方法のまとめ&quot;&gt;RuboCop found unsupported Ruby version 2.1 の原因と対応方法のまとめ&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;原因：gem内も解析対象となっている&lt;/li&gt;
-  &lt;li&gt;対応：.rubocop.ymlで&lt;code class=&quot;highlighter-rouge&quot;&gt;vendor/**/*&lt;/code&gt;のように除外指定をする&lt;/li&gt;
-  &lt;li&gt;まとめ：エラー文をちゃんと読む&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="ruby" /><category term="rubocop" /><summary type="html">先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png" /></entry><entry><title type="html">エンジニアが個の価値向上のために継続するべき10個の行動</title><link href="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer" rel="alternate" type="text/html" title="エンジニアが個の価値向上のために継続するべき10個の行動" /><published>2019-09-10T00:00:00+09:00</published><updated>2019-09-10T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer</id><content type="html" xml:base="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer">&lt;p&gt;これは私自身の過去の経験を経てこれからの自分のために、これを継続することがエンジニアとして生きていくために、&lt;br /&gt;
+&lt;h2 id=&quot;最後に&quot;&gt;最後に&lt;/h2&gt;
+&lt;p&gt;rubyに慣れるためrailsを使わずCLIツールを作成しました。
+まだまだできたばかりなので不足を感じますが、ドッグフーディングしつつ少しずつ育てるのもありかなと考えています。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ruby" /><summary type="html">新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。 プロアスリート同様に日々の鍛錬があるからこそ、エンジニアとして品質を維持できています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-15-tools-training-support-tools-urcoach.jpg" /></entry><entry><title type="html">エンジニアが個の価値向上のために継続するべき10個の行動</title><link href="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer" rel="alternate" type="text/html" title="エンジニアが個の価値向上のために継続するべき10個の行動" /><published>2019-09-10T00:00:00+09:00</published><updated>2019-09-10T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer</id><content type="html" xml:base="https://blog.mothule.com/notebook/necessary-continual-behavior-for-engineer">&lt;p&gt;これは私自身の過去の経験を経てこれからの自分のために、これを継続することがエンジニアとして生きていくために、&lt;br /&gt;
 エンジニアという人間で居続けられるために、エンジニアだからできて、そして必要だと思う重要な行動10個について&lt;br /&gt;
 まとめてみました。&lt;/p&gt;
 
@@ -1148,72 +1517,4 @@ hoge:x:1000:
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chown [user name] [file or directory]&lt;/code&gt;で変更ができます。&lt;/p&gt;
 
 &lt;h2 id=&quot;グループを変更する&quot;&gt;グループを変更する&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chgrp [group name] [file or directory]&lt;/code&gt;で変更ができます。&lt;/p&gt;</content><author><name></name></author><category term="linux" /><category term="centos" /><summary type="html">ユーザーの追加や削除、グループ追加やsudo付与などユーザー操作に関するコマンドを忘れては調べ忘れては調べるを繰り返しているので、いい加減自分用に用意しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry><entry><title type="html">p4mergeでgit mergeの衝突を解決する</title><link href="https://blog.mothule.com/tools/git/git-merge-p4merge" rel="alternate" type="text/html" title="p4mergeでgit mergeの衝突を解決する" /><published>2019-09-02T00:00:00+09:00</published><updated>2019-09-02T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/git/git-merge-p4merge</id><content type="html" xml:base="https://blog.mothule.com/tools/git/git-merge-p4merge">&lt;p&gt;gitを使っていると必ず出くわすことになるコンフリクト。
-機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。
-衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。
-今回はGUIでグラフィカルに衝突解決を行うツール&lt;strong&gt;p4merge&lt;/strong&gt;について紹介します。&lt;/p&gt;
-
-&lt;h2 id=&quot;guiでマージするならp4merge&quot;&gt;GUIでマージするならp4merge&lt;/h2&gt;
-
-&lt;p&gt;p4mergeをGitの衝突解決ツールとして設定すると、衝突時にp4mergeでグラフィカルにマージを行うことができます。&lt;/p&gt;
-
-&lt;h3 id=&quot;p4merge-のいいところ&quot;&gt;p4merge のいいところ&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;衝突位置にだけ移動するショートカットが用意されている&lt;/li&gt;
-  &lt;li&gt;衝突ソース毎に背景色が違うので見分けがつく&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;インストール方法&quot;&gt;インストール方法&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.perforce.com/ja/zhipin/helix-core-apps/merge-diff-tool-p4merge&quot;&gt;公式サイト&lt;/a&gt;からOSを選んでダウンロードします。&lt;/p&gt;
-
-&lt;h2 id=&quot;p4mergeが起動するように設定&quot;&gt;p4mergeが起動するように設定&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.gitconfig&lt;/code&gt; を次のように設定します。他の無関係な設定は省いています。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;merge]
-  tool &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; p4merge
-  keepBackup &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;mergetool &lt;span class=&quot;s2&quot;&gt;&quot;p4merge&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-  path &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /Applications/p4merge.app/Contents/MacOS/p4merge
-  cmd &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; p4merge &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$BASE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOCAL&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$REMOTE&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$MERGED&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-  keepTemporaries &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false
-  &lt;/span&gt;trustExitCode &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false
-  &lt;/span&gt;keepBackup &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;このように設定すると、 &lt;code class=&quot;highlighter-rouge&quot;&gt;$ git mergetool&lt;/code&gt; と実行すれば、 p4merge　が起動します。&lt;/p&gt;
-
-&lt;p&gt;もし、マージではなく比較でも p4merge を使いたい場合は次のように設定します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;diff]
-  tool &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; vimdiff
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;difftool]
-	prompt &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
-
-&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;difftool &lt;span class=&quot;s2&quot;&gt;&quot;p4merge&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;
-	cmd &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; /Applications/p4merge.app/Contents/MacOS/p4merge &lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$LOCAL&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt; &lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$REMOTE&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\&quot;&lt;/span&gt;
-	trustExitCode &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この設定では、&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ git diff&lt;/code&gt; を実行すればユニファイド型式で表示され、&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ git difftool&lt;/code&gt;を実行すれば vimdiff で表示され、&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ git difftool -t p4merge&lt;/code&gt;を実行すれば p4merge で表示されます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;p4mergeの設定&quot;&gt;p4mergeの設定&lt;/h2&gt;
-
-&lt;p&gt;p4merge自身の設定についてです。デフォルトでも使うことは可能ですが、いくつか設定をしておくことで余計な穴にハマらず使えるかと思います。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-02-git-merge-p4merge-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-02-git-merge-p4merge-1.png&quot; width=&quot;75%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;フォントは日本語対応フォントにする&lt;/li&gt;
-  &lt;li&gt;文字が重なる場合はフォントを等倍にする&lt;/li&gt;
-  &lt;li&gt;encode は utf-8(厳密にはファイルと合わせる)&lt;/li&gt;
-  &lt;li&gt;改行タイプはシステムと合わせる(厳密にはgit commit時に自動変換オプションもあるのでそっちの兼ね合いも必要)&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Comparison method&lt;/code&gt; は 改行差異とスペース幅を無視する(ここは好みの問題でもある)&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="tools" /><category term="git" /><category term="p4merge" /><summary type="html">gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-02-git-merge-p4merge.png" /></entry></feed>
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;chgrp [group name] [file or directory]&lt;/code&gt;で変更ができます。&lt;/p&gt;</content><author><name></name></author><category term="linux" /><category term="centos" /><summary type="html">ユーザーの追加や削除、グループ追加やsudo付与などユーザー操作に関するコマンドを忘れては調べ忘れては調べるを繰り返しているので、いい加減自分用に用意しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/site-image.png" /></entry></feed>
