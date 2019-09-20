@@ -4,33 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-      <title>UITableViewに引っ張る更新Pull to Refreshを実装する - もちゅろぐ</title>
+      <title>UITableViewの空セルの線(separator)を消す実装 - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="UITableViewに引っ張る更新Pull to Refreshを実装する" />
+<meta property="og:title" content="UITableViewの空セルの線(separator)を消す実装" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="概要 iOSで使われるUIベスト3に入るUITableView" />
-<meta property="og:description" content="概要 iOSで使われるUIベスト3に入るUITableView" />
-<link rel="canonical" href="https://blog.mothule.com/ios/swift/uitableview/ios-swift-uitableview-pull-to-refresh" />
-<meta property="og:url" content="https://blog.mothule.com/ios/swift/uitableview/ios-swift-uitableview-pull-to-refresh" />
+<meta name="description" content="概要" />
+<meta property="og:description" content="概要" />
+<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-swift-uitableview-hidden-separator" />
+<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-swift-uitableview-hidden-separator" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2017-12-10-ios-swift-uitableview-hidden-separator.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2017-12-10T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/swift/uitableview/ios-swift-uitableview-pull-to-refresh","headline":"UITableViewに引っ張る更新Pull to Refreshを実装する","dateModified":"2017-12-10T00:00:00+09:00","datePublished":"2017-12-10T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/uitableview/ios-swift-uitableview-pull-to-refresh"},"description":"概要 iOSで使われるUIベスト3に入るUITableView","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"headline":"UITableViewの空セルの線(separator)を消す実装","dateModified":"2017-12-10T00:00:00+09:00","datePublished":"2017-12-10T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2017-12-10-ios-swift-uitableview-hidden-separator.png","url":"https://blog.mothule.com/ios/uitableview/ios-swift-uitableview-hidden-separator","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-swift-uitableview-hidden-separator"},"description":"概要","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="UITableViewに引っ張る更新Pull to Refreshを実装する">
-    <meta name="twitter:description" content="概要iOSで使われるUIベスト3に入るUITableView">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png">
+    <meta name="twitter:title" content="UITableViewの空セルの線(separator)を消す実装">
+    <meta name="twitter:description" content="概要">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2017-12-10-ios-swift-uitableview-hidden-separator.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           rel="stylesheet"
@@ -108,15 +108,11 @@
       
     
       
-        / <a href="/tags#swift">Swift</a>
-      
-    
-      
         / <a href="/tags#uitableview">Uitableview</a>
       
     
       
-        / UITableViewに引っ張る更新Pull to Refreshを実装する
+        / UITableViewの空セルの線(separator)を消す実装
       
     
   
@@ -128,12 +124,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png" alt="UITableViewに引っ張る更新Pull to Refreshを実装する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2017-12-10-ios-swift-uitableview-hidden-separator.png" alt="UITableViewの空セルの線(separator)を消す実装">
     </div>
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>UITableViewに引っ張る更新Pull to Refreshを実装する</h1>
+    <h1>UITableViewの空セルの線(separator)を消す実装</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
@@ -152,100 +148,35 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#概要">概要</a>
-    <ul>
-      <li><a href="#注意">注意</a></li>
-    </ul>
-  </li>
-  <li><a href="#実装方法">実装方法</a>
-    <ul>
-      <li><a href="#サンプルコード">サンプルコード</a></li>
-    </ul>
-  </li>
-  <li><a href="#実装ポイント">実装ポイント</a></li>
+  <li><a href="#概要">概要</a></li>
+  <li><a href="#実装方法">実装方法</a></li>
+  <li><a href="#サンプルコード">サンプルコード</a></li>
 </ul>
   </div>
 
   <h2 id="概要">概要</h2>
-<p><a href="/categories/ios">iOS</a>で使われるUIベスト3に入る<a href="/tags#uitableview">UITableView</a></p>
 
-<p>そのUITableViewに引っ張って更新する機能（Pull to Refresh）の実装についてまとめました。</p>
+<p><a href="/categories/ios">iOS</a>で使われるUIベスト3に入る<a href="/tags/#uitableview">UITableView</a></p>
 
-<h3 id="注意">注意</h3>
-<p>1クラスにねじ込んだので、データフロー周りは参考にしないでください。</p>
+<p>そんなUITableViewですがデザイナーからよく指摘される空セルには線(separator)を引かないで消す実装についてまとめました。</p>
 
 <h2 id="実装方法">実装方法</h2>
-<p><strong>UIRefreshControl</strong> を使うことで簡単に実装できます。</p>
 
-<h3 id="サンプルコード">サンプルコード</h3>
-<p>下記サンプルコードになります。 記事用に短く書いてます。</p>
+<p><strong>UITableView.tableFooterView</strong> を空にするだけです。</p>
+
+<h2 id="サンプルコード">サンプルコード</h2>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
     <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
-    <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">refreshControl</span><span class="p">:</span> <span class="kt">UIRefreshControl</span><span class="o">!</span>
 
     <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
         <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
-        <span class="nf">initializePullToRefresh</span><span class="p">()</span>
-    <span class="p">}</span>
-
-    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewWillAppear</span><span class="p">(</span><span class="n">_</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">super</span><span class="o">.</span><span class="nf">viewWillAppear</span><span class="p">(</span><span class="n">animated</span><span class="p">)</span>
-        <span class="nf">refresh</span><span class="p">()</span>
-    <span class="p">}</span>
-
-
-    <span class="c1">// MARK: - Pull to Refresh</span>
-    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">initializePullToRefresh</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">let</span> <span class="nv">control</span> <span class="o">=</span> <span class="kt">UIRefreshControl</span><span class="p">()</span>
-        <span class="n">control</span><span class="o">.</span><span class="nf">addTarget</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">onPullToRefresh(_:)</span><span class="kd">)</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="o">.</span><span class="n">valueChanged</span><span class="p">)</span>
-        <span class="n">tableView</span><span class="o">.</span><span class="nf">addSubview</span><span class="p">(</span><span class="n">control</span><span class="p">)</span>
-        <span class="n">refreshControl</span> <span class="o">=</span> <span class="n">control</span>
-    <span class="p">}</span>
-
-    <span class="kd">@objc</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">onPullToRefresh</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">)</span> <span class="p">{</span>
-        <span class="nf">refresh</span><span class="p">()</span>
-    <span class="p">}</span>
-
-    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">stopPullToRefresh</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">if</span> <span class="n">refreshControl</span><span class="o">.</span><span class="n">isRefreshing</span> <span class="p">{</span>
-            <span class="n">refreshControl</span><span class="o">.</span><span class="nf">endRefreshing</span><span class="p">()</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="c1">// MARK: - Data Flow</span>
-    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">refresh</span><span class="p">()</span> <span class="p">{</span>
-        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="nf">global</span><span class="p">()</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
-            <span class="kt">Thread</span><span class="o">.</span><span class="nf">sleep</span><span class="p">(</span><span class="nv">forTimeInterval</span><span class="p">:</span> <span class="mf">1.0</span><span class="p">)</span>
-            <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
-                <span class="k">self</span><span class="o">.</span><span class="nf">completeRefresh</span><span class="p">()</span>
-            <span class="p">}</span>
-        <span class="p">}</span>
-    <span class="p">}</span>
-
-    <span class="kd">private</span> <span class="kd">func</span> <span class="nf">completeRefresh</span><span class="p">()</span> <span class="p">{</span>
-        <span class="nf">stopPullToRefresh</span><span class="p">()</span>
-        <span class="n">tableView</span><span class="o">.</span><span class="nf">reloadData</span><span class="p">()</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">tableFooterView</span> <span class="o">=</span> <span class="kt">UIView</span><span class="p">()</span>
     <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="実装ポイント">実装ポイント</h2>
-
-<p>上のサンプルコードで重要なメソッドは下記の２つだけになります。</p>
-
-<ul>
-  <li>initializePullToRefresh
-    <ul>
-      <li><strong>UIRefreshControl</strong> の初期化</li>
-    </ul>
-  </li>
-  <li>stopPullToRefresh
-    <ul>
-      <li><strong>UIRefreshControl</strong> の状態を見て停止</li>
-    </ul>
-  </li>
-</ul>
+<p>たったこれだけで線(separator)を消すことができます。</p>
 
 
   <div class="post-content-share">
@@ -262,7 +193,7 @@
   <div class="related-posts-body">
     
       <ul>
-        <li><a href="/ios/swift/rxswift/ios-swift-rxswfit-basic">RxSwiftの基本を動かして理解する</a></li>
+        <li><a href="/ios/rxswift/ios-swift-rxswfit-basic">RxSwiftの基本を動かして理解する</a></li>
       </ul>
     
       <ul>
@@ -370,6 +301,8 @@
       <a href="/tags#active-record">active-record</a>
     
       <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
     
       <a href="/tags#ngrok">ngrok</a>
     
