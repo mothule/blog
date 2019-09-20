@@ -17,3 +17,6 @@ $ git add .
 $ git commit -m "Delete files"
 $ git push
 ```
+
+最新のみclone
+$ git clone --depth 1 https://github.com/opencv/opencv.git
