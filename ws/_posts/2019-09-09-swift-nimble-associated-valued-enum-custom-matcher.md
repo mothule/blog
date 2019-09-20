@@ -1,6 +1,6 @@
 ---
 title: Nimbleでenum(Associated Value)の自作matcher作って可読性を上げる
-categories: swift test
+categories: ios nimble
 tags: swift test nimble
 image:
   path: /assets/images/2019-09-09-swift-nimble-associated-valued-enum-custom-matcher.png

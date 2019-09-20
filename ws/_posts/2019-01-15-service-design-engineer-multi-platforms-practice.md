@@ -1,6 +1,6 @@
 ---
 title: WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話
-categories: design service-design
+categories: notebook service-design
 tags: service-design design
 ---
 

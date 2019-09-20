@@ -1,6 +1,6 @@
 ---
 title: RxSwiftの基本を動かして理解する
-categories: ios swift rxswift
+categories: ios rxswift
 tags: ios swift rxswift
 image:
   path: /assets/images/2019-09-18-ios-swift-rxswfit-basic.png

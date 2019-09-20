@@ -1,6 +1,6 @@
 ---
 title: UITableViewの空セルの線(separator)を消す実装
-categories: ios swift uitableview
+categories: ios uitableview
 tags: ios swift uitableview
 image:
   path: /assets/images/2017-12-10-ios-swift-uitableview-hidden-separator.png

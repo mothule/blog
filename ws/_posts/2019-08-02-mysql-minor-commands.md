@@ -1,7 +1,7 @@
 ---
 title: 忘れるのに定期的に必要になるMySQLコマンド
-categories: mysql
-tags: mysql
+categories: db mysql
+tags: db mysql
 ---
 
 普段はRailsでMySQLを操作してるため、使わないし覚えてなくても開発に支障が出ることは少ないのに、開発環境スイッチしたことでマイグレーションが失敗とか、explainでindex漏れがないかとか、**定期的に必要になるコマンド** ってありますよね。

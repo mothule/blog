@@ -1,6 +1,6 @@
 ---
 title: UITableViewに引っ張る更新Pull to Refreshを実装する
-categories: ios swift uitableview
+categories: ios uitableview
 tags: ios swift uitableview
 image:
   path: /assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png

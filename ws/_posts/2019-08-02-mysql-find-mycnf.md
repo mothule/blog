@@ -1,7 +1,7 @@
 ---
 title: MySQLのmy.cnfの場所を見つける
-categories: mysql
-tags: mysql
+categories: db mysql
+tags: db mysql
 ---
 初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。
 しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。
