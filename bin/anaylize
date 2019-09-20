@@ -1,0 +1,65 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+class Node
+  attr_accessor :parent
+  attr_accessor :children
+  attr_accessor :category
+  attr_accessor :count
+
+  def initialize(parent:, category:)
+    @parent = parent
+    @category = category
+    @children = []
+    @count = 1
+  end
+
+  def insert_child(child:)
+    @children << child
+  end
+
+  def find_child_by_category(category:)
+    @children.filter { |child| child.category == category }.first
+  end
+
+  def self.print(node:, depth:)
+    indent_size = 2
+    space = ' ' * depth * indent_size
+    puts "#{space}#{node.category} : #{node.count}"
+    node.children.each do |child|
+      Node.print(node: child, depth: depth + 1)
+    end
+  end
+
+  def increment_count
+    @count += 1
+  end
+end
+
+puts 'Analyzing...'
+
+article_count = Dir.glob('./ws/_posts/*.md').count
+
+root = Node.new(parent: nil, category: 'root')
+
+Dir.glob('./ws/_posts/*.md') do |post_path|
+  text = File.read(post_path)
+  categories = text.match(/categories: (.*)/).captures.first.split(' ')
+
+  node = root
+  categories.each do |category|
+    child = node.find_child_by_category(category: category)
+    if child.nil?
+      child = Node.new(parent: node, category: category)
+      node.insert_child(child: child)
+    else
+      child.increment_count
+    end
+
+    node = child
+  end
+end
+
+puts "記事数: #{article_count}"
+puts '------------------------------'
+Node.print(node: root, depth: 0)
