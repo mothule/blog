@@ -8,6 +8,8 @@ gem 'github-pages', group: :jekyll_plugins
 # gem 'jekyll-remote-theme'
 # gem 'leonids'
 
+gem 'tinify'
+
 group :jekyll_plugins do
   gem 'jekyll-sitemap'
   gem 'jekyll-feed'
