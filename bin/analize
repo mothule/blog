@@ -1,6 +1,61 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
+require 'bundler/setup'
+require 'colorator'
+
+class Article
+  attr_accessor :title
+  attr_accessor :categories
+  attr_accessor :tags
+
+  class << self
+    def import_from(path:)
+      text = File.read(path)
+      title = text.match(/title: (.*)/).captures.first
+      categories = text.match(/categories: (.*)/).captures.first.split(' ')
+      tags = text.match(/tags: (.*)/).captures.first.split(' ')
+
+      Article.new(title: title, categories: categories, tags: tags)
+    end
+
+    def report(articles:)
+      categories_width = max_length_categories(articles: articles)
+
+      articles.each do |article|
+        puts article.to_s(categories_width: categories_width)
+      end
+    end
+
+    def max_length_categories(articles:)
+      articles.map(&:categories).map { |c| c.join(' ') }.map(&:length).max
+    end
+  end
+
+  def initialize(title:, categories:, tags:)
+    @title = title
+    @categories = categories
+    @tags = tags
+  end
+
+  def to_s(categories_width:)
+    "#{title_with(width: 32)} |  #{categories.join(' ').ljust(categories_width, ' ').green} | #{tags.join(' ').magenta}"
+  end
+
+  private
+
+  def title_with(width:)
+    t = title[0..width]
+    len = t.length + t.chars.reject(&:ascii_only?).length
+
+    wide_width = 2 + width * 2
+
+    space = ''
+    space = ' ' * (wide_width - len) if wide_width - len > 0
+    t + space
+  end
+end
+
 class Node
   attr_accessor :parent
   attr_accessor :children
@@ -42,9 +97,12 @@ article_count = Dir.glob('./ws/_posts/*.md').count
 
 root = Node.new(parent: nil, category: 'root')
 
+articles = []
+
 Dir.glob('./ws/_posts/*.md') do |post_path|
-  text = File.read(post_path)
-  categories = text.match(/categories: (.*)/).captures.first.split(' ')
+  article = Article.import_from(path: post_path)
+  articles << article
+  categories = article.categories
 
   node = root
   categories.each do |category|
@@ -63,3 +121,5 @@ end
 puts "記事数: #{article_count}"
 puts '------------------------------'
 Node.print(node: root, depth: 0)
+puts '------------------------------'
+Article.report(articles: articles)
