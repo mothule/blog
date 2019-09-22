@@ -27,11 +27,17 @@ info "Build blog contents for production."
 JEKYLL_ENV=production bundle exec jekyll build
 cd ..
 
+if [[ ! ruby bin/validate-image-existence ]] ; then
+  error "Failed validation."
+  exit 1
+fi
+
 if [[ ! -d './docs' ]] ; then
   if mkdir docs ; then
     info "Created a docs folder"
   else
     error "Failed to create docs folder"
+    exit 1
   fi
 else
   log "/docs folder already existing."
