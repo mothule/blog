@@ -20,10 +20,16 @@ end
 image_paths.each do |path|
   if path.match?(/^http/)
     existing = Kernel.open(path).status.first.to_i == 200
-    raise "Not found URL. Check #{path}" unless existing
+    unless existing
+      puts "Not found URL. Check #{path}" unless existing
+      exit 1
+    end
   else
     workspace = './ws'
-    raise "Not found path. Check #{path}" unless File.exist?(workspace + path)
+    unless File.exist?(workspace + path)
+      puts "Not found path. Check #{path}"
+      exit 1
+    end
   end
 end
 
