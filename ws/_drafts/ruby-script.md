@@ -1,0 +1,5 @@
+- スクリプトファイル
+- shell scriptだけでない
+- ruby script
+- シェバング
+- bundler を使う
