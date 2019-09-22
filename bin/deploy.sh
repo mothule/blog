@@ -27,10 +27,7 @@ info "Build blog contents for production."
 JEKYLL_ENV=production bundle exec jekyll build
 cd ..
 
-if [[ ! bin/validate-image-existence ]] ; then
-  error "Failed validation."
-  exit 1
-fi
+ruby bin/validate-image-existence
 
 if [[ ! -d './docs' ]] ; then
   if mkdir docs ; then
