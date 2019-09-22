@@ -1,0 +1,30 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require 'bundler/setup'
+require 'active_support/all'
+require 'open-uri'
+
+puts ''
+puts 'Validate image existence.'
+
+domain = 'http://localhost:4000'
+
+image_paths = []
+Dir.glob('./ws/_site/**/*.html') do |path|
+  text = File.read(path)
+  ret = text.scan(/src="(.*\....)"/)
+  image_paths |= ret.flatten.presence || []
+end
+
+image_paths.each do |path|
+  if path.match?(/^http/)
+    existing = Kernel.open(path).status.first.to_i == 200
+    raise "Not found URL. Check #{path}" unless existing
+  else
+    workspace = './ws'
+    raise "Not found path. Check #{path}" unless File.exist?(workspace + path)
+  end
+end
+
+puts 'Successful existence validation of images.'
