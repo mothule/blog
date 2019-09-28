@@ -1,7 +1,7 @@
 ---
 title: 【初心者必見】UITableViewの実践デザイン分析
-categories: TODO
-tags: TODO
+categories: ios uitableview
+tags: ios uitableview
 image:
   path: /assets/images/2019-09-18-ios-swift-rxswfit-basic.png
 ---
