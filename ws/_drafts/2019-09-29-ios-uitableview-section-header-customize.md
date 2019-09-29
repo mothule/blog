@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewのSectionHeader(セクションヘッダ
 categories: ios uitableview
 tags: ios uitableview
 image:
-  path: /assets/images/2019-09-18-ios-swift-rxswfit-basic.png
+  path: /assets/images/2019-09-29-ios-uitableview-section-header-customize.png
 ---
 SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。  
 基本的な変更であれば`UITableDataSource`protocolの`titleForHeaderInSection`などを変更すれば可能ですが、  
@@ -16,7 +16,7 @@ SectionHeader(セクションヘッダー)やSectionFooter(セクションフッ
 ## 完成イメージ
 リソースは適当に用意したものなので見た目としては酷いですが、機能は満たしてあります。
 
-<video autoplay loop muted playsinline src="/assets/videos/2019-09-29-ios-uitableview-section-header-customize-1.mp4" width="100%" height="400px"></video>
+<video autoplay loop muted playsinline src="/assets/videos/2019-09-29-ios-uitableview-section-header-customize-1.mp4" width="100%" height="400px">うまく読み込めない場合はリロード</video>
 
 ## 基礎理解
 セクションヘッダーの定義元には次のようなコメントがあります。
