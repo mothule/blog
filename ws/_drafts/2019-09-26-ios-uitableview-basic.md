@@ -1,12 +1,12 @@
 ---
-title: 【初心者向け】UITableViewの基本的な使い方【入門】
+title: 【初心者向け】UITableViewの基本的な使い方を極める【入門】
 categories: ios uitableview
 tags: ios uitableview
 image:
   path: /assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png
 ---
-
 初心者向けにiOSのUITableViewの基本的な使い方について説明します。
+この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。
 
 Xcodeでプロジェクトを作成し、storyboardを使ってUITextFieldやUILabel, UIButtonを使って簡単な画面を作れるようになりましたか？
 
