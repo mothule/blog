@@ -1,7 +1,7 @@
 ---
 title: UITableViewに引っ張る更新Pull to Refreshを実装する
 categories: ios uitableview
-tags: ios swift uitableview
+tags: ios uitableview
 image:
   path: /assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png
 ---
@@ -25,50 +25,18 @@ image:
 ```swift
 class ViewController: UIViewController {
     @IBOutlet private weak var tableView: UITableView!
-    private weak var refreshControl: UIRefreshControl!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        initializePullToRefresh()
+
+        tableView.refreshControl = UIRefreshControl()
+        tableView.refreshControl?.addTarget(self, action: #selector(onRefresh(_:)), for: .valueChanged)
     }
 
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        refresh()
-    }
-
-
-    // MARK: - Pull to Refresh
-    private func initializePullToRefresh() {
-        let control = UIRefreshControl()
-        control.addTarget(self, action: #selector(onPullToRefresh(_:)), for: .valueChanged)
-        tableView.addSubview(control)
-        refreshControl = control
-    }
-
-    @objc private func onPullToRefresh(_ sender: AnyObject) {
-        refresh()
-    }
-
-    private func stopPullToRefresh() {
-        if refreshControl.isRefreshing {
-            refreshControl.endRefreshing()
+    @objc private func onRefresh(_ sender: AnyObject) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) { [weak self] in
+            self?.tableView.refreshControl?.endRefreshing()
         }
-    }
-
-    // MARK: - Data Flow
-    private func refresh() {
-        DispatchQueue.global().async {
-            Thread.sleep(forTimeInterval: 1.0)
-            DispatchQueue.main.async {
-                self.completeRefresh()
-            }
-        }
-    }
-
-    private func completeRefresh() {
-        stopPullToRefresh()
-        tableView.reloadData()
     }
 }
 ```
@@ -77,7 +45,5 @@ class ViewController: UIViewController {
 
 上のサンプルコードで重要なメソッドは下記の２つだけになります。
 
-- initializePullToRefresh
-  - **UIRefreshControl** の初期化
-- stopPullToRefresh
-  - **UIRefreshControl** の状態を見て停止
+iOS10からは `UIScrollView` に標準で入っており弱参照でもないので、独自に管理も不要で、直接インスタンスを渡すことができます。
+リフレッシュ終了は `endRefreshing()` を呼ぶだけです。
