@@ -7,7 +7,7 @@ tags: ios swift uiview ios-safearea
 ## 問題の症状
 下のアニメのように外へスライドしようとすると最初に白くなってから上へスライドします。
 
-<a href="/assets/images/2019-01-05-disapper-cause-safe-area-when-fade-out-anim-1.gif"><img src="/assets/images/2019-01-05-disapper-cause-safe-area-when-fade-out-anim-1.gif" width="50%" alt="スライド前に非表示になるバグ"></a>
+{% page_image -1.gif 50% %}
 
 コードは下記のように至ってシンプル。
 
@@ -41,7 +41,7 @@ Auto Layoutが効いてる場合は、 `animations` クロージャ内に `self.
 
 |対象View|制約|
 |---|---|
-|<a href="/assets/images/2019-01-05-disapper-cause-safe-area-when-fade-out-anim-2.png"><img src="/assets/images/2019-01-05-disapper-cause-safe-area-when-fade-out-anim-2.png" width="100%" alt="対象View"></a>|<a href="/assets/images/2019-01-05-disapper-cause-safe-area-when-fade-out-anim-3.png"><img src="/assets/images/2019-01-05-disapper-cause-safe-area-when-fade-out-anim-3.png" width="100%" alt="成約"></a>|
+|{% page_image -2.png %}|{% page_image -3.png %}|
 
 今回のようなパーツxibのような Safe Area を使わなくても良い場合はSafe Areaを無効にすることで
 画面外へスライドアニメしても表示が消えずにスライドできるように解決できました。

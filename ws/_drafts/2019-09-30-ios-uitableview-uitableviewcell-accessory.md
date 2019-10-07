@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewCellのAccessory(アクセサリ)の使�
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-09-30-ios-uitableview-uitableviewcell-accessory.png
+  path: /assets/images/2019-09-30-ios-uitableview-uitableviewcell-accessory/0.png
 ---
 UITableViewCellには予めAccessory(アクセサリ)が用意されており、全部で4種類あります。
 

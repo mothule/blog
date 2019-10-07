@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewCellの高さを可変にする
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-09-29-ios-uitableview-uitableviewcell-height-customize-1.png
+  path: /assets/images/2019-09-29-ios-uitableview-uitableviewcell-height-customize/2019-09-29-ios-uitableview-uitableviewcell-height-customize-1.png
 ---
 
 次の`UITableViewDelegate`のメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。

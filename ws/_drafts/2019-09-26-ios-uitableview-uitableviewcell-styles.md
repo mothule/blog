@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewCellのスタイル一覧
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles.png
+  path: /assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles.png
 ---
 UITableViewCellには予めデフォルトで用意されたスタイルが存在します。  
 この記事ではそのスタイル一覧を紹介します。

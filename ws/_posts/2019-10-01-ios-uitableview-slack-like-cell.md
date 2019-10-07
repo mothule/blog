@@ -3,7 +3,7 @@ title: Slackアプリみたいなアイコンと可変文字のセルの作り�
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-10-01-ios-uitableview-slack-like-cell.png
+  path: /assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png
 ---
 Slackみたいなセルを作る方法について説明する。
 Slackみたいなセルとは、

@@ -17,7 +17,7 @@ SHOW INDEX FROM table_name
 
 例： `users`テーブルを見た場合 (nameにindexがある)
 
-<a href="/assets/images/2019-08-02-mysql-minor-commands-1.png"><img src="/assets/images/2019-08-02-mysql-minor-commands-1.png" alt="SHOW INDEX FROM users;" width="100%"></a>
+{% page_image -1.png %}
 
 ### 指定テーブルのインデックス削除
 
@@ -62,7 +62,7 @@ mysql> SHOW FULL COLUMNS FROM table_name
 
 例： `users`テーブルを見た場合
 
-<a href="/assets/images/2019-08-02-mysql-minor-commands-2.png"><img src="/assets/images/2019-08-02-mysql-minor-commands-2.png" alt="SHOW FULL COLUMNS FROM users;" width="100%"></a>
+{% page_image -2.png %}
 
 ### 指定テーブルの作成時のクエリー表示
 

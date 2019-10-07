@@ -3,7 +3,7 @@ title: 【初心者向け】UIAlertControllerでアラートを表示する方�
 categories: ios uialertcontroller
 tags: ios
 image:
-  path: /assets/images/2019-09-27-ios-uialertcontroller-basic-4.png
+  path: /assets/images/2019-09-27-ios-uialertcontroller-basic/2019-09-27-ios-uialertcontroller-basic-4.png
 ---
 iOSでは紆余曲折あった後に、Alert(アラート)とActionSheet(アクションシート)を一つのクラスに集約されました。
 またUIViewベースだったものがUIViewControllerに変わったことで表示挙動も変わりました。

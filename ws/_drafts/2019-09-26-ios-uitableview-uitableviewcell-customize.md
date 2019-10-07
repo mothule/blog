@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewCellをカスタマイズする
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png
+  path: /assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png
 ---
 TODO: リード文
 

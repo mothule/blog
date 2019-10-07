@@ -3,7 +3,7 @@ title: p4mergeでgit mergeの衝突を解決する
 categories: tools git
 tags: tools git p4merge
 image:
-  path: /assets/images/2019-09-02-git-merge-p4merge.png
+  path: /assets/images/2019-09-02-git-merge-p4merge/2019-09-02-git-merge-p4merge.png
 ---
 gitを使っていると必ず出くわすことになるコンフリクト。
 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。

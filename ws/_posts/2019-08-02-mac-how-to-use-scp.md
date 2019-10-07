@@ -18,11 +18,12 @@ scpはsshを利用して暗号化通信上でファイルコピーをするコ�
 1. 共有を開く
 1. リモートログインをONにする
 
-<a href="/assets/images/2019-08-02-mac-how-to-use-scp-1.png"><img src="/assets/images/2019-08-02-mac-how-to-use-scp-1.png" width="50%"></a>
+{% page_image -1.png 50% %}
 
 
 リモートログインをONにすると、右側に接続方法が表示されるので、それを他PCからssh接続すること成功します。
-<a href="/assets/images/2019-08-02-mac-how-to-use-scp-2.png"><img src="/assets/images/2019-08-02-mac-how-to-use-scp-2.png" width="100%"></a>
+
+{% page_image -2.png %}
 
 これで無事scpを使うことができる。
 

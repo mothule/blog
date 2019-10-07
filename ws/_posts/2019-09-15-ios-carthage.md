@@ -3,7 +3,7 @@ title: 今さらCarthage入門
 categories: ios carthage
 tags: ios carthage
 image:
-  path: /assets/images/2019-09-15-ios-carthage.png
+  path: /assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png
 ---
 
 ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。

@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewのSection(セクション)の使い方
 categories: ios uitableview
 tags: ios uitableview
 image:
-  path: /assets/images/2019-09-26-ios-uitableview-section-basic.png
+  path: /assets/images/2019-09-26-ios-uitableview-section-basic/2019-09-26-ios-uitableview-section-basic.png
 ---
 
 あまり使う機会の少ないと油断してると、必要性が急上昇するSection（セクション）です。

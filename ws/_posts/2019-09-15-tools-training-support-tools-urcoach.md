@@ -3,7 +3,7 @@ title: 実装の速度を養うトレーニングサポートツールを作っ�
 categories: tools
 tags: tools ruby
 image:
-  path: /assets/images/2019-09-15-tools-training-support-tools-urcoach.jpg
+  path: /assets/images/2019-09-15-tools-training-support-tools-urcoach/2019-09-15-tools-training-support-tools-urcoach.jpg
 ---
 
 新しくプログラム言語やフレームワーク、サービスなどを学習するのは、エンジニアの嗜みですね。  

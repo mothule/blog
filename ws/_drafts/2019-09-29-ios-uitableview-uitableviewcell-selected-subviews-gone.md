@@ -3,7 +3,7 @@ title: UITableViewCell(セル)のサブビュー背景色が消える原因と�
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-09-29-ios-uitableview-uitableviewcell-selected-subviews-gone-1.png
+  path: /assets/images/2019-09-29-ios-uitableview-uitableviewcell-selected-subviews-gone/2019-09-29-ios-uitableview-uitableviewcell-selected-subviews-gone-1.png
 ---
 UITableViewのUITableViewCell(セル)をカスタマイズでサブビューに背景色をつけることがありますが、  
 そのセルをタップしてハイライト状態(Highlighted)や選択状態(Selected)にしたときに、サブビューの背景色が消える現象に遭遇した人は多いと思います。  

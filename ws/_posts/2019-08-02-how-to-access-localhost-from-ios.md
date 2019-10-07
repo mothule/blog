@@ -17,8 +17,7 @@ MacとiPhoneのネット回線が**同じWi-Fi環境下**であること
 
 ## Macのシステム環境設定で共有を設定する
 
-<a href="/assets/images/2019-08-02-how-to-access-localhost-from-ios-1.png"><img src="/assets/images/2019-08-02-how-to-access-localhost-from-ios-1.png" width="100%" alt="システム環境設定の共有画面"></a>
-
+{% page_image -1.png %}
 
 上図はシステム環境設定の共有を開いた画面になります。
 
@@ -26,11 +25,11 @@ MacとiPhoneのネット回線が**同じWi-Fi環境下**であること
 まず左側のチェックボックスの**いずれか**をONにしてください。
 1つだけでいいですし、例えば下図のように実質共有不可能にしても構いません。
 
-<a href="/assets/images/2019-08-02-how-to-access-localhost-from-ios-2.png"><img src="/assets/images/2019-08-02-how-to-access-localhost-from-ios-2.png" width="100%" alt="共有の有効"></a>
+{% page_image -2.png %}
 
 ### ローカルホスト名を設定する
 
-<a href="/assets/images/2019-08-02-how-to-access-localhost-from-ios-3.png"><img src="/assets/images/2019-08-02-how-to-access-localhost-from-ios-3.png" width="100%" alt="ローカルホスト名の設定"></a>
+{% page_image -3.png %}
 
 例えば上図のようになっていた場合、**ローカルホスト名とは「mothule-mbp.local」**のことを言います。
 これが実際のアドレス代わりとなり、`http://mothule-mbp.local:3000` のようにアクセスするとポート3000に対して `GET /` リクエストを投げます。
@@ -68,7 +67,7 @@ Use Ctrl-C to stop
 ここで先程設定した**ローカルホスト名**を使います。
 仮にローカルホスト名が「mothule.local」だとして、`http://mothule.local:3000/` にアクセスしてみます。
 
-<a href="/assets/images/2019-08-02-how-to-access-localhost-from-ios-4.jpg"><img src="/assets/images/2019-08-02-how-to-access-localhost-from-ios-4.jpg" width="50%" alt="サーバー起動画面"></a>
+{% page_image -4.jpg 50% %}
 
 無事アクセスできました。
 
@@ -93,4 +92,4 @@ Use Ctrl-C to stop
 
 下図はXcodeでInfo.plistを開いた画像です。
 
-<a href="/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png"><img src="/assets/images/2019-08-02-how-to-access-localhost-from-ios-5.png" width="100%" alt="ATS一部無効化設定"></a>
+{% page_image -5.png %}

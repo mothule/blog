@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewCellの再利用を理解する
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-09-26-ios-uitableview-lifecycle.png
+  path: /assets/images/2019-09-26-ios-uitableview-lifecycle/2019-09-26-ios-uitableview-lifecycle.png
 ---
 UITableViewCellは再利用セルとして使われていますが、どういった感じで再利用されているかイメージついてる初心者は少ないかと思います。
 

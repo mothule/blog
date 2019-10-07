@@ -3,7 +3,7 @@ title: UITableViewのセルの高さを動的に変更する
 categories: ios uitableview
 tags: ios swift uitableview
 image:
-  path: /assets/images/2017-12-10-ios-uitableview-dynamic-cell-height.png
+  path: /assets/images/2017-12-10-ios-uitableview-dynamic-cell-height/2017-12-10-ios-uitableview-dynamic-cell-height.png
 ---
 ## 概要
 
@@ -105,4 +105,5 @@ class TableViewCell: UITableViewCell {
 ```
 
 レイアウト
-<a href="/assets/images/2017-12-10-ios-uitableview-dynamic-cell-height-1.png"><img src="/assets/images/2017-12-10-ios-uitableview-dynamic-cell-height-1.png" width="50%" alt="高さ可変のUITableView"></a>
+
+{% page_image -1.png 50% %}

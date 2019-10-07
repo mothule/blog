@@ -3,7 +3,7 @@ title: 【初心者向け】Assets.xcassetsを理解して使う
 categories: ios
 tags: ios
 image:
-  path: /assets/images/2019-09-29-ios-xcassets-basic.png
+  path: /assets/images/2019-09-29-ios-xcassets-basic/0.png
 ---
 
 ## 登場以前

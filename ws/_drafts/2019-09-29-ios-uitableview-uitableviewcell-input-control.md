@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewでボタンやテキスト入力の使�
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
-  path: /assets/images/2019-09-29-ios-uitableview-uitableviewcell-input-control-2.png
+  path: /assets/images/2019-09-29-ios-uitableview-uitableviewcell-input-control/2019-09-29-ios-uitableview-uitableviewcell-input-control-2.png
 ---
 UITableViewのセル(UITableViewCell)にButtonやTextFieldをセットした場合の注意点についてまとめました。
 

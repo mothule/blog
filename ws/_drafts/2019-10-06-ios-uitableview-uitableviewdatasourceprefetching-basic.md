@@ -3,7 +3,7 @@ title: 【初心者向け】UITableViewDataSourcePrefetchingで事前処理し�
 categories: ios uitableview
 tags: ios uitableview
 image:
-  path: /assets/images/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic.png
+  path: /assets/images/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic.png
 ---
 UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする方法についてまとめました。
 UITableView(テーブル)には表示するUITableViewCell(セル)には様々な情報が乗せることが可能です。

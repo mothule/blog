@@ -3,7 +3,7 @@ title: 健全なチームの成熟のために自分が意識していること
 categories: notebook
 tags: notebook
 image:
-  path: /assets/images/2019-03-26-engineering-mind-and-behavior-for-team.png
+  path: /assets/images/2019-03-26-engineering-mind-and-behavior-for-team/2019-03-26-engineering-mind-and-behavior-for-team.png
 ---
 普段プログラマという仕事をしつつそれ以外のことをしてることもあり、それの一部について考えまとめたもの。
 
@@ -59,7 +59,7 @@ image:
 しかしそれはチームワークという観点においては視野不足である。
 下に簡単なポジション別の図を用意した。かなり簡単な図なのでどういった図なのかは見れば分かるはず。
 
-<a href="/assets/images/2019-03-26-engineering-mind-and-behavior-for-team-1.png"><img src="/assets/images/2019-03-26-engineering-mind-and-behavior-for-team-1.png" width="100%"></a>
+{% page_image -1.png %}
 
 - これで言うところの作業aまたは作業b担当の目線、つまり来た仕事をこなし次へ回すだけでいると周りの関係者や他人の仕事なんて見えるわけがない。
 - 仕事の規模が大きくなるリーダもそのリーダ目線でいると他ラインの関係者が見えない。

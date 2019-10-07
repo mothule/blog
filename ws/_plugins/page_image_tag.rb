@@ -15,8 +15,29 @@ module Jekyll
       @image_name, @width = @markup.split(' ')
       @width = '100%' if @width.nil?
 
-      image_path = "/assets/images/#{basename}#{@image_name}"
+      image_path = find_image_path(basename, @image_name)
       "<a href=\"#{image_path}\"><img src=\"#{image_path}\" width=\"#{@width}\"></a>"
+    end
+
+    private
+
+    # 最初は /assets/images/YYYY-MM-DDフォルダの中に画像がないかを確認して、
+    # なければ /assets/imagesフォルダの中に画像がないかを確認する。
+    def find_image_path(basename, image_name)
+
+      path_in_directory = "/assets/images/#{basename}/#{image_name}"
+      full_path_in_directory = "/assets/images/#{basename}/#{basename}#{image_name}"
+      image_path = "/assets/images/#{basename}#{image_name}"
+
+      if File.exist?('.' + path_in_directory)
+        path_in_directory
+      elsif File.exist?('.' + full_path_in_directory)
+        full_path_in_directory
+      elsif File.exist?('.' + image_path)
+        image_path
+      else
+        raise "Not found image path. #{basename}#{image_name}"
+      end
     end
   end
 end

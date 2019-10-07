@@ -18,11 +18,11 @@ CircleCIはGitHubのレポジトリベースで管理されており、セット
 そのさいに何故か秘密鍵が登録できず失敗になって躓いたのでその時に調べたことを紹介しようと思います。
 
 ↓SSH Key 追加画面
-<a href="/assets/images/2018-11-26-circleci-fail-add-ssh-key-1.png"><img src="/assets/images/2018-11-26-circleci-fail-add-ssh-key-1.png" width="100%"></a>
+{% page_image -1.png %}
 
 
 ## エラーはブラウザコンソールに出る
-<a href="/assets/images/2018-11-26-circleci-fail-add-ssh-key-2.png"><img src="/assets/images/2018-11-26-circleci-fail-add-ssh-key-2.png" width="20%"></a>
+{% page_image -2.png 20% %}
 
 エラーになると失敗しか表示されず一見まったく原因が分からないですが、
 ここでエラーになったらブラウザコンソールでエラーログに失敗要因が表示されてます。

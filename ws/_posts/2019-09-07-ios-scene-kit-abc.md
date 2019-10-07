@@ -3,7 +3,7 @@ title: 360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに
 categories: ios scene-kit
 tags: ios scene-kit swift
 image:
- path: /assets/images/2019-09-07-ios-scene-kit-abc.jpg
+ path: /assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc.jpg
 ---
 GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。
 
