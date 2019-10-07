@@ -315,6 +315,12 @@ present(alert, animated: true, completion: nil)
 
 {% post_link 2019-09-27-ios-uialertcontroller-basic %}
 
+## 引っ張ったら更新するPull to refreshを実装する
+
+UIRefreshControlを使って、テーブル最上部で下にスワイプしてリフレッシュを呼ぶ方法についてはこちらの記事で紹介しています。
+
+{% post_link 2017-12-10-ios-swift-uitableview-pull-to-refresh %}
+
 ## もう少し細かい部分を良くする
 
 基本的な部分は前述した説明とコードになります。
