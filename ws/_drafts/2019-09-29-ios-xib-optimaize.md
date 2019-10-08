@@ -168,7 +168,7 @@ extension NSObjectProtocol {
 またnibにはクラス名がいるので先程の`NSObjectProtcol`に準拠させます。
 
 ```swift
-protocol Nibable: NSObjectProtcol {
+protocol Nibable: NSObjectProtocol {
   static var nibName: String { get }
   static var nib: UINib { get }
 }
