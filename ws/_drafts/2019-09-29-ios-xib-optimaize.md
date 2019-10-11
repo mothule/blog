@@ -192,8 +192,10 @@ Nibableを採用したことでデフォルトでそれらを持っているた�
 なので先程改修したregiserを修正します。
 
 ```swift
-func register<T: UITableViewCell>(_ viewType: T.Type) where T: Nibable {
-    register(T.nib, forCellReuseIdentifier: T.identifier)
+extension UITableView {
+  func register<T: UITableViewCell>(_ viewType: T.Type) where T: Nibable {
+      register(T.nib, forCellReuseIdentifier: T.identifier)
+  }
 }
 ```
 型を`UITableViewCell`を継承したサブクラス限定にして、 そのサブクラスが`Nibable`を採用している条件にします。
