@@ -26,8 +26,10 @@ UICollectionViewを使ったCarousel(カルーセル)を実装します。
 
 {% page_image 2.png %}
 
-縦幅を変えられるように`UICollectionView.height`の`Constraint`を取ってあります。  
-この時値は仮で200を渡してあります。
+
+スクロールをページングスタイルにするために、 `Paging Enabled` を `ON` にします。
+{% page_image 4.png 50% %}
+
 
 ### コード
 
