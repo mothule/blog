@@ -209,7 +209,7 @@ Section(セクション)は分類が異なるデータを分ける場合に重�
 
 詳しくはこちらの記事をどうぞ。
 
-{% post_link 2019-09-29-ios-uitableview-actual-practice %}
+{% post_link 2019-10-14-ios-uitableview-actual-practice %}
 
 ## 終わりに
 
