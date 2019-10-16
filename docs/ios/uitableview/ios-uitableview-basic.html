@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>【初心者向け】UITableViewの基本的な使い方を極める【入門】 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="【初心者向け】UITableViewの基本的な使い方を極める【入門】" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="初心者向けにiOSのUITableViewの基本的な使い方について説明します。 この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。" />
+<meta property="og:description" content="初心者向けにiOSのUITableViewの基本的な使い方について説明します。 この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-basic" />
+<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-basic" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-26T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"headline":"【初心者向け】UITableViewの基本的な使い方を極める【入門】","dateModified":"2019-09-26T00:00:00+09:00","datePublished":"2019-09-26T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-basic","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-basic"},"description":"初心者向けにiOSのUITableViewの基本的な使い方について説明します。 この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="【初心者向け】UITableViewの基本的な使い方を極める【入門】">
+    <meta name="twitter:description" content="初心者向けにiOSのUITableViewの基本的な使い方について説明します。この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#uitableview">Uitableview</a>
+      
+    
+      
+        / 【初心者向け】UITableViewの基本的な使い方を極める【入門】
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" alt="【初心者向け】UITableViewの基本的な使い方を極める【入門】">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>【初心者向け】UITableViewの基本的な使い方を極める【入門】</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-26</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableview">uitableview</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#テーブルを表示してタップでアラートを出すサンプルを作成する">テーブルを表示してタップでアラートを出すサンプルを作成する</a></li>
+  <li><a href="#uitableviewをviewcontrollerと紐付ける">UITableViewをViewControllerと紐付ける</a></li>
+  <li><a href="#uitableviewdatasourceとはデータをuitableviewに流し込む役割">UITableViewDataSourceとはデータをUITableViewに流し込む役割</a>
+    <ul>
+      <li><a href="#uitableviewdatasourceとは">UITableViewDataSourceとは</a></li>
+    </ul>
+  </li>
+  <li><a href="#データを表示するコードを書く">データを表示するコードを書く</a>
+    <ul>
+      <li><a href="#表示するデータ">表示するデータ</a></li>
+      <li><a href="#uitableviewテーブルにデータモデルを渡す">UITableView(テーブル)にデータモデルを渡す</a></li>
+      <li><a href="#viewcontrollerがuitableviewdatasourceを採用する">ViewControllerがUITableViewDataSourceを採用する</a></li>
+      <li><a href="#セル数を返す">セル数を返す</a>
+        <ul>
+          <li><a href="#セクションとはロウとは">セクションとは？ロウとは？</a></li>
+        </ul>
+      </li>
+      <li><a href="#セルの1つ1つを返す">セルの1つ1つを返す</a>
+        <ul>
+          <li><a href="#セルには予め何パターンか用意されている">セルには予め何パターンか用意されている</a></li>
+          <li><a href="#セルはカスタマイズできる">セルはカスタマイズできる</a></li>
+          <li><a href="#セルは使い回す">セルは使い回す</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#uitableviewdelegateとはuitableviewのイベントハンドラ">UITableViewDelegateとはUITableViewのイベントハンドラ</a>
+    <ul>
+      <li><a href="#uitableviewdelegateとは">UITableViewDelegateとは</a></li>
+    </ul>
+  </li>
+  <li><a href="#セルをタップしたらアラート出すコードを書く">セルをタップしたらアラート出すコードを書く</a>
+    <ul>
+      <li><a href="#タップしたら呼ばれるメソッドがある">タップしたら呼ばれるメソッドがある</a></li>
+      <li><a href="#アラートを出す">アラートを出す</a></li>
+    </ul>
+  </li>
+  <li><a href="#引っ張ったら更新するpull-to-refreshを実装する">引っ張ったら更新するPull to refreshを実装する</a></li>
+  <li><a href="#もう少し細かい部分を良くする">もう少し細かい部分を良くする</a>
+    <ul>
+      <li><a href="#なにもないセルをなくしたい">なにもないセルをなくしたい</a></li>
+      <li><a href="#タップした後が残るのを消して欲しい">タップした後が残るのを消して欲しい</a></li>
+    </ul>
+  </li>
+  <li><a href="#uitableviewの使い方は奥が深い">UITableViewの使い方は奥が深い</a></li>
+</ul>
+  </div>
+
+  <p>初心者向けにiOSのUITableViewの基本的な使い方について説明します。
+この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。</p>
+
+<p>Xcodeでプロジェクトを作成し、storyboardを使ってUITextFieldやUILabel, UIButtonを使って簡単な画面を作れるようになりましたか？</p>
+
+<p>しかし、UITableViewを使おうと思ったら、途端に扱うクラスが増えてそれぞれの関係性がなんなのかついていけず、躓いている人が多いのではないでしょうか？<br />
+最初の躓きとなりやすいUITableViewを１つ１つ役割を理解し、それぞれの関係性を頭でイメージできるようになれば、難しいものではなくなります。</p>
+
+<h2 id="テーブルを表示してタップでアラートを出すサンプルを作成する">テーブルを表示してタップでアラートを出すサンプルを作成する</h2>
+
+<p>完成イメージは次の動画のように、テーブルが表示されタップしたらタップしたデータをアラートで表示します。</p>
+
+<video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2019-09-26-ios-uitableview-basic.mp4" width="50%" height="400px"></video>
+
+<p>このサンプルには</p>
+
+<ul>
+  <li>UITableView</li>
+  <li>UITableViewDelegate</li>
+  <li>UITableViewDataSource</li>
+  <li>UITableViewCell</li>
+  <li>UIAlertController</li>
+  <li>UIAlertAction</li>
+</ul>
+
+<p>が使われています。</p>
+
+<p>全機能を使っているのではなく、部分的に使っているだけなので気構えずに１つずつ読み解いていきましょう。</p>
+
+<h2 id="uitableviewをviewcontrollerと紐付ける">UITableViewをViewControllerと紐付ける</h2>
+
+<p>まず次の動画のようにstoryboard上のUITableViewをコードとバインディングします。</p>
+<video autoplay="" loop="" muted="" controls="" preload="auto" src="/assets/videos/2019-09-26-ios-uitableview-basic-1.mp4" width="100%"></video>
+<p>※動画が再生出来ない場合はキャッシュ無視リロードしてみてください。chromeであればcmd+rでできます。</p>
+
+<p>この時点で一度実行します。実行するとテーブルのセパレータ(区切り線)が表示されるだけですが、実行はできます。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-1.png"><img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-1.png" width="50%" /></a></p>
+
+<p>もし実行できずエラーになる場合は、UITableViewの紐付けが次の画像のようになっているか確認してみてください。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-2.png"><img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-2.png" width="100%" /></a></p>
+
+<p>コードは次の通りです。</p>
+
+<p><em>ViewController.swift</em></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">import</span> <span class="kt">UIKit</span>
+
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="uitableviewdatasourceとはデータをuitableviewに流し込む役割">UITableViewDataSourceとはデータをUITableViewに流し込む役割</h2>
+<p>先程の状態ではテーブルには何も表示されていません。<br />
+次の画像のようにデータを表示したいですね。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-3.png"><img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-3.png" width="50%" /></a></p>
+
+<p>テーブルに何らかのデータを表示するには、<code class="highlighter-rouge">UITableViewDataSource</code>を使います。</p>
+
+<h3 id="uitableviewdatasourceとは">UITableViewDataSourceとは</h3>
+
+<p>UITableViewDataSourceとはUITableViewのデータモデルを表現するプロトコルです。
+このプロトコルを使えばテーブルにデータを表示することができます。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">UITableViewDataSource</span> <span class="p">:</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="データを表示するコードを書く">データを表示するコードを書く</h2>
+
+<p>次のコードはテーブルにABCD1234を上から順番に表示するコードです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">]</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">items</span><span class="o">.</span><span class="n">count</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span> <span class="p">??</span>
+                    <span class="kt">UITableViewCell</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">cell</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>順番に説明します。</p>
+
+<h3 id="表示するデータ">表示するデータ</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="k">let</span> <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">items</code>がデータとなります。この並び順がテーブルの表示順となります。</p>
+
+<h3 id="uitableviewテーブルにデータモデルを渡す">UITableView(テーブル)にデータモデルを渡す</h3>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">tableView.dataSource</code>とはUITableViewが持つプロパティで型は<code class="highlighter-rouge">UITableViewDataSource</code>です。<br />
+定義にジャンプすれば</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">weak</span> <span class="kd">open</span> <span class="k">var</span> <span class="nv">dataSource</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span><span class="p">?</span>
+</code></pre></div></div>
+<p>と書いてるのを確認できます。</p>
+
+<p>この<code class="highlighter-rouge">UITableViewDataSource</code>とは前述した、</p>
+
+<p>「<strong>UITableViewDataSourceとはUITableViewのデータモデルを表現するプロトコル</strong>」です。</p>
+
+<p>このプロトコルに対し、<code class="highlighter-rouge">self</code>を代入しています。  selfとはViewControllerです。<br />
+つまり<code class="highlighter-rouge">ViewController</code>が<code class="highlighter-rouge">UITableViewDataSource</code>を採用してることになります。</p>
+
+<h3 id="viewcontrollerがuitableviewdatasourceを採用する">ViewControllerがUITableViewDataSourceを採用する</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+  <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>このコード部分がそれにあたります。</p>
+
+<h3 id="セル数を返す">セル数を返す</h3>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="n">items</span><span class="o">.</span><span class="n">count</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>これは <code class="highlighter-rouge">UITableViewDataSource</code>が提供する実装が必要なメソッドの１つです。<br />
+指定セクション内のロウの数を返すメソッドです。</p>
+
+<p>今回は<code class="highlighter-rouge">items</code>の中身を表示するので、<code class="highlighter-rouge">items</code>の要素数を返します。</p>
+
+<p><code class="highlighter-rouge">section</code>は今回は使いませんが、詳しくはこちらの記事をどうぞ。</p>
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-section-basic">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-26-ios-uitableview-section-basic/2019-09-26-ios-uitableview-section-basic.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewのSection(セクション)の使い方</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+
+あまり使う機会の少ないと油断してると、必要性が急上昇するSection（セクション）です。
+Section(セクション)を使うとどうなるのか？どういった見た目になるのか？注意点や使い所に関して説明します。
+
+UITableViewのおさらい
+
+テーブルはヘッダー、フッター、SectionとRowに分かれています。
+
+そしてSectionごとにもヘッダーとフッターがあります。
+
+
+Section(セクション)とは？Row(ロウ)とは？
+
+{% page_image -1.png 1...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h4 id="セクションとはロウとは">セクションとは？ロウとは？</h4>
+
+<p>次の図のような関係になってます。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-4.png"><img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-4.png" width="182px" /></a></p>
+
+<ul>
+  <li>ロウ(Row)とはセルを表します。</li>
+  <li>セクションとはロウをまとめたグループ。</li>
+</ul>
+
+<h3 id="セルの1つ1つを返す">セルの1つ1つを返す</h3>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span> <span class="p">??</span>
+                <span class="kt">UITableViewCell</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span>
+    <span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">cell</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>ここで指定された位置(indexPath: IndexPath)にどんなセルを返すのかを定義します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span> <span class="p">??</span>
+            <span class="kt">UITableViewCell</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span>
+</code></pre></div></div>
+<p>セルID<code class="highlighter-rouge">cell</code>があればそれを使いまわします。
+なければUITableViewCellをスタイル<code class="highlighter-rouge">default</code>でID名を<code class="highlighter-rouge">cell</code>で用意します。
+<code class="highlighter-rouge">reuseIdentifier: "cell"</code>はセルを使い回すための識別子を名付けます。
+これは複数種類のセルを扱う場合、ユニークである必要があります。</p>
+
+<h4 id="セルには予め何パターンか用意されている">セルには予め何パターンか用意されている</h4>
+<p><code class="highlighter-rouge">style: .default</code>とはUITableViewCellに予め何パターンか用意されているのでそれの指定になります。</p>
+
+<p>詳しくはこちらの記事で書いてあります。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewcell-styles">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewCellのスタイル一覧</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+UITableViewCellには予めデフォルトで用意されたスタイルが存在します。  
+この記事ではそのスタイル一覧を紹介します。
+アプリ開発初期やプロト版、記事用サンプルといったスピードを強く求められる段階においてデフォルトスタイルを把握しておくと  
+わざわざカスタマイズして車輪の再発明を避けることが出来ます。  
+
+デフォルトのスタイルにはUI数が決まっている
+
+スタイルによっては使われるUIや位置や色など属性は異なりますが、
+原則3UIで構成されており、UITableViewCel...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h4 id="セルはカスタマイズできる">セルはカスタマイズできる</h4>
+<p>既存スタイルにはなく自分でセルを自作(カスタマイズ)することもできます。</p>
+
+<p>詳しくはこちらの記事をどうぞ。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewCellをカスタマイズする</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+TODO: リード文
+
+
+簡単なユーザー情報を表示するテーブルを題材に話を進めます。
+
+UITableViewCellを継承したセルクラスを用意する
+
+Xcodeのファイル作成でCoCoa Touch Classを選び、Subclass ofにUITableViewCellを選んで作成すると、次のようなコードが生成されます。
+
+
+
+```swift
+class UserTableViewCell: UITableViewCell {
+ ...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h4 id="セルは使い回す">セルは使い回す</h4>
+<p>UITableViewCellはIDによる種類別で用意しておき、セルを再利用することでメモリ効率を満たしています。</p>
+
+<p>詳しくはこちらの記事をどうぞ。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-lifecycle">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-26-ios-uitableview-lifecycle/2019-09-26-ios-uitableview-lifecycle.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewCellの再利用を理解する</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+UITableViewCellは再利用セルとして使われていますが、どういった感じで再利用されているかイメージついてる初心者は少ないかと思います。
+
+なので少しでもイメージがついて再利用の利点が分かることで、より一層理解が深まると思います。
+
+いつ再利用されるのか？
+
+**セル参照時です。**
+
+つまり `func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -&gt; UITableViewCell...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<p>UITableViewのUI特性はたくさんのデータを縦に積むことで、スクロールすればそれらを閲覧できます。</p>
+
+<p>そのため例えばテーブルに1000個のデータを並べた場合、UITableViewCellは1000個必要になります。<br />
+それだと、メモリ効率が非常に悪いため、同じレイアウトなら使いまわそう。という考えがあります。<br />
+それが<code class="highlighter-rouge">ReusableCell</code>と名付けられた由来になります。</p>
+
+<h2 id="uitableviewdelegateとはuitableviewのイベントハンドラ">UITableViewDelegateとはUITableViewのイベントハンドラ</h2>
+
+<p>データを表示することができました。<br />
+しかしアプリとしては表示だけで済むケースはほぼなく、大抵はセルをタップしたら何かしらアクションを起きます。</p>
+
+<p>次のように押されたセルに関連するアクションを出すなど。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-5.png"><img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-5.png" width="50%" /></a></p>
+
+<p>セルのタップを検知するには、<code class="highlighter-rouge">UITableViewDelegate</code>を使います。</p>
+
+<h3 id="uitableviewdelegateとは">UITableViewDelegateとは</h3>
+<p><code class="highlighter-rouge">UITableViewDelegate</code>とは<code class="highlighter-rouge">UITableView</code>の操作イベントをハンドリングするプロトコルです。<br />
+今回はタップのみですが、それ以外にも様々なイベントを検知することができます。</p>
+
+<p>詳しくはこちらにまとめてあります。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewdelegate-basic">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewDelegateで出来ること</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+`UITableViewDelegate`とは`UITableView`の操作イベントをハンドリングするプロトコルです。
+単純なセルのタップイベントをはじめ、
+今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。
+
+この記事では `UITableViewDelegate`には何が用意されているのか？  
+このprotocolを使ってどのようなことが出来るのか？についてとっかかりを掴むページを想定してます。
+
+実際の詳細に関しては記事内の随所に詳細ページへの紹介をしているので...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h2 id="セルをタップしたらアラート出すコードを書く">セルをタップしたらアラート出すコードを書く</h2>
+
+<p>次のコードはセルをタップすると選択したデータをアラートに表示するコードです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">items</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">,</span> <span class="s">"D"</span><span class="p">,</span> <span class="s">"1"</span><span class="p">,</span> <span class="s">"2"</span><span class="p">,</span> <span class="s">"3"</span><span class="p">,</span> <span class="s">"4"</span><span class="p">]</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+
+        <span class="n">tableView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">items</span><span class="o">.</span><span class="n">count</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span> <span class="p">??</span>
+                    <span class="kt">UITableViewCell</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">cell</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDelegate</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didSelectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+        <span class="k">let</span> <span class="nv">alert</span> <span class="o">=</span> <span class="kt">UIAlertController</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"タイトル"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="n">item</span><span class="p">,</span> <span class="nv">preferredStyle</span><span class="p">:</span> <span class="o">.</span><span class="n">alert</span><span class="p">)</span>
+        <span class="n">alert</span><span class="o">.</span><span class="nf">addAction</span><span class="p">(</span><span class="kt">UIAlertAction</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"OK"</span><span class="p">,</span> <span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="kc">nil</span><span class="p">))</span>
+        <span class="nf">present</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>前述したデータ表示のコードに加えてあります。順番に説明します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">tableView.dataSource = self</code>と同様になります。<br />
+<code class="highlighter-rouge">delegate</code>は<code class="highlighter-rouge">UITableViewDelegate</code>というプロトコルになります。</p>
+
+<h3 id="タップしたら呼ばれるメソッドがある">タップしたら呼ばれるメソッドがある</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDelegate</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didSelectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+        <span class="k">let</span> <span class="nv">alert</span> <span class="o">=</span> <span class="kt">UIAlertController</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"タイトル"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="n">item</span><span class="p">,</span> <span class="nv">preferredStyle</span><span class="p">:</span> <span class="o">.</span><span class="n">alert</span><span class="p">)</span>
+        <span class="n">alert</span><span class="o">.</span><span class="nf">addAction</span><span class="p">(</span><span class="kt">UIAlertAction</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"OK"</span><span class="p">,</span> <span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="kc">nil</span><span class="p">))</span>
+        <span class="nf">present</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>このメソッドはセルがタップされたら呼ばれるメソッドです。<code class="highlighter-rouge">UITableViewDelegate</code>プロトコルによって定義されています。</p>
+
+<h3 id="アラートを出す">アラートを出す</h3>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">item</span> <span class="o">=</span> <span class="n">items</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+<span class="k">let</span> <span class="nv">alert</span> <span class="o">=</span> <span class="kt">UIAlertController</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"タイトル"</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="n">item</span><span class="p">,</span> <span class="nv">preferredStyle</span><span class="p">:</span> <span class="o">.</span><span class="n">alert</span><span class="p">)</span>
+<span class="n">alert</span><span class="o">.</span><span class="nf">addAction</span><span class="p">(</span><span class="kt">UIAlertAction</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">"OK"</span><span class="p">,</span> <span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="kc">nil</span><span class="p">))</span>
+<span class="nf">present</span><span class="p">(</span><span class="n">alert</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>データアクセス方法をセル表示と同様に行うことで、タップした場所に表示されたデータ取得を実現しています。
+アラートに関してはこちらにまとめてあります。</p>
+
+<div class="link-container">
+  <a href="/ios/uialertcontroller/ios-uialertcontroller-basic">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-27-ios-uialertcontroller-basic/2019-09-27-ios-uialertcontroller-basic-4.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UIAlertControllerでアラートを表示する方法</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+iOSでは紆余曲折あった後に、Alert(アラート)とActionSheet(アクションシート)を一つのクラスに集約されました。
+またUIViewベースだったものがUIViewControllerに変わったことで表示挙動も変わりました。
+
+しかし特に難しくなってはおらず、通常の利用ケースであれば簡単に使うことが出来ます。
+
+Alert(アラート)とActionSheet(アクションシート)の違い
+
+ユーザー行動かそうじゃないかになります。
+
+通信結果によって起きたエラーをcancel or...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h2 id="引っ張ったら更新するpull-to-refreshを実装する">引っ張ったら更新するPull to refreshを実装する</h2>
+
+<p>UIRefreshControlを使って、テーブル最上部で下にスワイプしてリフレッシュを呼ぶ方法についてはこちらの記事で紹介しています。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-swift-uitableview-pull-to-refresh">
+    <div class="link-container-image">
+      <img src="/assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>UITableViewに引っ張る更新Pull to Refreshを実装する</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+概要
+[iOS](/categories/ios)で使われるUIベスト3に入る[UITableView](/tags#uitableview)
+
+そのUITableViewに引っ張って更新する機能（Pull to Refresh）の実装についてまとめました。
+
+
+注意
+1クラスにねじ込んだので、データフロー周りは参考にしないでください。
+
+
+実装方法
+**UIRefreshControl** を使うことで簡単に実装できます。
+
+サンプルコード
+下記サンプルコードになり...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h2 id="もう少し細かい部分を良くする">もう少し細かい部分を良くする</h2>
+
+<p>基本的な部分は前述した説明とコードになります。</p>
+
+<p>しかし、ついでにデザイナーから要望を受けやすい一部とその実装を簡単に説明します。</p>
+<h3 id="なにもないセルをなくしたい">なにもないセルをなくしたい</h3>
+
+<p>「データが入っているセルはいいのですが、データが何も表示していないセルをなんとかできませんか？」と言われた場合、
+セルに見えている原因となるセパレート(区切り線)を消すことで解決します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+    <span class="c1">// ...</span>
+    <span class="n">tableView</span><span class="o">.</span><span class="n">tableFooterView</span> <span class="o">=</span> <span class="kt">UIView</span><span class="p">()</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>このようにフッタービューに対して空のUIViewを代入することで空セルの区切り線は表示されなくなります。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>区切り線あり</th>
+      <th>区切り線なし</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-6.png"><img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-6.png" width="100%" /></a></td>
+      <td><a href="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-7.png"><img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic-7.png" width="100%" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="タップした後が残るのを消して欲しい">タップした後が残るのを消して欲しい</h3>
+
+<p>特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didSelectRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">tableView</span><span class="o">.</span><span class="nf">deselectRow</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">)</span>
+    <span class="c1">// ...</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>このように <code class="highlighter-rouge">deselectRow</code>メソッドを呼ぶことで選択解除されます。</p>
+
+<video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2019-09-26-ios-uitableview-basic-2.mp4" width="50%" height="400px"></video>
+
+<h2 id="uitableviewの使い方は奥が深い">UITableViewの使い方は奥が深い</h2>
+
+<p>UITableViewはiOSを習い始めでは慣れないクラス構造でつまづきやすいポイントかと思います。
+しかし、アプリのレイアウトにおいてほぼ100%使われるので、極めておいて損はないです。</p>
+
+<p>今回は基本的な部分の説明でしたが、実際の開発ではこの基本実装だけでは到底無理なので、
+めげずにどんどんUITableViewの使い方を覚えていったほうが体系的に理解できます。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/ios-uicollectionview-carousel-simple">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

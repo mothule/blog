@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>【初心者向け】UITableViewCellをカスタマイズする - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="【初心者向け】UITableViewCellをカスタマイズする" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="TODO: リード文" />
+<meta property="og:description" content="TODO: リード文" />
+<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize" />
+<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-26T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"headline":"【初心者向け】UITableViewCellをカスタマイズする","dateModified":"2019-09-26T00:00:00+09:00","datePublished":"2019-09-26T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize"},"description":"TODO: リード文","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="【初心者向け】UITableViewCellをカスタマイズする">
+    <meta name="twitter:description" content="TODO: リード文">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#uitableview">Uitableview</a>
+      
+    
+      
+        / 【初心者向け】UITableViewCellをカスタマイズする
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png" alt="【初心者向け】UITableViewCellをカスタマイズする">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>【初心者向け】UITableViewCellをカスタマイズする</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-26</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableview">uitableview</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableviewcell">uitableviewcell</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#uitableviewcellを継承したセルクラスを用意する">UITableViewCellを継承したセルクラスを用意する</a>
+    <ul>
+      <li><a href="#func-awakefromnib-storyboardまたはnibファイルからロードされた直後に呼ばれる"><code class="highlighter-rouge">func awakeFromNib()</code>: Storyboardまたはnibファイルからロードされた直後に呼ばれる</a></li>
+      <li><a href="#func-setselected-animated-選択状態と通常状態の状態アニメーション処理"><code class="highlighter-rouge">func setSelected(, animated:)</code>: 選択状態と通常状態の状態アニメーション処理</a></li>
+    </ul>
+  </li>
+  <li><a href="#storyboardのuitableviewに直接uitableviewcellを追加する">StoryboardのUITableViewに直接UITableViewCellを追加する</a></li>
+  <li><a href="#セルと制御クラスを紐付ける">セルと制御クラスを紐付ける</a></li>
+  <li><a href="#セルをレイアウトする">セルをレイアウトする</a></li>
+  <li><a href="#制御クラスに実装する">制御クラスに実装する</a>
+    <ul>
+      <li><a href="#注意uitableviewcellが定義した名前は使えない">注意：UITableViewCellが定義した名前は使えない</a></li>
+    </ul>
+  </li>
+  <li><a href="#identifierを定義する">Identifierを定義する</a></li>
+  <li><a href="#カスタムセルを使う">カスタムセルを使う</a>
+    <ul>
+      <li><a href="#struc-user-テーブル表示したいデータ構造"><code class="highlighter-rouge">struc User</code>: テーブル表示したいデータ構造</a></li>
+      <li><a href="#セル参照の実装">セル参照の実装</a></li>
+    </ul>
+  </li>
+  <li><a href="#応用編">応用編</a>
+    <ul>
+      <li><a href="#uitableviewcellをxibに分けて使う">UITableViewCellをxibに分けて使う</a></li>
+      <li><a href="#コードで重複しやすい呼び出し処理を解決する">コードで重複しやすい呼び出し処理を解決する</a></li>
+      <li><a href="#セルの高さを可変にする">セルの高さを可変にする</a></li>
+      <li><a href="#セル上にボタンやテキストフィールドを配置する">セル上にボタンやテキストフィールドを配置する</a></li>
+    </ul>
+  </li>
+  <li><a href="#さいごに">さいごに</a></li>
+</ul>
+  </div>
+
+  <p>TODO: リード文</p>
+
+<p>簡単なユーザー情報を表示するテーブルを題材に話を進めます。</p>
+
+<h2 id="uitableviewcellを継承したセルクラスを用意する">UITableViewCellを継承したセルクラスを用意する</h2>
+
+<p>Xcodeのファイル作成でCoCoa Touch Classを選び、Subclass ofにUITableViewCellを選んで作成すると、次のようなコードが生成されます。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-2.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-2.png" width="50%" /></a></p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">UserTableViewCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">awakeFromNib</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">awakeFromNib</span><span class="p">()</span>
+        <span class="c1">// Initialization code</span>
+    <span class="p">}</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">setSelected</span><span class="p">(</span><span class="n">_</span> <span class="nv">selected</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">)</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">setSelected</span><span class="p">(</span><span class="n">selected</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="n">animated</span><span class="p">)</span>
+        <span class="c1">// Configure the view for the selected state</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h3 id="func-awakefromnib-storyboardまたはnibファイルからロードされた直後に呼ばれる"><code class="highlighter-rouge">func awakeFromNib()</code>: Storyboardまたはnibファイルからロードされた直後に呼ばれる</h3>
+<p>初期化などUserTableViewCellがロードされた直後に１度だけ実行したい処理をここに実装します。</p>
+
+<h3 id="func-setselected-animated-選択状態と通常状態の状態アニメーション処理"><code class="highlighter-rouge">func setSelected(, animated:)</code>: 選択状態と通常状態の状態アニメーション処理</h3>
+<p>セルがタップにより選択状態/通常状態の切り替わり処理をするときに呼ばれる処理です。
+特になくても状態アニメーションは行われます。</p>
+
+<p>ここを確実に使う場面は少なく、セル内の色付きビューや画像の選択処理がうまく動かない場合に使います。
+詳しくはこちらの記事をどうぞ。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewcell-selected-subviews-gone">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-29-ios-uitableview-uitableviewcell-selected-subviews-gone/2019-09-29-ios-uitableview-uitableviewcell-selected-subviews-gone-1.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>UITableViewCell(セル)のサブビュー背景色が消える原因と解決法</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+UITableViewのUITableViewCell(セル)をカスタマイズでサブビューに背景色をつけることがありますが、  
+そのセルをタップしてハイライト状態(Highlighted)や選択状態(Selected)にしたときに、サブビューの背景色が消える現象に遭遇した人は多いと思います。  
+そんなバグの直し方を説明します。
+
+原因は色を透明化してるため
+例えば次のようにレイアウトされたセルを用意する。
+
+
+
+このセルをタップ直後の...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h2 id="storyboardのuitableviewに直接uitableviewcellを追加する">StoryboardのUITableViewに直接UITableViewCellを追加する</h2>
+
+<p>下記画像のようにUITableViewCellをテーブルに追加します。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-1.gif"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-1.gif" width="320px" /></a></p>
+
+<h2 id="セルと制御クラスを紐付ける">セルと制御クラスを紐付ける</h2>
+
+<p>動画のようにStoryboard上のセルを選択して<code class="highlighter-rouge">Identity Inspectorタブ &gt; CustomClass &gt; Class</code>に制御クラスを入力します。<br />
+今回は UserTableViewCell と入力します。動画のようにサジェストで入力補完されるのであっていればエンターを押してください。<br />
+このとき下の<code class="highlighter-rouge">Module</code>が変わることを確認してください。ここも正しいModuleじゃないと見つけられずランタイムエラーになります。</p>
+
+<video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2019-09-26-ios-uitableview-uitableviewcell-customize-1.mp4" width="100%" height="400px"></video>
+
+<h2 id="セルをレイアウトする">セルをレイアウトする</h2>
+
+<p>追加方法は、通常のビュー追加と同じです。特に注意することはないと思います。</p>
+
+<p>今回は次のようなレイアウトにしました。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-3.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-3.png" width="100%" /></a></p>
+
+<h2 id="制御クラスに実装する">制御クラスに実装する</h2>
+
+<p>制御したいビューは</p>
+
+<ol>
+  <li>イメージ</li>
+  <li>ラベル(左)</li>
+  <li>ラベル(右)</li>
+</ol>
+
+<p>の3つになります。</p>
+
+<p>コードだと次のようになります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">iconImageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="o">!</span>
+<span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">nameLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+<span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">ageLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+
+<span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">iconImageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">icon</span>
+    <span class="n">nameLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">name</span>
+    <span class="n">ageLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="kt">String</span><span class="p">(</span><span class="n">age</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>と名付けて前述した<code class="highlighter-rouge">UserTableViewCell</code>に追記します。</p>
+
+<p><code class="highlighter-rouge">setup(icon:name:age:)</code>メソッドは、決められたものではなく自分で用意したものです。
+制御クラスからビュープロパティを出さずに目的を提供することで、使い手側の内部依存をなくすことが目的です。<br />
+セルのカスタマイズには不要で、public化して直接外からビュー設定をすることも出来ますが、<br />
+だからといって逸脱しすぎた実装をするのは好きではないので、このようなメソッドを用意しています。</p>
+
+<h3 id="注意uitableviewcellが定義した名前は使えない">注意：UITableViewCellが定義した名前は使えない</h3>
+
+<p>単純に <code class="highlighter-rouge">imageView: UIImageView</code> と名付けたくなりますが、
+<strong>UITableViewCellには予め定義されているため使うことができません。</strong></p>
+
+<p><em>UItableViewCell抜粋</em></p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Content.  These properties provide direct access to the internal label and image views used by the table view cell.  These should be used instead of the content properties below.</span>
+<span class="kd">@available(iOS 3.0, *)</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">imageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span> <span class="c1">// default is nil.  image view will be created if necessary.</span>
+
+<span class="kd">@available(iOS 3.0, *)</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">textLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span> <span class="c1">// default is nil.  label will be created if necessary.</span>
+
+<span class="kd">@available(iOS 3.0, *)</span>
+<span class="kd">open</span> <span class="k">var</span> <span class="nv">detailTextLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span> <span class="c1">// default is nil.  label will be created if necessary (and the current style supports a detail label).</span>
+</code></pre></div></div>
+
+<h2 id="identifierを定義する">Identifierを定義する</h2>
+
+<p>Identifierとは次の画像の箇所を指します。</p>
+
+<p>これはカスタムセル自体のIDを指します。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-4.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-4.png" width="518px" /></a></p>
+
+<p>ユニークであれば何でもいいのですが、制御クラス名にするのが慣習です。<br />
+今回も<code class="highlighter-rouge">UserTableViewCell</code>にしてます。</p>
+
+<p>ここのIDとコード側の指定が間違うと次のようなランタイムエラーが発生します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'unable to dequeue a cell with identifier UserTableViewCell - must register a nib or a class for the identifier or connect a prototype cell in a storyboard'
+</code></pre></div></div>
+
+<h2 id="カスタムセルを使う">カスタムセルを使う</h2>
+
+<p>カスタムセルのビューを用意し、制御クラス(<code class="highlighter-rouge">UserTableViewCell</code>)も用意しそれらの紐付けも行いました。<br />
+次は、それを実際に使います。主に見るべき場所は <code class="highlighter-rouge">func tableView(tableView:cellForRowAt:) -&gt; UITableViewCell</code>内になります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">icon</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">age</span><span class="p">:</span> <span class="kt">Int</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">users</span><span class="p">:</span> <span class="p">[</span><span class="kt">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="kt">User</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span> <span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Angel"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">20</span><span class="p">),</span>
+        <span class="kt">User</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span> <span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Bob"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">21</span><span class="p">),</span>
+        <span class="kt">User</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span> <span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Chirs"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">22</span><span class="p">),</span>
+        <span class="kt">User</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span> <span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"David"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">23</span><span class="p">),</span>
+        <span class="kt">User</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span> <span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"Elly"</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="mi">24</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"UserTableViewCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">UserTableViewCell</span>
+
+        <span class="k">let</span> <span class="nv">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+        <span class="n">cell</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">icon</span> <span class="p">??</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon2"</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cell</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>もしUITableViewの使い方がわからない場合は次の記事を確認してください。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-basic">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>|
+| |
+
+タップした後が残るのを消して欲しい
+
+特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
+
+```swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPa...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="struc-user-テーブル表示したいデータ構造"><code class="highlighter-rouge">struc User</code>: テーブル表示したいデータ構造</h3>
+
+<p>今回はユーザー情報を表示するので、それを表すモデルとして用意しました。<br />
+本来の開発であれば、データモデルにUIKitデータとなるUIImageをオリジナルとして直接持つことはないのですが、<br />
+今回の記事はそこを正すとコード量が増えて、目的を正しく伝えれずブレてしまうので、このような形にしてあります。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">ViewController.users</code>にデータ元を用意してます。</li>
+  <li><code class="highlighter-rouge">#imageLiteral(resourceName: "icon")</code> は、<code class="highlighter-rouge">Assets.xcassets</code> 内のリソースを指定してあります。</li>
+</ul>
+
+<p><code class="highlighter-rouge">xcassets</code>については詳しくはこちらの記事をどうぞ。</p>
+
+<div class="link-container">
+  <a href="/ios/ios-xcassets-basic">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-29-ios-xcassets-basic/0.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】Assets.xcassetsを理解して使う</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+
+登場以前
+プロジェクトファイルに直接画像ファイルを登録していたため、チーム開発するとプロジェクトファイルの衝突が多発してた。
+
+解像度別画像(x2)の管理が面倒で、x2版 x1版どちらのファイルをロードすればいいか分からなくなることもあった。
+
+Asset Catalogのメリット
+- 画像追加によるプロジェクトファイルのコンフリクトがなくなる
+- デバイスサイズ毎の画像管理が分かりやすくなる
+- 起動イメージ, アプリアイコンも管理できる
+- あらゆるアセットデータが管理できる
+...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="セル参照の実装">セル参照の実装</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"UserTableViewCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">UserTableViewCell</span>
+
+    <span class="k">let</span> <span class="nv">user</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+    <span class="n">cell</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="nv">icon</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">icon</span> <span class="p">??</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon2"</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="nv">age</span><span class="p">:</span> <span class="n">user</span><span class="o">.</span><span class="n">age</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">cell</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">cell.setup</code>は前述で説明した自前コードです。 このメソッドは<code class="highlighter-rouge">UserTableViewCell</code>で定義されています。このメソッドを使うために
+その前のセル取得でキャストしてます。</p>
+
+<p>Identifierに<code class="highlighter-rouge">UserTableViewCell</code>を指定してるのは、前述の <code class="highlighter-rouge">Identifier</code>を定義したときの値です。
+これは一致している必要があります。</p>
+
+<p>これを実行すると次の画像のようになります。</p>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png" width="100%" /></a></p>
+
+<p><code class="highlighter-rouge">Angel</code> の <code class="highlighter-rouge">g</code> が切れてます。これはセル内のUILabelの高さを調整するか, UILabelのStringではなくUIAttributedStringを使い、<code class="highlighter-rouge">baseline</code>を上げることで解決します。前者が楽です。</p>
+
+<h2 id="応用編">応用編</h2>
+
+<p>このままではまだ実践には耐えられないです。</p>
+
+<h3 id="uitableviewcellをxibに分けて使う">UITableViewCellをxibに分けて使う</h3>
+
+<p>今回は StoryboardのUITableView上に直接UITableViewCellを配置するケースで説明しました。
+しかし、別画面で同様のセルを使いまわしたい場合など、画面毎にセルを用意するのはDRY原則違反になり、メンテナンス性が低下します。</p>
+
+<p>そのため、xibファイルに分けることで流用性をあげます。詳しくはこちらの記事をどうぞ。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewcell-xib">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-29-ios-uitableview-uitableviewcell-xib/2019-09-29-ios-uitableview-uitableviewcell-xib.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewCellをxibから使う</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+この記事ではUITableViewCellをxib化して外部からセルを使う方法について説明します。
+
+UITableViewCellをカスタマイズして多彩なテーブル実装はできますが、設計観点においてUITableView上に直接UITableViewCellを配置してカスタマイズするのは、ときとして完全ではありません。
+
+例えば画面Aと画面Bで同じレイアウトのセルを必要になったときに、UITableViewに直接配置したセルでは、画面毎のstoryboardに同じレイアウトが存在してしまい、DR...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="コードで重複しやすい呼び出し処理を解決する">コードで重複しやすい呼び出し処理を解決する</h3>
+
+<p>UITableViewCellのカスタマイズはとても多くの場面で使います。
+比例してコードも増えるため、ボイラープレートと呼ばれる部分を共通化することで、コード量の増加を抑えつつも
+手続きコードを分離できるためコードの可読性も期待できます。</p>
+
+<p>詳細はこちらの記事をどうぞ。</p>
+
+<div class="link-container">
+  <a href="/ios/ios-xib-optimaize">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-29-ios-xib-optimaize.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>StoryboardやXibのロード処理の作りを改善する</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。
+そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので
+あまりよろしくありません。
+
+なので私が普段使っている煩わしいロード処理を抑え込んだロード処理実装について説明します。
+
+
+自由に法則性を与えることで実装を簡易にする
+
+Storyboardやxibは自由度が高いため、1storyboardに複数のView Controller...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="セルの高さを可変にする">セルの高さを可変にする</h3>
+
+<p>今回のサンプルではセルの高さをデフォルトの44のままにしてあります。</p>
+
+<p>しかし実際のアプリでは、44固定であるわけもなく必ずカスタムの高さであったり、
+同じセルでも中身によっては高さ幅が変わったりします。</p>
+
+<p>その対応方法についてはこちらの記事に詳細を書いてあります。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-29-ios-uitableview-uitableviewcell-height-customize/2019-09-29-ios-uitableview-uitableviewcell-height-customize-1.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewCellの高さを可変にする</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+
+次の`UITableViewDelegate`のメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。
+なぜなら`UITableView.rowHeight`に `UITableView.automaticDimension` を渡し、各セルをAuto-Layoutが効くような実装にすれば  
+自動でセルの高さを計算してくれるためです。
+
+あるとすればセルごとの推測値`estimated`の値を返す。または状態によって一部セルを非表示にするために高さを...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="セル上にボタンやテキストフィールドを配置する">セル上にボタンやテキストフィールドを配置する</h3>
+
+<p>今回のサンプルではカスタマイズしたセルは全て参照UIのみでボタンやテキスト入力といったUIは使っていません。</p>
+
+<p>しかし実際のアプリでは、プロフィール入力や設定変更といった画面ではUITableViewを使って、
+項目別にフィールド編集がされます。</p>
+
+<p>ただUIを配置するだけでいいと思ったら色々と細かい設定が必要になります。
+そういった詳細はこちらの記事でまとめてあります。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewcell-input-control">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-29-ios-uitableview-uitableviewcell-input-control/2019-09-29-ios-uitableview-uitableviewcell-input-control-2.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+UITableViewのセル(UITableViewCell)にButtonやTextFieldをセットした場合の注意点についてまとめました。
+
+サンプル
+
+検証コードになります。  
+セルにUIButtonとUITextFieldを配置しています。
+
+```swift
+class ViewController: UIViewController {
+    @IBOutlet private weak var tableView: UITableView!
+
+    override f...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h2 id="さいごに">さいごに</h2>
+
+<p>UITableViewCellのカスタマイズはiOSアプリ開発では必須スキルです。<br />
+これを知らないとiOSアプリエンジニアと名乗る資格はないです。</p>
+
+<p>それほど多岐にわたり使われています。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/ios-uicollectionview-carousel-simple">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

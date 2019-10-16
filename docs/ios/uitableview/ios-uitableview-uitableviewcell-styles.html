@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>【初心者向け】UITableViewCellのスタイル一覧 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="【初心者向け】UITableViewCellのスタイル一覧" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="UITableViewCellには予めデフォルトで用意されたスタイルが存在します。 この記事ではそのスタイル一覧を紹介します。 アプリ開発初期やプロト版、記事用サンプルといったスピードを強く求められる段階においてデフォルトスタイルを把握しておくと わざわざカスタマイズして車輪の再発明を避けることが出来ます。" />
+<meta property="og:description" content="UITableViewCellには予めデフォルトで用意されたスタイルが存在します。 この記事ではそのスタイル一覧を紹介します。 アプリ開発初期やプロト版、記事用サンプルといったスピードを強く求められる段階においてデフォルトスタイルを把握しておくと わざわざカスタマイズして車輪の再発明を避けることが出来ます。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-styles" />
+<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-styles" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-26T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"headline":"【初心者向け】UITableViewCellのスタイル一覧","dateModified":"2019-09-26T00:00:00+09:00","datePublished":"2019-09-26T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-styles","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-styles"},"description":"UITableViewCellには予めデフォルトで用意されたスタイルが存在します。 この記事ではそのスタイル一覧を紹介します。 アプリ開発初期やプロト版、記事用サンプルといったスピードを強く求められる段階においてデフォルトスタイルを把握しておくと わざわざカスタマイズして車輪の再発明を避けることが出来ます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="【初心者向け】UITableViewCellのスタイル一覧">
+    <meta name="twitter:description" content="UITableViewCellには予めデフォルトで用意されたスタイルが存在します。この記事ではそのスタイル一覧を紹介します。アプリ開発初期やプロト版、記事用サンプルといったスピードを強く求められる段階においてデフォルトスタイルを把握しておくとわざわざカスタマイズして車輪の再発明を避けることが出来ます。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#uitableview">Uitableview</a>
+      
+    
+      
+        / 【初心者向け】UITableViewCellのスタイル一覧
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles.png" alt="【初心者向け】UITableViewCellのスタイル一覧">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>【初心者向け】UITableViewCellのスタイル一覧</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-26</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableview">uitableview</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableviewcell">uitableviewcell</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#デフォルトのスタイルにはui数が決まっている">デフォルトのスタイルにはUI数が決まっている</a></li>
+  <li><a href="#uitableviewcellのスタイル一覧">UITableViewCellのスタイル一覧</a></li>
+  <li><a href="#cellstyledefault">CellStyle.default</a></li>
+  <li><a href="#cellstylevalue1">CellStyle.value1</a></li>
+  <li><a href="#cellstylevalue2">CellStyle.value2</a></li>
+  <li><a href="#cellstylesubtitle">CellStyle.subtitle</a></li>
+</ul>
+  </div>
+
+  <p>UITableViewCellには予めデフォルトで用意されたスタイルが存在します。<br />
+この記事ではそのスタイル一覧を紹介します。
+アプリ開発初期やプロト版、記事用サンプルといったスピードを強く求められる段階においてデフォルトスタイルを把握しておくと<br />
+わざわざカスタマイズして車輪の再発明を避けることが出来ます。</p>
+
+<h2 id="デフォルトのスタイルにはui数が決まっている">デフォルトのスタイルにはUI数が決まっている</h2>
+
+<p>スタイルによっては使われるUIや位置や色など属性は異なりますが、
+原則3UIで構成されており、UITableViewCellの次の3つで制御します。</p>
+
+<ul>
+  <li>textLabel: UILabel</li>
+  <li>imageView: UIImageView</li>
+  <li>detailTextLabel: UILabel</li>
+</ul>
+
+<h2 id="uitableviewcellのスタイル一覧">UITableViewCellのスタイル一覧</h2>
+<p><code class="highlighter-rouge">UITableViewCell.CellStyle</code> に一覧があります。次のコードは定義コードです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">CellStyle</span> <span class="p">:</span> <span class="kt">Int</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="err">`</span><span class="k">default</span><span class="err">`</span>
+    <span class="k">case</span> <span class="n">value1</span>
+    <span class="k">case</span> <span class="n">value2</span>
+    <span class="k">case</span> <span class="n">subtitle</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>一つ一つ見ていきます。</p>
+
+<h2 id="cellstyledefault">CellStyle.default</h2>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-1.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-1.png" width="100%" /></a></p>
+
+<p>画像とすぐ横のラベルが用意されています。
+次のコードのように紐付いています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"TextLabel"</span>
+<span class="n">cell</span><span class="o">.</span><span class="n">imageView</span><span class="p">?</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>なお</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cell</span><span class="o">.</span><span class="n">detailTextLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"DetailTextLabel"</span>
+</code></pre></div></div>
+<p>は何も起こりません。</p>
+
+<h2 id="cellstylevalue1">CellStyle.value1</h2>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-2.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-2.png" width="100%" /></a></p>
+
+<p><code class="highlighter-rouge">.default</code> のレイアウトに右側にグレイカラーのラベルが追加されてます。</p>
+
+<p>コードは次のようになっています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"TextLabel"</span>
+<span class="n">cell</span><span class="o">.</span><span class="n">imageView</span><span class="p">?</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span>
+<span class="n">cell</span><span class="o">.</span><span class="n">detailTextLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"DetailTextLabel"</span>
+</code></pre></div></div>
+
+<h2 id="cellstylevalue2">CellStyle.value2</h2>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-3.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-3.png" width="100%" /></a></p>
+
+<p>青色のラベルとすぐ横に黒色のラベルがあり、画像はありません。</p>
+
+<p>コードは次のようになっています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"TextLabel"</span>
+<span class="n">cell</span><span class="o">.</span><span class="n">detailTextLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"DetailTextLabel"</span>
+</code></pre></div></div>
+
+<p>なお、</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cell</span><span class="o">.</span><span class="n">imageView</span><span class="p">?</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span>
+</code></pre></div></div>
+<p>を入れても何も起こりません。</p>
+
+<h2 id="cellstylesubtitle">CellStyle.subtitle</h2>
+
+<p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-4.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-styles/2019-09-26-ios-uitableview-uitableviewcell-styles-4.png" width="100%" /></a></p>
+
+<p>画像, ラベル2つの構成で、2つ目のラベルはスタイル名の通りサブタイトル化してます。</p>
+
+<p>コードは次のようになっています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"TextLabel"</span>
+<span class="n">cell</span><span class="o">.</span><span class="n">imageView</span><span class="p">?</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">)</span>
+<span class="n">cell</span><span class="o">.</span><span class="n">detailTextLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"DetailTextLabel"</span>
+</code></pre></div></div>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/ios-uicollectionview-carousel-simple">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
