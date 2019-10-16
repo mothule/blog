@@ -1,0 +1,843 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>【初心者向け】UITableViewのセルの編集制御を極める - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="【初心者向け】UITableViewのセルの編集制御を極める" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。 メソッド一覧は量が多いので省きます。" />
+<meta property="og:description" content="セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。 メソッド一覧は量が多いので省きます。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode" />
+<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-30T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"headline":"【初心者向け】UITableViewのセルの編集制御を極める","dateModified":"2019-09-30T00:00:00+09:00","datePublished":"2019-09-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode"},"description":"セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。 メソッド一覧は量が多いので省きます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="【初心者向け】UITableViewのセルの編集制御を極める">
+    <meta name="twitter:description" content="セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。メソッド一覧は量が多いので省きます。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#uitableview">Uitableview</a>
+      
+    
+      
+        / 【初心者向け】UITableViewのセルの編集制御を極める
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png" alt="【初心者向け】UITableViewのセルの編集制御を極める">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>【初心者向け】UITableViewのセルの編集制御を極める</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-30</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableview">uitableview</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableviewcell">uitableviewcell</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#編集モードとは">編集モードとは</a></li>
+  <li><a href="#削除と並び替えを実装する">削除と並び替えを実装する</a>
+    <ul>
+      <li><a href="#todoデータモデル">ToDoデータモデル</a></li>
+      <li><a href="#削除はイベント検知したらデータとテーブルを更新する">削除はイベント検知したらデータとテーブルを更新する</a></li>
+      <li><a href="#並び替えはイベント検知したらデータを更新する">並び替えはイベント検知したらデータを更新する</a></li>
+      <li><a href="#削除ラベルのタイトルを変える">削除ラベルのタイトルを変える</a></li>
+    </ul>
+  </li>
+  <li><a href="#並び替えのみ有効にする">並び替えのみ有効にする</a>
+    <ul>
+      <li><a href="#削除のみを有効にする">削除のみを有効にする</a></li>
+      <li><a href="#指定セルの編集モードできないようにする">指定セルの編集モードできないようにする</a></li>
+    </ul>
+  </li>
+  <li><a href="#削除ではなく追加にする">削除ではなく追加にする</a></li>
+  <li><a href="#アクションをカスタマイズする">アクションをカスタマイズする</a></li>
+  <li><a href="#スワイプ用アクションで前方スワイプと後方スワイプでのアクションを制御する">スワイプ用アクションで前方スワイプと後方スワイプでのアクションを制御する</a>
+    <ul>
+      <li><a href="#アクションには通常アクションと削除アクションの２種類がある">アクションには通常アクションと削除アクションの２種類がある</a></li>
+      <li><a href="#前方スワイプ">前方スワイプ</a></li>
+      <li><a href="#後方スワイプ">後方スワイプ</a></li>
+    </ul>
+  </li>
+  <li><a href="#編集モード前後イベント">編集モード前後イベント</a></li>
+  <li><a href="#並び替え制御">並び替え制御</a></li>
+  <li><a href="#メニュー制御">メニュー制御</a>
+    <ul>
+      <li><a href="#アクションを制限する">アクションを制限する</a></li>
+    </ul>
+  </li>
+  <li><a href="#どれも簡単な物ばかり">どれも簡単な物ばかり</a></li>
+</ul>
+  </div>
+
+  <p>セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。
+メソッド一覧は量が多いので省きます。</p>
+
+<p>実際にどういったことが出来るのか詳細はこちらの記事をどうぞ。</p>
+
+<h2 id="編集モードとは">編集モードとは</h2>
+<p><code class="highlighter-rouge">UITableView.isEditing</code> を <code class="highlighter-rouge">true</code> にすると編集モードに切り替わります。</p>
+
+<p>次のように削除と並び替えが出てきます。
+<a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif" width="100%" /></a></p>
+
+<p>つまり 編集モードには <code class="highlighter-rouge">アクション</code> と <code class="highlighter-rouge">並び替え</code> の2機能を備えてます。</p>
+
+<p>しかしこのままでは削除を押しても何もおきないし、並び替えできてもセルを隠すと元に戻ります。</p>
+
+<ul>
+  <li>セルの削除は自分で行う必要がある</li>
+  <li>並び替え後はデータも並び替える必要がある</li>
+</ul>
+
+<p>ではちゃんと削除と並び替えを実装してみます。</p>
+
+<h2 id="削除と並び替えを実装する">削除と並び替えを実装する</h2>
+<p>次のようなToDoをテーブルに並べて、それを削除したり並び替えたりできるようにします。</p>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-2.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-2.png" width="100%" /></a></p>
+
+<h3 id="todoデータモデル">ToDoデータモデル</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">enum</span> <span class="kt">ToDoCategory</span><span class="p">:</span> <span class="kt">CustomStringConvertible</span> <span class="p">{</span>
+    <span class="k">case</span> <span class="n">business</span>
+    <span class="k">case</span> <span class="n">home</span>
+
+    <span class="k">var</span> <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">switch</span> <span class="k">self</span> <span class="p">{</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">business</span><span class="p">:</span> <span class="k">return</span> <span class="s">"仕事"</span>
+        <span class="k">case</span> <span class="o">.</span><span class="nv">home</span><span class="p">:</span> <span class="k">return</span> <span class="s">"家事"</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">struct</span> <span class="kt">ToDo</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">category</span><span class="p">:</span> <span class="kt">ToDoCategory</span>
+<span class="p">}</span>
+
+<span class="k">var</span> <span class="nv">todos</span><span class="p">:</span> <span class="p">[</span><span class="kt">ToDo</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"皿洗い"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">home</span><span class="p">),</span>
+    <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"洗濯"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">home</span><span class="p">),</span>
+    <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"洗濯物干し"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">home</span><span class="p">),</span>
+    <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"洗濯物取り込み"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">home</span><span class="p">),</span>
+    <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"洗濯物畳み"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">home</span><span class="p">),</span>
+    <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"ブログ記事執筆"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">business</span><span class="p">),</span>
+    <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"ログ解析"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">business</span><span class="p">),</span>
+<span class="p">]</span>
+</code></pre></div></div>
+
+<p>なおテーブル表示は通常のテーブル表示と変わらず、データは↑のtodosを使っています。</p>
+
+<p>テーブル表示の詳細はこちらの記事をどうぞ</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-basic">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>|
+| |
+
+タップした後が残るのを消して欲しい
+
+特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
+
+```swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPa...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="削除はイベント検知したらデータとテーブルを更新する">削除はイベント検知したらデータとテーブルを更新する</h3>
+
+<p>削除は セル左側の赤◯ボタンを押すと右側から出てくる赤背景のアクションをタップするとイベントが呼ばれます。<br />
+その内部でテーブルとデータを更新します。</p>
+
+<p>呼ばれるメソッドは <code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">func tableView(_:commit:forRowAt:)</code> になります。</p>
+
+<p>このメソッドに次のようにテーブルとデータを更新します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">commit</span> <span class="nv">editingStyle</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">.</span><span class="kt">EditingStyle</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="n">todos</span><span class="o">.</span><span class="nf">remove</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">tableView</span><span class="o">.</span><span class="nf">deleteRows</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="p">[</span><span class="n">indexPath</span><span class="p">],</span> <span class="nv">with</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">RowAnimation</span><span class="o">.</span><span class="n">automatic</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>これを実行すると次のように削除ボタンを選べばテーブルから削除されて、かつセルを隠して再更新させても復活しなくなります。</p>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-3.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-3.gif" width="100%" /></a></p>
+
+<h3 id="並び替えはイベント検知したらデータを更新する">並び替えはイベント検知したらデータを更新する</h3>
+
+<p>並び替えはセルをドロップしたら、イベントが呼ばれます。
+その内部でデータを更新します。 テーブルは既に変わっているので特に何もする必要はありません。</p>
+
+<p>呼ばれるメソッドは <code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">func tableView(_:moveRowAt:to:)</code> になります。</p>
+
+<p>このメソッドに次のコードでようにデータを更新します</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">moveRowAt</span> <span class="nv">sourceIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">to</span> <span class="nv">destinationIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">todo</span> <span class="o">=</span> <span class="n">todos</span><span class="p">[</span><span class="n">sourceIndexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+    <span class="n">todos</span><span class="o">.</span><span class="nf">remove</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">sourceIndexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
+    <span class="n">todos</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">todo</span><span class="p">,</span> <span class="nv">at</span><span class="p">:</span> <span class="n">destinationIndexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>これを実行すると次のように並び替えた後でセルを隠して再更新しても並び順は維持されます。</p>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-4.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-4.gif" width="100%" /></a></p>
+
+<h3 id="削除ラベルのタイトルを変える">削除ラベルのタイトルを変える</h3>
+
+<p>セル右側の削除ラベルのタイトルは変えることができます。</p>
+
+<p>変更用メソッドは <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:titleForDeleteConfirmationButtonForRowAt:) -&gt; String?</code> になります。</p>
+
+<p>このメソッドに次のように文字列を渡すことで変更できます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">titleForDeleteConfirmationButtonForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="s">"削除する"</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png" width="100%" /></a></p>
+
+<p>ちなみに <code class="highlighter-rouge">nil</code> を渡すとデフォルトで文字列ではなく空白になります。</p>
+
+<h2 id="並び替えのみ有効にする">並び替えのみ有効にする</h2>
+
+<p>削除はできず並び替えだけしたい場合があります。</p>
+
+<p>その場合は <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> を使います。</p>
+
+<p>次のように実装します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">editingStyleForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span><span class="o">.</span><span class="kt">EditingStyle</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">.</span><span class="k">none</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-8.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-8.png" width="100%" /></a></p>
+
+<p>しかしこれだと左側に謎のスペースが残ったままになります。</p>
+
+<p>これはインデントが作用してることが原因なので <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">func tableView(_:shouldIndentWhileEditingRowAt:) -&gt; Bool</code> メソッドを使います。</p>
+
+<p>先程のコードに次のコードを追加します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">shouldIndentWhileEditingRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-9.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-9.png" width="100%" /></a></p>
+
+<p>これでインデントによるスペースをなくすことができます。</p>
+
+<h3 id="削除のみを有効にする">削除のみを有効にする</h3>
+
+<p>並び替えはできず削除のみしたい場合があります。</p>
+
+<p>その場合は <code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">tableView(_:canMoveRowAt:) -&gt; Bool</code> メソッドを使います。</p>
+
+<p>次のコードを追加するだけです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canMoveRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-10.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-10.png" width="100%" /></a></p>
+
+<h3 id="指定セルの編集モードできないようにする">指定セルの編集モードできないようにする</h3>
+
+<p>セル単位で編集モードを出さないようにできます。
+<code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">func tableView(_:canEditRowAt:) -&gt; Bool</code> メソッドを使います。</p>
+
+<p>例えば一番上のセルのみを編集モード(削除,並び替え)が出ないようにした場合は  でセル別に設定します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canEditRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span> <span class="k">return</span> <span class="kc">false</span> <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>これを実行すると次のように削除ボタンと並び替えがでなくなります。<br />
+ただし、他のセルの並び替えは有効なため、相対的に位置をずらすことはできます。</p>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-6.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-6.png" width="100%" /></a></p>
+
+<h2 id="削除ではなく追加にする">削除ではなく追加にする</h2>
+
+<p>前述したコードは全部アクションは削除一択でしたが、これを追加アクションにすることができます。<br />
+<code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> メソッドを使います。</p>
+
+<p>既に 削除を無効にする方法で説明してるメソッドです。</p>
+
+<p>このメソッドを次のようにすると追加アクションになります。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">editingStyleForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span><span class="o">.</span><span class="kt">EditingStyle</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="o">.</span><span class="n">insert</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png" width="100%" /></a></p>
+
+<p>削除と違って追加ボタンを押すとすぐに
+<code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">tableView(_:commit:forRowAt:)</code> メソッドが呼ばれます。</p>
+
+<p>これは削除時と同じメソッドです。</p>
+
+<p>削除と追加を分けるには引数の <code class="highlighter-rouge">editingStyle: UITableViewCell.EditingStyle</code> で削除として呼ばれたのか追加として呼ばれたのか判別できます。</p>
+
+<p>例えば削除と追加を混じったコードは次のようになります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">commit</span> <span class="nv">editingStyle</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">.</span><span class="kt">EditingStyle</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="k">if</span> <span class="n">editingStyle</span> <span class="o">==</span> <span class="o">.</span><span class="n">delete</span><span class="p">{</span>
+        <span class="n">todos</span><span class="o">.</span><span class="nf">remove</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="nf">deleteRows</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="p">[</span><span class="n">indexPath</span><span class="p">],</span> <span class="nv">with</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">RowAnimation</span><span class="o">.</span><span class="n">automatic</span><span class="p">)</span>
+    <span class="p">}</span> <span class="k">else</span> <span class="k">if</span> <span class="n">editingStyle</span> <span class="o">==</span> <span class="o">.</span><span class="n">insert</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">newTodo</span> <span class="o">=</span> <span class="kt">ToDo</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"可燃ごみ"</span><span class="p">,</span> <span class="nv">category</span><span class="p">:</span> <span class="o">.</span><span class="n">home</span><span class="p">)</span>
+        <span class="c1">// +1 だとセルの下に追加されます</span>
+        <span class="k">let</span> <span class="nv">newIndexPath</span> <span class="o">=</span> <span class="kt">IndexPath</span><span class="p">(</span><span class="nv">row</span><span class="p">:</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">section</span><span class="p">:</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">section</span><span class="p">)</span>
+        <span class="n">todos</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="n">newTodo</span><span class="p">,</span> <span class="nv">at</span><span class="p">:</span> <span class="n">newIndexPath</span><span class="o">.</span><span class="n">row</span><span class="p">)</span>
+
+        <span class="n">tableView</span><span class="o">.</span><span class="nf">insertRows</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="p">[</span><span class="n">newIndexPath</span><span class="p">],</span> <span class="nv">with</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">RowAnimation</span><span class="o">.</span><span class="n">automatic</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-12.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-12.gif" width="100%" /></a></p>
+
+<h2 id="アクションをカスタマイズする">アクションをカスタマイズする</h2>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-13.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-13.gif" width="100%" /></a></p>
+
+<p>上記のようにアクションをカスタマイズできます。</p>
+
+<p>カスタマイズには <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">func tableView(_:editActionsForRowAt) -&gt; [UITableViewRowAction]?</code> メソッドを使います。</p>
+
+<p>このメソッドを次のように実装します。
+また、このメソッドを実装すると、<code class="highlighter-rouge">tableView(_:titleForDeleteConfirmationButtonForRowAt:)</code> は使われなくなります。
+このとき <code class="highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> は <code class="highlighter-rouge">.delete</code> でないと出てきません。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">editActionsForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UITableViewRowAction</span><span class="p">]?</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="p">[</span>
+        <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"default"</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">rowAction</span><span class="p">,</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">in</span>
+            <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span> <span class="o">+</span> <span class="s">"rowAction: </span><span class="se">\(</span><span class="n">rowAction</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}),</span>
+        <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"normal"</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">rowAction</span><span class="p">,</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">in</span>
+            <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span> <span class="o">+</span> <span class="s">"rowAction: </span><span class="se">\(</span><span class="n">rowAction</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">}),</span>
+        <span class="kt">UITableViewRowAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">destructive</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"destructive"</span><span class="p">,</span> <span class="nv">handler</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="n">rowAction</span><span class="p">,</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">in</span>
+            <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span> <span class="o">+</span> <span class="s">"rowAction: </span><span class="se">\(</span><span class="n">rowAction</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>各アクションのタップは <code class="highlighter-rouge">UITableViewRowAction</code> 毎のハンドラーで処理します。上記コードはコンソールに出力してるだけになります。</p>
+
+<h2 id="スワイプ用アクションで前方スワイプと後方スワイプでのアクションを制御する">スワイプ用アクションで前方スワイプと後方スワイプでのアクションを制御する</h2>
+<p>左から右スワイプと右から左スワイプでアクションを出します。</p>
+
+<p><strong>このスワイプアクションは編集モードとは独立しており、<code class="highlighter-rouge">TableView.isEditing</code> が <code class="highlighter-rouge">true</code> だと編集モードのほうを優先されるため機能しません。なので<code class="highlighter-rouge">tableView.isEditing</code> を <code class="highlighter-rouge">false</code> にしてください。</strong></p>
+
+<h3 id="アクションには通常アクションと削除アクションの２種類がある">アクションには通常アクションと削除アクションの２種類がある</h3>
+
+<p>色が違うだけでなく挙動が少しことなります。通常アクションは, アクションが1つの場合スワイプされたらアクションが自動で実行されます。<br />
+アクションが2つの場合はスワイプしたらアクション2つが表示されたままの状態を維持するので、どちらかのアクションをタップして選びます。</p>
+
+<p>削除スワイプは、通常スワイプのアクションが2つ以上だった場合と同じ挙動がアクションが1つでも起きます。</p>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-14.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-14.gif" width="100%" /></a></p>
+
+<h3 id="前方スワイプ">前方スワイプ</h3>
+
+<p><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:leadingSwipeActionsConfigurationForRowAt:) -&gt; UISwipeActionsConfiguration?</code> メソッドを実装します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">leadingSwipeActionsConfigurationForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">?</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">action</span> <span class="o">=</span> <span class="kt">UIContextualAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"normal"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">ctxAction</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">completionHandler</span><span class="p">)</span> <span class="k">in</span>
+        <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+        <span class="nf">completionHandler</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">(</span><span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="n">action</span><span class="p">,</span> <span class="n">action2</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>コードのように <code class="highlighter-rouge">UIContextualAction</code> を配列で <code class="highlighter-rouge">UISwipeActionsConfiguration</code> に渡し返す必要があります。</p>
+
+<p><code class="highlighter-rouge">UIContextualAction</code> 1つにつきアクション1つと結びつきます。<br />
+<code class="highlighter-rouge">UIContextualAction</code> の3つ目の引数がアクションとなる処理を書いて、完了したら <code class="highlighter-rouge">completionHandler</code> を呼びます。</p>
+
+<h3 id="後方スワイプ">後方スワイプ</h3>
+<p><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:trailingSwipeActionsConfigurationForRowAt:) -&gt; UISwipeActionsConfiguration?</code> メソッドを実装します</p>
+
+<p>使い方は前方スワイプと同じです。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">trailingSwipeActionsConfigurationForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">?</span> <span class="p">{</span>
+
+    <span class="k">let</span> <span class="nv">action</span> <span class="o">=</span> <span class="kt">UIContextualAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">destructive</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"destructive"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">ctxAction</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">completionHandler</span><span class="p">)</span> <span class="k">in</span>
+        <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+        <span class="nf">completionHandler</span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+    <span class="p">}</span>
+
+    <span class="k">return</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">(</span><span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="n">action</span><span class="p">])</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>後方スワイプの <code class="highlighter-rouge">.destructive</code> は自動でセルが消えます。<br />
+しかしデータ側を教えておかないと、セルの再読み込み時に元に戻ってしまいます。</p>
+
+<h2 id="編集モード前後イベント">編集モード前後イベント</h2>
+
+<p>編集モードの開始直前と終了直後のイベントを受け取ることができます。</p>
+
+<p><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:willBeginEditingRowAt:)</code> と <code class="highlighter-rouge">tableView(_:didEndEditingRowAt:)</code> メソッドです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 行ごとの編集モード開始直前</span>
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willBeginEditingRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+<span class="p">}</span>
+
+<span class="c1">// 行ごとの編集モード完了直後</span>
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">didEndEditingRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">?)</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="並び替え制御">並び替え制御</h2>
+
+<p>並び替えの許可や制御を行うことができます。
+<code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:targetIndexPathForMoveFromRowAt:toProposedIndexPath:) -&gt; IndexPath</code> メソッドです。</p>
+
+<p>デフォルトの並び替えではセクションを横断して並び替えをすることが可能です。
+これを例えばセクションをまたいだ並び替えを禁止して、またいだ場合は移動前に戻したい場合は次のコードのように使うことができます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">targetIndexPathForMoveFromRowAt</span> <span class="nv">sourceIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">toProposedIndexPath</span> <span class="nv">proposedDestinationIndexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">IndexPath</span> <span class="p">{</span>    
+    <span class="k">if</span> <span class="n">sourceIndexPath</span><span class="o">.</span><span class="n">section</span> <span class="o">==</span> <span class="n">proposedDestinationIndexPath</span><span class="o">.</span><span class="n">section</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">proposedDestinationIndexPath</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">sourceIndexPath</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-15.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-15.gif" width="100%" /></a></p>
+
+<h2 id="メニュー制御">メニュー制御</h2>
+
+<p>テキストを長押ししたらコピーやカットなどが出るメニューがあります。<br />
+テーブルのセルを長押ししたらメニューを出すことができます。</p>
+
+<p>メニューを表示させるには1度に3つのメソッドを実装する必要があります。1つでも抜けてると機能しません。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:shouldShowMenuForRowAt:) -&gt; Bool</code></li>
+  <li><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:canPerformAction:forRowAt:withSender:) -&gt; Bool</code></li>
+  <li><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:performAction:forRowAt:withSender:)</code></li>
+</ul>
+
+<p>それぞれがメニューの表示許可, アクション毎の実行許可, アクション実行時の処理になります。</p>
+
+<p>この3つのメソッドを実装するとメニューが呼べるようになります。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">shouldShowMenuForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canPerformAction</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">withSender</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span> <span class="o">+</span> <span class="s">"action: </span><span class="se">\(</span><span class="n">action</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">true</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">performAction</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">withSender</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上記コードを実行して、次のコンソールログは長押しでメニューを出したときの動画とログになります。</p>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif" width="100%" /></a></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:canPerformAction:forRowAt:withSender:)action: didSetResponderTargetForCalloutBar:
+tableView(_:canPerformAction:forRowAt:withSender:)action: cut:
+tableView(_:canPerformAction:forRowAt:withSender:)action: copy:
+tableView(_:canPerformAction:forRowAt:withSender:)action: select:
+tableView(_:canPerformAction:forRowAt:withSender:)action: selectAll:
+tableView(_:canPerformAction:forRowAt:withSender:)action: paste:
+tableView(_:canPerformAction:forRowAt:withSender:)action: delete:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _promptForReplace:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _transliterateChinese:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _insertDrawing:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _showTextStyleOptions:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _lookup:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _addShortcut:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _accessibilitySpeak:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _accessibilitySpeakLanguageSelection:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _accessibilityPauseSpeaking:
+tableView(_:canPerformAction:forRowAt:withSender:)action: _share:
+tableView(_:canPerformAction:forRowAt:withSender:)action: makeTextWritingDirectionRightToLeft:
+tableView(_:canPerformAction:forRowAt:withSender:)action: makeTextWritingDirectionLeftToRight:
+
+tableView(_:canPerformAction:forRowAt:withSender:)action: cut:
+tableView(_:performAction:forRowAt:withSender:)
+</code></pre></div></div>
+
+<p>改行手前は、 各メニューアクションが実行可能か検証するために呼ばれています。</p>
+
+<p>改行後は、切り取りをタップしたときに呼ばれています。検証と実行が呼ばれています。</p>
+
+<h3 id="アクションを制限する">アクションを制限する</h3>
+
+<p>例えばコピーとカットのみにアクションを制限したいなら、次のコードで２つに絞ることが出来ます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">canPerformAction</span> <span class="nv">action</span><span class="p">:</span> <span class="kt">Selector</span><span class="p">,</span> <span class="n">forRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">,</span> <span class="n">withSender</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">Any</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Bool</span> <span class="p">{</span>
+    <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span> <span class="o">+</span> <span class="s">"action: </span><span class="se">\(</span><span class="n">action</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="kd">#selector(</span><span class="nf">copy(_:)</span><span class="kd">)</span> <span class="o">||</span> <span class="n">action</span> <span class="o">==</span> <span class="kd">#selector(</span><span class="nf">cut(_:)</span><span class="kd">)</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kc">true</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="kc">false</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-17.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-17.png" width="100%" /></a></p>
+
+<h2 id="どれも簡単な物ばかり">どれも簡単な物ばかり</h2>
+
+<p><code class="highlighter-rouge">UITableViewDelegate</code> の中身にはたくさんのメソッドがあって折れそうになりますが、1つ1つ見て試すとそんなに難しいものはなくどれも簡単に実装できるものばかりです。</p>
+
+<p>ただ今回のセル編集機能のような少し凝ったUIは、データ構造がUIとの親和性をよくする設計になっていないと苦労すると思います。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/ios-uicollectionview-carousel-simple">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

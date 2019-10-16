@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>StoryboardやXibのロード処理の作りを改善する - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="StoryboardやXibのロード処理の作りを改善する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。 そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので あまりよろしくありません。" />
+<meta property="og:description" content="至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。 そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので あまりよろしくありません。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/ios-xib-optimaize" />
+<meta property="og:url" content="https://blog.mothule.com/ios/ios-xib-optimaize" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-29-ios-xib-optimaize.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-09-29T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"headline":"StoryboardやXibのロード処理の作りを改善する","dateModified":"2019-09-29T00:00:00+09:00","datePublished":"2019-09-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-xib-optimaize.png","url":"https://blog.mothule.com/ios/ios-xib-optimaize","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/ios-xib-optimaize"},"description":"至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。 そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので あまりよろしくありません。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="StoryboardやXibのロード処理の作りを改善する">
+    <meta name="twitter:description" content="至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるのであまりよろしくありません。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-29-ios-xib-optimaize.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / StoryboardやXibのロード処理の作りを改善する
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-29-ios-xib-optimaize.png" alt="StoryboardやXibのロード処理の作りを改善する">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>StoryboardやXibのロード処理の作りを改善する</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-9-29</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableview">uitableview</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uicollectionview">uicollectionview</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#自由に法則性を与えることで実装を簡易にする">自由に法則性を与えることで実装を簡易にする</a></li>
+  <li><a href="#法則性によりロード処理がシンプルになる">法則性によりロード処理がシンプルになる</a>
+    <ul>
+      <li><a href="#storyboard">Storyboard</a></li>
+      <li><a href="#xib">xib</a></li>
+      <li><a href="#storyboardableとnibableとは">StoryboardableとNibableとは</a></li>
+    </ul>
+  </li>
+  <li><a href="#xibのコードを改善してみる">xibのコードを改善してみる</a>
+    <ul>
+      <li><a href="#テーブル登録">テーブル登録</a></li>
+      <li><a href="#登録処理を汎用化する">登録処理を汎用化する</a></li>
+      <li><a href="#セルの参照">セルの参照</a></li>
+    </ul>
+  </li>
+  <li><a href="#storyboardのコードを改善してみる">storyboardのコードを改善してみる</a></li>
+  <li><a href="#既存の1storyboardに複数個のviewcontrollerが紐付いてるstoryboardに対して">既存の1storyboardに複数個のViewControllerが紐付いてるstoryboardに対して</a></li>
+  <li><a href="#全容">全容</a></li>
+  <li><a href="#storyboardやxibのロード処理の改善はただのリファクタリング">StoryboardやXibのロード処理の改善はただのリファクタリング</a></li>
+</ul>
+  </div>
+
+  <p>至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。
+そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので
+あまりよろしくありません。</p>
+
+<p>なので私が普段使っている煩わしいロード処理を抑え込んだロード処理実装について説明します。</p>
+
+<h2 id="自由に法則性を与えることで実装を簡易にする">自由に法則性を与えることで実装を簡易にする</h2>
+
+<p>Storyboardやxibは自由度が高いため、1storyboardに複数のView Controllerを作成できたり、
+Identifierに好きな名前をつけることができます。</p>
+
+<p>しかしこれだと法則性が生まれないため、今回は次のようにルールを設けることで法則性を作り出します。</p>
+
+<ul>
+  <li>1 View Controller に対し 1 Storyboard</li>
+  <li>Identifier には制御クラス名が入る</li>
+  <li>storyboardファイル/xibファイルは<code class="highlighter-rouge">制御クラス名.拡張子</code>となっている</li>
+</ul>
+
+<h2 id="法則性によりロード処理がシンプルになる">法則性によりロード処理がシンプルになる</h2>
+
+<p>Storyboardには1 View Controller しかないのであれば、ロードはシンプルになります。<br />
+加えてIdentifierを制御クラスにすることでよりシンプルになります。</p>
+
+<h3 id="storyboard">Storyboard</h3>
+<p>Storyboardをロードする処理を通常通り書くと次のような処理になります。
+下記コードは<code class="highlighter-rouge">Is Initial View Controller</code>が<code class="highlighter-rouge">ON</code> and Identifierが未設定のViewControllerのロードにトライし、それが失敗だったら<br />
+Identifierを指定してViewControllerのロードにトライして、HogeViewControllerのロード処理を行っています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">storyboard</span> <span class="o">=</span> <span class="kt">UIStoryboard</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"HogeViewController"</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+<span class="k">let</span> <span class="nv">vc</span><span class="p">:</span> <span class="kt">HogeViewController</span>
+<span class="k">if</span> <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="n">storyboard</span><span class="o">.</span><span class="nf">instantiateInitialViewController</span><span class="p">()</span> <span class="k">as?</span> <span class="kt">HogeViewController</span>
+  <span class="n">vc</span> <span class="o">=</span> <span class="n">viewController</span>
+<span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+  <span class="n">vc</span> <span class="o">=</span> <span class="n">storyboard</span><span class="o">.</span><span class="nf">instantiateViewController</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"HogeViewController"</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">HogeViewController</span>
+<span class="p">}</span>
+<span class="nf">present</span><span class="p">(</span><span class="n">vc</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>これを今回は次のようにします。詳細は後述します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">HogeViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">Storyboardable</span> <span class="p">{</span> <span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">vc</span> <span class="o">=</span> <span class="kt">HogeViewController</span><span class="o">.</span><span class="nf">instance</span><span class="p">()</span>
+<span class="nf">present</span><span class="p">(</span><span class="n">vc</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="xib">xib</h3>
+<p>xibのロードに関しては、例えばTableViewCell.xibファイルをUITableViewに登録する処理は通常通りだと下記コードですが</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">nib</span> <span class="o">=</span> <span class="kt">UINib</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="s">"TableViewCell"</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+<span class="n">tableView</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="n">nib</span><span class="p">,</span> <span class="nv">forCellReuseIdentifier</span><span class="p">:</span> <span class="s">"TableViewCell"</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>今回は次のようになります。詳細は後述します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableViewCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="p">,</span> <span class="kt">Nibable</span> <span class="p">{}</span>
+
+<span class="n">tableView</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="kt">TableViewCell</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>UICollectionViewのCell登録に関しても同様になります。</p>
+
+<h3 id="storyboardableとnibableとは">StoryboardableとNibableとは</h3>
+
+<p>これらは登録や参照における処理を前述したルールに基づいてロードや参照処理を持つものです。</p>
+
+<p>順を追って説明します。まずはxibから説明します。</p>
+
+<h2 id="xibのコードを改善してみる">xibのコードを改善してみる</h2>
+
+<p>例えばUITableViewCellのサブクラスとなる<code class="highlighter-rouge">TableViewCell</code>が定義されてたとして、xibファイルは<code class="highlighter-rouge">TableViewCell.xib</code>だったとします。
+xibファイルは前述したルールに制御クラス名でなければいけません。</p>
+
+<p>UITableViewにそのセルを表示するには</p>
+
+<ol>
+  <li>テーブルに登録</li>
+  <li>セル参照</li>
+</ol>
+
+<p>の2つが必要になります。</p>
+
+<h3 id="テーブル登録">テーブル登録</h3>
+<p>テーブルへの登録には、 <code class="highlighter-rouge">UITableView.register</code> が使われます。</p>
+
+<p>これは <code class="highlighter-rouge">UINib</code>と対象のセルの<code class="highlighter-rouge">Identifier</code>を渡すことで登録が行われます。
+そして<code class="highlighter-rouge">UINib</code>はxibファイル名が必要になります。</p>
+
+<p>つまり UITableViewCellのサブクラスを登録するには、</p>
+
+<ul>
+  <li>xibファイル名</li>
+  <li>セルのIdentifier</li>
+</ul>
+
+<p>の2つが必要になります。</p>
+
+<p>そして、前述したルールに沿えば、xibファイル名は<code class="highlighter-rouge">制御クラス名.xib</code>でなければならないのと、
+セルのIdentifierも<code class="highlighter-rouge">制御クラス名</code>でなければなりません。</p>
+
+<p>つまり<strong>制御クラス名が分かれば、登録処理に必要な情報が分かります。</strong></p>
+
+<p>そして制御クラス名とは、登録したいセルと一致しているため、<br />
+次のように制御クラスからUINibを求める処理が書けるようになります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableViewCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">className</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span> <span class="p">}</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="n">className</span> <span class="p">}</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">nib</span><span class="p">:</span> <span class="kt">UINib</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">UINib</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="n">className</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>これにより登録処理は次のように書けます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="kt">TableViewCell</span><span class="o">.</span><span class="n">nib</span><span class="p">,</span> <span class="nv">forCellReuseIdentifier</span><span class="p">:</span> <span class="kt">TableViewCell</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>しかしこれだと、わざわざ1つに固まった情報を外側で２つに分けて登録することになりコードとしては閉じた設計になっていません。<br />
+なので登録処理自体も用意します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UITableView</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="n">register</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">TableViewCell</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span> <span class="p">)</span> <span class="p">{</span>
+      <span class="nf">register</span><span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">nib</span><span class="p">,</span> <span class="nv">forCellReuseIdentifier</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>こうすることで、処理を閉じ込めることができました。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="kt">TableViewCell</span><span class="o">.</span><span class="k">self</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>xibに分離されたセルの使い方が分からない場合は、こちらの記事をどうぞ。</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-uitableviewcell-xib">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-29-ios-uitableview-uitableviewcell-xib/2019-09-29-ios-uitableview-uitableviewcell-xib.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewCellをxibから使う</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>
+この記事ではUITableViewCellをxib化して外部からセルを使う方法について説明します。
+
+UITableViewCellをカスタマイズして多彩なテーブル実装はできますが、設計観点においてUITableView上に直接UITableViewCellを配置してカスタマイズするのは、ときとして完全ではありません。
+
+例えば画面Aと画面Bで同じレイアウトのセルを必要になったときに、UITableViewに直接配置したセルでは、画面毎のstoryboardに同じレイアウトが存在してしまい、DR...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="登録処理を汎用化する">登録処理を汎用化する</h3>
+<p>前述したコードはたしかに登録処理がシンプルになりましたが、 TableViewCell専用です。<br />
+なのでこれをどのUITableViewCellサブクラスにも使えるようにします。</p>
+
+<p>まず制御クラス名(<code class="highlighter-rouge">className</code>)とIdentifierをTableViewCell専用から汎用に変えるためにprotocol抽出します。<br />
+UIViewControllerやUITableViewCellらは根底としてNSObjectを基底クラスとして持っており、そしてNSObjectはNSObjectProtcolを採用しています。</p>
+
+<p>なので今回は NSObjectProtocol protocolを拡張することでUIViewControllerやUITableViewCellのクラス名やIdentifierが取れるようにします。<br />
+多少影響がが広いですが、どちらもただのクラス名を返す属性としてあっても問題ないプロパティなので、大きく剥離した設計ではないと思います。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">className</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span> <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="n">className</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>こうすることで UIViewControllerやUITableViewCellらは、自分のクラス名とIDを持つことができました。
+残すは<code class="highlighter-rouge">nib: UINib</code>になります。</p>
+
+<p>これには新しく <code class="highlighter-rouge">Nibable</code> protocol を用意して、NIBを持つ制御クラスにこのprotocolを採用させることで、
+採用したクラスは<code class="highlighter-rouge">nib: UINib</code>が持てるようにします。<br />
+またnibにはクラス名がいるので先程の<code class="highlighter-rouge">NSObjectProtcol</code>に準拠させます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Nibable</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">nibName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">nib</span><span class="p">:</span> <span class="kt">UINib</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">extension</span> <span class="kt">Nibable</span> <span class="p">{</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">nibName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="n">className</span> <span class="p">}</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">nib</span><span class="p">:</span> <span class="kt">UINib</span> <span class="p">{</span> <span class="k">return</span> <span class="kt">UINib</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="n">nibName</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>これを<code class="highlighter-rouge">TableViewCell</code>に採用させると次のようになります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableViewCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="p">,</span> <span class="kt">Nibable</span> <span class="p">{</span> <span class="p">}</span>
+</code></pre></div></div>
+<p>TableViewCell自体に制御クラス名などは持たせる必要はありません。
+Nibableを採用したことでデフォルトでそれらを持っているためです。</p>
+
+<p>こうすることで、別のテーブル定義にも <code class="highlighter-rouge">Nibable</code> を採用させることで登録処理を簡易化できるようになります。</p>
+
+<p>しかし先程同様にデータ側が整理されても登録も整理されていないと動きません。
+なので先程改修したregiserを修正します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UITableView</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="n">register</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span><span class="p">:</span> <span class="kt">Nibable</span> <span class="p">{</span>
+      <span class="nf">register</span><span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">nib</span><span class="p">,</span> <span class="nv">forCellReuseIdentifier</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>型を<code class="highlighter-rouge">UITableViewCell</code>を継承したサブクラス限定にして、 そのサブクラスが<code class="highlighter-rouge">Nibable</code>を採用している条件にします。</p>
+
+<p>xibやテーブルだけでなくUICollectionViewにも使われます。</p>
+
+<h3 id="セルの参照">セルの参照</h3>
+
+<p>登録の次はセルを生成 or 参照が必要です。</p>
+
+<p>これは通常は</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"TableViewCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">TableViewCell</span>
+</code></pre></div></div>
+<p>というふうに <code class="highlighter-rouge">Identifier</code>と<code class="highlighter-rouge">制御クラス</code>へのキャストが必要になります。</p>
+
+<p>これを今回は</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="kt">TableViewCell</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span>
+</code></pre></div></div>
+<p>のように制御クラスへのキャストやIdentifierの指定を閉じ込めます。
+これは、<code class="highlighter-rouge">制御クラスの型</code>を渡すだけで中で<code class="highlighter-rouge">Identifler</code>と<code class="highlighter-rouge">制御クラス</code>へのキャストをしてくれる拡張メソッドを用意すればいいだけですね。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UITableView</span> <span class="p">{</span>
+  <span class="kd">func</span> <span class="n">dequeueReusableCell</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">cellType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="k">for</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="p">{</span>
+    <span class="k">return</span> <span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">T</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>今度はNibableは必要ありません。型推論によりキャストもできて、UITableViewCellは<code class="highlighter-rouge">NSObjectProtcol</code>を採用しているので<code class="highlighter-rouge">identifier</code>も取ってこれます。</p>
+
+<h2 id="storyboardのコードを改善してみる">storyboardのコードを改善してみる</h2>
+
+<p>StoryboardもNibableのように<code class="highlighter-rouge">Storyboardable</code>を用意する方法です。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Storyboardable</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">extension</span> <span class="kt">Storyboardable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="n">className</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>前述したルール、Identifierは制御クラスなのでここでもstoryboardNameは制御クラス名になります。</p>
+
+<p>そして、これらを使ってStoryboardにアクセスしView Controllerのインスタンスを生成するコードを用意します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">Storyboardable</span> <span class="p">{</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="n">className</span> <span class="p">}</span>
+
+  <span class="kd">static</span> <span class="kd">func</span> <span class="nf">instance</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="p">{</span>
+      <span class="k">let</span> <span class="nv">storyBoardName</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="k">Self</span><span class="o">.</span><span class="n">storyboardName</span>
+      <span class="k">let</span> <span class="nv">storyBoard</span> <span class="o">=</span> <span class="kt">UIStoryboard</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="n">storyBoardName</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+      <span class="k">if</span> <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="n">storyBoard</span><span class="o">.</span><span class="nf">instantiateInitialViewController</span><span class="p">()</span> <span class="k">as?</span> <span class="k">Self</span> <span class="p">{</span>
+          <span class="k">return</span> <span class="n">viewController</span>
+      <span class="p">}</span>
+
+      <span class="k">let</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="k">Self</span><span class="o">.</span><span class="n">className</span>
+      <span class="k">return</span> <span class="n">storyBoard</span><span class="o">.</span><span class="nf">instantiateViewController</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="n">identifier</span><span class="p">)</span> <span class="k">as!</span> <span class="k">Self</span>
+  <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>これは冒頭に記載したコードと意図は同じです。</p>
+
+<h2 id="既存の1storyboardに複数個のviewcontrollerが紐付いてるstoryboardに対して">既存の1storyboardに複数個のViewControllerが紐付いてるstoryboardに対して</h2>
+<p><code class="highlighter-rouge">FugaViewController</code> の対象UIが <code class="highlighter-rouge">HogeViewController.storyboard</code> にある場合は次のように実装します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">FugaViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">Storyboardable</span> <span class="p">{</span>
+  <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"HogeViewController"</span> <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>このようにすれば HogeViewController.storyboard内の<code class="highlighter-rouge">FugaViewController</code>のIdentifierを持つView Controllerをロードします。</p>
+
+<h2 id="全容">全容</h2>
+<p>部分的にコード抜粋で全容を見ないと分からないと思うのでコードの全容を記載します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// MARK: - NSObjectProtocol</span>
+<span class="kd">extension</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">className</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span>
+    <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">className</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// MARK: - Storyboardable</span>
+<span class="kd">protocol</span> <span class="kt">Storyboardable</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+<span class="kd">extension</span> <span class="kt">Storyboardable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="n">className</span> <span class="p">}</span>
+
+    <span class="kd">static</span> <span class="kd">func</span> <span class="nf">instance</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="k">Self</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">storyBoardName</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="k">Self</span><span class="o">.</span><span class="n">storyboardName</span>
+        <span class="k">let</span> <span class="nv">storyBoard</span> <span class="o">=</span> <span class="kt">UIStoryboard</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="n">storyBoardName</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">viewController</span> <span class="o">=</span> <span class="n">storyBoard</span><span class="o">.</span><span class="nf">instantiateInitialViewController</span><span class="p">()</span> <span class="k">as?</span> <span class="k">Self</span> <span class="p">{</span>
+            <span class="k">return</span> <span class="n">viewController</span>
+        <span class="p">}</span>
+
+        <span class="k">let</span> <span class="nv">identifier</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="k">Self</span><span class="o">.</span><span class="n">className</span>
+        <span class="k">return</span> <span class="n">storyBoard</span><span class="o">.</span><span class="nf">instantiateViewController</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="n">identifier</span><span class="p">)</span> <span class="k">as!</span> <span class="k">Self</span>
+
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// MARK: - Nibable</span>
+<span class="kd">protocol</span> <span class="kt">Nibable</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">nibName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">nib</span><span class="p">:</span> <span class="kt">UINib</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">Nibable</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">nibName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">className</span>
+    <span class="p">}</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">nib</span><span class="p">:</span> <span class="kt">UINib</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="kt">UINib</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="n">nibName</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">UITableView</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="n">dequeueReusableCell</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">cellType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="k">for</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="n">identifier</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">T</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="n">register</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">viewType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">)</span> <span class="k">where</span> <span class="kt">T</span><span class="p">:</span> <span class="kt">Nibable</span> <span class="p">{</span>
+        <span class="nf">register</span><span class="p">(</span><span class="kt">T</span><span class="o">.</span><span class="n">nib</span><span class="p">,</span> <span class="nv">forCellReuseIdentifier</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="n">identifier</span><span class="p">)</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="storyboardやxibのロード処理の改善はただのリファクタリング">StoryboardやXibのロード処理の改善はただのリファクタリング</h2>
+
+<p>改善と言っても速度や動作は変わっておらず、コードの可読性や重複性を排除しただけなので、リファクタリングになります。</p>
+
+<p>最初は通常コードで実装し、コード量が増え実装に一定の法則性が見えてきたら、リファクタリングをするとその時に適した実装になりやすいです。<br />
+いきなりリファクタリング後のコードを目指そうとしても大体がうまくいきません。</p>
+
+<p>また今回のようなリファクタリングは自由を削り、出来ることを明確に表したことによる実装のカプセル化になります。<br />
+そのため今は最適なコードでも、時間が立つことで環境や状況が代わり、最適だったコードも、不足が生まれ返って処理が散開するなどダメなコードに成り果てます。<br />
+UIのような上位レイヤーに位置するコードに永続不変なコードは存在しません。</p>
+
+<p>その時その状況を把握して適切なコードをメンテナンスし続けることは避けられません。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/ios-uicollectionview-carousel-simple">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

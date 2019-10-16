@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>【初心者向け】UITableView(テーブル)の更新方法の基本と注意点 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="【初心者向け】UITableView(テーブル)の更新方法の基本と注意点" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。" />
+<meta property="og:description" content="UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic" />
+<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-10-08T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"headline":"【初心者向け】UITableView(テーブル)の更新方法の基本と注意点","dateModified":"2019-10-08T00:00:00+09:00","datePublished":"2019-10-08T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic"},"description":"UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="【初心者向け】UITableView(テーブル)の更新方法の基本と注意点">
+    <meta name="twitter:description" content="UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。参照データがセルに表示するタイミングもその一つです。このシステムの更新ルールから外れて参照データを更新しても反映されません。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / <a href="/tags#uitableview">Uitableview</a>
+      
+    
+      
+        / 【初心者向け】UITableView(テーブル)の更新方法の基本と注意点
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png" alt="【初心者向け】UITableView(テーブル)の更新方法の基本と注意点">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-10-8</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableview">uitableview</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#データが反映されないコード">データが反映されないコード</a>
+    <ul>
+      <li><a href="#もっとも手軽な解決方法">もっとも手軽な解決方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#テーブル更新方法">テーブル更新方法</a>
+    <ul>
+      <li><a href="#reloaddataの欠点">reloadData()の欠点</a></li>
+      <li><a href="#セクション単位とセル単位の更新">セクション単位とセル単位の更新</a></li>
+    </ul>
+  </li>
+  <li><a href="#部分更新で役立つメソッド">部分更新で役立つメソッド</a></li>
+  <li><a href="#更新は奥が深い">更新は奥が深い</a></li>
+</ul>
+  </div>
+
+  <p>UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。<br />
+参照データがセルに表示するタイミングもその一つです。<br />
+このシステムの更新ルールから外れて参照データを更新しても反映されません。</p>
+
+<p>今回は動的なテーブルの更新方法について説明します。<br />
+またいくつか更新方法があるのでそれぞれの説明と注意点についても説明します。</p>
+
+<h2 id="データが反映されないコード">データが反映されないコード</h2>
+<p>次のようにテーブルの参照データを後から更新すると、テーブルには反映されません。<br />
+なぜならテーブルと参照データは特に紐付いていないためです。<br />
+何らかの方法で参照データの変化をテーブル更新に繋げる必要があります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">users</span><span class="p">:</span> <span class="p">[</span><span class="kt">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+        <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
+
+        <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="nf">asyncAfter</span><span class="p">(</span><span class="nv">deadline</span><span class="p">:</span> <span class="o">.</span><span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">execute</span><span class="p">:</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span> <span class="p">]</span> <span class="k">in</span>
+            <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="n">users</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="kt">User</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"mothule"</span><span class="p">))</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"Changed users"</span><span class="p">)</span>
+        <span class="p">})</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+        <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span> <span class="p">??</span>
+                    <span class="kt">UITableViewCell</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="k">default</span><span class="p">,</span> <span class="nv">reuseIdentifier</span><span class="p">:</span> <span class="s">"cell"</span><span class="p">)</span>
+        <span class="k">let</span> <span class="nv">model</span> <span class="o">=</span> <span class="n">users</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">]</span>
+        <span class="n">cell</span><span class="o">.</span><span class="n">textLabel</span><span class="p">?</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">return</span> <span class="n">cell</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><a href="/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png"><img src="/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png" width="100%" /></a></p>
+
+<p>このときのコンソールは下記を出力してます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>viewDidLoad()
+tableView(_:numberOfRowsInSection:)
+tableView(_:numberOfRowsInSection:)
+tableView(_:numberOfRowsInSection:)
+tableView(_:numberOfRowsInSection:)
+Changed users
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">tableView(_:cellForRowAt:)</code>が呼ばれていないためセルの生成がされません。<br />
+呼ばれない理由は、<code class="highlighter-rouge">users</code>に<code class="highlighter-rouge">User</code>が追加される前にテーブル更新が完結してるためです。</p>
+
+<p>そのため何らかの方法でテーブルを再更新する必要があります。</p>
+
+<p>ちなみにテーブルの基本的な使い方に関してはこちらの記事をどうぞ</p>
+
+<div class="link-container">
+  <a href="/ios/uitableview/ios-uitableview-basic">
+    <div class="link-container-image">
+      <img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
+    </div>
+    <div class="link-container-summary">
+      <div class="link-container-summary-title">
+        <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
+      </div>
+      <div class="link-container-summary-brief">
+        <span>|
+| |
+
+タップした後が残るのを消して欲しい
+
+特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
+
+```swift
+func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+    tableView.deselectRow(at: indexPa...</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<h3 id="もっとも手軽な解決方法">もっとも手軽な解決方法</h3>
+
+<p>テーブルの更新方法はいくつかありますが、もっとも手軽なのが <code class="highlighter-rouge">UITableView.reloadData()</code> になります。</p>
+
+<p>例えば次のコードは参照データが変化したらテーブル全体を更新します。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="k">var</span> <span class="nv">users</span><span class="p">:</span> <span class="p">[</span><span class="kt">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="p">{</span>
+    <span class="k">didSet</span> <span class="p">{</span>
+        <span class="n">tableView</span><span class="p">?</span><span class="o">.</span><span class="nf">reloadData</span><span class="p">()</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="テーブル更新方法">テーブル更新方法</h2>
+
+<p><code class="highlighter-rouge">UITableView</code>の次の３つのメソッドで更新します。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">reloadData</code>: 全てのセルとセクションを更新します。</li>
+  <li><code class="highlighter-rouge">reloadSections(_:with:)</code>: 指定セクションと付随するいセルを更新します。</li>
+  <li><code class="highlighter-rouge">reloadRows(at:with:)</code>: 指定セルをアニメ付きで更新します。</li>
+</ul>
+
+<p>今回のケースでは <code class="highlighter-rouge">reloadData</code> か <code class="highlighter-rouge">reloadSections(_:with:)</code> で更新ができます。<br />
+<code class="highlighter-rouge">reloadRows(at:with:)</code> は更新前と更新後のセクション内のセル数が同じでないとランタイムエラーになります。</p>
+
+<h3 id="reloaddataの欠点">reloadData()の欠点</h3>
+
+<p>セル数の少ないテーブルであれば、 <code class="highlighter-rouge">reloadData()</code> で事足ります。
+しかしセル数が増えたりセル内のレイアウトが複雑だったりすると全体更新は負荷がかかります。</p>
+
+<p>動的に変更で呼ばれるメソッドゆえあまり負荷が重くなるとカクツキが起きるようになります。<br />
+場合によってはスパイクといって数ミリ秒~数秒固まります。</p>
+
+<h3 id="セクション単位とセル単位の更新">セクション単位とセル単位の更新</h3>
+
+<p>負荷がセンシティブな要素であるなら、更新範囲を削ることで更新にかかる時間を短くすることが重要になります。</p>
+
+<p>更新範囲を狭くする方法として <code class="highlighter-rouge">reloadSections(_:with:)</code> と <code class="highlighter-rouge">reloadRows(at:with:)</code> があります。
+<code class="highlighter-rouge">reloadSections(_:with:)</code> メソッドはセクション単位での更新になります。</p>
+
+<p>また更に絞り込みしたい場合は、 <code class="highlighter-rouge">reloadRows(at:with:)</code>がありますが、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。</p>
+
+<h2 id="部分更新で役立つメソッド">部分更新で役立つメソッド</h2>
+
+<p>先程紹介した<code class="highlighter-rouge">reloadSections(_:with:)</code> と <code class="highlighter-rouge">reloadRows(at:with:)</code>はどちらもセクションまたはセルなど具体的な場所を指定する必要があります。</p>
+
+<p>しかしケースによっては特定するのが難しいことがあります。</p>
+
+<p>その場合は、次のメソッドを使うと特定のヒントまたはそのまま使えます。</p>
+
+<ul>
+  <li>選択中のセル位置を取得
+    <ul>
+      <li><code class="highlighter-rouge">UITableView.indexPathsForSelectedRows</code></li>
+      <li><code class="highlighter-rouge">UITableView.indexPathForSelectedRow</code></li>
+    </ul>
+  </li>
+  <li>指定スクリーン座標のセル位置を取得
+    <ul>
+      <li><code class="highlighter-rouge">UITableView.indexPathsForRows(in:)</code></li>
+      <li><code class="highlighter-rouge">UITableView.indexPathForRow(at:)</code></li>
+    </ul>
+  </li>
+  <li>指定セルのセル位置を取得
+    <ul>
+      <li><code class="highlighter-rouge">UITableView.indexPath(for:)</code></li>
+    </ul>
+  </li>
+  <li>表示中のセル位置を取得
+    <ul>
+      <li><code class="highlighter-rouge">UITableView.indexPathsForVisibleRows</code></li>
+    </ul>
+  </li>
+</ul>
+
+<p>例えば表示中セルの全セクションを更新したい場合、次のコードのように工夫すればセクション一覧を取得できます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">sections</span> <span class="o">=</span> <span class="kt">Set</span><span class="p">((</span><span class="n">tableView</span><span class="o">.</span><span class="n">indexPathsForVisibleRows</span> <span class="p">??</span> <span class="p">[])</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">section</span> <span class="p">})</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">reloadSections</span><span class="p">(</span><span class="kt">IndexSet</span><span class="p">(</span><span class="n">sections</span><span class="p">),</span> <span class="nv">with</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">RowAnimation</span><span class="o">.</span><span class="n">automatic</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Setに入れてるのはセクションの重複排除のためです。Arrayが持ってた順番保証がなくなりますが、必要ないので問題ないです。</p>
+
+<h2 id="更新は奥が深い">更新は奥が深い</h2>
+<p>ほとんどのテーブルでは更新はあまり意識せず簡単なものですが、<br />
+更新を呼びすぎるとシステムは愚直にテーブルを更新してしまいます。</p>
+
+<p>しかも1~2回無駄に増えたと程度ではあまり目立ちません。<br />
+しかしスペックの低いiPhoneや高負荷状態では、非常に目立ちます。つまりデータ依存で再現しにくいケースがあります。</p>
+
+<p>そして部分更新でもっともリスクな不具合として、更新場所が適切ではなくテーブルが更新されないバグです。<br />
+開発中に見つけられればそれは良しとして、データ依存による不具合であれば本番しか起きていない不具合で<br />
+それはアプリとして非常に使いにくい動作として現れます。<br />
+しかも残念ながらクラッシュはほぼしないでしょう。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uicollectionview/ios-uicollectionview-carousel-simple">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
