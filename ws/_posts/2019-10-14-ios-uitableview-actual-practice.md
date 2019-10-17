@@ -23,8 +23,7 @@ App Storeに登録されているアプリには様々なデザインがあり�
 解説に使ったサンプル実装の動かしたときの動画になります。
 
 <video src="/assets/videos/2019-10-14-ios-uitableview-actual-practice-1.mp4" playsinline muted autoplay loop width="100%" height="400px">
-　<source src="movie/movie.mp4" type="video/mp4">
-　<source src="movie/movie.webm" type="video/webm">
+　<source src="/assets/videos/2019-10-14-ios-uitableview-actual-practice-1.mp4" type="video/mp4">
 </video>
 
 
