@@ -58,12 +58,60 @@ Driverは購読開始時にイベントがあれば流します。
 しかし、Signalは流しません。
 そのため UIButton などのタップイベントに向いています。
 
+## bindとは？
+あるデータとBinder<データ型>を結びつける機能です。
+
+いまいち分からないので、実際の動きで確認してみる。
+サンプルとして次のような仕様を実装する。
+
+- 「UITextField」の内容が5文字超になれば「UIButton」が押せるようになる
+- 「UIButton」が押されたら「UITextField」の内容を「UILabel」に反映する
+
+これを`subscribe`で実装すると次のコードになる。
+
+```swift
+textField.rx.text.orEmpty
+    .subscribe(onNext: { [weak self] text in
+        self?.button.isEnabled = text.count > 5
+    })
+    .disposed(by: disposeBag)
+
+button.rx.tap.asSignal()
+    .emit(onNext: { [weak self] in
+        self?.label.text = self?.textField.text
+    })
+    .disposed(by: disposeBag)
+```
+
+これをBinderで実装すると次のコードになる。
+
+```swift
+textField.rx.text.orEmpty
+    .map { $0.count > 5 }
+    .bind(to: button.rx.isEnabled)
+    .disposed(by: disposeBag)
+
+button.rx.tap
+    .map { [weak self] _ in self?.textField.text }
+    .bind(to: self.label.rx.text)
+    .disposed(by: disposeBag)
+```
+
+渡された値をそのままバインド先に反映させる。  
+当然なら型は同じでなければならないため、mapでバインド先の型に合わせている。
+
+`bind` と `subscribe` はほとんど同じ動作をする。
+`bind` のほうがシンプルなため、紐付け情報が分かりやすくなる。
+
 ## subscribeとbindとdriveの違い
 
-Observable.subscribe(onNext:) は購読
-bind は
+どれもほとんど同じで講読処理。
+bindは直感的なシンプル差を持つ。
+driveはエラーで終了しないし、UIスレッド保証。
 
-Driver.drive(onNext:)
+## 逆引き: ボタン押されたらテキストをObservableにわたす
+
+outputText = buttonTap.withLatestFrom(textField.rx.text.orEmpty.asDriver())
 
 
 ### shareReplayLatestWhileConnected
