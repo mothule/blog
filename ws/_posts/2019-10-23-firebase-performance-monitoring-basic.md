@@ -276,3 +276,46 @@ let attributes: [String: String] = trace.attributes
 - `FirebaseApp.configure()`の呼び出し後のメソッド入れ替えは影響する可能性があります。
 - iOS8.0~8.2シミュレータでは正常に動作する保証がありません
 - NSURLSessionのbackgroundSessionConfigurationは接続時間が予想より長くなります。
+
+
+## Firebase Performance Monitoring を無効にする方法は3つある
+
+大きく分けて`Info.plist`を設定する方法とコード上で設定する方法に分かれます。
+
+またコード上での設定では自動とカスタムそれぞれの制御ができます。
+
+### Info.plist を設定する方法
+
+- ビルド時に無効にしておき、ランタイムで有効／無効を制御できる方法（`通常無効`）
+- ビルド時に完全無効にしておき、ランタイムで有効に変更できない方法（`完全無効`）
+
+#### 通常無効
+`Info.plist` で `firebase_performance_collection_enabled` を `false` にすることで、無効にできます。
+
+#### 完全無効
+`Info.plist` で `firebase_performance_collection_deactivated` を `true` にすることで、完全無効にできます。
+
+これは `通常無効`(`firebase_performance_collection_enabled`) の設定をオーバーライドします。
+
+前者はつまりコード上で制御できて、後者は制御が不可能になります。
+
+### コード上で設定する方法
+
+`Performance.sharedInstance().isInstrumentationEnabled` で自動トレースとHTTP/Sネットワークリクエストを有効／無効制御できます。
+
+`Performance.sharedInstance().isDataCollectionEnabled` でカスタムトレースを有効／無効制御できます。
+
+コード上の変更では前述した`完全無効`では効果ありません。
+
+### デバッグ版は無効にする
+開発中ではパフォーマンス測定しないために無効にしておき、本番ではコード上で有効にする例があります。
+
+デバッグ情報が入った開発版では本来の測定より重いレポートとなるため、あまりパフォーマンス測定の効果は得られません。
+
+本番のみ有効にするという利用ケースもあります。
+
+### Remote Config と組み合わせて無効制御する
+
+コード上で無効制御ができることとRemote Configを組み合わせることで、デプロイ済みのアプリに対して無効／有効設定ができるようになります。
+
+詳しくは[公式](https://firebase.google.com/docs/perf-mon/disable-sdk?hl=ja&platform=ios#disable-with-remote-config)の記事を確認ください。
