@@ -1,4 +1,313 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-10-23T12:57:28+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">【初心者必見】UITableViewの実践デザイン分析</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice" rel="alternate" type="text/html" title="【初心者必見】UITableViewの実践デザイン分析" /><published>2019-10-14T00:00:00+09:00</published><updated>2019-10-14T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice">&lt;p&gt;UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-10-23T12:58:52+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Firebase Performance Monitoringについて調べてみた</title><link href="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic" rel="alternate" type="text/html" title="Firebase Performance Monitoringについて調べてみた" /><published>2019-10-23T00:00:00+09:00</published><updated>2019-10-23T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic">&lt;p&gt;アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。&lt;br /&gt;
+なお本記事はiOSを重点に調査しています。&lt;/p&gt;
+
+&lt;h2 id=&quot;firebase-performance-monitoringとは&quot;&gt;Firebase Performance Monitoringとは？&lt;/h2&gt;
+
+&lt;p&gt;iOS,Android,Webアプリのパフォーマンス特性を知ることが出来ます。&lt;br /&gt;
+SDKをアプリに統合するだけで、プロファイルコード不要で各パフォーマンスデータを収集し、Firebaseコンソールから分析できます。&lt;/p&gt;
+
+&lt;p&gt;これによりアプリのパフォーマンス問題を解決できます。&lt;/p&gt;
+
+&lt;p&gt;なお Performance Monitoringが自動収集するデータには名前、メアド、電話番号などの個人情報は一切収集しません。&lt;br /&gt;
+またカスタム属性で個人を特定できる情報は使用しないでください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://firebase.google.com/docs/perf-mon?hl=ja&quot;&gt;公式&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;主な機能&quot;&gt;主な機能&lt;/h2&gt;
+
+&lt;p&gt;おもに３つの機能があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;パフォーマンスデータとして次の項目を自動収集&quot;&gt;パフォーマンスデータとして次の項目を自動収集&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;アプリ起動時間&lt;/li&gt;
+  &lt;li&gt;HTTP/Sネットワーク上のリクエスト&lt;/li&gt;
+  &lt;li&gt;画面ごとのレンダリングデータ&lt;/li&gt;
+  &lt;li&gt;フォアグラウンドでのアクティビティ&lt;/li&gt;
+  &lt;li&gt;バックグラウンドでのアクティビティ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;パフォーマンス課題を見つけやすくする&quot;&gt;パフォーマンス課題を見つけやすくする&lt;/h3&gt;
+
+&lt;p&gt;パフォーマンス指標として次の項目を確認できます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;国&lt;/li&gt;
+  &lt;li&gt;デバイス&lt;/li&gt;
+  &lt;li&gt;アプリのバージョン&lt;/li&gt;
+  &lt;li&gt;OS&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;アプリ毎にperformance-monitoringをカスタマイズ&quot;&gt;アプリ毎にPerformance Monitoringをカスタマイズ&lt;/h3&gt;
+
+&lt;p&gt;自作や新しい画面やUIの表示などのパパフォーマンストレーサーを作成できます。&lt;br /&gt;
+またカスタム指標を用意し、トレース時に定義したイベント(キャッシュヒットなど)をカウントできます。&lt;/p&gt;
+
+&lt;p&gt;例えばアプリ独自にインメモリのキャッシュ機構を構築してる場合のキャッシュヒット率を収集することができます。&lt;/p&gt;
+
+&lt;h4 id=&quot;トレースとは&quot;&gt;トレースとは？&lt;/h4&gt;
+
+&lt;p&gt;トレースとは2つの時点の間で取得されたパフォーマンスデータのレポートです。&lt;/p&gt;
+
+&lt;h2 id=&quot;performance-monitoringの仕組み&quot;&gt;Performance Monitoringの仕組み&lt;/h2&gt;
+
+&lt;p&gt;大きくレポートタイミングとして、トレースと通信キャプチャに分かれており、その配下に指標があります。&lt;/p&gt;
+
+&lt;h2 id=&quot;トレースには2種類ある&quot;&gt;トレースには2種類ある&lt;/h2&gt;
+
+&lt;p&gt;トレースには自動トレースとカスタムトレースの2種類のトレースがあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;自動トレース&quot;&gt;自動トレース&lt;/h3&gt;
+
+&lt;p&gt;iOSやAndroidアプリで自動で組み込まれるデフォルトトレースです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;アプリ起動トレース
+    &lt;ul&gt;
+      &lt;li&gt;ユーザーがアプリを起動してから、アプリが応答するまでの時間を測定&lt;/li&gt;
+      &lt;li&gt;コンソールでは &lt;code class=&quot;highlighter-rouge&quot;&gt;_app_start&lt;/code&gt; 報告指標は&lt;code class=&quot;highlighter-rouge&quot;&gt;期間&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;開始タイミングは、アプリが最初のObjectをロードすると開始します&lt;/li&gt;
+      &lt;li&gt;終了タイミングは、 &lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDidBecomeActiveNotification&lt;/code&gt;通知受信後の最初の正常な実行ループ後に停止します。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;フォアグラウンドアプリのトレース
+    &lt;ul&gt;
+      &lt;li&gt;アプリがフォアグラウンドで実行されていてユーザーが利用できる時間を測定&lt;/li&gt;
+      &lt;li&gt;コンソールでは &lt;code class=&quot;highlighter-rouge&quot;&gt;_app_in_foreground&lt;/code&gt; 報告指標は&lt;code class=&quot;highlighter-rouge&quot;&gt;期間&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;開始タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDidBecomeActiveNotification&lt;/code&gt;を受け取ると開始&lt;/li&gt;
+      &lt;li&gt;終了タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationWillResignActiveNotification&lt;/code&gt;を受け取ると停止&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;バックグラウンドアプリのトレース
+    &lt;ul&gt;
+      &lt;li&gt;アプリがバックグラウンドで実行されている時間を測定&lt;/li&gt;
+      &lt;li&gt;コンソールでは &lt;code class=&quot;highlighter-rouge&quot;&gt;_app_in_background&lt;/code&gt; 報告指標は&lt;code class=&quot;highlighter-rouge&quot;&gt;期間&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;開始タイミングは、アプリが&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationWillResignActiveNotification&lt;/code&gt;を受け取ると開始&lt;/li&gt;
+      &lt;li&gt;終了タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDidBecomeActiveNotification&lt;/code&gt;を受け取ると停止&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;画面トレース
+    &lt;ul&gt;
+      &lt;li&gt;画面の存続期間を通じて低速なフレームとフリーズしたフレームを測定&lt;/li&gt;
+      &lt;li&gt;指標はレンダリングが遅いフレームとフリーズしたフレームのみ報告されます。&lt;/li&gt;
+      &lt;li&gt;コンソールでは他トレースとは別テーブルに表示されます。&lt;/li&gt;
+      &lt;li&gt;開始タイミングは、 &lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidAppear:&lt;/code&gt;を呼び出すと &lt;code class=&quot;highlighter-rouge&quot;&gt;keyWindow&lt;/code&gt;内のすべての&lt;code class=&quot;highlighter-rouge&quot;&gt;UIViewController&lt;/code&gt;について開始&lt;/li&gt;
+      &lt;li&gt;終了タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidDisappear:&lt;/code&gt;を呼び出すと停止&lt;/li&gt;
+      &lt;li&gt;正規のコンテナビューコントローラはキャプチャされません。(UINavigationViewControllerなど)&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;自動トレース情報&quot;&gt;自動トレース情報&lt;/h3&gt;
+
+&lt;p&gt;Firebase Performance Monitoringでは次の種類の情報がデフォルトで収集します。&lt;a href=&quot;https://support.google.com/firebase/answer/6318039?hl=ja&quot;&gt;URL&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;機種、OS、画面の向きなどの全般的な端末情報&lt;/li&gt;
+  &lt;li&gt;RAM とディスクのサイズ&lt;/li&gt;
+  &lt;li&gt;CPU 使用率&lt;/li&gt;
+  &lt;li&gt;携帯通信会社（モバイルの国コードとネットワーク コードに基づく）&lt;/li&gt;
+  &lt;li&gt;無線通信 / ネットワークの情報（例: Wi-Fi、LTE、3G）&lt;/li&gt;
+  &lt;li&gt;国（IP アドレスに基づく）&lt;/li&gt;
+  &lt;li&gt;ロケール / 言語&lt;/li&gt;
+  &lt;li&gt;電波強度&lt;/li&gt;
+  &lt;li&gt;デバイスのジェイルブレイクまたはルート権限取得&lt;/li&gt;
+  &lt;li&gt;電池残量と充電状態&lt;/li&gt;
+  &lt;li&gt;アプリのバージョン&lt;/li&gt;
+  &lt;li&gt;アプリの状態（フォアグラウンドまたはバックグラウンド）&lt;/li&gt;
+  &lt;li&gt;アプリのパッケージ名&lt;/li&gt;
+  &lt;li&gt;仮名のアプリ インスタンス識別子&lt;/li&gt;
+  &lt;li&gt;ネットワークの URL（URL パラメータやペイロードのコンテンツを含まない）と以下の対応する情報:
+    &lt;ul&gt;
+      &lt;li&gt;応答コード（例: 403、200）&lt;/li&gt;
+      &lt;li&gt;ペイロードのサイズ（バイト単位）&lt;/li&gt;
+      &lt;li&gt;応答時間&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;自動トレースの継続時間&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;カスタムトレース&quot;&gt;カスタムトレース&lt;/h3&gt;
+
+&lt;p&gt;ユーザー独自のトレースです。SDKに用意されたAPIを使ってカスタムトレースの開始と終了を定義することできます。&lt;/p&gt;
+
+&lt;p&gt;またカスタムトレースを詳細に構成することで、該当する範囲内で発生したパフォーマンス関連イベントのカスタム指標の記録もできます。&lt;/p&gt;
+
+&lt;p&gt;これは前述したメモリキャッシュ機構でいう、キャッシュヒット数とミス数といった指標や、&lt;br /&gt;
+UIが一定期間反応しなかった回数などカスタム指標を作成できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;httpsネットワークリクエスト&quot;&gt;HTTP/Sネットワークリクエスト&lt;/h2&gt;
+&lt;p&gt;アプリがリクエストを発行してレスポンスが返ってくるまでの時間をキャプチャするレポートです。&lt;br /&gt;
+次の指標を収集します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;応答時間
+    &lt;ul&gt;
+      &lt;li&gt;リクエスト発行からレスポンスの完全受信までの時間&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ペイロードサイズ
+    &lt;ul&gt;
+      &lt;li&gt;ダウンロード／アップロードされたネットワークペイロードのバイトサイズ&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;成功率
+    &lt;ul&gt;
+      &lt;li&gt;全レスポンスに対する成功レスポンスの割合. これは通信障害やサーバー障害を測定することを目的としてる&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;属性&quot;&gt;属性&lt;/h2&gt;
+
+&lt;p&gt;パフォーマンスデータはトレースとHTTP/Sネットワークリクエストの両レポートで次のように分類されています。(以下はiOS/Android)&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;トレース
+    &lt;ul&gt;
+      &lt;li&gt;アプリバージョン&lt;/li&gt;
+      &lt;li&gt;国&lt;/li&gt;
+      &lt;li&gt;OS レベル&lt;/li&gt;
+      &lt;li&gt;デバイス&lt;/li&gt;
+      &lt;li&gt;無線通信&lt;/li&gt;
+      &lt;li&gt;携帯通信会社&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;HTTP/Sネットワークリクエスト
+    &lt;ul&gt;
+      &lt;li&gt;アプリバージョン&lt;/li&gt;
+      &lt;li&gt;国&lt;/li&gt;
+      &lt;li&gt;OS レベル&lt;/li&gt;
+      &lt;li&gt;デバイス&lt;/li&gt;
+      &lt;li&gt;無線通信&lt;/li&gt;
+      &lt;li&gt;携帯通信会社&lt;/li&gt;
+      &lt;li&gt;MIMEタイプ&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;またカスタム属性を設定することもできます。&lt;/p&gt;
+
+&lt;p&gt;これらは、コンソール上でパフォーマンスデータを属性でフィルタリング（セグメント化）することで、さまざまなシナリオにフォーカスした指標を得ることが出来ます。&lt;/p&gt;
+
+&lt;h2 id=&quot;組み込んでみる&quot;&gt;組み込んでみる&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Performance Monitoringをアプリに追加&lt;/li&gt;
+  &lt;li&gt;Firebaseコンソールで結果を確認する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;この2工程です。 なお Firebaseの追加自体はこちらの&lt;a href=&quot;https://firebase.google.com/docs/ios/setup?hl=ja&quot;&gt;公式サイト&lt;/a&gt;を参照してください。&lt;/p&gt;
+
+&lt;h3 id=&quot;performance-monitoringをアプリに追加&quot;&gt;Performance Monitoringをアプリに追加&lt;/h3&gt;
+
+&lt;p&gt;&lt;em&gt;Podfile&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Firebase/Analytics'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Firebase/Performance'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;後は &lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt; するだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDelegate&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;application:didFinishLaunchingWithOptions:&lt;/code&gt;に &lt;code class=&quot;highlighter-rouge&quot;&gt;FirebaseApp.configure()&lt;/code&gt; を追加する必要がありますが、&lt;br /&gt;
+すでにFirebaseを使っている場合はこのコードは既に組み込まれているかと思います。&lt;/p&gt;
+
+&lt;p&gt;これで &lt;code class=&quot;highlighter-rouge&quot;&gt;自動トレース&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP/Sネットワークリクエスト&lt;/code&gt;を監視するようになります。&lt;/p&gt;
+
+&lt;p&gt;※ なお &lt;code class=&quot;highlighter-rouge&quot;&gt;Firebase/Performance&lt;/code&gt; を追加すると依存関係として &lt;code class=&quot;highlighter-rouge&quot;&gt;Remote Config&lt;/code&gt; が組み込まれます。&lt;/p&gt;
+
+&lt;p&gt;もし pod install で UUID重複警告が出た場合は、Firebase関連podを最新にupdateすることで回避できました。&lt;/p&gt;
+
+&lt;h3 id=&quot;firebaseコンソールで結果を確認する&quot;&gt;Firebaseコンソールで結果を確認する&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://console.firebase.google.com/?hl=ja&quot;&gt;Firebase コンソール&lt;/a&gt; で結果が反映されることを確認します。結果は通常12時間以内で表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-23-firebase-performance-monitoring-basic/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-23-firebase-performance-monitoring-basic/1.png&quot; width=&quot;506px&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;カスタムトレースとカスタム指標の実装&quot;&gt;カスタムトレースとカスタム指標の実装&lt;/h2&gt;
+
+&lt;p&gt;1つのトレースに複数の指標を追加できます。&lt;/p&gt;
+
+&lt;p&gt;カスタムトレースはIDが文字列になっており、いくつか制限があります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;先頭と末尾が空白ではないこと&lt;/li&gt;
+  &lt;li&gt;先頭がアンダースコア&lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt;でないこと&lt;/li&gt;
+  &lt;li&gt;32文字以下であること&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;カスタムトレースを追加する&quot;&gt;&lt;em&gt;カスタムトレースを追加する&lt;/em&gt;&lt;/h3&gt;
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;FirebasePerformance&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Performance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;startTrace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// トレースしたいコードを挟む&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;カスタム指標を追加する&quot;&gt;&lt;em&gt;カスタム指標を追加する&lt;/em&gt;&lt;/h3&gt;
+
+&lt;p&gt;次のコードのようにトレースの間にカスタム指標コードを追加します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Performance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;startTrace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;incrementMetric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cache-miss-count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;c1&quot;&gt;// トレースしたいコードを挟む&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;httpsネットワークリクエストのモニタリング追加&quot;&gt;HTTP/Sネットワークリクエストのモニタリング追加&lt;/h2&gt;
+&lt;p&gt;基本的に自動収集されますが、一部収集されないケースがあります。  その場合はカスタムネットワークリクエストを次のように追加します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;metric&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;HTTPMetric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;https://your.domain.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;httpMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;metric&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hogeRequest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;HogeRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;kt&quot;&gt;HogeAPI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hogeRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;metric&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;リクエストの発行前とレスポンスの受信完了直後に &lt;code class=&quot;highlighter-rouge&quot;&gt;start()&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;stop()&lt;/code&gt; を呼んでください。&lt;/p&gt;
+
+&lt;h2 id=&quot;カスタム属性の追加&quot;&gt;カスタム属性の追加&lt;/h2&gt;
+
+&lt;p&gt;Performance Monitoringでは属性を使用することでパフォーマンスデータをセグメント化し、シナリオ別にパフォーマンスを絞り込むことができます。&lt;/p&gt;
+
+&lt;p&gt;カスタム属性はトレースごとに設定出来ます。&lt;br /&gt;
+またカスタム属性にはいくつか制限があります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;カスタム属性の数は、1トレース最大5個に制限&lt;/li&gt;
+  &lt;li&gt;名前は、先頭と末尾に空白がない&lt;/li&gt;
+  &lt;li&gt;先頭にアンダースコア&lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt;がない&lt;/li&gt;
+  &lt;li&gt;32文字以下&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;にする必要があります。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Performance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Male&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;forAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 更新も可能&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Female&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;forAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 削除&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;removeAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// 属性読み込み&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;valueForAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;// トレースに紐づく全属性読み込み&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://firebase.google.com/docs/perf-mon/get-started-ios?hl=ja#known_issues&quot;&gt;公式&lt;/a&gt;ではいくつか注意事項があります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;GTMSQLiteを使ってる場合は、互換性がないため、Performance Monitoringを使用しないほうがいいです。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FirebaseApp.configure()&lt;/code&gt;の呼び出し後のメソッド入れ替えは影響する可能性があります。&lt;/li&gt;
+  &lt;li&gt;iOS8.0~8.2シミュレータでは正常に動作する保証がありません&lt;/li&gt;
+  &lt;li&gt;NSURLSessionのbackgroundSessionConfigurationは接続時間が予想より長くなります。&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="firebase" /><category term="performance-monitoring" /><summary type="html">アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。 なお本記事はiOSを重点に調査しています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-23-firebase-performance-monitoring-basic/0.png" /></entry><entry><title type="html">【初心者必見】UITableViewの実践デザイン分析</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice" rel="alternate" type="text/html" title="【初心者必見】UITableViewの実践デザイン分析" /><published>2019-10-14T00:00:00+09:00</published><updated>2019-10-14T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice">&lt;p&gt;UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。&lt;/p&gt;
 
 &lt;p&gt;App Storeに登録されているアプリには様々なデザインがあります。
 今回はUITableViewを使ってどのように実装されるのかをこの記事で説明します。&lt;/p&gt;
@@ -253,90 +562,7 @@ Storyboardやxibは自由度が高いため、1storyboardに複数のView Contro
 &lt;h2 id=&quot;実は基本の組み合わせ&quot;&gt;実は基本の組み合わせ&lt;/h2&gt;
 &lt;p&gt;実はこのブログのUITableViewの記事を読んでいれば、今回の実装はほとんどが簡単な組み合わせになります。&lt;/p&gt;
 
-&lt;p&gt;難しいように見えて簡単です。ただ手間なだけですね。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png" /></entry><entry><title type="html">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</title><link href="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple" rel="alternate" type="text/html" title="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する" /><published>2019-10-12T00:00:00+09:00</published><updated>2019-10-12T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple</id><content type="html" xml:base="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple">&lt;p&gt;UICollectionViewを使ったCarousel(カルーセル)を実装します。&lt;/p&gt;
-
-&lt;p&gt;カルーセルとは横にバナー画像が並んだ画像ビューワーです。
-主な用途として期間中のキャンペーンバナーの表示として使われます。&lt;/p&gt;
-
-&lt;p&gt;色々な実装方法がありますが、今回はとにかくシンプルを優先して実装します。&lt;/p&gt;
-
-&lt;p&gt;なお記事中の解説画像は&lt;a href=&quot;https://placeholder.com&quot;&gt;Placeholder.com&lt;/a&gt;で生成したものを使っています。&lt;/p&gt;
-
-&lt;h2 id=&quot;実装する&quot;&gt;実装する&lt;/h2&gt;
-
-&lt;p&gt;今回実装するのは次のようなカルーセルです。&lt;/p&gt;
-
-&lt;p&gt;背景色は識別用に出しているだけなのでデフォルトに戻しても問題ありません。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;storyboard&quot;&gt;storyboard&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;スクロールをページングスタイルにするために、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Paging Enabled&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;ON&lt;/code&gt; にします。
-&lt;a href=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;コード&quot;&gt;コード&lt;/h3&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image7&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionViewHeightConstraint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLayoutSubviews&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLayoutSubviews&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;layout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewFlowLayout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scrollDirection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;horizontal&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;minimumInteritemSpacing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;minimumLineSpacing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;itemSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collectionViewLayout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfItemsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForItemAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withReuseIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;CollectionViewCell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as!&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CollectionViewCell&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CollectionViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;imageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidLoad&lt;/code&gt; ではなく &lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidLayoutSubviews&lt;/code&gt; に実装してるのは、画面回転に対応するためです。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;itemSize&lt;/code&gt; を UICollectionViewのサイズと同じにすることで1スクリーンに1セルになります。&lt;/p&gt;
-
-&lt;p&gt;あとはこれを横スクロールにすれば、カルーセルの完成です。&lt;/p&gt;
-
-&lt;p&gt;よりカルーセルらしく見せるには画像の比率を合わせることで余白がなくなりそれっぽく見えます。&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;UIデザインパターンの1つで、ECサイトやキュレーションサイトなど様々なサービスで使われやすいデザインなので覚えておいて損はないと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uicollectionview" /><summary type="html">UICollectionViewを使ったCarousel(カルーセル)を実装します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" /></entry><entry><title type="html">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</title><link href="https://blog.mothule.com/ios/uicollectionview/uicollectionview-in-table" rel="alternate" type="text/html" title="UITableView内にUICollectionViewでCarousel(カルーセル)を実装する" /><published>2019-10-12T00:00:00+09:00</published><updated>2019-10-12T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uicollectionview/uicollectionview-in-table</id><content type="html" xml:base="https://blog.mothule.com/ios/uicollectionview/uicollectionview-in-table">&lt;p&gt;画像の一覧表示や、画面内の情報密度を上げる際に使われるUICollectionViewですが、別の使い方として1列に画像やカードViewなどを並ばせるCarousel(カルーセル)という使い方があります。
+&lt;p&gt;難しいように見えて簡単です。ただ手間なだけですね。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png" /></entry><entry><title type="html">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</title><link href="https://blog.mothule.com/ios/uicollectionview/uicollectionview-in-table" rel="alternate" type="text/html" title="UITableView内にUICollectionViewでCarousel(カルーセル)を実装する" /><published>2019-10-12T00:00:00+09:00</published><updated>2019-10-12T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uicollectionview/uicollectionview-in-table</id><content type="html" xml:base="https://blog.mothule.com/ios/uicollectionview/uicollectionview-in-table">&lt;p&gt;画像の一覧表示や、画面内の情報密度を上げる際に使われるUICollectionViewですが、別の使い方として1列に画像やカードViewなどを並ばせるCarousel(カルーセル)という使い方があります。
 &lt;strong&gt;今回はこれをUITableViewのCell(セル)に入れる方法について説明します。&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;UITableViewのセル内に入れるということは、UICollectionViewの高さが算出できなければいけません。
@@ -668,7 +894,90 @@ UIPageControlも同様に高さをデフォルトに固定しています。&lt;
 &lt;p&gt;プログラミングにおいてアーキテクチャやメンテナンス性、可読性、柔軟性などは共通して求められますが、&lt;br /&gt;
 iOS開発ではそれに加えて端末が持つ機能の使い方やUIデザインの実装方法がスキルとして必要になってきます。&lt;/p&gt;
 
-&lt;p&gt;デザイナーから依頼されたデザインをいかに既存のパーツを組み合わせて構成するかが必要になります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uicollectionview" /><summary type="html">画像の一覧表示や、画面内の情報密度を上げる際に使われるUICollectionViewですが、別の使い方として1列に画像やカードViewなどを並ばせるCarousel(カルーセル)という使い方があります。 今回はこれをUITableViewのCell(セル)に入れる方法について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-12-uicollectionview-in-table/1.png" /></entry><entry><title type="html">【初心者向け】UITableViewControllerの使い方</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic" rel="alternate" type="text/html" title="【初心者向け】UITableViewControllerの使い方" /><published>2019-10-08T00:00:00+09:00</published><updated>2019-10-08T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic">&lt;p&gt;UITableViewControllerの使い方について説明します。&lt;/p&gt;
+&lt;p&gt;デザイナーから依頼されたデザインをいかに既存のパーツを組み合わせて構成するかが必要になります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uicollectionview" /><summary type="html">画像の一覧表示や、画面内の情報密度を上げる際に使われるUICollectionViewですが、別の使い方として1列に画像やカードViewなどを並ばせるCarousel(カルーセル)という使い方があります。 今回はこれをUITableViewのCell(セル)に入れる方法について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-12-uicollectionview-in-table/1.png" /></entry><entry><title type="html">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</title><link href="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple" rel="alternate" type="text/html" title="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する" /><published>2019-10-12T00:00:00+09:00</published><updated>2019-10-12T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple</id><content type="html" xml:base="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple">&lt;p&gt;UICollectionViewを使ったCarousel(カルーセル)を実装します。&lt;/p&gt;
+
+&lt;p&gt;カルーセルとは横にバナー画像が並んだ画像ビューワーです。
+主な用途として期間中のキャンペーンバナーの表示として使われます。&lt;/p&gt;
+
+&lt;p&gt;色々な実装方法がありますが、今回はとにかくシンプルを優先して実装します。&lt;/p&gt;
+
+&lt;p&gt;なお記事中の解説画像は&lt;a href=&quot;https://placeholder.com&quot;&gt;Placeholder.com&lt;/a&gt;で生成したものを使っています。&lt;/p&gt;
+
+&lt;h2 id=&quot;実装する&quot;&gt;実装する&lt;/h2&gt;
+
+&lt;p&gt;今回実装するのは次のようなカルーセルです。&lt;/p&gt;
+
+&lt;p&gt;背景色は識別用に出しているだけなのでデフォルトに戻しても問題ありません。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;storyboard&quot;&gt;storyboard&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;スクロールをページングスタイルにするために、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Paging Enabled&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;ON&lt;/code&gt; にします。
+&lt;a href=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;コード&quot;&gt;コード&lt;/h3&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;image7&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionViewHeightConstraint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLayoutSubviews&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLayoutSubviews&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;layout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewFlowLayout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;scrollDirection&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;horizontal&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;minimumInteritemSpacing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;minimumLineSpacing&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.0&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;itemSize&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;bounds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;collectionViewLayout&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;layout&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfItemsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForItemAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;collectionView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withReuseIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;CollectionViewCell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as!&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CollectionViewCell&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;images&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CollectionViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UICollectionViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt;  &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;imageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidLoad&lt;/code&gt; ではなく &lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidLayoutSubviews&lt;/code&gt; に実装してるのは、画面回転に対応するためです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;itemSize&lt;/code&gt; を UICollectionViewのサイズと同じにすることで1スクリーンに1セルになります。&lt;/p&gt;
+
+&lt;p&gt;あとはこれを横スクロールにすれば、カルーセルの完成です。&lt;/p&gt;
+
+&lt;p&gt;よりカルーセルらしく見せるには画像の比率を合わせることで余白がなくなりそれっぽく見えます。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;UIデザインパターンの1つで、ECサイトやキュレーションサイトなど様々なサービスで使われやすいデザインなので覚えておいて損はないと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uicollectionview" /><summary type="html">UICollectionViewを使ったCarousel(カルーセル)を実装します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" /></entry><entry><title type="html">【初心者向け】UITableViewControllerの使い方</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic" rel="alternate" type="text/html" title="【初心者向け】UITableViewControllerの使い方" /><published>2019-10-08T00:00:00+09:00</published><updated>2019-10-08T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic">&lt;p&gt;UITableViewControllerの使い方について説明します。&lt;/p&gt;
 
 &lt;p&gt;UIViewControllerと対等の位置にありますが、実態はUIViewControllerにテーブル機能を追加して、他の機能を削っただけです。&lt;/p&gt;
 
@@ -1685,194 +1994,4 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 
 &lt;p&gt;N以上X未満みたいな表現をしたい場合、制約を2つ用意することで実現可能です。&lt;/p&gt;
 
-&lt;p&gt;この時 &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; だと制約衝突してしまいます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><category term="uitableviewcell" /><summary type="html">Slackみたいなセルを作る方法について説明する。 Slackみたいなセルとは、</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png" /></entry><entry><title type="html">【初心者向け】UITableViewのセル選択を制御する方法</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-cell-selection" rel="alternate" type="text/html" title="【初心者向け】UITableViewのセル選択を制御する方法" /><published>2019-09-30T00:00:00+09:00</published><updated>2019-09-30T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-cell-selection</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-cell-selection">&lt;p&gt;UITableViewのUITableViewCell(セル)をタップを検知する実装方法について説明します。&lt;/p&gt;
-
-&lt;p&gt;一部検知イベントは超基本的で超高頻度で使う機能ですが、難易度は簡単なのでささっと覚えてしまうほうが後々の実装効率は良くなります。&lt;/p&gt;
-
-&lt;h2 id=&quot;セルの選択イベント一覧&quot;&gt;セルの選択イベント一覧&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;セルタップ制御: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:shouldHighlightRowAt:) -&amp;gt; Bool&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セルハイライト直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didHighlightRowAt:)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セルハイライト解除直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didUnhighlightRowAt:)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択直前: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:willSelectRowAt:) -&amp;gt; IndexPath?&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択解除直前: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:willDeselectRowAt:) -&amp;gt; IndexPath?&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didSelectRowAt:)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択解除直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didDeselectRowAt:)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;セルタップ制御&lt;/code&gt;では、falseを返したセルはタップしてもハイライトにもタップイベントも呼ばれません。&lt;br /&gt;
-ラベルセルとして実装する場合にここをfalseにしてタップできないようにします。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;セル選択直前&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;セル選択解除直前&lt;/code&gt;の戻り値は返したセル位置が実際に選択状態を変更します。&lt;br /&gt;
-正直使うケースに出くわしたことはありません。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;セル選択直後&lt;/code&gt;はセルがタップされたときにここにセルごとの処理を記述することで、セルのタップハンドリングができます。&lt;/p&gt;
-
-&lt;h2 id=&quot;セルの選択解除を検知する&quot;&gt;セルの選択/解除を検知する&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;セル選択直前: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:willSelectRowAt:) -&amp;gt; IndexPath?&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択解除直前: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:willDeselectRowAt:) -&amp;gt; IndexPath?&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didSelectRowAt:)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択解除直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didDeselectRowAt:)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セルハイライト直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didHighlightRowAt:)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セルハイライト解除直後: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:didUnhighlightRowAt:)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;この4つはセルの選択や解除の前後で呼ばれるコールバックメソッドです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;セル選択直前: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:willSelectRowAt:) -&amp;gt; IndexPath?&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;セル選択解除直前: &lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:willDeselectRowAt:) -&amp;gt; IndexPath?&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;直前に呼ばれるこの2つは、選択するセル／解除するセルを制御することも可能です。 &lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;nil&lt;/code&gt;を返すと選択の拒否／解除の拒否する動作になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;イベント検知したら通知する実装&quot;&gt;イベント検知したら通知する実装&lt;/h3&gt;
-&lt;p&gt;次のコードはセルをタップしたら、選択や解除の前後でコンソールにアウトプットするコードです。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// セル選択直前&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;willSelectRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// セル選択解除直前&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;willDeselectRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// セル選択直後&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;didSelectRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// セル選択解除直後&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;didDeselectRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// セルのハイライト直後&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;didHighlightRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// セルのハイライト解除直後&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;didUnhighlightRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;動かした結果&quot;&gt;動かした結果&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-1.gif&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-1.gif&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;上記動きをしたときの出力結果は次の通りです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tableView(_:didHighlightRowAt:)0
-tableView(_:didUnhighlightRowAt:)0
-tableView(_:willSelectRowAt:)0
-tableView(_:didSelectRowAt:)0
-tableView(_:didHighlightRowAt:)1
-tableView(_:didUnhighlightRowAt:)1
-tableView(_:willSelectRowAt:)1
-tableView(_:willDeselectRowAt:)0
-tableView(_:willDeselectRowAt:)0
-tableView(_:didDeselectRowAt:)0
-tableView(_:didSelectRowAt:)1
-tableView(_:didHighlightRowAt:)2
-tableView(_:didUnhighlightRowAt:)2
-tableView(_:willSelectRowAt:)2
-tableView(_:willDeselectRowAt:)1
-tableView(_:willDeselectRowAt:)1
-tableView(_:didDeselectRowAt:)1
-tableView(_:didSelectRowAt:)2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;最初のセル選択以外は、&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;セルハイライト直後&lt;/li&gt;
-  &lt;li&gt;セルハイライト解除直後&lt;/li&gt;
-  &lt;li&gt;セル選択直前&lt;/li&gt;
-  &lt;li&gt;セル選択解除直前&lt;/li&gt;
-  &lt;li&gt;セル選択解除直後&lt;/li&gt;
-  &lt;li&gt;セル選択直後&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;の順番で呼ばれています。(セル選択解除直前がなぜ2回呼ばれているのかは不明です)&lt;/p&gt;
-
-&lt;h4 id=&quot;ハイライトとは押下中の状態&quot;&gt;ハイライトとは押下中の状態&lt;/h4&gt;
-&lt;p&gt;ハイライトとは指でセルを押したままの状態を指します。&lt;/p&gt;
-
-&lt;h3 id=&quot;セルのタップにより処理をするなら選択直後&quot;&gt;セルのタップにより処理をするなら選択直後&lt;/h3&gt;
-
-&lt;p&gt;セルをタップしたら別画面に遷移するなど、セルの押下で処理をしたい場合は&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tableView(_:didSelectRowAt:)&lt;/code&gt;メソッドでやります。&lt;/p&gt;
-
-&lt;h2 id=&quot;セル選択を拒否する&quot;&gt;セル選択を拒否する&lt;/h2&gt;
-&lt;p&gt;セルをタップしたさいにハイライト状態のち選択状態になります。&lt;br /&gt;
-選択状態とは次の状態です。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-2.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;この選択状態を拒否するメソッドがあります。それが&lt;code class=&quot;highlighter-rouge&quot;&gt;func tableView(_:shouldHighlightRowAt:) -&amp;gt; Bool&lt;/code&gt;になります。&lt;/p&gt;
-
-&lt;p&gt;このメソッドの戻り値で&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;を返すと、返されたセルはタップしても何も起こらなくなります。&lt;/p&gt;
-
-&lt;p&gt;次の動画は一番上のセル以外はタップ禁止にしたさいの動きになります。
-動画では選択状態にもハイライトにもなっていません。&lt;br /&gt;
-またログも一番上のセル以外は拾わなくなりました。&lt;/p&gt;
-
-&lt;video autoplay=&quot;&quot; loop=&quot;&quot; muted=&quot;&quot; playsinline=&quot;&quot; src=&quot;/assets/videos/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-1.mp4&quot; width=&quot;100%&quot; height=&quot;400px&quot;&gt;&lt;/video&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;tableView(_:willSelectRowAt:)0
-tableView(_:didSelectRowAt:)0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;コードは前述した選択／解除の前後コールバックに次のコードを追記したものです。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shouldHighlightRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;セル自体のタップ禁止にするだけで、セル自体がボタンを持ってる場合などは通常通り反応します。&lt;br /&gt;
-その場合の実装方法や注意点に関してはこちらの記事をどうぞ。&lt;/p&gt;
-
-&lt;div class=&quot;link-container&quot;&gt;
-  &lt;a href=&quot;/ios/uitableview/ios-uitableview-uitableviewcell-input-control&quot;&gt;
-    &lt;div class=&quot;link-container-image&quot;&gt;
-      &lt;img src=&quot;/assets/images/2019-09-29-ios-uitableview-uitableviewcell-input-control/2019-09-29-ios-uitableview-uitableviewcell-input-control-2.png&quot; /&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;link-container-summary&quot;&gt;
-      &lt;div class=&quot;link-container-summary-title&quot;&gt;
-        &lt;span&gt;【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;link-container-summary-brief&quot;&gt;
-        &lt;span&gt;
-UITableViewのセル(UITableViewCell)にButtonやTextFieldをセットした場合の注意点についてまとめました。
-
-サンプル
-
-検証コードになります。  
-セルにUIButtonとUITextFieldを配置しています。
-
-```swift
-class ViewController: UIViewController {
-    @IBOutlet private weak var tableView: UITableView!
-
-    override f...&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/a&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;セルの選択はuitableviewの重要機能の一つ&quot;&gt;セルの選択はUITableViewの重要機能の一つ&lt;/h2&gt;
-
-&lt;p&gt;セルを表示するだけの画面はほぼなく、必ずといっていいほどセルの選択は必要になります。&lt;/p&gt;
-
-&lt;p&gt;全部のセル選択コールバックの覚える必要はなくともセルの選択により処理をするケースだけでも覚えといて損はないです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><category term="uitableviewcell" /><summary type="html">UITableViewのUITableViewCell(セル)をタップを検知する実装方法について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection.png" /></entry></feed>
+&lt;p&gt;この時 &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; だと制約衝突してしまいます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><category term="uitableviewcell" /><summary type="html">Slackみたいなセルを作る方法について説明する。 Slackみたいなセルとは、</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png" /></entry></feed>
