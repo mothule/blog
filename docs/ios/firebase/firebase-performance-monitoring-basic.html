@@ -185,6 +185,19 @@
   <li><a href="#httpsネットワークリクエストのモニタリング追加">HTTP/Sネットワークリクエストのモニタリング追加</a></li>
   <li><a href="#カスタム属性の追加">カスタム属性の追加</a></li>
   <li><a href="#注意事項">注意事項</a></li>
+  <li><a href="#firebase-performance-monitoring-を無効にする方法は3つある">Firebase Performance Monitoring を無効にする方法は3つある</a>
+    <ul>
+      <li><a href="#infoplist-を設定する方法">Info.plist を設定する方法</a>
+        <ul>
+          <li><a href="#通常無効">通常無効</a></li>
+          <li><a href="#完全無効">完全無効</a></li>
+        </ul>
+      </li>
+      <li><a href="#コード上で設定する方法">コード上で設定する方法</a></li>
+      <li><a href="#デバッグ版は無効にする">デバッグ版は無効にする</a></li>
+      <li><a href="#remote-config-と組み合わせて無効制御する">Remote Config と組み合わせて無効制御する</a></li>
+    </ul>
+  </li>
 </ul>
   </div>
 
@@ -498,6 +511,50 @@ UIが一定期間反応しなかった回数などカスタム指標を作成で
   <li>iOS8.0~8.2シミュレータでは正常に動作する保証がありません</li>
   <li>NSURLSessionのbackgroundSessionConfigurationは接続時間が予想より長くなります。</li>
 </ul>
+
+<h2 id="firebase-performance-monitoring-を無効にする方法は3つある">Firebase Performance Monitoring を無効にする方法は3つある</h2>
+
+<p>大きく分けて<code class="highlighter-rouge">Info.plist</code>を設定する方法とコード上で設定する方法に分かれます。</p>
+
+<p>またコード上での設定では自動とカスタムそれぞれの制御ができます。</p>
+
+<h3 id="infoplist-を設定する方法">Info.plist を設定する方法</h3>
+
+<ul>
+  <li>ビルド時に無効にしておき、ランタイムで有効／無効を制御できる方法（<code class="highlighter-rouge">通常無効</code>）</li>
+  <li>ビルド時に完全無効にしておき、ランタイムで有効に変更できない方法（<code class="highlighter-rouge">完全無効</code>）</li>
+</ul>
+
+<h4 id="通常無効">通常無効</h4>
+<p><code class="highlighter-rouge">Info.plist</code> で <code class="highlighter-rouge">firebase_performance_collection_enabled</code> を <code class="highlighter-rouge">false</code> にすることで、無効にできます。</p>
+
+<h4 id="完全無効">完全無効</h4>
+<p><code class="highlighter-rouge">Info.plist</code> で <code class="highlighter-rouge">firebase_performance_collection_deactivated</code> を <code class="highlighter-rouge">true</code> にすることで、完全無効にできます。</p>
+
+<p>これは <code class="highlighter-rouge">通常無効</code>(<code class="highlighter-rouge">firebase_performance_collection_enabled</code>) の設定をオーバーライドします。</p>
+
+<p>前者はつまりコード上で制御できて、後者は制御が不可能になります。</p>
+
+<h3 id="コード上で設定する方法">コード上で設定する方法</h3>
+
+<p><code class="highlighter-rouge">Performance.sharedInstance().isInstrumentationEnabled</code> で自動トレースとHTTP/Sネットワークリクエストを有効／無効制御できます。</p>
+
+<p><code class="highlighter-rouge">Performance.sharedInstance().isDataCollectionEnabled</code> でカスタムトレースを有効／無効制御できます。</p>
+
+<p>コード上の変更では前述した<code class="highlighter-rouge">完全無効</code>では効果ありません。</p>
+
+<h3 id="デバッグ版は無効にする">デバッグ版は無効にする</h3>
+<p>開発中ではパフォーマンス測定しないために無効にしておき、本番ではコード上で有効にする例があります。</p>
+
+<p>デバッグ情報が入った開発版では本来の測定より重いレポートとなるため、あまりパフォーマンス測定の効果は得られません。</p>
+
+<p>本番のみ有効にするという利用ケースもあります。</p>
+
+<h3 id="remote-config-と組み合わせて無効制御する">Remote Config と組み合わせて無効制御する</h3>
+
+<p>コード上で無効制御ができることとRemote Configを組み合わせることで、デプロイ済みのアプリに対して無効／有効設定ができるようになります。</p>
+
+<p>詳しくは<a href="https://firebase.google.com/docs/perf-mon/disable-sdk?hl=ja&amp;platform=ios#disable-with-remote-config">公式</a>の記事を確認ください。</p>
 
 
   <div class="post-content-share">
