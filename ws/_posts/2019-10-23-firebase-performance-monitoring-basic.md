@@ -186,6 +186,8 @@ pod 'Firebase/Performance'
 
 もし pod install で UUID重複警告が出た場合は、Firebase関連podを最新にupdateすることで回避できました。
 
+**Firebaseコンソールへの反映には12時間以内と記載ありますが、私の環境では12時間近くかかりました。**
+
 ### Firebaseコンソールで結果を確認する
 
 [Firebase コンソール](https://console.firebase.google.com/?hl=ja) で結果が反映されることを確認します。結果は通常12時間以内で表示されます。
