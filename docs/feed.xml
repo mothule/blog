@@ -1,4 +1,115 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-10-24T01:53:39+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Firebase Performance Monitoringの基本の概念と実装について整理した</title><link href="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic" rel="alternate" type="text/html" title="Firebase Performance Monitoringの基本の概念と実装について整理した" /><published>2019-10-23T00:00:00+09:00</published><updated>2019-10-23T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic">&lt;p&gt;アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-11-13T20:09:56+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">rails updateでgemバージョン依存を解決してみる</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version" rel="alternate" type="text/html" title="rails updateでgemバージョン依存を解決してみる" /><published>2019-11-13T00:00:00+09:00</published><updated>2019-11-13T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version">&lt;p&gt;他愛もないネタですが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;gem&lt;/code&gt;のバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。&lt;/p&gt;
+
+&lt;p&gt;題材としてRailsのバージョンを4系から5系にアップデートします。&lt;/p&gt;
+
+&lt;h2 id=&quot;バージョン衝突を再現する&quot;&gt;バージョン衝突を再現する&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle update rails&lt;/code&gt; を実行すると&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle update rails
+Fetching gem metadata from https://rubygems.org/.........
+Fetching gem metadata from https://rubygems.org/.
+Resolving dependencies....
+Bundler could not find compatible versions &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;gem &lt;span class=&quot;s2&quot;&gt;&quot;activesupport&quot;&lt;/span&gt;:
+  In Gemfile:
+    bullet was resolved to 5.9.0, which depends on
+      activesupport &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 3.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    haml-rails was resolved to 1.0.0, which depends on
+      activesupport &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 4.0.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    jbuilder &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;~&amp;gt; 2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; was resolved to 2.8.0, which depends on
+      activesupport &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 4.2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    rails &lt;span class=&quot;o&quot;&gt;(=&lt;/span&gt; 5.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; was resolved to 5.0.0, which depends on
+      activesupport &lt;span class=&quot;o&quot;&gt;(=&lt;/span&gt; 5.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    rspec-rails was resolved to 3.8.1, which depends on
+      activesupport &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 3.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    spring was resolved to 2.0.2, which depends on
+      activesupport &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 4.2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+Bundler could not find compatible versions &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;gem &lt;span class=&quot;s2&quot;&gt;&quot;rails&quot;&lt;/span&gt;:
+  In Gemfile:
+    rails &lt;span class=&quot;o&quot;&gt;(=&lt;/span&gt; 5.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    rails-flog was resolved to 1.5.0, which depends on
+      rails &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 4.2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+Bundler could not find compatible versions &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;gem &lt;span class=&quot;s2&quot;&gt;&quot;railties&quot;&lt;/span&gt;:
+  In Gemfile:
+    devise was resolved to 4.5.0, which depends on
+      railties &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&amp;lt; 6.0, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; 4.1.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    factory_bot_rails was resolved to 4.11.1, which depends on
+      railties &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 3.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    haml-rails was resolved to 1.0.0, which depends on
+      railties &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 4.0.1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    jquery-rails was resolved to 4.3.3, which depends on
+      railties &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 4.2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    rails &lt;span class=&quot;o&quot;&gt;(=&lt;/span&gt; 5.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; was resolved to 5.0.0, which depends on
+      railties &lt;span class=&quot;o&quot;&gt;(=&lt;/span&gt; 5.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    devise was resolved to 4.5.0, which depends on
+      responders was resolved to 2.4.0, which depends on
+        railties &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&amp;lt; 5.3, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; 4.2.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    rspec-rails was resolved to 3.8.1, which depends on
+      railties &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 3.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+
+    sass-rails &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;~&amp;gt; 4.0.3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; was resolved to 4.0.5, which depends on
+      railties &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&amp;lt; 5.0, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; 4.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;とgem依存エラーが表示される。&lt;/p&gt;
+
+&lt;p&gt;赤く大量に表示されてこの時点でやる気なくすが、何がをどう解決すればいいかを読み解いてみる。&lt;/p&gt;
+
+&lt;h2 id=&quot;ログはgemの依存関係を表している&quot;&gt;ログはgemの依存関係を表している&lt;/h2&gt;
+
+&lt;p&gt;このログはどの gem が どの gem に依存しているかを表してます。
+一部抜粋します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Bundler could not find compatible versions &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;gem &lt;span class=&quot;s2&quot;&gt;&quot;activesupport&quot;&lt;/span&gt;:
+  In Gemfile:
+    bullet was resolved to 5.9.0, which depends on
+      activesupport &lt;span class=&quot;o&quot;&gt;(&amp;gt;=&lt;/span&gt; 3.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この場合 &lt;code class=&quot;highlighter-rouge&quot;&gt;bullet&lt;/code&gt; gem が &lt;code class=&quot;highlighter-rouge&quot;&gt;activesupport&lt;/code&gt; gem に依存してることを表します。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;activesupport&lt;/code&gt; のバージョンが &lt;code class=&quot;highlighter-rouge&quot;&gt;3.0.0以上&lt;/code&gt; であれば問題ありません。&lt;br /&gt;
+つまり問題ないライブラリ組み合わせです。&lt;/p&gt;
+
+&lt;p&gt;他のライブラリもバージョン上問題ない組み合わせばかりです。&lt;/p&gt;
+
+&lt;p&gt;つまり問題のない組み合わせもログとして出力されます。&lt;/p&gt;
+
+&lt;h2 id=&quot;地道に見ていく&quot;&gt;地道に見ていく&lt;/h2&gt;
+
+&lt;p&gt;最後まで見ると &lt;code class=&quot;highlighter-rouge&quot;&gt;sass-rails&lt;/code&gt; が怪しいです。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sass-rails &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;~&amp;gt; 4.0.3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; was resolved to 4.0.5, which depends on
+  railties &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&amp;lt; 5.0, &lt;span class=&quot;o&quot;&gt;&amp;gt;=&lt;/span&gt; 4.0.0&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;railties&lt;/code&gt; は 5.0未満でなければいけませんが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;rails&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;5.0.0&lt;/code&gt; なので
+&lt;code class=&quot;highlighter-rouge&quot;&gt;railties&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;5.0.0&lt;/code&gt; になります。
+これは &lt;a href=&quot;https://rubygems.org/gems/rails/versions/5.0.0&quot;&gt;rubygems.org&lt;/a&gt; で確認できます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sass-rails&lt;/code&gt; について調べてみると次のような記事を見つけます。
+https://techracho.bpsinc.jp/hachi8833/2018_04_06/54793#2-1&lt;/p&gt;
+
+&lt;p&gt;どうやら&lt;code class=&quot;highlighter-rouge&quot;&gt;sass&lt;/code&gt;は非推奨になるようです。つまり &lt;code class=&quot;highlighter-rouge&quot;&gt;rails&lt;/code&gt; では &lt;code class=&quot;highlighter-rouge&quot;&gt;sass-rails&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;sassc-rails&lt;/code&gt; に乗り換えないといけないようです。
+Gemfile を次のように書き換えます。&lt;/p&gt;
+
+&lt;div class=&quot;language-diff highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;gd&quot;&gt;-gem 'sass-rails', '~&amp;gt; 4.0.3'
+&lt;/span&gt;&lt;span class=&quot;gi&quot;&gt;+gem 'sassc-rails', '~&amp;gt; 2.1.2'
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これで再度 &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle update rails&lt;/code&gt; を実行すると成功しました。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png" /></entry><entry><title type="html">Firebase Performance Monitoringの基本の概念と実装について整理した</title><link href="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic" rel="alternate" type="text/html" title="Firebase Performance Monitoringの基本の概念と実装について整理した" /><published>2019-10-23T00:00:00+09:00</published><updated>2019-10-23T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic">&lt;p&gt;アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。&lt;br /&gt;
 なお本記事はiOSを重点に調査しています。&lt;/p&gt;
 
 &lt;h2 id=&quot;firebase-performance-monitoringとは&quot;&gt;Firebase Performance Monitoringとは？&lt;/h2&gt;
@@ -216,6 +327,8 @@ UIが一定期間反応しなかった回数などカスタム指標を作成で
 &lt;p&gt;※ なお &lt;code class=&quot;highlighter-rouge&quot;&gt;Firebase/Performance&lt;/code&gt; を追加すると依存関係として &lt;code class=&quot;highlighter-rouge&quot;&gt;Remote Config&lt;/code&gt; が組み込まれます。&lt;/p&gt;
 
 &lt;p&gt;もし pod install で UUID重複警告が出た場合は、Firebase関連podを最新にupdateすることで回避できました。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Firebaseコンソールへの反映には12時間以内と記載ありますが、私の環境では12時間近くかかりました。&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h3 id=&quot;firebaseコンソールで結果を確認する&quot;&gt;Firebaseコンソールで結果を確認する&lt;/h3&gt;
 
@@ -1454,7 +1567,204 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 &lt;p&gt;たかが線ですが、デザインにおいて情報の見せ方で線のありなし、線のインセットで情報整理を行うのがデザインの基本です。&lt;/p&gt;
 
-&lt;p&gt;そのためデザイナーからあげられるデザインにはセル単位で線の制御が入ることがあります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewのseparator(区切り線)は</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-separator-basic/5.png" /></entry><entry><title type="html">【初心者向け】UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic" rel="alternate" type="text/html" title="【初心者向け】UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする" /><published>2019-10-06T00:00:00+09:00</published><updated>2019-10-06T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic">&lt;p&gt;UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする方法についてまとめました。
+&lt;p&gt;そのためデザイナーからあげられるデザインにはセル単位で線の制御が入ることがあります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewのseparator(区切り線)は</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-separator-basic/5.png" /></entry><entry><title type="html">【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate" rel="alternate" type="text/html" title="【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット" /><published>2019-10-06T00:00:00+09:00</published><updated>2019-10-06T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate">&lt;p&gt;UITableView(テーブル)の構築に必須の&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt;ですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。&lt;/p&gt;
+
+&lt;p&gt;しかし実際のアプリ開発では、必ずしもそうとは限らず ViewController が複雑になればリファクタリングとして DataSource を別クラスに分離させることもあります。&lt;/p&gt;
+
+&lt;p&gt;今回は別クラスで&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt;プロトコルを実装する方法とそうすることのメリットについて説明します。&lt;/p&gt;
+
+&lt;h2 id=&quot;データソースの前提&quot;&gt;データソースの前提&lt;/h2&gt;
+&lt;p&gt;実装の前に、データソースについて理解する必要があります。この理解が設計に関係するためです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;DataSourceのスコープはViewControllerが持つUITableViewと同じです。&lt;/li&gt;
+  &lt;li&gt;つまりViewControllerが終わるときにはDataSourceも同時に不要になります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;準備-データモデルとデータを用意&quot;&gt;準備: データモデルとデータを用意&lt;/h2&gt;
+
+&lt;p&gt;データモデルは今回は簡単なユーザーモデルを用意します。
+今回はサーバーではなくローカルに擬似的にデータを用意します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-7&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;データ受取をなるべくリアルにする&quot;&gt;データ受取をなるべくリアルにする&lt;/h3&gt;
+&lt;p&gt;実際の開発ではViewControllerやインメモリがオリジナルデータを持つことはなく、大抵がサーバーから受信したデータを使います。&lt;br /&gt;
+しかもサーバーからのデータ受取は通常は非同期です。
+これを今回は次のコードで擬似的に実現します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;asyncAfter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deadline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これは画面が開く直前にサーバーに問い合わせてデータを受け取る想定のコードです。&lt;/p&gt;
+
+&lt;h2 id=&quot;uitableviewdatasourceを分離する&quot;&gt;UITableViewDataSourceを分離する&lt;/h2&gt;
+
+&lt;p&gt;次コードは &lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt; クラスを用意し &lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt; をデータ連携して &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; を ViewControllerから分離しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;didSet&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reloadData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;asyncAfter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deadline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfRowsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;reuseIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObjectProtocol&lt;/code&gt; を採用しているため、 &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;を継承する必要があります。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.dataSource&lt;/code&gt; は &lt;strong&gt;弱参照&lt;/strong&gt; のためインスタンスのオーナーを別で保つ必要があるため &lt;code class=&quot;highlighter-rouge&quot;&gt;ViewController&lt;/code&gt; にもたせています。&lt;/li&gt;
+  &lt;li&gt;これは前提でも説明したようにデータソースとViewControllerのスコープは同じなので理にかなっています。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;よりdatasourceを疎結合にする&quot;&gt;よりDataSourceを疎結合にする&lt;/h2&gt;
+
+&lt;p&gt;前述した実装でも大抵は問題ないのですが、「テーブルのレイアウトは同じがデータのみが異なる」というケースには対応ができません。&lt;br /&gt;
+なぜなら、&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;内部で&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;を持っているためです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;が&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;を知りすぎているのも気になります。 &lt;br /&gt;
+本来なら&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;は知る必要はなく、テーブルに表示したいデータが欲しいだけだからです。&lt;/p&gt;
+
+&lt;p&gt;これを&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;のために専用のデータモデルを用意して&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;から追い出します。&lt;br /&gt;
+そして他モデルでも使える使えるようにデータモデルを抽象化します。&lt;/p&gt;
+
+&lt;h3 id=&quot;データモデルを用意する&quot;&gt;データモデルを用意する&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;ではデータ数と&lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt;属性を必要としているので、これを抽象化します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;protocol&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;データソースはデータモデルを使うようにする&quot;&gt;データソースはデータモデルを使うようにする&lt;/h3&gt;
+
+&lt;p&gt;次のコードのように先程用意したデータモデルを使って、テーブル構築を行います。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfRowsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt;
+                    &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;reuseIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これでデータへのアクセスはすべて&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSourceModel&lt;/code&gt;を介することで &lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt; に他ドメインなクラスがいなくなりました。&lt;/p&gt;
+
+&lt;h3 id=&quot;データソースにデータを渡す&quot;&gt;データソースにデータを渡す&lt;/h3&gt;
+
+&lt;p&gt;次にデータソース(&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;)にデータ(&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;)を渡す方法についてです。&lt;/p&gt;
+
+&lt;p&gt;これは渡すデータ(&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;)が&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSourceModel&lt;/code&gt;プロトコルに準拠していれば渡すことができるようになります。&lt;/p&gt;
+
+&lt;p&gt;これは次のコードで実現できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これは &lt;code class=&quot;highlighter-rouge&quot;&gt;DataSourceModel.name&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;User.name&lt;/code&gt; が満たしているためこのような実装になります。&lt;/p&gt;
+
+&lt;p&gt;あとは&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;のオーナーであるViewControllerからデータを渡せば完了です。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;didSet&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reloadData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;データ連携に煩わしさを感じるなら&quot;&gt;データ連携に煩わしさを感じるなら&lt;/h3&gt;
+
+&lt;p&gt;ViewControllerがリモート先から受け取ったデータをデータソースに渡すまでのフローに手続き的な手間を感じます。&lt;/p&gt;
+
+&lt;p&gt;これを解決するには RxSwift といったイベントとデータフローを連結すれば解決できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;datasourceを分離するメリット&quot;&gt;DataSourceを分離するメリット&lt;/h2&gt;
+
+&lt;p&gt;&lt;strong&gt;レイアウト同じだがデータが異なる場合に対応できる&lt;/strong&gt;&lt;br /&gt;
+ここまで読んだ人ならこのメリットを理解できると思います。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; はViewControllerではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView&lt;/code&gt;と共存してるので&lt;br /&gt;
+別のViewControllerで同じUITableViewを使う場合に流用できるためDRY違反になりません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;ViewControllerからテーブル処理を分離できる&lt;/strong&gt;&lt;br /&gt;
+これは単純なViewControllerでは実感は全くないと思います。&lt;br /&gt;
+単純な分離ではありますが、責務を分けて見る必要のないコードが視界に入らないのはやはり効果は大きいです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><category term="uitableviewdatasource" /><summary type="html">UITableView(テーブル)の構築に必須のUITableViewDataSourceですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-06-ios-uitableview-uitableviewdatasource-separate.png" /></entry><entry><title type="html">【初心者向け】UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic" rel="alternate" type="text/html" title="【初心者向け】UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする" /><published>2019-10-06T00:00:00+09:00</published><updated>2019-10-06T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic">&lt;p&gt;UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする方法についてまとめました。
 UITableView(テーブル)には表示するUITableViewCell(セル)には様々な情報が乗せることが可能です。&lt;/p&gt;
 
 &lt;p&gt;テーブルの特性からしても大量のデータを表示することに適しておりユーザーもまたそれを望んでいます。&lt;/p&gt;
@@ -1719,323 +2029,4 @@ tableView(_:prefetchRowsAt:) [[0, 36]]
 
 &lt;p&gt;無駄な処理だと分かったタイミングで処理を中断(キャンセル)が必要になります。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSourcePrefetching&lt;/code&gt; では &lt;code class=&quot;highlighter-rouge&quot;&gt;tableView(_:cancelPrefetchingForRowsAt:)&lt;/code&gt; がキャンセル時に呼ばれるのでこのメソッドでキャンセル処理を行わないと、無駄な処理が完遂まで走り続けます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする方法についてまとめました。 UITableView(テーブル)には表示するUITableViewCell(セル)には様々な情報が乗せることが可能です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic.png" /></entry><entry><title type="html">【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate" rel="alternate" type="text/html" title="【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット" /><published>2019-10-06T00:00:00+09:00</published><updated>2019-10-06T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate">&lt;p&gt;UITableView(テーブル)の構築に必須の&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt;ですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。&lt;/p&gt;
-
-&lt;p&gt;しかし実際のアプリ開発では、必ずしもそうとは限らず ViewController が複雑になればリファクタリングとして DataSource を別クラスに分離させることもあります。&lt;/p&gt;
-
-&lt;p&gt;今回は別クラスで&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt;プロトコルを実装する方法とそうすることのメリットについて説明します。&lt;/p&gt;
-
-&lt;h2 id=&quot;データソースの前提&quot;&gt;データソースの前提&lt;/h2&gt;
-&lt;p&gt;実装の前に、データソースについて理解する必要があります。この理解が設計に関係するためです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;DataSourceのスコープはViewControllerが持つUITableViewと同じです。&lt;/li&gt;
-  &lt;li&gt;つまりViewControllerが終わるときにはDataSourceも同時に不要になります。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;準備-データモデルとデータを用意&quot;&gt;準備: データモデルとデータを用意&lt;/h2&gt;
-
-&lt;p&gt;データモデルは今回は簡単なユーザーモデルを用意します。
-今回はサーバーではなくローカルに擬似的にデータを用意します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-3&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-4&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-5&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-6&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule-7&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;データ受取をなるべくリアルにする&quot;&gt;データ受取をなるべくリアルにする&lt;/h3&gt;
-&lt;p&gt;実際の開発ではViewControllerやインメモリがオリジナルデータを持つことはなく、大抵がサーバーから受信したデータを使います。&lt;br /&gt;
-しかもサーバーからのデータ受取は通常は非同期です。
-これを今回は次のコードで擬似的に実現します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;asyncAfter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deadline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これは画面が開く直前にサーバーに問い合わせてデータを受け取る想定のコードです。&lt;/p&gt;
-
-&lt;h2 id=&quot;uitableviewdatasourceを分離する&quot;&gt;UITableViewDataSourceを分離する&lt;/h2&gt;
-
-&lt;p&gt;次コードは &lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt; クラスを用意し &lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt; をデータ連携して &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; を ViewControllerから分離しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;didSet&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reloadData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewWillAppear&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;asyncAfter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deadline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfRowsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt;
-                    &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;reuseIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObjectProtocol&lt;/code&gt; を採用しているため、 &lt;code class=&quot;highlighter-rouge&quot;&gt;NSObject&lt;/code&gt;を継承する必要があります。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.dataSource&lt;/code&gt; は &lt;strong&gt;弱参照&lt;/strong&gt; のためインスタンスのオーナーを別で保つ必要があるため &lt;code class=&quot;highlighter-rouge&quot;&gt;ViewController&lt;/code&gt; にもたせています。&lt;/li&gt;
-  &lt;li&gt;これは前提でも説明したようにデータソースとViewControllerのスコープは同じなので理にかなっています。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;よりdatasourceを疎結合にする&quot;&gt;よりDataSourceを疎結合にする&lt;/h2&gt;
-
-&lt;p&gt;前述した実装でも大抵は問題ないのですが、「テーブルのレイアウトは同じがデータのみが異なる」というケースには対応ができません。&lt;br /&gt;
-なぜなら、&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;内部で&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;を持っているためです。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;が&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;を知りすぎているのも気になります。 &lt;br /&gt;
-本来なら&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;は知る必要はなく、テーブルに表示したいデータが欲しいだけだからです。&lt;/p&gt;
-
-&lt;p&gt;これを&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;のために専用のデータモデルを用意して&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;から追い出します。&lt;br /&gt;
-そして他モデルでも使える使えるようにデータモデルを抽象化します。&lt;/p&gt;
-
-&lt;h3 id=&quot;データモデルを用意する&quot;&gt;データモデルを用意する&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;ではデータ数と&lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt;属性を必要としているので、これを抽象化します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;protocol&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;get&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;データソースはデータモデルを使うようにする&quot;&gt;データソースはデータモデルを使うようにする&lt;/h3&gt;
-
-&lt;p&gt;次のコードのように先程用意したデータモデルを使って、テーブル構築を行います。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSource&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;models&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfRowsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt;
-                    &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;reuseIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;models&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これでデータへのアクセスはすべて&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSourceModel&lt;/code&gt;を介することで &lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt; に他ドメインなクラスがいなくなりました。&lt;/p&gt;
-
-&lt;h3 id=&quot;データソースにデータを渡す&quot;&gt;データソースにデータを渡す&lt;/h3&gt;
-
-&lt;p&gt;次にデータソース(&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;)にデータ(&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;)を渡す方法についてです。&lt;/p&gt;
-
-&lt;p&gt;これは渡すデータ(&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;)が&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSourceModel&lt;/code&gt;プロトコルに準拠していれば渡すことができるようになります。&lt;/p&gt;
-
-&lt;p&gt;これは次のコードで実現できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;DataSourceModel&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これは &lt;code class=&quot;highlighter-rouge&quot;&gt;DataSourceModel.name&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;User.name&lt;/code&gt; が満たしているためこのような実装になります。&lt;/p&gt;
-
-&lt;p&gt;あとは&lt;code class=&quot;highlighter-rouge&quot;&gt;DataSource&lt;/code&gt;のオーナーであるViewControllerからデータを渡せば完了です。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;didSet&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setupModel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reloadData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;データ連携に煩わしさを感じるなら&quot;&gt;データ連携に煩わしさを感じるなら&lt;/h3&gt;
-
-&lt;p&gt;ViewControllerがリモート先から受け取ったデータをデータソースに渡すまでのフローに手続き的な手間を感じます。&lt;/p&gt;
-
-&lt;p&gt;これを解決するには RxSwift といったイベントとデータフローを連結すれば解決できます。&lt;/p&gt;
-
-&lt;h2 id=&quot;datasourceを分離するメリット&quot;&gt;DataSourceを分離するメリット&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;レイアウト同じだがデータが異なる場合に対応できる&lt;/strong&gt;&lt;br /&gt;
-ここまで読んだ人ならこのメリットを理解できると思います。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; はViewControllerではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView&lt;/code&gt;と共存してるので&lt;br /&gt;
-別のViewControllerで同じUITableViewを使う場合に流用できるためDRY違反になりません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ViewControllerからテーブル処理を分離できる&lt;/strong&gt;&lt;br /&gt;
-これは単純なViewControllerでは実感は全くないと思います。&lt;br /&gt;
-単純な分離ではありますが、責務を分けて見る必要のないコードが視界に入らないのはやはり効果は大きいです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><category term="uitableviewdatasource" /><summary type="html">UITableView(テーブル)の構築に必須のUITableViewDataSourceですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-06-ios-uitableview-uitableviewdatasource-separate.png" /></entry><entry><title type="html">Slackアプリみたいなアイコンと可変文字のセルの作り方</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell" rel="alternate" type="text/html" title="Slackアプリみたいなアイコンと可変文字のセルの作り方" /><published>2019-10-01T00:00:00+09:00</published><updated>2019-10-01T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell">&lt;p&gt;Slackみたいなセルを作る方法について説明する。
-Slackみたいなセルとは、&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;文字列の高さがアイコンより小さい場合はセルの高さ幅はアイコンより小さくならない。&lt;/li&gt;
-  &lt;li&gt;しかし文字列が長くなり高さがアイコンより大きくなる場合は、セルの高さ幅はアイコンより大きくなり、文字列の高さに追従する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Twitterみたいなセルでもイメージは同じです。&lt;/p&gt;
-
-&lt;h2 id=&quot;コードは特に凝ったつくりではない&quot;&gt;コードは特に凝ったつくりではない&lt;/h2&gt;
-
-&lt;p&gt;コード側は特に変わった部分はありません。
-普通のセル高さを自動算出にしたセル表示です。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;ViewController.swift&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&quot;
-Slackみたいなセル。文字列の高さがアイコンより小さい場合は、セルの高さ幅はアイコンより小さくならない。
-しかし文字列が長くなり、高さがアイコンより大きくなる場合は、セルの高さ幅はアイコンより大きくなり、文字列の高さに追従する
-&quot;&quot;&quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;estimatedRowHeight&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;81&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rowHeight&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;automaticDimension&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfRowsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;TableCell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;c&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as?&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TableCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;comment&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;repeating&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;text&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;c&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;err&quot;&gt;#&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;imageLiteral&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;resourceName&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;icon&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;comment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;comment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;em&gt;TableView.swift&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;iconImageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;commentLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UILabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;nameLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UILabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;comment&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;iconImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;nameLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;commentLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;comment&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;もしセルの高さ可変について分からない場合はこちらの記事をどうぞ。&lt;/p&gt;
-
-&lt;div class=&quot;link-container&quot;&gt;
-  &lt;a href=&quot;/ios/uitableview/ios-uitableview-uitableviewcell-height-customize&quot;&gt;
-    &lt;div class=&quot;link-container-image&quot;&gt;
-      &lt;img src=&quot;/assets/images/2019-09-29-ios-uitableview-uitableviewcell-height-customize/2019-09-29-ios-uitableview-uitableviewcell-height-customize-1.png&quot; /&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;link-container-summary&quot;&gt;
-      &lt;div class=&quot;link-container-summary-title&quot;&gt;
-        &lt;span&gt;【初心者向け】UITableViewCellの高さを可変にする&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;link-container-summary-brief&quot;&gt;
-        &lt;span&gt;
-
-次の`UITableViewDelegate`のメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。
-なぜなら`UITableView.rowHeight`に `UITableView.automaticDimension` を渡し、各セルをAuto-Layoutが効くような実装にすれば  
-自動でセルの高さを計算してくれるためです。
-
-あるとすればセルごとの推測値`estimated`の値を返す。または状態によって一部セルを非表示にするために高さを...&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/a&gt;
-&lt;/div&gt;
-
-&lt;h2 id=&quot;凝っているのはconstraints設計&quot;&gt;凝っているのはConstraints設計&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;画像より文字が大きくなれば文字の制約に追従し、反対に文字が画像より小さくなれば画像の制約に従う。&lt;/p&gt;
-
-&lt;p&gt;言葉にすると難しいですが、仕組みは分かると単純です。&lt;/p&gt;
-
-&lt;p&gt;まず画像下部から伸びてる制約は次のようにします。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-2.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;8以上&lt;/code&gt; つまり8より小さくなってはならない。&lt;/p&gt;
-
-&lt;p&gt;次にコメント用UILabelの下部から伸びている制約です。&lt;br /&gt;
-制約は2つあります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-3.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-3.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;52以下&lt;/code&gt; つまり52より大きくなってはいけない。&lt;br /&gt;
-52とはUILabelからセルの下部までの距離です。&lt;br /&gt;
-これはセルは文字列がアイコンより小さい時のセルのサイズ時の文字列からセル下部までの距離です。&lt;br /&gt;
-つまりこれ以上距離が短くなってしまうと、セルの高さは狭まりアイコンが切れてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-4.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-4.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;8以上&lt;/code&gt; つまり8より小さくなってはならない。&lt;br /&gt;
-これは文字列がアイコンより大きくなった場合に、文字列とセル下部の距離が8より短くならないための制約です。&lt;/p&gt;
-
-&lt;p&gt;この3つの制約で成り立ってます。&lt;/p&gt;
-
-&lt;p&gt;他の制約はただ隣接までの距離を8固定で制約をつけているだけです。&lt;/p&gt;
-
-&lt;h2 id=&quot;2つ制約をつけるテクニックはよくある&quot;&gt;2つ制約をつけるテクニックはよくある&lt;/h2&gt;
-
-&lt;p&gt;N以上X未満みたいな表現をしたい場合、制約を2つ用意することで実現可能です。&lt;/p&gt;
-
-&lt;p&gt;この時 &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; だと制約衝突してしまいます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><category term="uitableviewcell" /><summary type="html">Slackみたいなセルを作る方法について説明する。 Slackみたいなセルとは、</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png" /></entry></feed>
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSourcePrefetching&lt;/code&gt; では &lt;code class=&quot;highlighter-rouge&quot;&gt;tableView(_:cancelPrefetchingForRowsAt:)&lt;/code&gt; がキャンセル時に呼ばれるのでこのメソッドでキャンセル処理を行わないと、無駄な処理が完遂まで走り続けます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする方法についてまとめました。 UITableView(テーブル)には表示するUITableViewCell(セル)には様々な情報が乗せることが可能です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic.png" /></entry></feed>

@@ -4,33 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-      <title>RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた - もちゅろぐ</title>
+      <title>rails updateでgemバージョン依存を解決してみる - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた" />
+<meta property="og:title" content="rails updateでgemバージョン依存を解決してみる" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="概要" />
-<meta property="og:description" content="概要" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice" />
+<meta name="description" content="他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。" />
+<meta property="og:description" content="他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2018-10-21T00:00:00+09:00" />
+<meta property="article:published_time" content="2019-11-13T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"headline":"RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた","dateModified":"2018-10-21T00:00:00+09:00","datePublished":"2018-10-21T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","url":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice"},"description":"概要","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"headline":"rails updateでgemバージョン依存を解決してみる","dateModified":"2019-11-13T00:00:00+09:00","datePublished":"2019-11-13T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png","url":"https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version"},"description":"他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた">
-    <meta name="twitter:description" content="概要">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/site-image.png">
+    <meta name="twitter:title" content="rails updateでgemバージョン依存を解決してみる">
+    <meta name="twitter:description" content="他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           rel="stylesheet"
@@ -112,7 +112,7 @@
       
     
       
-        / RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた
+        / rails updateでgemバージョン依存を解決してみる
       
     
   
@@ -123,19 +123,21 @@
 <div class="post-content">
 
   
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-11-13-ruby-rails-update-rails-version.png" alt="rails updateでgemバージョン依存を解決してみる">
+    </div>
+  
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた</h1>
+    <h1>rails updateでgemバージョン依存を解決してみる</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
-        <li class="list-inline-item">2018-10-21</li>
-        
-          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
-        
-          <li class="list-inline-item"><a href="/tags#rails-controller">rails-controller</a></li>
+        <li class="list-inline-item">2019-11-13</li>
         
           <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
         
       </ul>
     </div>
@@ -144,47 +146,124 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#概要">概要</a></li>
-  <li><a href="#applicationで一律例外検知してハンドリングする方法">Applicationで一律例外検知してハンドリングする方法</a></li>
-  <li><a href="#ベストプラクティス">ベストプラクティス</a></li>
+  <li><a href="#バージョン衝突を再現する">バージョン衝突を再現する</a></li>
+  <li><a href="#ログはgemの依存関係を表している">ログはgemの依存関係を表している</a></li>
+  <li><a href="#地道に見ていく">地道に見ていく</a></li>
 </ul>
   </div>
 
-  <h2 id="概要">概要</h2>
+  <p>他愛もないネタですが、 <code class="highlighter-rouge">gem</code>のバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。</p>
 
-<ul>
-  <li>各APIControllerでエラー検知とエラーレスポンスを書くのDRY違反してる</li>
-  <li>エラーレスポンスは構造が統一できていないとクライアント側が死んでしまう</li>
-  <li>Applicationで一律例外検知してエラー内容をハンドリングしたほうが楽</li>
-</ul>
+<p>題材としてRailsのバージョンを4系から5系にアップデートします。</p>
 
-<p>C#のASP.NET MVC5ではController毎に例外キャッチなどはせずApplicationで一律ハンドリングするので、
-Railsにも同様の機能は提供されていると思う。</p>
+<h2 id="バージョン衝突を再現する">バージョン衝突を再現する</h2>
+<p><code class="highlighter-rouge">bundle update rails</code> を実行すると</p>
 
-<p>その方法を調べると同時にRailsにおけるベストプラクティスを知っておこうって思った。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle update rails
+Fetching gem metadata from https://rubygems.org/.........
+Fetching gem metadata from https://rubygems.org/.
+Resolving dependencies....
+Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"activesupport"</span>:
+  In Gemfile:
+    bullet was resolved to 5.9.0, which depends on
+      activesupport <span class="o">(&gt;=</span> 3.0.0<span class="o">)</span>
 
-<h2 id="applicationで一律例外検知してハンドリングする方法">Applicationで一律例外検知してハンドリングする方法</h2>
+    haml-rails was resolved to 1.0.0, which depends on
+      activesupport <span class="o">(&gt;=</span> 4.0.1<span class="o">)</span>
 
-<ul>
-  <li>ApplicationController で <code class="highlighter-rouge">rescue_from</code> メソッドを使う</li>
-  <li>404や500は 専用Controller用意とroutes.rb更新して<code class="highlighter-rouge">config.exceptions_app = routes</code>でカスタマイズする</li>
-</ul>
+    jbuilder <span class="o">(</span>~&gt; 2.0<span class="o">)</span> was resolved to 2.8.0, which depends on
+      activesupport <span class="o">(&gt;=</span> 4.2.0<span class="o">)</span>
 
-<h2 id="ベストプラクティス">ベストプラクティス</h2>
+    rails <span class="o">(=</span> 5.0.0<span class="o">)</span> was resolved to 5.0.0, which depends on
+      activesupport <span class="o">(=</span> 5.0.0<span class="o">)</span>
 
-<ul>
-  <li>ExceptionではなくStandardErrorをキャッチする</li>
-  <li>各ControllerではなくApplicationControllerでハンドリングする</li>
-  <li>エラーハンドリング処理はApplicationControllerから分離する</li>
-  <li>Custom Errorでエラー情報の詳細化を助ける</li>
-  <li>アプリケーションエラーとシステムエラーは分けるハンドリングする</li>
-  <li>アプリケーションエラーはユーザーフレンドリーを目指す</li>
-  <li>
-    <p>システムエラーはデベロッパーフレンドリーを目指す</p>
-  </li>
-  <li><a href="https://medium.com/rails-ember-beyond/error-handling-in-rails-the-modular-way-9afcddd2fe1b">参考サイトA</a></li>
-  <li><a href="https://qiita.com/jnchito/items/3ef95ea144ed15df3637">参考サイトB</a></li>
-</ul>
+    rspec-rails was resolved to 3.8.1, which depends on
+      activesupport <span class="o">(&gt;=</span> 3.0<span class="o">)</span>
+
+    spring was resolved to 2.0.2, which depends on
+      activesupport <span class="o">(&gt;=</span> 4.2<span class="o">)</span>
+
+Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"rails"</span>:
+  In Gemfile:
+    rails <span class="o">(=</span> 5.0.0<span class="o">)</span>
+
+    rails-flog was resolved to 1.5.0, which depends on
+      rails <span class="o">(&gt;=</span> 4.2.0<span class="o">)</span>
+
+Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"railties"</span>:
+  In Gemfile:
+    devise was resolved to 4.5.0, which depends on
+      railties <span class="o">(</span>&lt; 6.0, <span class="o">&gt;=</span> 4.1.0<span class="o">)</span>
+
+    factory_bot_rails was resolved to 4.11.1, which depends on
+      railties <span class="o">(&gt;=</span> 3.0.0<span class="o">)</span>
+
+    haml-rails was resolved to 1.0.0, which depends on
+      railties <span class="o">(&gt;=</span> 4.0.1<span class="o">)</span>
+
+    jquery-rails was resolved to 4.3.3, which depends on
+      railties <span class="o">(&gt;=</span> 4.2.0<span class="o">)</span>
+
+    rails <span class="o">(=</span> 5.0.0<span class="o">)</span> was resolved to 5.0.0, which depends on
+      railties <span class="o">(=</span> 5.0.0<span class="o">)</span>
+
+    devise was resolved to 4.5.0, which depends on
+      responders was resolved to 2.4.0, which depends on
+        railties <span class="o">(</span>&lt; 5.3, <span class="o">&gt;=</span> 4.2.0<span class="o">)</span>
+
+    rspec-rails was resolved to 3.8.1, which depends on
+      railties <span class="o">(&gt;=</span> 3.0<span class="o">)</span>
+
+    sass-rails <span class="o">(</span>~&gt; 4.0.3<span class="o">)</span> was resolved to 4.0.5, which depends on
+      railties <span class="o">(</span>&lt; 5.0, <span class="o">&gt;=</span> 4.0.0<span class="o">)</span>
+</code></pre></div></div>
+
+<p>とgem依存エラーが表示される。</p>
+
+<p>赤く大量に表示されてこの時点でやる気なくすが、何がをどう解決すればいいかを読み解いてみる。</p>
+
+<h2 id="ログはgemの依存関係を表している">ログはgemの依存関係を表している</h2>
+
+<p>このログはどの gem が どの gem に依存しているかを表してます。
+一部抜粋します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"activesupport"</span>:
+  In Gemfile:
+    bullet was resolved to 5.9.0, which depends on
+      activesupport <span class="o">(&gt;=</span> 3.0.0<span class="o">)</span>
+</code></pre></div></div>
+
+<p>この場合 <code class="highlighter-rouge">bullet</code> gem が <code class="highlighter-rouge">activesupport</code> gem に依存してることを表します。<br />
+<code class="highlighter-rouge">activesupport</code> のバージョンが <code class="highlighter-rouge">3.0.0以上</code> であれば問題ありません。<br />
+つまり問題ないライブラリ組み合わせです。</p>
+
+<p>他のライブラリもバージョン上問題ない組み合わせばかりです。</p>
+
+<p>つまり問題のない組み合わせもログとして出力されます。</p>
+
+<h2 id="地道に見ていく">地道に見ていく</h2>
+
+<p>最後まで見ると <code class="highlighter-rouge">sass-rails</code> が怪しいです。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sass-rails <span class="o">(</span>~&gt; 4.0.3<span class="o">)</span> was resolved to 4.0.5, which depends on
+  railties <span class="o">(</span>&lt; 5.0, <span class="o">&gt;=</span> 4.0.0<span class="o">)</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">railties</code> は 5.0未満でなければいけませんが、 <code class="highlighter-rouge">rails</code> は <code class="highlighter-rouge">5.0.0</code> なので
+<code class="highlighter-rouge">railties</code> は <code class="highlighter-rouge">5.0.0</code> になります。
+これは <a href="https://rubygems.org/gems/rails/versions/5.0.0">rubygems.org</a> で確認できます。</p>
+
+<p><code class="highlighter-rouge">sass-rails</code> について調べてみると次のような記事を見つけます。
+https://techracho.bpsinc.jp/hachi8833/2018_04_06/54793#2-1</p>
+
+<p>どうやら<code class="highlighter-rouge">sass</code>は非推奨になるようです。つまり <code class="highlighter-rouge">rails</code> では <code class="highlighter-rouge">sass-rails</code> から <code class="highlighter-rouge">sassc-rails</code> に乗り換えないといけないようです。
+Gemfile を次のように書き換えます。</p>
+
+<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gd">-gem 'sass-rails', '~&gt; 4.0.3'
+</span><span class="gi">+gem 'sassc-rails', '~&gt; 2.1.2'
+</span></code></pre></div></div>
+
+<p>これで再度 <code class="highlighter-rouge">bundle update rails</code> を実行すると成功しました。</p>
 
 
   <div class="post-content-share">
@@ -201,10 +280,6 @@ Railsにも同様の機能は提供されていると思う。</p>
   <div class="related-posts-body">
     
       <ul>
-        <li><a href="/ruby/rails/ruby-rails-update-rails-version">rails updateでgemバージョン依存を解決してみる</a></li>
-      </ul>
-    
-      <ul>
         <li><a href="/ios/firebase/firebase-performance-monitoring-basic">Firebase Performance Monitoringの基本の概念と実装について整理した</a></li>
       </ul>
     
@@ -218,6 +293,10 @@ Railsにも同様の機能は提供されていると思う。</p>
     
       <ul>
         <li><a href="/ios/uicollectionview/ios-uicollectionview-carousel-simple">【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></li>
       </ul>
     
   </div>
