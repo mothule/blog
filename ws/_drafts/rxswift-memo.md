@@ -116,4 +116,4 @@ outputText = buttonTap.withLatestFrom(textField.rx.text.orEmpty.asDriver())
 
 ### shareReplayLatestWhileConnected
 
-とは
+## Observable<Element>.using(:observableFactory:) とは？
