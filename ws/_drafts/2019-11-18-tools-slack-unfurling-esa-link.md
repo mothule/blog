@@ -59,6 +59,9 @@ URLが貼られるだけになります。
   - 表示される `Personal Access Token` を保持しておく
 - サーバー準備
   - [FromAtom/Kujaku](https://github.com/FromAtom/Kujaku)を使う
+    - ↑をforkする
+    - app.jsonのrepositoryをfork先に修正
+    - README.mdの`Deploy to Heroku`のURLをfork先に修正
   - Deploy to Heroku
   - Heroku URL 保持
 - Slack App と サーバーの連携
@@ -132,6 +135,16 @@ redisを既に別で使ってる場合`flushall`しないと既存データを�
 `redis-cli` で接続後に `flushall` で中のデータを全部クリアする必要があります。
 
 既存redisのクリア処理は自己責任です。
+
+## Heroku
+Herokuへのデプロイには `Deploy to Heroku` を使います。
+これはHerokuページにいかなくても、 GitHubのインフラ構築コードとボタンからHerokuアプリを構築してくれる機能です。
+
+README.mdに貼られてるボタンを押すことでHerokuページに遷移し、アプリ作成画面(デプロイ画面)が表示されるので、そこで入力してデプロイを押すだけで
+アプリ作成＋デプロイしてくれます。便利ですね。
+
+注意点としては AddonとしてRedis to Go Addonを使っているので、無料垢の人はクレジットカード登録が必須になります。
+
 
 ## 参考
 https://inside.pixiv.blog/fromatom/5684
