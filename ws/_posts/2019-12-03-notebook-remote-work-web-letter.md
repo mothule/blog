@@ -1,7 +1,9 @@
 ---
-title: Webレターをやってみた
+title: フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた
 categories: notebook remote-work
 tags: notebook remote-work
+image:
+  path: /assets/images/2019-12-03-notebook-remote-work-web-letter/0.png
 ---
 フルリモートワークで仕事をしていると、オフィスに足を運ぶことがほとんどなく、理由がない限り行く時間やメリットもありません。
 
@@ -11,6 +13,8 @@ Webレターの基本的な情報ややり方、1つだけ大きな落とし穴�
 
 ## Webレターとは
 Webゆうびんが提供してる配送サービス。
+
+https://www.post.japanpost.jp/service/webletter/
 
 Web上からdocファイルとpdfファイルをアップロードすることで実際の住所にそのファイルを印刷した紙が郵送してくれます。
 
