@@ -4,33 +4,33 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
-      <title>RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた - もちゅろぐ</title>
+      <title>secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた" />
+<meta property="og:title" content="secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="概要" />
-<meta property="og:description" content="概要" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice" />
+<meta name="description" content="1つのPCで複数のプロジェクトをいじることはよくあるありますよね。 業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。" />
+<meta property="og:description" content="1つのPCで複数のプロジェクトをいじることはよくあるありますよね。 業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard" />
+<meta property="og:url" content="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/site-image.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2018-10-21T00:00:00+09:00" />
+<meta property="article:published_time" content="2019-12-16T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"headline":"RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた","dateModified":"2018-10-21T00:00:00+09:00","datePublished":"2018-10-21T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/site-image.png","url":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice"},"description":"概要","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"headline":"secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する","dateModified":"2019-12-16T00:00:00+09:00","datePublished":"2019-12-16T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/0.png","url":"https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard"},"description":"1つのPCで複数のプロジェクトをいじることはよくあるありますよね。 業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた">
-    <meta name="twitter:description" content="概要">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/site-image.png">
+    <meta name="twitter:title" content="secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する">
+    <meta name="twitter:description" content="1つのPCで複数のプロジェクトをいじることはよくあるありますよね。業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/0.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           rel="stylesheet"
@@ -104,15 +104,15 @@
     <a href="/">Home</a>
     
       
-        / <a href="/tags#ruby">Ruby</a>
+        / <a href="/tags#ios">Ios</a>
       
     
       
-        / <a href="/tags#rails">Rails</a>
+        / <a href="/tags#test">Test</a>
       
     
       
-        / RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた
+        / secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する
       
     
   
@@ -123,19 +123,23 @@
 <div class="post-content">
 
   
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/0.png" alt="secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する">
+    </div>
+  
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた</h1>
+    <h1>secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
-        <li class="list-inline-item">2018-10-21</li>
+        <li class="list-inline-item">2019-12-16</li>
         
-          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
         
-          <li class="list-inline-item"><a href="/tags#rails-controller">rails-controller</a></li>
+          <li class="list-inline-item"><a href="/tags#test">test</a></li>
         
-          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+          <li class="list-inline-item"><a href="/tags#xcuitest">xcuitest</a></li>
         
       </ul>
     </div>
@@ -144,47 +148,63 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#概要">概要</a></li>
-  <li><a href="#applicationで一律例外検知してハンドリングする方法">Applicationで一律例外検知してハンドリングする方法</a></li>
-  <li><a href="#ベストプラクティス">ベストプラクティス</a></li>
+  <li><a href="#何が起きているのか">何が起きているのか？</a></li>
+  <li><a href="#エラーメッセージ">エラーメッセージ</a></li>
+  <li><a href="#メッセージを読み解く">メッセージを読み解く</a></li>
+  <li><a href="#原因はconnect-hardware-keyboard">原因はConnect Hardware Keyboard</a></li>
 </ul>
   </div>
 
-  <h2 id="概要">概要</h2>
+  <p>1つのPCで複数のプロジェクトをいじることはよくあるありますよね。<br />
+業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。</p>
 
-<ul>
-  <li>各APIControllerでエラー検知とエラーレスポンスを書くのDRY違反してる</li>
-  <li>エラーレスポンスは構造が統一できていないとクライアント側が死んでしまう</li>
-  <li>Applicationで一律例外検知してエラー内容をハンドリングしたほうが楽</li>
-</ul>
+<p>今回はXcodeのSimulatorがそれで、その影響で「何もコード弄ってないのに失敗する」って現象が起きたのでそれの対処方について簡単にまとめました。</p>
 
-<p>C#のASP.NET MVC5ではController毎に例外キャッチなどはせずApplicationで一律ハンドリングするので、
-Railsにも同様の機能は提供されていると思う。</p>
+<h2 id="何が起きているのか">何が起きているのか？</h2>
 
-<p>その方法を調べると同時にRailsにおけるベストプラクティスを知っておこうって思った。</p>
+<p>ローカル上にてXcodeのSimulator上でXCUITestを実行したところ、パスワード入力(secureTextFields)のタイピング(typeText)が反応せず失敗する。</p>
 
-<h2 id="applicationで一律例外検知してハンドリングする方法">Applicationで一律例外検知してハンドリングする方法</h2>
+<h2 id="エラーメッセージ">エラーメッセージ</h2>
 
-<ul>
-  <li>ApplicationController で <code class="highlighter-rouge">rescue_from</code> メソッドを使う</li>
-  <li>404や500は 専用Controller用意とroutes.rb更新して<code class="highlighter-rouge">config.exceptions_app = routes</code>でカスタマイズする</li>
-</ul>
+<p>抜粋ですが、残り部分はプロジェクト固有情報でノイズとなるため除去して最小限にしてあります。</p>
 
-<h2 id="ベストプラクティス">ベストプラクティス</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Failed to synthesize event: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: SecureTextField, identifier: 'password_textfield', placeholderValue: '半角英数8文字以上20文字以内', value: 半角英数8文字以上20文字以内
+Element debug description:
+Attributes: SecureTextField, { {151.0, 284.0}, {254.0, 40.0} }, identifier: 'password_textfield', placeholderValue: '半角英数8文字以上20文字以内'
+</code></pre></div></div>
 
-<ul>
-  <li>ExceptionではなくStandardErrorをキャッチする</li>
-  <li>各ControllerではなくApplicationControllerでハンドリングする</li>
-  <li>エラーハンドリング処理はApplicationControllerから分離する</li>
-  <li>Custom Errorでエラー情報の詳細化を助ける</li>
-  <li>アプリケーションエラーとシステムエラーは分けるハンドリングする</li>
-  <li>アプリケーションエラーはユーザーフレンドリーを目指す</li>
-  <li>
-    <p>システムエラーはデベロッパーフレンドリーを目指す</p>
-  </li>
-  <li><a href="https://medium.com/rails-ember-beyond/error-handling-in-rails-the-modular-way-9afcddd2fe1b">参考サイトA</a></li>
-  <li><a href="https://qiita.com/jnchito/items/3ef95ea144ed15df3637">参考サイトB</a></li>
-</ul>
+<h2 id="メッセージを読み解く">メッセージを読み解く</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Neither element nor any descendant has keyboard focus.
+</code></pre></div></div>
+<p>Google翻訳にて「<code class="highlighter-rouge">要素も子孫もキーボードフォーカスを持ちません。</code>」と言われてるこれがエラーメッセージです。</p>
+
+<p>コードでは下記のように一度タップしてフォーカスしたのち、キータイプを行っていますがあることが原因でフォーカスされていないようです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">app</span><span class="o">.</span><span class="n">secureTextFields</span><span class="p">[</span><span class="s">"password_textfield"</span><span class="p">]</span><span class="o">.</span><span class="nf">tap</span><span class="p">()</span>
+<span class="n">app</span><span class="o">.</span><span class="n">secureTextFields</span><span class="p">[</span><span class="s">"password_textfield"</span><span class="p">]</span><span class="o">.</span><span class="nf">typeText</span><span class="p">(</span><span class="n">password</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>フォーカスされていないとは、つまりキーボードが出ていないことを意味します。<br />
+本来ならフォーカスされればそれに対する入力としてキーボードが出現します。</p>
+
+<p>何らかの原因でキーボードがでなくなっているようです。</p>
+
+<p>また普段は成功しているし、CIでも問題なく動いています。しかしローカルでは失敗してしまいます。<br />
+つまり自分のPCに原因があることが推測できます。</p>
+
+<h2 id="原因はconnect-hardware-keyboard">原因はConnect Hardware Keyboard</h2>
+
+<p>シミュレーターではある設定が有効だと、secureTextFields.typeTextが失敗する不具合があります。<br />
+ここで不具合と言い切っているのは、通常のtextField.typeTextでは失敗しないためです。</p>
+
+<p>キーボードが出てこなくなる設定、それは <strong>Connect Hardware Keyboard</strong> です。</p>
+
+<p><a href="/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/1.png"><img src="/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/1.png" width="100%" /></a></p>
+
+<p>これが有効だとキーボードウィンドウが表示されず、ハードキーボード（つまりmacなどのキー)を押すとシミュレーターのフォーカス中のテキストフィールドに入力されます。</p>
+
+<p>どうやらこれがsecureTextFieldsだとフォーカスしていないと判断され失敗していたようでした。</p>
 
 
   <div class="post-content-share">
@@ -201,10 +221,6 @@ Railsにも同様の機能は提供されていると思う。</p>
   <div class="related-posts-body">
     
       <ul>
-        <li><a href="/ios/test/ios-xctest-failed-for-hard-keyboard">secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する</a></li>
-      </ul>
-    
-      <ul>
         <li><a href="/notebook/remote-work/notebook-remote-work-web-letter">フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた</a></li>
       </ul>
     
@@ -218,6 +234,10 @@ Railsにも同様の機能は提供されていると思う。</p>
     
       <ul>
         <li><a href="/ruby/rails/ruby-rails-rails5_0_0-update">Rails4.1からRails5.0.0.1に変更した</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/firebase/firebase-performance-monitoring-basic">Firebase Performance Monitoringの基本の概念と実装について整理した</a></li>
       </ul>
     
   </div>
