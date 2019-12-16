@@ -1,4 +1,53 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-12-04T01:14:46+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-web-letter" rel="alternate" type="text/html" title="フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた" /><published>2019-12-03T00:00:00+09:00</published><updated>2019-12-03T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-web-letter</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-web-letter">&lt;p&gt;フルリモートワークで仕事をしていると、オフィスに足を運ぶことがほとんどなく、理由がない限り行く時間やメリットもありません。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-12-16T15:54:22+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する</title><link href="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard" rel="alternate" type="text/html" title="secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する" /><published>2019-12-16T00:00:00+09:00</published><updated>2019-12-16T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard</id><content type="html" xml:base="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard">&lt;p&gt;1つのPCで複数のプロジェクトをいじることはよくあるありますよね。&lt;br /&gt;
+業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。&lt;/p&gt;
+
+&lt;p&gt;今回はXcodeのSimulatorがそれで、その影響で「何もコード弄ってないのに失敗する」って現象が起きたのでそれの対処方について簡単にまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;何が起きているのか&quot;&gt;何が起きているのか？&lt;/h2&gt;
+
+&lt;p&gt;ローカル上にてXcodeのSimulator上でXCUITestを実行したところ、パスワード入力(secureTextFields)のタイピング(typeText)が反応せず失敗する。&lt;/p&gt;
+
+&lt;h2 id=&quot;エラーメッセージ&quot;&gt;エラーメッセージ&lt;/h2&gt;
+
+&lt;p&gt;抜粋ですが、残り部分はプロジェクト固有情報でノイズとなるため除去して最小限にしてあります。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Failed to synthesize event: Neither element nor any descendant has keyboard focus. Event dispatch snapshot: SecureTextField, identifier: 'password_textfield', placeholderValue: '半角英数8文字以上20文字以内', value: 半角英数8文字以上20文字以内
+Element debug description:
+Attributes: SecureTextField, { {151.0, 284.0}, {254.0, 40.0} }, identifier: 'password_textfield', placeholderValue: '半角英数8文字以上20文字以内'
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;メッセージを読み解く&quot;&gt;メッセージを読み解く&lt;/h2&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Neither element nor any descendant has keyboard focus.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Google翻訳にて「&lt;code class=&quot;highlighter-rouge&quot;&gt;要素も子孫もキーボードフォーカスを持ちません。&lt;/code&gt;」と言われてるこれがエラーメッセージです。&lt;/p&gt;
+
+&lt;p&gt;コードでは下記のように一度タップしてフォーカスしたのち、キータイプを行っていますがあることが原因でフォーカスされていないようです。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;secureTextFields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;password_textfield&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;tap&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;secureTextFields&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;password_textfield&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;typeText&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;password&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;フォーカスされていないとは、つまりキーボードが出ていないことを意味します。&lt;br /&gt;
+本来ならフォーカスされればそれに対する入力としてキーボードが出現します。&lt;/p&gt;
+
+&lt;p&gt;何らかの原因でキーボードがでなくなっているようです。&lt;/p&gt;
+
+&lt;p&gt;また普段は成功しているし、CIでも問題なく動いています。しかしローカルでは失敗してしまいます。&lt;br /&gt;
+つまり自分のPCに原因があることが推測できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;原因はconnect-hardware-keyboard&quot;&gt;原因はConnect Hardware Keyboard&lt;/h2&gt;
+
+&lt;p&gt;シミュレーターではある設定が有効だと、secureTextFields.typeTextが失敗する不具合があります。&lt;br /&gt;
+ここで不具合と言い切っているのは、通常のtextField.typeTextでは失敗しないためです。&lt;/p&gt;
+
+&lt;p&gt;キーボードが出てこなくなる設定、それは &lt;strong&gt;Connect Hardware Keyboard&lt;/strong&gt; です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これが有効だとキーボードウィンドウが表示されず、ハードキーボード（つまりmacなどのキー)を押すとシミュレーターのフォーカス中のテキストフィールドに入力されます。&lt;/p&gt;
+
+&lt;p&gt;どうやらこれがsecureTextFieldsだとフォーカスしていないと判断され失敗していたようでした。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="test" /><category term="xcuitest" /><summary type="html">1つのPCで複数のプロジェクトをいじることはよくあるありますよね。 業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-12-16-ios-xctest-failed-for-hard-keyboard/0.png" /></entry><entry><title type="html">フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-web-letter" rel="alternate" type="text/html" title="フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた" /><published>2019-12-03T00:00:00+09:00</published><updated>2019-12-03T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-web-letter</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-web-letter">&lt;p&gt;フルリモートワークで仕事をしていると、オフィスに足を運ぶことがほとんどなく、理由がない限り行く時間やメリットもありません。&lt;/p&gt;
 
 &lt;p&gt;ただ今回、仕事でpdf書類を印刷してバックオフィスに提出する必要があったため、以前ネットで見かけたWebレターをやってみました。&lt;/p&gt;
 
@@ -1553,191 +1602,4 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 大抵が複数のViewを組み合わせて画面が構築されます。&lt;/p&gt;
 
 &lt;p&gt;そのため&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewController&lt;/code&gt;で実装を進めていると後で痛い目をみます。&lt;br /&gt;
-私個人としては使うべきではないです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewControllerの使い方について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png" /></entry><entry><title type="html">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic" rel="alternate" type="text/html" title="【初心者向け】UITableView(テーブル)の更新方法の基本と注意点" /><published>2019-10-08T00:00:00+09:00</published><updated>2019-10-08T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic">&lt;p&gt;UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。&lt;br /&gt;
-参照データがセルに表示するタイミングもその一つです。&lt;br /&gt;
-このシステムの更新ルールから外れて参照データを更新しても反映されません。&lt;/p&gt;
-
-&lt;p&gt;今回は動的なテーブルの更新方法について説明します。&lt;br /&gt;
-またいくつか更新方法があるのでそれぞれの説明と注意点についても説明します。&lt;/p&gt;
-
-&lt;h2 id=&quot;データが反映されないコード&quot;&gt;データが反映されないコード&lt;/h2&gt;
-&lt;p&gt;次のようにテーブルの参照データを後から更新すると、テーブルには反映されません。&lt;br /&gt;
-なぜならテーブルと参照データは特に紐付いていないためです。&lt;br /&gt;
-何らかの方法で参照データの変化をテーブル更新に繋げる必要があります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;
-
-        &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;asyncAfter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deadline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;mothule&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-            &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Changed users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfRowsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt;
-                    &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;style&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;default&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;reuseIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;model&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;textLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;model&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;このときのコンソールは下記を出力してます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;viewDidLoad()
-tableView(_:numberOfRowsInSection:)
-tableView(_:numberOfRowsInSection:)
-tableView(_:numberOfRowsInSection:)
-tableView(_:numberOfRowsInSection:)
-Changed users
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;tableView(_:cellForRowAt:)&lt;/code&gt;が呼ばれていないためセルの生成がされません。&lt;br /&gt;
-呼ばれない理由は、&lt;code class=&quot;highlighter-rouge&quot;&gt;users&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;User&lt;/code&gt;が追加される前にテーブル更新が完結してるためです。&lt;/p&gt;
-
-&lt;p&gt;そのため何らかの方法でテーブルを再更新する必要があります。&lt;/p&gt;
-
-&lt;p&gt;ちなみにテーブルの基本的な使い方に関してはこちらの記事をどうぞ&lt;/p&gt;
-
-&lt;div class=&quot;link-container&quot;&gt;
-  &lt;a href=&quot;/ios/uitableview/ios-uitableview-basic&quot;&gt;
-    &lt;div class=&quot;link-container-image&quot;&gt;
-      &lt;img src=&quot;/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png&quot; /&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;link-container-summary&quot;&gt;
-      &lt;div class=&quot;link-container-summary-title&quot;&gt;
-        &lt;span&gt;【初心者向け】UITableViewの基本的な使い方を極める【入門】&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;link-container-summary-brief&quot;&gt;
-        &lt;span&gt;|
-| |
-
-タップした後が残るのを消して欲しい
-
-特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
-
-```swift
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPa...&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/a&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;もっとも手軽な解決方法&quot;&gt;もっとも手軽な解決方法&lt;/h3&gt;
-
-&lt;p&gt;テーブルの更新方法はいくつかありますが、もっとも手軽なのが &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.reloadData()&lt;/code&gt; になります。&lt;/p&gt;
-
-&lt;p&gt;例えば次のコードは参照データが変化したらテーブル全体を更新します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;didSet&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reloadData&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;テーブル更新方法&quot;&gt;テーブル更新方法&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView&lt;/code&gt;の次の３つのメソッドで更新します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadData&lt;/code&gt;: 全てのセルとセクションを更新します。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadSections(_:with:)&lt;/code&gt;: 指定セクションと付随するいセルを更新します。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:with:)&lt;/code&gt;: 指定セルをアニメ付きで更新します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;今回のケースでは &lt;code class=&quot;highlighter-rouge&quot;&gt;reloadData&lt;/code&gt; か &lt;code class=&quot;highlighter-rouge&quot;&gt;reloadSections(_:with:)&lt;/code&gt; で更新ができます。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:with:)&lt;/code&gt; は更新前と更新後のセクション内のセル数が同じでないとランタイムエラーになります。&lt;/p&gt;
-
-&lt;h3 id=&quot;reloaddataの欠点&quot;&gt;reloadData()の欠点&lt;/h3&gt;
-
-&lt;p&gt;セル数の少ないテーブルであれば、 &lt;code class=&quot;highlighter-rouge&quot;&gt;reloadData()&lt;/code&gt; で事足ります。
-しかしセル数が増えたりセル内のレイアウトが複雑だったりすると全体更新は負荷がかかります。&lt;/p&gt;
-
-&lt;p&gt;動的に変更で呼ばれるメソッドゆえあまり負荷が重くなるとカクツキが起きるようになります。&lt;br /&gt;
-場合によってはスパイクといって数ミリ秒~数秒固まります。&lt;/p&gt;
-
-&lt;h3 id=&quot;セクション単位とセル単位の更新&quot;&gt;セクション単位とセル単位の更新&lt;/h3&gt;
-
-&lt;p&gt;負荷がセンシティブな要素であるなら、更新範囲を削ることで更新にかかる時間を短くすることが重要になります。&lt;/p&gt;
-
-&lt;p&gt;更新範囲を狭くする方法として &lt;code class=&quot;highlighter-rouge&quot;&gt;reloadSections(_:with:)&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:with:)&lt;/code&gt; があります。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadSections(_:with:)&lt;/code&gt; メソッドはセクション単位での更新になります。&lt;/p&gt;
-
-&lt;p&gt;また更に絞り込みしたい場合は、 &lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:with:)&lt;/code&gt;がありますが、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。&lt;/p&gt;
-
-&lt;h2 id=&quot;部分更新で役立つメソッド&quot;&gt;部分更新で役立つメソッド&lt;/h2&gt;
-
-&lt;p&gt;先程紹介した&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadSections(_:with:)&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:with:)&lt;/code&gt;はどちらもセクションまたはセルなど具体的な場所を指定する必要があります。&lt;/p&gt;
-
-&lt;p&gt;しかしケースによっては特定するのが難しいことがあります。&lt;/p&gt;
-
-&lt;p&gt;その場合は、次のメソッドを使うと特定のヒントまたはそのまま使えます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;選択中のセル位置を取得
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.indexPathsForSelectedRows&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.indexPathForSelectedRow&lt;/code&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;指定スクリーン座標のセル位置を取得
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.indexPathsForRows(in:)&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.indexPathForRow(at:)&lt;/code&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;指定セルのセル位置を取得
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.indexPath(for:)&lt;/code&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;表示中のセル位置を取得
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.indexPathsForVisibleRows&lt;/code&gt;&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;例えば表示中セルの全セクションを更新したい場合、次のコードのように工夫すればセクション一覧を取得できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sections&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPathsForVisibleRows&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[])&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;section&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reloadSections&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;IndexSet&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sections&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;RowAnimation&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;automatic&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Setに入れてるのはセクションの重複排除のためです。Arrayが持ってた順番保証がなくなりますが、必要ないので問題ないです。&lt;/p&gt;
-
-&lt;h2 id=&quot;更新は奥が深い&quot;&gt;更新は奥が深い&lt;/h2&gt;
-&lt;p&gt;ほとんどのテーブルでは更新はあまり意識せず簡単なものですが、&lt;br /&gt;
-更新を呼びすぎるとシステムは愚直にテーブルを更新してしまいます。&lt;/p&gt;
-
-&lt;p&gt;しかも1~2回無駄に増えたと程度ではあまり目立ちません。&lt;br /&gt;
-しかしスペックの低いiPhoneや高負荷状態では、非常に目立ちます。つまりデータ依存で再現しにくいケースがあります。&lt;/p&gt;
-
-&lt;p&gt;そして部分更新でもっともリスクな不具合として、更新場所が適切ではなくテーブルが更新されないバグです。&lt;br /&gt;
-開発中に見つけられればそれは良しとして、データ依存による不具合であれば本番しか起きていない不具合で&lt;br /&gt;
-それはアプリとして非常に使いにくい動作として現れます。&lt;br /&gt;
-しかも残念ながらクラッシュはほぼしないでしょう。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png" /></entry></feed>
+私個人としては使うべきではないです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewControllerの使い方について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png" /></entry></feed>
