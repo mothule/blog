@@ -59,3 +59,11 @@ app.secureTextFields["password_textfield"].typeText(password)
 これが有効だとキーボードウィンドウが表示されず、ハードキーボード（つまりmacなどのキー)を押すとシミュレーターのフォーカス中のテキストフィールドに入力されます。
 
 どうやらこれがsecureTextFieldsだとフォーカスしていないと判断され失敗していたようでした。
+
+## 追記：Connect Hardware KeyboardがOFFでも失敗する場合
+
+シミュレーターのConnect Hardware KeyboardはOFFになっているが失敗するケースがあります。
+
+その場合は一度Connect Hardware KeyboardをONにしてからすぐにOFFにしてもう一度テストを試してみてください。
+
+ショートカットは shift+cmd+k なので２回押せばOFF→ON→OFFとすぐできます。
