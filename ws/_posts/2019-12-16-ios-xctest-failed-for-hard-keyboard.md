@@ -60,7 +60,7 @@ app.secureTextFields["password_textfield"].typeText(password)
 
 どうやらこれがsecureTextFieldsだとフォーカスしていないと判断され失敗していたようでした。
 
-## 追記：Connect Hardware KeyboardがOFFでも失敗する場合
+## Connect Hardware KeyboardがOFFでも失敗する場合
 
 シミュレーターのConnect Hardware KeyboardはOFFになっているが失敗するケースがあります。  
 その場合は一度Connect Hardware KeyboardをONにしてからすぐにOFFにしてもう一度テストを試してみてください。
