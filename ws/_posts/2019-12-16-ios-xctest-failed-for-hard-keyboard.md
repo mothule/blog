@@ -62,8 +62,7 @@ app.secureTextFields["password_textfield"].typeText(password)
 
 ## 追記：Connect Hardware KeyboardがOFFでも失敗する場合
 
-シミュレーターのConnect Hardware KeyboardはOFFになっているが失敗するケースがあります。
-
+シミュレーターのConnect Hardware KeyboardはOFFになっているが失敗するケースがあります。  
 その場合は一度Connect Hardware KeyboardをONにしてからすぐにOFFにしてもう一度テストを試してみてください。
 
 ショートカットは shift+cmd+k なので２回押せばOFF→ON→OFFとすぐできます。
