@@ -1,4 +1,156 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2019-12-17T16:16:32+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する</title><link href="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard" rel="alternate" type="text/html" title="secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する" /><published>2019-12-16T00:00:00+09:00</published><updated>2019-12-16T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard</id><content type="html" xml:base="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard">&lt;p&gt;1つのPCで複数のプロジェクトをいじることはよくあるありますよね。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-01-06T04:26:11+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">GitHubのConfirm your account recovery settingsについて</title><link href="https://blog.mothule.com/tools/github/tools-github-confirm-your-account-recovery-settings" rel="alternate" type="text/html" title="GitHubのConfirm your account recovery settingsについて" /><published>2020-01-05T00:00:00+09:00</published><updated>2020-01-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/github/tools-github-confirm-your-account-recovery-settings</id><content type="html" xml:base="https://blog.mothule.com/tools/github/tools-github-confirm-your-account-recovery-settings">&lt;p&gt;近年セキュリティを個々が意識し堅牢にすることの重要性が以前より遥かに増しています。&lt;br /&gt;
+特にリモートワークなどでは会社情報を含むPCやスマホを使うことが多いので、個人に求められるセキュリティリテラシーはとても高いものとなっています。&lt;br /&gt;
+実際に被害に合う確率が天文学な数字であっても、場所と状態さえ満たしてしまえばその確率は宝くじで1等2等に当選することよりも高くなります。&lt;/p&gt;
+
+&lt;p&gt;加えて近年のサービスではアクセストークンを第三者へ渡すことで外部からサービスアクセスができる連携機能も重要なエコシステムとなっています。&lt;br /&gt;
+しかしリスクとしては個人とサービスだけでなくその第三者がセキュリティ意識が低いことで漏洩リスクが高まります。&lt;/p&gt;
+
+&lt;p&gt;今回はGitHubでよく出てくる「Confirm your account recovery settings」画面について1つずつ確認したのでそれを説明します。&lt;/p&gt;
+
+&lt;h2 id=&quot;confirm-your-account-recovery-settings-画面とは&quot;&gt;Confirm your account recovery settings 画面とは？&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-01-05-tools-github-confirm-your-account-recovery-settings/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-01-05-tools-github-confirm-your-account-recovery-settings/1.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;この画面のことです。GitHubにアクセスしたとき一定の期間毎に表示されるようで、&lt;br /&gt;
+見かける方はセキュリティ対策が不十分である可能性があります。&lt;/p&gt;
+
+&lt;h2 id=&quot;two-factor-methods-とは&quot;&gt;Two-factor methods とは？&lt;/h2&gt;
+
+&lt;p&gt;Two-factorとは2要素認証のことで通称2FA(Two-factor Authentication)と呼ばれています。&lt;br /&gt;
+自身の知っている知識情報だけでなく、自身の所有物を使ったり、自分自身の身体的特徴などを2つの認証要素で認証することを言います。&lt;/p&gt;
+
+&lt;p&gt;GitHubではAuthenticator app(認証アプリ)、Security keys(物理キー)、SMS number(スマホのSMSメール)の3種類の手段が用意されています。
+注意点としては2FA後にブラウザを許可し2FAをスキップする設定もありますので、許可すると所有認証となる物だけでなくでなくPCをロストするとリスクが拡大します。&lt;/p&gt;
+
+&lt;h3 id=&quot;authenticator-app&quot;&gt;Authenticator app&lt;/h3&gt;
+
+&lt;p&gt;スマホやPCアプリによる認証コードを出してくれるアプリです。&lt;br /&gt;
+メール認証後にこのアプリを使って表示されている認証コードを使って認証します。
+認証コードは一定時間毎に入れ替わります。&lt;/p&gt;
+
+&lt;p&gt;これにより悪意ある第三者が自分のメール認証のメアドとパスワードを入手しても、私が所有しているスマホを入手しない限りログインできません。&lt;/p&gt;
+
+&lt;h4 id=&quot;対応アプリは色々ある&quot;&gt;対応アプリは色々ある&lt;/h4&gt;
+
+&lt;p&gt;私はAuthyというアプリを使ってます。
+MacではAuthy DesktopというPCアプリもあり数年使っていますが今の所そこまで不便に感じずに使ってます。&lt;/p&gt;
+
+&lt;p&gt;たまにアプリを立ち上げるとAuthy自体に設定したパスワードを求められるので、少しだけ2段階認証となっております。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;a href=&quot;https://apps.apple.com/jp/app/authy/id494168017&quot;&gt;Authy - App Store&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;&lt;a href=&quot;https://play.google.com/store/apps/details?id=com.authy.authy&amp;amp;hl=ja&quot;&gt;Authy - Google Play&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;security-keys&quot;&gt;Security keys&lt;/h3&gt;
+
+&lt;p&gt;ハードウェアのセキュリティキーのことで、実在する物理のキーになります。
+有名な物だとYubiKeyなどでしょうか。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.amazon.co.jp/Yubico-Y-072-YubiKey-NEO/dp/B00LX8KZZ8/ref=as_li_ss_il?ie=UTF8&amp;amp;linkCode=li3&amp;amp;tag=mothule05-22&amp;amp;linkId=21079b265ff170d8eb1d0caabfcdd878&amp;amp;language=ja_JP&quot; target=&quot;_blank&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;ASIN=B00LX8KZZ8&amp;amp;Format=_SL250_&amp;amp;ID=AsinImage&amp;amp;MarketPlace=JP&amp;amp;ServiceVersion=20070822&amp;amp;WS=1&amp;amp;tag=mothule05-22&amp;amp;language=ja_JP&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;https://ir-jp.amazon-adsystem.com/e/ir?t=mothule05-22&amp;amp;language=ja_JP&amp;amp;l=li3&amp;amp;o=9&amp;amp;a=B00LX8KZZ8&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;YubiKey&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.amazon.co.jp/Yubico-Y-072-YubiKey-NEO/dp/B00LX8KZZ8/ref=as_li_ss_tl?ie=UTF8&amp;amp;linkCode=ll1&amp;amp;tag=mothule05-22&amp;amp;linkId=b95d217be6ebdea044d92e29a3d8d2ba&amp;amp;language=ja_JP&quot;&gt;Amazonで開く&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これも前述したAuthenticator app同様に所有認証となり、悪意ある第三者がメール認証のメアドとパスワードを得ても、このセキュリティキーで認証しなければログインできません。&lt;/p&gt;
+
+&lt;h3 id=&quot;sms-number&quot;&gt;SMS number&lt;/h3&gt;
+
+&lt;p&gt;SMS番号とは電話番号へのSMSメッセージを使って認証コードを送ってくれる方法で、得た認証コードを入力することで認証します。&lt;br /&gt;
+これも他同様に電話番号が紐付いた端末を保持しているということで所有認証の部類に入ります。&lt;/p&gt;
+
+&lt;h2 id=&quot;recovery-options-とは&quot;&gt;Recovery options とは？&lt;/h2&gt;
+
+&lt;p&gt;Recovery options とは万が一上記の認証手段を失ってしまった場合に、回復する手段のことをいいます。&lt;/p&gt;
+
+&lt;p&gt;GitHubではRecovery codes(乱数群)、Fallback SMS number(別スマホのSMSメール)、Recovery tokens（回復用乱数羅列）の3種類が用意されています。&lt;/p&gt;
+
+&lt;p&gt;セキュリティと直結はしにくいですが、2FAでセキュリティを上げることで認証手段が複数個になるわけですから、同様にその認証手段をロストするリスクも向上します。&lt;/p&gt;
+
+&lt;p&gt;セキュリティを堅牢にしても自分がアクセスできなくなっては意味がありません。&lt;/p&gt;
+
+&lt;h3 id=&quot;recovery-codes&quot;&gt;Recovery codes&lt;/h3&gt;
+
+&lt;p&gt;Recovery codes とは回復用に予め受け取っておいたコード一覧のことです。&lt;br /&gt;
+ログイン済みでRecovery codesを取得し、保存しておくことで、何らかの理由でGitHubにアクセスできなくなったときにこのコードのいずれか１つを使ってアクセスします。&lt;br /&gt;
+このコードを紙に印刷して完全にデジタルから隔離しておいたり、スマホなど別端末で管理になると思います。&lt;br /&gt;
+それぞれ一長一短ありますので、自分で万が一に備えておきましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;fallback-sms-number&quot;&gt;Fallback SMS number&lt;/h3&gt;
+
+&lt;p&gt;2FAで設定したSMS番号とは別のSMS番号に認証コードを送信できるようになります。&lt;br /&gt;
+スマホのロストはもっとも確率が高いので、2FAでAuthenticator appsやSMS numberを使っていて、Recovery codesをスマホに保存している場合は、ここを設定しておいたほうが安心です。&lt;/p&gt;
+
+&lt;h3 id=&quot;recovery-tokens&quot;&gt;Recovery tokens&lt;/h3&gt;
+
+&lt;p&gt;Facebookアカウントを使用した回復手段です。&lt;br /&gt;
+Facebookアカウントと連携しておくことで万が一アクセス手段をロストしてもFacebookアカウントにログインできれば回復できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;2faは絶対やろう&quot;&gt;2FAは絶対やろう&lt;/h2&gt;
+
+&lt;p&gt;2FAは絶対にやりましょう。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;様々なサービスを使っている&lt;/li&gt;
+  &lt;li&gt;他サービスと同じパスワードを使いまわしている&lt;/li&gt;
+  &lt;li&gt;フリーWiFiや自分の所有物でない端末でログインする機会がある&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;いずれ1つでも当てはまる人は、既に射程距離に入っています。&lt;/p&gt;
+
+&lt;h3 id=&quot;大手サービスだから大丈夫&quot;&gt;「大手サービスだから大丈夫」&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;所属経験上、大手だからといって安心ではない&lt;/li&gt;
+  &lt;li&gt;セキュリティ考慮が予算から外れやすい現実&lt;/li&gt;
+  &lt;li&gt;大手ほどエンジニアは外注でセキュリティなど完全に予算外&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;漏洩のニュースが流れていなくても情報は外部に漏れている&quot;&gt;漏洩のニュースが流れていなくても情報は外部に漏れている&lt;/h3&gt;
+
+&lt;p&gt;私自身の経験ですが、過去に使っていたパスワードで、そのパスワードを使ってた対象サービスの漏洩ニュースがなかったにも関わらず、&lt;br /&gt;
+メール認証で使ってたメールアドレスに対して、「お前のパスワードこれだろ？悪用されたくなかったらビットコインで金よこせ」といわゆる人質メールが来ました。&lt;br /&gt;
+しかも提示されていたパスワードは実際に昔使ってたものでした。&lt;/p&gt;
+
+&lt;p&gt;偶然にも私はパスワードは違う形に変えていたことで、有名どころのサービスやクレカを登録してるサービスは異なるパスワードでしたが、もしこれが同じパスワードでしたら&lt;br /&gt;
+完全個人情報やクレジットカード情報など、生活におけるほぼ全部の情報が漏洩しているところでした。&lt;/p&gt;
+
+&lt;p&gt;つまり GitHubがどんなに堅牢でも、パスワードが同じだと、他サービスがやられたら堂々と不正ログインされます。&lt;/p&gt;
+
+&lt;p&gt;自分の人生を他人に信託できるのならどうぞご勝手に。&lt;br /&gt;
+私はこれ以降全ての登録サービスを一元管理し、パスワードは長文乱数化、2FAあるなら対応し、不要なサービスはパスワードは複雑化し退会しています。&lt;/p&gt;
+
+&lt;h2 id=&quot;人はミスをする生き物&quot;&gt;人はミスをする生き物&lt;/h2&gt;
+
+&lt;p&gt;2FAをしているから万全というわけではありません。会社に迷惑はかからないのでその点は安心なのですが、&lt;br /&gt;
+自分の過去の資産にアクセスできないのはそれはそれで手痛いです。&lt;br /&gt;
+2FAに必要な認証要素を失ったら自分すらもアクセスできなくなります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Authenticator app&lt;/li&gt;
+  &lt;li&gt;Security keys&lt;/li&gt;
+  &lt;li&gt;SMS number&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これら3つ対応していても、PC担いで通勤中に交通事故に遭ってPCもスマホも物理キーも壊れたら終わりです。&lt;br /&gt;
+命助かっても助かった気がしません。&lt;/p&gt;
+
+&lt;p&gt;自宅が火事になればもろとも吹き飛びます。&lt;/p&gt;
+
+&lt;p&gt;泥棒に盗まれても同じです。&lt;/p&gt;
+
+&lt;p&gt;日常に潜む確率の低いリスクにわざわざ巻き込まれやすくする理由はないので、Recovery optionsは確実に残しておきましょう。&lt;/p&gt;
+
+&lt;p&gt;これは普段の利便性が下がるものでもなく緊急時に使うものなので、やっておいて何一つ損はないです。&lt;/p&gt;
+
+&lt;h2 id=&quot;本業に集中するための保険だと思うこと&quot;&gt;本業に集中するための保険だと思うこと&lt;/h2&gt;
+&lt;p&gt;セキュリティは利便性の反比例になるため、堅牢にするほどGitHubの利便性は下がるのは避けられません。&lt;/p&gt;
+
+&lt;p&gt;しかし、その利便性を重視しすぎることによって、漏洩やアカウント乗っ取りリスクは影を潜めていても確実にそこにいます。&lt;/p&gt;
+
+&lt;p&gt;そのリスクを自分のミスで受けると個人であれば不正利用による信用失墜や巨額の請求が来たり、会社であれば所属会社からの雇用契約書の契約違反による甲側の一方的な解雇と場合によっては損害賠償請求がありえます。&lt;/p&gt;
+
+&lt;p&gt;フリーランスや副業の方による業務委託契約であれば、契約書の契約違反となり損害賠償の話になります。&lt;/p&gt;
+
+&lt;p&gt;自分が守るべき責務を守らないことで得られるものに対して、確率的に低くとも受けるリスクと比べると&lt;strong&gt;「そこまでして欲しい利便性か？」&lt;/strong&gt; と一度己に説いてみるのも重要です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="github" /><summary type="html">近年セキュリティを個々が意識し堅牢にすることの重要性が以前より遥かに増しています。 特にリモートワークなどでは会社情報を含むPCやスマホを使うことが多いので、個人に求められるセキュリティリテラシーはとても高いものとなっています。 実際に被害に合う確率が天文学な数字であっても、場所と状態さえ満たしてしまえばその確率は宝くじで1等2等に当選することよりも高くなります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-01-05-tools-github-confirm-your-account-recovery-settings/0.png" /></entry><entry><title type="html">secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する</title><link href="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard" rel="alternate" type="text/html" title="secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する" /><published>2019-12-16T00:00:00+09:00</published><updated>2019-12-16T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard</id><content type="html" xml:base="https://blog.mothule.com/ios/test/ios-xctest-failed-for-hard-keyboard">&lt;p&gt;1つのPCで複数のプロジェクトをいじることはよくあるありますよね。&lt;br /&gt;
 業務で複数プロジェクトだったり、ちょっとした調査プロジェクトだったり、プロジェクト自体は独立して他プロジェクトと疎結合であっても、開発環境はそうでない場合があります。&lt;/p&gt;
 
 &lt;p&gt;今回はXcodeのSimulatorがそれで、その影響で「何もコード弄ってないのに失敗する」って現象が起きたのでそれの対処方について簡単にまとめました。&lt;/p&gt;
@@ -49,7 +201,7 @@ Attributes: SecureTextField, { {151.0, 284.0}, {254.0, 40.0} }, identifier: 'pas
 
 &lt;p&gt;どうやらこれがsecureTextFieldsだとフォーカスしていないと判断され失敗していたようでした。&lt;/p&gt;
 
-&lt;h2 id=&quot;追記connect-hardware-keyboardがoffでも失敗する場合&quot;&gt;追記：Connect Hardware KeyboardがOFFでも失敗する場合&lt;/h2&gt;
+&lt;h2 id=&quot;connect-hardware-keyboardがoffでも失敗する場合&quot;&gt;Connect Hardware KeyboardがOFFでも失敗する場合&lt;/h2&gt;
 
 &lt;p&gt;シミュレーターのConnect Hardware KeyboardはOFFになっているが失敗するケースがあります。&lt;br /&gt;
 その場合は一度Connect Hardware KeyboardをONにしてからすぐにOFFにしてもう一度テストを試してみてください。&lt;/p&gt;
@@ -1463,150 +1615,4 @@ iOS開発ではそれに加えて端末が持つ機能の使い方やUIデザイ
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 
-&lt;p&gt;UIデザインパターンの1つで、ECサイトやキュレーションサイトなど様々なサービスで使われやすいデザインなので覚えておいて損はないと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uicollectionview" /><summary type="html">UICollectionViewを使ったCarousel(カルーセル)を実装します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" /></entry><entry><title type="html">【初心者向け】UITableViewControllerの使い方</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic" rel="alternate" type="text/html" title="【初心者向け】UITableViewControllerの使い方" /><published>2019-10-08T00:00:00+09:00</published><updated>2019-10-08T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic">&lt;p&gt;UITableViewControllerの使い方について説明します。&lt;/p&gt;
-
-&lt;p&gt;UIViewControllerと対等の位置にありますが、実態はUIViewControllerにテーブル機能を追加して、他の機能を削っただけです。&lt;/p&gt;
-
-&lt;h2 id=&quot;まずはただ表示する&quot;&gt;まずはただ表示する&lt;/h2&gt;
-
-&lt;p&gt;次のファイルを作成する&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;TableViewController.swift&lt;/li&gt;
-  &lt;li&gt;TableViewController.storyboard&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;tableviewcontrollerswift&quot;&gt;TableViewController.swift&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cocoa Touch Class&lt;/code&gt; を選択して、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Subclass of&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewController&lt;/code&gt; にすると自動でコードが生成されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/2.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;コードの定義を見ると分かるように &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewController&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDelegate&lt;/code&gt; を採用しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;open&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDelegate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;テーブルの基本について分からない場合はこちらの記事をどうぞ&lt;/p&gt;
-
-&lt;div class=&quot;link-container&quot;&gt;
-  &lt;a href=&quot;/ios/uitableview/ios-uitableview-basic&quot;&gt;
-    &lt;div class=&quot;link-container-image&quot;&gt;
-      &lt;img src=&quot;/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png&quot; /&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;link-container-summary&quot;&gt;
-      &lt;div class=&quot;link-container-summary-title&quot;&gt;
-        &lt;span&gt;【初心者向け】UITableViewの基本的な使い方を極める【入門】&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;link-container-summary-brief&quot;&gt;
-        &lt;span&gt;|
-| |
-
-タップした後が残るのを消して欲しい
-
-特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
-
-```swift
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPa...&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/a&gt;
-&lt;/div&gt;
-
-&lt;p&gt;自動生成されたコード量に少し面倒くささを感じますが、コメントアウトされたコードを見ると&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDataSource&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDelegate&lt;/code&gt; の必須とよく使うメソッドば抜粋されているだけです。&lt;/p&gt;
-
-&lt;p&gt;もし&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewDelegate&lt;/code&gt;で分からない場合は、こちらの記事を先にどうぞ&lt;/p&gt;
-
-&lt;div class=&quot;link-container&quot;&gt;
-  &lt;a href=&quot;/ios/uitableview/ios-uitableview-uitableviewdelegate-basic&quot;&gt;
-    &lt;div class=&quot;link-container-image&quot;&gt;
-      &lt;img src=&quot;/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png&quot; /&gt;
-    &lt;/div&gt;
-    &lt;div class=&quot;link-container-summary&quot;&gt;
-      &lt;div class=&quot;link-container-summary-title&quot;&gt;
-        &lt;span&gt;【初心者向け】UITableViewDelegateで出来ること&lt;/span&gt;
-      &lt;/div&gt;
-      &lt;div class=&quot;link-container-summary-brief&quot;&gt;
-        &lt;span&gt;
-`UITableViewDelegate`とは`UITableView`の操作イベントをハンドリングするプロトコルです。
-単純なセルのタップイベントをはじめ、
-今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。
-
-この記事では `UITableViewDelegate`には何が用意されているのか？  
-このprotocolを使ってどのようなことが出来るのか？についてとっかかりを掴むページを想定してます。
-
-実際の詳細に関しては記事内の随所に詳細ページへの紹介をしているので...&lt;/span&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/a&gt;
-&lt;/div&gt;
-
-&lt;h3 id=&quot;tableviewcontrollerstoryboard&quot;&gt;TableViewController.storyboard&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewController&lt;/code&gt;を配置します。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;制御クラスは &lt;code class=&quot;highlighter-rouge&quot;&gt;TableViewController&lt;/code&gt; にします。&lt;/p&gt;
-
-&lt;h2 id=&quot;唯一の特性であるstaticcell&quot;&gt;唯一の特性であるStaticCell&lt;/h2&gt;
-
-&lt;p&gt;UITableViewControllerはテーブルを静的にデータとして扱うことができます。&lt;/p&gt;
-
-&lt;p&gt;これは例えば次のようなテーブルにいくつかのカスタムセルがあったとして、&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/4.png&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;コード側では次のように直接Outletとして持つことができます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TableViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;textField&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITextField&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBAction&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onTouchedButton&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Any&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;vc&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIAlertController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;title&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;message&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;textField&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;??&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;preferredStyle&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;alert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;present&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;vc&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;animated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;textField&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;// ...&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/5.gif&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/5.gif&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;テーブルのセル内のイベントやUIを用意に取れるのはかなり協力ですが、弱点としては名前の通り静的構造限定です。&lt;br /&gt;
-動的にセルが変化したり増えたりするのはできません。&lt;/p&gt;
-
-&lt;h2 id=&quot;uitableviewcontrollerでrefreshcontrol実装&quot;&gt;UITableViewControllerでrefreshcontrol実装&lt;/h2&gt;
-&lt;p&gt;UITableViewControllerに下に引っ張って更新するPull to refreshを実装するのは他と変わらずです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/3.gif&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-08-ios-uitableviewcontroller-basic/3.gif&quot; width=&quot;100%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;refreshControl&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIRefreshControl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;refreshControl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;addTarget&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;action&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;#selector(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onRefresh(_:)&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;valueChanged&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;    
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;@objc&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onRefresh&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;AnyObject&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-    &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;asyncAfter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;deadline&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;now&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;1.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;execute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;refreshControl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;endRefreshing&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;titleは使えない&quot;&gt;titleは使えない&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewController&lt;/code&gt; にはタイトルを設定する項目はありますが、&lt;code class=&quot;highlighter-rouge&quot;&gt;UINavigationController&lt;/code&gt; や &lt;code class=&quot;highlighter-rouge&quot;&gt;UITabBarController&lt;/code&gt; などViewControllerコンテナで呼ばない限りタイトルは表示されません。&lt;/p&gt;
-
-&lt;h2 id=&quot;uitableviewcontrollerは用途は限定的&quot;&gt;UITableViewControllerは用途は限定的&lt;/h2&gt;
-
-&lt;p&gt;UITableViewControllerは UIViewController+UIViewTableで実装が楽になると思いますが、  &lt;br /&gt;
-それ以上に柔軟性を犠牲にしており、実際のアプリ開発の画面ではUITableView単体で完結することはほとんどなく&lt;br /&gt;
-大抵が複数のViewを組み合わせて画面が構築されます。&lt;/p&gt;
-
-&lt;p&gt;そのため&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableViewController&lt;/code&gt;で実装を進めていると後で痛い目をみます。&lt;br /&gt;
-私個人としては使うべきではないです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">UITableViewControllerの使い方について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png" /></entry></feed>
+&lt;p&gt;UIデザインパターンの1つで、ECサイトやキュレーションサイトなど様々なサービスで使われやすいデザインなので覚えておいて損はないと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uicollectionview" /><summary type="html">UICollectionViewを使ったCarousel(カルーセル)を実装します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" /></entry></feed>
