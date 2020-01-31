@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Google Analyticsで自分のサイトを分析して分かったこと - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Google Analyticsで自分のサイトを分析して分かったこと" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。" />
+<meta property="og:description" content="Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" />
+<meta property="og:url" content="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-01-tools-google-analytics-my-site/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-01T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"dateModified":"2020-02-01T00:00:00+09:00","datePublished":"2020-02-01T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site"},"url":"https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site","image":"https://blog.mothule.com/assets/images/2020-02-01-tools-google-analytics-my-site/0.png","description":"Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。","headline":"Google Analyticsで自分のサイトを分析して分かったこと","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="Google Analyticsで自分のサイトを分析して分かったこと">
+    <meta name="twitter:description" content="Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-01-tools-google-analytics-my-site/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#tools">Tools</a>
+      
+    
+      
+        / <a href="/tags#google-analytics">Google-analytics</a>
+      
+    
+      
+        / Google Analyticsで自分のサイトを分析して分かったこと
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-01-tools-google-analytics-my-site/0.png" alt="Google Analyticsで自分のサイトを分析して分かったこと">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Google Analyticsで自分のサイトを分析して分かったこと</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-1</li>
+        
+          <li class="list-inline-item"><a href="/tags#tools">tools</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#google-analytics">google-analytics</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#まずはグラフを見る">まずはグラフを見る</a>
+    <ul>
+      <li><a href="#dauのチャート">DAUのチャート</a>
+        <ul>
+          <li><a href="#変化を見る">変化を見る</a></li>
+        </ul>
+      </li>
+      <li><a href="#トラフィック">トラフィック</a>
+        <ul>
+          <li><a href="#流入元を調べる">流入元を調べる</a></li>
+        </ul>
+      </li>
+      <li><a href="#時間帯別ユーザーアクセス">時間帯別ユーザーアクセス</a>
+        <ul>
+          <li><a href="#変化を見る-1">変化を見る</a></li>
+        </ul>
+      </li>
+      <li><a href="#アクセスランキングと直帰率と離脱率">アクセスランキングと直帰率と離脱率</a>
+        <ul>
+          <li><a href="#記事の属性や数字を見る">記事の属性や数字を見る</a></li>
+          <li><a href="#ここにはない情報がある">ここにはない情報がある</a></li>
+          <li><a href="#用語の意味">用語の意味</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#仮説を立てる">仮説を立てる</a></li>
+  <li><a href="#仮説から課題を立てる">仮説から課題を立てる</a></li>
+  <li><a href="#課題に対する分析や対策を考える">課題に対する分析や対策を考える</a>
+    <ul>
+      <li><a href="#直帰率が高いのはそれ以外に欲しい情報がない">直帰率が高いのはそれ以外に欲しい情報がない</a></li>
+      <li><a href="#刺さる情報とはユーザー属性から出す">刺さる情報とはユーザー属性から出す</a></li>
+      <li><a href="#初学者以外のユーザー属性に刺さる記事がない">初学者以外のユーザー属性に刺さる記事がない</a></li>
+    </ul>
+  </li>
+  <li><a href="#アクションを立てる">アクションを立てる</a></li>
+  <li><a href="#アクションを判断する">アクションを判断する</a></li>
+  <li><a href="#分析してみて">分析してみて</a></li>
+</ul>
+  </div>
+
+  <p>Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。</p>
+
+<p>普段アクセス数やアクセス数の多いページ一覧しか見てなかったのですが、<br />
+今回ちょっと分析結果から仮説を立てるまでをまとめてみました。</p>
+
+<p>GAを使った分析がいまいち分からない人向け。</p>
+
+<h2 id="まずはグラフを見る">まずはグラフを見る</h2>
+
+<h3 id="dauのチャート">DAUのチャート</h3>
+
+<p><a href="/assets/images/2020-02-01-tools-google-analytics-my-site/dau.png"><img src="/assets/images/2020-02-01-tools-google-analytics-my-site/dau.png" width="50%" /></a></p>
+
+<h4 id="変化を見る">変化を見る</h4>
+<p>チャートでは変化を見ましょう。
+大きく変化してる部分や、全体としてのなだらかの変化率を見るの2つの観点で見てみましょう。</p>
+
+<p>ちなみにこの図だと、
+ガクンと落ちてる部分は全て <strong>「土日」</strong> です。</p>
+
+<p>技術ブログなので、土日はみんな技術系の調べ物はせず、リフレッシュしてるのでしょうか。</p>
+
+<h3 id="トラフィック">トラフィック</h3>
+
+<p>どうやってこのサイトに到達したのかが分かります。</p>
+
+<p><a href="/assets/images/2020-02-01-tools-google-analytics-my-site/trafic.png"><img src="/assets/images/2020-02-01-tools-google-analytics-my-site/trafic.png" width="100%" /></a></p>
+
+<h4 id="流入元を調べる">流入元を調べる</h4>
+<p>どこからやってきたのかここで調べましょう。
+SNSであればTwitterやFacebook、他サイトとしてQiitaなどの流入もあります。</p>
+
+<p>このサイトは、ほぼ全部オーガニックつまりGoogle検索で辿り着いてます。</p>
+
+<h3 id="時間帯別ユーザーアクセス">時間帯別ユーザーアクセス</h3>
+
+<p>ユーザーがこのサイトにアクセスしてくる時間帯が分かります。</p>
+
+<p><a href="/assets/images/2020-02-01-tools-google-analytics-my-site/users-each-times.png"><img src="/assets/images/2020-02-01-tools-google-analytics-my-site/users-each-times.png" width="50%" /></a></p>
+
+<h4 id="変化を見る-1">変化を見る</h4>
+<p>集合といった塊や変化してる部分を見ましょう。</p>
+
+<p>ちなみにこの図だと、
+平日9時から20時に主なアクセス時間帯のようです。</p>
+
+<p>つまり社会人であれば業務中ですね。<br />
+前述したDAUも考慮すると <strong>業務中でしか使われていないサイト</strong> のようです。</p>
+
+<h3 id="アクセスランキングと直帰率と離脱率">アクセスランキングと直帰率と離脱率</h3>
+
+<p>2ヶ月間のアクセスランキングとそれらの直帰率と離脱率です。</p>
+
+<p><a href="/assets/images/2020-02-01-tools-google-analytics-my-site/access-page-rank-bounce-rate.png"><img src="/assets/images/2020-02-01-tools-google-analytics-my-site/access-page-rank-bounce-rate.png" width="100%" /></a></p>
+
+<h4 id="記事の属性や数字を見る">記事の属性や数字を見る</h4>
+
+<ul>
+  <li>初心者向け記事が目立ちます。</li>
+  <li>直帰率が非常に高いです。</li>
+  <li>離脱率も一部非常に高いです。</li>
+  <li>ページ滞在時間が長いので欲しい情報に到達してると思って良さそう。</li>
+</ul>
+
+<h4 id="ここにはない情報がある">ここにはない情報がある</h4>
+
+<p>それは記事の構成と記事比率です。
+「初心者向け」と「iOS」の記事が多く、それら記事内で構造化されていれば、SEO評価が上がります。</p>
+
+<p>例えばCarthageに関する記事は1つしかないので、直帰率や離脱率が高いのでしょう。<br />
+違う目線で見れば、これ1つでユーザーにとって有能な記事とも見れます。</p>
+
+<h4 id="用語の意味">用語の意味</h4>
+
+<p>直帰率とは1セッションにおいてそのページ以外にアクセスせず離脱すること。<br />
+離脱率とはそのページを最後にセッションを終了すること。<br />
+セッション終了とは簡単な話ブラウザを閉じること。</p>
+
+<p>厳密には最後のアクセスから30分以上経過などあります。これはGAの定義の話なので他分析ツールでは異なってきます。<br />
+GAについては<a href="https://support.google.com/analytics/answer/2731565?hl=ja">アナリティクスでのウェブ セッションの算出方法</a>をどうぞ。</p>
+
+<h2 id="仮説を立てる">仮説を立てる</h2>
+
+<p>掲載したチャートや表、感想から考えて、
+「ユーザーは業務中の初学者か？」と仮説が立ちます。<br />
+おおむね「業務中で分からないことをググって解決して、分かったら閉じる。」がユーザーシナリオが想像できます。<br />
+直帰率が高いのがそれを後押ししてます。
+また次のリテンションも後押ししてます。</p>
+
+<p><a href="/assets/images/2020-02-01-tools-google-analytics-my-site/retension.png"><img src="/assets/images/2020-02-01-tools-google-analytics-my-site/retension.png" width="50%" /></a></p>
+
+<h2 id="仮説から課題を立てる">仮説から課題を立てる</h2>
+
+<p>仮説が立ったら今度は課題です。仮説を事実だと捉えて考えてみます.</p>
+
+<ul>
+  <li>このサイトは回遊率が低いです。 もっといろんな記事を見て直帰率とセッション時間をあげたいですね。</li>
+  <li>意図通りか別として、ユーザーの技術力が低いです。初学者以外にもアクセスされて欲しいですね。</li>
+  <li>業務中でしか使われていません。もっとプライベートな時間帯にもアクセスが欲しいですね。</li>
+</ul>
+
+<h2 id="課題に対する分析や対策を考える">課題に対する分析や対策を考える</h2>
+
+<p>課題が見えたら今度はそれらのいろんな角度から見たり、見えてきた原因の解決策を考えてみます。</p>
+
+<h3 id="直帰率が高いのはそれ以外に欲しい情報がない">直帰率が高いのはそれ以外に欲しい情報がない</h3>
+<p>ユーザーシナリオから鑑みて、直帰率が高すぎるのは、欲しい情報が手に入ったことで、ユーザーニーズが終了してるのも事実です。<br />
+しかしユーザーは無意識でも「刺さる情報を提供できていない」とも言えます。</p>
+
+<h3 id="刺さる情報とはユーザー属性から出す">刺さる情報とはユーザー属性から出す</h3>
+<p>ユーザーが初学者であれば、初学者に刺さるような情報があればいいわけです。<br />
+またiOS記事であれば、他の刺さるようなiOS記事があるといいかもしれません。
+プライベートな時間帯を狙うなら、技術NEWS系の記事もあるとアンテナはってる人たちに見てもらえる可能性があります。</p>
+
+<h3 id="初学者以外のユーザー属性に刺さる記事がない">初学者以外のユーザー属性に刺さる記事がない</h3>
+<p>事実として初学者以外に向けた記事数は少ないですし、それらを構造化もあまり出来ていません。<br />
+初学者以外を狙うとなると、大掛かりな行動となりそうです。</p>
+
+<h2 id="アクションを立てる">アクションを立てる</h2>
+
+<p>対策から具体的な行動に移せる粒度に落とし込みます。</p>
+
+<ul>
+  <li>ページ内の関連記事の精度を上げる</li>
+  <li>技術NEWSの考察した記事を蓄積する</li>
+</ul>
+
+<h2 id="アクションを判断する">アクションを判断する</h2>
+
+<p>関連記事の精度を上げることで、閲覧中記事と同じ属性を持つ記事をユーザーに提供すれば、<br />
+ユーザーは同様に興味を持つかも知れないですね。</p>
+
+<p>技術NEWSの考察は、サイト方針とは異なる情報となるため、今回は却下となります。</p>
+
+<h2 id="分析してみて">分析してみて</h2>
+<p>優先順位の判断材料となります。</p>
+
+<p>やることはたくさんある中で少ない時間の中で、何を選択し集中することでコスパよく効果を出さないといけません。
+そんな状況下では、優先順位付けに悩みます。</p>
+
+<p>これを繰り返すことでOODAをループさせます。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related-posts">
+  <div class="related-posts-title">
+    <h2>関連記事</h2>
+  </div>
+  <div class="related-posts-body">
+    
+      <ul>
+        <li><a href="/ruby/gem/ruby-gem-specify-version">Gemで指定バージョンをインストール</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/notebook/remote-work/pitfall-of-remote-work">リモートワーク4年目間近で落ちた穴</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/tools/github/tools-github-confirm-your-account-recovery-settings">GitHubのConfirm your account recovery settingsについて</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/ios/test/ios-xctest-failed-for-hard-keyboard">secureTextFieldsのNeither element nor any descendant has keyboard focusを対処する</a></li>
+      </ul>
+    
+      <ul>
+        <li><a href="/notebook/remote-work/notebook-remote-work-web-letter">フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた</a></li>
+      </ul>
+    
+  </div>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
