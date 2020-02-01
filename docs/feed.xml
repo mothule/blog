@@ -1,4 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-01T05:08:42+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Google Analyticsで自分のサイトを分析して分かったこと</title><link href="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" rel="alternate" type="text/html" title="Google Analyticsで自分のサイトを分析して分かったこと" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site</id><content type="html" xml:base="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site">&lt;p&gt;Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-02T00:14:09+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Rails以外でBundlerを使う方法</title><link href="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails" rel="alternate" type="text/html" title="Rails以外でBundlerを使う方法" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails">&lt;p&gt;仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、
+なるべく自前スクリプトでもRubyで書くようにしてます。&lt;/p&gt;
+
+&lt;p&gt;だけど毎度Railsを使わずBundlerを使う場合に一部躓くのでメモとしてまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;段取り&quot;&gt;段取り&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;スクリプトで使うバージョン指定&lt;/li&gt;
+  &lt;li&gt;(Option)bundlerインストール&lt;/li&gt;
+  &lt;li&gt;Gemfile用意&lt;/li&gt;
+  &lt;li&gt;bundle install&lt;/li&gt;
+  &lt;li&gt;スクリプトでbundle内gemをrequire&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Rails外で使う上で特別必要な処理って最後の項目だけなので、
+そこだけ知りたい人はざざっと一番下へどうぞ。&lt;/p&gt;
+
+&lt;h2 id=&quot;スクリプトで使うバージョン指定&quot;&gt;スクリプトで使うバージョン指定&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ruby version]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;optionbundlerインストール&quot;&gt;(Option)bundlerインストール&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install bundler &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2.0.2&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;バージョン指定する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;-v &quot;[bundler version]&quot;&lt;/code&gt;を入れます。&lt;br /&gt;
+最新でいいなら指定不要です。&lt;/p&gt;
+
+&lt;h2 id=&quot;gemfile用意&quot;&gt;Gemfile用意&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Gemfileが作成されるので、中に必要なgemを追加します。&lt;/p&gt;
+
+&lt;h2 id=&quot;bundle-install&quot;&gt;bundle install&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bundle
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Gemfileで指定されたgemsをインストールします。&lt;/p&gt;
+
+&lt;h2 id=&quot;スクリプト内でbundle内gemをrequire&quot;&gt;スクリプト内でbundle内gemをrequire&lt;/h2&gt;
+
+&lt;p&gt;エントリーファイルが &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; であれば, &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; の頭に&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rubygems'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'bundler/setup'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と書きます。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="bundler" /><summary type="html">仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、 なるべく自前スクリプトでもRubyで書くようにしてます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-ruby-use-bundler-outside-of-rails.png" /></entry><entry><title type="html">Google Analyticsで自分のサイトを分析して分かったこと</title><link href="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" rel="alternate" type="text/html" title="Google Analyticsで自分のサイトを分析して分かったこと" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site</id><content type="html" xml:base="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site">&lt;p&gt;Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。&lt;/p&gt;
 
 &lt;p&gt;普段アクセス数やアクセス数の多いページ一覧しか見てなかったのですが、&lt;br /&gt;
 今回ちょっと分析結果から仮説を立てるまでをまとめてみました。&lt;/p&gt;
@@ -813,359 +865,4 @@ Gemfile を次のように書き換えます。&lt;/p&gt;
 &lt;/span&gt;&lt;span class=&quot;gi&quot;&gt;+gem 'sassc-rails', '~&amp;gt; 2.1.2'
 &lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;これで再度 &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle update rails&lt;/code&gt; を実行すると成功しました。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png" /></entry><entry><title type="html">Firebase Performance Monitoringの基本の概念と実装について整理した</title><link href="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic" rel="alternate" type="text/html" title="Firebase Performance Monitoringの基本の概念と実装について整理した" /><published>2019-10-23T00:00:00+09:00</published><updated>2019-10-23T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic</id><content type="html" xml:base="https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic">&lt;p&gt;アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。&lt;br /&gt;
-なお本記事はiOSを重点に調査しています。&lt;/p&gt;
-
-&lt;h2 id=&quot;firebase-performance-monitoringとは&quot;&gt;Firebase Performance Monitoringとは？&lt;/h2&gt;
-
-&lt;p&gt;iOS,Android,Webアプリのパフォーマンス特性を知ることが出来ます。&lt;br /&gt;
-SDKをアプリに統合するだけで、プロファイルコード不要で各パフォーマンスデータを収集し、Firebaseコンソールから分析できます。&lt;/p&gt;
-
-&lt;p&gt;これによりアプリのパフォーマンス問題を解決できます。&lt;/p&gt;
-
-&lt;p&gt;なお Performance Monitoringが自動収集するデータには名前、メアド、電話番号などの個人情報は一切収集しません。&lt;br /&gt;
-またカスタム属性で個人を特定できる情報は使用しないでください。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://firebase.google.com/docs/perf-mon?hl=ja&quot;&gt;公式&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;主な機能&quot;&gt;主な機能&lt;/h2&gt;
-
-&lt;p&gt;おもに３つの機能があります。&lt;/p&gt;
-
-&lt;h3 id=&quot;パフォーマンスデータとして次の項目を自動収集&quot;&gt;パフォーマンスデータとして次の項目を自動収集&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;アプリ起動時間&lt;/li&gt;
-  &lt;li&gt;HTTP/Sネットワーク上のリクエスト&lt;/li&gt;
-  &lt;li&gt;画面ごとのレンダリングデータ&lt;/li&gt;
-  &lt;li&gt;フォアグラウンドでのアクティビティ&lt;/li&gt;
-  &lt;li&gt;バックグラウンドでのアクティビティ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;パフォーマンス課題を見つけやすくする&quot;&gt;パフォーマンス課題を見つけやすくする&lt;/h3&gt;
-
-&lt;p&gt;パフォーマンス指標として次の項目を確認できます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;国&lt;/li&gt;
-  &lt;li&gt;デバイス&lt;/li&gt;
-  &lt;li&gt;アプリのバージョン&lt;/li&gt;
-  &lt;li&gt;OS&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;アプリ毎にperformance-monitoringをカスタマイズ&quot;&gt;アプリ毎にPerformance Monitoringをカスタマイズ&lt;/h3&gt;
-
-&lt;p&gt;自作や新しい画面やUIの表示などのパパフォーマンストレーサーを作成できます。&lt;br /&gt;
-またカスタム指標を用意し、トレース時に定義したイベント(キャッシュヒットなど)をカウントできます。&lt;/p&gt;
-
-&lt;p&gt;例えばアプリ独自にインメモリのキャッシュ機構を構築してる場合のキャッシュヒット率を収集することができます。&lt;/p&gt;
-
-&lt;h4 id=&quot;トレースとは&quot;&gt;トレースとは？&lt;/h4&gt;
-
-&lt;p&gt;トレースとは2つの時点の間で取得されたパフォーマンスデータのレポートです。&lt;/p&gt;
-
-&lt;h2 id=&quot;performance-monitoringの仕組み&quot;&gt;Performance Monitoringの仕組み&lt;/h2&gt;
-
-&lt;p&gt;大きくレポートタイミングとして、トレースと通信キャプチャに分かれており、その配下に指標があります。&lt;/p&gt;
-
-&lt;h2 id=&quot;トレースには2種類ある&quot;&gt;トレースには2種類ある&lt;/h2&gt;
-
-&lt;p&gt;トレースには自動トレースとカスタムトレースの2種類のトレースがあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;自動トレース&quot;&gt;自動トレース&lt;/h3&gt;
-
-&lt;p&gt;iOSやAndroidアプリで自動で組み込まれるデフォルトトレースです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;アプリ起動トレース
-    &lt;ul&gt;
-      &lt;li&gt;ユーザーがアプリを起動してから、アプリが応答するまでの時間を測定&lt;/li&gt;
-      &lt;li&gt;コンソールでは &lt;code class=&quot;highlighter-rouge&quot;&gt;_app_start&lt;/code&gt; 報告指標は&lt;code class=&quot;highlighter-rouge&quot;&gt;期間&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;開始タイミングは、アプリが最初のObjectをロードすると開始します&lt;/li&gt;
-      &lt;li&gt;終了タイミングは、 &lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDidBecomeActiveNotification&lt;/code&gt;通知受信後の最初の正常な実行ループ後に停止します。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;フォアグラウンドアプリのトレース
-    &lt;ul&gt;
-      &lt;li&gt;アプリがフォアグラウンドで実行されていてユーザーが利用できる時間を測定&lt;/li&gt;
-      &lt;li&gt;コンソールでは &lt;code class=&quot;highlighter-rouge&quot;&gt;_app_in_foreground&lt;/code&gt; 報告指標は&lt;code class=&quot;highlighter-rouge&quot;&gt;期間&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;開始タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDidBecomeActiveNotification&lt;/code&gt;を受け取ると開始&lt;/li&gt;
-      &lt;li&gt;終了タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationWillResignActiveNotification&lt;/code&gt;を受け取ると停止&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;バックグラウンドアプリのトレース
-    &lt;ul&gt;
-      &lt;li&gt;アプリがバックグラウンドで実行されている時間を測定&lt;/li&gt;
-      &lt;li&gt;コンソールでは &lt;code class=&quot;highlighter-rouge&quot;&gt;_app_in_background&lt;/code&gt; 報告指標は&lt;code class=&quot;highlighter-rouge&quot;&gt;期間&lt;/code&gt;&lt;/li&gt;
-      &lt;li&gt;開始タイミングは、アプリが&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationWillResignActiveNotification&lt;/code&gt;を受け取ると開始&lt;/li&gt;
-      &lt;li&gt;終了タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDidBecomeActiveNotification&lt;/code&gt;を受け取ると停止&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;画面トレース
-    &lt;ul&gt;
-      &lt;li&gt;画面の存続期間を通じて低速なフレームとフリーズしたフレームを測定&lt;/li&gt;
-      &lt;li&gt;指標はレンダリングが遅いフレームとフリーズしたフレームのみ報告されます。&lt;/li&gt;
-      &lt;li&gt;コンソールでは他トレースとは別テーブルに表示されます。&lt;/li&gt;
-      &lt;li&gt;開始タイミングは、 &lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidAppear:&lt;/code&gt;を呼び出すと &lt;code class=&quot;highlighter-rouge&quot;&gt;keyWindow&lt;/code&gt;内のすべての&lt;code class=&quot;highlighter-rouge&quot;&gt;UIViewController&lt;/code&gt;について開始&lt;/li&gt;
-      &lt;li&gt;終了タイミングは、&lt;code class=&quot;highlighter-rouge&quot;&gt;viewDidDisappear:&lt;/code&gt;を呼び出すと停止&lt;/li&gt;
-      &lt;li&gt;正規のコンテナビューコントローラはキャプチャされません。(UINavigationViewControllerなど)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;自動トレース情報&quot;&gt;自動トレース情報&lt;/h3&gt;
-
-&lt;p&gt;Firebase Performance Monitoringでは次の種類の情報がデフォルトで収集します。&lt;a href=&quot;https://support.google.com/firebase/answer/6318039?hl=ja&quot;&gt;URL&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;機種、OS、画面の向きなどの全般的な端末情報&lt;/li&gt;
-  &lt;li&gt;RAM とディスクのサイズ&lt;/li&gt;
-  &lt;li&gt;CPU 使用率&lt;/li&gt;
-  &lt;li&gt;携帯通信会社（モバイルの国コードとネットワーク コードに基づく）&lt;/li&gt;
-  &lt;li&gt;無線通信 / ネットワークの情報（例: Wi-Fi、LTE、3G）&lt;/li&gt;
-  &lt;li&gt;国（IP アドレスに基づく）&lt;/li&gt;
-  &lt;li&gt;ロケール / 言語&lt;/li&gt;
-  &lt;li&gt;電波強度&lt;/li&gt;
-  &lt;li&gt;デバイスのジェイルブレイクまたはルート権限取得&lt;/li&gt;
-  &lt;li&gt;電池残量と充電状態&lt;/li&gt;
-  &lt;li&gt;アプリのバージョン&lt;/li&gt;
-  &lt;li&gt;アプリの状態（フォアグラウンドまたはバックグラウンド）&lt;/li&gt;
-  &lt;li&gt;アプリのパッケージ名&lt;/li&gt;
-  &lt;li&gt;仮名のアプリ インスタンス識別子&lt;/li&gt;
-  &lt;li&gt;ネットワークの URL（URL パラメータやペイロードのコンテンツを含まない）と以下の対応する情報:
-    &lt;ul&gt;
-      &lt;li&gt;応答コード（例: 403、200）&lt;/li&gt;
-      &lt;li&gt;ペイロードのサイズ（バイト単位）&lt;/li&gt;
-      &lt;li&gt;応答時間&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;自動トレースの継続時間&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;カスタムトレース&quot;&gt;カスタムトレース&lt;/h3&gt;
-
-&lt;p&gt;ユーザー独自のトレースです。SDKに用意されたAPIを使ってカスタムトレースの開始と終了を定義することできます。&lt;/p&gt;
-
-&lt;p&gt;またカスタムトレースを詳細に構成することで、該当する範囲内で発生したパフォーマンス関連イベントのカスタム指標の記録もできます。&lt;/p&gt;
-
-&lt;p&gt;これは前述したメモリキャッシュ機構でいう、キャッシュヒット数とミス数といった指標や、&lt;br /&gt;
-UIが一定期間反応しなかった回数などカスタム指標を作成できます。&lt;/p&gt;
-
-&lt;h2 id=&quot;httpsネットワークリクエスト&quot;&gt;HTTP/Sネットワークリクエスト&lt;/h2&gt;
-&lt;p&gt;アプリがリクエストを発行してレスポンスが返ってくるまでの時間をキャプチャするレポートです。&lt;br /&gt;
-次の指標を収集します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;応答時間
-    &lt;ul&gt;
-      &lt;li&gt;リクエスト発行からレスポンスの完全受信までの時間&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;ペイロードサイズ
-    &lt;ul&gt;
-      &lt;li&gt;ダウンロード／アップロードされたネットワークペイロードのバイトサイズ&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;成功率
-    &lt;ul&gt;
-      &lt;li&gt;全レスポンスに対する成功レスポンスの割合. これは通信障害やサーバー障害を測定することを目的としてる&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;属性&quot;&gt;属性&lt;/h2&gt;
-
-&lt;p&gt;パフォーマンスデータはトレースとHTTP/Sネットワークリクエストの両レポートで次のように分類されています。(以下はiOS/Android)&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;トレース
-    &lt;ul&gt;
-      &lt;li&gt;アプリバージョン&lt;/li&gt;
-      &lt;li&gt;国&lt;/li&gt;
-      &lt;li&gt;OS レベル&lt;/li&gt;
-      &lt;li&gt;デバイス&lt;/li&gt;
-      &lt;li&gt;無線通信&lt;/li&gt;
-      &lt;li&gt;携帯通信会社&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;HTTP/Sネットワークリクエスト
-    &lt;ul&gt;
-      &lt;li&gt;アプリバージョン&lt;/li&gt;
-      &lt;li&gt;国&lt;/li&gt;
-      &lt;li&gt;OS レベル&lt;/li&gt;
-      &lt;li&gt;デバイス&lt;/li&gt;
-      &lt;li&gt;無線通信&lt;/li&gt;
-      &lt;li&gt;携帯通信会社&lt;/li&gt;
-      &lt;li&gt;MIMEタイプ&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;またカスタム属性を設定することもできます。&lt;/p&gt;
-
-&lt;p&gt;これらは、コンソール上でパフォーマンスデータを属性でフィルタリング（セグメント化）することで、さまざまなシナリオにフォーカスした指標を得ることが出来ます。&lt;/p&gt;
-
-&lt;h2 id=&quot;組み込んでみる&quot;&gt;組み込んでみる&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Performance Monitoringをアプリに追加&lt;/li&gt;
-  &lt;li&gt;Firebaseコンソールで結果を確認する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;この2工程です。 なお Firebaseの追加自体はこちらの&lt;a href=&quot;https://firebase.google.com/docs/ios/setup?hl=ja&quot;&gt;公式サイト&lt;/a&gt;を参照してください。&lt;/p&gt;
-
-&lt;h3 id=&quot;performance-monitoringをアプリに追加&quot;&gt;Performance Monitoringをアプリに追加&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;Podfile&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;pod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Firebase/Analytics'&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pod&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'Firebase/Performance'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;後は &lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt; するだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIApplicationDelegate&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;application:didFinishLaunchingWithOptions:&lt;/code&gt;に &lt;code class=&quot;highlighter-rouge&quot;&gt;FirebaseApp.configure()&lt;/code&gt; を追加する必要がありますが、&lt;br /&gt;
-すでにFirebaseを使っている場合はこのコードは既に組み込まれているかと思います。&lt;/p&gt;
-
-&lt;p&gt;これで &lt;code class=&quot;highlighter-rouge&quot;&gt;自動トレース&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;HTTP/Sネットワークリクエスト&lt;/code&gt;を監視するようになります。&lt;/p&gt;
-
-&lt;p&gt;※ なお &lt;code class=&quot;highlighter-rouge&quot;&gt;Firebase/Performance&lt;/code&gt; を追加すると依存関係として &lt;code class=&quot;highlighter-rouge&quot;&gt;Remote Config&lt;/code&gt; が組み込まれます。&lt;/p&gt;
-
-&lt;p&gt;もし pod install で UUID重複警告が出た場合は、Firebase関連podを最新にupdateすることで回避できました。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;Firebaseコンソールへの反映には12時間以内と記載ありますが、私の環境では12時間近くかかりました。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;firebaseコンソールで結果を確認する&quot;&gt;Firebaseコンソールで結果を確認する&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://console.firebase.google.com/?hl=ja&quot;&gt;Firebase コンソール&lt;/a&gt; で結果が反映されることを確認します。結果は通常12時間以内で表示されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2019-10-23-firebase-performance-monitoring-basic/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2019-10-23-firebase-performance-monitoring-basic/1.png&quot; width=&quot;506px&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;カスタムトレースとカスタム指標の実装&quot;&gt;カスタムトレースとカスタム指標の実装&lt;/h2&gt;
-
-&lt;p&gt;1つのトレースに複数の指標を追加できます。&lt;/p&gt;
-
-&lt;p&gt;カスタムトレースはIDが文字列になっており、いくつか制限があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;先頭と末尾が空白ではないこと&lt;/li&gt;
-  &lt;li&gt;先頭がアンダースコア&lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt;でないこと&lt;/li&gt;
-  &lt;li&gt;32文字以下であること&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;カスタムトレースを追加する&quot;&gt;&lt;em&gt;カスタムトレースを追加する&lt;/em&gt;&lt;/h3&gt;
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;FirebasePerformance&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Performance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;startTrace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// トレースしたいコードを挟む&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;カスタム指標を追加する&quot;&gt;&lt;em&gt;カスタム指標を追加する&lt;/em&gt;&lt;/h3&gt;
-
-&lt;p&gt;次のコードのようにトレースの間にカスタム指標コードを追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Performance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;startTrace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;incrementMetric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;named&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;cache-miss-count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;// トレースしたいコードを挟む&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;httpsネットワークリクエストのモニタリング追加&quot;&gt;HTTP/Sネットワークリクエストのモニタリング追加&lt;/h2&gt;
-&lt;p&gt;基本的に自動収集されますが、一部収集されないケースがあります。  その場合はカスタムネットワークリクエストを次のように追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;metric&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;HTTPMetric&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;https://your.domain.com&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;httpMethod&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;metric&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;start&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;hogeRequest&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;HogeRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;kt&quot;&gt;HogeAPI&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;get&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;request&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hogeRequest&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;completion&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;metric&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stop&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;リクエストの発行前とレスポンスの受信完了直後に &lt;code class=&quot;highlighter-rouge&quot;&gt;start()&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;stop()&lt;/code&gt; を呼んでください。&lt;/p&gt;
-
-&lt;h2 id=&quot;カスタム属性の追加&quot;&gt;カスタム属性の追加&lt;/h2&gt;
-
-&lt;p&gt;Performance Monitoringでは属性を使用することでパフォーマンスデータをセグメント化し、シナリオ別にパフォーマンスを絞り込むことができます。&lt;/p&gt;
-
-&lt;p&gt;カスタム属性はトレースごとに設定出来ます。&lt;br /&gt;
-またカスタム属性にはいくつか制限があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;カスタム属性の数は、1トレース最大5個に制限&lt;/li&gt;
-  &lt;li&gt;名前は、先頭と末尾に空白がない&lt;/li&gt;
-  &lt;li&gt;先頭にアンダースコア&lt;code class=&quot;highlighter-rouge&quot;&gt;_&lt;/code&gt;がない&lt;/li&gt;
-  &lt;li&gt;32文字以下&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;にする必要があります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;trace&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Performance&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sharedInstance&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Hoge&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Male&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;forAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// 更新も可能&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Female&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;forAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// 削除&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;removeAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// 属性読み込み&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;gender&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;valueForAttribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Gender&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;// トレースに紐づく全属性読み込み&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;attributes&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;trace&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;注意事項&quot;&gt;注意事項&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://firebase.google.com/docs/perf-mon/get-started-ios?hl=ja#known_issues&quot;&gt;公式&lt;/a&gt;ではいくつか注意事項があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;GTMSQLiteを使ってる場合は、互換性がないため、Performance Monitoringを使用しないほうがいいです。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;FirebaseApp.configure()&lt;/code&gt;の呼び出し後のメソッド入れ替えは影響する可能性があります。&lt;/li&gt;
-  &lt;li&gt;iOS8.0~8.2シミュレータでは正常に動作する保証がありません&lt;/li&gt;
-  &lt;li&gt;NSURLSessionのbackgroundSessionConfigurationは接続時間が予想より長くなります。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;firebase-performance-monitoring-を無効にする方法は3つある&quot;&gt;Firebase Performance Monitoring を無効にする方法は3つある&lt;/h2&gt;
-
-&lt;p&gt;大きく分けて&lt;code class=&quot;highlighter-rouge&quot;&gt;Info.plist&lt;/code&gt;を設定する方法とコード上で設定する方法に分かれます。&lt;/p&gt;
-
-&lt;p&gt;またコード上での設定では自動とカスタムそれぞれの制御ができます。&lt;/p&gt;
-
-&lt;h3 id=&quot;infoplist-を設定する方法&quot;&gt;Info.plist を設定する方法&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ビルド時に無効にしておき、ランタイムで有効／無効を制御できる方法（&lt;code class=&quot;highlighter-rouge&quot;&gt;通常無効&lt;/code&gt;）&lt;/li&gt;
-  &lt;li&gt;ビルド時に完全無効にしておき、ランタイムで有効に変更できない方法（&lt;code class=&quot;highlighter-rouge&quot;&gt;完全無効&lt;/code&gt;）&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;通常無効&quot;&gt;通常無効&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Info.plist&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;firebase_performance_collection_enabled&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt; にすることで、無効にできます。&lt;/p&gt;
-
-&lt;h4 id=&quot;完全無効&quot;&gt;完全無効&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Info.plist&lt;/code&gt; で &lt;code class=&quot;highlighter-rouge&quot;&gt;firebase_performance_collection_deactivated&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt; にすることで、完全無効にできます。&lt;/p&gt;
-
-&lt;p&gt;これは &lt;code class=&quot;highlighter-rouge&quot;&gt;通常無効&lt;/code&gt;(&lt;code class=&quot;highlighter-rouge&quot;&gt;firebase_performance_collection_enabled&lt;/code&gt;) の設定をオーバーライドします。&lt;/p&gt;
-
-&lt;p&gt;前者はつまりコード上で制御できて、後者は制御が不可能になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;コード上で設定する方法&quot;&gt;コード上で設定する方法&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Performance.sharedInstance().isInstrumentationEnabled&lt;/code&gt; で自動トレースとHTTP/Sネットワークリクエストを有効／無効制御できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Performance.sharedInstance().isDataCollectionEnabled&lt;/code&gt; でカスタムトレースを有効／無効制御できます。&lt;/p&gt;
-
-&lt;p&gt;コード上の変更では前述した&lt;code class=&quot;highlighter-rouge&quot;&gt;完全無効&lt;/code&gt;では効果ありません。&lt;/p&gt;
-
-&lt;h3 id=&quot;デバッグ版は無効にする&quot;&gt;デバッグ版は無効にする&lt;/h3&gt;
-&lt;p&gt;開発中ではパフォーマンス測定しないために無効にしておき、本番ではコード上で有効にする例があります。&lt;/p&gt;
-
-&lt;p&gt;デバッグ情報が入った開発版では本来の測定より重いレポートとなるため、あまりパフォーマンス測定の効果は得られません。&lt;/p&gt;
-
-&lt;p&gt;本番のみ有効にするという利用ケースもあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;remote-config-と組み合わせて無効制御する&quot;&gt;Remote Config と組み合わせて無効制御する&lt;/h3&gt;
-
-&lt;p&gt;コード上で無効制御ができることとRemote Configを組み合わせることで、デプロイ済みのアプリに対して無効／有効設定ができるようになります。&lt;/p&gt;
-
-&lt;p&gt;詳しくは&lt;a href=&quot;https://firebase.google.com/docs/perf-mon/disable-sdk?hl=ja&amp;amp;platform=ios#disable-with-remote-config&quot;&gt;公式&lt;/a&gt;の記事を確認ください。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="firebase" /><category term="performance-monitoring" /><summary type="html">アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。 なお本記事はiOSを重点に調査しています。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-10-23-firebase-performance-monitoring-basic/0.png" /></entry></feed>
+&lt;p&gt;これで再度 &lt;code class=&quot;highlighter-rouge&quot;&gt;bundle update rails&lt;/code&gt; を実行すると成功しました。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png" /></entry></feed>
