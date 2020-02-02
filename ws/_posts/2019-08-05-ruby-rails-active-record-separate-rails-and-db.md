@@ -2,6 +2,8 @@
 title: Mac上でRailsとMySQLのサーバー分けたい
 categories: ruby rails active-record
 tags: ruby rails active-record mysql
+image:
+  path: /assets/images/2019-08-05-ruby-rails-active-record-separate-rails-and-db.png
 ---
 開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い...」「想定より遅い...」なんて経験ありませんか？
 

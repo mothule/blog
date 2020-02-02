@@ -2,6 +2,8 @@
 title: RackとRack Middlewareを知ることでRailsの一部仕組みを理解する
 categories: ruby rails rack
 tags: ruby rails rack rack-middleware
+image:
+  path: /assets/images/2019-09-01-rails-rack-middleware-extension.png
 ---
 
 Railsの挙動を拡張するには3つの方法があります。

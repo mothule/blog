@@ -2,6 +2,8 @@
 title: RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた
 categories: ruby rails
 tags: rails rails-controller ruby
+image:
+  path: /assets/images/2018-10-21-rails-error-handling-best-practice.png
 ---
 ## 概要
 

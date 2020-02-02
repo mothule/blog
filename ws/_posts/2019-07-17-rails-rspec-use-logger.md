@@ -2,6 +2,8 @@
 title: Railsのloggerでテストがうまく動かないときに
 categories: ruby rails rspec
 tags: ruby rails rspec
+image:
+  path: /assets/images/2019-07-17-rails-rspec-use-logger.png
 ---
 仕事でRailsのloggerがちゃんと出力されているかrspecでテストしたいなと思い調べたのですが、
 ネットで見つかる方法だと想定した通りに動かず、同僚に教えてもらった方法で今回はことを得たので、

@@ -2,6 +2,8 @@
 title: MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応
 categories: ruby rails active-record
 tags: ruby rails active-record mysql
+image:
+  path: /assets/images/2019-08-02-ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length.png
 ---
 charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。
 

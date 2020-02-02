@@ -2,6 +2,8 @@
 title: UITableViewで一番下までスクロールする方法
 categories: ios uitableview
 tags: ios uitableview
+image:
+  path: /assets/images/2017-12-15-ios-uitableview-scroll-last.png
 ---
 UITableViewで一番下のセルまでスクロールする方法についてまとめました。
 

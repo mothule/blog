@@ -2,6 +2,8 @@
 title: rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac)
 categories: ruby rails
 tags: ruby rails mysql
+image:
+  path: /assets/images/2019-03-22-ruby-rails-mysql2-error.png
 ---
 ## 前提環境
 

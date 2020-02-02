@@ -2,6 +2,8 @@
 title: Optional<String>をExtension化したのにエラーになって役に立たなかった話
 categories: ios swift
 tags: ios swift
+image:
+  path: /assets/images/2018-08-15-ios-swift-optional-extension-compile-error.png
 ---
 
 nil結合演算子はコンパイルが重くなる要因だし、見た目としてもよくないから解決したいと考えてた。

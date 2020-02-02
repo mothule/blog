@@ -2,6 +2,8 @@
 title: ActiveRecordでテーブルの存在を確認する2つの方法とその違い
 categories: ruby rails active-record
 tags: ruby rails active-record
+image:
+  path: /assets/images/2019-07-22-ruby-rails-activerecord-check-table-exists-diff.png
 ---
 あまり頻度は高くないので忘れることが多いメソッドです。
 
