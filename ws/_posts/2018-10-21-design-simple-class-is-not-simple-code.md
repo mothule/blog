@@ -2,6 +2,8 @@
 title: クラス名にSimpleやEasyがついててもクラス内コードが単純なわけではない
 categories: notebook program-design
 tags: program-design notebook
+image:
+  path: /assets/images/2018-10-21-design-simple-class-is-not-simple-code.png
 ---
 クラス名は目的やできることや塊を表現する。  
 そのためクラス名にSimpleやEasyがついてる場合

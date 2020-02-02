@@ -2,6 +2,8 @@
 title: 年収500万の人は通勤で毎年23万円分の時間を使っている
 categories: notebook remote-work
 tags: notebook remote-work
+image:
+  path: /assets/images/2017-12-07-commute-is-vainness.png
 ---
 
 例えば次の都内にいそうなモデルケースの年収をもとに、通勤コストを求めてみました。

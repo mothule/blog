@@ -2,6 +2,8 @@
 title: LinuxのCentOSでユーザー操作
 categories: linux centos
 tags: linux centos
+image:
+  path: /assets/images/2019-09-03-linux-user-control-commands.png
 ---
 
 ユーザーの追加や削除、グループ追加やsudo付与などユーザー操作に関するコマンドを忘れては調べ忘れては調べるを繰り返しているので、いい加減自分用に用意しました。

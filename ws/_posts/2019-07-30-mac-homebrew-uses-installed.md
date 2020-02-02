@@ -2,6 +2,8 @@
 title: Homebrewで使われているかを解決する
 categories: mac homebrew
 tags: mac homebrew
+image:
+  path: /assets/images/2019-07-30-mac-homebrew-uses-installed.png
 ---
 長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？
 `$ brew list -l` で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、

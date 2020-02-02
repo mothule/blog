@@ -2,6 +2,8 @@
 title: CircleCIで別途SSHキーを追加して使う方法
 categories: ci circleci
 tags: circleci ssh ci
+image:
+  path: /assets/images/2018-11-27-circleci-add-ssh-key.png
 ---
 最近CircleCIを使って定期実行的なことをするために弄り始めました。
 

@@ -2,6 +2,8 @@
 title: Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない
 categories: notebook
 tags: program-design notebook
+image:
+  path: /assets/images/2016-10-18-wrong-architecture-design.png
 ---
 ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。
 私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。

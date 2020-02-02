@@ -2,6 +2,8 @@
 title: 正規表現で否定を表現する
 categories: tools regexp
 tags: tools regexp
+image:
+  path: /assets/images/2019-08-05-regexp-not-expression.png
 ---
 常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。
 

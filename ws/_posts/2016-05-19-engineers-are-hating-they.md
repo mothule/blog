@@ -2,6 +2,8 @@
 title: エンジニアは矛盾した行動でユーザーや自分を裏切る企画や営業に辟易しやすい。
 categories: notebook
 tags: notebook
+image:
+  path: /assets/images/2016-05-19-engineers-are-hating-they.png
 ---
 
 エンジニアって職業柄、仕様を曖昧にすることができず、全容を知る必要があります。

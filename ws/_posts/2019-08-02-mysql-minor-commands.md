@@ -2,6 +2,8 @@
 title: 忘れるのに定期的に必要になるMySQLコマンド
 categories: db mysql
 tags: db mysql
+image:
+  path: /assets/images/2019-08-02-mysql-minor-commands.png
 ---
 
 普段はRailsでMySQLを操作してるため、使わないし覚えてなくても開発に支障が出ることは少ないのに、開発環境スイッチしたことでマイグレーションが失敗とか、explainでindex漏れがないかとか、**定期的に必要になるコマンド** ってありますよね。

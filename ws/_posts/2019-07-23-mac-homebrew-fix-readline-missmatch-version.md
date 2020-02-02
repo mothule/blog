@@ -2,6 +2,8 @@
 title: readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ
 categories: mac homebrew
 tags: mac homebrew
+image:
+  path: /assets/images/2019-07-23-mac-homebrew-fix-readline-missmatch-version.png
 ---
 以前[tigが動かなくなる件]({% post_url 2019-07-22-fix-tig-lib-not-loaded %})をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。
 

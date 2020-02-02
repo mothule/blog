@@ -2,6 +2,8 @@
 title: MacからMacへscpを使う方法
 categories: mac
 tags: mac
+image:
+  path: /assets/images/2019-08-02-mac-how-to-use-scp.png
 ---
 MacからLinuxに対してscpを使うことをよくあるのですが、Macに対してscpを使おうとしたときに躓いたのでまとめました。
 ちなみに送信元はMacでなくとも何でもいいです。

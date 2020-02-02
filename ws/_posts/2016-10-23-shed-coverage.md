@@ -2,6 +2,8 @@
 title: カバレッジがもたらす災い。カバレッジ率なんてゴミ箱に捨てて、みんなで飲みに行け。
 categories: notebook
 tags: notebook
+image:
+  path: /assets/images/2016-10-23-shed-coverage.png
 ---
 カバレッジについて思うことを書きました。
 テスト添削以外でもリリース速度を上げる方法はありますが、ここではそれは記載していません。

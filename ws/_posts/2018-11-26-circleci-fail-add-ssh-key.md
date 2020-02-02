@@ -2,6 +2,8 @@
 title: CircleCIでSSH Key登録が失敗する場合の原因特定方法と自分が見つけた解決方法
 categories: ci circleci
 tags: circleci ci ssh
+image:
+  path: /assets/images/2018-11-26-circleci-fail-add-ssh-key.png
 ---
 最近CircleCIを使って定期実行的なことをするために弄り始めました。
 

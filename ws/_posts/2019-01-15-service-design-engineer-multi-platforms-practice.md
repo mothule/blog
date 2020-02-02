@@ -2,6 +2,8 @@
 title: WebとiOSとAndroidのエンジニアが最低限知るべきマルチプラットフォーム対応サービスの仕様とデザインの共通と独立の話
 categories: notebook service-design
 tags: service-design design
+image:
+  path: /assets/images/2019-01-15-service-design-engineer-multi-platforms-practice.png
 ---
 
 ## 背景

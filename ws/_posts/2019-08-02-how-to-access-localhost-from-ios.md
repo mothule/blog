@@ -2,6 +2,8 @@
 title: iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法
 categories: mac
 tags: ruby rails ios mac
+image:
+  path: /assets/images/2019-08-02-how-to-access-localhost-from-ios.png
 ---
 MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。
 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。

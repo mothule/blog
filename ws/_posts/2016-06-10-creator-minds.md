@@ -2,6 +2,8 @@
 title: ソフトウェアエンジニアが持つべきモノづくりの考え方
 categories: notebook
 tags: notebook
+image:
+  path: /assets/images/2016-06-10-creator-minds.png
 ---
 
 BtoC, BtoBであろうとソフトウェアエンジニアが１つのものを作る上で失ってはいけない大事な考え方について書いてみました。
