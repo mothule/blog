@@ -3,7 +3,7 @@ title: ActiveRecordでpluckとselectしてpluckに変化はあるか？
 categories: ruby rails active-record
 tags: ruby rails active-record
 image:
-  path: /assets/iamges/2019-08-05-ruby-rails-activerecord.png
+  path: /assets/images/2019-08-05-ruby-rails-activerecord.png
 ---
 
 ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。
