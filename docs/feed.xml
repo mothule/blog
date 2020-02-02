@@ -1,56 +1,67 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-02T23:05:17+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Rails以外でBundlerを使う方法</title><link href="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails" rel="alternate" type="text/html" title="Rails以外でBundlerを使う方法" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails">&lt;p&gt;仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、
-なるべく自前スクリプトでもRubyで書くようにしてます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-03T03:57:05+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">記事タイトルの入ったTwitterサマリーカード用画像を生成できるスクリプトを作った</title><link href="https://blog.mothule.com/ruby/ruby-create-kiji" rel="alternate" type="text/html" title="記事タイトルの入ったTwitterサマリーカード用画像を生成できるスクリプトを作った" /><published>2020-02-02T00:00:00+09:00</published><updated>2020-02-02T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/ruby-create-kiji</id><content type="html" xml:base="https://blog.mothule.com/ruby/ruby-create-kiji">&lt;p&gt;こないだ&lt;a href=&quot;https://twitter.com/mothule/status/1215116021805117440&quot;&gt;Twitter&lt;/a&gt;でもつぶやいたのですが、&lt;/p&gt;
 
-&lt;p&gt;だけど毎度Railsを使わずBundlerを使う場合に一部躓くのでメモとしてまとめました。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-02-02-ruby-create-kiji/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-02-02-ruby-create-kiji/1.png&quot; width=&quot;75%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;段取り&quot;&gt;段取り&lt;/h2&gt;
+&lt;p&gt;最近Qiitaやはてブロの記事をTwitterで見かけると、次のような記事タイトルが画像に組み込まれたTwitterサマリーカードを見かけます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-02-02-ruby-create-kiji/0.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-02-02-ruby-create-kiji/0.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これこのブログでも使えたら便利だなーと思って、今回作ってみました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/kiji&quot;&gt;mothule/kiji - GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Twitter(鳥)の記事(雉)用画像を生成ってことで、ネーミングは適当です。&lt;br /&gt;
+ロゴ画像はそれこそ適当の塊です…&lt;/p&gt;
+
+&lt;h2 id=&quot;ざっくりフロー考える&quot;&gt;ざっくりフロー考える&lt;/h2&gt;
 
 &lt;ol&gt;
-  &lt;li&gt;スクリプトで使うバージョン指定&lt;/li&gt;
-  &lt;li&gt;(Option)bundlerインストール&lt;/li&gt;
-  &lt;li&gt;Gemfile用意&lt;/li&gt;
-  &lt;li&gt;bundle install&lt;/li&gt;
-  &lt;li&gt;スクリプトでbundle内gemをrequire&lt;/li&gt;
+  &lt;li&gt;テンプレエンジンにかませるhtmlの骨組みを用意&lt;/li&gt;
+  &lt;li&gt;骨組みに介入したい要素をセットしhtml生成&lt;/li&gt;
+  &lt;li&gt;生成したhtmlを描画エンジンのヘッドレスで描画&lt;/li&gt;
+  &lt;li&gt;それをキャプチャして外部ファイル化&lt;/li&gt;
 &lt;/ol&gt;
 
-&lt;p&gt;Rails外で使う上で特別必要な処理って最後の項目だけなので、
-そこだけ知りたい人はざざっと一番下へどうぞ。&lt;/p&gt;
+&lt;p&gt;という流れで当初考えてました。
+言語はRubyを使うことは決めてました。&lt;/p&gt;
 
-&lt;h2 id=&quot;スクリプトで使うバージョン指定&quot;&gt;スクリプトで使うバージョン指定&lt;/h2&gt;
+&lt;p&gt;1~2はRubyのERBを使えば簡単です。&lt;br /&gt;
+3については何を使うのか少し調べる必要があるなと思い調べていたら。&lt;br /&gt;
+&lt;a href=&quot;https://wkhtmltopdf.org/&quot;&gt;wkhtmltoimage&lt;/a&gt;というツールがあることが分かりました。&lt;br /&gt;
+これをrubyで使えるgemとして&lt;a href=&quot;https://github.com/csquared/IMGKit&quot;&gt;IMGKit&lt;/a&gt;があります。&lt;/p&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ruby version]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h2 id=&quot;も少し具体的なフローを考える&quot;&gt;も少し具体的なフローを考える&lt;/h2&gt;
 
-&lt;h2 id=&quot;optionbundlerインストール&quot;&gt;(Option)bundlerインストール&lt;/h2&gt;
+&lt;ol&gt;
+  &lt;li&gt;erbなhtml/cssで骨組み&lt;/li&gt;
+  &lt;li&gt;html から image の変換は wkhtmltoimage をRubyで使えるIMGKit gemを使う&lt;/li&gt;
+  &lt;li&gt;RubyからERBを介して記事タイトルを流し込んでhtml生成&lt;/li&gt;
+  &lt;li&gt;IMGKit gemに流し込む&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install bundler &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2.0.2&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;バージョン指定する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;-v &quot;[bundler version]&quot;&lt;/code&gt;を入れます。&lt;br /&gt;
-最新でいいなら指定不要です。&lt;/p&gt;
+&lt;p&gt;という感じになります。&lt;/p&gt;
 
-&lt;h2 id=&quot;gemfile用意&quot;&gt;Gemfile用意&lt;/h2&gt;
+&lt;h2 id=&quot;躓いたところ&quot;&gt;躓いたところ&lt;/h2&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle init
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;IMGKit gem など先人のお陰もあり、躓きは少なかったです。&lt;br /&gt;
+ただ1つだけ大きく躓いた部分があり、ツールの実装の8割はこの部分で費やしてます。&lt;/p&gt;
 
-&lt;p&gt;Gemfileが作成されるので、中に必要なgemを追加します。&lt;/p&gt;
+&lt;h3 id=&quot;描画エンジンの仕様に依存する&quot;&gt;描画エンジンの仕様に依存する&lt;/h3&gt;
+&lt;p&gt;wkhtmltoimage はhtml描画エンジンhtmlの描画結果をキャプチャしてます。&lt;br /&gt;
+自分が当初考えてたざっくりフローと同じですね。&lt;/p&gt;
 
-&lt;h2 id=&quot;bundle-install&quot;&gt;bundle install&lt;/h2&gt;
+&lt;p&gt;で、そのエンジンにはQtWebKitが使われています。
+そのためレンダリング結果はQtWebKitの描画仕様に準拠します。&lt;/p&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bundle
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ChromeやSafariでは想定通りの挙動でも、QtWebKitでは表示されないなどありました。
+なので実装や使ってるgem自体の躓きというよりは、QtWebKitの仕様との戦いでした。&lt;/p&gt;
 
-&lt;p&gt;Gemfileで指定されたgemsをインストールします。&lt;/p&gt;
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 
-&lt;h2 id=&quot;スクリプト内でbundle内gemをrequire&quot;&gt;スクリプト内でbundle内gemをrequire&lt;/h2&gt;
+&lt;p&gt;今後はブログで画像指定しない場合は、このスクリプトを使っていこうかと思います。&lt;/p&gt;
 
-&lt;p&gt;エントリーファイルが &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; であれば, &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; の頭に&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rubygems'&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'bundler/setup'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;と書きます。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="bundler" /><summary type="html">仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、 なるべく自前スクリプトでもRubyで書くようにしてます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-ruby-use-bundler-outside-of-rails.png" /></entry><entry><title type="html">Google Analyticsで自分のサイトを分析して分かったこと</title><link href="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" rel="alternate" type="text/html" title="Google Analyticsで自分のサイトを分析して分かったこと" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site</id><content type="html" xml:base="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site">&lt;p&gt;Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。&lt;/p&gt;
+&lt;p&gt;gem化などは考えていません。しかし、使っていくうちに改良するとは思うので、&lt;br /&gt;
+その蓄積で充実してきたらgem化するかもしれません。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="kiji" /><summary type="html">こないだTwitterでもつぶやいたのですが、</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-02-ruby-create-kiji/2.png" /></entry><entry><title type="html">Google Analyticsで自分のサイトを分析して分かったこと</title><link href="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" rel="alternate" type="text/html" title="Google Analyticsで自分のサイトを分析して分かったこと" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site</id><content type="html" xml:base="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site">&lt;p&gt;Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。&lt;/p&gt;
 
 &lt;p&gt;普段アクセス数やアクセス数の多いページ一覧しか見てなかったのですが、&lt;br /&gt;
 今回ちょっと分析結果から仮説を立てるまでをまとめてみました。&lt;/p&gt;
@@ -190,7 +201,59 @@ GAについては&lt;a href=&quot;https://support.google.com/analytics/answer/27
 &lt;p&gt;やることはたくさんある中で少ない時間の中で、何を選択し集中することでコスパよく効果を出さないといけません。
 そんな状況下では、優先順位付けに悩みます。&lt;/p&gt;
 
-&lt;p&gt;これを繰り返すことでOODAをループさせます。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="google-analytics" /><summary type="html">Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-tools-google-analytics-my-site/0.png" /></entry><entry><title type="html">Gemで指定バージョンをインストール</title><link href="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version" rel="alternate" type="text/html" title="Gemで指定バージョンをインストール" /><published>2020-01-29T00:00:00+09:00</published><updated>2020-01-29T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/gem/ruby-gem-specify-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version">&lt;p&gt;Rubyのバージョンが上がるたび、そのバージョンのgemsをインストールします。
+&lt;p&gt;これを繰り返すことでOODAをループさせます。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="google-analytics" /><summary type="html">Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-tools-google-analytics-my-site/0.png" /></entry><entry><title type="html">Rails以外でBundlerを使う方法</title><link href="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails" rel="alternate" type="text/html" title="Rails以外でBundlerを使う方法" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails">&lt;p&gt;仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、
+なるべく自前スクリプトでもRubyで書くようにしてます。&lt;/p&gt;
+
+&lt;p&gt;だけど毎度Railsを使わずBundlerを使う場合に一部躓くのでメモとしてまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;段取り&quot;&gt;段取り&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;スクリプトで使うバージョン指定&lt;/li&gt;
+  &lt;li&gt;(Option)bundlerインストール&lt;/li&gt;
+  &lt;li&gt;Gemfile用意&lt;/li&gt;
+  &lt;li&gt;bundle install&lt;/li&gt;
+  &lt;li&gt;スクリプトでbundle内gemをrequire&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Rails外で使う上で特別必要な処理って最後の項目だけなので、
+そこだけ知りたい人はざざっと一番下へどうぞ。&lt;/p&gt;
+
+&lt;h2 id=&quot;スクリプトで使うバージョン指定&quot;&gt;スクリプトで使うバージョン指定&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ruby version]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;optionbundlerインストール&quot;&gt;(Option)bundlerインストール&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install bundler &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2.0.2&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;バージョン指定する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;-v &quot;[bundler version]&quot;&lt;/code&gt;を入れます。&lt;br /&gt;
+最新でいいなら指定不要です。&lt;/p&gt;
+
+&lt;h2 id=&quot;gemfile用意&quot;&gt;Gemfile用意&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Gemfileが作成されるので、中に必要なgemを追加します。&lt;/p&gt;
+
+&lt;h2 id=&quot;bundle-install&quot;&gt;bundle install&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bundle
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Gemfileで指定されたgemsをインストールします。&lt;/p&gt;
+
+&lt;h2 id=&quot;スクリプト内でbundle内gemをrequire&quot;&gt;スクリプト内でbundle内gemをrequire&lt;/h2&gt;
+
+&lt;p&gt;エントリーファイルが &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; であれば, &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; の頭に&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rubygems'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'bundler/setup'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と書きます。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="bundler" /><summary type="html">仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、 なるべく自前スクリプトでもRubyで書くようにしてます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-ruby-use-bundler-outside-of-rails.png" /></entry><entry><title type="html">Gemで指定バージョンをインストール</title><link href="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version" rel="alternate" type="text/html" title="Gemで指定バージョンをインストール" /><published>2020-01-29T00:00:00+09:00</published><updated>2020-01-29T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/gem/ruby-gem-specify-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version">&lt;p&gt;Rubyのバージョンが上がるたび、そのバージョンのgemsをインストールします。
 BundlerだとGemfile.lockの指定されたバージョンでインストールします。&lt;/p&gt;
 
 &lt;p&gt;たまにしか使わない、でも絶対知っていないといけないGemで指定バージョンをインストールについてメモしておきます。&lt;/p&gt;
@@ -709,52 +772,7 @@ You cannot call create unless the parent is saved
 &lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'hoge'&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'ほげ'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 &lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;save!&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">個人アプリのRailsバージョンが結構古いことに気づいたので、バージョンを上げたときに躓いたポイントをまとめた記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-11-14-ruby-rails-rails-5_2_3-update.png" /></entry><entry><title type="html">Rails4.1からRails5.0.0.1に変更した</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-rails5_0_0-update" rel="alternate" type="text/html" title="Rails4.1からRails5.0.0.1に変更した" /><published>2019-11-13T00:00:00+09:00</published><updated>2019-11-13T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-rails5_0_0-update</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-rails5_0_0-update">&lt;p&gt;個人アプリのRailsバージョンが結構古いことに気づいたので、バージョンを上げたときに躓いたポイントをまとめた記事です。&lt;/p&gt;
-
-&lt;h2 id=&quot;request-spec-では-キーワード引数が必要になりました&quot;&gt;Request spec では キーワード引数が必要になりました。&lt;/h2&gt;
-
-&lt;p&gt;下記コードだと&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;次のような警告が出る&lt;/p&gt;
-
-&lt;h3 id=&quot;原文&quot;&gt;原文&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;DEPRECATION WARNING: ActionDispatch::IntegrationTest HTTP request methods will accept only
-the following keyword arguments in future Rails versions:
-params, headers, env, xhr, as
-
-Examples:
-
-get '/profile',
-  params: { id: 1 },
-  headers: { 'X-Extra-Header' =&amp;gt; '123' },
-  env: { 'action_dispatch.custom' =&amp;gt; 'custom' },
-  xhr: true,
-  as: :json
- (called from block (3 levels) in &amp;lt;top (required)&amp;gt; at /Users/mothule/workspace/organ/spec/requests/rooms_spec.rb:185)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;params, headers などキーワード指定が必要になりました。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;subject&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;post&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;params: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;headers: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;headers&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;にすると警告が出なくなります。&lt;/p&gt;
-
-&lt;h2 id=&quot;actioncontrollerparametersからmergeメソッドが51から使えなくなります&quot;&gt;ActionController::Parametersからmerge!メソッドが5.1から使えなくなります&lt;/h2&gt;
-
-&lt;p&gt;セキュリティ観点によるメソッド廃止です。&lt;/p&gt;
-
-&lt;p&gt;使い続けると潜在的なセキュリティ問題が顕在化しアプリの脆弱性が作成され悪性される可能性があります。
-特に理由がなければ別メソッドで差し替えたほうがいいでしょう。
-代用は非推奨ではないメソッドを&lt;a href=&quot;http://api.rubyonrails.org/v5.0.0.1/classes/ActionController/Parameters.html&quot;&gt;こちら&lt;/a&gt;から使うと確実です。&lt;/p&gt;
-
-&lt;h3 id=&quot;原文-1&quot;&gt;原文&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;DEPRECATION WARNING: Method merge! is deprecated and will be removed in Rails 5.1, as `ActionController::Parameters` no longer inherits from hash. Using this deprecated behavior exposes potential security problems. If you continue to use this method you may be creating a security vulnerability in your app that can be exploited. Instead, consider using one of these documented methods which are not deprecated: http://api.rubyonrails.org/v5.0.0.1/classes/ActionController/Parameters.html (called from reposition_location_param at your/rails/controller/path.rb:67)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">個人アプリのRailsバージョンが結構古いことに気づいたので、バージョンを上げたときに躓いたポイントをまとめた記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-rails5_0_0-update.png" /></entry><entry><title type="html">rails updateでgemバージョン依存を解決してみる</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version" rel="alternate" type="text/html" title="rails updateでgemバージョン依存を解決してみる" /><published>2019-11-13T00:00:00+09:00</published><updated>2019-11-13T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version">&lt;p&gt;他愛もないネタですが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;gem&lt;/code&gt;のバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。&lt;/p&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">個人アプリのRailsバージョンが結構古いことに気づいたので、バージョンを上げたときに躓いたポイントをまとめた記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-11-14-ruby-rails-rails-5_2_3-update.png" /></entry><entry><title type="html">rails updateでgemバージョン依存を解決してみる</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version" rel="alternate" type="text/html" title="rails updateでgemバージョン依存を解決してみる" /><published>2019-11-13T00:00:00+09:00</published><updated>2019-11-13T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version">&lt;p&gt;他愛もないネタですが、 &lt;code class=&quot;highlighter-rouge&quot;&gt;gem&lt;/code&gt;のバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。&lt;/p&gt;
 
 &lt;p&gt;題材としてRailsのバージョンを4系から5系にアップデートします。&lt;/p&gt;
 
