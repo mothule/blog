@@ -2,6 +2,8 @@
 title: 古いPCにLinux(CentOS 7)をUSBメモリでインストールしてプリンターサーバーとして再生させる
 categories: linux centos
 tags: linux centos printer
+image:
+  path: /assets/images/2018-12-10-replace_oldpc_to_printer_server.png
 ---
 
 こないだ断捨離してたら独身の頃買ったネットブックを発見。

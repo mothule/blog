@@ -2,6 +2,8 @@
 title: "dylod: Library not loaded でtigが起動しない状態から動くまで"
 categories: tools tig
 tags: git tig homebrew tools
+image:
+  path: /assets/images/2019-07-22-fix-tig-lib-not-loaded.png
 ---
 
 特にアップグレード類の操作はしていないけれど、tigが立ち上がらなくなったので、動くようになるまでの流れを記載しました。

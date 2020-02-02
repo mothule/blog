@@ -2,6 +2,8 @@
 title: Homebrewで過去バージョンにダウングレードする2つの方法
 categories: mac homebrew
 tags: mac homebrew
+image:
+  path: /assets/images/2019-07-23-mac-homebrew-how-to-downgrade.png
 ---
 
 * 以前 `brew upgrade` で tig のバージョンを最新にして raedline のバージョンズレを解決しました。
