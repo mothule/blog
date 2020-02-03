@@ -150,6 +150,15 @@
       <li><a href="#-を--で割ると一定時間おきに実行する"><code class="highlighter-rouge">*</code> を <code class="highlighter-rouge">/</code> で割ると一定時間おきに実行する</a></li>
     </ul>
   </li>
+  <li><a href="#登録されてるcron一覧">登録されてるcron一覧</a>
+    <ul>
+      <li><a href="#指定ユーザーのcron一覧">指定ユーザーのcron一覧</a>
+        <ul>
+          <li><a href="#権限なし">権限なし</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 </ul>
   </div>
 
@@ -158,7 +167,7 @@
 
 <h2 id="フォーマット">フォーマット</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>分 時 日 月 曜日 コマンド
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>分 時 日 月 曜日 コマンド
 </code></pre></div></div>
 
 <h2 id="日時の範囲">日時の範囲</h2>
@@ -195,20 +204,38 @@
 </table>
 
 <h3 id="-はどの値にも当てはまる"><code class="highlighter-rouge">*</code> はどの値にも当てはまる</h3>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* * * * * &lt;command&gt;
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span> <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>
 </code></pre></div></div>
 
 <h3 id="-で区切ると複数時間を指定できる"><code class="highlighter-rouge">,</code> で区切ると複数時間を指定できる</h3>
 
 <p><strong>月曜と水曜のみ実行</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* * * * 1,3 &lt;command&gt;
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span> <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> 1,3 &lt;<span class="nb">command</span><span class="o">&gt;</span>
 </code></pre></div></div>
 
 <h3 id="-を--で割ると一定時間おきに実行する"><code class="highlighter-rouge">*</code> を <code class="highlighter-rouge">/</code> で割ると一定時間おきに実行する</h3>
 <p><strong>3時間置きに実行</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>* */3 * * * &lt;command&gt;
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">*</span> <span class="k">*</span>/3 <span class="k">*</span> <span class="k">*</span> <span class="k">*</span> &lt;<span class="nb">command</span><span class="o">&gt;</span>
 </code></pre></div></div>
 <p>※ この記法は Linux だと動かないかも</p>
+
+<h2 id="登録されてるcron一覧">登録されてるcron一覧</h2>
+
+<p>カレントユーザーのcron一覧は <code class="highlighter-rouge">crontab</code> に <code class="highlighter-rouge">-l</code> オプションをつけるだけです。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>crontab <span class="nt">-l</span>
+</code></pre></div></div>
+
+<h3 id="指定ユーザーのcron一覧">指定ユーザーのcron一覧</h3>
+<p>ユーザー指定する場合は <code class="highlighter-rouge">-u</code> で指定します。
+権限ないとエラーになるのでsudoつけます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>crontab <span class="nt">-u</span> &lt;user name&gt; <span class="nt">-l</span>
+</code></pre></div></div>
+
+<h4 id="権限なし">権限なし</h4>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>crontab <span class="nt">-u</span> &lt;user name&gt; <span class="nt">-l</span>
+crontab: must be privileged to use <span class="nt">-u</span>
+</code></pre></div></div>
 
 
   <div class="post-content-share">
