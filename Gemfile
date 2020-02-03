@@ -11,6 +11,8 @@ gem 'github-pages', group: :jekyll_plugins
 gem 'activesupport'
 gem 'tinify'
 gem 'rubocop'
+gem 'imgkit'
+gem 'wkhtmltoimage-binary'
 
 group :jekyll_plugins do
   gem 'jekyll-feed'
