@@ -9,9 +9,10 @@ gem 'github-pages', group: :jekyll_plugins
 # gem 'leonids'
 
 gem 'activesupport'
-gem 'tinify'
-gem 'rubocop'
+gem 'classifier-reborn'
 gem 'imgkit'
+gem 'rubocop'
+gem 'tinify'
 gem 'wkhtmltoimage-binary'
 
 group :jekyll_plugins do
