@@ -23,8 +23,9 @@ function log() {
 info "Start deploy."
 
 cd ws
-info "Build blog contents for production."
-JEKYLL_ENV=production bundle exec jekyll build
+info "Build blog contents for production...start"
+JEKYLL_ENV=production bundle exec jekyll build --lsi
+info "Build blog contents for production...done"
 cd ..
 
 ruby bin/validate-image-existence
@@ -40,21 +41,24 @@ else
   log "/docs folder already existing."
 fi
 
-sleep 7s
+#sleep 7s
 
-info "Copy to docs/"
+info "Copy to docs/ ... start"
 rsync -auv --delete ws/_site/ docs
+info "Copy to docs/ ... done"
 
-sleep 3s
+#sleep 3s
 
-info "Copy CNAME to docs/"
+info "Copy CNAME to docs/ ... start"
 cp CNAME docs/
+info "Copy CNAME to docs/ ... done"
 
 
-info "Commit and push"
+info "Commit and push ... start"
 git add .
 git commit -m "Deploy:"
 git push
+info "Commit and push ... done"
 
-info "Finished deploy."
+info "Deploy done."
 exit 0
