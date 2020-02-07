@@ -24,7 +24,7 @@ info "Start deploy."
 
 cd ws
 info "Build blog contents for production...start"
-JEKYLL_ENV=production bundle exec jekyll build --lsi
+JEKYLL_ENV=production bundle exec jekyll build
 info "Build blog contents for production...done"
 cd ..
 
