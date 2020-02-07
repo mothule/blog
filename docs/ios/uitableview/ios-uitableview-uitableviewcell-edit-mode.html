@@ -11,8 +11,8 @@
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="【初心者向け】UITableViewのセルの編集制御を極める" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。 メソッド一覧は量が多いので省きます。" />
-<meta property="og:description" content="セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。 メソッド一覧は量が多いので省きます。" />
+<meta name="description" content="UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。 実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。" />
+<meta property="og:description" content="UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。 実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。" />
 <link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode" />
 <meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -22,14 +22,14 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode","headline":"【初心者向け】UITableViewのセルの編集制御を極める","dateModified":"2019-09-30T00:00:00+09:00","datePublished":"2019-09-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png","description":"セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。 メソッド一覧は量が多いので省きます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode","headline":"【初心者向け】UITableViewのセルの編集制御を極める","dateModified":"2019-09-30T00:00:00+09:00","datePublished":"2019-09-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png","description":"UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。 実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
     <meta name="twitter:title" content="【初心者向け】UITableViewのセルの編集制御を極める">
-    <meta name="twitter:description" content="セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。メソッド一覧は量が多いので省きます。">
+    <meta name="twitter:description" content="UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -183,10 +183,8 @@
 </ul>
   </div>
 
-  <p>セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。
-メソッド一覧は量が多いので省きます。</p>
-
-<p>実際にどういったことが出来るのか詳細はこちらの記事をどうぞ。</p>
+  <p>UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。<br />
+実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。</p>
 
 <h2 id="編集モードとは">編集モードとは</h2>
 <p><code class="highlighter-rouge">UITableView.isEditing</code> を <code class="highlighter-rouge">true</code> にすると編集モードに切り替わります。</p>
@@ -714,6 +712,11 @@ tableView(_:performAction:forRowAt:withSender:)
                 
                 
                 
+
+            
+                
+                
+                
                     <li><h3><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></h3></li>
                     
                     
@@ -914,6 +917,8 @@ tableView(_:performAction:forRowAt:withSender:)
       <a href="/tags#google-analytics">google-analytics</a>
     
       <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
     
   </div>
 </div>

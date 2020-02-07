@@ -1,4 +1,777 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-07T15:30:29+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Gitで先にPRやリモートブランチを用意する方法</title><link href="https://blog.mothule.com/tools/git/tools-git-empty-commit" rel="alternate" type="text/html" title="Gitで先にPRやリモートブランチを用意する方法" /><published>2020-02-03T00:00:00+09:00</published><updated>2020-02-03T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-empty-commit</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-empty-commit">&lt;p&gt;Gitで事前にPRやリモートブランチを用意する方法についてメモしました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-08T02:48:19+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</title><link href="https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner" rel="alternate" type="text/html" title="iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門" /><published>2020-02-05T00:00:00+09:00</published><updated>2020-02-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner</id><content type="html" xml:base="https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner">&lt;p&gt;bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;iOSエンジニアと言えどXcode上でSwiftをコーディングだけが全てではありません。&lt;/strong&gt;&lt;br /&gt;
+&lt;em&gt;CocoaPods&lt;/em&gt;や&lt;em&gt;Carthage&lt;/em&gt;、&lt;em&gt;fastlane&lt;/em&gt; などエコシステムはシェルコマンド操作が必須です。&lt;/p&gt;
+
+&lt;p&gt;またAPIとの通信にシェルスクリプトを使うことで、効率よく情報を集めたり事前準備できたりします。&lt;br /&gt;
+シェルスクリプトはSwiftと同じただの道具です。使い方を覚えて視野を広げましょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;この記事で基礎知識を得よう&quot;&gt;この記事で基礎知識を得よう&lt;/h2&gt;
+&lt;p&gt;この記事では難しいイディオムテクニックが書けるなどではなく、基本を理解してシェルスクリプトを読めるようになるための土台作りだとイメージしてください。&lt;br /&gt;
+この土台を踏み台に少しずつシェルスクリプトに触れていくことで、より生産性の高いスキルを身に付けれるかと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;bashやzsh-fishと色々あるが基本は同じ&quot;&gt;bashやzsh, fishと色々あるが基本は同じ&lt;/h2&gt;
+&lt;p&gt;シェルスクリプトは色々ありますが、Swiftと違ってどれも活躍場所がターミナル上に閉じています。&lt;br /&gt;
+そして基本部分は同じなので慣れてきたら自分好みのシェルを選ぶと流れがいいです。&lt;br /&gt;
+ターミナル上の作業を効率よく進められれば結果的にiOS開発効率の向上に繋がります。&lt;/p&gt;
+
+&lt;h2 id=&quot;シェルスクリプトとは&quot;&gt;シェルスクリプトとは？&lt;/h2&gt;
+&lt;p&gt;広義と狭義の意味を持っているのですが、ここではUnixシェルで使われるスクリプト言語です。&lt;br /&gt;
+つまりシェルのスクリプトです。&lt;/p&gt;
+
+&lt;h3 id=&quot;ではシェルとは&quot;&gt;ではシェルとは？&lt;/h3&gt;
+&lt;p&gt;シェルとはOSとユーザーが対話するためのインターフェイスを提供するソフトウェアです。&lt;br /&gt;
+ユーザーがOSに対して命令するための窓口とも言えます。&lt;br /&gt;
+bashやzshなどもシェルでありコマンド言語でもあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;コマンドとは&quot;&gt;コマンドとは？&lt;/h3&gt;
+
+&lt;p&gt;シェルが提供している対話手段みたいなものです。&lt;br /&gt;
+echo などがそれにあたります。&lt;/p&gt;
+
+&lt;p&gt;つまりシェルスクリプトとはechoなどのシェルコマンドにより構成されたスクリプト言語です。&lt;/p&gt;
+
+&lt;h2 id=&quot;よく使うコマンド&quot;&gt;よく使うコマンド&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;echo: 画面に文字列などを出力する&lt;/li&gt;
+  &lt;li&gt;shift: 引数をN個ずらす&lt;/li&gt;
+  &lt;li&gt;source: ファイル内のシェルを読み込んで実行する&lt;/li&gt;
+  &lt;li&gt;awk: 空白で区切られたテキストを処理する&lt;/li&gt;
+  &lt;li&gt;sed: 文字列置換&lt;/li&gt;
+  &lt;li&gt;grep: テキスト検索&lt;/li&gt;
+  &lt;li&gt;ag: grep高速版&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;echo-画面に文字列などを出力する&quot;&gt;echo: 画面に文字列などを出力する&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hoge&quot;&lt;/span&gt;
+hoge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;単純に出力するしたり&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ var&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'asdf'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt;
+asdf
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;変数を展開したり&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Failed tests&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ~/Downloads/test.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;出力先をリダイレクトしたりも出来ます。&lt;/p&gt;
+
+&lt;h3 id=&quot;shift-引数をn個ずらす&quot;&gt;shift: 引数をN個ずらす&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;shift [N]&lt;/code&gt;
+引数が1,2,3,4,5の場合、&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; → 1
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt; → 2
+&lt;span class=&quot;nb&quot;&gt;shift
+echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; → 2
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt; → 3
+&lt;span class=&quot;nb&quot;&gt;shift &lt;/span&gt;2
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt; → 4
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt; → 5
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;case/inと組み合わせることで引数を一つずつハンドリングする処理が書くこともできます。&lt;/p&gt;
+
+&lt;h3 id=&quot;source-ファイル内のシェルを読み込んで実行する&quot;&gt;source: ファイル内のシェルを読み込んで実行する&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;source&lt;/span&gt; ~/.bash_profile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;というは、実は &lt;code class=&quot;highlighter-rouge&quot;&gt;.bash_profile&lt;/code&gt; というシェルスクリプトを実行してるだけです。&lt;/p&gt;
+
+&lt;h3 id=&quot;awk-空白で区切られたテキストを処理する&quot;&gt;awk: 空白で区切られたテキストを処理する&lt;/h3&gt;
+
+&lt;p&gt;パイプなどで受け取った出力結果を一部分だけ抜き取る場合などに利用できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a b c d e f'&lt;/span&gt; | awk &lt;span class=&quot;s1&quot;&gt;'{ print $2 }'&lt;/span&gt;
+b
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;これは空白区切りして2つ目のテキストを出力します。&lt;/p&gt;
+
+&lt;p&gt;awkは高機能なためこれだけではありません。
+詳しくは他解説サイトをご覧ください。&lt;/p&gt;
+
+&lt;h3 id=&quot;sed-文字列置換&quot;&gt;sed: 文字列置換&lt;/h3&gt;
+
+&lt;p&gt;パイプなどで受け取った出力結果にたいし文字列置換したい場合に利用できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;apple orange&quot;&lt;/span&gt; | sed s/apple/Apple/
+Apple orange
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;sedは高機能なためこれだけではありません。
+詳しくは他解説サイトをご覧ください。&lt;/p&gt;
+
+&lt;h3 id=&quot;grep-テキスト検索&quot;&gt;grep: テキスト検索&lt;/h3&gt;
+&lt;p&gt;パイプで受け取った出力結果に対して文字列を検索します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;Podfile.lock | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; firebase
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;このようにPodfile.lockに対してちょっとした検索などにも使えます。&lt;/p&gt;
+
+&lt;p&gt;パイプだけでなく指定フォルダのファイル内検索も可能ですが、結構重いです。なので自分は次のagを使っています。&lt;/p&gt;
+
+&lt;h3 id=&quot;ag-grep高速版&quot;&gt;ag: grep高速版&lt;/h3&gt;
+
+&lt;p&gt;The Silver Searcherと呼ばれてます。&lt;br /&gt;
+grepよりかなり高速です。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag .storyboard
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;とするだけで実行ディレクトリから子ディレクトリ含め全部のファイルに対し、ファイル内検索を実行します。&lt;br /&gt;
+アプリ上で指定文言が使われているか検索する場合、Xcode使わずこれを使うと早いです。&lt;br /&gt;
+Xcodeでは検索に引っかからない場合もありますし。&lt;/p&gt;
+
+&lt;h2 id=&quot;入出力リダイレクト&quot;&gt;入出力リダイレクト&lt;/h2&gt;
+
+&lt;p&gt;入力をコマンドに渡したり、コマンドの結果を別ストリームに渡したりすることをいいます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&lt;/code&gt; : 上書き or ファイル作成&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&amp;gt;&lt;/code&gt; : 追加出力 or ファイル作成&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;2&amp;gt;&lt;/code&gt; : 標準エラー出力をファイルにリダイレクト(上書き or 作成)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&amp;gt;&lt;/code&gt; : 標準出力と標準エラー出力をファイルにリダイレクト&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&amp;gt;&amp;gt;&lt;/code&gt; : 標準出力と標準エラー出力をファイルに追記書き込み&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;gt;&amp;amp;2&lt;/code&gt; : 標準出力を標準エラー出力にリダイレクト&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ファイル作成上書き&quot;&gt;ファイル作成(上書き)&lt;/h3&gt;
+
+&lt;p&gt;結果を指定パスに出力します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ~/test.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/test.txt
+&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;出力先が存在する場合は上書きします。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/test.txt
+&lt;span class=&quot;nb&quot;&gt;test&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;test2&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ~/test.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/test.txt
+test2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;パイプライン&quot;&gt;パイプライン&lt;/h2&gt;
+&lt;p&gt;コマンドの結果を次のコマンドに渡す処理のことをいいます。&lt;br /&gt;
+コマンドとコマンドをつなぐシェルでとても重要な機能の一つです。&lt;/p&gt;
+
+&lt;h3 id=&quot;使い方は簡単&quot;&gt;使い方は簡単&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command a | command b&lt;/code&gt;のように &lt;strong&gt;|&lt;/strong&gt; を挟むだけで、 &lt;code class=&quot;highlighter-rouge&quot;&gt;command a&lt;/code&gt;の結果が &lt;code class=&quot;highlighter-rouge&quot;&gt;command b&lt;/code&gt; に引数として渡されます。&lt;/p&gt;
+
+&lt;p&gt;例えばファイル一覧からテキストを絞り込む場合は&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;.txt&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;のように&lt;code class=&quot;highlighter-rouge&quot;&gt;ls -l&lt;/code&gt;の出力結果を&lt;code class=&quot;highlighter-rouge&quot;&gt;grep&lt;/code&gt;に渡してテキストファイルの行を絞り込みします。&lt;/p&gt;
+
+&lt;h2 id=&quot;コマンドの連結&quot;&gt;コマンドの連結&lt;/h2&gt;
+&lt;p&gt;連結することで、コマンドを立て続けに実行して一度の命令で複数のコマンドを実行することができる。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;;&lt;/code&gt;(セミコロン)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&lt;/code&gt;(アンパサンド)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;&amp;amp;&amp;amp;&lt;/code&gt;(ダブルアンパサンド)&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;||&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;セミコロンで連結&quot;&gt;;(セミコロン)で連結&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command a ; command b&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;command a&lt;/code&gt;を実行、コマンドが終わったら&lt;code class=&quot;highlighter-rouge&quot;&gt;command b&lt;/code&gt;を実行する。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'b'&lt;/span&gt;
+a
+b
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;アンパサンドで連結&quot;&gt;&amp;amp;(アンパサンド)で連結&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command a &amp;amp; command b&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;command a&lt;/code&gt;を実行後すぐに &lt;code class=&quot;highlighter-rouge&quot;&gt;command b&lt;/code&gt;を実行する。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sleep 1 &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;だと1秒後にaが出力される。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;sleep 1 &amp;amp; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'a'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;だと待たずにaが出力される。&lt;/p&gt;
+
+&lt;h3 id=&quot;ダブルアンパサンドで連結&quot;&gt;&amp;amp;&amp;amp;(ダブルアンパサンド)で連結&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command a &amp;amp;&amp;amp; command b&lt;/code&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;command a&lt;/code&gt;が成功したら、&lt;code class=&quot;highlighter-rouge&quot;&gt;command b&lt;/code&gt;を実行する。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;command a&lt;/code&gt;が失敗したら、&lt;code class=&quot;highlighter-rouge&quot;&gt;command b&lt;/code&gt;は実行しない。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git checkout develop &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git checkout pull &lt;span class=&quot;nt&quot;&gt;--prune&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git branch &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; feature/hoge &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; git checkout &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; feature/fuga
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;というコマンド連結だと、&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;developブランチに移動&lt;/li&gt;
+  &lt;li&gt;pull –prune 実行&lt;/li&gt;
+  &lt;li&gt;feature/hogeブランチを削除&lt;/li&gt;
+  &lt;li&gt;feature/fugaブランチをチェックアウト or 作成&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;になりますが、どれか失敗すると以降のコマンドは実行されません。&lt;/p&gt;
+
+&lt;h3 id=&quot;で連結&quot;&gt;||で連結&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;command a || command b&lt;/code&gt;
+&amp;amp;&amp;amp; の逆。&lt;code class=&quot;highlighter-rouge&quot;&gt;command a&lt;/code&gt;に失敗したら&lt;code class=&quot;highlighter-rouge&quot;&gt;command b&lt;/code&gt;を実行する。&lt;/p&gt;
+
+&lt;h2 id=&quot;外部シェルスクリプトの作成&quot;&gt;外部シェルスクリプトの作成&lt;/h2&gt;
+
+&lt;p&gt;ターミナル上でシェルを操作するだけだとたくさんのコマンドや複雑な条件処理をしたいときに1行で書くこととなり不便です。
+別のPCでも実行したいとなると保存されていないので、またそのPCで最初から打ち直すことになります。&lt;br /&gt;
+1つファイルにシェルコマンドを集約するのがシェルスクリプトとなります。&lt;/p&gt;
+
+&lt;h3 id=&quot;シェルスクリプト雛形を用意&quot;&gt;シェルスクリプト雛形を用意&lt;/h3&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;ファイル作成&lt;/li&gt;
+  &lt;li&gt;シェバング記載&lt;/li&gt;
+  &lt;li&gt;適当なコマンド入れる&lt;/li&gt;
+  &lt;li&gt;実行権限の付与&lt;/li&gt;
+  &lt;li&gt;実行してみる&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h4 id=&quot;ファイル作成&quot;&gt;ファイル作成&lt;/h4&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;touch script
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;これでscriptというファイルが作成されます。&lt;/p&gt;
+
+&lt;h4 id=&quot;シェバング記載&quot;&gt;シェバング記載&lt;/h4&gt;
+
+&lt;p&gt;scriptファイルをエディタで開いて1行目に次のコードを入れます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;適当なコマンド入れる&quot;&gt;適当なコマンド入れる&lt;/h4&gt;
+
+&lt;p&gt;scriptファイルを実行時に正しく実行できたか判断できるように簡単なコマンドを入れておきます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'I am script.'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;実行権限の付与&quot;&gt;実行権限の付与&lt;/h4&gt;
+&lt;p&gt;scriptファイルに実行権限を付与します。これをしないと作成者以外のユーザーがこれを実行できないためです。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chmod 711 script
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;権限エラーの場合は頭にsudoつけてください。&lt;/p&gt;
+
+&lt;h4 id=&quot;実行してみる&quot;&gt;実行してみる&lt;/h4&gt;
+&lt;p&gt;ではこれを実行してみます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./script
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;コメント&quot;&gt;コメント&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;# これはコメント&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;シェバングshebangでosにスクリプト情報を伝える&quot;&gt;シェバング(Shebang)でOSにスクリプト情報を伝える&lt;/h3&gt;
+&lt;p&gt;シェルスクリプトの先頭にコメントで&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;と入っているのは、おまじないではなく、シェルスクリプトを実行したときOSがどの言語で実行するべきスクリプトなのかを判断するための情報となります。&lt;/p&gt;
+
+&lt;p&gt;例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;hoge.sh&lt;/code&gt;というファイル名であれば拡張子から実行方法を割り出します。でも&lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt;というファイル名では分かりません。&lt;br /&gt;
+OSはファイルの先頭に記載された情報を元に実行する方法を切り替えています。&lt;/p&gt;
+
+&lt;h4 id=&quot;実際に動かしてみる&quot;&gt;実際に動かしてみる&lt;/h4&gt;
+&lt;p&gt;次のファイルを用意します
+&lt;code class=&quot;highlighter-rouge&quot;&gt;hoge&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'I am bash'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次に実行権限を与えます。(必要に応じsudoつける)&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chmod 711 hoge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このファイルを実行方法の指定なしで実行します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; &amp;lt;hogeがあるディレクトリまで移動&amp;gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./hoge
+I am bash
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;問題なくechoが出力されました。&lt;/p&gt;
+
+&lt;p&gt;では次にシェバングを&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;&lt;/code&gt;から&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;c1&quot;&gt;#!/usr/bin/ruby&lt;/span&gt;&lt;/code&gt;に変えます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./hoge
+./hoge:2:in &lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;&amp;lt;main&amp;gt;&lt;span class=&quot;se&quot;&gt;\'&lt;/span&gt;: undefined method &lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\'&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;main:Object &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;NoMethodError&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;rubyとして実行され、echoというメソッドがないことで失敗しました。&lt;/p&gt;
+
+&lt;p&gt;反対にシェバングを&lt;code class=&quot;highlighter-rouge&quot;&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;&lt;/code&gt;にしてコードをrubyに変更します。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;p&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'I am ruby'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;これを実行します。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./hoge
+./hoge: line 3: p: &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;not found
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;bashとして実行され、pというコマンドがないことで失敗しました。&lt;/p&gt;
+
+&lt;p&gt;このようにシェバングはOSに実行方法を伝える役割です。&lt;/p&gt;
+
+&lt;h3 id=&quot;exit-1-の意味&quot;&gt;exit 1 の意味&lt;/h3&gt;
+&lt;p&gt;コマンドは実行の成功・失敗を表す終了ステータスという数値があり、その数値は特殊変数&lt;code class=&quot;highlighter-rouge&quot;&gt;$?&lt;/code&gt;に格納される。&lt;br /&gt;
+終了ステータスの数値は一般的に 成功&lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt; 失敗&lt;code class=&quot;highlighter-rouge&quot;&gt;1&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;0&lt;/code&gt;以外で表されている。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'complex command'&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
+complex &lt;span class=&quot;nb&quot;&gt;command
+&lt;/span&gt;0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;変数&quot;&gt;変数&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;変数の宣言&lt;/li&gt;
+  &lt;li&gt;変数の参照&lt;/li&gt;
+  &lt;li&gt;変数のエクスポート&lt;/li&gt;
+  &lt;li&gt;特殊変数&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;変数の宣言&quot;&gt;変数の宣言&lt;/h3&gt;
+&lt;p&gt;変数宣言は次のように書きます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;VARIABLE&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;strong&gt;注意&lt;/strong&gt;
+=の前後にスペースを空けるとエラーになります。&lt;/p&gt;
+
+&lt;h3 id=&quot;変数の参照&quot;&gt;変数の参照&lt;/h3&gt;
+&lt;p&gt;変数にアクセスして中の値を使うには変数名の前に$をつけて&lt;code class=&quot;highlighter-rouge&quot;&gt;$変数名&lt;/code&gt;と書いて使います。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$VARIABLE&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;でより厳密な参照&quot;&gt;${}でより厳密な参照&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$var&lt;/code&gt;でも変数への参照はできるが、本来の正しい参照は&lt;code class=&quot;highlighter-rouge&quot;&gt;${var}&lt;/code&gt;が正しい。&lt;br /&gt;
+この方法じゃないと変数名によっては間違った解釈で異なる変数参照をしようとする。
+また後述する文字列演算子を使うときに必要となる。&lt;/p&gt;
+
+&lt;h3 id=&quot;文字列演算子&quot;&gt;文字列演算子&lt;/h3&gt;
+&lt;p&gt;変数の参照時にちょっとしたマクロ的な使い方ができます。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;演算子&lt;/td&gt;
+      &lt;td&gt;内容&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var:-value}&lt;/td&gt;
+      &lt;td&gt;varがありNULLではないなら、varを返し、それ以外は valueを返す&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var:=value}&lt;/td&gt;
+      &lt;td&gt;varがありNULLではないなら、varを返し、それ以外は varにvalueを入れて返す. 例外あり&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var:?msg}&lt;/td&gt;
+      &lt;td&gt;varがありNULLではないなら、varを返し、それ以外は msgを出力し処理を中止する&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var:+value}&lt;/td&gt;
+      &lt;td&gt;varがありNULLではないなら、varを返し、それ以外は NULLを返す&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var#pattern}&lt;/td&gt;
+      &lt;td&gt;varを先頭検索して pattern が一致したら、最短一致した部分を削除する&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var##pattern}&lt;/td&gt;
+      &lt;td&gt;varを先頭検索して pattern が一致したら、最長一致した部分を削除する&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var%pattern}&lt;/td&gt;
+      &lt;td&gt;varを末尾検索して pattern が一致したら、最短一致した部分を削除する&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${var%%pattern}&lt;/td&gt;
+      &lt;td&gt;varを末尾検索して pattern が一致したら、最長一致した部分を削除する&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;${#var}&lt;/td&gt;
+      &lt;td&gt;varの長さを返す&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;変数のエクスポート&quot;&gt;変数のエクスポート&lt;/h3&gt;
+&lt;p&gt;変数を定義したシェルから起動したシェルや実行したコマンドから変数を参照できるようになります。
+これを環境変数と呼びます。&lt;/p&gt;
+&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;var2&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;cdn
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;特殊変数&quot;&gt;特殊変数&lt;/h3&gt;
+
+&lt;p&gt;シェルスクリプトには予約された変数が存在しており、それらは決められた機能を持っています。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;変数名&lt;/th&gt;
+      &lt;th&gt;説明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$0&lt;/td&gt;
+      &lt;td&gt;実行してるスクリプト名&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$$&lt;/td&gt;
+      &lt;td&gt;実行してるスクリプトのプロセスID&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$#&lt;/td&gt;
+      &lt;td&gt;スクリプト実行時に渡された引数の数&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$1 ~ $9&lt;/td&gt;
+      &lt;td&gt;引数それぞれの変数&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$*&lt;/td&gt;
+      &lt;td&gt;渡された引数全部を1つの変数として扱う&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$@&lt;/td&gt;
+      &lt;td&gt;渡された引数を個別に扱う&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$?&lt;/td&gt;
+      &lt;td&gt;最後に実行したコマンドの実行結果&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;$!&lt;/td&gt;
+      &lt;td&gt;最後に実行したバックグラウンドのプロセスID&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h4 id=&quot;引数&quot;&gt;引数&lt;/h4&gt;
+&lt;p&gt;コマンドラインに渡された値が格納された変数です。&lt;/p&gt;
+
+&lt;p&gt;例えば&lt;strong&gt;test.sh&lt;/strong&gt;の中身が下記コードだとして、
+&lt;strong&gt;test.sh&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;次のようなコマンドを実行すると、&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;sh test.sh hoge fuga nuga
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;hoge
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;とターミナルに出力されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$1&lt;/code&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;直前のコマンドの終了ステータスを保持&quot;&gt;直前のコマンドの終了ステータスを保持&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$?&lt;/code&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;条件分岐&quot;&gt;条件分岐&lt;/h2&gt;
+
+&lt;p&gt;コマンドの結果によって次の処理を変えたい場合は、if文やswitch/case文を使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;ifelse文&quot;&gt;if/else文&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;条件式 &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# some process&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;条件式 &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# some process&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# some process&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;閉じスコープが &lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt; の反対になってるのが特徴です。&lt;br /&gt;
+また &lt;code class=&quot;highlighter-rouge&quot;&gt;; then&lt;/code&gt; の&lt;code class=&quot;highlighter-rouge&quot;&gt;;&lt;/code&gt;はSwiftと同じ役割です。開始ブレースが頭についたほうが読みやすいようにシェルスクリプトでも&lt;code class=&quot;highlighter-rouge&quot;&gt;;&lt;/code&gt;をつかって表現しています。&lt;/p&gt;
+
+&lt;p&gt;これは&lt;code class=&quot;highlighter-rouge&quot;&gt;;&lt;/code&gt;使わずに書くと&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;条件式
+&lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# some process&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;elif &lt;/span&gt;条件式
+&lt;span class=&quot;k&quot;&gt;then&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# some process&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# some process&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;となり、さっきまであったレイアウトの法則性がなくなり、視線の運び方に乱れがおきて負荷がかかります。
+つまりスラスラと読みにくいです。&lt;/p&gt;
+
+&lt;p&gt;例えば&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;if 1 &amp;gt; 0 {
+  print(&quot;True&quot;)
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;を書く場合は&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;-gt&lt;/span&gt; 0 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;True
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と書きます。&lt;/p&gt;
+
+&lt;h4 id=&quot;ifの評価式にtestやを使う理由&quot;&gt;ifの評価式にtestや[]を使う理由&lt;/h4&gt;
+&lt;p&gt;if文はlsやgrepなど&lt;strong&gt;コマンドの終了ステータス&lt;/strong&gt;を評価しています。
+そして、終了ステータスは&lt;strong&gt;0なら真&lt;/strong&gt;となりそれ以外なら偽となります。
+そのため &lt;code class=&quot;highlighter-rouge&quot;&gt;if $age &amp;gt; 5 ; then&lt;/code&gt; みたいには書けません。&lt;/p&gt;
+
+&lt;p&gt;上記みたいな式を書きたい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;コマンドを使います。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;コマンドは受け取った引数を評価し、真なら0、偽なら1の終了ステータスを返してくれます。
+これをifの評価式に挟むことで、我々が本来そうていしているif文が使えるようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;test 数値1 -eq 数値2&lt;/code&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;test &lt;/span&gt;1 &lt;span class=&quot;nt&quot;&gt;-eq&lt;/span&gt; 1 &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ちなみにこれのシュガーシンタックスが[]となります。
+上のコードは次のように書けます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; 1 &lt;span class=&quot;nt&quot;&gt;-eq&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;しかし残念ながら、&lt;code class=&quot;highlighter-rouge&quot;&gt;test&lt;/code&gt;コマンドは &lt;strong&gt;==,&amp;lt;,&amp;gt;,&amp;lt;=,&amp;gt;=&lt;/strong&gt; は使えない。代わりに文字列で指定するしかない。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;引数&lt;/th&gt;
+      &lt;th&gt;意味&lt;/th&gt;
+      &lt;th&gt;いわゆる&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-lt&lt;/td&gt;
+      &lt;td&gt;Less than&lt;/td&gt;
+      &lt;td&gt;&amp;lt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-gt&lt;/td&gt;
+      &lt;td&gt;Greater than&lt;/td&gt;
+      &lt;td&gt;&amp;gt;&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-le&lt;/td&gt;
+      &lt;td&gt;Less than or equal&lt;/td&gt;
+      &lt;td&gt;&amp;lt;=&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-ge&lt;/td&gt;
+      &lt;td&gt;Greater than or equal&lt;/td&gt;
+      &lt;td&gt;&amp;gt;=&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-eq&lt;/td&gt;
+      &lt;td&gt;Equal&lt;/td&gt;
+      &lt;td&gt;==&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;-ne&lt;/td&gt;
+      &lt;td&gt;Not equal&lt;/td&gt;
+      &lt;td&gt;!=&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;ちなみに and と or は
+and は&lt;code class=&quot;highlighter-rouge&quot;&gt;expression1 -a expression2&lt;/code&gt;
+or は&lt;code class=&quot;highlighter-rouge&quot;&gt;expression1 -o expression2&lt;/code&gt;
+となる。&lt;/p&gt;
+
+&lt;p&gt;否定は ! となる
+&lt;code class=&quot;highlighter-rouge&quot;&gt;[ ! $hoge ]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;一般的に&lt;code class=&quot;highlighter-rouge&quot;&gt;if test hoge&lt;/code&gt;と書かずに&lt;code class=&quot;highlighter-rouge&quot;&gt;if [[hoge]]&lt;/code&gt;のように書かれる。 &lt;code class=&quot;highlighter-rouge&quot;&gt;[[]]&lt;/code&gt;はtestの略式コマンドとなる&lt;/p&gt;
+
+&lt;p&gt;また文字列の比較であれば、 &lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt; と &lt;code class=&quot;highlighter-rouge&quot;&gt;!=&lt;/code&gt; が使える&lt;/p&gt;
+
+&lt;h4 id=&quot;testコマンドでファイルやディレクトリの存在有無が分かる&quot;&gt;testコマンドでファイルやディレクトリの存在有無が分かる&lt;/h4&gt;
+
+&lt;p&gt;ディレクトリは &lt;code class=&quot;highlighter-rouge&quot;&gt;-d&lt;/code&gt; オプションを指定することで、その次に続くパスにディレクトリがあるか確認できる&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'/your/directory/path'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ある&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;else
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;ない&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ファイルは &lt;code class=&quot;highlighter-rouge&quot;&gt;-f&lt;/code&gt; or &lt;code class=&quot;highlighter-rouge&quot;&gt;-e&lt;/code&gt; オプションを指定することで、確認できる。&lt;/p&gt;
+
+&lt;p&gt;またファイルが読取可能, 書込可能, 実行可能の確認もできて、それぞれ
+&lt;code class=&quot;highlighter-rouge&quot;&gt;-r&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;-w&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;-x&lt;/code&gt;となる。&lt;/p&gt;
+
+&lt;p&gt;またファイルが空サイズかどうかの確認は &lt;code class=&quot;highlighter-rouge&quot;&gt;-s&lt;/code&gt;で確認できる。&lt;/p&gt;
+
+&lt;h4 id=&quot;testコマンドで2つのファイルの新旧を比較できる&quot;&gt;testコマンドで2つのファイルの新旧を比較できる&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[ $file1 -nt $file2 ]&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;$file1&lt;/code&gt; が新しいと真となる
+&lt;code class=&quot;highlighter-rouge&quot;&gt;[ $file1 -ot $file2 ]&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;$file1&lt;/code&gt; が古いと真となる&lt;/p&gt;
+
+&lt;p&gt;それぞれ
+&lt;code class=&quot;highlighter-rouge&quot;&gt;-nt&lt;/code&gt; → newer than
+&lt;code class=&quot;highlighter-rouge&quot;&gt;-ot&lt;/code&gt; → older than
+となる。&lt;/p&gt;
+
+&lt;h4 id=&quot;testコマンドで文字列の長さチェックができる&quot;&gt;testコマンドで文字列の長さチェックができる&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[ -z $hoge]&lt;/code&gt; は文字列の長さが0なら真
+&lt;code class=&quot;highlighter-rouge&quot;&gt;[ -n $hoge]&lt;/code&gt; は文字列の長さが1以上なら真&lt;/p&gt;
+
+&lt;h4 id=&quot;bashzshなどはよりを使おう&quot;&gt;bash,zshなどは[より[[を使おう&lt;/h4&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[]&lt;/code&gt;の説明をしましたが、&lt;code class=&quot;highlighter-rouge&quot;&gt;[[]]&lt;/code&gt;が使える場合はそちらを使ったほうがいいです。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;[]&lt;/code&gt;は変数展開でワード分割やパス名展開されて想定外の判定結果となるためです。&lt;/p&gt;
+
+&lt;p&gt;通常であれば↓のような結果ですが、&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ var&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hogehoge'&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; hogehoge &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
+0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このような場合だとエラーになります。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ var&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hoge hoge'&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; hogehoge &lt;span class=&quot;o&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt;
+too many arguments
+2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;詳しくはこちらの記事が参考になります。
+&lt;a href=&quot;https://fumiyas.github.io/2013/12/15/test.sh-advent-calendar.html&quot;&gt;test と [ と [[ コマンドの違い - 拡張 POSIX シェルスクリプト Advent Calendar 2013 - ダメ出し Blog&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;switchcase文&quot;&gt;switch/case文&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; 値 &lt;span class=&quot;k&quot;&gt;in
+  &lt;/span&gt;ケース1 &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 処理 &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  ケース2 &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; 処理 &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;;;&lt;/code&gt; セミコロン二つはコマンドの終わりを知らせます。&lt;/p&gt;
+
+&lt;h4 id=&quot;評価値が文字列の場合は正規表現が使える&quot;&gt;評価値が文字列の場合は正規表現が使える&lt;/h4&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--branch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;branch&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;正規表現マッチング&quot;&gt;正規表現マッチング&lt;/h3&gt;
+
+&lt;p&gt;変数varに挨拶が含まれてるか調べる&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hello, world'&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~ ^.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;hello.&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'挨拶'&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;=~&lt;/code&gt;を使うことで正規表現判定となります。&lt;/p&gt;
+
+&lt;h2 id=&quot;ループ&quot;&gt;ループ&lt;/h2&gt;
+
+&lt;h3 id=&quot;for文&quot;&gt;for文&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;var &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;one two three&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;while文&quot;&gt;while文&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;評価式&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;break
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;read &lt;/span&gt;var&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt; &amp;lt; ~/Downloads/hoge.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;関数&quot;&gt;関数&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;my_func&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;hello_world
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;引数あり関数&quot;&gt;引数あり関数&lt;/h3&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;hello&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;hello, &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+hello &lt;span class=&quot;s2&quot;&gt;&quot;hoge&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;特殊引数&quot;&gt;特殊引数&lt;/h2&gt;
+&lt;h3 id=&quot;ダブルダッシュ&quot;&gt;ダブル・ダッシュ&lt;/h3&gt;
+&lt;p&gt;ハイフン二つ(–)のことをダブル・ダッシュ(Double Dash)と呼ばれており、これはコマンドフラグの終わりを示す記号となる。&lt;br /&gt;
+オプションのスキャン処理を明示的に終了させるときに使う。&lt;/p&gt;
+
+&lt;h2 id=&quot;展開&quot;&gt;展開&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$(コマンド)&lt;/code&gt; でコマンド結果を出力します。&lt;br /&gt;
+同様の機能にバッククォートで囲む &lt;code class=&quot;highlighter-rouge&quot;&gt;コマンド&lt;/code&gt; もあります。&lt;br /&gt;
+ちなみにバッククォートは入れ子にできません。&lt;/p&gt;
+
+&lt;h2 id=&quot;正常終了と異常終了&quot;&gt;正常終了と異常終了&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;exit 終了ステータス&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;正常： &lt;code class=&quot;highlighter-rouge&quot;&gt;exit 0&lt;/code&gt;
+以上： &lt;code class=&quot;highlighter-rouge&quot;&gt;exit 1&lt;/code&gt;など0以外&lt;/p&gt;
+
+&lt;h2 id=&quot;echo-で色&quot;&gt;echo で色&lt;/h2&gt;
+&lt;p&gt;16進数&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[1;31m This is red text &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\0&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;33[0m&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;応用&quot;&gt;応用&lt;/h2&gt;
+
+&lt;h3 id=&quot;bash限定-local-の意味&quot;&gt;bash限定: local の意味&lt;/h3&gt;
+&lt;p&gt;シェルスクリプトの変数はデフォルトはグローバル変数です。&lt;br /&gt;
+グローバル変数は、関数内で変数が使われていても、外でその変数にアクセスできるなど不具合の巣窟です。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;hoge&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nv&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+hoge
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# &quot;test&quot; と出力される&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;関数で使った変数は関数から出たら消えてほしい場合には local を使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;function &lt;/span&gt;hoge&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;var&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+hoge
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 空出力&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;forなど内部で変数が使われるような場合は、事前に使う変数をlocal変数宣言しておきます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;var
+&lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;var &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;test1 test2 test3&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$var&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# 空出力&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+&lt;p&gt;一度に全部を覚える必要はないですが、シェルやシェルスクリプトを使いこなすことで、iOS開発効率やAPIを効率良く検証したりいいことばかりです。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="shellscript" /><category term="ios" /><summary type="html">bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png" /></entry><entry><title type="html">Gitで先にPRやリモートブランチを用意する方法</title><link href="https://blog.mothule.com/tools/git/tools-git-empty-commit" rel="alternate" type="text/html" title="Gitで先にPRやリモートブランチを用意する方法" /><published>2020-02-03T00:00:00+09:00</published><updated>2020-02-03T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-empty-commit</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-empty-commit">&lt;p&gt;Gitで事前にPRやリモートブランチを用意する方法についてメモしました。&lt;/p&gt;
 
 &lt;p&gt;ニーズは少ないと感じる人もいるかもしれませんが、少し規模が大きかったり、チームメンバーが多かったりすると使う機会は増えてきます。&lt;/p&gt;
 
@@ -85,7 +858,59 @@ PRも作成することができます。&lt;/p&gt;
 &lt;p&gt;今後はブログで画像指定しない場合は、このスクリプトを使っていこうかと思います。&lt;/p&gt;
 
 &lt;p&gt;gem化などは考えていません。しかし、使っていくうちに改良するとは思うので、&lt;br /&gt;
-その蓄積で充実してきたらgem化するかもしれません。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="kiji" /><summary type="html">こないだTwitterでもつぶやいたのですが、</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-02-ruby-create-kiji/2.png" /></entry><entry><title type="html">Google Analyticsで自分のサイトを分析して分かったこと</title><link href="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" rel="alternate" type="text/html" title="Google Analyticsで自分のサイトを分析して分かったこと" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site</id><content type="html" xml:base="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site">&lt;p&gt;Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。&lt;/p&gt;
+その蓄積で充実してきたらgem化するかもしれません。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="kiji" /><summary type="html">こないだTwitterでもつぶやいたのですが、</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-02-ruby-create-kiji/2.png" /></entry><entry><title type="html">Rails以外でBundlerを使う方法</title><link href="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails" rel="alternate" type="text/html" title="Rails以外でBundlerを使う方法" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails">&lt;p&gt;仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、
+なるべく自前スクリプトでもRubyで書くようにしてます。&lt;/p&gt;
+
+&lt;p&gt;だけど毎度Railsを使わずBundlerを使う場合に一部躓くのでメモとしてまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;段取り&quot;&gt;段取り&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;スクリプトで使うバージョン指定&lt;/li&gt;
+  &lt;li&gt;(Option)bundlerインストール&lt;/li&gt;
+  &lt;li&gt;Gemfile用意&lt;/li&gt;
+  &lt;li&gt;bundle install&lt;/li&gt;
+  &lt;li&gt;スクリプトでbundle内gemをrequire&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Rails外で使う上で特別必要な処理って最後の項目だけなので、
+そこだけ知りたい人はざざっと一番下へどうぞ。&lt;/p&gt;
+
+&lt;h2 id=&quot;スクリプトで使うバージョン指定&quot;&gt;スクリプトで使うバージョン指定&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ruby version]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;optionbundlerインストール&quot;&gt;(Option)bundlerインストール&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install bundler &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2.0.2&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;バージョン指定する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;-v &quot;[bundler version]&quot;&lt;/code&gt;を入れます。&lt;br /&gt;
+最新でいいなら指定不要です。&lt;/p&gt;
+
+&lt;h2 id=&quot;gemfile用意&quot;&gt;Gemfile用意&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle init
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Gemfileが作成されるので、中に必要なgemを追加します。&lt;/p&gt;
+
+&lt;h2 id=&quot;bundle-install&quot;&gt;bundle install&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bundle
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Gemfileで指定されたgemsをインストールします。&lt;/p&gt;
+
+&lt;h2 id=&quot;スクリプト内でbundle内gemをrequire&quot;&gt;スクリプト内でbundle内gemをrequire&lt;/h2&gt;
+
+&lt;p&gt;エントリーファイルが &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; であれば, &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; の頭に&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rubygems'&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'bundler/setup'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;と書きます。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="bundler" /><summary type="html">仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、 なるべく自前スクリプトでもRubyで書くようにしてます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-ruby-use-bundler-outside-of-rails.png" /></entry><entry><title type="html">Google Analyticsで自分のサイトを分析して分かったこと</title><link href="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site" rel="alternate" type="text/html" title="Google Analyticsで自分のサイトを分析して分かったこと" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site</id><content type="html" xml:base="https://blog.mothule.com/tools/google-analytics/tools-google-analytics-my-site">&lt;p&gt;Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。&lt;/p&gt;
 
 &lt;p&gt;普段アクセス数やアクセス数の多いページ一覧しか見てなかったのですが、&lt;br /&gt;
 今回ちょっと分析結果から仮説を立てるまでをまとめてみました。&lt;/p&gt;
@@ -225,59 +1050,7 @@ GAについては&lt;a href=&quot;https://support.google.com/analytics/answer/27
 &lt;p&gt;やることはたくさんある中で少ない時間の中で、何を選択し集中することでコスパよく効果を出さないといけません。
 そんな状況下では、優先順位付けに悩みます。&lt;/p&gt;
 
-&lt;p&gt;これを繰り返すことでOODAをループさせます。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="google-analytics" /><summary type="html">Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-tools-google-analytics-my-site/0.png" /></entry><entry><title type="html">Rails以外でBundlerを使う方法</title><link href="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails" rel="alternate" type="text/html" title="Rails以外でBundlerを使う方法" /><published>2020-02-01T00:00:00+09:00</published><updated>2020-02-01T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-use-bundler-outside-of-rails">&lt;p&gt;仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、
-なるべく自前スクリプトでもRubyで書くようにしてます。&lt;/p&gt;
-
-&lt;p&gt;だけど毎度Railsを使わずBundlerを使う場合に一部躓くのでメモとしてまとめました。&lt;/p&gt;
-
-&lt;h2 id=&quot;段取り&quot;&gt;段取り&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;スクリプトで使うバージョン指定&lt;/li&gt;
-  &lt;li&gt;(Option)bundlerインストール&lt;/li&gt;
-  &lt;li&gt;Gemfile用意&lt;/li&gt;
-  &lt;li&gt;bundle install&lt;/li&gt;
-  &lt;li&gt;スクリプトでbundle内gemをrequire&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Rails外で使う上で特別必要な処理って最後の項目だけなので、
-そこだけ知りたい人はざざっと一番下へどうぞ。&lt;/p&gt;
-
-&lt;h2 id=&quot;スクリプトで使うバージョン指定&quot;&gt;スクリプトで使うバージョン指定&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv &lt;span class=&quot;nb&quot;&gt;local&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ruby version]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;optionbundlerインストール&quot;&gt;(Option)bundlerインストール&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;gem install bundler &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;2.0.2&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;バージョン指定する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;-v &quot;[bundler version]&quot;&lt;/code&gt;を入れます。&lt;br /&gt;
-最新でいいなら指定不要です。&lt;/p&gt;
-
-&lt;h2 id=&quot;gemfile用意&quot;&gt;Gemfile用意&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle init
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Gemfileが作成されるので、中に必要なgemを追加します。&lt;/p&gt;
-
-&lt;h2 id=&quot;bundle-install&quot;&gt;bundle install&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;vendor/bundle
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Gemfileで指定されたgemsをインストールします。&lt;/p&gt;
-
-&lt;h2 id=&quot;スクリプト内でbundle内gemをrequire&quot;&gt;スクリプト内でbundle内gemをrequire&lt;/h2&gt;
-
-&lt;p&gt;エントリーファイルが &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; であれば, &lt;code class=&quot;highlighter-rouge&quot;&gt;main.rb&lt;/code&gt; の頭に&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rubygems'&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'bundler/setup'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;と書きます。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="bundler" /><summary type="html">仕事柄バックエンドはRailsでフロントエンドのエコシステムではRubyベースのツールもあり、 なるべく自前スクリプトでもRubyで書くようにしてます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-ruby-use-bundler-outside-of-rails.png" /></entry><entry><title type="html">Gemで指定バージョンをインストール</title><link href="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version" rel="alternate" type="text/html" title="Gemで指定バージョンをインストール" /><published>2020-01-29T00:00:00+09:00</published><updated>2020-01-29T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/gem/ruby-gem-specify-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version">&lt;p&gt;Rubyのバージョンが上がるたび、そのバージョンのgemsをインストールします。
+&lt;p&gt;これを繰り返すことでOODAをループさせます。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="google-analytics" /><summary type="html">Google Analytics(以下GA)を使ってサイト分析は一般的なサイト運営です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-01-tools-google-analytics-my-site/0.png" /></entry><entry><title type="html">Gemで指定バージョンをインストール</title><link href="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version" rel="alternate" type="text/html" title="Gemで指定バージョンをインストール" /><published>2020-01-29T00:00:00+09:00</published><updated>2020-01-29T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/gem/ruby-gem-specify-version</id><content type="html" xml:base="https://blog.mothule.com/ruby/gem/ruby-gem-specify-version">&lt;p&gt;Rubyのバージョンが上がるたび、そのバージョンのgemsをインストールします。
 BundlerだとGemfile.lockの指定されたバージョンでインストールします。&lt;/p&gt;
 
 &lt;p&gt;たまにしか使わない、でも絶対知っていないといけないGemで指定バージョンをインストールについてメモしておきます。&lt;/p&gt;
@@ -728,72 +1501,4 @@ PDFの作成方法を変更してください。&lt;/p&gt;
 
 &lt;h2 id=&quot;追記&quot;&gt;追記&lt;/h2&gt;
 &lt;p&gt;無事郵送され、印刷物にも問題ないことが分かりました。
-これは便利ですね。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><summary type="html">フルリモートワークで仕事をしていると、オフィスに足を運ぶことがほとんどなく、理由がない限り行く時間やメリットもありません。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-12-03-notebook-remote-work-web-letter/0.png" /></entry><entry><title type="html">Railsを5.0.0から5.2.3に変更した</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-rails-5_2_3-update" rel="alternate" type="text/html" title="Railsを5.0.0から5.2.3に変更した" /><published>2019-11-14T00:00:00+09:00</published><updated>2019-11-14T00:00:00+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-rails-5_2_3-update</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-rails-5_2_3-update">&lt;p&gt;個人アプリのRailsバージョンが結構古いことに気づいたので、バージョンを上げたときに躓いたポイントをまとめた記事です。&lt;/p&gt;
-
-&lt;p&gt;Gemfileのrailsを&lt;code class=&quot;highlighter-rouge&quot;&gt;5.0.0&lt;/code&gt; から &lt;code class=&quot;highlighter-rouge&quot;&gt;5.2.3&lt;/code&gt; に変更後、&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle update rails&lt;/code&gt;を実行&lt;/p&gt;
-
-&lt;p&gt;gemインストールは成功したが末尾にメッセージが表示。&lt;/p&gt;
-
-&lt;h3 id=&quot;原文&quot;&gt;原文&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;HEADS UP! i18n 1.1 changed fallbacks to exclude default locale.
-But that may break your application.
-
-Please check your Rails app for 'config.i18n.fallbacks = true'.
-If you're using I18n (&amp;gt;= 1.1.0) and Rails (&amp;lt; 5.2.2), this should be
-'config.i18n.fallbacks = [I18n.default_locale]'.
-If not, fallbacks will be broken in your app by I18n 1.1.x.
-
-For more info see:
-https://github.com/svenfuchs/i18n/releases/tag/v1.1.0
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;i18n の 1.1 では、デフォルトロケールが除外されました。&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;i18n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fallbacks&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;を確認して i18n が &amp;gt;= 1.1.0 および Rails &amp;lt; 5.2.2 の場合はこれを&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;i18n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fallbacks&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;I18n&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default_locale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;に変更すべきです。&lt;/p&gt;
-
-&lt;p&gt;そうしないとこれのせいでアプリが異常動作します。&lt;/p&gt;
-
-&lt;h2 id=&quot;親が保存されないと子はcreateを呼び出せない&quot;&gt;親が保存されないと子はcreateを呼び出せない&lt;/h2&gt;
-
-&lt;p&gt;ActiveRecordでは、親子関係のあるモデルで親より先に子を保存しようとするとエラーになるようになりました。&lt;/p&gt;
-
-&lt;h3 id=&quot;原文-1&quot;&gt;原文&lt;/h3&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ActiveRecord::RecordNotSaved:
-You cannot call create unless the parent is saved
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;説明&quot;&gt;説明&lt;/h3&gt;
-&lt;p&gt;例えば 著者(Author) と 記事(Article) なら関連は次のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Author&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;has_many&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:articles&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# カラムとして name: string がある&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Article&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;belongs_to&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:author&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# カラムとして title: string がある&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このとき Author を保存せずにArticleを保存しようとするとエラーになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'hoge'&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create!&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'ほげ'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# エラー&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;save!&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;対応策&quot;&gt;対応策&lt;/h3&gt;
-&lt;p&gt;子を保存しないか先に親を保存させる必要があります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;create&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;''&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'hoge'&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;articles&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;title: &lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'ほげ'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;author&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;save!&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">個人アプリのRailsバージョンが結構古いことに気づいたので、バージョンを上げたときに躓いたポイントをまとめた記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-11-14-ruby-rails-rails-5_2_3-update.png" /></entry></feed>
+これは便利ですね。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><summary type="html">フルリモートワークで仕事をしていると、オフィスに足を運ぶことがほとんどなく、理由がない限り行く時間やメリットもありません。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2019-12-03-notebook-remote-work-web-letter/0.png" /></entry></feed>

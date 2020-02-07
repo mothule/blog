@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？" />
+<meta property="og:description" content="bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？" />
+<link rel="canonical" href="https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner" />
+<meta property="og:url" content="https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-05T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner"},"url":"https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner","headline":"iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門","dateModified":"2020-02-05T00:00:00+09:00","datePublished":"2020-02-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png","description":"bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門">
+    <meta name="twitter:description" content="bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#tools">Tools</a>
+      
+    
+      
+        / <a href="/tags#shellscript">Shellscript</a>
+      
+    
+      
+        / iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png" alt="iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-5</li>
+        
+          <li class="list-inline-item"><a href="/tags#tools">tools</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#shellscript">shellscript</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#この記事で基礎知識を得よう">この記事で基礎知識を得よう</a></li>
+  <li><a href="#bashやzsh-fishと色々あるが基本は同じ">bashやzsh, fishと色々あるが基本は同じ</a></li>
+  <li><a href="#シェルスクリプトとは">シェルスクリプトとは？</a>
+    <ul>
+      <li><a href="#ではシェルとは">ではシェルとは？</a></li>
+      <li><a href="#コマンドとは">コマンドとは？</a></li>
+    </ul>
+  </li>
+  <li><a href="#よく使うコマンド">よく使うコマンド</a>
+    <ul>
+      <li><a href="#echo-画面に文字列などを出力する">echo: 画面に文字列などを出力する</a></li>
+      <li><a href="#shift-引数をn個ずらす">shift: 引数をN個ずらす</a></li>
+      <li><a href="#source-ファイル内のシェルを読み込んで実行する">source: ファイル内のシェルを読み込んで実行する</a></li>
+      <li><a href="#awk-空白で区切られたテキストを処理する">awk: 空白で区切られたテキストを処理する</a></li>
+      <li><a href="#sed-文字列置換">sed: 文字列置換</a></li>
+      <li><a href="#grep-テキスト検索">grep: テキスト検索</a></li>
+      <li><a href="#ag-grep高速版">ag: grep高速版</a></li>
+    </ul>
+  </li>
+  <li><a href="#入出力リダイレクト">入出力リダイレクト</a>
+    <ul>
+      <li><a href="#ファイル作成上書き">ファイル作成(上書き)</a></li>
+    </ul>
+  </li>
+  <li><a href="#パイプライン">パイプライン</a>
+    <ul>
+      <li><a href="#使い方は簡単">使い方は簡単</a></li>
+    </ul>
+  </li>
+  <li><a href="#コマンドの連結">コマンドの連結</a>
+    <ul>
+      <li><a href="#セミコロンで連結">;(セミコロン)で連結</a></li>
+      <li><a href="#アンパサンドで連結">&amp;(アンパサンド)で連結</a></li>
+      <li><a href="#ダブルアンパサンドで連結">&amp;&amp;(ダブルアンパサンド)で連結</a></li>
+      <li><a href="#で連結">||で連結</a></li>
+    </ul>
+  </li>
+  <li><a href="#外部シェルスクリプトの作成">外部シェルスクリプトの作成</a>
+    <ul>
+      <li><a href="#シェルスクリプト雛形を用意">シェルスクリプト雛形を用意</a>
+        <ul>
+          <li><a href="#ファイル作成">ファイル作成</a></li>
+          <li><a href="#シェバング記載">シェバング記載</a></li>
+          <li><a href="#適当なコマンド入れる">適当なコマンド入れる</a></li>
+          <li><a href="#実行権限の付与">実行権限の付与</a></li>
+          <li><a href="#実行してみる">実行してみる</a></li>
+        </ul>
+      </li>
+      <li><a href="#コメント">コメント</a></li>
+      <li><a href="#シェバングshebangでosにスクリプト情報を伝える">シェバング(Shebang)でOSにスクリプト情報を伝える</a>
+        <ul>
+          <li><a href="#実際に動かしてみる">実際に動かしてみる</a></li>
+        </ul>
+      </li>
+      <li><a href="#exit-1-の意味">exit 1 の意味</a></li>
+    </ul>
+  </li>
+  <li><a href="#変数">変数</a>
+    <ul>
+      <li><a href="#変数の宣言">変数の宣言</a></li>
+      <li><a href="#変数の参照">変数の参照</a>
+        <ul>
+          <li><a href="#でより厳密な参照">${}でより厳密な参照</a></li>
+        </ul>
+      </li>
+      <li><a href="#文字列演算子">文字列演算子</a></li>
+      <li><a href="#変数のエクスポート">変数のエクスポート</a></li>
+      <li><a href="#特殊変数">特殊変数</a>
+        <ul>
+          <li><a href="#引数">引数</a></li>
+          <li><a href="#直前のコマンドの終了ステータスを保持">直前のコマンドの終了ステータスを保持</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#条件分岐">条件分岐</a>
+    <ul>
+      <li><a href="#ifelse文">if/else文</a>
+        <ul>
+          <li><a href="#ifの評価式にtestやを使う理由">ifの評価式にtestや[]を使う理由</a></li>
+          <li><a href="#testコマンドでファイルやディレクトリの存在有無が分かる">testコマンドでファイルやディレクトリの存在有無が分かる</a></li>
+          <li><a href="#testコマンドで2つのファイルの新旧を比較できる">testコマンドで2つのファイルの新旧を比較できる</a></li>
+          <li><a href="#testコマンドで文字列の長さチェックができる">testコマンドで文字列の長さチェックができる</a></li>
+          <li>[bash,zshなどは[より[<a href="#bashzshなどはよりを使おう">を使おう</a></li>
+        </ul>
+      </li>
+      <li><a href="#switchcase文">switch/case文</a>
+        <ul>
+          <li><a href="#評価値が文字列の場合は正規表現が使える">評価値が文字列の場合は正規表現が使える</a></li>
+        </ul>
+      </li>
+      <li><a href="#正規表現マッチング">正規表現マッチング</a></li>
+    </ul>
+  </li>
+  <li><a href="#ループ">ループ</a>
+    <ul>
+      <li><a href="#for文">for文</a></li>
+      <li><a href="#while文">while文</a></li>
+    </ul>
+  </li>
+  <li><a href="#関数">関数</a>
+    <ul>
+      <li><a href="#引数あり関数">引数あり関数</a></li>
+    </ul>
+  </li>
+  <li><a href="#特殊引数">特殊引数</a>
+    <ul>
+      <li><a href="#ダブルダッシュ">ダブル・ダッシュ</a></li>
+    </ul>
+  </li>
+  <li><a href="#展開">展開</a></li>
+  <li><a href="#正常終了と異常終了">正常終了と異常終了</a></li>
+  <li><a href="#echo-で色">echo で色</a></li>
+  <li><a href="#応用">応用</a>
+    <ul>
+      <li><a href="#bash限定-local-の意味">bash限定: local の意味</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+
+  <p>bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？</p>
+
+<p><strong>iOSエンジニアと言えどXcode上でSwiftをコーディングだけが全てではありません。</strong><br />
+<em>CocoaPods</em>や<em>Carthage</em>、<em>fastlane</em> などエコシステムはシェルコマンド操作が必須です。</p>
+
+<p>またAPIとの通信にシェルスクリプトを使うことで、効率よく情報を集めたり事前準備できたりします。<br />
+シェルスクリプトはSwiftと同じただの道具です。使い方を覚えて視野を広げましょう。</p>
+
+<h2 id="この記事で基礎知識を得よう">この記事で基礎知識を得よう</h2>
+<p>この記事では難しいイディオムテクニックが書けるなどではなく、基本を理解してシェルスクリプトを読めるようになるための土台作りだとイメージしてください。<br />
+この土台を踏み台に少しずつシェルスクリプトに触れていくことで、より生産性の高いスキルを身に付けれるかと思います。</p>
+
+<h2 id="bashやzsh-fishと色々あるが基本は同じ">bashやzsh, fishと色々あるが基本は同じ</h2>
+<p>シェルスクリプトは色々ありますが、Swiftと違ってどれも活躍場所がターミナル上に閉じています。<br />
+そして基本部分は同じなので慣れてきたら自分好みのシェルを選ぶと流れがいいです。<br />
+ターミナル上の作業を効率よく進められれば結果的にiOS開発効率の向上に繋がります。</p>
+
+<h2 id="シェルスクリプトとは">シェルスクリプトとは？</h2>
+<p>広義と狭義の意味を持っているのですが、ここではUnixシェルで使われるスクリプト言語です。<br />
+つまりシェルのスクリプトです。</p>
+
+<h3 id="ではシェルとは">ではシェルとは？</h3>
+<p>シェルとはOSとユーザーが対話するためのインターフェイスを提供するソフトウェアです。<br />
+ユーザーがOSに対して命令するための窓口とも言えます。<br />
+bashやzshなどもシェルでありコマンド言語でもあります。</p>
+
+<h3 id="コマンドとは">コマンドとは？</h3>
+
+<p>シェルが提供している対話手段みたいなものです。<br />
+echo などがそれにあたります。</p>
+
+<p>つまりシェルスクリプトとはechoなどのシェルコマンドにより構成されたスクリプト言語です。</p>
+
+<h2 id="よく使うコマンド">よく使うコマンド</h2>
+
+<ul>
+  <li>echo: 画面に文字列などを出力する</li>
+  <li>shift: 引数をN個ずらす</li>
+  <li>source: ファイル内のシェルを読み込んで実行する</li>
+  <li>awk: 空白で区切られたテキストを処理する</li>
+  <li>sed: 文字列置換</li>
+  <li>grep: テキスト検索</li>
+  <li>ag: grep高速版</li>
+</ul>
+
+<h3 id="echo-画面に文字列などを出力する">echo: 画面に文字列などを出力する</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"hoge"</span>
+hoge
+</code></pre></div></div>
+<p>単純に出力するしたり</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ var</span><span class="o">=</span><span class="s1">'asdf'</span><span class="p">;</span><span class="nb">echo</span> <span class="nv">$var</span>
+asdf
+</code></pre></div></div>
+<p>変数を展開したり</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"Failed tests"</span> <span class="o">&gt;</span> ~/Downloads/test.txt
+</code></pre></div></div>
+<p>出力先をリダイレクトしたりも出来ます。</p>
+
+<h3 id="shift-引数をn個ずらす">shift: 引数をN個ずらす</h3>
+
+<p><code class="highlighter-rouge">shift [N]</code>
+引数が1,2,3,4,5の場合、</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$1</span> → 1
+<span class="nb">echo</span> <span class="nv">$2</span> → 2
+<span class="nb">shift
+echo</span> <span class="nv">$1</span> → 2
+<span class="nb">echo</span> <span class="nv">$2</span> → 3
+<span class="nb">shift </span>2
+<span class="nb">echo</span> <span class="nv">$1</span> → 4
+<span class="nb">echo</span> <span class="nv">$2</span> → 5
+</code></pre></div></div>
+
+<p>case/inと組み合わせることで引数を一つずつハンドリングする処理が書くこともできます。</p>
+
+<h3 id="source-ファイル内のシェルを読み込んで実行する">source: ファイル内のシェルを読み込んで実行する</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">source</span> ~/.bash_profile
+</code></pre></div></div>
+<p>というは、実は <code class="highlighter-rouge">.bash_profile</code> というシェルスクリプトを実行してるだけです。</p>
+
+<h3 id="awk-空白で区切られたテキストを処理する">awk: 空白で区切られたテキストを処理する</h3>
+
+<p>パイプなどで受け取った出力結果を一部分だけ抜き取る場合などに利用できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'a b c d e f'</span> | awk <span class="s1">'{ print $2 }'</span>
+b
+</code></pre></div></div>
+<p>これは空白区切りして2つ目のテキストを出力します。</p>
+
+<p>awkは高機能なためこれだけではありません。
+詳しくは他解説サイトをご覧ください。</p>
+
+<h3 id="sed-文字列置換">sed: 文字列置換</h3>
+
+<p>パイプなどで受け取った出力結果にたいし文字列置換したい場合に利用できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"apple orange"</span> | sed s/apple/Apple/
+Apple orange
+</code></pre></div></div>
+
+<p>sedは高機能なためこれだけではありません。
+詳しくは他解説サイトをご覧ください。</p>
+
+<h3 id="grep-テキスト検索">grep: テキスト検索</h3>
+<p>パイプで受け取った出力結果に対して文字列を検索します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>Podfile.lock | <span class="nb">grep</span> <span class="nt">-i</span> firebase
+</code></pre></div></div>
+<p>このようにPodfile.lockに対してちょっとした検索などにも使えます。</p>
+
+<p>パイプだけでなく指定フォルダのファイル内検索も可能ですが、結構重いです。なので自分は次のagを使っています。</p>
+
+<h3 id="ag-grep高速版">ag: grep高速版</h3>
+
+<p>The Silver Searcherと呼ばれてます。<br />
+grepよりかなり高速です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ag .storyboard
+</code></pre></div></div>
+<p>とするだけで実行ディレクトリから子ディレクトリ含め全部のファイルに対し、ファイル内検索を実行します。<br />
+アプリ上で指定文言が使われているか検索する場合、Xcode使わずこれを使うと早いです。<br />
+Xcodeでは検索に引っかからない場合もありますし。</p>
+
+<h2 id="入出力リダイレクト">入出力リダイレクト</h2>
+
+<p>入力をコマンドに渡したり、コマンドの結果を別ストリームに渡したりすることをいいます。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">&gt;</code> : 上書き or ファイル作成</li>
+  <li><code class="highlighter-rouge">&gt;&gt;</code> : 追加出力 or ファイル作成</li>
+  <li><code class="highlighter-rouge">2&gt;</code> : 標準エラー出力をファイルにリダイレクト(上書き or 作成)</li>
+  <li><code class="highlighter-rouge">&amp;&gt;</code> : 標準出力と標準エラー出力をファイルにリダイレクト</li>
+  <li><code class="highlighter-rouge">&amp;&gt;&gt;</code> : 標準出力と標準エラー出力をファイルに追記書き込み</li>
+  <li><code class="highlighter-rouge">&gt;&amp;2</code> : 標準出力を標準エラー出力にリダイレクト</li>
+</ul>
+
+<h3 id="ファイル作成上書き">ファイル作成(上書き)</h3>
+
+<p>結果を指定パスに出力します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"test"</span> <span class="o">&gt;</span> ~/test.txt
+<span class="nv">$ </span><span class="nb">cat</span> ~/test.txt
+<span class="nb">test</span>
+</code></pre></div></div>
+
+<p>出力先が存在する場合は上書きします。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ~/test.txt
+<span class="nb">test</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"test2"</span> <span class="o">&gt;</span> ~/test.txt
+<span class="nv">$ </span><span class="nb">cat</span> ~/test.txt
+test2
+</code></pre></div></div>
+
+<h2 id="パイプライン">パイプライン</h2>
+<p>コマンドの結果を次のコマンドに渡す処理のことをいいます。<br />
+コマンドとコマンドをつなぐシェルでとても重要な機能の一つです。</p>
+
+<h3 id="使い方は簡単">使い方は簡単</h3>
+<p><code class="highlighter-rouge">command a | command b</code>のように <strong>|</strong> を挟むだけで、 <code class="highlighter-rouge">command a</code>の結果が <code class="highlighter-rouge">command b</code> に引数として渡されます。</p>
+
+<p>例えばファイル一覧からテキストを絞り込む場合は</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> | <span class="nb">grep</span> <span class="s2">".txt"</span>
+</code></pre></div></div>
+<p>のように<code class="highlighter-rouge">ls -l</code>の出力結果を<code class="highlighter-rouge">grep</code>に渡してテキストファイルの行を絞り込みします。</p>
+
+<h2 id="コマンドの連結">コマンドの連結</h2>
+<p>連結することで、コマンドを立て続けに実行して一度の命令で複数のコマンドを実行することができる。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">;</code>(セミコロン)</li>
+  <li><code class="highlighter-rouge">&amp;</code>(アンパサンド)</li>
+  <li><code class="highlighter-rouge">&amp;&amp;</code>(ダブルアンパサンド)</li>
+  <li><code class="highlighter-rouge">||</code></li>
+</ul>
+
+<h3 id="セミコロンで連結">;(セミコロン)で連結</h3>
+<p><code class="highlighter-rouge">command a ; command b</code>
+<code class="highlighter-rouge">command a</code>を実行、コマンドが終わったら<code class="highlighter-rouge">command b</code>を実行する。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s1">'a'</span> <span class="p">;</span> <span class="nb">echo</span> <span class="s1">'b'</span>
+a
+b
+</code></pre></div></div>
+
+<h3 id="アンパサンドで連結">&amp;(アンパサンド)で連結</h3>
+<p><code class="highlighter-rouge">command a &amp; command b</code>
+<code class="highlighter-rouge">command a</code>を実行後すぐに <code class="highlighter-rouge">command b</code>を実行する。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sleep 1 <span class="p">;</span> <span class="nb">echo</span> <span class="s1">'a'</span>
+</code></pre></div></div>
+<p>だと1秒後にaが出力される。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sleep 1 &amp; <span class="nb">echo</span> <span class="s1">'a'</span>
+</code></pre></div></div>
+<p>だと待たずにaが出力される。</p>
+
+<h3 id="ダブルアンパサンドで連結">&amp;&amp;(ダブルアンパサンド)で連結</h3>
+<p><code class="highlighter-rouge">command a &amp;&amp; command b</code>
+<code class="highlighter-rouge">command a</code>が成功したら、<code class="highlighter-rouge">command b</code>を実行する。
+<code class="highlighter-rouge">command a</code>が失敗したら、<code class="highlighter-rouge">command b</code>は実行しない。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git checkout develop <span class="o">&amp;&amp;</span> git checkout pull <span class="nt">--prune</span> <span class="o">&amp;&amp;</span> git branch <span class="nt">-d</span> feature/hoge <span class="o">&amp;&amp;</span> git checkout <span class="nt">-b</span> feature/fuga
+</code></pre></div></div>
+<p>というコマンド連結だと、</p>
+
+<ol>
+  <li>developブランチに移動</li>
+  <li>pull –prune 実行</li>
+  <li>feature/hogeブランチを削除</li>
+  <li>feature/fugaブランチをチェックアウト or 作成</li>
+</ol>
+
+<p>になりますが、どれか失敗すると以降のコマンドは実行されません。</p>
+
+<h3 id="で連結">||で連結</h3>
+<p><code class="highlighter-rouge">command a || command b</code>
+&amp;&amp; の逆。<code class="highlighter-rouge">command a</code>に失敗したら<code class="highlighter-rouge">command b</code>を実行する。</p>
+
+<h2 id="外部シェルスクリプトの作成">外部シェルスクリプトの作成</h2>
+
+<p>ターミナル上でシェルを操作するだけだとたくさんのコマンドや複雑な条件処理をしたいときに1行で書くこととなり不便です。
+別のPCでも実行したいとなると保存されていないので、またそのPCで最初から打ち直すことになります。<br />
+1つファイルにシェルコマンドを集約するのがシェルスクリプトとなります。</p>
+
+<h3 id="シェルスクリプト雛形を用意">シェルスクリプト雛形を用意</h3>
+
+<ol>
+  <li>ファイル作成</li>
+  <li>シェバング記載</li>
+  <li>適当なコマンド入れる</li>
+  <li>実行権限の付与</li>
+  <li>実行してみる</li>
+</ol>
+
+<h4 id="ファイル作成">ファイル作成</h4>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>touch script
+</code></pre></div></div>
+<p>これでscriptというファイルが作成されます。</p>
+
+<h4 id="シェバング記載">シェバング記載</h4>
+
+<p>scriptファイルをエディタで開いて1行目に次のコードを入れます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+</code></pre></div></div>
+
+<h4 id="適当なコマンド入れる">適当なコマンド入れる</h4>
+
+<p>scriptファイルを実行時に正しく実行できたか判断できるように簡単なコマンドを入れておきます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s1">'I am script.'</span>
+</code></pre></div></div>
+
+<h4 id="実行権限の付与">実行権限の付与</h4>
+<p>scriptファイルに実行権限を付与します。これをしないと作成者以外のユーザーがこれを実行できないためです。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>chmod 711 script
+</code></pre></div></div>
+<p>権限エラーの場合は頭にsudoつけてください。</p>
+
+<h4 id="実行してみる">実行してみる</h4>
+<p>ではこれを実行してみます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./script
+</code></pre></div></div>
+
+<h3 id="コメント">コメント</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c"># これはコメント</span>
+</code></pre></div></div>
+
+<h3 id="シェバングshebangでosにスクリプト情報を伝える">シェバング(Shebang)でOSにスクリプト情報を伝える</h3>
+<p>シェルスクリプトの先頭にコメントで</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+</code></pre></div></div>
+<p>と入っているのは、おまじないではなく、シェルスクリプトを実行したときOSがどの言語で実行するべきスクリプトなのかを判断するための情報となります。</p>
+
+<p>例えば<code class="highlighter-rouge">hoge.sh</code>というファイル名であれば拡張子から実行方法を割り出します。でも<code class="highlighter-rouge">hoge</code>というファイル名では分かりません。<br />
+OSはファイルの先頭に記載された情報を元に実行する方法を切り替えています。</p>
+
+<h4 id="実際に動かしてみる">実際に動かしてみる</h4>
+<p>次のファイルを用意します
+<code class="highlighter-rouge">hoge</code></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nb">echo</span> <span class="s1">'I am bash'</span>
+</code></pre></div></div>
+
+<p>次に実行権限を与えます。(必要に応じsudoつける)</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>chmod 711 hoge
+</code></pre></div></div>
+
+<p>このファイルを実行方法の指定なしで実行します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> &lt;hogeがあるディレクトリまで移動&gt;
+<span class="nv">$ </span>./hoge
+I am bash
+</code></pre></div></div>
+<p>問題なくechoが出力されました。</p>
+
+<p>では次にシェバングを<code class="highlighter-rouge"><span class="c">#!/bin/bash</span></code>から<code class="highlighter-rouge"><span class="c1">#!/usr/bin/ruby</span></code>に変えます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./hoge
+./hoge:2:in <span class="se">\`</span>&lt;main&gt;<span class="se">\'</span>: undefined method <span class="se">\`</span><span class="nb">echo</span><span class="se">\'</span> <span class="k">for </span>main:Object <span class="o">(</span>NoMethodError<span class="o">)</span>
+</code></pre></div></div>
+
+<p>rubyとして実行され、echoというメソッドがないことで失敗しました。</p>
+
+<p>反対にシェバングを<code class="highlighter-rouge"><span class="c">#!/bin/bash</span></code>にしてコードをrubyに変更します。</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/bin/bash</span>
+<span class="nb">p</span> <span class="s1">'I am ruby'</span>
+</code></pre></div></div>
+<p>これを実行します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./hoge
+./hoge: line 3: p: <span class="nb">command </span>not found
+</code></pre></div></div>
+<p>bashとして実行され、pというコマンドがないことで失敗しました。</p>
+
+<p>このようにシェバングはOSに実行方法を伝える役割です。</p>
+
+<h3 id="exit-1-の意味">exit 1 の意味</h3>
+<p>コマンドは実行の成功・失敗を表す終了ステータスという数値があり、その数値は特殊変数<code class="highlighter-rouge">$?</code>に格納される。<br />
+終了ステータスの数値は一般的に 成功<code class="highlighter-rouge">0</code> 失敗<code class="highlighter-rouge">1</code>や<code class="highlighter-rouge">0</code>以外で表されている。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s1">'complex command'</span>
+<span class="nv">$ </span><span class="nb">echo</span> <span class="nv">$?</span>
+complex <span class="nb">command
+</span>0
+</code></pre></div></div>
+
+<h2 id="変数">変数</h2>
+
+<ul>
+  <li>変数の宣言</li>
+  <li>変数の参照</li>
+  <li>変数のエクスポート</li>
+  <li>特殊変数</li>
+</ul>
+
+<h3 id="変数の宣言">変数の宣言</h3>
+<p>変数宣言は次のように書きます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">VARIABLE</span><span class="o">=</span>1
+</code></pre></div></div>
+<p><strong>注意</strong>
+=の前後にスペースを空けるとエラーになります。</p>
+
+<h3 id="変数の参照">変数の参照</h3>
+<p>変数にアクセスして中の値を使うには変数名の前に$をつけて<code class="highlighter-rouge">$変数名</code>と書いて使います。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$VARIABLE</span>
+</code></pre></div></div>
+
+<h4 id="でより厳密な参照">${}でより厳密な参照</h4>
+<p><code class="highlighter-rouge">$var</code>でも変数への参照はできるが、本来の正しい参照は<code class="highlighter-rouge">${var}</code>が正しい。<br />
+この方法じゃないと変数名によっては間違った解釈で異なる変数参照をしようとする。
+また後述する文字列演算子を使うときに必要となる。</p>
+
+<h3 id="文字列演算子">文字列演算子</h3>
+<p>変数の参照時にちょっとしたマクロ的な使い方ができます。</p>
+
+<table>
+  <tbody>
+    <tr>
+      <td>演算子</td>
+      <td>内容</td>
+    </tr>
+    <tr>
+      <td>${var:-value}</td>
+      <td>varがありNULLではないなら、varを返し、それ以外は valueを返す</td>
+    </tr>
+    <tr>
+      <td>${var:=value}</td>
+      <td>varがありNULLではないなら、varを返し、それ以外は varにvalueを入れて返す. 例外あり</td>
+    </tr>
+    <tr>
+      <td>${var:?msg}</td>
+      <td>varがありNULLではないなら、varを返し、それ以外は msgを出力し処理を中止する</td>
+    </tr>
+    <tr>
+      <td>${var:+value}</td>
+      <td>varがありNULLではないなら、varを返し、それ以外は NULLを返す</td>
+    </tr>
+    <tr>
+      <td>${var#pattern}</td>
+      <td>varを先頭検索して pattern が一致したら、最短一致した部分を削除する</td>
+    </tr>
+    <tr>
+      <td>${var##pattern}</td>
+      <td>varを先頭検索して pattern が一致したら、最長一致した部分を削除する</td>
+    </tr>
+    <tr>
+      <td>${var%pattern}</td>
+      <td>varを末尾検索して pattern が一致したら、最短一致した部分を削除する</td>
+    </tr>
+    <tr>
+      <td>${var%%pattern}</td>
+      <td>varを末尾検索して pattern が一致したら、最長一致した部分を削除する</td>
+    </tr>
+    <tr>
+      <td>${#var}</td>
+      <td>varの長さを返す</td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="変数のエクスポート">変数のエクスポート</h3>
+<p>変数を定義したシェルから起動したシェルや実行したコマンドから変数を参照できるようになります。
+これを環境変数と呼びます。</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">var2</span><span class="o">=</span>cdn
+</code></pre></div></div>
+
+<h3 id="特殊変数">特殊変数</h3>
+
+<p>シェルスクリプトには予約された変数が存在しており、それらは決められた機能を持っています。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>変数名</th>
+      <th>説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$0</td>
+      <td>実行してるスクリプト名</td>
+    </tr>
+    <tr>
+      <td>$$</td>
+      <td>実行してるスクリプトのプロセスID</td>
+    </tr>
+    <tr>
+      <td>$#</td>
+      <td>スクリプト実行時に渡された引数の数</td>
+    </tr>
+    <tr>
+      <td>$1 ~ $9</td>
+      <td>引数それぞれの変数</td>
+    </tr>
+    <tr>
+      <td>$*</td>
+      <td>渡された引数全部を1つの変数として扱う</td>
+    </tr>
+    <tr>
+      <td>$@</td>
+      <td>渡された引数を個別に扱う</td>
+    </tr>
+    <tr>
+      <td>$?</td>
+      <td>最後に実行したコマンドの実行結果</td>
+    </tr>
+    <tr>
+      <td>$!</td>
+      <td>最後に実行したバックグラウンドのプロセスID</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="引数">引数</h4>
+<p>コマンドラインに渡された値が格納された変数です。</p>
+
+<p>例えば<strong>test.sh</strong>の中身が下記コードだとして、
+<strong>test.sh</strong></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nv">$1</span>
+</code></pre></div></div>
+<p>次のようなコマンドを実行すると、</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>sh test.sh hoge fuga nuga
+</code></pre></div></div>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>hoge
+</code></pre></div></div>
+<p>とターミナルに出力されます。</p>
+
+<p><code class="highlighter-rouge">$1</code></p>
+
+<h4 id="直前のコマンドの終了ステータスを保持">直前のコマンドの終了ステータスを保持</h4>
+<p><code class="highlighter-rouge">$?</code></p>
+
+<h2 id="条件分岐">条件分岐</h2>
+
+<p>コマンドの結果によって次の処理を変えたい場合は、if文やswitch/case文を使います。</p>
+
+<h3 id="ifelse文">if/else文</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>条件式 <span class="p">;</span> <span class="k">then</span>
+  <span class="c"># some process</span>
+<span class="k">elif </span>条件式 <span class="p">;</span> <span class="k">then</span>
+  <span class="c"># some process</span>
+<span class="k">else</span>
+  <span class="c"># some process</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+<p>閉じスコープが <code class="highlighter-rouge">if</code> の反対になってるのが特徴です。<br />
+また <code class="highlighter-rouge">; then</code> の<code class="highlighter-rouge">;</code>はSwiftと同じ役割です。開始ブレースが頭についたほうが読みやすいようにシェルスクリプトでも<code class="highlighter-rouge">;</code>をつかって表現しています。</p>
+
+<p>これは<code class="highlighter-rouge">;</code>使わずに書くと</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>条件式
+<span class="k">then</span>
+  <span class="c"># some process</span>
+<span class="k">elif </span>条件式
+<span class="k">then</span>
+  <span class="c"># some process</span>
+<span class="k">else</span>
+  <span class="c"># some process</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+<p>となり、さっきまであったレイアウトの法則性がなくなり、視線の運び方に乱れがおきて負荷がかかります。
+つまりスラスラと読みにくいです。</p>
+
+<p>例えば</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>if 1 &gt; 0 {
+  print("True")
+}
+</code></pre></div></div>
+
+<p>を書く場合は</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> 1 <span class="nt">-gt</span> 0 <span class="o">]</span> <span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo </span>True
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>と書きます。</p>
+
+<h4 id="ifの評価式にtestやを使う理由">ifの評価式にtestや[]を使う理由</h4>
+<p>if文はlsやgrepなど<strong>コマンドの終了ステータス</strong>を評価しています。
+そして、終了ステータスは<strong>0なら真</strong>となりそれ以外なら偽となります。
+そのため <code class="highlighter-rouge">if $age &gt; 5 ; then</code> みたいには書けません。</p>
+
+<p>上記みたいな式を書きたい場合は、<code class="highlighter-rouge">test</code>コマンドを使います。
+<code class="highlighter-rouge">test</code>コマンドは受け取った引数を評価し、真なら0、偽なら1の終了ステータスを返してくれます。
+これをifの評価式に挟むことで、我々が本来そうていしているif文が使えるようになります。</p>
+
+<p><code class="highlighter-rouge">test 数値1 -eq 数値2</code></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">test </span>1 <span class="nt">-eq</span> 1 <span class="p">;</span> <span class="nb">echo</span> <span class="nv">$?</span>
+</code></pre></div></div>
+
+<p>ちなみにこれのシュガーシンタックスが[]となります。
+上のコードは次のように書けます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="o">[</span> 1 <span class="nt">-eq</span> 1 <span class="o">]</span> <span class="p">;</span> <span class="nb">echo</span> <span class="nv">$?</span>
+</code></pre></div></div>
+
+<p>しかし残念ながら、<code class="highlighter-rouge">test</code>コマンドは <strong>==,&lt;,&gt;,&lt;=,&gt;=</strong> は使えない。代わりに文字列で指定するしかない。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>引数</th>
+      <th>意味</th>
+      <th>いわゆる</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>-lt</td>
+      <td>Less than</td>
+      <td>&lt;</td>
+    </tr>
+    <tr>
+      <td>-gt</td>
+      <td>Greater than</td>
+      <td>&gt;</td>
+    </tr>
+    <tr>
+      <td>-le</td>
+      <td>Less than or equal</td>
+      <td>&lt;=</td>
+    </tr>
+    <tr>
+      <td>-ge</td>
+      <td>Greater than or equal</td>
+      <td>&gt;=</td>
+    </tr>
+    <tr>
+      <td>-eq</td>
+      <td>Equal</td>
+      <td>==</td>
+    </tr>
+    <tr>
+      <td>-ne</td>
+      <td>Not equal</td>
+      <td>!=</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>ちなみに and と or は
+and は<code class="highlighter-rouge">expression1 -a expression2</code>
+or は<code class="highlighter-rouge">expression1 -o expression2</code>
+となる。</p>
+
+<p>否定は ! となる
+<code class="highlighter-rouge">[ ! $hoge ]</code></p>
+
+<p>一般的に<code class="highlighter-rouge">if test hoge</code>と書かずに<code class="highlighter-rouge">if [[hoge]]</code>のように書かれる。 <code class="highlighter-rouge">[[]]</code>はtestの略式コマンドとなる</p>
+
+<p>また文字列の比較であれば、 <code class="highlighter-rouge">=</code> と <code class="highlighter-rouge">!=</code> が使える</p>
+
+<h4 id="testコマンドでファイルやディレクトリの存在有無が分かる">testコマンドでファイルやディレクトリの存在有無が分かる</h4>
+
+<p>ディレクトリは <code class="highlighter-rouge">-d</code> オプションを指定することで、その次に続くパスにディレクトリがあるか確認できる</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[</span> <span class="nt">-d</span> <span class="s1">'/your/directory/path'</span> <span class="o">]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"ある"</span>
+<span class="k">else
+  </span><span class="nb">echo</span> <span class="s2">"ない"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p>ファイルは <code class="highlighter-rouge">-f</code> or <code class="highlighter-rouge">-e</code> オプションを指定することで、確認できる。</p>
+
+<p>またファイルが読取可能, 書込可能, 実行可能の確認もできて、それぞれ
+<code class="highlighter-rouge">-r</code> <code class="highlighter-rouge">-w</code> <code class="highlighter-rouge">-x</code>となる。</p>
+
+<p>またファイルが空サイズかどうかの確認は <code class="highlighter-rouge">-s</code>で確認できる。</p>
+
+<h4 id="testコマンドで2つのファイルの新旧を比較できる">testコマンドで2つのファイルの新旧を比較できる</h4>
+
+<p><code class="highlighter-rouge">[ $file1 -nt $file2 ]</code> は <code class="highlighter-rouge">$file1</code> が新しいと真となる
+<code class="highlighter-rouge">[ $file1 -ot $file2 ]</code> は <code class="highlighter-rouge">$file1</code> が古いと真となる</p>
+
+<p>それぞれ
+<code class="highlighter-rouge">-nt</code> → newer than
+<code class="highlighter-rouge">-ot</code> → older than
+となる。</p>
+
+<h4 id="testコマンドで文字列の長さチェックができる">testコマンドで文字列の長さチェックができる</h4>
+
+<p><code class="highlighter-rouge">[ -z $hoge]</code> は文字列の長さが0なら真
+<code class="highlighter-rouge">[ -n $hoge]</code> は文字列の長さが1以上なら真</p>
+
+<h4 id="bashzshなどはよりを使おう">bash,zshなどは[より[[を使おう</h4>
+
+<p><code class="highlighter-rouge">[]</code>の説明をしましたが、<code class="highlighter-rouge">[[]]</code>が使える場合はそちらを使ったほうがいいです。
+<code class="highlighter-rouge">[]</code>は変数展開でワード分割やパス名展開されて想定外の判定結果となるためです。</p>
+
+<p>通常であれば↓のような結果ですが、</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ var</span><span class="o">=</span><span class="s1">'hogehoge'</span>
+<span class="nv">$ </span><span class="o">[</span> <span class="nv">$var</span> <span class="o">==</span> hogehoge <span class="o">]</span><span class="p">;</span> <span class="nb">echo</span> <span class="nv">$?</span>
+0
+</code></pre></div></div>
+
+<p>このような場合だとエラーになります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ var</span><span class="o">=</span><span class="s1">'hoge hoge'</span>
+<span class="nv">$ </span><span class="o">[</span> <span class="nv">$var</span> <span class="o">==</span> hogehoge <span class="o">]</span><span class="p">;</span> <span class="nb">echo</span> <span class="nv">$?</span>
+too many arguments
+2
+</code></pre></div></div>
+
+<p>詳しくはこちらの記事が参考になります。
+<a href="https://fumiyas.github.io/2013/12/15/test.sh-advent-calendar.html">test と [ と [[ コマンドの違い - 拡張 POSIX シェルスクリプト Advent Calendar 2013 - ダメ出し Blog</a></p>
+
+<h3 id="switchcase文">switch/case文</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">case</span> 値 <span class="k">in
+  </span>ケース1 <span class="p">)</span> 処理 <span class="p">;;</span>
+  ケース2 <span class="p">)</span> 処理 <span class="p">;;</span>
+<span class="k">esac</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">;;</code> セミコロン二つはコマンドの終わりを知らせます。</p>
+
+<h4 id="評価値が文字列の場合は正規表現が使える">評価値が文字列の場合は正規表現が使える</h4>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">branch</span><span class="o">=</span>
+<span class="k">case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in</span>
+  <span class="nt">-b</span> <span class="p">|</span> <span class="nt">--branch</span><span class="p">)</span>
+    <span class="nb">echo</span> <span class="nv">$2</span>
+    <span class="nv">branch</span><span class="o">=</span><span class="nv">$2</span>
+    <span class="p">;;</span>
+<span class="k">esac</span>
+</code></pre></div></div>
+
+<h3 id="正規表現マッチング">正規表現マッチング</h3>
+
+<p>変数varに挨拶が含まれてるか調べる</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">var</span><span class="o">=</span><span class="s1">'hello, world'</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$var</span> <span class="o">=</span>~ ^.<span class="k">*</span>hello.<span class="k">*</span><span class="nv">$ </span><span class="o">]]</span> <span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s1">'挨拶'</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">=~</code>を使うことで正規表現判定となります。</p>
+
+<h2 id="ループ">ループ</h2>
+
+<h3 id="for文">for文</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">for </span>var <span class="k">in </span>one two three<span class="p">;</span> <span class="k">do
+  </span><span class="nb">echo</span> <span class="nv">$var</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<h3 id="while文">while文</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span>評価式<span class="p">;</span> <span class="k">do
+  </span><span class="nb">break
+</span><span class="k">done</span>
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">read </span>var<span class="p">;</span> <span class="k">do
+  </span><span class="nb">echo</span> <span class="nv">$var</span>
+<span class="k">done</span> &lt; ~/Downloads/hoge.txt
+</code></pre></div></div>
+
+<h2 id="関数">関数</h2>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>my_func<span class="o">()</span> <span class="o">{</span>
+  <span class="nb">echo </span>hello_world
+<span class="o">}</span>
+</code></pre></div></div>
+
+<h3 id="引数あり関数">引数あり関数</h3>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>hello<span class="o">()</span> <span class="o">{</span>
+  <span class="nb">echo</span> <span class="s2">"hello, </span><span class="nv">$1</span><span class="s2">"</span>
+<span class="o">}</span>
+hello <span class="s2">"hoge"</span>
+</code></pre></div></div>
+
+<h2 id="特殊引数">特殊引数</h2>
+<h3 id="ダブルダッシュ">ダブル・ダッシュ</h3>
+<p>ハイフン二つ(–)のことをダブル・ダッシュ(Double Dash)と呼ばれており、これはコマンドフラグの終わりを示す記号となる。<br />
+オプションのスキャン処理を明示的に終了させるときに使う。</p>
+
+<h2 id="展開">展開</h2>
+<p><code class="highlighter-rouge">$(コマンド)</code> でコマンド結果を出力します。<br />
+同様の機能にバッククォートで囲む <code class="highlighter-rouge">コマンド</code> もあります。<br />
+ちなみにバッククォートは入れ子にできません。</p>
+
+<h2 id="正常終了と異常終了">正常終了と異常終了</h2>
+<p><code class="highlighter-rouge">exit 終了ステータス</code></p>
+
+<p>正常： <code class="highlighter-rouge">exit 0</code>
+以上： <code class="highlighter-rouge">exit 1</code>など0以外</p>
+
+<h2 id="echo-で色">echo で色</h2>
+<p>16進数</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="nt">-e</span> <span class="s2">"</span><span class="se">\0</span><span class="s2">33[1;31m This is red text </span><span class="se">\0</span><span class="s2">33[0m"</span>
+</code></pre></div></div>
+
+<h2 id="応用">応用</h2>
+
+<h3 id="bash限定-local-の意味">bash限定: local の意味</h3>
+<p>シェルスクリプトの変数はデフォルトはグローバル変数です。<br />
+グローバル変数は、関数内で変数が使われていても、外でその変数にアクセスできるなど不具合の巣窟です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>hoge<span class="o">()</span> <span class="o">{</span>
+  <span class="nv">var</span><span class="o">=</span><span class="s2">"test"</span>
+  <span class="nb">echo</span> <span class="nv">$var</span>
+<span class="o">}</span>
+hoge
+<span class="nb">echo</span> <span class="nv">$var</span> <span class="c"># "test" と出力される</span>
+</code></pre></div></div>
+
+<p>関数で使った変数は関数から出たら消えてほしい場合には local を使います。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">function </span>hoge<span class="o">()</span> <span class="o">{</span>
+  <span class="nb">local </span><span class="nv">var</span><span class="o">=</span><span class="s2">"test"</span>
+  <span class="nb">echo</span> <span class="nv">$var</span>
+<span class="o">}</span>
+hoge
+<span class="nb">echo</span> <span class="nv">$var</span> <span class="c"># 空出力</span>
+</code></pre></div></div>
+
+<p>forなど内部で変数が使われるような場合は、事前に使う変数をlocal変数宣言しておきます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">local </span>var
+<span class="k">for </span>var <span class="k">in</span> <span class="sb">`</span><span class="nb">echo </span>test1 test2 test3<span class="sb">`</span> <span class="p">;</span> <span class="k">do
+  </span><span class="nb">echo</span> <span class="nv">$var</span>
+<span class="k">done
+</span><span class="nb">echo</span> <span class="nv">$var</span> <span class="c"># 空出力</span>
+</code></pre></div></div>
+
+<h2 id="まとめ">まとめ</h2>
+<p>一度に全部を覚える必要はないですが、シェルやシェルスクリプトを使いこなすことで、iOS開発効率やAPIを効率良く検証したりいいことばかりです。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
