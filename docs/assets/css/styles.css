@@ -1,7 +1,6 @@
-body, h1, h2, .post-content h3, .post-content h4, h3, h4, h5, p {
+body, h1, .post-content h2, .post-content h3, .post-content h4, h2, h3, h4, h5, p {
   color: #464646;
-  font-family: monospace;
-  line-height: 1.6; }
+  font-family: 'Hiragino Kaku Gothic Pro', monospace; }
 
 .secondary-text {
   color: #868686; }
@@ -11,9 +10,18 @@ table, td, th {
   border: 1px solid #444444;
   padding: 2px; }
 
-.highlight {
+.highlighter-rouge pre.highlight {
+  letter-spacing: 0.01em;
+  font-size: 0.8em;
+  line-height: 1.6;
   padding: 4px;
-  margin-bottom: 16px; }
+  margin-bottom: 0;
+  background-color: rgba(27, 31, 35, 0); }
+
+code.highlighter-rouge {
+  background-color: rgba(27, 31, 35, 0.07);
+  padding: 0.1em;
+  color: #464646; }
 
 header .title {
   font-size: 32px;
@@ -50,7 +58,8 @@ footer {
   padding-bottom: 16px; }
 
 .tag-cloud {
-  padding-bottom: 16px; }
+  padding-bottom: 16px;
+  font-family: monospace; }
   .tag-cloud .tag-cloud-title {
     border-bottom-color: black;
     border-bottom-style: solid;
@@ -68,15 +77,16 @@ footer {
   max-width: 300px !important;
   width: 200px !important; }
 
-.related-posts .related-posts-title {
-  border-bottom-color: black;
-  border-bottom-style: solid;
-  border-bottom-width: 1px;
-  margin-bottom: 16px; }
-  .related-posts .related-posts-title h2, .related-posts .related-posts-title .post-content h3, .post-content .related-posts .related-posts-title h3, .related-posts .related-posts-title .post-content h4, .post-content .related-posts .related-posts-title h4 {
-    font-size: 1.25rem; }
-.related-posts .related-posts-body {
-  font-size: 0.8rem; }
+.related-posts {
+  padding-left: 0;
+  list-style-type: none; }
+  .related-posts .related-posts-title {
+    border-bottom-color: black;
+    border-bottom-style: solid;
+    border-bottom-width: 1px;
+    margin-bottom: 16px; }
+  .related-posts .related-posts-body h3 {
+    font-size: 1.1em; }
 
 .global-nav-current {
   color: green; }
@@ -86,16 +96,26 @@ footer {
   color: black; }
 
 .post-content {
-  padding-bottom: 64px; }
-  .post-content h2, .post-content h3, .post-content h4 {
-    padding-left: 16px;
-    border-left-color: #444444;
-    border-left-style: solid;
-    border-left-width: 1px;
+  padding-bottom: 64px;
+  line-height: 2.0;
+  letter-spacing: 0.05em;
+  font-size: 16px; }
+  .post-content p {
+    margin-bottom: 1.3em; }
+  .post-content h1, .post-content h2, .post-content h3, .post-content h4 {
     font-size: 1.7rem;
     font-weight: bold;
     margin-bottom: 16px;
     margin-top: 32px; }
+  .post-content h2 {
+    font-size: 1.7rem;
+    font-weight: bold;
+    margin-bottom: 16px;
+    margin-top: 32px;
+    padding-left: 16px;
+    border-left-color: #444444;
+    border-left-style: solid;
+    border-left-width: 1px; }
   .post-content h3 {
     font-size: 1.5rem;
     font-weight: normal;
@@ -106,11 +126,23 @@ footer {
     font-weight: normal;
     border-left: none;
     padding-left: 0; }
+  .post-content blockquote {
+    background-color: #f4f4f4;
+    margin-left: 16px;
+    padding-left: 16px;
+    padding-top: 4px;
+    border-left-color: #444444;
+    border-left-style: solid;
+    border-left-width: 1px; }
+    .post-content blockquote p {
+      color: #868686; }
   .post-content .post-content-toc {
     background-color: #f2f2f2;
     padding-top: 16px;
     padding-bottom: 16px;
-    margin-bottom: 32px; }
+    margin-bottom: 32px;
+    line-height: 1.6;
+    font-size: 0.85em; }
     .post-content .post-content-toc p {
       margin-left: 16px; }
     .post-content .post-content-toc ul {
@@ -146,13 +178,13 @@ footer {
       color: #868686;
       font-size: 0.5rem; }
 
-.body-summary h1 {
+.body-summary h1, .body-summary .post-content h2, .post-content .body-summary h2, .body-summary .post-content h3, .post-content .body-summary h3, .body-summary .post-content h4, .post-content .body-summary h4 {
   font-size: 2rem; }
 
 .thumbnail {
   margin-bottom: 32px; }
 
-.caption h2, .caption .post-content h3, .post-content .caption h3, .caption .post-content h4, .post-content .caption h4 {
+.caption h2 {
   font-size: 1.5rem; }
 .caption ul li a {
   color: #007bff; }
