@@ -5,11 +5,8 @@ tags: ios uitableview uitableviewcell
 image:
   path: /assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png
 ---
-
-セルを右や左にスワイプすることで横からアクションメニューを表示したり、ソートや削除するさいに使います。
-メソッド一覧は量が多いので省きます。
-
-実際にどういったことが出来るのか詳細はこちらの記事をどうぞ。
+UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。  
+実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。
 
 ## 編集モードとは
 `UITableView.isEditing` を `true` にすると編集モードに切り替わります。
