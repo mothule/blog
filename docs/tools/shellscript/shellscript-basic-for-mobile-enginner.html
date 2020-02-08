@@ -165,6 +165,8 @@
       <li><a href="#sed-文字列置換">sed: 文字列置換</a></li>
       <li><a href="#grep-テキスト検索">grep: テキスト検索</a></li>
       <li><a href="#ag-grep高速版">ag: grep高速版</a></li>
+      <li><a href="#pbcopy-クリップボードにコピー">pbcopy: クリップボードにコピー</a></li>
+      <li><a href="#pbpaste-クリップボードからペースト">pbpaste: クリップボードからペースト</a></li>
     </ul>
   </li>
   <li><a href="#入出力リダイレクト">入出力リダイレクト</a>
@@ -313,6 +315,8 @@ echo などがそれにあたります。</p>
   <li>sed: 文字列置換</li>
   <li>grep: テキスト検索</li>
   <li>ag: grep高速版</li>
+  <li>pbcopy: クリップボードにコピー</li>
+  <li>pbpaste: クリップボードからペースト</li>
 </ul>
 
 <h3 id="echo-画面に文字列などを出力する">echo: 画面に文字列などを出力する</h3>
@@ -396,6 +400,29 @@ grepよりかなり高速です。</p>
 <p>とするだけで実行ディレクトリから子ディレクトリ含め全部のファイルに対し、ファイル内検索を実行します。<br />
 アプリ上で指定文言が使われているか検索する場合、Xcode使わずこれを使うと早いです。<br />
 Xcodeでは検索に引っかからない場合もありますし。</p>
+
+<h3 id="pbcopy-クリップボードにコピー">pbcopy: クリップボードにコピー</h3>
+
+<p>出力結果をクリップボードにコピーします。<br />
+結果をslackなどに貼りたいなど別の場所に貼りたい場合に便利です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>tail <span class="nt">-n</span> 2 Gemfile.lock | pbcopy
+</code></pre></div></div>
+<p>↓がコピーされます。</p>
+
+<blockquote>
+  <p>BUNDLED WITH<br />
+  1.17.2</p>
+</blockquote>
+
+<h3 id="pbpaste-クリップボードからペースト">pbpaste: クリップボードからペースト</h3>
+
+<p><code class="highlighter-rouge">pbcopy</code> とは逆の貼り付けです。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"hoge"</span> | pbcopy
+<span class="nv">$ </span>pbpaste
+hoge
+</code></pre></div></div>
 
 <h2 id="入出力リダイレクト">入出力リダイレクト</h2>
 
@@ -1063,6 +1090,15 @@ hoge
             
             
             
+
+            
+                
+                
+                
+                    <li><h3><a href="/ruby/ruby-script-basic">iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</a></h3></li>
+                    
+                    
+                
 
             
                 
