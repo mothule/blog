@@ -1,4 +1,150 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-10T02:08:48+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CX/UX/UIデザインの価値を定量化するために私がした施策</title><link href="https://blog.mothule.com/notebook/service-design/convert-design-to-data" rel="alternate" type="text/html" title="CX/UX/UIデザインの価値を定量化するために私がした施策" /><published>2020-02-09T00:00:00+09:00</published><updated>2020-02-09T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/service-design/convert-design-to-data</id><content type="html" xml:base="https://blog.mothule.com/notebook/service-design/convert-design-to-data">&lt;p&gt;この記事はデザイン価値の定量化で、チームをユーザーファーストな文化にしたくて私が進めた話です。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-02-10T02:19:01+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOS開発におけるライブラリの選定戦略について考えてみた</title><link href="https://blog.mothule.com/ios/ios-how-to-find-good-lib" rel="alternate" type="text/html" title="iOS開発におけるライブラリの選定戦略について考えてみた" /><published>2020-02-10T00:00:00+09:00</published><updated>2020-02-10T00:00:00+09:00</updated><id>https://blog.mothule.com/ios/ios-how-to-find-good-lib</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-how-to-find-good-lib">&lt;p&gt;ライブラリ選定に悩んでますか？私も悩みます。便利なら何でも入れてますか？それなら怖いですね。&lt;br /&gt;
+ネットでは執筆当時のトレンドに合わせたライブラリセットを紹介してる記事もありますね。&lt;br /&gt;
+慣れない人は鵜呑みに取り入れて目の前の問題を解決し自信を持っていますが、 &lt;strong&gt;事業成長に合わせたライブラリを使うメリット・デメリットを考慮していますか？&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;去年年末にこんなツイートを呟きました。&lt;/p&gt;
+
+&lt;div class=&quot;jekyll-twitter-plugin&quot;&gt;&lt;blockquote class=&quot;twitter-tweet&quot;&gt;&lt;p lang=&quot;ja&quot; dir=&quot;ltr&quot;&gt;AFNetworkingは潮時&lt;br /&gt;UIWebViewが非推奨になってからWKWebViewに差し替えるPRが牛歩過ぎて業務スピードに全く追いついけていない。&lt;br /&gt;ObjCはSwiftのバージョンによる破壊変更に依存しないため安定性維持メリットがあったが、今回のAPI依存だと安定性が災いして更新速度が牛歩。&lt;a href=&quot;https://t.co/uclNZQ8WC3&quot;&gt;https://t.co/uclNZQ8WC3&lt;/a&gt;&lt;/p&gt;&amp;mdash; もちゅる@フルリモートパパエンジニア (@mothule) &lt;a href=&quot;https://twitter.com/mothule/status/1199503382366412800?ref_src=twsrc%5Etfw&quot;&gt;November 27, 2019&lt;/a&gt;&lt;/blockquote&gt;
+&lt;script async=&quot;&quot; src=&quot;https://platform.twitter.com/widgets.js&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
+&lt;/div&gt;
+
+&lt;p&gt;ちょっとこのこともあるし、ライブラリ最高文化な風潮がiOSにはあるので、それって他プラットフォームのメリットを鵜呑みにしてない？って思うこともあり考えてみました。&lt;/p&gt;
+
+&lt;p&gt;近年のアプリ開発においてOSSの利用は必要不可欠です。&lt;br /&gt;
+でもリスク分かって取り入れてるのかな？って疑問に抱く記事を見かけるときもあります。&lt;br /&gt;
+ライブラリを使う上でどう付き合っていくべきなのか？ってのを少し考えてみました。&lt;/p&gt;
+
+&lt;p&gt;私個人の経験のもと判断した物なので、これが全ての答えとは思わないでください。&lt;br /&gt;
+&lt;strong&gt;大事なのはリスクコントロールです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;swift製とobjective-c製のライブラリどっちが良いか&quot;&gt;Swift製とObjective-C製のライブラリどっちが良いか？&lt;/h2&gt;
+
+&lt;p&gt;さきのAFNetwrokingの件も踏まえて私は次のような判断です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Objective-Cは普段は安定しているが変更時の &lt;strong&gt;リスクが大きい&lt;/strong&gt;&lt;/li&gt;
+  &lt;li&gt;Swiftは新しいライブラリやSwiftyだが変更の &lt;strong&gt;リスクが多い&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;objective-cは普段は安定しているが変更時のリスクが大きい&quot;&gt;Objective-Cは普段は安定しているが変更時のリスクが大きい&lt;/h3&gt;
+&lt;p&gt;言語として落ち着いており今後目新しい追加や変更はないものと見てます。&lt;br /&gt;
+言語としてどうなのか？疑問はありますが、良い意味で変わらないので、その上で作られたプログラムは言語都合で変更を余儀なくされるリスクは低いです。&lt;/p&gt;
+
+&lt;p&gt;しかし、悪い意味で言語として衰退しており、その上で作られたプログラムをメンテナンスする人も減ることで、API仕様変更で対応が必要になっても、対応する人がいないリスクもあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;swiftは新しいライブラリやswiftyだが変更のリスクが多い&quot;&gt;Swiftは新しいライブラリやSwiftyだが変更のリスクが多い&lt;/h3&gt;
+&lt;p&gt;SwiftのライブラリはSwiftで書かれているためSwiftyな使い方が出来るので、使う側からしたら使い心地は良いものです。&lt;/p&gt;
+
+&lt;p&gt;しかし言語としてまだ未熟で、言語仕様の変更に影響を受けやすいのでバージョンの更新は多くなります。&lt;br /&gt;
+またそのライブラリ自体がライバルのライブラリと負けて衰退してメンテナンスする人が少ないと、ライブラリの撤退が早まります。&lt;/p&gt;
+
+&lt;h2 id=&quot;独断と偏見で領域別ライブラリの見方&quot;&gt;独断と偏見で領域別ライブラリの見方&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;UI系のライブラリは変更リスクが一番大きい&lt;/li&gt;
+  &lt;li&gt;通信系はセキュリティと新プロトコル以外は安定&lt;/li&gt;
+  &lt;li&gt;永続化系は今後は大きな変更なく落ち着いていく&lt;/li&gt;
+  &lt;li&gt;テスト系は改善傾向&lt;/li&gt;
+  &lt;li&gt;アーキテクチャ系はハイリスクハイリターン&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ui系のライブラリは変更リスクが一番大きい&quot;&gt;UI系のライブラリは変更リスクが一番大きい&lt;/h3&gt;
+&lt;p&gt;iPhoneの強みはデザインです。&lt;br /&gt;
+新しいデザインを取り込みます。&lt;br /&gt;
+そんなコンセプト方針に一番影響受けるのはUIです。&lt;br /&gt;
+一昔前に流行ったデザインも1年後には廃れてるのが日常茶飯事です。&lt;/p&gt;
+
+&lt;p&gt;独立性の高いUIライブラリの場合は寿命が長いですが、ひとまとまりのUIライブラリはそのデザイン自体が廃れたら終わりなので寿命は短命です。ただ入れるだけで簡単に画面が出来上がるのでスタートダッシュには向いてます。&lt;/p&gt;
+
+&lt;h3 id=&quot;通信系はセキュリティと新プロトコル以外は安定&quot;&gt;通信系はセキュリティと新プロトコル以外は安定&lt;/h3&gt;
+
+&lt;p&gt;通信は新しい通信方式が出たときにライブラリが旧式しか対応していないとリジェクトリスクが出るので変更は必要となります。&lt;br /&gt;
+またAppleは個人情報大事マンになったのでセキュリティに力を入れるのは明白です。&lt;/p&gt;
+
+&lt;h3 id=&quot;永続化系は今後は大きな変更なく落ち着いていく&quot;&gt;永続化系は今後は大きな変更なく落ち着いていく&lt;/h3&gt;
+
+&lt;p&gt;近年はデータはクラウド上やサーバー管理が主流なので、少し前に流行ったRealmあたりから落ち着いてます。&lt;br /&gt;
+大きな変更は少ないとは思いますが、そもそもニーズがなさそうな気もします。&lt;/p&gt;
+
+&lt;h3 id=&quot;テスト系は改善傾向&quot;&gt;テスト系は改善傾向&lt;/h3&gt;
+
+&lt;p&gt;Objective-CではSwizzlingでモックをラクラク作れてたのに、&lt;br /&gt;
+Swiftはマニュアルモッキングというprintデバッグ並の最悪スタートだったのもあり、これ以上不便になることはないかなと思ってます。&lt;br /&gt;
+少し前あたりからプロダクトコードを分析してテスト用モッキングコードを自動生成するライブラリも出てますし、&lt;br /&gt;
+後はiOSがテスト環境ならprivateにもアクセス可能とかモック可能とかfinalでも継承可能とか自由度が効く改善をしてくれた場合の便利に向かう変更がありそうですね。&lt;/p&gt;
+
+&lt;h3 id=&quot;アーキテクチャ系はハイリスクハイリターン&quot;&gt;アーキテクチャ系はハイリスクハイリターン&lt;/h3&gt;
+&lt;p&gt;もともとはMVCでしたが、MVPのあとにMVVMが出てきました。&lt;br /&gt;
+それに加えてClean ArchitectureやVIPERアーキテクチャも出てきました。&lt;br /&gt;
+より上位な概念としてDDDのプラクティスも介入してきました。&lt;/p&gt;
+
+&lt;p&gt;これらアーキテクチャの共通してるのは関心事の分離による依存排除です。&lt;br /&gt;
+しかしSwiftではそれを実現するにはクラスやファイルを分けるしか方法がないため、
+自然とファイルやクラス数は増えて、単純な変更にもまどろっこしい手続きとも呼べる変更作業が発生します。
+これらを補足するライブラリや外部ツールが登場しています。&lt;/p&gt;
+
+&lt;p&gt;これらは全部根幹または根幹をサポートするライブラリなので、もしそのアーキテクチャが廃れてしまうと差し替えコストは甚大となります。選定には慎重に。&lt;/p&gt;
+
+&lt;h3 id=&quot;脱線-決済会社や広告会社などのsdkにobjective-cが多い理由&quot;&gt;脱線: 決済会社や広告会社などのSDKにObjective-Cが多い理由&lt;/h3&gt;
+&lt;p&gt;決済会社や広告会社などが提供しているSDKの場合は、iOSはObjective-Cが多いです。&lt;br /&gt;
+明確な理由は会社それぞれですが、理由のいくつかとしては事業としてより多くの会社で使ってもらうには、両言語で使えるObjCが適しているからです。&lt;br /&gt;
+またSwiftのように言語自体がまだ未成熟だと言語仕様が変更されるとSDKの更新も必要になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;ライブラリと事業規模の関係性&quot;&gt;ライブラリと事業規模の関係性&lt;/h2&gt;
+&lt;p&gt;「iOS開発はこのライブラリセットで最強」は危険な思想です。&lt;br /&gt;
+前述したようにリスクを理解し、リスクに対する対策や選定をしないと痛い目を見ます。&lt;br /&gt;
+ここらへんはロングメンテナンスを経験すると痛感します。&lt;br /&gt;
+特に悪質な業務委託者などで時間給ではなく単価給でスピード重視で突発的に作られたりすると、負債が未来に後回しされます。&lt;/p&gt;
+
+&lt;h3 id=&quot;導入時はiosチーム人数がネックとなる&quot;&gt;導入時はiOSチーム人数がネックとなる&lt;/h3&gt;
+&lt;p&gt;ライブラリを導入する場合、導入障壁は影響範囲 x 人数に比例します。&lt;br /&gt;
+人数が多いとそのライブラリへの理解や利用方法の把握が必要になります。&lt;br /&gt;
+またチームによっては、対象ライブラリへの反対が一人でもいると、やはりその人へ説明する必要が出てくるでしょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;対応や退却時はiosチーム人数がキーとなる&quot;&gt;対応や退却時はiOSチーム人数がキーとなる&lt;/h3&gt;
+&lt;p&gt;反対にライブラリの更新や別ライブラリへの差し替えや退却は、人数が多いほうが作業を分散できるので、楽になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;ライブラリは機材のレンタルだと捉える&quot;&gt;ライブラリは機材のレンタルだと捉える&lt;/h3&gt;
+&lt;p&gt;事業スタート時期は負債をして利益を得ることを優先します。&lt;br /&gt;
+利益が獲得し安定し始めた頃に負債を少しずつ返すことでフットワークを軽くし次を事業を拡大します。&lt;/p&gt;
+
+&lt;p&gt;企業みたいな話ですが、ライブラリの話です。&lt;/p&gt;
+
+&lt;h3 id=&quot;ライブラリは時限爆弾式ブースター&quot;&gt;ライブラリは時限爆弾式ブースター&lt;/h3&gt;
+&lt;p&gt;iOSのライブラリは宝くじのようにAPIや言語仕様の変更にぶつかります。&lt;/p&gt;
+
+&lt;p&gt;ライブラリを使うことで実装をショートカットしたり実装速度をあげたりできますが、仕様変更が起きることでライブラリの対応をしないといけません。自分らで対応可能な規模や難易度であれば自分らでfork&amp;amp;pull requestsで直すこともできますが、全てのエンジニアがそれを出来るとは限りません。&lt;/p&gt;
+
+&lt;p&gt;いつコストが炎上するか分からない時限爆弾のような存在です。&lt;/p&gt;
+
+&lt;h3 id=&quot;乗るタイミングより下りるタイミングが重要&quot;&gt;乗るタイミングより下りるタイミングが重要&lt;/h3&gt;
+&lt;p&gt;ライブラリはずっと使い続けるものもあれば、一時的に加速するためのライブラリもあります。&lt;/p&gt;
+
+&lt;p&gt;何でもかんでもライブラリで解決すると、一度に炎上したときに手を付けれなくなります。&lt;br /&gt;
+自前で簡易に用意していれば、簡単に解決できることでもライブラリとなると汎用性が高いことで構造が複雑になっていたり
+Pull requests を投げてもなかなか承認されないという問題リスクもあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;ライブラリはスターよりもアクティビティを見る&quot;&gt;ライブラリはスターよりもアクティビティを見る&lt;/h2&gt;
+&lt;p&gt;ライブラリを選ぶ場合はスターを基準にすると時として痛い目をみます。&lt;br /&gt;
+スターは多くてもそれは過去のスター蓄積であって、今のスターとは限りません。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;コミットの時間&lt;/li&gt;
+  &lt;li&gt;コントリビューターの数&lt;/li&gt;
+  &lt;li&gt;Open Issueの数&lt;/li&gt;
+  &lt;li&gt;Closed Issueの更新日&lt;/li&gt;
+  &lt;li&gt;Pull requestsの数と提案日&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これらを見て活発度合いを確認しましょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ライブラリ選定は事業規模を考慮する&lt;/li&gt;
+  &lt;li&gt;ライブラリ選定は領域毎に変更リスクを理解する&lt;/li&gt;
+  &lt;li&gt;ライブラリ選定はスターではなくアクティビティを見る&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="notebook" /><category term="ios" /><category term="program-design" /><summary type="html">ライブラリ選定に悩んでますか？私も悩みます。便利なら何でも入れてますか？それなら怖いですね。 ネットでは執筆当時のトレンドに合わせたライブラリセットを紹介してる記事もありますね。 慣れない人は鵜呑みに取り入れて目の前の問題を解決し自信を持っていますが、 事業成長に合わせたライブラリを使うメリット・デメリットを考慮していますか？</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-10-ios-how-to-find-good-lib.png" /></entry><entry><title type="html">CX/UX/UIデザインの価値を定量化するために私がした施策</title><link href="https://blog.mothule.com/notebook/service-design/convert-design-to-data" rel="alternate" type="text/html" title="CX/UX/UIデザインの価値を定量化するために私がした施策" /><published>2020-02-09T00:00:00+09:00</published><updated>2020-02-09T00:00:00+09:00</updated><id>https://blog.mothule.com/notebook/service-design/convert-design-to-data</id><content type="html" xml:base="https://blog.mothule.com/notebook/service-design/convert-design-to-data">&lt;p&gt;この記事はデザイン価値の定量化で、チームをユーザーファーストな文化にしたくて私が進めた話です。&lt;br /&gt;
 UXデザイナーだけどデザイン変更の説得に悩んでる人や、どうすればUXが重要だと理解してもらえるのか考えてる方の参考になればなと願います。&lt;/p&gt;
 
 &lt;h2 id=&quot;uxデザインを取り巻く課題&quot;&gt;UXデザインを取り巻く課題&lt;/h2&gt;
@@ -1521,156 +1667,4 @@ LINEの既読のように上司が見たと分かるのであればまだ分か�
 上司からのレポートライン同様、上司への報告など上司が気づく仕組みづくりが必要です。&lt;/p&gt;
 
 &lt;p&gt;また本当の雑談の場というのは必要です。それが定例となると無駄な会議体となりなくなることは明白です。
-なので通常のslack上で互いに話しやすい支えやすい信頼関係は複数人必要です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><summary type="html">フルリモートワークの会社で働いて4年目間近、テキストコミュニケーションの難しさや情報の集約性といった課題はありつつも、メリットを見れば魅力的な働き方です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-01-11-pitfall-of-remote-work.jpg" /></entry><entry><title type="html">GitHubのConfirm your account recovery settingsについて</title><link href="https://blog.mothule.com/tools/github/tools-github-confirm-your-account-recovery-settings" rel="alternate" type="text/html" title="GitHubのConfirm your account recovery settingsについて" /><published>2020-01-05T00:00:00+09:00</published><updated>2020-01-05T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/github/tools-github-confirm-your-account-recovery-settings</id><content type="html" xml:base="https://blog.mothule.com/tools/github/tools-github-confirm-your-account-recovery-settings">&lt;p&gt;近年セキュリティを個々が意識し堅牢にすることの重要性が以前より遥かに増しています。&lt;br /&gt;
-特にリモートワークなどでは会社情報を含むPCやスマホを使うことが多いので、個人に求められるセキュリティリテラシーはとても高いものとなっています。&lt;br /&gt;
-実際に被害に合う確率が天文学な数字であっても、場所と状態さえ満たしてしまえばその確率は宝くじで1等2等に当選することよりも高くなります。&lt;/p&gt;
-
-&lt;p&gt;加えて近年のサービスではアクセストークンを第三者へ渡すことで外部からサービスアクセスができる連携機能も重要なエコシステムとなっています。&lt;br /&gt;
-しかしリスクとしては個人とサービスだけでなくその第三者がセキュリティ意識が低いことで漏洩リスクが高まります。&lt;/p&gt;
-
-&lt;p&gt;今回はGitHubでよく出てくる「Confirm your account recovery settings」画面について1つずつ確認したのでそれを説明します。&lt;/p&gt;
-
-&lt;h2 id=&quot;confirm-your-account-recovery-settings-画面とは&quot;&gt;Confirm your account recovery settings 画面とは？&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-01-05-tools-github-confirm-your-account-recovery-settings/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-01-05-tools-github-confirm-your-account-recovery-settings/1.png&quot; width=&quot;50%&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;この画面のことです。GitHubにアクセスしたとき一定の期間毎に表示されるようで、&lt;br /&gt;
-見かける方はセキュリティ対策が不十分である可能性があります。&lt;/p&gt;
-
-&lt;h2 id=&quot;two-factor-methods-とは&quot;&gt;Two-factor methods とは？&lt;/h2&gt;
-
-&lt;p&gt;Two-factorとは2要素認証のことで通称2FA(Two-factor Authentication)と呼ばれています。&lt;br /&gt;
-自身の知っている知識情報だけでなく、自身の所有物を使ったり、自分自身の身体的特徴などを2つの認証要素で認証することを言います。&lt;/p&gt;
-
-&lt;p&gt;GitHubではAuthenticator app(認証アプリ)、Security keys(物理キー)、SMS number(スマホのSMSメール)の3種類の手段が用意されています。
-注意点としては2FA後にブラウザを許可し2FAをスキップする設定もありますので、許可すると所有認証となる物だけでなくでなくPCをロストするとリスクが拡大します。&lt;/p&gt;
-
-&lt;h3 id=&quot;authenticator-app&quot;&gt;Authenticator app&lt;/h3&gt;
-
-&lt;p&gt;スマホやPCアプリによる認証コードを出してくれるアプリです。&lt;br /&gt;
-メール認証後にこのアプリを使って表示されている認証コードを使って認証します。
-認証コードは一定時間毎に入れ替わります。&lt;/p&gt;
-
-&lt;p&gt;これにより悪意ある第三者が自分のメール認証のメアドとパスワードを入手しても、私が所有しているスマホを入手しない限りログインできません。&lt;/p&gt;
-
-&lt;h4 id=&quot;対応アプリは色々ある&quot;&gt;対応アプリは色々ある&lt;/h4&gt;
-
-&lt;p&gt;私はAuthyというアプリを使ってます。
-MacではAuthy DesktopというPCアプリもあり数年使っていますが今の所そこまで不便に感じずに使ってます。&lt;/p&gt;
-
-&lt;p&gt;たまにアプリを立ち上げるとAuthy自体に設定したパスワードを求められるので、少しだけ2段階認証となっております。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;a href=&quot;https://apps.apple.com/jp/app/authy/id494168017&quot;&gt;Authy - App Store&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;a href=&quot;https://play.google.com/store/apps/details?id=com.authy.authy&amp;amp;hl=ja&quot;&gt;Authy - Google Play&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;security-keys&quot;&gt;Security keys&lt;/h3&gt;
-
-&lt;p&gt;ハードウェアのセキュリティキーのことで、実在する物理のキーになります。
-有名な物だとYubiKeyなどでしょうか。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.amazon.co.jp/Yubico-Y-072-YubiKey-NEO/dp/B00LX8KZZ8/ref=as_li_ss_il?ie=UTF8&amp;amp;linkCode=li3&amp;amp;tag=mothule05-22&amp;amp;linkId=21079b265ff170d8eb1d0caabfcdd878&amp;amp;language=ja_JP&quot; target=&quot;_blank&quot;&gt;&lt;img border=&quot;0&quot; src=&quot;//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;amp;ASIN=B00LX8KZZ8&amp;amp;Format=_SL250_&amp;amp;ID=AsinImage&amp;amp;MarketPlace=JP&amp;amp;ServiceVersion=20070822&amp;amp;WS=1&amp;amp;tag=mothule05-22&amp;amp;language=ja_JP&quot; /&gt;&lt;/a&gt;&lt;img src=&quot;https://ir-jp.amazon-adsystem.com/e/ir?t=mothule05-22&amp;amp;language=ja_JP&amp;amp;l=li3&amp;amp;o=9&amp;amp;a=B00LX8KZZ8&quot; width=&quot;1&quot; height=&quot;1&quot; border=&quot;0&quot; alt=&quot;YubiKey&quot; style=&quot;border:none !important; margin:0px !important;&quot; /&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://www.amazon.co.jp/Yubico-Y-072-YubiKey-NEO/dp/B00LX8KZZ8/ref=as_li_ss_tl?ie=UTF8&amp;amp;linkCode=ll1&amp;amp;tag=mothule05-22&amp;amp;linkId=b95d217be6ebdea044d92e29a3d8d2ba&amp;amp;language=ja_JP&quot;&gt;Amazonで開く&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;これも前述したAuthenticator app同様に所有認証となり、悪意ある第三者がメール認証のメアドとパスワードを得ても、このセキュリティキーで認証しなければログインできません。&lt;/p&gt;
-
-&lt;h3 id=&quot;sms-number&quot;&gt;SMS number&lt;/h3&gt;
-
-&lt;p&gt;SMS番号とは電話番号へのSMSメッセージを使って認証コードを送ってくれる方法で、得た認証コードを入力することで認証します。&lt;br /&gt;
-これも他同様に電話番号が紐付いた端末を保持しているということで所有認証の部類に入ります。&lt;/p&gt;
-
-&lt;h2 id=&quot;recovery-options-とは&quot;&gt;Recovery options とは？&lt;/h2&gt;
-
-&lt;p&gt;Recovery options とは万が一上記の認証手段を失ってしまった場合に、回復する手段のことをいいます。&lt;/p&gt;
-
-&lt;p&gt;GitHubではRecovery codes(乱数群)、Fallback SMS number(別スマホのSMSメール)、Recovery tokens（回復用乱数羅列）の3種類が用意されています。&lt;/p&gt;
-
-&lt;p&gt;セキュリティと直結はしにくいですが、2FAでセキュリティを上げることで認証手段が複数個になるわけですから、同様にその認証手段をロストするリスクも向上します。&lt;/p&gt;
-
-&lt;p&gt;セキュリティを堅牢にしても自分がアクセスできなくなっては意味がありません。&lt;/p&gt;
-
-&lt;h3 id=&quot;recovery-codes&quot;&gt;Recovery codes&lt;/h3&gt;
-
-&lt;p&gt;Recovery codes とは回復用に予め受け取っておいたコード一覧のことです。&lt;br /&gt;
-ログイン済みでRecovery codesを取得し、保存しておくことで、何らかの理由でGitHubにアクセスできなくなったときにこのコードのいずれか１つを使ってアクセスします。&lt;br /&gt;
-このコードを紙に印刷して完全にデジタルから隔離しておいたり、スマホなど別端末で管理になると思います。&lt;br /&gt;
-それぞれ一長一短ありますので、自分で万が一に備えておきましょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;fallback-sms-number&quot;&gt;Fallback SMS number&lt;/h3&gt;
-
-&lt;p&gt;2FAで設定したSMS番号とは別のSMS番号に認証コードを送信できるようになります。&lt;br /&gt;
-スマホのロストはもっとも確率が高いので、2FAでAuthenticator appsやSMS numberを使っていて、Recovery codesをスマホに保存している場合は、ここを設定しておいたほうが安心です。&lt;/p&gt;
-
-&lt;h3 id=&quot;recovery-tokens&quot;&gt;Recovery tokens&lt;/h3&gt;
-
-&lt;p&gt;Facebookアカウントを使用した回復手段です。&lt;br /&gt;
-Facebookアカウントと連携しておくことで万が一アクセス手段をロストしてもFacebookアカウントにログインできれば回復できます。&lt;/p&gt;
-
-&lt;h2 id=&quot;2faは絶対やろう&quot;&gt;2FAは絶対やろう&lt;/h2&gt;
-
-&lt;p&gt;2FAは絶対にやりましょう。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;様々なサービスを使っている&lt;/li&gt;
-  &lt;li&gt;他サービスと同じパスワードを使いまわしている&lt;/li&gt;
-  &lt;li&gt;フリーWiFiや自分の所有物でない端末でログインする機会がある&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;いずれ1つでも当てはまる人は、既に射程距離に入っています。&lt;/p&gt;
-
-&lt;h3 id=&quot;大手サービスだから大丈夫&quot;&gt;「大手サービスだから大丈夫」&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;所属経験上、大手だからといって安心ではない&lt;/li&gt;
-  &lt;li&gt;セキュリティ考慮が予算から外れやすい現実&lt;/li&gt;
-  &lt;li&gt;大手ほどエンジニアは外注でセキュリティなど完全に予算外&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;漏洩のニュースが流れていなくても情報は外部に漏れている&quot;&gt;漏洩のニュースが流れていなくても情報は外部に漏れている&lt;/h3&gt;
-
-&lt;p&gt;私自身の経験ですが、過去に使っていたパスワードで、そのパスワードを使ってた対象サービスの漏洩ニュースがなかったにも関わらず、&lt;br /&gt;
-メール認証で使ってたメールアドレスに対して、「お前のパスワードこれだろ？悪用されたくなかったらビットコインで金よこせ」といわゆる人質メールが来ました。&lt;br /&gt;
-しかも提示されていたパスワードは実際に昔使ってたものでした。&lt;/p&gt;
-
-&lt;p&gt;偶然にも私はパスワードは違う形に変えていたことで、有名どころのサービスやクレカを登録してるサービスは異なるパスワードでしたが、もしこれが同じパスワードでしたら&lt;br /&gt;
-完全個人情報やクレジットカード情報など、生活におけるほぼ全部の情報が漏洩しているところでした。&lt;/p&gt;
-
-&lt;p&gt;つまり GitHubがどんなに堅牢でも、パスワードが同じだと、他サービスがやられたら堂々と不正ログインされます。&lt;/p&gt;
-
-&lt;p&gt;自分の人生を他人に信託できるのならどうぞご勝手に。&lt;br /&gt;
-私はこれ以降全ての登録サービスを一元管理し、パスワードは長文乱数化、2FAあるなら対応し、不要なサービスはパスワードは複雑化し退会しています。&lt;/p&gt;
-
-&lt;h2 id=&quot;人はミスをする生き物&quot;&gt;人はミスをする生き物&lt;/h2&gt;
-
-&lt;p&gt;2FAをしているから万全というわけではありません。会社に迷惑はかからないのでその点は安心なのですが、&lt;br /&gt;
-自分の過去の資産にアクセスできないのはそれはそれで手痛いです。&lt;br /&gt;
-2FAに必要な認証要素を失ったら自分すらもアクセスできなくなります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Authenticator app&lt;/li&gt;
-  &lt;li&gt;Security keys&lt;/li&gt;
-  &lt;li&gt;SMS number&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これら3つ対応していても、PC担いで通勤中に交通事故に遭ってPCもスマホも物理キーも壊れたら終わりです。&lt;br /&gt;
-命助かっても助かった気がしません。&lt;/p&gt;
-
-&lt;p&gt;自宅が火事になればもろとも吹き飛びます。&lt;/p&gt;
-
-&lt;p&gt;泥棒に盗まれても同じです。&lt;/p&gt;
-
-&lt;p&gt;日常に潜む確率の低いリスクにわざわざ巻き込まれやすくする理由はないので、Recovery optionsは確実に残しておきましょう。&lt;/p&gt;
-
-&lt;p&gt;これは普段の利便性が下がるものでもなく緊急時に使うものなので、やっておいて何一つ損はないです。&lt;/p&gt;
-
-&lt;h2 id=&quot;本業に集中するための保険だと思うこと&quot;&gt;本業に集中するための保険だと思うこと&lt;/h2&gt;
-&lt;p&gt;セキュリティは利便性の反比例になるため、堅牢にするほどGitHubの利便性は下がるのは避けられません。&lt;/p&gt;
-
-&lt;p&gt;しかし、その利便性を重視しすぎることによって、漏洩やアカウント乗っ取りリスクは影を潜めていても確実にそこにいます。&lt;/p&gt;
-
-&lt;p&gt;そのリスクを自分のミスで受けると個人であれば不正利用による信用失墜や巨額の請求が来たり、会社であれば所属会社からの雇用契約書の契約違反による甲側の一方的な解雇と場合によっては損害賠償請求がありえます。&lt;/p&gt;
-
-&lt;p&gt;フリーランスや副業の方による業務委託契約であれば、契約書の契約違反となり損害賠償の話になります。&lt;/p&gt;
-
-&lt;p&gt;自分が守るべき責務を守らないことで得られるものに対して、確率的に低くとも受けるリスクと比べると&lt;strong&gt;「そこまでして欲しい利便性か？」&lt;/strong&gt; と一度己に説いてみるのも重要です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="github" /><summary type="html">近年セキュリティを個々が意識し堅牢にすることの重要性が以前より遥かに増しています。 特にリモートワークなどでは会社情報を含むPCやスマホを使うことが多いので、個人に求められるセキュリティリテラシーはとても高いものとなっています。 実際に被害に合う確率が天文学な数字であっても、場所と状態さえ満たしてしまえばその確率は宝くじで1等2等に当選することよりも高くなります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-01-05-tools-github-confirm-your-account-recovery-settings/0.png" /></entry></feed>
+なので通常のslack上で互いに話しやすい支えやすい信頼関係は複数人必要です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><summary type="html">フルリモートワークの会社で働いて4年目間近、テキストコミュニケーションの難しさや情報の集約性といった課題はありつつも、メリットを見れば魅力的な働き方です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-01-11-pitfall-of-remote-work.jpg" /></entry></feed>

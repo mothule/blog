@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>iOS開発におけるライブラリの選定戦略について考えてみた - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="iOS開発におけるライブラリの選定戦略について考えてみた" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="ライブラリ選定に悩んでますか？私も悩みます。便利なら何でも入れてますか？それなら怖いですね。 ネットでは執筆当時のトレンドに合わせたライブラリセットを紹介してる記事もありますね。 慣れない人は鵜呑みに取り入れて目の前の問題を解決し自信を持っていますが、 事業成長に合わせたライブラリを使うメリット・デメリットを考慮していますか？" />
+<meta property="og:description" content="ライブラリ選定に悩んでますか？私も悩みます。便利なら何でも入れてますか？それなら怖いですね。 ネットでは執筆当時のトレンドに合わせたライブラリセットを紹介してる記事もありますね。 慣れない人は鵜呑みに取り入れて目の前の問題を解決し自信を持っていますが、 事業成長に合わせたライブラリを使うメリット・デメリットを考慮していますか？" />
+<link rel="canonical" href="https://blog.mothule.com/ios/ios-how-to-find-good-lib" />
+<meta property="og:url" content="https://blog.mothule.com/ios/ios-how-to-find-good-lib" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-10-ios-how-to-find-good-lib.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-10T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/ios-how-to-find-good-lib"},"url":"https://blog.mothule.com/ios/ios-how-to-find-good-lib","headline":"iOS開発におけるライブラリの選定戦略について考えてみた","dateModified":"2020-02-10T00:00:00+09:00","datePublished":"2020-02-10T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-10-ios-how-to-find-good-lib.png","description":"ライブラリ選定に悩んでますか？私も悩みます。便利なら何でも入れてますか？それなら怖いですね。 ネットでは執筆当時のトレンドに合わせたライブラリセットを紹介してる記事もありますね。 慣れない人は鵜呑みに取り入れて目の前の問題を解決し自信を持っていますが、 事業成長に合わせたライブラリを使うメリット・デメリットを考慮していますか？","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="iOS開発におけるライブラリの選定戦略について考えてみた">
+    <meta name="twitter:description" content="ライブラリ選定に悩んでますか？私も悩みます。便利なら何でも入れてますか？それなら怖いですね。ネットでは執筆当時のトレンドに合わせたライブラリセットを紹介してる記事もありますね。慣れない人は鵜呑みに取り入れて目の前の問題を解決し自信を持っていますが、 事業成長に合わせたライブラリを使うメリット・デメリットを考慮していますか？">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-10-ios-how-to-find-good-lib.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ios">Ios</a>
+      
+    
+      
+        / iOS開発におけるライブラリの選定戦略について考えてみた
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-10-ios-how-to-find-good-lib.png" alt="iOS開発におけるライブラリの選定戦略について考えてみた">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>iOS開発におけるライブラリの選定戦略について考えてみた</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-10</li>
+        
+          <li class="list-inline-item"><a href="/tags#notebook">notebook</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">ios</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#program-design">program-design</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#swift製とobjective-c製のライブラリどっちが良いか">Swift製とObjective-C製のライブラリどっちが良いか？</a>
+    <ul>
+      <li><a href="#objective-cは普段は安定しているが変更時のリスクが大きい">Objective-Cは普段は安定しているが変更時のリスクが大きい</a></li>
+      <li><a href="#swiftは新しいライブラリやswiftyだが変更のリスクが多い">Swiftは新しいライブラリやSwiftyだが変更のリスクが多い</a></li>
+    </ul>
+  </li>
+  <li><a href="#独断と偏見で領域別ライブラリの見方">独断と偏見で領域別ライブラリの見方</a>
+    <ul>
+      <li><a href="#ui系のライブラリは変更リスクが一番大きい">UI系のライブラリは変更リスクが一番大きい</a></li>
+      <li><a href="#通信系はセキュリティと新プロトコル以外は安定">通信系はセキュリティと新プロトコル以外は安定</a></li>
+      <li><a href="#永続化系は今後は大きな変更なく落ち着いていく">永続化系は今後は大きな変更なく落ち着いていく</a></li>
+      <li><a href="#テスト系は改善傾向">テスト系は改善傾向</a></li>
+      <li><a href="#アーキテクチャ系はハイリスクハイリターン">アーキテクチャ系はハイリスクハイリターン</a></li>
+      <li><a href="#脱線-決済会社や広告会社などのsdkにobjective-cが多い理由">脱線: 決済会社や広告会社などのSDKにObjective-Cが多い理由</a></li>
+    </ul>
+  </li>
+  <li><a href="#ライブラリと事業規模の関係性">ライブラリと事業規模の関係性</a>
+    <ul>
+      <li><a href="#導入時はiosチーム人数がネックとなる">導入時はiOSチーム人数がネックとなる</a></li>
+      <li><a href="#対応や退却時はiosチーム人数がキーとなる">対応や退却時はiOSチーム人数がキーとなる</a></li>
+      <li><a href="#ライブラリは機材のレンタルだと捉える">ライブラリは機材のレンタルだと捉える</a></li>
+      <li><a href="#ライブラリは時限爆弾式ブースター">ライブラリは時限爆弾式ブースター</a></li>
+      <li><a href="#乗るタイミングより下りるタイミングが重要">乗るタイミングより下りるタイミングが重要</a></li>
+    </ul>
+  </li>
+  <li><a href="#ライブラリはスターよりもアクティビティを見る">ライブラリはスターよりもアクティビティを見る</a></li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+
+  <p>ライブラリ選定に悩んでますか？私も悩みます。便利なら何でも入れてますか？それなら怖いですね。<br />
+ネットでは執筆当時のトレンドに合わせたライブラリセットを紹介してる記事もありますね。<br />
+慣れない人は鵜呑みに取り入れて目の前の問題を解決し自信を持っていますが、 <strong>事業成長に合わせたライブラリを使うメリット・デメリットを考慮していますか？</strong></p>
+
+<p>去年年末にこんなツイートを呟きました。</p>
+
+<div class="jekyll-twitter-plugin"><blockquote class="twitter-tweet"><p lang="ja" dir="ltr">AFNetworkingは潮時<br />UIWebViewが非推奨になってからWKWebViewに差し替えるPRが牛歩過ぎて業務スピードに全く追いついけていない。<br />ObjCはSwiftのバージョンによる破壊変更に依存しないため安定性維持メリットがあったが、今回のAPI依存だと安定性が災いして更新速度が牛歩。<a href="https://t.co/uclNZQ8WC3">https://t.co/uclNZQ8WC3</a></p>&mdash; もちゅる@フルリモートパパエンジニア (@mothule) <a href="https://twitter.com/mothule/status/1199503382366412800?ref_src=twsrc%5Etfw">November 27, 2019</a></blockquote>
+<script async="" src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+</div>
+
+<p>ちょっとこのこともあるし、ライブラリ最高文化な風潮がiOSにはあるので、それって他プラットフォームのメリットを鵜呑みにしてない？って思うこともあり考えてみました。</p>
+
+<p>近年のアプリ開発においてOSSの利用は必要不可欠です。<br />
+でもリスク分かって取り入れてるのかな？って疑問に抱く記事を見かけるときもあります。<br />
+ライブラリを使う上でどう付き合っていくべきなのか？ってのを少し考えてみました。</p>
+
+<p>私個人の経験のもと判断した物なので、これが全ての答えとは思わないでください。<br />
+<strong>大事なのはリスクコントロールです。</strong></p>
+
+<h2 id="swift製とobjective-c製のライブラリどっちが良いか">Swift製とObjective-C製のライブラリどっちが良いか？</h2>
+
+<p>さきのAFNetwrokingの件も踏まえて私は次のような判断です。</p>
+
+<ul>
+  <li>Objective-Cは普段は安定しているが変更時の <strong>リスクが大きい</strong></li>
+  <li>Swiftは新しいライブラリやSwiftyだが変更の <strong>リスクが多い</strong></li>
+</ul>
+
+<h3 id="objective-cは普段は安定しているが変更時のリスクが大きい">Objective-Cは普段は安定しているが変更時のリスクが大きい</h3>
+<p>言語として落ち着いており今後目新しい追加や変更はないものと見てます。<br />
+言語としてどうなのか？疑問はありますが、良い意味で変わらないので、その上で作られたプログラムは言語都合で変更を余儀なくされるリスクは低いです。</p>
+
+<p>しかし、悪い意味で言語として衰退しており、その上で作られたプログラムをメンテナンスする人も減ることで、API仕様変更で対応が必要になっても、対応する人がいないリスクもあります。</p>
+
+<h3 id="swiftは新しいライブラリやswiftyだが変更のリスクが多い">Swiftは新しいライブラリやSwiftyだが変更のリスクが多い</h3>
+<p>SwiftのライブラリはSwiftで書かれているためSwiftyな使い方が出来るので、使う側からしたら使い心地は良いものです。</p>
+
+<p>しかし言語としてまだ未熟で、言語仕様の変更に影響を受けやすいのでバージョンの更新は多くなります。<br />
+またそのライブラリ自体がライバルのライブラリと負けて衰退してメンテナンスする人が少ないと、ライブラリの撤退が早まります。</p>
+
+<h2 id="独断と偏見で領域別ライブラリの見方">独断と偏見で領域別ライブラリの見方</h2>
+
+<ul>
+  <li>UI系のライブラリは変更リスクが一番大きい</li>
+  <li>通信系はセキュリティと新プロトコル以外は安定</li>
+  <li>永続化系は今後は大きな変更なく落ち着いていく</li>
+  <li>テスト系は改善傾向</li>
+  <li>アーキテクチャ系はハイリスクハイリターン</li>
+</ul>
+
+<h3 id="ui系のライブラリは変更リスクが一番大きい">UI系のライブラリは変更リスクが一番大きい</h3>
+<p>iPhoneの強みはデザインです。<br />
+新しいデザインを取り込みます。<br />
+そんなコンセプト方針に一番影響受けるのはUIです。<br />
+一昔前に流行ったデザインも1年後には廃れてるのが日常茶飯事です。</p>
+
+<p>独立性の高いUIライブラリの場合は寿命が長いですが、ひとまとまりのUIライブラリはそのデザイン自体が廃れたら終わりなので寿命は短命です。ただ入れるだけで簡単に画面が出来上がるのでスタートダッシュには向いてます。</p>
+
+<h3 id="通信系はセキュリティと新プロトコル以外は安定">通信系はセキュリティと新プロトコル以外は安定</h3>
+
+<p>通信は新しい通信方式が出たときにライブラリが旧式しか対応していないとリジェクトリスクが出るので変更は必要となります。<br />
+またAppleは個人情報大事マンになったのでセキュリティに力を入れるのは明白です。</p>
+
+<h3 id="永続化系は今後は大きな変更なく落ち着いていく">永続化系は今後は大きな変更なく落ち着いていく</h3>
+
+<p>近年はデータはクラウド上やサーバー管理が主流なので、少し前に流行ったRealmあたりから落ち着いてます。<br />
+大きな変更は少ないとは思いますが、そもそもニーズがなさそうな気もします。</p>
+
+<h3 id="テスト系は改善傾向">テスト系は改善傾向</h3>
+
+<p>Objective-CではSwizzlingでモックをラクラク作れてたのに、<br />
+Swiftはマニュアルモッキングというprintデバッグ並の最悪スタートだったのもあり、これ以上不便になることはないかなと思ってます。<br />
+少し前あたりからプロダクトコードを分析してテスト用モッキングコードを自動生成するライブラリも出てますし、<br />
+後はiOSがテスト環境ならprivateにもアクセス可能とかモック可能とかfinalでも継承可能とか自由度が効く改善をしてくれた場合の便利に向かう変更がありそうですね。</p>
+
+<h3 id="アーキテクチャ系はハイリスクハイリターン">アーキテクチャ系はハイリスクハイリターン</h3>
+<p>もともとはMVCでしたが、MVPのあとにMVVMが出てきました。<br />
+それに加えてClean ArchitectureやVIPERアーキテクチャも出てきました。<br />
+より上位な概念としてDDDのプラクティスも介入してきました。</p>
+
+<p>これらアーキテクチャの共通してるのは関心事の分離による依存排除です。<br />
+しかしSwiftではそれを実現するにはクラスやファイルを分けるしか方法がないため、
+自然とファイルやクラス数は増えて、単純な変更にもまどろっこしい手続きとも呼べる変更作業が発生します。
+これらを補足するライブラリや外部ツールが登場しています。</p>
+
+<p>これらは全部根幹または根幹をサポートするライブラリなので、もしそのアーキテクチャが廃れてしまうと差し替えコストは甚大となります。選定には慎重に。</p>
+
+<h3 id="脱線-決済会社や広告会社などのsdkにobjective-cが多い理由">脱線: 決済会社や広告会社などのSDKにObjective-Cが多い理由</h3>
+<p>決済会社や広告会社などが提供しているSDKの場合は、iOSはObjective-Cが多いです。<br />
+明確な理由は会社それぞれですが、理由のいくつかとしては事業としてより多くの会社で使ってもらうには、両言語で使えるObjCが適しているからです。<br />
+またSwiftのように言語自体がまだ未成熟だと言語仕様が変更されるとSDKの更新も必要になります。</p>
+
+<h2 id="ライブラリと事業規模の関係性">ライブラリと事業規模の関係性</h2>
+<p>「iOS開発はこのライブラリセットで最強」は危険な思想です。<br />
+前述したようにリスクを理解し、リスクに対する対策や選定をしないと痛い目を見ます。<br />
+ここらへんはロングメンテナンスを経験すると痛感します。<br />
+特に悪質な業務委託者などで時間給ではなく単価給でスピード重視で突発的に作られたりすると、負債が未来に後回しされます。</p>
+
+<h3 id="導入時はiosチーム人数がネックとなる">導入時はiOSチーム人数がネックとなる</h3>
+<p>ライブラリを導入する場合、導入障壁は影響範囲 x 人数に比例します。<br />
+人数が多いとそのライブラリへの理解や利用方法の把握が必要になります。<br />
+またチームによっては、対象ライブラリへの反対が一人でもいると、やはりその人へ説明する必要が出てくるでしょう。</p>
+
+<h3 id="対応や退却時はiosチーム人数がキーとなる">対応や退却時はiOSチーム人数がキーとなる</h3>
+<p>反対にライブラリの更新や別ライブラリへの差し替えや退却は、人数が多いほうが作業を分散できるので、楽になります。</p>
+
+<h3 id="ライブラリは機材のレンタルだと捉える">ライブラリは機材のレンタルだと捉える</h3>
+<p>事業スタート時期は負債をして利益を得ることを優先します。<br />
+利益が獲得し安定し始めた頃に負債を少しずつ返すことでフットワークを軽くし次を事業を拡大します。</p>
+
+<p>企業みたいな話ですが、ライブラリの話です。</p>
+
+<h3 id="ライブラリは時限爆弾式ブースター">ライブラリは時限爆弾式ブースター</h3>
+<p>iOSのライブラリは宝くじのようにAPIや言語仕様の変更にぶつかります。</p>
+
+<p>ライブラリを使うことで実装をショートカットしたり実装速度をあげたりできますが、仕様変更が起きることでライブラリの対応をしないといけません。自分らで対応可能な規模や難易度であれば自分らでfork&amp;pull requestsで直すこともできますが、全てのエンジニアがそれを出来るとは限りません。</p>
+
+<p>いつコストが炎上するか分からない時限爆弾のような存在です。</p>
+
+<h3 id="乗るタイミングより下りるタイミングが重要">乗るタイミングより下りるタイミングが重要</h3>
+<p>ライブラリはずっと使い続けるものもあれば、一時的に加速するためのライブラリもあります。</p>
+
+<p>何でもかんでもライブラリで解決すると、一度に炎上したときに手を付けれなくなります。<br />
+自前で簡易に用意していれば、簡単に解決できることでもライブラリとなると汎用性が高いことで構造が複雑になっていたり
+Pull requests を投げてもなかなか承認されないという問題リスクもあります。</p>
+
+<h2 id="ライブラリはスターよりもアクティビティを見る">ライブラリはスターよりもアクティビティを見る</h2>
+<p>ライブラリを選ぶ場合はスターを基準にすると時として痛い目をみます。<br />
+スターは多くてもそれは過去のスター蓄積であって、今のスターとは限りません。</p>
+
+<ul>
+  <li>コミットの時間</li>
+  <li>コントリビューターの数</li>
+  <li>Open Issueの数</li>
+  <li>Closed Issueの更新日</li>
+  <li>Pull requestsの数と提案日</li>
+</ul>
+
+<p>これらを見て活発度合いを確認しましょう。</p>
+
+<h2 id="まとめ">まとめ</h2>
+
+<ul>
+  <li>ライブラリ選定は事業規模を考慮する</li>
+  <li>ライブラリ選定は領域毎に変更リスクを理解する</li>
+  <li>ライブラリ選定はスターではなくアクティビティを見る</li>
+</ul>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/notebook/program-design/design-simple-class-is-not-simple-code">クラス名にSimpleやEasyがついててもクラス内コードが単純なわけではない</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/notebook/wrong-architecture-design">Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
