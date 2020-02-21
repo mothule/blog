@@ -41,19 +41,17 @@ else
   log "/docs folder already existing."
 fi
 
-#sleep 7s
-
+# rsync
 info "Copy to docs/ ... start"
 rsync -auv --delete ws/_site/ docs
 info "Copy to docs/ ... done"
 
-#sleep 3s
-
+# CNAME
 info "Copy CNAME to docs/ ... start"
 cp CNAME docs/
 info "Copy CNAME to docs/ ... done"
 
-
+# Git
 info "Commit and push ... start"
 git add .
 git commit -m "Deploy:"
