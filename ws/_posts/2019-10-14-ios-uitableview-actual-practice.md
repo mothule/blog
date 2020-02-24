@@ -94,21 +94,19 @@ GitHubのコードを落としてXcodeと記事両方を開くことを推奨し
 UITableViewのセクション定義になります。Rowの定義は用意していません。Rowの並び順が変わるなど、Section内がより複雑になるのであればあったほうがいいです。
 
 ### DataSource.swift  
-`UITableViewDataSource` と `UITableViewDelegate` を採用したクラスです。  
-こちらに関しては次の記事が参考になります。
+`UITableViewDataSource` と `UITableViewDelegate` を採用したクラスです。
 
-{% post_link 2019-10-06-ios-uitableview-uitableviewdatasource-separate %}
+▼こちらに関しては次の記事で説明しています。  
+{% post_link_text 2019-10-06-ios-uitableview-uitableviewdatasource-separate %}
 
 ### Viewsフォルダ以下
 UITableViewやUICollectionViewのセル制御クラスになります。
 
-UITableViewの基本に関して分からない場合はこちらの記事をどうぞ。
+▼UITableViewの基本に関して分からない場合はこちらの記事に詳しく説明してあります。  
+{% post_link_text 2019-09-26-ios-uitableview-basic %}
 
-{% post_link 2019-09-26-ios-uitableview-basic %}
-
-またUICollectionViewに関してはこちらの記事が参考になります。
-
-{% post_link 2019-10-12-uicollectionview-in-table %}
+▼またUICollectionViewに関してはこちらの記事で説明しています。  
+{% post_link_text 2019-10-12-uicollectionview-in-table %}
 
 ### Item.swift
 今回唯一のモデルクラスです。  
@@ -117,9 +115,9 @@ UITableViewの基本に関して分からない場合はこちらの記事をど
 ### Nibable.swift
 
 UITableViewやUICollectionViewのポイラープレートを収束させたクラスです。  
-詳しくはこちらの記事をどうぞ。
 
-{% post_link 2019-09-29-ios-xib-optimaize %}
+▼詳しくはこちらの記事で説明しています。  
+{% post_link_text 2019-09-29-ios-xib-optimaize %}
 
 ### ApiClient.swift
 
