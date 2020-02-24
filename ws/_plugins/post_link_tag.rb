@@ -28,12 +28,17 @@ module Jekyll
                  .map(&:url)
                  .first
 
+      raise StandardError.new('指定パスにファイルなし') unless File.exist?(article_path(post_file_name: post_file_name))
       post_article = File.read(article_path(post_file_name: post_file_name))
       title = post_article.match(/title: (.*)/).captures.first
-      image_path = post_article.match(/path: (.*)/).captures.first
+      image_path = post_article.match(/path: (.*)/)&.captures&.first 
+      if image_path.nil?
+        image_path = '/assets/images/site-image.png'
+        puts "アイキャッチ画像がありません。 #{post_file_name}"
+      end
 
       post = Jekyll::Tags::PostComparer.new(post_name)
-      begin_index = post_article[0..-1].rindex('---') + 3
+      begin_index = post_article[(post_article.index('---') + 3)..-1].index('---') + 6
       brief = post_article[begin_index..begin_index + 250]
               .gsub(/^## /, '')
               .gsub(/^### /, '')
