@@ -31,7 +31,7 @@ App Storeに登録されているアプリには様々なデザインがあり�
 
 今回はApp Storeに上がっているいくつか複数のアプリをピックアップして、だいたい共通しているレイアウトなどを模様した架空のレイアウトを用意しました。
 
-{% page_image 1.png 50% %}
+{% page_image 1.png 50% 最近のアプリのレイアウト例 %}
 
 このレイアウトをUITableViewベースで実装していきたいと思います。
 なお無理にUITableViewにこだわらずともUIStackViewやUICollectionViewでも実装は可能ですが、今回はUITableViewベースで話を進めます。
@@ -45,7 +45,7 @@ App Storeに登録されているアプリには様々なデザインがあり�
 
 次のイメージのようにセルやセクションを今回は分けます。
 
-{% page_image 2.png 50% %}
+{% page_image 2.png 50% レイアウトをセルやセクションで分割 %}
 
 ### なぜ Section Header は使わないのか？
 
@@ -63,7 +63,7 @@ UITableViewではStyleをGroupだとSection Headerは残らないのですが、
 
 例えば、最後の「おすすめ」↓ が可変の場合は、ヘッダーセルと商品セルを別セクションにすると、制御がしやすくなります。
 
-{% page_image 3.png %}
+{% page_image 3.png 100% 可変セル時にセクションを分けた図 %}
 
 ## 実装フェイズ
 
@@ -77,13 +77,13 @@ GitHubのコードを落としてXcodeと記事両方を開くことを推奨し
 
 ## storyboardでレイアウトに必要なセルを作成する
 
-{% page_image 4.png %}
+{% page_image 4.png 100% セルが用意されたStoryboard %}
 
 こんな感じでセルを用意します。
 
 ## ファイル構成
 
-{% page_image 5.png 50% %}
+{% page_image 5.png 50% レイアウト実現のファイル構成 %}
 
 いくつか抜粋して説明します。
 
@@ -128,7 +128,7 @@ API通信クライアントです。しかし今回は実際に通信はして�
 
 重要な部分のみ抜粋します。
 
-{% page_image 6.png 267px %}
+{% page_image 6.png 267px レイアウト実現のクラス図 %}
 
 ### ViewController
 
