@@ -12,11 +12,11 @@ module Jekyll
     def render(context)
       basename = File.basename(context['page'].path, '.md')
 
-      @image_name, @width = @markup.split(' ')
+      @image_name, @width, @alt = @markup.split(' ')
       @width = '100%' if @width.nil?
 
       image_path = find_image_path(basename, @image_name)
-      "<a href=\"#{image_path}\"><img src=\"#{image_path}\" width=\"#{@width}\"></a>"
+      "<a href=\"#{image_path}\"><img src=\"#{image_path}\" width=\"#{@width}\" alt=\"#{@alt}\"></a>"
     end
 
     private
