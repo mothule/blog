@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。" />
+<meta property="og:description" content="RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server" />
+<meta property="og:url" content="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-29T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-03-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server"},"url":"https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server","image":"https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png","description":"RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。","headline":"RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法","dateModified":"2020-03-29T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法">
+    <meta name="twitter:description" content="RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#tools">Tools</a>
+      
+    
+      
+        / <a href="/tags#rubymine">Rubymine</a>
+      
+    
+      
+        / RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" alt="RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-3-29</li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">mac</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rubymine">rubymine</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#tools">tools</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#環境">環境</a></li>
+  <li><a href="#rubymineから実行はunixドメインソケット通信による起動がない">RubyMineから実行はUNIXドメインソケット通信による起動がない</a></li>
+  <li><a href="#unixドメインソケット通信はrubymineでrailsアプリをアタッチする">UNIXドメインソケット通信はRubyMineでRailsアプリをアタッチする</a>
+    <ul>
+      <li><a href="#デバッグしたいrailsアプリをシェルで起動">デバッグしたいRailsアプリをシェルで起動</a></li>
+      <li><a href="#rubymineからattach-to-processを実行">RubyMineからAttach to Process…を実行</a></li>
+      <li><a href="#attachが成功するのを待つ">Attachが成功するのを待つ</a></li>
+      <li><a href="#失敗するときの3つの確認">失敗するときの3つの確認</a></li>
+    </ul>
+  </li>
+  <li><a href="#rubymineでunixドメインソケット通信でもデバッグできるようになる">RubyMineでUNIXドメインソケット通信でもデバッグできるようになる</a></li>
+</ul>
+  </div>
+
+  <p>RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。
+しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。
+私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。</p>
+
+<p>今回はRubyMineを使ってUNIXドメインソケット通信で起動してるRailsアプリにブレイクポイントを仕込んだり、ブレイクポイントで止めたコンテキストからRubyを実行したり、変数をウォッチしたりするいわゆるデバッグする方法についてまとめます。</p>
+
+<h2 id="環境">環境</h2>
+
+<ul>
+  <li>RubyMine</li>
+  <li>PumaにてUNIXドメインソケット通信中のRailsアプリ</li>
+  <li>Mac</li>
+</ul>
+
+<h2 id="rubymineから実行はunixドメインソケット通信による起動がない">RubyMineから実行はUNIXドメインソケット通信による起動がない</h2>
+
+<p>通常ならRubyMineからRailsアプリを実行するには、メニューバーの <code class="highlighter-rouge">Run &gt; Run... &gt; Development: app_name</code> の順で実行できます。
+もし設定を変更したい場合は、<code class="highlighter-rouge">Run &gt; Edit Configurations...</code>を選ぶことで登録された設定情報を変更できる画面が表示されます。</p>
+
+<p><em>▼RubyMineのEdit Configurations…を開いた画面</em><br />
+<a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png" width="100%" alt="RubyMineのEdit Configurations...を開いた画面" /></a></p>
+
+<p>ここでIP addressとPortを指定して実行すればサーバが立ち上がります。
+しかしこの方法はTCP/IPによるポートが開かれるタイプとなり、UNIXドメインソケットによる立ち上げとは異なります。</p>
+
+<p><code class="highlighter-rouge">Server</code>項目を見てもそれらしき項目は見当たりません。</p>
+
+<p><em>▼サーバーパラメータ一覧</em><br />
+<a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png" width="100%" alt="RubyMineのEdit Configurations...を開いた画面のServer一覧" /></a></p>
+
+<p>私が調べた限りでは直接UNIXドメインソケット通信として起動する方法はありませんでした。
+これでは起動もデバッグもできずで、RubyMineが使い物にならなくなります。
+しかし、実は少し手間ですがちゃんと手段はあります。</p>
+
+<h2 id="unixドメインソケット通信はrubymineでrailsアプリをアタッチする">UNIXドメインソケット通信はRubyMineでRailsアプリをアタッチする</h2>
+
+<p>それはメニューバーの<code class="highlighter-rouge">Run &gt; Attach to Process...</code>による<strong>既存プロセスにアタッチ</strong>する方法です。</p>
+
+<p><em>▼メニューバーのRunにAttach to Process…はあります。</em><br />
+<a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png" width="100%" alt="RubyMineのメニューバーのRunを開いた画面" /></a></p>
+
+<p>これを使うことで起動中のRailsアプリに対してアタッチを試み、成功したらRubyMineが介入できる環境を構築してくれます。</p>
+
+<p>フローは次のようになります。</p>
+
+<ol>
+  <li>デバッグしたいRailsアプリをシェルで起動</li>
+  <li>RubyMineからAttach to Processを実行</li>
+  <li>Attachが成功するのを待つ</li>
+</ol>
+
+<h3 id="デバッグしたいrailsアプリをシェルで起動">デバッグしたいRailsアプリをシェルで起動</h3>
+<p>ターミナルからRailsのServerコマンドを実行してRailsアプリを起動します。</p>
+
+<blockquote>
+  <p>Listening on unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock</p>
+</blockquote>
+
+<p>となっているのでUNIXドメインソケット通信として起動しています。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bin/rails s
+<span class="o">=&gt;</span> Booting Puma
+<span class="o">=&gt;</span> Rails 6.0.2.1 application starting <span class="k">in </span>development
+<span class="o">=&gt;</span> Run <span class="sb">`</span>rails server <span class="nt">--help</span><span class="sb">`</span> <span class="k">for </span>more startup options
+Puma starting <span class="k">in </span>single mode...
+<span class="k">*</span> Version 4.3.3 <span class="o">(</span>ruby 2.6.5-p114<span class="o">)</span>, codename: Mysterious Traveller
+<span class="k">*</span> Min threads: 5, max threads: 5
+<span class="k">*</span> Environment: development
+<span class="k">*</span> Listening on unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock
+Use Ctrl-C to stop
+</code></pre></div></div>
+
+<h3 id="rubymineからattach-to-processを実行">RubyMineからAttach to Process…を実行</h3>
+
+<p><code class="highlighter-rouge">Attach to Process...</code>を選ぶとRubyMineがRubyで起動してるプロセスを見つけて一覧として出してくれます。</p>
+
+<p><em>▼Rubyプロセス一覧</em><br />
+<a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png" width="100%" alt="Attach to Process...で出る一覧画面" /></a></p>
+
+<p>先程立ち上げたRailsアプリを見つけてくれます。賢いですね。</p>
+
+<h3 id="attachが成功するのを待つ">Attachが成功するのを待つ</h3>
+
+<p>次はこれを選ぶことでRubyMineがRailsアプリにアタッチをトライしてくれます。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/5.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/5.png" width="100%" alt="接続中プログレス" /></a></p>
+
+<p>RubyMineのDebug Toolbarにも次のようなログが流れます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="s2">"env RBENV_VERSION=2.6.5 /usr/local/Cellar/rbenv/1.1.2/libexec/rbenv exec ruby /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/gdb_wrapper --pid 15009 --ruby-path /Users/mothule/.rbenv/versions/2.6.5/bin/ruby --include-gem /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib --include-gem /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib -- --key-value --step-over-in-blocks --disable-int-handler --evaluation-timeout 20 --evaluation-control --time-limit 100 --memory-limit 0 --rubymine-protocol-extensions --port 61951 --host 0.0.0.0 --dispatcher-port 61952 --attach-mode"</span>
+Fast Debugger <span class="o">(</span>ruby-debug-ide 0.8.0.beta21, debase 0.3.0.beta23, file filtering is supported, block breakpoints supported, smart steps supported, obtaining <span class="k">return </span>values supported, partial obtaining of instance variables supported<span class="o">)</span>
+executed <span class="s1">'lldb /Users/mothule/.rbenv/versions/2.6.5/bin/ruby --no-lldbinit'</span>
+executed <span class="sb">`</span>attach 15009<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>thread list<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>thread list<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>thread <span class="k">select </span>1<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>bt<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>thread <span class="k">select </span>2<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>bt<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+...
+executed <span class="sb">`</span>thread <span class="k">select </span>23<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>bt<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>thread <span class="k">select </span>1<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>expr <span class="o">(</span>void <span class="k">*</span><span class="o">)</span> dlopen<span class="o">(</span><span class="s2">"/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle"</span>, 2<span class="o">)</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>expr <span class="o">(</span>int<span class="o">)</span> debase_start_attach<span class="o">()</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span>breakpoint <span class="nb">set</span> <span class="nt">--shlib</span> /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle <span class="nt">--name</span> __func_to_set_breakpoint_at<span class="sb">`</span> <span class="nb">command </span>inside lldb.
+continuing
+executed <span class="sb">`</span>expr <span class="o">(</span>void<span class="o">)</span> debase_rb_eval<span class="o">(</span><span class="s2">"require '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/../lib/ruby-debug-ide/attach/debugger_loader'; load_debugger(['/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib', '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib'], ['--key-value', '--step-over-in-blocks', '--disable-int-handler', '--evaluation-timeout', '20', '--evaluation-control', '--time-limit', '100', '--memory-limit', '0', '--rubymine-protocol-extensions', '--port', '61951', '--host', '0.0.0.0', '--dispatcher-port', '61952', '--attach-mode'])"</span><span class="o">)</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
+</code></pre></div></div>
+
+<p>成功するとRailsアプリのログにも次のようなログが出力されます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Fast Debugger <span class="o">(</span>ruby-debug-ide 0.8.0.beta21, debase 0.3.0.beta23, file filtering is supported, block breakpoints supported, smart steps supported, obtaining <span class="k">return </span>values supported, partial obtaining of instance variables supported<span class="o">)</span> listens on 0.0.0.0:61951
+</code></pre></div></div>
+
+<h3 id="失敗するときの3つの確認">失敗するときの3つの確認</h3>
+
+<p>Attach to Processはアタッチ処理は安定とはいえないです。何回か試して成功するという状態です。
+私がアタッチが失敗した場合にいつも試してることを教えます。
+もし失敗する場合は次の4つを試してみてください。</p>
+
+<ol>
+  <li>タイムアウトを伸ばす</li>
+  <li>Railsアプリを立ち上げ直す</li>
+  <li>アタッチトライ中にRailsアプリを動かしてみる</li>
+  <li>ブレイクポイントをつけてAttachを実行する</li>
+</ol>
+
+<p>「タイムアウトを伸ばす」はRubyMineのPreferencesから出来ます。</p>
+
+<p><em>▼Preferences &gt; Build, Execution, Deployment &gt; Debugger &gt; Ruby &gt; Debug connection timeout</em><br />
+<a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png" width="100%" alt="RubyMineのSettingsからDebug connection timeを延長する" /></a></p>
+
+<h2 id="rubymineでunixドメインソケット通信でもデバッグできるようになる">RubyMineでUNIXドメインソケット通信でもデバッグできるようになる</h2>
+<p>通常ではRubyMineから起動したアプリしかデバッグができなかったり、ターミナル上でしかUNIXドメインソケット通信のRailsアプリを起動できなかったりしますが、この方法であれば既に立ち上がっているRubyプロセスでもアタッチすることでデバッグができるようになり便利ですね。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-security-on-mac">Mac上でnginxのセキュリティ最低限を確認する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-customize-on-mac">Mac上のnginx設定ファイルをドメイン毎に分ける</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step2-on-mac">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step1-on-mac">Macでnginxをインストールして起動する</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

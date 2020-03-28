@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"今さらCarthage入門","dateModified":"2019-09-15T00:00:00+09:00","datePublished":"2019-09-15T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png","description":"ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"url":"https://blog.mothule.com/ios/carthage/ios-carthage","image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png","description":"ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。","headline":"今さらCarthage入門","dateModified":"2019-09-15T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -188,6 +188,7 @@
   </li>
   <li><a href="#テスト環境限定のライブラリインストール">テスト環境限定のライブラリインストール</a></li>
   <li><a href="#git管理について">git管理について</a></li>
+  <li><a href="#carthage管理のライブラリ更新">Carthage管理のライブラリ更新</a></li>
   <li><a href="#まとめ">まとめ</a></li>
 </ul>
   </div>
@@ -372,14 +373,14 @@ github <span class="s2">"SwiftyJSON/SwiftyJSON"</span>
 <h3 id="フレームワークをリンクする">フレームワークをリンクする</h3>
 
 <p>プロジェクトのターゲットのGeneralを開いて、 <code class="highlighter-rouge">Linked frameworks and Libraries</code> を ＋ ボタンを押してください。
-<a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-1.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-1.png" width="100%" /></a></p>
+<a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-1.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-1.png" width="100%" alt="" /></a></p>
 
 <p>フレームワーク／ライブラリの選択画面が出るので、<code class="highlighter-rouge">Add Other...</code> ボタンを押してください。
-<a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-2.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-2.png" width="100%" /></a></p>
+<a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-2.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-2.png" width="100%" alt="" /></a></p>
 
 <p>ここで先程作成したフレームワークを指定します。</p>
 
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-3.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-3.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-3.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-3.png" width="100%" alt="" /></a></p>
 
 <p>なおフレームワークは</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> Carthage/Build/iOS
@@ -392,15 +393,15 @@ drwxr-xr-x  3 mothule  staff     96  9 15 14:31 SwiftyJSON.framework.dSYM
 <p>に作成されています。
 次の図のように追加されていればOKです。</p>
 
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-4.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-4.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-4.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-4.png" width="100%" alt="" /></a></p>
 
 <p>次に <code class="highlighter-rouge">Build Phases</code>上の ＋ ボタンを押して <code class="highlighter-rouge">New Run Script Phase</code> を選んでください。</p>
 
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png" width="100%" alt="" /></a></p>
 
 <p><code class="highlighter-rouge">Run Script</code>フェイズが作成されるので、中にコマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。</p>
 
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png" width="100%" alt="" /></a></p>
 
 <p>ちなみにこの <code class="highlighter-rouge">carthage copy-frameworks</code> を実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
@@ -461,6 +462,26 @@ Carthage/Checkouts
 !Carthage/Build
 </code></pre></div></div>
 
+<h2 id="carthage管理のライブラリ更新">Carthage管理のライブラリ更新</h2>
+
+<p>ライブラリが更新されたらCarthageにはライブラリを更新するコマンドが用意されています。</p>
+
+<p>例えば次のシェルはこのような意味になります。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">SwiftJSON</code>と<code class="highlighter-rouge">APIKit</code>を更新</li>
+  <li>GitHubなどにアップロード済みのzipなどを使わず、コードから</li>
+  <li>iOSプラットフォームだけを対象</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update SwiftyJSON APIKit <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">--platform iOS</code>はiOSアプリでしか使わないのであれば他プラットフォーム用ビルドをしても意味ないので、その場合はこのオプションをつけます。<br />
+<code class="highlighter-rouge">--no-use-binaries</code>はGitHubなどにビルド済みがzipなどでアップロードされてる場合はそれを使おうとするので、それを使わずコードからビルドしたい場合はこのオプションをつけます。
+バイナリ使ったほうが更新処理は早いのですが、もしアップロードされてるSwiftバージョンが異なったりするとエラーとなるので、そこが気になるならこのオプションをつけといたほうがいいです。
+少し時間がかかるぐらいなので。</p>
+
 <h2 id="まとめ">まとめ</h2>
 
 <p>以上がCarthageの入門記事になります。</p>
@@ -490,6 +511,56 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
             
             
             
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -1129,6 +1200,14 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
       <a href="/tags#kiji">kiji</a>
     
       <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
     
   </div>
 </div>

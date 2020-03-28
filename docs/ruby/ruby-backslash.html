@@ -1,0 +1,1094 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="バックスラッシュ記法とは？ 文字列中でバックスラッシュ(\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。" />
+<meta property="og:description" content="バックスラッシュ記法とは？ 文字列中でバックスラッシュ(\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/ruby-backslash" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/ruby-backslash" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-28-ruby-backslash.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-28T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-02-28T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/ruby-backslash"},"url":"https://blog.mothule.com/ruby/ruby-backslash","image":"https://blog.mothule.com/assets/images/2020-02-28-ruby-backslash.png","description":"バックスラッシュ記法とは？ 文字列中でバックスラッシュ(\\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。","headline":"Rubyのバックスラッシュ記法(\\t \\n \\sなど)一覧を確認","dateModified":"2020-02-28T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認">
+    <meta name="twitter:description" content="バックスラッシュ記法とは？文字列中でバックスラッシュ(\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-28-ruby-backslash.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ruby">Ruby</a>
+      
+    
+      
+        / Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-28-ruby-backslash.png" alt="Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-28</li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#バックスラッシュ記法とは">バックスラッシュ記法とは？</a></li>
+  <li><a href="#バックスラッシュ記法の一覧">バックスラッシュ記法の一覧</a>
+    <ul>
+      <li><a href="#タブt">タブ(\t)</a></li>
+      <li><a href="#垂直タブv">垂直タブ(\v)</a></li>
+      <li><a href="#バックスペースb">バックスペース(\b)</a></li>
+      <li><a href="#ベルa">ベル(\a)</a></li>
+      <li><a href="#空白s">空白(\s)</a></li>
+      <li><a href="#8進数表記-16進数表記-コントロール文字">8進数表記, 16進数表記, コントロール文字</a></li>
+      <li><a href="#unicode文字-unicode文字列">Unicode文字, Unicode文字列</a></li>
+      <li><a href="#文字列中に改行を含めずに改行改行">文字列中に改行を含めずに改行(\改行)</a></li>
+    </ul>
+  </li>
+  <li><a href="#rubyのバックスラッシュ記法一覧確認したけど">Rubyのバックスラッシュ記法一覧確認したけど</a></li>
+</ul>
+  </div>
+
+  <h2 id="バックスラッシュ記法とは">バックスラッシュ記法とは？</h2>
+<p>文字列中でバックスラッシュ(\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。</p>
+
+<h2 id="バックスラッシュ記法の一覧">バックスラッシュ記法の一覧</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>バックスラッシュ記法</th>
+      <th>意味</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>\t</td>
+      <td>タブ(0x09)</td>
+    </tr>
+    <tr>
+      <td>\v</td>
+      <td>垂直タブ(0x0b)</td>
+    </tr>
+    <tr>
+      <td>\n</td>
+      <td>改行(0x0a)</td>
+    </tr>
+    <tr>
+      <td>\r</td>
+      <td>キャリッジリターン(0x0d)</td>
+    </tr>
+    <tr>
+      <td>\f</td>
+      <td>改ページ(0x0c)</td>
+    </tr>
+    <tr>
+      <td>\b</td>
+      <td>バックスペース (0x08)</td>
+    </tr>
+    <tr>
+      <td>\a</td>
+      <td>ベル (0x07)</td>
+    </tr>
+    <tr>
+      <td>\e</td>
+      <td>エスケープ (0x1b)</td>
+    </tr>
+    <tr>
+      <td>\s</td>
+      <td>空白 (0x20)</td>
+    </tr>
+    <tr>
+      <td>\nnn</td>
+      <td>8 進数表記 (n は 0-7)</td>
+    </tr>
+    <tr>
+      <td>\xnn</td>
+      <td>16 進数表記 (n は 0-9,a-f)</td>
+    </tr>
+    <tr>
+      <td>\cx or \C-x</td>
+      <td>コントロール文字 (x は ASCII 文字)</td>
+    </tr>
+    <tr>
+      <td>\M-x</td>
+      <td>メタ x (c | 0x80)</td>
+    </tr>
+    <tr>
+      <td>\M-\C-x</td>
+      <td>メタ コントロール x</td>
+    </tr>
+    <tr>
+      <td>\x</td>
+      <td>文字 x そのもの</td>
+    </tr>
+    <tr>
+      <td>\unnnn</td>
+      <td>Unicode 文字(n は 0-9,a-f,A-F、16進数4桁で指定)</td>
+    </tr>
+    <tr>
+      <td>\u{nnnn}</td>
+      <td>Unicode 文字列(n は 0-9,a-f,A-F)。nnnnは16進数で1桁から6桁まで指定可能。スペースかタブ区切りで複数の Unicode 文字を指定できる。例: “\u{30eb 30d3 30fc a}” # =&gt; “ルビー\n”</td>
+    </tr>
+    <tr>
+      <td>\改行</td>
+      <td>文字列中に改行を含めずに改行</td>
+    </tr>
+  </tbody>
+</table>
+
+<p><a href="https://docs.ruby-lang.org/ja/latest/doc/spec=2fliteral.html#backslash">Rubyリファレンスマニュアルより抜粋引用</a></p>
+
+<h3 id="タブt">タブ(\t)</h3>
+
+<p>分かりにくいですが、fooとbarの間にスペースではなく、タブが入ります。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"foo</span><span class="se">\t</span><span class="s2">bar"</span>
+<span class="n">foo</span>	<span class="n">bar</span>
+</code></pre></div></div>
+
+<h3 id="垂直タブv">垂直タブ(\v)</h3>
+<p>真下に移動します。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"foo</span><span class="se">\v</span><span class="s2">bar"</span>
+<span class="n">foo</span>
+   <span class="n">bar</span>
+</code></pre></div></div>
+
+<h3 id="バックスペースb">バックスペース(\b)</h3>
+
+<p>キーボードのバックスペース同様、手前1文字を消します。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"foo</span><span class="se">\b</span><span class="s2">bar"</span>
+<span class="n">fobar</span>
+</code></pre></div></div>
+
+<h3 id="ベルa">ベル(\a)</h3>
+
+<p>実行すると音がなります。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"foo</span><span class="se">\a</span><span class="s2">bar"</span>
+<span class="n">foobar</span>
+</code></pre></div></div>
+
+<h3 id="空白s">空白(\s)</h3>
+
+<p>スペース1文字入ります。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"foo</span><span class="se">\s</span><span class="s2">bar"</span>
+<span class="n">foo</span> <span class="n">bar</span>
+</code></pre></div></div>
+
+<h3 id="8進数表記-16進数表記-コントロール文字">8進数表記, 16進数表記, コントロール文字</h3>
+
+<p>これらは直接制御文字を指定する方法です。
+制御文字のコードと命令については<a href="https://ja.wikipedia.org/wiki/%E5%88%B6%E5%BE%A1%E6%96%87%E5%AD%97">Wikipedia</a>が分かりやすいです。</p>
+
+<p>例えば前述したタブの場合は コントロール文字であれば<code class="highlighter-rouge">^I</code>16進数なら<code class="highlighter-rouge">09</code>なので、
+Rubyではこう書きます。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"foo</span><span class="se">\c</span><span class="s2">Ibar"</span>
+<span class="n">foo</span>	<span class="n">bar</span>
+
+<span class="nb">puts</span> <span class="s2">"foo</span><span class="se">\x09</span><span class="s2">bar"</span>
+<span class="n">foo</span>	<span class="n">bar</span>
+</code></pre></div></div>
+
+<h3 id="unicode文字-unicode文字列">Unicode文字, Unicode文字列</h3>
+
+<p>Unicodeを直接指定します。
+例えば<code class="highlighter-rouge">A</code>の場合は<code class="highlighter-rouge">0x0041</code>なので</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"</span><span class="se">\u</span><span class="s2">0041"</span>
+<span class="no">A</span>
+</code></pre></div></div>
+
+<p>文字列<code class="highlighter-rouge">ABC</code>の場合は<code class="highlighter-rouge">0x0041 0x0042 0x0043</code>なので</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="s2">"</span><span class="se">\u</span><span class="s2">{0041 0042 0043}"</span>
+<span class="no">ABC</span>
+</code></pre></div></div>
+
+<h3 id="文字列中に改行を含めずに改行改行">文字列中に改行を含めずに改行(\改行)</h3>
+
+<p>文字列を作成中に改行しても文字列作成中を継続する場合に使います。
+これ意味わかりにくいですが、コード見ると何のことかすぐ分かります。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">hoge</span> <span class="o">=</span> <span class="s2">"foo\
+bar\
+baz"</span>
+<span class="nb">puts</span> <span class="n">hoge</span> <span class="c1"># foobarbaz</span>
+</code></pre></div></div>
+
+<h2 id="rubyのバックスラッシュ記法一覧確認したけど">Rubyのバックスラッシュ記法一覧確認したけど</h2>
+<p>用途や効果の分からない記法もありました。長年実務でも見かけたことのないものなので特別なシステム開発でしか使われないかと思います。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

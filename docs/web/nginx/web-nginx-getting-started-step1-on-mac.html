@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Macでnginxをインストールして起動する - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Macでnginxをインストールして起動する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。" />
+<meta property="og:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。" />
+<link rel="canonical" href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac" />
+<meta property="og:url" content="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-21T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-02-21T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac"},"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac","image":"https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png","description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。","headline":"Macでnginxをインストールして起動する","dateModified":"2020-02-21T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="Macでnginxをインストールして起動する">
+    <meta name="twitter:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#web">Web</a>
+      
+    
+      
+        / <a href="/tags#nginx">Nginx</a>
+      
+    
+      
+        / Macでnginxをインストールして起動する
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png" alt="Macでnginxをインストールして起動する">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Macでnginxをインストールして起動する</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-21</li>
+        
+          <li class="list-inline-item"><a href="/tags#web">web</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">mac</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#nginxはwebサーバ">nginxはWebサーバ</a>
+    <ul>
+      <li><a href="#webサーバとは">Webサーバとは？</a></li>
+      <li><a href="#ポートとは">ポートとは？</a></li>
+      <li><a href="#ドキュメントルートとは">ドキュメントルートとは？</a></li>
+    </ul>
+  </li>
+  <li><a href="#なぜmacでnginxなのか">なぜMacでnginxなのか？</a></li>
+  <li><a href="#macにnginxをhomebrewでインストール">Macにnginxをhomebrewでインストール</a>
+    <ul>
+      <li><a href="#homebrewでインストール">homebrewでインストール</a></li>
+      <li><a href="#nginxが入ってるか確認">nginxが入ってるか確認</a></li>
+      <li><a href="#nginxを起動する">nginxを起動する</a></li>
+      <li><a href="#nginxを停止する">nginxを停止する</a></li>
+      <li><a href="#その他シグナル">その他シグナル</a></li>
+    </ul>
+  </li>
+  <li><a href="#nginxの構成">nginxの構成</a></li>
+  <li><a href="#nginxの設定ファイル">nginxの設定ファイル</a>
+    <ul>
+      <li><a href="#nginxの設定ファイルの場所">nginxの設定ファイルの場所</a>
+        <ul>
+          <li><a href="#補足-brew-info-の-usrlocaletcnginxservers">補足: brew info の /usr/local/etc/nginx/servers/</a></li>
+        </ul>
+      </li>
+      <li><a href="#ドキュメントルートの確認と変更">ドキュメントルートの確認と変更</a></li>
+      <li><a href="#ポートの確認と変更">ポートの確認と変更</a></li>
+      <li><a href="#nginxの設定ファイルのテスト">nginxの設定ファイルのテスト</a>
+        <ul>
+          <li><a href="#-nginx--tでテスト結果を表示"><code class="highlighter-rouge">$ nginx -t</code>でテスト結果を表示</a></li>
+          <li><a href="#-nginx--tで設定ファイルも表示"><code class="highlighter-rouge">$ nginx -T</code>で設定ファイルも表示</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#nginxのログファイル">nginxのログファイル</a></li>
+</ul>
+  </div>
+
+  <p>MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。
+Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。</p>
+
+<h2 id="nginxはwebサーバ">nginxはWebサーバ</h2>
+
+<p><a href="https://ja.wikipedia.org/wiki/Nginx">nginx - Wikipedia</a></p>
+<blockquote>
+  <p>nginxとはフリーかつオープンソースなWebサーバである。
+処理性能・高い並行性・メモリ使用量の小ささに焦点を当てて開発
+HTTP, HTTPS, SMTP, POP3, IMAPのリバースプロキシの機能や、ロードバランサ、HTTPキャッシュなどの機能も持つ。</p>
+</blockquote>
+
+<p>いろんな通信プロトコルや通信機能をカバーした <strong>Webサーバ</strong> です。</p>
+
+<p>nginxは1つのマスタープロセスと複数のワーカープロセスで構成されてます。</p>
+<ul>
+  <li>マスタープロセス：nginx.confを読み取り、ワーカープロセスを維持する。</li>
+  <li>ワーカープロセス：リクエスト処理</li>
+</ul>
+
+<p>イベントベースのモデルとOS依存メカニズムを使用して、ワーカプロセス間でのリクエストを効率よく分散します。<br />
+ワーカープロセス数は構成ファイルで定義され、固定値か使用可能なCPUコア数に自動調整します。</p>
+
+<h3 id="webサーバとは">Webサーバとは？</h3>
+<p>粒度荒く単純に説明するなら<br />
+ブラウザに、静的コンテンツ(HTMLや画像など)を配信するソフトウェア＋ハードです。</p>
+
+<p>nginxを使うことでmacOSにポートを開き、ポートからのHTTPリクエストが来たらドキュメントルート内の一致するパス(ファイル)を返すようになります。<br />
+つまり静的コンテンツなブログのようなサービスを立ち上げることができるということです。</p>
+
+<h3 id="ポートとは">ポートとは？</h3>
+<p>噛み砕いて説明すると、コンピュータ通信における窓口です。<br />
+外のコンピュータはこの窓口を通して中のコンピュータに情報を送っています。<br />
+普段このポートは使わない場合は閉じてあります。
+またポートには番号が割り振られており、ポートは655356個あります。
+一部ポートには用途が予め決められています。
+例えばブラウザが通信で使っているプロトコルHTTPは80番ポートです。</p>
+
+<h3 id="ドキュメントルートとは">ドキュメントルートとは？</h3>
+<p>Webサーバが外部に公開するためのディレクトリです。
+このディレクトリにファイルを配置することで、パスと名前が一致していればWebサーバはブラウザに一致したファイルを返します。</p>
+
+<h2 id="なぜmacでnginxなのか">なぜMacでnginxなのか？</h2>
+<p>nginxはWebサーバであり、大抵のサーバOSはLinuxなので、nginxはLinux上で使うことが多いです。<br />
+MacとLinuxではコマンドやパス構成が異なることから、Mac上で得た知識を完全移行はできません。</p>
+
+<p>しかし、<strong>nginxの基礎理解のために慣れたOSを手元で試行錯誤することは全体像の理解を促進します。</strong><br />
+また、VirtualBoxなど仮想OSでLinuxをMac上で構築することもできますが、ブリッジなど仮想OS自体の知識が必要だったり純粋にnginxの把握には不向きだったりします。</p>
+
+<p>加えて、アプリサーバ開発中にWebサーバをnginxで動作確認したいケースもありえます。</p>
+
+<h2 id="macにnginxをhomebrewでインストール">Macにnginxをhomebrewでインストール</h2>
+<p>Macのパッケージ管理ソフトウェアHomebrewを使ってnginxをインストールします。</p>
+
+<h3 id="homebrewでインストール">homebrewでインストール</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install nginx
+</code></pre></div></div>
+
+<h3 id="nginxが入ってるか確認">nginxが入ってるか確認</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nginx <span class="nt">-v</span>
+nginx version: nginx/1.17.8
+</code></pre></div></div>
+
+<h3 id="nginxを起動する">nginxを起動する</h3>
+
+<p><code class="highlighter-rouge">launchd</code>として起動すれば、ログイン時に自動でサービス起動します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew services start nginx
+</code></pre></div></div>
+
+<p>単純起動は <code class="highlighter-rouge">nginx</code> を実行するだけです。</p>
+
+<p>どのポートを開いてるかは<code class="highlighter-rouge">lsof</code>で確認できます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>lsof <span class="nt">-c</span> nginx <span class="nt">-P</span> | <span class="nb">grep </span>LISTEN
+nginx   97024 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span class="k">*</span>:8080 <span class="o">(</span>LISTEN<span class="o">)</span>
+nginx   97025 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span class="k">*</span>:8080 <span class="o">(</span>LISTEN<span class="o">)</span>
+</code></pre></div></div>
+<p>この場合は8080が開いてるので、 http://localhost:8080 にアクセスすると表示されます。</p>
+
+<p>▼<code class="highlighter-rouge">lsof</code>に関しては以下のの記事で説明してます。<br />
+<span><a href="/tools/lsof/tools-lsof-basic">lsofでプロセスが使用中のポートやファイルを確認</a></span></p>
+
+<p>設定に問題なければ、デフォルトで用意されているhtmlページが表示されます。</p>
+
+<p><a href="/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/1.png"><img src="/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/1.png" width="75%" alt="nginx起動初期画面" /></a></p>
+
+<h3 id="nginxを停止する">nginxを停止する</h3>
+<p>stopシグナルを送ります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nginx -s stop
+</code></pre></div></div>
+
+<h3 id="その他シグナル">その他シグナル</h3>
+
+<table>
+  <thead>
+    <tr>
+      <th>シグナル名</th>
+      <th>意味</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>nginx -s stop</td>
+      <td>nginxを停止する。処理中のリクエスト待たずに終了する。</td>
+    </tr>
+    <tr>
+      <td>nginx -s quit</td>
+      <td>nginxを停止する。処理を待つ。</td>
+    </tr>
+    <tr>
+      <td>nginx -s reopen</td>
+      <td>ログファイルを開き直す</td>
+    </tr>
+    <tr>
+      <td>nignx -s reload</td>
+      <td>nginxの設定ファイルを再読み込みする</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2 id="nginxの構成">nginxの構成</h2>
+
+<p>nginxの内部構成をざっくり分けると次のようになります。</p>
+
+<ul>
+  <li>設定
+    <ul>
+      <li>/usr/local/etc/nginx</li>
+    </ul>
+  </li>
+  <li>ドキュメントルート(ディレクトリ)</li>
+  <li>追加モジュール</li>
+  <li>ログ</li>
+  <li>ログローテーション</li>
+  <li>キャッシュ</li>
+</ul>
+
+<h2 id="nginxの設定ファイル">nginxの設定ファイル</h2>
+<p>nginxには細かな動作やパラメータを設定するファイル（設定ファイル）があります。<br />
+設定ファイルを変更してnginxをチューニングできます。</p>
+
+<h3 id="nginxの設定ファイルの場所">nginxの設定ファイルの場所</h3>
+<p>Macの場合は<code class="highlighter-rouge">/usr/local/etc/nginx/nginx.conf</code>になります。
+フォルダ上に<code class="highlighter-rouge">nginx.conf</code>だけでなく<code class="highlighter-rouge">nginx.conf</code>内部でincludeされている設定ファイル(<code class="highlighter-rouge">mime.types</code>など)が配置されてあります。</p>
+
+<h4 id="補足-brew-info-の-usrlocaletcnginxservers">補足: brew info の /usr/local/etc/nginx/servers/</h4>
+<p>ちなみに <code class="highlighter-rouge">brew info nginx</code>で</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx will load all files <span class="k">in</span> /usr/local/etc/nginx/servers/.
+</code></pre></div></div>
+<p>とは記述されているのは、 <code class="highlighter-rouge">nginx.conf</code>内で</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include servers/*;
+</code></pre></div></div>
+<p>と記述されてるためです。</p>
+
+<p><code class="highlighter-rouge">servers</code>フォルダ内にファイルを置くことで設定ファイルとして読み込んでくれるということです。<br />
+なお、<code class="highlighter-rouge">servers</code>フォルダは存在しないため自分で作成が必要です。</p>
+
+<h3 id="ドキュメントルートの確認と変更">ドキュメントルートの確認と変更</h3>
+<p>ドキュメントルートは<code class="highlighter-rouge">nginx.conf</code>内に定義されてます。</p>
+
+<p>↓は抜粋したものです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  server {
+    location / {
+      root  /usr/local/var/www;
+      index index.html index.hml;
+    }
+  }
+}
+</code></pre></div></div>
+
+<h3 id="ポートの確認と変更">ポートの確認と変更</h3>
+
+<p>現在のポート番号は <code class="highlighter-rouge">nginx.conf</code>内に定義されてます。</p>
+
+<p>↓は抜粋したものです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  server {
+    listen  8080;
+  }
+}
+</code></pre></div></div>
+<p>この場合は8080ポート番号を開いています。</p>
+
+<h3 id="nginxの設定ファイルのテスト">nginxの設定ファイルのテスト</h3>
+
+<p>設定ファイルの書き方に問題がないかテストする方法があります。
+方法は２つあり、</p>
+
+<h4 id="-nginx--tでテスト結果を表示"><code class="highlighter-rouge">$ nginx -t</code>でテスト結果を表示</h4>
+<p>設定ファイルをテストして結果を表示する。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nginx <span class="nt">-t</span>
+nginx: the configuration file /usr/local/etc/nginx/nginx.conf syntax is ok
+nginx: configuration file /usr/local/etc/nginx/nginx.conf <span class="nb">test </span>is successful
+</code></pre></div></div>
+
+<h4 id="-nginx--tで設定ファイルも表示"><code class="highlighter-rouge">$ nginx -T</code>で設定ファイルも表示</h4>
+<p>設定ファイルをテストして、設定ファイルinclude含め一つの設定ファイルとして表示する。</p>
+
+<h2 id="nginxのログファイル">nginxのログファイル</h2>
+<p>ログはアクセスログとエラーログの２酒類です。<br />
+ログの出力先は設定ファイルで変更できます。</p>
+
+<p><em>nginx.conf</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error_log  logs/error.log;
+
+...
+
+http {
+  log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+  access_log  logs/accss.log main;
+
+  ...
+
+  server {
+    access_log logs/host.access.log main;
+  }
+
+}
+</code></pre></div></div>
+
+<p>httpブロック内のアクセスログでもいいですが、絞りたい場合は serverブロック内のアクセスログもあります。
+log_formatを使わず直接access_log にformatを書いても大丈夫です。</p>
+
+<p>上記の構文を次の記事となる<span><a href="/web/nginx/web-nginx-getting-started-step2-on-mac">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></span>
+で説明します。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-security-on-mac">Mac上でnginxのセキュリティ最低限を確認する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-customize-on-mac">Mac上のnginx設定ファイルをドメイン毎に分ける</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step2-on-mac">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

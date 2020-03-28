@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc"},"url":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc","headline":"360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話","dateModified":"2019-09-07T00:00:00+09:00","datePublished":"2019-09-07T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc.jpg","description":"GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"datePublished":"2019-09-07T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc"},"url":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc","image":"https://blog.mothule.com/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc.jpg","description":"GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。","headline":"360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話","dateModified":"2019-09-07T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -198,7 +198,7 @@
 
 <p>原因がいまいち分からず、情報集めるため公式ドキュメントを覗いたら驚愕しました。</p>
 
-<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-1.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-1.png" width="50%" /></a></p>
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-1.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-1.png" width="50%" alt="" /></a></p>
 
 <p><strong>oh…</strong> なんとほぼ全部が <code class="highlighter-rouge">Deprecated</code> ラベルがついてました。</p>
 
@@ -223,7 +223,7 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 <p>GLKitと異なりSceneKitではOpenGLを直接操作するのではなく、Sceneと呼ばれる単位で描画環境の構築を行います。<br />
 そしてこのScene内はNodeと呼ばれるディレクトリのような階層構造で描画オブジェクトを管理しています。</p>
 
-<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-2.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-2.png" width="100%" /></a>
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-2.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-2.png" width="100%" alt="" /></a>
 ↑ <a href="https://developer.apple.com/documentation/scenekit/scnscene">公式</a>より抜粋</p>
 
 <p>映画の1シーンと捉えると理解がしやすいかと思います。</p>
@@ -314,7 +314,7 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 下の図は1フレーム※で行われている処理と各フックタイミングの解説です。<br />
 ※ 60FPSだとしたら、 1 / 60 ≒ 0.01667秒毎に呼ばれる。</p>
 
-<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-3.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-3.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-3.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-3.png" width="100%" alt="" /></a></p>
 
 <p>今回は更新毎にカメラ制御などをしたいので<a href="https://developer.apple.com/documentation/scenekit/scnscenerendererdelegate/1522937-renderer">func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval)</a>を使います。</p>
 
@@ -370,11 +370,11 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 
 <p><code class="highlighter-rouge">true</code>にして実行すると画面下にオーバーレイでviewが表示されます。</p>
 
-<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-4.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-4.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-4.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-4.png" width="100%" alt="" /></a></p>
 
 <p>左側の+をタップすると、上記で解説したSceneKitがに行っている処理区分に分かれた負荷が表示されます。</p>
 
-<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-5.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-5.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-5.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-5.png" width="100%" alt="" /></a></p>
 
 <h3 id="カメラをセット">カメラをセット</h3>
 
@@ -400,7 +400,7 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 この値がなんなのかは、<a href="https://developer.apple.com/documentation/scenekit/scncamera">公式</a>に解説があります。
 ざっくり説明するとFOVが視野でZ-Farが見える距離です。</p>
 
-<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-6.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-6.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-6.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-6.png" width="100%" alt="" /></a></p>
 
 <p>ちなみにFloatだったりSCNFloatだったりCGFloatだったりと型が統一されていません。ここらへんは後々統一されるといいですね。</p>
 
@@ -427,7 +427,7 @@ diffuseの他にambientやmetalness,specularなどシェーダーがあります
 とりあえず基本だから用意してくれているってだけです。<br />
 頑張れば下図のような川瀬式シェーダーも可能になります。</p>
 
-<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-7.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-7.png" width="100%" /></a>
+<p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-7.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-7.png" width="100%" alt="" /></a>
 (図は[Kawase 2003]より)</p>
 
 <p><code class="highlighter-rouge">isDoubleSided</code> はポリゴン面の法線を無視して両面に画像を表示するように支持しています。
@@ -508,6 +508,56 @@ Yawの回転比率に応じて、PitchとRollの値をcos/sinでだしてPitch�
             
             
             
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -1140,6 +1190,14 @@ Yawの回転比率に応じて、PitchとRollの値をcos/sinでだしてPitch�
       <a href="/tags#kiji">kiji</a>
     
       <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
     
   </div>
 </div>

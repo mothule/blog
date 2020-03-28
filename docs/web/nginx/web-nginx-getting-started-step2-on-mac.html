@@ -1,0 +1,1754 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。 [so_keepalive=on off [keepidle]:[keepintvl]:[keepcnt]];" />
+<meta property="og:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。 [so_keepalive=on off [keepidle]:[keepintvl]:[keepcnt]];" />
+<link rel="canonical" href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac" />
+<meta property="og:url" content="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-22T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-02-22T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac"},"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac","image":"https://blog.mothule.com/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png","description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。 [so_keepalive=on off [keepidle]:[keepintvl]:[keepcnt]];","headline":"Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる","dateModified":"2020-02-22T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる">
+    <meta name="twitter:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。            [so_keepalive=on      off      [keepidle]:[keepintvl]:[keepcnt]];      ">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#web">Web</a>
+      
+    
+      
+        / <a href="/tags#nginx">Nginx</a>
+      
+    
+      
+        / Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png" alt="Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-22</li>
+        
+          <li class="list-inline-item"><a href="/tags#web">web</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">mac</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#ゼロからnginxconfを書いてhttpサーバを構築します">ゼロから<code class="highlighter-rouge">nginx.conf</code>を書いてHTTPサーバを構築します</a>
+    <ul>
+      <li><a href="#インストールや起動方法などが分からない方は過去記事を">インストールや起動方法などが分からない方は過去記事を</a></li>
+    </ul>
+  </li>
+  <li><a href="#最小設定でnginxのhttpサーバを構築する">最小設定でnginxのHTTPサーバを構築する</a></li>
+  <li><a href="#mainコンテキスト">mainコンテキスト</a>
+    <ul>
+      <li><a href="#userディレクティブ">userディレクティブ</a></li>
+      <li><a href="#worker_processesディレクティブ">worker_processesディレクティブ</a></li>
+      <li><a href="#error_logディレクティブ">error_logディレクティブ</a></li>
+      <li><a href="#pidディレクティブ">pidディレクティブ</a></li>
+    </ul>
+  </li>
+  <li><a href="#eventsコンテキスト">eventsコンテキスト</a>
+    <ul>
+      <li><a href="#worker_connectionsディレクティブ">worker_connectionsディレクティブ</a></li>
+      <li><a href="#worker_rlimit_nofileディレクティブ">worker_rlimit_nofileディレクティブ</a>
+        <ul>
+          <li><a href="#rlimit_nofileとは">RLIMIT_NOFILEとは？</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#同時接続に関するパラメータを整理する">同時接続に関するパラメータを整理する</a>
+    <ul>
+      <li><a href="#worker_rlimit_nofileの算出式">worker_rlimit_nofileの算出式</a></li>
+    </ul>
+  </li>
+  <li><a href="#httpコンテキスト">httpコンテキスト</a>
+    <ul>
+      <li><a href="#includeディレクティブ">includeディレクティブ</a></li>
+      <li><a href="#typesコンテキスト">typesコンテキスト</a></li>
+      <li><a href="#default_typesディレクティブ">default_typesディレクティブ</a></li>
+      <li><a href="#access_logディレクティブ">access_logディレクティブ</a>
+        <ul>
+          <li><a href="#ifcondition例">if=condition例</a></li>
+        </ul>
+      </li>
+      <li><a href="#log_formatディレクティブ">log_formatディレクティブ</a></li>
+      <li><a href="#デフォルト設定はテストすると落ちる">デフォルト設定はテストすると落ちる</a></li>
+      <li><a href="#sendfileディレクティブ">sendfileディレクティブ</a>
+        <ul>
+          <li><a href="#sendfileとは">sendfileとは？</a></li>
+        </ul>
+      </li>
+      <li><a href="#tcp_nopushディレクティブ">tcp_nopushディレクティブ</a></li>
+      <li><a href="#keepalive_timeoutディレクティブ">keepalive_timeoutディレクティブ</a>
+        <ul>
+          <li><a href="#keep-aliveとは">keep-aliveとは？</a></li>
+        </ul>
+      </li>
+      <li><a href="#gzipディレクティブ">gzipディレクティブ</a></li>
+      <li><a href="#gzip_buffersディレクティブ">gzip_buffersディレクティブ</a></li>
+      <li><a href="#gzip_comp_levelディレクティブ">gzip_comp_levelディレクティブ</a></li>
+      <li><a href="#gzip_disableディレクティブ">gzip_disableディレクティブ</a></li>
+      <li><a href="#gzip_http_versionディレクティブ">gzip_http_versionディレクティブ</a></li>
+      <li><a href="#gzip_min_lengthディレクティブ">gzip_min_lengthディレクティブ</a></li>
+      <li><a href="#gzip_proxiedディレクティブ">gzip_proxiedディレクティブ</a></li>
+      <li><a href="#gzip_typesディレクティブ">gzip_typesディレクティブ</a></li>
+      <li><a href="#gzip_varyディレクティブ">gzip_varyディレクティブ</a></li>
+    </ul>
+  </li>
+  <li><a href="#serverコンテキスト">serverコンテキスト</a>
+    <ul>
+      <li><a href="#listenディレクティブ">listenディレクティブ</a></li>
+      <li><a href="#server_nameディレクティブ">server_nameディレクティブ</a>
+        <ul>
+          <li><a href="#ワイルドカード">ワイルドカード</a></li>
+          <li><a href="#正規表現">正規表現</a></li>
+        </ul>
+      </li>
+      <li><a href="#charsetディレクティブ">charsetディレクティブ</a></li>
+      <li><a href="#access_logディレクティブ-1">access_logディレクティブ</a>
+        <ul>
+          <li><a href="#open-2-no-such-file-or-directory-が出る場合">open() 2: No such file or directory が出る場合</a></li>
+        </ul>
+      </li>
+      <li><a href="#error_pageディレクティブ">error_pageディレクティブ</a>
+        <ul>
+          <li><a href="#getに変更してリダイレクト">GETに変更してリダイレクト</a></li>
+          <li><a href="#応答コードの変更">応答コードの変更</a></li>
+          <li><a href="#応答ページを別サーバに渡す">応答ページを別サーバに渡す</a></li>
+          <li><a href="#別locationコンテキストにエラー処理を渡す">別locationコンテキストにエラー処理を渡す</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#locationコンテキスト">locationコンテキスト</a>
+    <ul>
+      <li><a href="#locationの検索フロー">locationの検索フロー</a></li>
+      <li><a href="#検索フロー例">検索フロー例</a></li>
+      <li><a href="#名前付きlocation">名前付きlocation</a></li>
+      <li><a href="#パーマネントリダイレクト">パーマネントリダイレクト</a></li>
+      <li><a href="#rootディレクティブ">rootディレクティブ</a></li>
+      <li><a href="#aliasディレクティブ">aliasディレクティブ</a></li>
+      <li><a href="#indexディレクティブ">indexディレクティブ</a></li>
+      <li><a href="#denyディレクティブ">denyディレクティブ</a></li>
+    </ul>
+  </li>
+  <li><a href="#出来上がった設定ファイルnginxconf">出来上がった設定ファイル(nginx.conf)</a>
+    <ul>
+      <li><a href="#ファイル配置図">ファイル配置図</a></li>
+    </ul>
+  </li>
+  <li><a href="#macにnginxでゼロから丁寧に簡易なhttpサーバを立てる">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></li>
+</ul>
+  </div>
+
+  <p>MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。</p>
+
+<h2 id="ゼロからnginxconfを書いてhttpサーバを構築します">ゼロから<code class="highlighter-rouge">nginx.conf</code>を書いてHTTPサーバを構築します</h2>
+
+<p><code class="highlighter-rouge">nginx.conf.default</code>を一行ずつ読み解いて有無を決めながら簡易な<strong>静的ブログ向け設定ファイルを作り上げていきます。</strong><br />
+また、<code class="highlighter-rouge">nginx.conf.default</code>にはないけど関連するものも取り上げます。</p>
+
+<p>上から一つずつ設定しており、それぞれの段階で実行が出来る状態になってありますが、<strong>もし途中で躓いた場合は</strong>
+最後に<code class="highlighter-rouge">nginx.conf</code>の全容を載せてます。確認してみてください。</p>
+
+<h3 id="インストールや起動方法などが分からない方は過去記事を">インストールや起動方法などが分からない方は過去記事を</h3>
+<p>前回はWebサーバの簡単な基礎とnginxのインストールから立ち上げるまでを説明しました。<br />
+▼前回の記事はこちらになります。<br />
+<span><a href="/web/nginx/web-nginx-getting-started-step1-on-mac">Macでnginxをインストールして起動する</a></span></p>
+
+<h2 id="最小設定でnginxのhttpサーバを構築する">最小設定でnginxのHTTPサーバを構築する</h2>
+
+<p>デフォルトで用意された<code class="highlighter-rouge">nginx.conf</code>には色々と書かれてて、やる気が萎えるのし分かりにくいです。<br />
+なので、まずはこの雛形を削りながら最少設定でHTTPサーバを構築します。</p>
+
+<p>削りきった最少でHTTPサーバを構築する設定ファイルは下記になります。</p>
+
+<p><em>nginx.conf</em></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events <span class="o">{</span>
+<span class="o">}</span>
+
+http <span class="o">{</span>
+  server <span class="o">{</span>
+  <span class="o">}</span>
+<span class="o">}</span>
+</code></pre></div></div>
+<p><code class="highlighter-rouge">events</code> <code class="highlighter-rouge">http</code> <code class="highlighter-rouge">server</code> の３つのブロックディレクティブだけでいけました。<br />
+それ以外はデフォルト値として動いているようです。<br />
+当然何も機能を設定していないので、ほぼ何もできないHTTPサーバです。<br />
+ここまで削れればとっかかりやすいですね。</p>
+
+<p>なおこれらブロックディレクティブのことはコンテキストと呼ぶようです。
+<strong>これらブロックディレクティブに1つも囲まれていない部分(インデントなし部分)をmainコンテキストと呼ぶようです。</strong></p>
+
+<p>次は、デフォルト設定ファイル(<code class="highlighter-rouge">nginx.conf.default</code>)から一つずつ確認しながら先程の最少設定ファイルを埋めていきます。</p>
+
+<h2 id="mainコンテキスト">mainコンテキスト</h2>
+
+<p>前述したどのブロックディレクティブにも囲まれていない部分から見ていきます。<br />
+<code class="highlighter-rouge">nginx.conf.default</code>ファイルの冒頭部分です。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#user  nobody;
+worker_processes  1;
+
+#error_log  logs/error.log;
+#error_log  logs/error.log  notice;
+#error_log  logs/error.log  info;
+
+#pid        logs/nginx.pid;
+</code></pre></div></div>
+
+<h3 id="userディレクティブ">userディレクティブ</h3>
+<p>workerプロセスを実行するユーザーとグループを設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">user user [group];</code><br />
+デフォルト: <code class="highlighter-rouge">nobody nobody</code></p>
+
+<p>デフォルトでもコメントアウトされてるように必須項目ではありません。</p>
+
+<h3 id="worker_processesディレクティブ">worker_processesディレクティブ</h3>
+<p>workerのプロセス数を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">worker_processes *number*|auto;</code><br />
+デフォルト: <code class="highlighter-rouge">worker_processes 1;</code></p>
+
+<p>最適値はCPUコア数、ストレージ数、負荷パターンなど多岐に渡ります。<br />
+悩ましい場合はCPUコア数を推奨します。<br />
+<code class="highlighter-rouge">auto</code>はそれを自動検出します。</p>
+
+<p>今回はCPUコア数と同じ値にします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_processes 4;
+</code></pre></div></div>
+
+<p>手元のMacのコア数はシステムレポートのハードウェア概要で確認できます。　　
+システムレポートは <code class="highlighter-rouge">Spotlight検索</code> &gt; <code class="highlighter-rouge">このMacについて.app</code> &gt; <code class="highlighter-rouge">システムレポート</code> でたどり着けます。</p>
+
+<h3 id="error_logディレクティブ">error_logディレクティブ</h3>
+<p>エラーログ出力先の設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">error_log file [level];</code><br />
+デフォルト: <code class="highlighter-rouge">error_log logs/error.log error;</code></p>
+
+<p>出力パスとログレベルを設定します。<br />
+ログレベルは<code class="highlighter-rouge">debug, info, notice, warn, error, crit, alert, emerg</code>の8個です。<br />
+例えばログレベルを<code class="highlighter-rouge">error</code>にすると<code class="highlighter-rouge">error, crit, alert, emerg</code>のレベルのログが出力されます。</p>
+
+<p>エラーログは欲しいのでログレベルerrorでログを取ろうと思います。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error_log /usr/local/var/log/nginx/error.log error;
+</code></pre></div></div>
+
+<h3 id="pidディレクティブ">pidディレクティブ</h3>
+<p>メインプロセスのプロセスIDの保存先を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">pid file;</code><br />
+デフォルト: <code class="highlighter-rouge">pid logs/nginx.pid;</code></p>
+
+<p>公式のデフォルト値は↑ですが、Macだと <code class="highlighter-rouge">/usr/local/var/run/nginx.pid</code> にあります。<br />
+デフォルト値でも問題ない場所にあるので特に指定はしないでいきます。</p>
+
+<h2 id="eventsコンテキスト">eventsコンテキスト</h2>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events {
+    worker_connections  10;
+}
+</code></pre></div></div>
+<p>接続処理に影響するブロックディレクティブです。</p>
+
+<h3 id="worker_connectionsディレクティブ">worker_connectionsディレクティブ</h3>
+
+<p>ワーカープロセスで開くことができる同時接続の最大数を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">worker_connections number;</code><br />
+デフォルト: <code class="highlighter-rouge">worker_connections 512;</code></p>
+
+<p>この接続とは、クライアントだけでなくすべての接続（プロキシサーバとの接続など）も含まれます。<br />
+また、同時接続の実際の数が、<code class="highlighter-rouge">worker_rlimit_nofile</code> に依存します。<br />
+せっかくなので <code class="highlighter-rouge">worker_rlimit_nofile</code> についても取り上げます。</p>
+
+<h3 id="worker_rlimit_nofileディレクティブ">worker_rlimit_nofileディレクティブ</h3>
+<p>ワーカープロセスが開けるファイルの最大数(<code class="highlighter-rouge">RLIMIT_NOFILE</code>)の制限を設定します。<br />
+メインプロセスを再起動せずに制限を増やすために使います。</p>
+
+<p>通常1プロセスは<code class="highlighter-rouge">RLIMIT_NOFILE</code>の数以上のファイルは開けませんが、<br />
+この値を設定することでその上限を超えたファイル数を処理できるようになります。</p>
+
+<p><strong>なおworker_rlimit_nofileディレクティブはmainコンテキスト</strong>で使えるディレクティブです。**</p>
+
+<h4 id="rlimit_nofileとは">RLIMIT_NOFILEとは？</h4>
+<p>1プロセスが開けるファイルの上限です。<br />
+確認するには<code class="highlighter-rouge">ulimit -n</code> で取れます。Macだとデフォルトは<code class="highlighter-rouge">256</code>しかないようです。</p>
+
+<h2 id="同時接続に関するパラメータを整理する">同時接続に関するパラメータを整理する</h2>
+
+<ul>
+  <li><code class="highlighter-rouge">worker_rlimit_nofile</code>はworkerプロセスが扱えるファイル上限数(<code class="highlighter-rouge">RLIMIT_NOFILE</code>)を設定する</li>
+  <li><code class="highlighter-rouge">RLIMIT_NOFILE</code>は1プロセスが開けるファイル上限で<code class="highlighter-rouge">ulimit -n</code>で確認できる。デフォルトでは<strong>256</strong>しかないようです。</li>
+  <li>OS全体で扱えるファイル数は<code class="highlighter-rouge">launchctl limit maxfiles</code>で確認できる。デフォルトでは<strong>256</strong>しかないようです。</li>
+</ul>
+
+<p><code class="highlighter-rouge">launchctl limit maxfiles</code>を変更は可能ですが、今回は目的ではないのでデフォルトのままにします。
+ちなみに変えたい場合は「launchctl limit maxfiles」で検索するとたくさん出てくるのでそちらを参考にしてください。</p>
+
+<h3 id="worker_rlimit_nofileの算出式">worker_rlimit_nofileの算出式</h3>
+<p>OS全体ファイル上限、プロセスファイル上限、workerプロセス数の３つからworkerプロセスの同時接続数を算出できそうです。</p>
+
+<p><code class="highlighter-rouge">workerプロセス数(worker_processes) * プロセスファイル上限(worker_rlimit_nofile) &lt; OS全体ファイル上限(maxfiles)</code></p>
+
+<p>この式からプロセスファイル上限(worker_rlimit_nofile)を求めます。</p>
+
+<p><strong>プロセスファイル上限(<code class="highlighter-rouge">worker_rlimit_nofile</code>) = OS全体ファイル上限(<code class="highlighter-rouge">maxfiles</code>) / workerプロセス数(<code class="highlighter-rouge">worker_processes</code>)</strong></p>
+
+<p>この式に実際の値を当てはめます。</p>
+
+<p><strong>256 / 4 = 64</strong></p>
+
+<p>ただしMacでnginxを使う目的は学習や開発版で、nginx以外にも様々なアプリでファイルを開いていると思うので、その分を考慮します。
+今回は半分にします。</p>
+
+<p><strong>64 * 0.5 = 32</strong></p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_rlimit_nofile 32;
+</code></pre></div></div>
+
+<p>ということですね。</p>
+
+<p>次に<code class="highlighter-rouge">worker_connections</code>ですが、1接続1ファイルオープンではなく少なくとも2つは消耗するようです。<a href="https://qiita.com/mikene_koko/items/85fbe6a342f89bf53e89#%E4%BD%95%E6%95%85-worker_connections-%E3%81%AE2%E5%80%8D%E3%81%AE%E5%80%A4%E3%81%8C-worker_rlimit_nofile-%E4%BB%A5%E4%B8%8B%E3%81%A7%E3%81%82%E3%82%8C%E3%81%B0ok">参考</a></p>
+
+<p>上記記事からして <code class="highlighter-rouge">worker_connections</code> は <code class="highlighter-rouge">worker_rlimit_nofile</code> の 1/3 にしておけば余裕だと思います。</p>
+
+<p>32 の 1/3 は10.6 きりよく10にします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events {
+  worker_connections 10;
+}
+</code></pre></div></div>
+
+<p>同時接続は4*10で大体40といったところでしょうか。</p>
+
+<p>実際のサーバ(Linux)では上限を結構あげたりすると思いますが、上限が上がったからといってその上限まで同時接続を捌けるとは限りません。あくまでもファイルオープンの限界値が増えただけであって、それ以外のCPU負荷やネットワーク負荷、DB負荷、メモリ負荷の問題は以前変わらずです。</p>
+
+<h2 id="httpコンテキスト">httpコンテキスト</h2>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  include       mime.types;
+  default_type  application/octet-stream;
+
+  #log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+  #                  '$status $body_bytes_sent "$http_referer" '
+  #                  '"$http_user_agent" "$http_x_forwarded_for"';
+
+  #access_log  logs/access.log  main;
+
+  sendfile        on;
+  #tcp_nopush     on;
+
+  #keepalive_timeout  0;
+  keepalive_timeout  65;
+
+  #gzip  on;
+  server {
+
+  }
+}
+
+</code></pre></div></div>
+<p>HTTPサーバに関するブロックディレクティブです。</p>
+
+<h3 id="includeディレクティブ">includeディレクティブ</h3>
+
+<p>構文: <code class="highlighter-rouge">include file|mask;</code><br />
+デフォルト: <code class="highlighter-rouge">なし</code></p>
+
+<p>別ファイルや一致するファイル群を設定として読み込みます。<br />
+取り込むファイルは、構文やディレクティブなども見てくれます。</p>
+
+<p>デフォルトnginx.confの <code class="highlighter-rouge">include mime.types;</code> は <code class="highlighter-rouge">minem.types</code> という別ファイルをロードしているようです。</p>
+
+<p>このファイルは<code class="highlighter-rouge">/usr/local/etc/nginx/</code>ディレクトリにあります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> | <span class="nb">grep </span>mime.types
+<span class="nt">-rw-r--r--</span>  1 mothule  admin  5170  7  1  2018 mime.types
+<span class="nt">-rw-r--r--</span>  1 mothule  admin  5231  2 20 03:07 mime.types.default
+</code></pre></div></div>
+
+<p>中身は <code class="highlighter-rouge">types</code> コンテキスト１つにたくさんのファイル・タイプの列挙がされてます。</p>
+
+<p><code class="highlighter-rouge">nginx.conf.default</code>の行末付近にも<code class="highlighter-rouge">include</code>は使われています。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include servers/*;
+</code></pre></div></div>
+<p>これは、サーバー毎の設定ファイルを外部ファイル化し、それをロードする場合に使います。</p>
+
+<p>▼詳しくは同シリーズの記事をご確認ください。<br />
+<span><a href="/web/nginx/web-nginx-getting-started-customize-on-mac">ドメイン別設定ファイル置き場を用意する</a></span></p>
+
+<h3 id="typesコンテキスト">typesコンテキスト</h3>
+
+<p>レスポンスのMIMEタイプと拡張子名のマッパーです。<br />
+追加時は小文字で必須です。</p>
+
+<p>デフォルトでほとんどのMIMEタイプをカバーできているのでこれはロードしたほうが良いです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  include mime.types;
+}
+</code></pre></div></div>
+
+<h3 id="default_typesディレクティブ">default_typesディレクティブ</h3>
+
+<p>レスポンスのデフォルトMIMEタイプを設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">default_types mime-type;</code><br />
+デフォルト: <code class="highlighter-rouge">default_types text/plain;</code></p>
+
+<p><code class="highlighter-rouge">types</code>コンテキストで設定したMIMEタイプに当てはまらない場合は <code class="highlighter-rouge">text/plain</code> になり、レスポンスによってはやばいものもあると思うので、デフォルトenginx.conf同様<code class="highlighter-rouge">application/octet-stream</code> にしておきます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  default_type  application/octet-stream;
+}
+</code></pre></div></div>
+
+<h3 id="access_logディレクティブ">access_logディレクティブ</h3>
+<p>アクセスログ出力先の設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">access_log file [format [buffer=size][gzip[=level]][flush=time][if=condition]]</code><br />
+デフォルト: <code class="highlighter-rouge">access_log logs/access.log combined;</code></p>
+
+<p>構文内の[]について説明すると、[]内の文字列や値は任意を表します。<br />
+例えば<code class="highlighter-rouge">[buffer=size]</code> は無指定でも問題ありません。<br />
+<code class="highlighter-rouge">[gzip[=level]]</code>だと無指定, gzip, gzip=level の3つとなります。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>引数</th>
+      <th>意味</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>file</td>
+      <td>出力先パス</td>
+    </tr>
+    <tr>
+      <td>format</td>
+      <td>1行ログの形式. 複雑な場合は後述するlog_formatの名前を指定します。</td>
+    </tr>
+    <tr>
+      <td>buffer=size</td>
+      <td>ファイルに書き込む前のバッファサイズ</td>
+    </tr>
+    <tr>
+      <td>gzip[=level]</td>
+      <td>圧縮して書き込む.levelは1~9で最大は9,デフォルトは1,ログは<code class="highlighter-rouge">zcat</code>で圧縮解除や読み取り可能です</td>
+    </tr>
+    <tr>
+      <td>flush=time</td>
+      <td>バッファをファイルに書き込むインターバル. この時間経過するとバッファをファイルに書き込みます</td>
+    </tr>
+    <tr>
+      <td>if=condition</td>
+      <td>条件付きログ. 条件が0または空文字列なら書き込まない</td>
+    </tr>
+  </tbody>
+</table>
+
+<h4 id="ifcondition例">if=condition例</h4>
+<p>次の例は$statusつまりHTTPコードが200番台,300番台ならログに書き込まない。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map $status $loggable {
+    ~^[23]  0;
+    default 1;
+}
+
+access_log /path/to/access.log combined if=$loggable;
+</code></pre></div></div>
+
+<h3 id="log_formatディレクティブ">log_formatディレクティブ</h3>
+<p>ログのフォーマットを設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">log_fomat name [escape=deafult|json|none] string ...;</code><br />
+デフォルト: <code class="highlighter-rouge">log_format combined "...";</code></p>
+
+<p>構文内の|について説明すると、|で区切られた値のみを設定できることを表します。<br />
+例えば<code class="highlighter-rouge">escape=default</code> <code class="highlighter-rouge">escape=json</code> <code class="highlighter-rouge">escape=none</code> の3パターンのみとなります。</p>
+
+<p>string には通常変数とログ書き込み時のみ存在する変数を含めたフォーマットを設定できます。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>変数名</th>
+      <th>説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>$bytes_sent</td>
+      <td>クライアントへ送信したバイト数</td>
+    </tr>
+    <tr>
+      <td>$connection</td>
+      <td>接続シリアルNo</td>
+    </tr>
+    <tr>
+      <td>$connection_requests</td>
+      <td>接続を介した現在のリクエスト数</td>
+    </tr>
+    <tr>
+      <td>$msec</td>
+      <td>ログ書き込み時間(ミリ秒)</td>
+    </tr>
+    <tr>
+      <td>$pipe</td>
+      <td>リクエストがパイプライン化されたら<code class="highlighter-rouge">p</code>が書き込まれ、それ以外は<code class="highlighter-rouge">.</code>が書き込まれます。</td>
+    </tr>
+    <tr>
+      <td>$request_length</td>
+      <td>リクエスト行、ヘッダー、本文含むリクエストの長さ</td>
+    </tr>
+    <tr>
+      <td>$request_time</td>
+      <td>リクエスト処理時間(ミリ秒).リクエストを受けてから返すまでの時間</td>
+    </tr>
+    <tr>
+      <td>$status</td>
+      <td>HTTPステータス</td>
+    </tr>
+    <tr>
+      <td>$time_iso8601</td>
+      <td>ISO8601フォーマットに沿ったローカル時間</td>
+    </tr>
+    <tr>
+      <td>$time_local</td>
+      <td>一般的なログフォーマットに沿ったローカル時間</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>ログのデフォルトは <code class="highlighter-rouge">$combined</code> が指定されており、これは次の形式になっています。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>log_format combined '$remote_addr - $remote_user [$time_local] '
+                    '"$request" $status $body_bytes_sent '
+                    '"$http_referer" "$http_user_agent"';
+</code></pre></div></div>
+<p>実際にnginxサーバにアクセスして<code class="highlighter-rouge">access.log</code>を覗いてみると下記形式でログが書き込まれます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1 - - [21/Feb/2020:18:43:21 +0900] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
+</code></pre></div></div>
+
+<h3 id="デフォルト設定はテストすると落ちる">デフォルト設定はテストすると落ちる</h3>
+<p>前述したnginx.confだとテストが落ちます。<br />
+理由はログのパスがnginxの場所からの相対パスとなっており、そこにフォルダが存在しないためです。<br />
+また場所もhomebrewの管理下になり、一般的なログ場所とは異なります。<br />
+ログのパスは下記のように絶対パスで指定します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  access_log  /usr/local/var/log/access.log  main;
+}
+</code></pre></div></div>
+
+<h3 id="sendfileディレクティブ">sendfileディレクティブ</h3>
+<p><code class="highlighter-rouge">sendfile()</code> の仕様有無を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">sendfile on|off;</code><br />
+デフォルト: <code class="highlighter-rouge">sendfile off;</code></p>
+
+<h4 id="sendfileとは">sendfileとは？</h4>
+<p>ファイルディスクリプター間のデータ転送関数。read/write組み合わせより効率が良い。<br />
+ただ、動作不安定や静的ファイルが更新不備など不安定な評判もある。</p>
+
+<p>とりあえず使ってみて動作不安定な気があればここを無効化します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  sendfile on;
+}
+</code></pre></div></div>
+
+<h3 id="tcp_nopushディレクティブ">tcp_nopushディレクティブ</h3>
+<p><code class="highlighter-rouge">TCP_NOPUSH</code>ソケットオプション または <code class="highlighter-rouge">TCP_CORK</code>オプションの使用有無を設定します。<br />
+FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<code class="highlighter-rouge">TCP_CORK</code>を使います。<br />
+このディレクティブは<code class="highlighter-rouge">sendfile</code>が有効時のみ働きます。</p>
+
+<p>構文: <code class="highlighter-rouge">tcp_nopush on|off;</code><br />
+デフォルト: <code class="highlighter-rouge">tcp_nopush off;</code></p>
+
+<p>これが有効だと、レスポンスヘッダーとファイルをまとめて送信するため、パケット数を抑え効率よくなります。</p>
+
+<p>今回は<code class="highlighter-rouge">sendfile</code>を有効化しており、<code class="highlighter-rouge">tcp_nopush</code>により高速化が見込めるので、ここも有効化します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  tcp_nopush on;
+}
+</code></pre></div></div>
+
+<h3 id="keepalive_timeoutディレクティブ">keepalive_timeoutディレクティブ</h3>
+<p>keep-aliveによる接続時間を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">keepalive_timeout timeout [header_timeout];</code><br />
+デフォルト: <code class="highlighter-rouge">keepalive_timeout 75s;</code></p>
+
+<p><code class="highlighter-rouge">[header_timeout]</code>は任意オプションです。<br />
+これはMozillaおよびKonquerorによって認識されます。 MSIEは約60秒でキープアライブ接続を自動的に閉じます。</p>
+
+<h4 id="keep-aliveとは">keep-aliveとは？</h4>
+
+<p>簡易説明すると、HTTPはリクエスト毎にサーバ／クライアント間で接続を確立し、レスポンスを返します。
+レスポンスを返したら接続を切るため、リクエストが大量にあれば、たとえ同じクライアントだとしてもそれだけ接続／切断を繰り返すことになります。  <br />
+これでは無駄なので、レスポンス送信後すぐに切断せずにしばらく待つことで、次リクエストの接続処理スキップすることで効率よくなります。</p>
+
+<p>詳細は<a href="https://www.atmarkit.co.jp/ait/articles/1605/11/news030_3.html">こちら</a>を参考にしてください。</p>
+
+<p>keep-aliveはタイムアウト値が適切であれば通信処理を効率良く出来るため、入れておきます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  keepalive_timeout: 60s;
+}
+</code></pre></div></div>
+
+<h3 id="gzipディレクティブ">gzipディレクティブ</h3>
+
+<p><code class="highlighter-rouge">gzip</code>コマンドで圧縮の使用有無を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip on|off;</code><br />
+デフォルト: <code class="highlighter-rouge">gzip off;</code></p>
+
+<p>圧縮することで通信量を減らせます。しかしトレードオフとして圧縮に必要なCPUリソースを消費します。また解凍(=展開)が必要になり解凍はクライアント側が行います。つまりクライアント側にも解凍に必要なCPUリソースを消費します。</p>
+
+<p>今回はonにしてみます。<br />
+ただし、gzipはon/offの二択ではなく、onの場合に細かいパラメータ設定が可能となっています。<br />
+せっかくなのでgzipのパラメータ設定用ディレクティブもまとめます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  gzip on;
+}
+</code></pre></div></div>
+
+<h3 id="gzip_buffersディレクティブ">gzip_buffersディレクティブ</h3>
+
+<p>レスポンス圧縮に使うバッファサイズと数を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_buffers number size;</code><br />
+デフォルト: <code class="highlighter-rouge">gzip_buffers 32 4k|16 8k;</code></p>
+
+<p>デフォルトは1メモリページと同等になってます。そのためプラットフォームに応じて <strong>32個 4kBytes</strong> か <strong>16個 8kBytes</strong> のいずれかです。</p>
+
+<p>ここはバッファサイズがメモリページを横断すると、メモリ操作によるコストがかさむのでデフォルトのままでよいと思います。</p>
+
+<h3 id="gzip_comp_levelディレクティブ">gzip_comp_levelディレクティブ</h3>
+<p>圧縮レベル(1~9)を設定します。小さいほど圧縮率は下がります。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_comp_level level;</code><br />
+デフォルト: <code class="highlighter-rouge">gzip_comp_level 1;</code></p>
+
+<p>圧縮は線形比例ではありません。なので<strong>9が1より9倍圧縮率が高くなることはありません。</strong><br />
+圧縮レベル別のパフォーマンスは<a href="https://qiita.com/nmatayoshi/items/9884eea9b0633c1c1f6c">こちらの記事</a>が参考になります。</p>
+
+<p>ここは1か2がコスパよいのでデフォルトと同じ1のままにします。</p>
+
+<h3 id="gzip_disableディレクティブ">gzip_disableディレクティブ</h3>
+
+<p>いずれかの正規表現に一致する<code class="highlighter-rouge">User-Agent</code>には<code class="highlighter-rouge">gzip</code>圧縮を無効に設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_disable regex ...;</code></p>
+
+<p>今回は特に除外はしないので、未設定にします。</p>
+
+<h3 id="gzip_http_versionディレクティブ">gzip_http_versionディレクティブ</h3>
+
+<p>レスポンス圧縮に必要な最小HTTPバージョンを設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_http_version 1.0 | 1.1;</code>
+デフォルト: <code class="highlighter-rouge">gzip_http_version 1.1;</code></p>
+
+<p>最近は1.1は当たり前なので、これはデフォルトのままにします。</p>
+
+<h3 id="gzip_min_lengthディレクティブ">gzip_min_lengthディレクティブ</h3>
+
+<p>レスポンスを圧縮する最小サイズを設定します。この最小サイズは<code class="highlighter-rouge">Content-Length</code>が使われます。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_min_length length;</code>
+デフォルト: <code class="highlighter-rouge">gzip_min_length 20;</code></p>
+
+<p>これは無圧縮のほうがコスパ良いサイズについて設定します。</p>
+
+<p>ここの値は通信帯域やパケットサイズに関係します。デフォルトは小さすぎるので1k(1024)にします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  gzip_min_length 1024;
+}
+</code></pre></div></div>
+
+<h3 id="gzip_proxiedディレクティブ">gzip_proxiedディレクティブ</h3>
+
+<p>リクエスト／レスポンスに応じてプロキシされたリクエストのレスポンスも圧縮するかを設定します。<br />
+つまり、プロキシから来たリクエストの結果(レスポンス)を圧縮するかどうかを設定します。</p>
+
+<p>パラメータは複数指定が可能です。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_proxied off|expired|no-cache|no-store|private|no_last_modified|no_etag|auth|any ...;</code><br />
+デフォルト: <code class="highlighter-rouge">gzip_proxied off;</code></p>
+
+<p>nginxはリバースプロキシ機能を持っており、そこで圧縮したレスポンスを内部ネットワークに応答することもできます。<br />
+その場合は既に圧縮したレスポンスに関しては何もする必要がありません。</p>
+
+<p>プロキシ経由かどうかは<code class="highlighter-rouge">Via</code>ヘッダーフィールドの存在で確認できます。</p>
+
+<p>パラメータが多いので表にします。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>パラメータ</th>
+      <th>説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>off</td>
+      <td>プロキシされたリクエストのレスポンスの圧縮を無効</td>
+    </tr>
+    <tr>
+      <td>expired</td>
+      <td>期限切れ<code class="highlighter-rouge">Expires</code>があれば有効</td>
+    </tr>
+    <tr>
+      <td>no-cache</td>
+      <td><code class="highlighter-rouge">Cache-Control</code>に<code class="highlighter-rouge">no-cache</code>があれば有効</td>
+    </tr>
+    <tr>
+      <td>no-store</td>
+      <td><code class="highlighter-rouge">Cache-Control</code>に<code class="highlighter-rouge">no-store</code>があれば有効</td>
+    </tr>
+    <tr>
+      <td>private</td>
+      <td><code class="highlighter-rouge">Cache-Control</code>に<code class="highlighter-rouge">private</code>があれば有効</td>
+    </tr>
+    <tr>
+      <td>no_last_modified</td>
+      <td><code class="highlighter-rouge">Last-Modified</code>が<strong>なければ</strong>有効</td>
+    </tr>
+    <tr>
+      <td>no_etag</td>
+      <td><code class="highlighter-rouge">ETag</code>が<strong>なければ</strong>有効</td>
+    </tr>
+    <tr>
+      <td>auth</td>
+      <td><code class="highlighter-rouge">Authorization</code>があれば有効</td>
+    </tr>
+    <tr>
+      <td>any</td>
+      <td>プロキシされたリクエストのレスポンスの圧縮を有効</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>複数指定は、スペース区切りで設定します。</p>
+
+<p>今回はリバースプロキシは介さないのでデフォルト(<code class="highlighter-rouge">off</code>)のままにします。</p>
+
+<h3 id="gzip_typesディレクティブ">gzip_typesディレクティブ</h3>
+
+<p>圧縮対象となるMIMEタイプを設定します。<br />
+なお<code class="highlighter-rouge">text/html</code>は常に圧縮されます。また <code class="highlighter-rouge">*</code>を指定すると全てのMIMEに一致します。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_types mime-type ...;</code>
+デフォルト: <code class="highlighter-rouge">gzip_types text/html;</code></p>
+
+<p>今回は、CSSやJavascript、JSONも圧縮対象にします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  gzip_types text/css text/javascript application/json;
+}
+</code></pre></div></div>
+
+<h3 id="gzip_varyディレクティブ">gzip_varyディレクティブ</h3>
+<p>圧縮ディレクティブ(<code class="highlighter-rouge">gzip</code>, <code class="highlighter-rouge">gzip_static</code>, <code class="highlighter-rouge">gunzip</code>)が有効であれば、
+<code class="highlighter-rouge">Vary: Accept-Encoding</code>ヘッダの挿入の有無を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">gzip_vary on | off;</code>
+デフォルト: <code class="highlighter-rouge">gzip_vary off;</code></p>
+
+<p>これは圧縮可能と不可能の２クライアントから同一リソースにアクセスがあった場合に起きる問題の回避として使います。
+詳しくは<a href="https://qiita.com/cubicdaiya/items/09c8f23891bfc07b14d3">こちらの記事</a>が参考になります。</p>
+
+<h2 id="serverコンテキスト">serverコンテキスト</h2>
+<p>バーチャルサーバの設定をします。</p>
+
+<p>少し長いですが<code class="highlighter-rouge">nginx.cnf.default</code>から<code class="highlighter-rouge">server</code>を抜粋したものが下記です。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  listen       8080;
+  server_name  localhost;
+
+  #charset koi8-r;
+
+  #access_log  logs/host.access.log  main;
+
+  location / {
+      root   html;
+      index  index.html index.htm;
+  }
+
+  #error_page  404              /404.html;
+
+  # redirect server error pages to the static page /50x.html
+  #
+  error_page   500 502 503 504  /50x.html;
+  location = /50x.html {
+      root   html;
+  }
+
+  # proxy the PHP scripts to Apache listening on 127.0.0.1:80
+  #
+  #location ~ \.php$ {
+  #    proxy_pass   http://127.0.0.1;
+  #}
+
+  # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
+  #
+  #location ~ \.php$ {
+  #    root           html;
+  #    fastcgi_pass   127.0.0.1:9000;
+  #    fastcgi_index  index.php;
+  #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
+  #    include        fastcgi_params;
+  #}
+
+  # deny access to .htaccess files, if Apache's document root
+  # concurs with nginx's one
+  #
+  #location ~ /\.ht {
+  #    deny  all;
+  #}
+}
+</code></pre></div></div>
+
+<h3 id="listenディレクティブ">listenディレクティブ</h3>
+<p>サーバがリクエストを受け付けるか設定します。</p>
+
+<p>構文:</p>
+<ol>
+  <li>listen address
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen address[:port] [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number]
+ [fastopen=number] [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter]
+ [deferred] [bind] [ipv6only=on|off] [reuseport] [so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
+</code></pre></div>    </div>
+  </li>
+  <li>listen port
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen port [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number] [fastopen=number]
+ [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter] [deferred] [bind]
+ [ipv6only=on|off] [reuseport] [so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
+</code></pre></div>    </div>
+  </li>
+  <li>listen unix:path
+    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen unix:path [default_server] [ssl] [http2 | spdy] [proxy_protocol] [backlog=number]
+[rcvbuf=size] [sndbuf=size] [accept_filter=filter] [deferred] [bind]
+[so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
+</code></pre></div>    </div>
+  </li>
+</ol>
+
+<p>デフォルト: <code class="highlighter-rouge">listen *:80 | *:8000;</code></p>
+
+<p>パターンは大きく3つに分かれており、オプションも膨大です。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>パラメータ</th>
+      <th>説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>address</td>
+      <td>IPまたはホストネーム</td>
+    </tr>
+    <tr>
+      <td>:port</td>
+      <td>ポート番号</td>
+    </tr>
+    <tr>
+      <td>default_server</td>
+      <td>どのserverにもマッチしない場合はこのオプションがついたサーバに振り向けます</td>
+    </tr>
+    <tr>
+      <td>ssl</td>
+      <td>SSL接続必須指定</td>
+    </tr>
+    <tr>
+      <td>http2</td>
+      <td>HTTP/2接続 spdyと同時指定はできません</td>
+    </tr>
+    <tr>
+      <td>spdy</td>
+      <td>SPDY接続 http2と同時指定はできません</td>
+    </tr>
+    <tr>
+      <td>proxy_protocol</td>
+      <td>PROXY protocol必須指定</td>
+    </tr>
+    <tr>
+      <td>setfib=number</td>
+      <td>FIB(SO_SETFIB)を設定,FreeBSD限定</td>
+    </tr>
+    <tr>
+      <td>fastopen=number</td>
+      <td>TCP Fast Openを有効にし、3ウェイハンドシェイク未完了の接続キューの最大長</td>
+    </tr>
+    <tr>
+      <td>backlog=number</td>
+      <td>保留中接続キューの最大長.接続要求が最大長超えると<code class="highlighter-rouge">ECONNREFUSED</code>エラーが起きる.FreeBSD,DragonFly BSD, macOSは-1、その他は511.詳細は<a href="https://kazuhira-r.hatenablog.com/entry/2019/07/10/015733">こちら</a></td>
+    </tr>
+    <tr>
+      <td>rcvbuf=size</td>
+      <td>受信バッファサイズ(<code class="highlighter-rouge">SO_RCVBUF</code>)</td>
+    </tr>
+    <tr>
+      <td>sndbuf=size</td>
+      <td>送信バッファサイズ(<code class="highlighter-rouge">SO_SNDBUF</code>)</td>
+    </tr>
+    <tr>
+      <td>accept_filter=filter</td>
+      <td>受信フィルタ(SO_ACCEPTFILTER)の名前。FreeBSDとNetBSD5.0+のみ</td>
+    </tr>
+    <tr>
+      <td>deferred</td>
+      <td>Linuxで遅延accept()<code class="highlighter-rouge">TCP_DEFER_ACCEPT</code>を使用有無.詳細は<a href="https://blog.yuuk.io/entry/2013/07/21/022859">こちら</a></td>
+    </tr>
+    <tr>
+      <td>bind</td>
+      <td>指定された<code class="highlighter-rouge">address:port</code>ペアに個別で<code class="highlighter-rouge">bind()</code>する。hoge:80,fuga:80,<em>:80の3つlistenがあったら,</em>:80にだけ<code class="highlighter-rouge">bind()</code>する。注意点は接続受付先アドレスの決定に<code class="highlighter-rouge">getsockname()</code>がが使われる。<code class="highlighter-rouge">setfib</code>, <code class="highlighter-rouge">backlog</code>,<code class="highlighter-rouge">rcvbuf</code>, <code class="highlighter-rouge">sndbuf</code>, <code class="highlighter-rouge">accept_fileter</code>, <code class="highlighter-rouge">deferred</code>, <code class="highlighter-rouge">ipv6only</code>,<code class="highlighter-rouge">so_keepalive</code>が使われたら、渡された<code class="highlighter-rouge">address:port</code>は個々に常に<code class="highlighter-rouge">bind()</code>する</td>
+    </tr>
+    <tr>
+      <td>ipv6only=</td>
+      <td><code class="highlighter-rouge">IPV6_V6ONLY</code>を経由してワイルドカードアドレス[::]でlistenしてるIPv6ソケットがIPv6接続だけかIPv4接続の両方を受け付けるかを決める。パラメータは<code class="highlighter-rouge">on</code>と<code class="highlighter-rouge">off</code>でデフォルトは<code class="highlighter-rouge">on</code></td>
+    </tr>
+    <tr>
+      <td>reuseport</td>
+      <td>カーネルが接続をワーカープロセス間に分散して、各ワーカープロセスに<code class="highlighter-rouge">SO_REUSEPORT</code>を使って個々のlistenソケットを生成指示する。Linux3.9+とDragonFly BSDのみ。</td>
+    </tr>
+    <tr>
+      <td>so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]]</td>
+      <td>TCP keepaliveの挙動設定する。パラメタ省略するとOS値が設定される。<code class="highlighter-rouge">on</code>だと<code class="highlighter-rouge">SO_KEEPALIVE</code>がソケットに対し<code class="highlighter-rouge">on</code>になる。 <code class="highlighter-rouge">off</code>だと<code class="highlighter-rouge">SO_KEEPALIVE</code>に対し<code class="highlighter-rouge">off</code>となる。Linux2.4+, NetBSD 5+ FreeBSD 9.0-Stableでは、<code class="highlighter-rouge">TCP_KEEPIDLE</code>,<code class="highlighter-rouge">TCP_KEEPINTVL</code>,<code class="highlighter-rouge">TCP_KEEPCNT</code>を使ってkeepaliveをサポートする。省略した場合はOSのデフォルト値が使われる。</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>今回はその他のパラメータは今回は使わず、3030ポートを開こうと思います。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  listen 3030;
+}
+</code></pre></div></div>
+
+<p><strong>もし既にポートが使われている場合</strong>
+次のエラーが出力されます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o">()</span> to 127.0.0.1:8080 failed <span class="o">(</span>48: Address already <span class="k">in </span>use<span class="o">)</span>
+nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o">()</span> to <span class="o">[</span>::1]:8080 failed <span class="o">(</span>48: Address already <span class="k">in </span>use<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="server_nameディレクティブ">server_nameディレクティブ</h3>
+<p>バーチャルサーバの名前を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">server_name name ...;</code><br />
+デフォルト: <code class="highlighter-rouge">server_name "";</code></p>
+
+<h4 id="ワイルドカード">ワイルドカード</h4>
+<p>サーバ名には最初と最後の名前にワイルドカード(<code class="highlighter-rouge">*</code>)が使えます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server_name example.com *.example.com api.example.*;
+</code></pre></div></div>
+<p>ちなみに<code class="highlighter-rouge">example.com</code>と<code class="highlighter-rouge">*.example.com</code>は<code class="highlighter-rouge">.example.com</code>に結合できます。</p>
+
+<h4 id="正規表現">正規表現</h4>
+<p>名前の前にチルダ(<code class="highlighter-rouge">~</code>)をつけて</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>servername www.exmaple.com ~^www\d+\.example\.com$;
+</code></pre></div></div>
+<p>のように正規表現を使えます。</p>
+
+<p>またキャプチャも使えます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  server_name ~^(www\.)?(.+)$;
+  location / {
+    root /sites/$2;
+  }
+}
+</code></pre></div></div>
+
+<p>名前付きキャプチャは変数として使えます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  server_name ~^(www\.)?(?&lt;domain&gt;.+)$;
+
+  location / {
+    root /sites/$domain;
+  }
+}
+</code></pre></div></div>
+
+<p>ちなみに <code class="highlighter-rouge">$hostname</code>にはマシンのホスト名が入ります。</p>
+
+<p>今回はローカルホストにサーバを立てるのでlocalhostを使います。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  server_name localhost;
+}
+</code></pre></div></div>
+
+<h3 id="charsetディレクティブ">charsetディレクティブ</h3>
+<p>指定した文字セットを<code class="highlighter-rouge">Content-Type</code>レスポンスヘッダフィールドに追加します。</p>
+
+<p>構文: <code class="highlighter-rouge">charset charset | off;</code>
+デフォルト: <code class="highlighter-rouge">charset off;</code></p>
+
+<p>注意点：<code class="highlighter-rouge">source_charset</code> と違うと変換が発生する。</p>
+
+<p>今回は無難に<code class="highlighter-rouge">utf-8</code>で行きます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  charset utf-8;
+}
+</code></pre></div></div>
+
+<h3 id="access_logディレクティブ-1">access_logディレクティブ</h3>
+
+<p>このディレクティブは前述しているため基本説明は省略します。</p>
+
+<p>追記としては、このサーバに対するアクセスのみログが記録されます。</p>
+
+<p>今回はこのサーバだけのアクセスログを残しておきます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  access_log /usr/local/var/log/nginx/localhost.access.log  main;
+}
+</code></pre></div></div>
+
+<p>formatは既に定義済みの<code class="highlighter-rouge">main</code>を使います。</p>
+
+<h4 id="open-2-no-such-file-or-directory-が出る場合">open() 2: No such file or directory が出る場合</h4>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx: [emerg] open() "/usr/local/var/log/enginx/localhost.access.log" failed (2: No such file or directory)
+</code></pre></div></div>
+<p>よく見ると分かりますが、パスが間違ってます。</p>
+
+<h3 id="error_pageディレクティブ">error_pageディレクティブ</h3>
+
+<p>エラーページとエラーコードのマッピングを設定します。<br />
+<code class="highlighter-rouge">uri</code>には変数を使えます。</p>
+
+<p>構文: <code class="highlighter-rouge">error_page code ... [=[response]] uri;</code></p>
+
+<p>例えば404と500番台でエラーページを用意してるなら</p>
+
+<h4 id="getに変更してリダイレクト">GETに変更してリダイレクト</h4>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  error_page 404 /404.html;
+  error_page 500 502 503 504 /50x.html;
+}
+</code></pre></div></div>
+
+<p>と設定すると、ステータスコードと一致するページにHEAD以外のリクエストを全て<code class="highlighter-rouge">GET</code>に変更して、内部的にリダイレクトします。</p>
+
+<h4 id="応答コードの変更">応答コードの変更</h4>
+<p>例えば404ではなく200にしてEmtpy pageを出したいなら</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  error_page 404 = 200 /empty.html;
+}
+</code></pre></div></div>
+<p>のように、応答コードを変更できます。</p>
+
+<h4 id="応答ページを別サーバに渡す">応答ページを別サーバに渡す</h4>
+<p>例えばPHPなどで404を返すページがある場合</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  error_page 404 = 404php;
+}
+</code></pre></div></div>
+<p>のように設定できます。</p>
+
+<h4 id="別locationコンテキストにエラー処理を渡す">別locationコンテキストにエラー処理を渡す</h4>
+<p>内部リダイレクトでURIとメソッド変更させない場合は</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  location / {
+    error_page 404 = @fallback;
+  }
+  location @fallback {
+    proxy_pass http://backend;
+  }
+}
+</code></pre></div></div>
+<p>のように別locationに移すことができます。</p>
+
+<p>今回は404は専用ページを用意する設定にします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  error_page 404 /404.html;
+}
+</code></pre></div></div>
+
+<h2 id="locationコンテキスト">locationコンテキスト</h2>
+
+<p>リクエストURIに応じて構成を設定する。</p>
+
+<p>構文:</p>
+<ul>
+  <li><code class="highlighter-rouge">location [ = | ~ | ~* | ^~ ] uri { ... }</code></li>
+  <li>
+    <p><code class="highlighter-rouge">location @name {... }</code></p>
+  </li>
+  <li>“%XX”形式エンコードされてテキストはデコード</li>
+  <li>相対パス<code class="highlighter-rouge">.</code>と<code class="highlighter-rouge">..</code>の参照は解決</li>
+  <li>２つ以上続くスラッシュ<code class="highlighter-rouge">/</code>は1つに差し替え</li>
+</ul>
+
+<p>その後、正規化されたURIに対してマッチングが実施される。</p>
+
+<p><strong>プリフィック文字</strong>と<strong>正規表現</strong> の２つで定義できる</p>
+
+<p><strong>正規表現のオプション</strong></p>
+
+<ul>
+  <li>先頭文字が<code class="highlighter-rouge">~*</code>修飾子なら大文字小文字を区別しないマッチング</li>
+  <li>先頭文字が<code class="highlighter-rouge">~</code>修飾子なら大文字小文字を区別するマッチング</li>
+</ul>
+
+<h3 id="locationの検索フロー">locationの検索フロー</h3>
+
+<p>指定されたリクエストに合致するlocationを見つけるために、</p>
+
+<ol>
+  <li>nginxはまずプリフィックス文字列を使って定義されるlcoationを調べます</li>
+  <li>それらの中で、一番長くマッチするプリフィックスlocationが選択され記憶されます
+    <ul>
+      <li>記憶したプリフィックスlocationに<code class="highlighter-rouge">^~</code>修飾子があれば以降の正規表現チェックはしません。</li>
+      <li>完全一致<code class="highlighter-rouge">=</code>修飾子で一致したら検索は終了します</li>
+    </ul>
+  </li>
+  <li>設定ファイルの中に現れる順番で正規表現を調べます
+    <ol>
+      <li>正規表現の検索は一番最初にマッチした時点で終了します</li>
+      <li>正規表現にマッチしなかったら、前に記憶されたプリフィックスlocationが使われます</li>
+    </ol>
+  </li>
+</ol>
+
+<p>完全一致は指定URIのアクセスが高頻度の場合に適用すると高速化します。</p>
+
+<h3 id="検索フロー例">検索フロー例</h3>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+  # A
+}
+location / {
+  # B
+}
+location /documents/ {
+  # C
+}
+location ^= /images/ {
+  # D
+}
+location ~* \.(gif|jpeg|jpg|png)$ {
+  # E
+}
+</code></pre></div></div>
+<p>というlocationがあった場合、</p>
+
+<ul>
+  <li><code class="highlighter-rouge">/</code> はAにマッチ</li>
+  <li><code class="highlighter-rouge">/index.html</code> はBにマッチ</li>
+  <li><code class="highlighter-rouge">/documents/document.html</code> はCにマッチ</li>
+  <li><code class="highlighter-rouge">/images/1.gif</code> はDにマッチ</li>
+  <li><code class="highlighter-rouge">/documents/1.jpg</code> はEにマッチ</li>
+</ul>
+
+<p>というマッチング結果となります。</p>
+
+<h3 id="名前付きlocation">名前付きlocation</h3>
+<p><code class="highlighter-rouge">@</code>プレフィックスをつけることで名前付きとして定義できます。<br />
+リクエストのリダイレクトに使います。</p>
+
+<h3 id="パーマネントリダイレクト">パーマネントリダイレクト</h3>
+<p>locationが末尾が<code class="highlighter-rouge">/</code>で終わる定義で、設定が <code class="highlighter-rouge">proxy_pass</code>, <code class="highlighter-rouge">fastcgi_pass</code>, <code class="highlighter-rouge">uwsgi_pass</code>, <code class="highlighter-rouge">scgi_pass</code>, <code class="highlighter-rouge">memcached_pass</code>, <code class="highlighter-rouge">grpc_pass</code>の1つで処理された場合は、特別処理がされます。
+同じURIだが最後の<code class="highlighter-rouge">/</code>がないリクエストの応答は、<code class="highlighter-rouge">/</code>がリクエストのURIに追加されて301として返される。</p>
+
+<h3 id="rootディレクティブ">rootディレクティブ</h3>
+
+<p>ルートディレクトリを設定する。</p>
+
+<p>構文: <code class="highlighter-rouge">root path;</code>
+デフォルト: <code class="highlighter-rouge">root html;</code></p>
+
+<p>例えば次の設定の場合</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /i/ {
+  root /data/wwww;
+}
+</code></pre></div></div>
+<p><code class="highlighter-rouge">/i/top.png</code>リクエストは、<code class="highlighter-rouge">/data/www/i/top.png</code>が応答します。</p>
+
+<p><code class="highlighter-rouge">path</code> には <code class="highlighter-rouge">$document_root</code>と<code class="highlighter-rouge">$realpath_root</code>を除く変数が使えます。</p>
+
+<p>ルートディレクトリの値にURIを追加するだけでファイルパスが構築されます。
+URIを変更する場合は、<code class="highlighter-rouge">alias</code>ディレクティブを使います。</p>
+
+<p>今回はトップページ、記事ページ、画像の3locationを用意します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+  root /usr/local/var/www;
+}
+location /articles/ {
+  root /usr/local/var/www;
+}
+location ~* \.(gif|jpg|jpeg|png)$ {
+  root /usr/local/var/www/images;
+}
+</code></pre></div></div>
+
+<h3 id="aliasディレクティブ">aliasディレクティブ</h3>
+<p>指定locationの置き換えを設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">alias path;</code></p>
+
+<p>例えば次の設定の場合</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /i/ {
+  alias /data/www/images/;
+}
+</code></pre></div></div>
+<p><code class="highlighter-rouge">/i/top.png</code>リクエストは、<code class="highlighter-rouge">/data/www/images/top.png</code>が応答します。</p>
+
+<p>もしlocationがディレクティブの最後の場所に一致する場合</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /images/ {
+  alias /data/www/images/;
+}
+</code></pre></div></div>
+<p>この場合は、<code class="highlighter-rouge">root</code>ディレクティブを使ったほうがいいです。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /images/ {
+  root /data/www;
+}
+</code></pre></div></div>
+
+<h3 id="indexディレクティブ">indexディレクティブ</h3>
+
+<p>indexとして使われるファイル定義を設定します。</p>
+
+<p><code class="highlighter-rouge">file</code>には変数を使えます。
+ファイルは設定順でチェックします。</p>
+
+<p>構文: <code class="highlighter-rouge">index file ...;</code>
+デフォルト: <code class="highlighter-rouge">index index.html;</code></p>
+
+<p><strong>注意点:</strong></p>
+
+<p><code class="highlighter-rouge">index</code>を使うと内部リダイレクトが発生し、想定外のlocationで処理されることがあります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+  index index.html;
+}
+location / {
+  # B
+}
+</code></pre></div></div>
+
+<p>この場合、<code class="highlighter-rouge">/</code> リクエストは<code class="highlighter-rouge">/index.html</code>として、2番目のlocation(B)で処理されます。</p>
+
+<p>今回はトップページのみ指定します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+  root /usr/local/var/www;
+  index index.html;
+}
+</code></pre></div></div>
+
+<h3 id="denyディレクティブ">denyディレクティブ</h3>
+<p>指定ネットワークやアドレスのアクエス拒否を設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">deny address | CIDR | unix: | all;</code></p>
+
+<p><code class="highlighter-rouge">unix:</code>の場合は全てのUNIXドメインソケットのアクセス拒否になります。</p>
+
+<p>特定のファイルに対してアクセス拒否したい場合などに使います。<br />
+今回は特に拒否したいファイルなどはないため設定しません。</p>
+
+<h2 id="出来上がった設定ファイルnginxconf">出来上がった設定ファイル(nginx.conf)</h2>
+
+<p>この記事を通して<code class="highlighter-rouge">nginx.conf.default</code>から必要なディレクティブのみを設定したものになります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_processes  4;
+
+error_log /usr/local/var/log/nginx/error.log error;
+
+worker_rlimit_nofile 32;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  include mime.types;
+  default_type application/octet-stream;
+
+  log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+  access_log /usr/local/var/log/nginx/access.log main;
+
+  sendfile on;
+  tcp_nopush on;
+
+  keepalive_timeout 60;
+
+  gzip on;
+  gzip_min_length 1024;
+  gzip_types text/css text/javascript application/json;
+
+
+  server {
+    listen 8080;
+    server_name localhost;
+
+    charset utf-8;
+
+    access_log /usr/local/var/log/nginx/localhost.access.log  main;
+
+    error_page 404 /404.html;
+
+    location = / {
+      root /usr/local/var/www;
+    }
+
+    location /articles/ {
+      root /usr/local/var/www;
+    }
+
+    location ~* \.(gif|jpg|jpeg|png)$ {
+      root /usr/local/var/www/images;
+    }
+  }
+}
+</code></pre></div></div>
+
+<h3 id="ファイル配置図">ファイル配置図</h3>
+
+<p><em>/usr/local/var/www</em> 配下は次のように配置してます。
+<code class="highlighter-rouge">$ tree
+.
+├── 404.html
+├── articles
+│   └── 1.html
+├── images
+│   └── nginx.png
+└── index.html
+</code></p>
+
+<ul>
+  <li><code class="highlighter-rouge">localhost:8080</code>にアクセスすると <code class="highlighter-rouge">index.html</code>が返ってきます。</li>
+  <li><code class="highlighter-rouge">localhost:8080/articles/1.html</code> にアクセスすると <code class="highlighter-rouge">1.html</code> が返ってきます。</li>
+  <li><code class="highlighter-rouge">localhost:8080/nginx.png</code>にアクセスすると <code class="highlighter-rouge">nginx.png</code>が返ってきます。</li>
+  <li><code class="highlighter-rouge">localhost:8080/hoge</code>にアクセスすると <code class="highlighter-rouge">404.html</code>が返ってきます。</li>
+</ul>
+
+<h2 id="macにnginxでゼロから丁寧に簡易なhttpサーバを立てる">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</h2>
+
+<p>今回は、とても単純なブログサーバをnginxで立ち上げました。前回と違い結構なボリュームでした。<br />
+一つずつディレクティブを確認したためこのボリュームになりました。<br />
+しかしこの部分がnginxでもっとも基礎の中でも重要な基礎となります。<br />
+ここを理解することで次の記事「<span><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></span>
+」へと繋げられます。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-security-on-mac">Mac上でnginxのセキュリティ最低限を確認する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-customize-on-mac">Mac上のnginx設定ファイルをドメイン毎に分ける</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step1-on-mac">Macでnginxをインストールして起動する</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

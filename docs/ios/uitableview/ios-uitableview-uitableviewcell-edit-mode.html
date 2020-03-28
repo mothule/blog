@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode","headline":"【初心者向け】UITableViewのセルの編集制御を極める","dateModified":"2019-09-30T00:00:00+09:00","datePublished":"2019-09-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png","description":"UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。 実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"datePublished":"2019-09-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png","description":"UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。 実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。","headline":"【初心者向け】UITableViewのセルの編集制御を極める","dateModified":"2019-09-30T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -190,7 +190,7 @@
 <p><code class="highlighter-rouge">UITableView.isEditing</code> を <code class="highlighter-rouge">true</code> にすると編集モードに切り替わります。</p>
 
 <p>次のように削除と並び替えが出てきます。
-<a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif" width="100%" /></a></p>
+<a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif" width="100%" alt="" /></a></p>
 
 <p>つまり 編集モードには <code class="highlighter-rouge">アクション</code> と <code class="highlighter-rouge">並び替え</code> の2機能を備えてます。</p>
 
@@ -206,7 +206,7 @@
 <h2 id="削除と並び替えを実装する">削除と並び替えを実装する</h2>
 <p>次のようなToDoをテーブルに並べて、それを削除したり並び替えたりできるようにします。</p>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-2.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-2.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-2.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-2.png" width="100%" alt="" /></a></p>
 
 <h3 id="todoデータモデル">ToDoデータモデル</h3>
 
@@ -252,16 +252,14 @@
         <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
       </div>
       <div class="link-container-summary-brief">
-        <span>|
-| |
+        <span>
+初心者向けにiOSのUITableViewの基本的な使い方について説明します。
+この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。
 
-タップした後が残るのを消して欲しい
+Xcodeでプロジェクトを作成し、storyboardを使ってUITextFieldやUILabel, UIButtonを使って簡単な画面を作れるようになりましたか？
 
-特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
-
-```swift
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPa...</span>
+しかし、UITableViewを使おうと思ったら、途端に扱うクラスが増えてそれぞれの関係性がなんなのかついていけず、躓いている人が多いのではないでしょうか？  
+最初の躓き...</span>
       </div>
     </div>
   </a>
@@ -284,7 +282,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 <p>これを実行すると次のように削除ボタンを選べばテーブルから削除されて、かつセルを隠して再更新させても復活しなくなります。</p>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-3.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-3.gif" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-3.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-3.gif" width="100%" alt="" /></a></p>
 
 <h3 id="並び替えはイベント検知したらデータを更新する">並び替えはイベント検知したらデータを更新する</h3>
 
@@ -304,7 +302,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 <p>これを実行すると次のように並び替えた後でセルを隠して再更新しても並び順は維持されます。</p>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-4.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-4.gif" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-4.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-4.gif" width="100%" alt="" /></a></p>
 
 <h3 id="削除ラベルのタイトルを変える">削除ラベルのタイトルを変える</h3>
 
@@ -319,7 +317,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png" width="100%" alt="" /></a></p>
 
 <p>ちなみに <code class="highlighter-rouge">nil</code> を渡すとデフォルトで文字列ではなく空白になります。</p>
 
@@ -336,7 +334,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-8.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-8.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-8.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-8.png" width="100%" alt="" /></a></p>
 
 <p>しかしこれだと左側に謎のスペースが残ったままになります。</p>
 
@@ -349,7 +347,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-9.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-9.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-9.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-9.png" width="100%" alt="" /></a></p>
 
 <p>これでインデントによるスペースをなくすことができます。</p>
 
@@ -366,7 +364,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-10.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-10.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-10.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-10.png" width="100%" alt="" /></a></p>
 
 <h3 id="指定セルの編集モードできないようにする">指定セルの編集モードできないようにする</h3>
 
@@ -384,7 +382,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <p>これを実行すると次のように削除ボタンと並び替えがでなくなります。<br />
 ただし、他のセルの並び替えは有効なため、相対的に位置をずらすことはできます。</p>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-6.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-6.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-6.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-6.png" width="100%" alt="" /></a></p>
 
 <h2 id="削除ではなく追加にする">削除ではなく追加にする</h2>
 
@@ -399,7 +397,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png" width="100%" alt="" /></a></p>
 
 <p>削除と違って追加ボタンを押すとすぐに
 <code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">tableView(_:commit:forRowAt:)</code> メソッドが呼ばれます。</p>
@@ -426,11 +424,11 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-12.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-12.gif" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-12.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-12.gif" width="100%" alt="" /></a></p>
 
 <h2 id="アクションをカスタマイズする">アクションをカスタマイズする</h2>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-13.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-13.gif" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-13.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-13.gif" width="100%" alt="" /></a></p>
 
 <p>上記のようにアクションをカスタマイズできます。</p>
 
@@ -469,7 +467,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 <p>削除スワイプは、通常スワイプのアクションが2つ以上だった場合と同じ挙動がアクションが1つでも起きます。</p>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-14.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-14.gif" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-14.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-14.gif" width="100%" alt="" /></a></p>
 
 <h3 id="前方スワイプ">前方スワイプ</h3>
 
@@ -539,7 +537,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-15.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-15.gif" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-15.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-15.gif" width="100%" alt="" /></a></p>
 
 <h2 id="メニュー制御">メニュー制御</h2>
 
@@ -573,7 +571,7 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
 
 <p>上記コードを実行して、次のコンソールログは長押しでメニューを出したときの動画とログになります。</p>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif" width="100%" alt="" /></a></p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:canPerformAction:forRowAt:withSender:)action: didSetResponderTargetForCalloutBar:
 tableView(_:canPerformAction:forRowAt:withSender:)action: cut:
@@ -616,7 +614,7 @@ tableView(_:performAction:forRowAt:withSender:)
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-17.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-17.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-17.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-17.png" width="100%" alt="" /></a></p>
 
 <h2 id="どれも簡単な物ばかり">どれも簡単な物ばかり</h2>
 
@@ -642,6 +640,56 @@ tableView(_:performAction:forRowAt:withSender:)
             
             
             
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -934,6 +982,14 @@ tableView(_:performAction:forRowAt:withSender:)
       <a href="/tags#kiji">kiji</a>
     
       <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
     
   </div>
 </div>
