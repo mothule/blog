@@ -1,5 +1,5 @@
 ---
-title: RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法
+title: RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法
 categories: tools rubymine
 tags: mac rubymine nginx tools ruby rails
 image:
