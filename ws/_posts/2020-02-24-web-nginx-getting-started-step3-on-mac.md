@@ -618,4 +618,4 @@ Mac1台でnginxでWebサーバとPumaでアプリサーバを立てることで�
 
 「Mac上でnginx」という本番では無意味な環境でも理解する上ではとても効率の良い環境です。
 
-次回は[nginxのセキュリティ最低限設定](2020-02-26-web-nginx-getting-started-security-on-mac)周りについて説明します。
+次の記事は「{% post_link_text 2020-02-26-web-nginx-getting-started-customize-on-mac %}」について説明します。

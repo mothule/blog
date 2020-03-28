@@ -252,3 +252,11 @@ location = /xmlrpc.php {
 
 [参考](https://qiita.com/hi-nakamura/items/fe07afbcfb61185c47f8)
 [参考](http://cluex-developers.hateblo.jp/entry/secure-nginx-setting-for-2016)
+
+## macでnginx入門シリーズ終了
+
+この記事でmacでnginxに触れて慣れる入門記事は完了となります。
+やはりボリュームとしては結構大きく上手にまとめられていない部分もあったかと思います。
+一方でこのシリーズを通したことでnginxとはなんなのか？nginxでRailsアプリってどう立ち上がるのか？といったぼんやりとした全体像はつかめたのではないかなと思います。
+
+この記事を皮切りに今後nginxの理解がより深まればいいですね。

@@ -225,4 +225,4 @@ http {
 httpブロック内のアクセスログでもいいですが、絞りたい場合は serverブロック内のアクセスログもあります。
 log_formatを使わず直接access_log にformatを書いても大丈夫です。
 
-上記の構文を次に説明します。
+上記の構文を次の記事となる{% post_link_text 2020-02-22-web-nginx-getting-started-step2-on-mac %}で説明します。
