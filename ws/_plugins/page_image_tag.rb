@@ -12,7 +12,8 @@ module Jekyll
     def render(context)
       basename = File.basename(context['page'].path, '.md')
 
-      @image_name, @width, @alt = @markup.split(' ')
+      separater = @markup.split(' ').count > 3 ? ',' : ' '
+      @image_name, @width, @alt = @markup.split(separater).map(&:strip)
       @width = '100%' if @width.nil?
 
       image_path = find_image_path(basename, @image_name)
@@ -24,7 +25,6 @@ module Jekyll
     # 最初は /assets/images/YYYY-MM-DDフォルダの中に画像がないかを確認して、
     # なければ /assets/imagesフォルダの中に画像がないかを確認する。
     def find_image_path(basename, image_name)
-
       path_in_directory = "/assets/images/#{basename}/#{image_name}"
       full_path_in_directory = "/assets/images/#{basename}/#{basename}#{image_name}"
       image_path = "/assets/images/#{basename}#{image_name}"
