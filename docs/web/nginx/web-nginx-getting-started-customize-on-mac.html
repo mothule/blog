@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Mac上のnginx設定ファイルをドメイン毎に分ける - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Mac上のnginx設定ファイルをドメイン毎に分ける" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。" />
+<meta property="og:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。" />
+<link rel="canonical" href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac" />
+<meta property="og:url" content="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-26T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-02-26T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac"},"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac","image":"https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png","description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。","headline":"Mac上のnginx設定ファイルをドメイン毎に分ける","dateModified":"2020-02-26T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="Mac上のnginx設定ファイルをドメイン毎に分ける">
+    <meta name="twitter:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#web">Web</a>
+      
+    
+      
+        / <a href="/tags#nginx">Nginx</a>
+      
+    
+      
+        / Mac上のnginx設定ファイルをドメイン毎に分ける
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png" alt="Mac上のnginx設定ファイルをドメイン毎に分ける">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Mac上のnginx設定ファイルをドメイン毎に分ける</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-26</li>
+        
+          <li class="list-inline-item"><a href="/tags#web">web</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">mac</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#ドメイン毎に設定を分ける理由">ドメイン毎に設定を分ける理由</a>
+    <ul>
+      <li><a href="#macのnginxは開発用途がメイン">Macのnginxは開発用途がメイン</a></li>
+      <li><a href="#1macに複数ドメインを立ち上げることはよくある">1Macに複数ドメインを立ち上げることはよくある</a></li>
+      <li><a href="#nginxconfに全ドメイン設定を記述できる"><code class="highlighter-rouge">nginx.conf</code>に全ドメイン設定を記述できる</a></li>
+      <li><a href="#長い設定ファイルはメンテナンスしにくい">長い設定ファイルはメンテナンスしにくい</a></li>
+      <li><a href="#開発不要になればそのドメイン設定は不要になる">開発不要になればそのドメイン設定は不要になる</a></li>
+      <li><a href="#macのnginxconfは本番サーバと異なり変更頻度が高い">Macの<code class="highlighter-rouge">nginx.conf</code>は本番サーバと異なり変更頻度が高い</a></li>
+      <li><a href="#ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる">ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる</a></li>
+    </ul>
+  </li>
+  <li><a href="#includeディレクティブでアプリ別設定ファイル構築する">includeディレクティブでアプリ別設定ファイル構築する</a>
+    <ul>
+      <li><a href="#ドメイン別設定ファイル置き場を用意する">ドメイン別設定ファイル置き場を用意する</a></li>
+      <li><a href="#nginxconfにincludeでドメイン別設定ファイルをロードする"><code class="highlighter-rouge">nginx.conf</code>に<code class="highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</a></li>
+      <li><a href="#ドメイン別設定ファイルを用意する">ドメイン別設定ファイルを用意する</a></li>
+    </ul>
+  </li>
+  <li><a href="#慣習に倣ったバーチャルホスト構築">慣習に倣ったバーチャルホスト構築</a></li>
+  <li><a href="#mac上のnginx設定ファイルをドメイン毎に分ける">Mac上のnginx設定ファイルをドメイン毎に分ける</a></li>
+</ul>
+  </div>
+
+  <p>MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。
+今回は<code class="highlighter-rouge">nginx.conf</code>の設定内容をドメイン毎、つまりアプリ毎に分けます。
+分かれてることで複数のアプリ開発を1つの<code class="highlighter-rouge">nginx.cnf</code>に集約されなくなり管理しやすくなります。</p>
+
+<p>▼前回記事はこちらになります。<br />
+<span><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></span></p>
+
+<h2 id="ドメイン毎に設定を分ける理由">ドメイン毎に設定を分ける理由</h2>
+
+<p><code class="highlighter-rouge">nginx.cnf</code>に直接記述せず、ドメイン毎に設定ファイルを用意する理由とは何でしょうか？
+Macでnginxを使うケースは分けたほうが恩恵をえられます。
+その理由について簡単に説明します。</p>
+
+<h3 id="macのnginxは開発用途がメイン">Macのnginxは開発用途がメイン</h3>
+<p>Macを本番サーバとして使うことはありませんが、開発PCはMacかWindowsが主なOSだと思います。
+そのため1つのMacに複数のアプリが含まれやすいです。
+開発では複数アプリが同時に扱うこともあります。</p>
+
+<h3 id="1macに複数ドメインを立ち上げることはよくある">1Macに複数ドメインを立ち上げることはよくある</h3>
+<p>例えばMac1台で開発してると下記のように複数アプリが含まれることはよくあります。</p>
+
+<ul>
+  <li>アプリA(Web)</li>
+  <li>アプリB(Web)</li>
+  <li>アプリB(Backend)</li>
+</ul>
+
+<p>しかもアプリBだと、WebとBackend両方を立ち上げが必要なケースもあると思います。
+これら各nginx設定は、特に工夫しなければすべて<code class="highlighter-rouge">nginx.conf</code>に書かれるかと思います。</p>
+
+<h3 id="nginxconfに全ドメイン設定を記述できる"><code class="highlighter-rouge">nginx.conf</code>に全ドメイン設定を記述できる</h3>
+<p>実は<code class="highlighter-rouge">nginx.conf</code>は複数ドメインの設定を<code class="highlighter-rouge">nginx.conf</code>にまとめて全部記述することは可能です。
+しかしそれによりなにかと長期的に面倒なことが続きます。
+それは可読性と他ドメイン影響範囲に悪影響することです。</p>
+
+<h3 id="長い設定ファイルはメンテナンスしにくい">長い設定ファイルはメンテナンスしにくい</h3>
+<p>前述はドメイン3つですが、人によっては5~10個ドメインが入っているかと思います。
+そうなってくると、<code class="highlighter-rouge">nginx.conf</code>には10個の設定が全部記述されるためファイルがとても長くなります。
+その長くて読みにくい設定ファイルから不要な項目を削除する必要があります。</p>
+
+<h3 id="開発不要になればそのドメイン設定は不要になる">開発不要になればそのドメイン設定は不要になる</h3>
+<p>ドメイン開発が終了すればそのドメインの設定は不要となるため、削除すると思います。
+それも放置すると<code class="highlighter-rouge">nginx.conf</code>がとんでも長い行となるためです。</p>
+
+<p>削除するときにどの項目を削除するべきなのか一つ一つ読み解いて行く必要があります。
+これは変更により他ドメインへの影響範囲内になりますし、誤って消してしまうと動かなくなります。
+本番サーバはチューリング用途ですが、Macだと開発環境つど変更必要です。</p>
+
+<h3 id="macのnginxconfは本番サーバと異なり変更頻度が高い">Macの<code class="highlighter-rouge">nginx.conf</code>は本番サーバと異なり変更頻度が高い</h3>
+
+<p>本番サーバのnginx.confは一度組み込んでしまえばパフォーマンス・チューニング用途以外で変えることは少ないです。
+しかしMac上のnginxは開発用途がメインで、開発不要になれば削除作業が起きますし、新しくアプリ開発すれば追加作業が起きます。
+本番サーバと異なり設定の大きく異なる複数のアプリを何度も消したり追加したりすることとなり、よりミスの可能性が上がります。
+これらはドメインごとに設定ファイルとして分かれてることで望ましいです。</p>
+
+<h3 id="ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる">ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる</h3>
+
+<p>これらの問題を回避するためにドメイン毎に設定ファイルが用意されていれば解決できます。
+新しくアプリが追加になればファイルごと追加で、アプリが不要になればドメイン設定ファイルを削除するだけで、
+他ドメインの設定に影響を抑えられます。</p>
+
+<p>これはドメインごとの設定ファイルとシンボリックリンクで実現します。</p>
+
+<h2 id="includeディレクティブでアプリ別設定ファイル構築する">includeディレクティブでアプリ別設定ファイル構築する</h2>
+<p>では実際の構築方法について説明します。</p>
+
+<p>仕組みは単純で、ドメイン別の設定ファイルを<code class="highlighter-rouge">include</code>ディレクティブでロードしているだけです。
+<code class="highlighter-rouge">include</code>ディレクティブには<code class="highlighter-rouge">*</code>でまとめてファイル指定もできるので、これを使います。</p>
+
+<p>流れは次の通りです。</p>
+
+<ol>
+  <li>ドメイン別設定ファイル置き場を用意する</li>
+  <li><code class="highlighter-rouge">nginx.conf</code>に<code class="highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</li>
+  <li>ドメイン別設定ファイルを用意する</li>
+</ol>
+
+<h3 id="ドメイン別設定ファイル置き場を用意する">ドメイン別設定ファイル置き場を用意する</h3>
+<p>まずは設定ファイルを置く場所を用意します。場所といってもフォルダです。
+フォルダの中に入れておくことで<code class="highlighter-rouge">include</code>と<code class="highlighter-rouge">*</code>でまとめてロードできて便利だからです。</p>
+
+<p>置き場となるフォルダ名は<code class="highlighter-rouge">servers</code>とします。これは<code class="highlighter-rouge">nginx.conf.default</code>で既にそういう記述があるためです。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mkdir /usr/local/etc/nginx/servers
+</code></pre></div></div>
+
+<h3 id="nginxconfにincludeでドメイン別設定ファイルをロードする"><code class="highlighter-rouge">nginx.conf</code>に<code class="highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</h3>
+
+<p>次は<code class="highlighter-rouge">nginx.conf</code>に先程用意したフォルダ内の設定ファイルを全てロードする処理を記述します。</p>
+
+<p><em>nginx.conf</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  # 全サーバ共通設定はここ
+
+  # 各個別設定はここ
+  include servers/*;
+}
+</code></pre></div></div>
+
+<p>これにより<code class="highlighter-rouge">servers</code>フォルダ内のファイルを全てロードするようになります。</p>
+
+<h3 id="ドメイン別設定ファイルを用意する">ドメイン別設定ファイルを用意する</h3>
+
+<p>最後はそれぞれドメイン毎の設定ファイルを用意します。
+ファイル名はドメイン名と同じ方がわかりやすいです。
+今回はローカルなので<code class="highlighter-rouge">api.localhost</code>というファイル名を用意します。</p>
+
+<p>内容は動作確認できればいいので適当に用意しました。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  listen 80;
+  server_name api.localhost;
+  root /usr/local/var/www;
+}
+</code></pre></div></div>
+
+<p>以上で設定は完了です、nginxを再起動するば反映されます。
+ この設定ファイルであれば、<code class="highlighter-rouge">http://api.localhost</code> にアクセスすると、<code class="highlighter-rouge">/usr/local/var/www</code>フォルダの<code class="highlighter-rouge">index.html</code>のレスポンスを返すようになります。</p>
+
+<h2 id="慣習に倣ったバーチャルホスト構築">慣習に倣ったバーチャルホスト構築</h2>
+<p>今回紹介したドメイン毎に設定ファイルを分ける方法はnginxではバーチャルホスト構築時は少し慣習から外れた方法なので、Apacheなどからしたら少し分かりにくいかもしれません。目的はローカル上で複数ドメインをMacなど開発用とで立ち上げることなので、問題はないのですが、これが本番サーバの場合はこの方法ではなく次の方法で構築をしてください。</p>
+
+<p>大きく次のフローとなります。</p>
+
+<ol>
+  <li>sites-available フォルダ作成と個別設定ファイル配置</li>
+  <li>sites-enabled フォルダの作成と<code class="highlighter-rouge">sites-available</code>フォルダ内の個別設定ファイルへのシンボリックリンク作成</li>
+  <li>nginx.conf に include ディレクティブで sites-enabled内ファイルをロード</li>
+  <li>nginx 再起動</li>
+</ol>
+
+<p><code class="highlighter-rouge">sites-available</code>フォルダが、先程の<code class="highlighter-rouge">servers</code>フォルダとなります。
+<code class="highlighter-rouge">nginx.conf</code>で読み込む先は<code class="highlighter-rouge">sites-available</code>ではなく<code class="highlighter-rouge">sites-enabled</code>フォルダにしてください。
+直接実ファイルをロードするのではなく、<code class="highlighter-rouge">sites-enabled</code>に用意されたシンボリックリンクをロードします。</p>
+
+<p><code class="highlighter-rouge">sites-enabled</code>が間に一つ入る形になっています。
+これは<code class="highlighter-rouge">unlink</code>すること簡単にバーチャルホストを閉じることが可能となっています。
+設定ファイルの削除や移動などは必要ありません。</p>
+
+<h2 id="mac上のnginx設定ファイルをドメイン毎に分ける">Mac上のnginx設定ファイルをドメイン毎に分ける</h2>
+<p>今回は設定ファイルを別ファイルからロードすることで<code class="highlighter-rouge">nginx.conf</code>をボリュームを抑え、変更影響を受けにくい仕組みの紹介でした。
+直接書くより少し手間だったり慣れていないと確認が面倒だったりはしますが、目の前の手間から逃げ続けると将来一気に避けられない手間を対応するはめに会います。
+可読性やメンテナンス性はエンジニアには重要指標なので、目の前の面倒から逃げずに将来のもっと大きな面倒をなくしていくことは大事ですね。</p>
+
+<p>次の記事は「<span><a href="/web/nginx/web-nginx-getting-started-security-on-mac">Mac上でnginxのセキュリティ最低限を確認する</a></span>
+」について説明します。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-security-on-mac">Mac上でnginxのセキュリティ最低限を確認する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step2-on-mac">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step1-on-mac">Macでnginxをインストールして起動する</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

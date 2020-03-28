@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Rubyの%w %s %i %Qなど%記法(パーセント記法)一覧を確認 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Rubyの%w %s %i %Qなど%記法(パーセント記法)一覧を確認" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="気づいたら忘れてる%記法(パーセント記法)について一覧を確認しました。 %wと%iぐらいしか使うこと少ないですが、他にも色々ありますね。" />
+<meta property="og:description" content="気づいたら忘れてる%記法(パーセント記法)について一覧を確認しました。 %wと%iぐらいしか使うこと少ないですが、他にも色々ありますね。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/ruby-percent-syntax" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/ruby-percent-syntax" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-27-ruby-percent-syntax.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-27T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-02-27T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/ruby-percent-syntax"},"url":"https://blog.mothule.com/ruby/ruby-percent-syntax","image":"https://blog.mothule.com/assets/images/2020-02-27-ruby-percent-syntax.png","description":"気づいたら忘れてる%記法(パーセント記法)について一覧を確認しました。 %wと%iぐらいしか使うこと少ないですが、他にも色々ありますね。","headline":"Rubyの%w %s %i %Qなど%記法(パーセント記法)一覧を確認","dateModified":"2020-02-27T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="Rubyの%w %s %i %Qなど%記法(パーセント記法)一覧を確認">
+    <meta name="twitter:description" content="気づいたら忘れてる%記法(パーセント記法)について一覧を確認しました。%wと%iぐらいしか使うこと少ないですが、他にも色々ありますね。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-27-ruby-percent-syntax.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#ruby">Ruby</a>
+      
+    
+      
+        / Rubyの%w %s %i %Qなど%記法(パーセント記法)一覧を確認
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-27-ruby-percent-syntax.png" alt="Rubyの%w %s %i %Qなど%記法(パーセント記法)一覧を確認">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Rubyの%w %s %i %Qなど%記法(パーセント記法)一覧を確認</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-27</li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#記法パーセント記法の一覧">%記法(パーセント記法)の一覧</a></li>
+  <li><a href="#記法パーセント記法の区切りに改行を使う">%記法(パーセント記法)の区切りに改行を使う</a></li>
+  <li><a href="#記法パーセント記法の囲い文字を変更する">%記法(パーセント記法)の囲い文字を変更する</a></li>
+  <li><a href="#記法パーセント記法の要素に空白文字スペースを入れる">%記法(パーセント記法)の要素に空白文字(スペース)を入れる</a></li>
+  <li><a href="#バックスラッシュ記法が有効な記法パーセント記法">バックスラッシュ記法が有効な%記法(パーセント記法)</a></li>
+  <li><a href="#rubyのw-i以外にも色々ある記法パーセント記法">Rubyの%w %i以外にも色々ある%記法(パーセント記法)</a></li>
+</ul>
+  </div>
+
+  <p>気づいたら忘れてる%記法(パーセント記法)について一覧を確認しました。
+%wと%iぐらいしか使うこと少ないですが、他にも色々ありますね。</p>
+
+<h2 id="記法パーセント記法の一覧">%記法(パーセント記法)の一覧</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>%記法</th>
+      <th style="text-align: center">式展開</th>
+      <th>使用例</th>
+      <th>結果</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>%w</td>
+      <td style="text-align: center">☓</td>
+      <td>%w(foo bar baz)</td>
+      <td>[“foo”, “bar”, “baz”]</td>
+    </tr>
+    <tr>
+      <td>%W</td>
+      <td style="text-align: center">◯</td>
+      <td>%W(foo bar #{<code class="highlighter-rouge">var</code>})</td>
+      <td>[“foo”, “bar”, “baz”]</td>
+    </tr>
+    <tr>
+      <td>%</td>
+      <td style="text-align: center">◯</td>
+      <td>%(foo bar #{<code class="highlighter-rouge">var</code>})</td>
+      <td>“foo bar baz”</td>
+    </tr>
+    <tr>
+      <td>%Q</td>
+      <td style="text-align: center">◯</td>
+      <td>%(foo bar #{<code class="highlighter-rouge">var</code>})</td>
+      <td>“foo bar baz”</td>
+    </tr>
+    <tr>
+      <td>%q</td>
+      <td style="text-align: center">☓</td>
+      <td>%(foo bar baz)</td>
+      <td>“foo bar baz”</td>
+    </tr>
+    <tr>
+      <td>%x</td>
+      <td style="text-align: center">◯</td>
+      <td>%x(echo #{<code class="highlighter-rouge">var</code>})</td>
+      <td>“baz\n”</td>
+    </tr>
+    <tr>
+      <td>%r</td>
+      <td style="text-align: center">◯</td>
+      <td>%r(^#{<code class="highlighter-rouge">var</code>}$) =~ baz</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>%s</td>
+      <td style="text-align: center">☓</td>
+      <td>%s(foo_bar_baz)</td>
+      <td>:foo_bar_baz</td>
+    </tr>
+    <tr>
+      <td>%i</td>
+      <td style="text-align: center">☓</td>
+      <td>%i(foo bar baz)</td>
+      <td>[:foo, :bar, :baz]</td>
+    </tr>
+    <tr>
+      <td>%I</td>
+      <td style="text-align: center">◯</td>
+      <td>%I(foo bar #{<code class="highlighter-rouge">var</code>})</td>
+      <td>[:foo, :bar, :baz]</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>※<code class="highlighter-rouge">var</code>は変数で<code class="highlighter-rouge">baz</code>を代入してると仮定します。</p>
+
+<h2 id="記法パーセント記法の区切りに改行を使う">%記法(パーセント記法)の区切りに改行を使う</h2>
+
+<p>区切り文字は空白文字(スペース)以外にも改行が使えます。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">puts</span> <span class="sx">%w(
+foo
+bar
+baz
+)</span><span class="p">.</span><span class="nf">first</span> <span class="c1"># foo</span>
+</code></pre></div></div>
+
+<h2 id="記法パーセント記法の囲い文字を変更する">%記法(パーセント記法)の囲い文字を変更する</h2>
+<p>%w<code class="highlighter-rouge">()</code>や%w<code class="highlighter-rouge">[]</code>など括弧でも囲えますが、<strong>任意の非英数字</strong> を使うことができます。<br />
+ただし、%w,%W,%i,%Iは区切り文字に<strong>空白文字(スペース)</strong>と<strong>改行</strong> を使うため、この２つは使えません。</p>
+
+<p>また<code class="highlighter-rouge">(]</code>のように始まりと終わり文字が異なるのは使えません。</p>
+
+<h2 id="記法パーセント記法の要素に空白文字スペースを入れる">%記法(パーセント記法)の要素に空白文字(スペース)を入れる</h2>
+
+<p>%w, %W, %i, %Iは空白区切りの要素がそれぞれ評価されます。<br />
+しかしひとつの要素に空白文字を入れたいケースがあります。<br />
+その場合 スペースの前に\(バックスラッシュ)を入れると一つの要素にできます。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="sx">%w(foo bar)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"foo"</span><span class="p">,</span> <span class="s2">"bar"</span><span class="p">]</span>
+
+<span class="sx">%w(foo\ bar)</span>
+<span class="o">=&gt;</span> <span class="p">[</span><span class="s2">"foo bar"</span><span class="p">]</span>
+</code></pre></div></div>
+
+<h2 id="バックスラッシュ記法が有効な記法パーセント記法">バックスラッシュ記法が有効な%記法(パーセント記法)</h2>
+
+<p>一部の%記法(パーセント記法)はバックスラッシュ記法が有効です。</p>
+
+<p>▼バックスラッシュ記法(\tなど)の詳細はこちらになります。<br />
+<span><a href="/ruby/ruby-backslash">Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認</a></span></p>
+
+<p>バックスラッシュ記法が使える%記法(パーセント記法)は下記になります。</p>
+
+<ul>
+  <li>%W</li>
+  <li>%I</li>
+</ul>
+
+<h2 id="rubyのw-i以外にも色々ある記法パーセント記法">Rubyの%w %i以外にも色々ある%記法(パーセント記法)</h2>
+
+<p>よく使うのは2つ3つですが、意外と多かったですね。<br />
+無理して使う必要はないですが、コードリーディングでは必要なので頭の片隅においときたいですね。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

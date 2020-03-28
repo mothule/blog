@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。" />
+<meta property="og:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。" />
+<link rel="canonical" href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac" />
+<meta property="og:url" content="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-24T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-02-24T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac"},"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac","image":"https://blog.mothule.com/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/0.png","description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。","headline":"Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる","dateModified":"2020-02-24T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる">
+    <meta name="twitter:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#web">Web</a>
+      
+    
+      
+        / <a href="/tags#nginx">Nginx</a>
+      
+    
+      
+        / Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/0.png" alt="Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-24</li>
+        
+          <li class="list-inline-item"><a href="/tags#web">web</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">mac</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rails">rails</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#ゼロからnginxconfを書いてアプリサーバを構築する">ゼロから<code class="highlighter-rouge">nginx.conf</code>を書いてアプリサーバを構築する</a></li>
+  <li><a href="#webサーバとapサーバアプリサーバの違い">WebサーバとAPサーバ(アプリサーバ)の違い</a>
+    <ul>
+      <li><a href="#webサーバとは">Webサーバとは？</a></li>
+      <li><a href="#apサーバアプリサーバとは">APサーバ(アプリサーバ)とは？</a></li>
+    </ul>
+  </li>
+  <li><a href="#nginx--puma--railsを1つのmacで構想する">nginx + puma + Railsを1つのMacで構想する</a>
+    <ul>
+      <li><a href="#pumaとは">pumaとは？</a></li>
+      <li><a href="#なぜwebサーバが2つ">なぜWebサーバが2つ？</a></li>
+      <li><a href="#rackとは">Rackとは？</a></li>
+      <li><a href="#なぜnginxが必要なのか">なぜnginxが必要なのか？</a></li>
+      <li><a href="#今回のリクエストフローを図にする">今回のリクエストフローを図にする</a></li>
+      <li><a href="#rackの役割は疎結合">Rackの役割は疎結合</a></li>
+      <li><a href="#nginxはリバースプロキシ">nginxはリバースプロキシ</a></li>
+      <li><a href="#unixドメインソケットとはプロセス間通信機能">UNIXドメインソケットとはプロセス間通信機能</a></li>
+    </ul>
+  </li>
+  <li><a href="#macにnginxでwebリバースプロキシサーバを立ち上げる">MacにnginxでWebリバースプロキシサーバを立ち上げる</a>
+    <ul>
+      <li><a href="#nginxにリバースプロキシ設定する">nginxにリバースプロキシ設定する</a></li>
+    </ul>
+  </li>
+  <li><a href="#upstreamコンテキスト">upstreamコンテキスト</a>
+    <ul>
+      <li><a href="#serverディレクティブ">serverディレクティブ</a>
+        <ul>
+          <li><a href="#ヘルスモニタ">ヘルスモニタ</a></li>
+          <li><a href="#注意max_connsを超えるケース">注意：max_connsを超えるケース</a></li>
+        </ul>
+      </li>
+      <li><a href="#zoneディレクティブ">zoneディレクティブ</a></li>
+      <li><a href="#keepaliveディレクティブ">keepaliveディレクティブ</a></li>
+      <li><a href="#keepalive_requestsディレクティブ">keepalive_requestsディレクティブ</a>
+        <ul>
+          <li><a href="#なぜ接続数が決められてるのか">なぜ接続数が決められてるのか？</a></li>
+        </ul>
+      </li>
+      <li><a href="#keepalive_timeoutディレクティブ">keepalive_timeoutディレクティブ</a></li>
+      <li><a href="#proxy_passディレクティブ">proxy_passディレクティブ</a></li>
+      <li><a href="#proxy_set_headerディレクティブ">proxy_set_headerディレクティブ</a></li>
+      <li><a href="#proxy_hide_headerディレクティブ">proxy_hide_headerディレクティブ</a></li>
+      <li><a href="#proxy_redirectディレクティブ">proxy_redirectディレクティブ</a></li>
+    </ul>
+  </li>
+  <li><a href="#出来上がった設定ファイルnginxconf">出来上がった設定ファイル(nginx.conf)</a></li>
+  <li><a href="#pumaの設定をrails側で設定する">pumaの設定をRails側で設定する</a></li>
+  <li><a href="#nginxとrailsアプリを起動して疎通する">nginxとRailsアプリを起動して疎通する</a>
+    <ul>
+      <li><a href="#ファイルディスクリプタの罠">ファイルディスクリプタの罠</a></li>
+      <li><a href="#nginxのプロセス数とpumaのプロセス数">nginxのプロセス数とpumaのプロセス数</a></li>
+    </ul>
+  </li>
+  <li><a href="#mac1台にnginxでwebサーバとpumaでアプリサーバを立てた">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てた</a></li>
+</ul>
+  </div>
+
+  <p>MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。</p>
+
+<h2 id="ゼロからnginxconfを書いてアプリサーバを構築する">ゼロから<code class="highlighter-rouge">nginx.conf</code>を書いてアプリサーバを構築する</h2>
+
+<p>今回はアプリサーバ(APサーバ)をnginxで立てます。<br />
+前回の記事でゼロから作り上げた<code class="highlighter-rouge">nginx.conf</code>をベースに変更加える形で説明します。</p>
+
+<p>▼もし前回記事を見ていない場合は確認してください。<br />
+<span><a href="/web/nginx/web-nginx-getting-started-step2-on-mac">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></span></p>
+
+<p><strong>今回も使用ディレクティブを一つ一つ説明します。</strong><br />
+もし、途中で躓いた場合は最後に<code class="highlighter-rouge">nginx.conf</code>の全容を載せてます。確認してみてください。</p>
+
+<h2 id="webサーバとapサーバアプリサーバの違い">WebサーバとAPサーバ(アプリサーバ)の違い</h2>
+
+<p>まず事前知識としてWebサーバとAPサーバ(アプリサーバ)の違いについて説明します。</p>
+
+<h3 id="webサーバとは">Webサーバとは？</h3>
+<p>WebサーバはWebブラウザからのリクエストをハンドリングします。</p>
+
+<p>ブログであれば「先週の記事一覧を閲覧したい」というリクエストです。<br />
+Webサーバはリクエストを受け取るとレスポンスをWebブラウザに送信します。先程の「先週の記事一覧」であれば<code class="highlighter-rouge">html</code>や<code class="highlighter-rouge">css</code>、<code class="highlighter-rouge">画像</code>などを送信します。</p>
+
+<p><code class="highlighter-rouge">nginx</code>はWebサーバになります。</p>
+
+<h3 id="apサーバアプリサーバとは">APサーバ(アプリサーバ)とは？</h3>
+<p>厳密にはWebアプリケーションサーバ(Web Application Server)です。APサーバやアプリサーバと略されることが多いです。<br />
+Webサーバが受け取ったリクエストを処理して、結果をWebサーバに返すサーバです。<br />
+APサーバではRubyやPHPなどプログラムを呼ぶことでリクエストを動的に処理して、Webサーバに分かる形で返しています。</p>
+
+<h2 id="nginx--puma--railsを1つのmacで構想する">nginx + puma + Railsを1つのMacで構想する</h2>
+
+<p>Ruby+Railsをベースに説明します。<br />
+今回のサーバ構成は</p>
+
+<ul>
+  <li>nginx</li>
+  <li><a href="https://github.com/puma/puma">puma</a></li>
+  <li>Rails</li>
+</ul>
+
+<p>の3層構造となります。</p>
+
+<h3 id="pumaとは">pumaとは？</h3>
+<blockquote>
+  <p>並行性のために構築されたRuby/Rack Webサーバです。</p>
+</blockquote>
+
+<p><a href="https://github.com/puma/puma">github/pumaより引用</a></p>
+
+<p>pumaはWebサーバでRackにも対応しているため、puma単体でRailsなどRubyを動かすことができます。<br />
+そのため、開発時はpuma単体を使うことが多いです。</p>
+
+<p>しかしここで疑問が2つあります。</p>
+
+<ul>
+  <li>なぜWebサーバが2つ使うのか？</li>
+  <li>Rackとは何か？</li>
+</ul>
+
+<p>この２つを説明します。</p>
+
+<h3 id="なぜwebサーバが2つ">なぜWebサーバが2つ？</h3>
+
+<p>nginxはWebサーバですが、pumaもWeb/Rackサーバです。なぜ二つもWebサーバを使うのでしょうか？<br />
+<strong>それはnginxにはRackに直接つなげることができないためです。</strong><br />
+nginxがクライアントからリクエストを受け取ってもそれをRails/Rubyに渡す手段がありません。</p>
+
+<h3 id="rackとは">Rackとは？</h3>
+
+<p>ではRackとは一体何でしょうか。<br />
+<strong>RackとはRailsなどWebサーバからRubyプログラムを操作するための統一インターフェイスです。</strong></p>
+
+<p>▼Rackの詳細はこちらで説明しています。<br />
+<span><a href="/ruby/rails/rack/rails-rack-middleware-extension">RackとRack Middlewareを知ることでRailsの一部仕組みを理解する</a></span></p>
+
+<h3 id="なぜnginxが必要なのか">なぜnginxが必要なのか？</h3>
+
+<p>ではそもそも何故nginxを使うのでしょうか？役割は何でしょうか？<br />
+rack接続できないnginxを使わずとも、pumaで完結したほうが構成がシンプルになります。<br />
+しかしそれでもnginxを使っている理由は、<strong>パフォーマンスの違いにあります。</strong></p>
+
+<p>pumaはRubyで書かれてますが、nginxはCで書かれています。速度差は圧倒的にnginxが高速で多機能です。</p>
+
+<blockquote>
+  <p>処理性能・高い並行性・メモリ使用量の小ささに焦点を当てて開発されており、HTTP, HTTPS, SMTP, POP3, IMAPのリバースプロキシの機能や、ロードバランサ、HTTPキャッシュなどの機能も持つ。</p>
+</blockquote>
+
+<p><a href="https://ja.wikipedia.org/wiki/Nginx">Wikipedia</a>より引用</p>
+
+<p>静的ファイルや画像など単純処理の場合にもRailsに渡さずnginxが処理したほうが高速で、CPUリソースも他の動的処理に回せるので全体として効率よく運用できます。</p>
+
+<h3 id="今回のリクエストフローを図にする">今回のリクエストフローを図にする</h3>
+
+<p>では今回作り上げるサーバ構成を前述した知識を使うと下図のようになります。</p>
+
+<p><a href="/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/1.png"><img src="/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/1.png" width="100%" alt="nginxとpumaとRailsを使ったサーバ構成図" /></a></p>
+
+<p>一番左側の層はクライアント層で、ブラウザだったりアプリになります。<br />
+左から右にリクエストフローを箇条書きすると次のようになります。</p>
+
+<ol>
+  <li>クライアントがnginxにHTTPリクエストを渡す</li>
+  <li>nginxはHTTPリクエストを分析してRailsに渡すためpumaに渡す</li>
+  <li>pumaは受け取ったリクエストをRackが分かるデータ形式で渡す</li>
+  <li>Rackはルールに基づいてRailsを呼び出す</li>
+</ol>
+
+<p>ここで補足すると、pumaとrackとRailsは説明都合で過分解してます。<br />
+実際はこれらは同じサーバにのり、呼び出しも通常のRubyによるコールスタックです。</p>
+
+<h3 id="rackの役割は疎結合">Rackの役割は疎結合</h3>
+<p>Rails自体にHTTPサーバ機能はなく、Rackという規約を通してHTTPリクエストを捌ける機能を提供しています。<br />
+pumaはHTTPサーバ機能を持ち、Rackの規約に基づいてRackへHTTPリクエストを渡しているのです。<br />
+つまりRackを通すことでpumaとRailsの疎結合が守られています。</p>
+
+<h3 id="nginxはリバースプロキシ">nginxはリバースプロキシ</h3>
+<p>nginxの立ち位置はリバースプロキシです。<br />
+これは前述したnginxの存在理由と一致します。<br />
+つまり簡単なHTTPリクエストはnginxが担い、難しいリクエストはPuma+Railsに任せるということです。</p>
+
+<p>そしてnginxからpumaへのデータ伝達テクノロジーとしてUNIXドメインソケットを使います。</p>
+
+<h3 id="unixドメインソケットとはプロセス間通信機能">UNIXドメインソケットとはプロセス間通信機能</h3>
+<p>1つのOS内部でのプロセス間通信でしか使えないですが、高速に通信できます。<br />
+UNIXドメインソケットを使うには、ファイルシステムのパス指定するとファイルが作成されます。<br />
+このファイルはソケットファイルと呼ばれるファイルで、通常ファイルのように実体は存在しません。<br />
+システムを使ったプロセス間の通信手段としてファイルを使います。<br />
+nginxがソケットファイルを作成し、Pumaは作成されたソケットファイルに接続します。</p>
+
+<h2 id="macにnginxでwebリバースプロキシサーバを立ち上げる">MacにnginxでWebリバースプロキシサーバを立ち上げる</h2>
+
+<p>それでは実際にサーバを構築していきます。まずはメインであるnginxでWebサーバを構築します。<br />
+冒頭でも説明したように前回の記事でゼロから作り上げた<code class="highlighter-rouge">nginx.conf</code>をベースに変更加える形で説明します。</p>
+
+<p>▼もし前回記事を見ていない場合は確認してください。<br />
+<span><a href="/web/nginx/web-nginx-getting-started-step2-on-mac">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></span></p>
+
+<p>工程は大きく分けて2つです。</p>
+
+<ol>
+  <li>nginxにリバースプロキシ設定する</li>
+  <li>pumaの設定をRails側で設定する</li>
+</ol>
+
+<p>どちらも共通してUNIXドメインソケットのパス指定です。</p>
+
+<h3 id="nginxにリバースプロキシ設定する">nginxにリバースプロキシ設定する</h3>
+
+<p>前回ではlocationに対してどのフォルダを見るのかrootを設定しました。<br />
+静的処理の場合はそれで良かったのですが、動的処理は、処理を委任する必要があります。</p>
+
+<p>次のように<code class="highlighter-rouge">upstream</code>と<code class="highlighter-rouge">proxy_pass</code>ディレクティブが重要になってます。</p>
+
+<p><em>nginx.conf</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  upstream puma {
+    server unix:///usr/local/var/work/app-name/tmp/sockets/puma.sock;
+  }
+
+  server {
+    location / {
+      proxy_pass http://puma;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header Host $http_host;
+      proxy_redirect off;
+    }
+  }
+}
+</code></pre></div></div>
+
+<p>このnginx.confの各ディレクティブを一つずつ見ていきます。必要であれば関連ディレクティブも見ていきます。</p>
+
+<h2 id="upstreamコンテキスト">upstreamコンテキスト</h2>
+
+<p>サーバグループを定義します。異なるポートや通信方式のサーバ群を混在できます。
+サーバグループの中のサーバは、リクエストをバランシングして渡されます。<br />
+ここでの<code class="highlighter-rouge">upstream</code>とはネットワークで下流から上流の通信機器へデータが流れることを指してます。</p>
+
+<p>構文: <code class="highlighter-rouge">upstream name { ... }</code></p>
+
+<p>次の例は4つのサーバを混在させたサーバグループです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>upstraem backend {
+  server backend1.example.com weight=5; # ①
+  server 127.0.0.1:8080 maxfails=3 fail_timeout=30s; # ②
+  server unix:/tmp/backend3; # ③
+
+  server backup1.example.com backup; # ④
+}
+</code></pre></div></div>
+
+<p>サーバ間の分散方式は、デフォルトでは加重ラウンドロビンバランシング方式(weighted round-robin balancing method)で分散されます。
+これはサーバに対するリクエストをサーバ負荷に無関係に、ローテーションでウェイトに従い各サーバに振り分ける方式です。
+上記サーバグループに7つのリクエストがあったら次のように配信されます。</p>
+
+<ol>
+  <li>5つのリクエストが①サーバに送信される</li>
+  <li>1つのリクエストが②と③サーバにそれぞれ送信される</li>
+  <li>サーバ通信中にエラー発生したら、リクエストは次のサーバに渡される</li>
+  <li>機能してる全サーバが試行されるまで続く</li>
+  <li>どのサーバからも正常応答を取得できない場合は、最後に通信したサーバの結果を受け取る</li>
+</ol>
+
+<h3 id="serverディレクティブ">serverディレクティブ</h3>
+
+<p>アドレスとサーバパラメータを定義します。</p>
+
+<p>構文: <code class="highlighter-rouge">server address [parameters];</code></p>
+
+<p>アドレスはドメインかIPアドレスとポート、または<code class="highlighter-rouge">unix:</code>プレフィックスの後に指定されたUNIXドメインソケットパスを指定できます。
+ポート未指定はポート80が使用されます。</p>
+
+<ul>
+  <li>fuga.example.com</li>
+  <li>127.0.0.1:8080</li>
+  <li>unix:/usr/local/var/run/nginx/nginx.sock</li>
+</ul>
+
+<table>
+  <thead>
+    <tr>
+      <th>パラメータ名</th>
+      <th>説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>weight</td>
+      <td>サーバウェイト。デフォルトは1。加重ラウンドロビンバランシングで使います</td>
+    </tr>
+    <tr>
+      <td>max_conns</td>
+      <td>プロキシされるサーバへの同時アクティブ接続最大数を制限。デフォルトは０で無制限。サーバグループが共有メモリ※にない場合はこの制限はワーカープロセス毎に機能</td>
+    </tr>
+    <tr>
+      <td>max_fails</td>
+      <td>デフォルトは1回。ヘルスモニタで後述</td>
+    </tr>
+    <tr>
+      <td>max_timeout</td>
+      <td>デフォルトは10秒。ヘルスモニタで後述</td>
+    </tr>
+    <tr>
+      <td>backup</td>
+      <td>サーバをバックアップサーバとして設定。プライマリサーバが利用不可時にリクエストが渡る。<code class="highlighter-rouge">hash</code>,<code class="highlighter-rouge">ip_hash</code>,<code class="highlighter-rouge">random</code>ロードバランシング方式時は利用不可</td>
+    </tr>
+    <tr>
+      <td>down</td>
+      <td>サーバを永続的に使用不可として設定</td>
+    </tr>
+    <tr>
+      <td>resolve</td>
+      <td>サーバのドメイン名に対応するIPアドレスの変更を監視し、再起動なくupstream構成を自動変更できます。サーバグループは共有メモリに存在する必要がある</td>
+    </tr>
+    <tr>
+      <td>route</td>
+      <td>サーバのルート名を設定</td>
+    </tr>
+    <tr>
+      <td>service</td>
+      <td>DNS SRVレコードの解決を有効にし、サービス名を設定。これを使うにはサーバの解決パラメタを指定し、ポート番号なしホスト名指定が必要</td>
+    </tr>
+    <tr>
+      <td>slow_start</td>
+      <td>サーバ不可から回復後にサーバのウェイトをゼロから公称値に回復する時間を設定。デフォルトは0、つまりスロースタートは無効</td>
+    </tr>
+    <tr>
+      <td>drain</td>
+      <td>ドレインモードに設定する。このモードはサーバにバインドされた要求のみがプロキシされる</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>※共有メモリに関しては後述する<code class="highlighter-rouge">zone</code>ディレクティブを確認してください。<br />
+グループにサーバ一つの場合は、 <code class="highlighter-rouge">max_fails</code>, <code class="highlighter-rouge">max_timeout</code>, <code class="highlighter-rouge">slow_start</code>は無視される。</p>
+
+<p>今回はUNIXドメインソケット通信1つしかないため、次のようにします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  upstream puma {
+    server unix:///usr/local/var/work/app-name/tmp/sockets/puma.sock;
+  }
+}
+</code></pre></div></div>
+
+<p>ソケットファイルのパスにはアプリ名を入れるのが良いでしょう。
+まだアプリ(Railsアプリ)は用意していないので、<code class="highlighter-rouge">app-name</code>と仮置してます。</p>
+
+<h4 id="ヘルスモニタ">ヘルスモニタ</h4>
+<p>max_timeoutパラメータの指定期間内にmax_failsパラメータ指定回数失敗すると、<strong>サーバ利用不可</strong> とみなします。
+そしてmax_timeoutパラメータの期間、サーバ利用不可となります。</p>
+
+<p>サーバとの通信試行が指定回数失敗したらサーバ利用不可と判断する時間、もしくはサーバが利用できないとみなされる期間。デフォルトは10秒</p>
+
+<h4 id="注意max_connsを超えるケース">注意：max_connsを超えるケース</h4>
+<ul>
+  <li>アイドル状態のkeepalive接続</li>
+  <li>複数のワーカー</li>
+  <li>共有メモリ</li>
+</ul>
+
+<p>が有効になっている場合、プロキシサーバへのアクティブ状態またはアイドル状態の接続総数が<code class="highlighter-rouge">max_conns</code>値を超える場合があります。</p>
+
+<p><code class="highlighter-rouge">keepalive</code>接続に関しては、後述する<code class="highlighter-rouge">keepalive</code>ディレクティブを確認してください。</p>
+
+<h3 id="zoneディレクティブ">zoneディレクティブ</h3>
+<p>「ワーカプロセス間で共有されるグループ構成」と「実行状態」を保持する共有メモリゾーンの名前とサイズを定義します。
+この設定は複数グループが同じゾーンを共有するケースがあります。その場合はサイズを1回指定で十分です。</p>
+
+<p>構文: <code class="highlighter-rouge">zone name [size];</code></p>
+
+<p>商用サブスクリプションの場合は、nginx再起動せずグループメンバーシップ変更できたり、特定サーバの設定変更できます。</p>
+
+<p>共有メモリを使わない場合は、各ワーカプロセスはサーバグループ設定のそれぞれのコピーを保持し、関連するカウンターのそれぞれのセットを保存します。
+カウンターにはグループ内のそれぞれのサーバへの現在の接続数が含まれ、サーバへリクエスト送信の失敗数が含まれます。
+サーバグループの設定は変更不可です。
+共有メモリが有効な場合、個別でもっているサーバグループ設定全てを共有メモリで扱います。</p>
+
+<p>また共有メモリが有効な場合、あるプロセスがサーバ利用不可と判断したら、別プロセスにも共有されます。
+無効な場合は、それぞれがサーバ利用不可と判断されるまでサーバへリクエストを送信し続けます。</p>
+
+<p>今回はワーカープロセスは複数個あるので、設定しておきます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>upstream puma {
+  zone nginx 64k;
+}
+
+</code></pre></div></div>
+
+<h3 id="keepaliveディレクティブ">keepaliveディレクティブ</h3>
+
+<p>Keep-Aliveを有効にします。
+<code class="highlighter-rouge">connections</code>パラメータは、Keep-alive接続の最大数を設定します。
+数を超えると使用頻度が低い接続が閉じます。</p>
+
+<p>構文: <code class="highlighter-rouge">keepalive connections;</code></p>
+
+<p><strong>この接続最大数はnginxワーカプロセスが開くことができるサーバの接続数の総数を超えてはいけません。</strong>
+超えてしまうと、ワーカプロセスが開ける接続数を超えるリクエストが来てもkeepaliveの期限切れするまで接続できません。</p>
+
+<p>keepalive接続数で処理するリクエストの最大数は <code class="highlighter-rouge">keepalive_requests</code>ディレクティブで設定できて、
+タイムアウトは<code class="highlighter-rouge">keepalive_timeout</code>ディレクティブで設定できます。</p>
+
+<p>今回はMac上ということで主に開発色が強いので1にします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>upstream puma {
+  keepalive 1;
+}
+</code></pre></div></div>
+
+<h3 id="keepalive_requestsディレクティブ">keepalive_requestsディレクティブ</h3>
+
+<p>1つのkeepalive接続を介して処理するリクエスト最大数を設定します。
+最大数のリクエストが処理された後、接続が閉じます。</p>
+
+<p>構文: <code class="highlighter-rouge">keepalive_requests number;</code><br />
+デフォルト: <code class="highlighter-rouge">keepalive_requests 100;</code></p>
+
+<p>今回はデフォルト値でいこうと思います。</p>
+
+<h4 id="なぜ接続数が決められてるのか">なぜ接続数が決められてるのか？</h4>
+<p>無制限ではダメな理由は、接続毎にメモリ割り当てが行われているため、定期的に接続を閉じてメモリ解放を行わないと、要求が高すぎるとメモリ使用量が高くなり推奨されません。</p>
+
+<h3 id="keepalive_timeoutディレクティブ">keepalive_timeoutディレクティブ</h3>
+
+<p>プロキシサーバーへのkeepalive接続のタイムアウトを設定します。</p>
+
+<p>構文: <code class="highlighter-rouge">keepalive_timeout timeout;</code><br />
+デフォルト: <code class="highlighter-rouge">keepalive_timeout 60s;</code></p>
+
+<p>今回はデフォルト値でいこうと思います。</p>
+
+<h3 id="proxy_passディレクティブ">proxy_passディレクティブ</h3>
+
+<p>プロキシするサーバのプロトコルとアドレス、場所となるURIをオプションで設定します。
+プロトコルは<code class="highlighter-rouge">http</code>と<code class="highlighter-rouge">https</code>を指定できます。アドレスはドメイン名、IPアドレスとオプションでポートを指定できます。
+UNIXドメインソケットの場合は<code class="highlighter-rouge">unix:</code>をつけます。</p>
+
+<p>構文: <code class="highlighter-rouge">proxy_pass URL;</code></p>
+
+<ul>
+  <li>例1： <code class="highlighter-rouge">proxy_pass http://localhost:8080/uri/;</code></li>
+  <li>例2： <code class="highlighter-rouge">proxy_pass https://backend.example.com;</code></li>
+  <li>例3： <code class="highlighter-rouge">proxy_pass http://unix:/tmp/backend.socket:/uri/;</code></li>
+</ul>
+
+<p>ドメイン名が複数アドレスに解決する場合はラウンドロビン方式で使用します。さらにアドレスをサーバグループとして指定できます。</p>
+
+<p><code class="highlighter-rouge">URL</code>パラメータには変数が使えます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /name/ {
+  proxy_pass http://127.0.0.1 $request_uri;
+}
+</code></pre></div></div>
+<p>この場合ディレクティブでURIを指定すると、元のリクエストURIを置き換えてそのままサーバに渡します。</p>
+
+<p>変数を使うと、アドレスがドメイン名なら名前解決はサーバグループ間で検索され、
+見つからない場合は<code class="highlighter-rouge">resolver</code>ディレクティブを使用します。</p>
+
+<p><code class="highlighter-rouge">resolver</code>ディレクティブとはネームサーバを設定するディレクティブです。</p>
+
+<p>今回はUNIXドメインソケットなので、 <code class="highlighter-rouge">upstream</code>で設定した名前を使います。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  location / {
+    proxy_pass http://puma;
+  }
+}
+</code></pre></div></div>
+
+<h3 id="proxy_set_headerディレクティブ">proxy_set_headerディレクティブ</h3>
+
+<p>プロキシサーバからパス先サーバにheader情報を追加で渡します。</p>
+
+<p>構文: <code class="highlighter-rouge">proxy_set_header field value;</code></p>
+
+<p>今回は次のヘッダーをパス先サーバに送ります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location / {
+  proxy_set_header    Host    $host;
+  proxy_set_header    X-Real-IP    $remote_addr;
+  proxy_set_header    X-Forwarded-Host       $host;
+  proxy_set_header    X-Forwarded-Server    $host;
+  proxy_set_header    X-Forwarded-For    $proxy_add_x_forwarded_for;
+  proxy_set_header    X-Forwarded-Proto $scheme;
+}
+</code></pre></div></div>
+
+<h3 id="proxy_hide_headerディレクティブ">proxy_hide_headerディレクティブ</h3>
+
+<p>クライアントに渡さないヘッダーフィールドを設定する。</p>
+
+<p>構文: <code class="highlighter-rouge">proxy_hide_header field;</code></p>
+
+<p>デフォルトでは下記のヘッダーフィールドは渡しません。</p>
+
+<ul>
+  <li>Date</li>
+  <li>Server</li>
+  <li>X-Pad</li>
+  <li>X-Accel-*</li>
+</ul>
+
+<p>ちなみに逆に許可は、<code class="highlighter-rouge">proxy_pass_header</code>ディレクティブを使用します。</p>
+
+<p>今回は<code class="highlighter-rouge">X-Powered-By</code>を隠します。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location / {
+  proxy_hide_header   X-Powered-By;
+}
+</code></pre></div></div>
+<p><code class="highlighter-rouge">X-Powered-By</code>フィールドは一部のFWではFW情報やバージョンをこのフィールドに乗せてクライアントに送ります。
+使ってるFWバージョンに脆弱性が見つかると攻撃手段を教えているようなもので、通常利用ならクライアント側に教える目的もないため隠します。</p>
+
+<h3 id="proxy_redirectディレクティブ">proxy_redirectディレクティブ</h3>
+
+<p>プロキシ先の応答の<code class="highlighter-rouge">Location</code>と<code class="highlighter-rouge">Refresh</code>ヘッダーフィールドで変更が必要か設定します。</p>
+
+<p>構文:</p>
+<ul>
+  <li><code class="highlighter-rouge">proxy_redirect default;</code></li>
+  <li><code class="highlighter-rouge">proxy_redirect off;</code></li>
+  <li><code class="highlighter-rouge">proxy_redirect redirect replacement;</code></li>
+</ul>
+
+<p>デフォルト: <code class="highlighter-rouge">proxy_redirect default;</code></p>
+
+<p>例：
+<code class="highlighter-rouge">proxy_redirect http://localhost:8000/two/ http://frontend/one/;</code>と設定した場合<br />
+プロキシ先から<code class="highlighter-rouge">Location: http://localhost:8000/two/some/uri</code>が返ってきたら
+クライアントには<code class="highlighter-rouge">Location: http://frontend/one/some/uri/</code>を返す</p>
+
+<p>パラメータ値が<code class="highlighter-rouge">default</code>では次の２つの設定は同じになります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /one/ {
+  proxy_pass     http://upstream:port/two/;
+  proxy_redirect default;
+}
+location /one/ {
+  proxy_pass     http://upstream:port/two/;
+  proxy_redirect http://upstream:port/two/ /one/;
+}
+</code></pre></div></div>
+
+<p>今回はプロキシ先にドメインが正しくを伝えるためにoffにします。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+  location / {
+    proxy_redirect off;
+  }
+}
+</code></pre></div></div>
+
+<h2 id="出来上がった設定ファイルnginxconf">出来上がった設定ファイル(nginx.conf)</h2>
+
+<p>この記事を通して出来上がった設定ファイル(<code class="highlighter-rouge">nginx.conf</code>)になります。</p>
+
+<p><em>nginx.conf</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_processes  4;
+
+error_log /usr/local/var/log/nginx/error.log error;
+
+worker_rlimit_nofile 2048;
+
+events {
+  worker_connections 1024;
+}
+
+http {
+  include mime.types;
+  default_type application/octet-stream;
+
+  log_format  main  '$remote_addr - $remote_user [$time_local] "$request" '
+                    '$status $body_bytes_sent "$http_referer" '
+                    '"$http_user_agent" "$http_x_forwarded_for"';
+
+  access_log /usr/local/var/log/nginx/access.log main;
+
+  sendfile on;
+  tcp_nopush on;
+
+  keepalive_timeout 60;
+
+  gzip on;
+  gzip_min_length 1024;
+  gzip_types text/css text/javascript application/json;
+
+  upstream puma {
+    server unix:///usr/local/var/work/app-name/tmp/sockets/puma.sock;
+    zone nginx 64k;
+    keepalive 1;
+  }
+
+  server {
+    listen 8080;
+    server_name localhost;
+
+    charset utf-8;
+
+    access_log /usr/local/var/log/nginx/localhost.access.log  main;
+
+    error_page 404 /404.html;
+
+    location / {
+      proxy_pass http://puma;
+      proxy_set_header    Host    $host;
+      proxy_set_header    X-Real-IP    $remote_addr;
+      proxy_set_header    X-Forwarded-Host       $host;
+      proxy_set_header    X-Forwarded-Server    $host;
+      proxy_set_header    X-Forwarded-For    $proxy_add_x_forwarded_for;
+      proxy_set_header    X-Forwarded-Proto $scheme;
+      proxy_hide_header   X-Powered-By;
+    }
+
+
+    location ~* \.(gif|jpg|jpeg|png)$ {
+      root /usr/local/var/www/images;
+    }
+  }
+}
+</code></pre></div></div>
+
+<h2 id="pumaの設定をrails側で設定する">pumaの設定をRails側で設定する</h2>
+<p>puma単体で動かしても動作確認しにくいのでサンプル用のRailsアプリを用意します。</p>
+
+<p>下記環境でRailsアプリを用意します。</p>
+
+<ul>
+  <li>Ruby 2.6.5</li>
+  <li>Rails 6.0.2.1</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails new nginx-puma-rails <span class="nt">-d</span> mysql <span class="nt">--skip-git</span> <span class="nt">--skip-javascript</span> <span class="nt">--skip-test</span> <span class="nt">--skip-spring</span> <span class="nt">--skip-bundle</span>
+...
+<span class="nv">$ </span><span class="nb">cd </span>nginx-puma-rails
+<span class="nv">$ </span>bundle install <span class="nt">--path</span><span class="o">=</span>vendor/bundle <span class="nt">-j4</span>
+...
+<span class="nv">$ </span>bin/rake db:create db:migrate db:seed
+Created database <span class="s1">'nginx_puma_rails_development'</span>
+Created database <span class="s1">'nginx_puma_rails_test'</span>
+</code></pre></div></div>
+
+<p>次にpumaの設定ファイルでポートlistenではなくUNIXドメインソケットの変更します。</p>
+
+<p><em>nginx-puma-rails/config/puma.rb</em></p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Specifies the `port` that Puma will listen on to receive requests; default is 3000.</span>
+<span class="c1">#</span>
+<span class="c1"># port        ENV.fetch("PORT") { 3000 }</span>
+<span class="c1"># ↑ portコマンドはコメントで動かないようにする</span>
+
+<span class="n">bind</span> <span class="s2">"unix://var/local/work/nginx-puma-rails/tmp/sockets/puma.sock"</span>
+</code></pre></div></div>
+
+<p><em>nginx.conf</em> ではアプリ名を仮(app-name)にしてたいので、ここも合わせます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+  upstream puma {
+    server unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock;
+  }
+}
+</code></pre></div></div>
+
+<h2 id="nginxとrailsアプリを起動して疎通する">nginxとRailsアプリを起動して疎通する</h2>
+
+<p>UNIXドメインソケットのパスをpumaとnginxそれぞれ合わせたら、Railsアプリを起動します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bin/rails s
+<span class="o">=&gt;</span> Booting Puma
+<span class="o">=&gt;</span> Rails 6.0.2.1 application starting <span class="k">in </span>development
+<span class="o">=&gt;</span> Run <span class="sb">`</span>rails server <span class="nt">--help</span><span class="sb">`</span> <span class="k">for </span>more startup options
+Puma starting <span class="k">in </span>single mode...
+<span class="k">*</span> Version 4.3.3 <span class="o">(</span>ruby 2.6.5-p114<span class="o">)</span>, codename: Mysterious Traveller
+<span class="k">*</span> Min threads: 5, max threads: 5
+<span class="k">*</span> Environment: development
+<span class="k">*</span> Listening on unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock
+Use Ctrl-C to stop
+</code></pre></div></div>
+
+<p>先程指定したパスにあるUNIXドメインソケットファイルをListenするようになります。</p>
+
+<p>ではnginxの開いてるlistenからアクセスして、railsにログが流れるか疎通確認してみます。
+nginxが未起動なら起動してください。</p>
+
+<p>ブラウザで<code class="highlighter-rouge">http://localhost:8080</code>にアクセスします。<br />
+Railsアプリに次のようなアクセスログが流れたら疎通成功です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Started GET <span class="s2">"/"</span> <span class="k">for </span>127.0.0.1 at 2020-03-02 00:54:43 +0900
+   <span class="o">(</span>0.6ms<span class="o">)</span>  SET NAMES utf8mb4,  @@SESSION.sql_mode <span class="o">=</span> CONCAT<span class="o">(</span>CONCAT<span class="o">(</span>@@sql_mode, <span class="s1">',STRICT_ALL_TABLES'</span><span class="o">)</span>, <span class="s1">',NO_AUTO_VALUE_ON_ZERO'</span><span class="o">)</span>,  @@SESSION.sql_auto_is_null <span class="o">=</span> 0, @@SESSION.wait_timeout <span class="o">=</span> 2147483
+Processing by Rails::WelcomeController#index as <span class="k">*</span>/<span class="k">*</span>
+  Rendering vendor/bundle/ruby/2.6.0/gems/railties-6.0.2.1/lib/rails/templates/rails/welcome/index.html.erb
+  Rendered vendor/bundle/ruby/2.6.0/gems/railties-6.0.2.1/lib/rails/templates/rails/welcome/index.html.erb <span class="o">(</span>Duration: 7.3ms | Allocations: 311<span class="o">)</span>
+Completed 200 OK <span class="k">in </span>13ms <span class="o">(</span>Views: 10.0ms | ActiveRecord: 0.0ms | Allocations: 1670<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="ファイルディスクリプタの罠">ファイルディスクリプタの罠</h3>
+<p>ここで一つ注意点があります。
+前回の記事で1プロセスあたりが扱えるファイルディスクリプタ上限について設定しました。
+1ワーカープロセス32個のファイルを扱える設定にしてあります。
+この32とは1プロセスですが、一つのプロセスにスレッドを複数持つことができるため、スレッドが多すぎるとアプリによっては簡単に32個を超えてしまいます。
+pumaのスレッド数は性能だけでなく上限も考慮が必要です。</p>
+
+<p>現在のpuma設定では最小スレッド5,最大スレッド5、つまり常時5スレッド稼働しています。
+つまり<code class="highlighter-rouge">32 ÷ 5 ≒ 6</code> 1スレッドあたり6個以上のファイル操作を行うと上限エラーが発生します。</p>
+
+<h3 id="nginxのプロセス数とpumaのプロセス数">nginxのプロセス数とpumaのプロセス数</h3>
+
+<p>nginxはリバースプロキシサーバとして立てているため、プロセス数は単純化すれば窓口の数になります。
+窓口の数が多すぎて、実際の作業場となるpumaのプロセス数が少ないとpumaサーバがボトルネックになります。
+nginxとpumaのプロセス数のバランスが重要になってきます。</p>
+
+<h2 id="mac1台にnginxでwebサーバとpumaでアプリサーバを立てた">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てた</h2>
+
+<p>実際にMac1台にnginxでWebリバースプロキシサーバとPumaアプリサーバ立てることができました。<br />
+Railsアプリを弄っているだけだとWebアプリがどういう仕組みで、そのうちRailsアプリはどこに配置されるのかイメージできなかったりします。
+Mac1台でnginxでWebサーバとPumaでアプリサーバを立てることで、nginxからリバースプロキシで送信されたリクエストをpumaWebサーバが受信してRack通じてRailsアプリに処理を渡していることが分かります。</p>
+
+<p>「Mac上でnginx」という本番では無意味な環境でも理解する上ではとても効率の良い環境です。</p>
+
+<p>次の記事は「<span><a href="/web/nginx/web-nginx-getting-started-customize-on-mac">Mac上のnginx設定ファイルをドメイン毎に分ける</a></span>
+」について説明します。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-security-on-mac">Mac上でnginxのセキュリティ最低限を確認する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-customize-on-mac">Mac上のnginx設定ファイルをドメイン毎に分ける</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step2-on-mac">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step1-on-mac">Macでnginxをインストールして起動する</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

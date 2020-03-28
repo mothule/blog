@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize","headline":"【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する","dateModified":"2019-09-29T00:00:00+09:00","datePublished":"2019-09-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png","description":"SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。 基本的な変更であればUITableDataSourceprotocolのtitleForHeaderInSectionなどを変更すれば可能ですが、 より複雑な独自のUIViewなどを設定したい場合はこれとは違う UITableViewDelegateを使った実装が必要になります。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"datePublished":"2019-09-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png","description":"SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。 基本的な変更であればUITableDataSourceprotocolのtitleForHeaderInSectionなどを変更すれば可能ですが、 より複雑な独自のUIViewなどを設定したい場合はこれとは違う UITableViewDelegateを使った実装が必要になります。","headline":"【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する","dateModified":"2019-09-29T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -230,7 +230,7 @@ Section(セクション)とは？Row(ロウ)とは？
 
 <p>デフォルトではiPhoneサイズのViewになっており変更もできないので、下記画像のように状態を変更します。</p>
 
-<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-1.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-1.png" width="514px" /></a></p>
+<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-1.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-1.png" width="514px" alt="" /></a></p>
 
 <p>これで角をドラッグすることでサイズ変更が可能となります。<br />
 またバッテリーアイコンなど余計なアイコンもでなくなります。<br />
@@ -238,11 +238,11 @@ Section(セクション)とは？Row(ロウ)とは？
 
 <p>レイアウトは今回は画像とラベル１つずつ次のように配置しました。</p>
 
-<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-2.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-2.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-2.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-2.png" width="100%" alt="" /></a></p>
 
 <p>制御クラスは先程作成したクラスを紐付けます。</p>
 
-<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png" width="506px" /></a></p>
+<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png" width="506px" alt="" /></a></p>
 
 <h2 id="xibをuitableviewに登録する">xibをUITableViewに登録する</h2>
 
@@ -297,16 +297,14 @@ Section(セクション)とは？Row(ロウ)とは？
         <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
       </div>
       <div class="link-container-summary-brief">
-        <span>|
-| |
+        <span>
+初心者向けにiOSのUITableViewの基本的な使い方について説明します。
+この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。
 
-タップした後が残るのを消して欲しい
+Xcodeでプロジェクトを作成し、storyboardを使ってUITextFieldやUILabel, UIButtonを使って簡単な画面を作れるようになりましたか？
 
-特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
-
-```swift
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPa...</span>
+しかし、UITableViewを使おうと思ったら、途端に扱うクラスが増えてそれぞれの関係性がなんなのかついていけず、躓いている人が多いのではないでしょうか？  
+最初の躓き...</span>
       </div>
     </div>
   </a>
@@ -335,6 +333,56 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
             
             
             
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -627,6 +675,14 @@ func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
       <a href="/tags#kiji">kiji</a>
     
       <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
     
   </div>
 </div>

@@ -1,0 +1,1066 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>OpenSSL Library not loadedが出たら疑う場所 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="OpenSSL Library not loadedが出たら疑う場所" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。" />
+<meta property="og:description" content="今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error" />
+<meta property="og:url" content="https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-02-20T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"datePublished":"2020-02-20T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error"},"url":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error","image":"https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png","description":"今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。","headline":"OpenSSL Library not loadedが出たら疑う場所","dateModified":"2020-02-20T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="OpenSSL Library not loadedが出たら疑う場所">
+    <meta name="twitter:description" content="今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#tools">Tools</a>
+      
+    
+      
+        / <a href="/tags#rbenv">Rbenv</a>
+      
+    
+      
+        / OpenSSL Library not loadedが出たら疑う場所
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png" alt="OpenSSL Library not loadedが出たら疑う場所">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>OpenSSL Library not loadedが出たら疑う場所</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-2-20</li>
+        
+          <li class="list-inline-item"><a href="/tags#tools">tools</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">ruby</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#何をしたのか">何をしたのか？</a>
+    <ul>
+      <li><a href="#homebrewでnginxの依存関係を調べる">homebrewでnginxの依存関係を調べる</a></li>
+    </ul>
+  </li>
+  <li><a href="#原因調査">原因調査</a>
+    <ul>
+      <li><a href="#ruby再インストール解決せず">Ruby再インストール(解決せず)</a></li>
+      <li><a href="#シンボリックリンクを用意解決せず">シンボリックリンクを用意(解決せず)</a></li>
+      <li><a href="#mysqlが起動しないことが発覚">MySQLが起動しないことが発覚</a></li>
+      <li><a href="#mysql2-gem-を再インストール">mysql2 gem を再インストール</a></li>
+      <li><a href="#ついに動いた">ついに動いた</a></li>
+    </ul>
+  </li>
+  <li><a href="#それぞれのopensslのパスがズレていた">それぞれのopensslのパスがズレていた？</a></li>
+  <li><a href="#openssl-library-not-loadedが出たときの対処法">OpenSSL Library not loadedが出たときの対処法</a></li>
+</ul>
+  </div>
+
+  <p>今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。
+この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
+  dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+</code></pre></div></div>
+
+<h2 id="何をしたのか">何をしたのか？</h2>
+<p>homebrew管理下のnginxを更新(<code class="highlighter-rouge">$ brew upgrade nginx</code>)しました。</p>
+
+<h3 id="homebrewでnginxの依存関係を調べる">homebrewでnginxの依存関係を調べる</h3>
+
+<p>homebrewには管理してるformulaがどのformulaを使っているのか依存関係を調べることができます。</p>
+
+<p>下記はその機能を使って、nginxがどのformulaに依存してるのかを調べた結果です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps nginx
+openssl@1.1
+pcre
+</code></pre></div></div>
+
+<p>どうやらnginxをバージョン更新した際に依存関係であるopensslに何らかの更新が入り、Ruby/Railsで使われているopensslに影響が起きたようです。</p>
+
+<h2 id="原因調査">原因調査</h2>
+<p>自分が調べて対処した順番に書いていきます。
+解決した項目だけを実施しても解決しないかも知れません。
+なぜなら問題が複数ケースだったり、順番に実施した内容のなかで必要手順が含まれていたのかもしれないからです。</p>
+
+<h3 id="ruby再インストール解決せず">Ruby再インストール(解決せず)</h3>
+<p>ネットで調べたところ、 Rubyに紐づくopensslが外れた事で読み込めなくなっているのではないか？と仮説にたどり着きました。
+Rubyはrbenvで管理しているため、rbenvで対象バージョンを再インストールすることで再紐付けされないか？と試してみることにしました。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv install &lt;ruby version&gt;
+</code></pre></div></div>
+
+<p>しかし解決はしませんでした。</p>
+
+<h3 id="シンボリックリンクを用意解決せず">シンボリックリンクを用意(解決せず)</h3>
+
+<p>OpenSSLのライブラリ置き場を確認したら次のように<code class="highlighter-rouge">1.0.0</code>版なくなってました。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-lkh</span> /usr/local/opt/openssl/lib/
+total 7236
+drwxr-xr-x  4 mothule  staff   128B  9 10 22:13 engines-1.1
+<span class="nt">-r--r--r--</span>  1 mothule  staff   2.2M  2 20 21:43 libcrypto.1.1.dylib
+<span class="nt">-r--r--r--</span>  1 mothule  staff   3.7M  9 10 22:13 libcrypto.a
+lrwxr-xr-x  1 mothule  staff    19B  9 10 22:13 libcrypto.dylib -&gt; libcrypto.1.1.dylib
+<span class="nt">-r--r--r--</span>  1 mothule  staff   474K  2 20 21:43 libssl.1.1.dylib
+<span class="nt">-r--r--r--</span>  1 mothule  staff   704K  9 10 22:13 libssl.a
+lrwxr-xr-x  1 mothule  staff    16B  9 10 22:13 libssl.dylib -&gt; libssl.1.1.dylib
+drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
+</code></pre></div></div>
+
+<p>どうやら存在しないバージョンファイルに対してアクセスをしているため失敗しているようです。</p>
+
+<p>強引ですが、試しにシンボリックリンクで1.1版に向けてみたら動かないか試してみました。<br />
+<strong>と思ったのも、セマンティック バージョニングなら1.0.0から1.1はマイナーバージョンアップになるので、運が良ければ破壊変更はないからです。（それでも将来的に考えたらこの方法はNGです）</strong></p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ln <span class="nt">-s</span> libssl.1.1.dylib libssl.1.0.0.dylib
+<span class="nv">$ </span>ln <span class="nt">-s</span> libcrypto.1.1.dylib libcrypto.1.0.0.dylib
+</code></pre></div></div>
+
+<p>こちらで試しましたが、MySQLの起動が失敗するようになりました。</p>
+
+<h3 id="mysqlが起動しないことが発覚">MySQLが起動しないことが発覚</h3>
+<p>ガサツな方法だと解決できない根深さなようなので本腰入れて調べることにしました。</p>
+
+<p>エラーログを確認すると、opensslはmysql2 gemがopensslを使おうとしてエラーを起こしています。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
+  dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+</code></pre></div></div>
+
+<p>まず問題を特定するために、そもそもMySQLが起動するかを確認しましたが、MySQLが起動(<code class="highlighter-rouge">$ mysql.server start</code>)しなくなっていました。</p>
+
+<p>MySQLは都合上最新ではなく MySQL5.6を使っており、homebrewで管理しています。
+なので再インストールをしてみることにしました。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew reinstall mysql@5.6
+</code></pre></div></div>
+
+<p><strong>MySQLは立ち上がるようになりました。</strong> しかしRailsは以前変わらず起動しません。</p>
+
+<h3 id="mysql2-gem-を再インストール">mysql2 gem を再インストール</h3>
+
+<p>前述したようにエラーはmysql2で起きてます。 MySQLが動くようになったので、今度はRubyとMySQLのアダプターとなる<code class="highlighter-rouge">mysql2</code>を再インストールしました。</p>
+
+<p>gem直接ではなくbunlder管理なのでbundlerから経由で指示します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">exec </span>gem uninstall mysql2
+<span class="nv">$ </span>bundle install
+</code></pre></div></div>
+
+<p>結果は変わらず起動していませんが、エラー内容が少し変わりました。</p>
+
+<h3 id="ついに動いた">ついに動いた</h3>
+
+<p>エラー内容がマイグレーション関係のエラーだったので、マイグレーションを走らせました。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bin/rake db:migrate:reset db:seed
+</code></pre></div></div>
+
+<p>これで起動したらついに動きました。</p>
+
+<h2 id="それぞれのopensslのパスがズレていた">それぞれのopensslのパスがズレていた？</h2>
+<p>振り返ってみると、nginxを更新したことでopensslが更新され、MySQL,ruby,mysql2とそれぞれでopensslのパスがズレたことが原因じゃないかと見ています。</p>
+
+<p>なので、どれか一つではなく、複数の対処で解決したんじゃないかと思ってます。</p>
+
+<h2 id="openssl-library-not-loadedが出たときの対処法">OpenSSL Library not loadedが出たときの対処法</h2>
+
+<p>今回自分が行った対処一覧となります。</p>
+
+<ol>
+  <li><code class="highlighter-rouge">$ brew reinstall mysql@5.6</code></li>
+  <li><code class="highlighter-rouge">$ rbenv install 2.5.7 &amp;&amp; gem install bundler -v "2.0.2"</code></li>
+  <li><code class="highlighter-rouge">$ bundle</code></li>
+  <li><code class="highlighter-rouge">$ bundle exec gem uninstall mysql2</code></li>
+  <li><code class="highlighter-rouge">$ bundle</code></li>
+  <li><code class="highlighter-rouge">$ bin/rake db:migrate:reset db:seed RAILS_ENV=test</code></li>
+</ol>
+
+<p>全ての環境で解決はしないと思いますが、その場合は自分のように原因領域の特定と仮説、試行の繰り返しが重要です。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信でRailsアプリをデバッグする方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ruby/ruby-script-basic">iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/tools-training-support-tools-urcoach">実装の速度を養うトレーニングサポートツールを作った</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      <a href="/tags#notebook">notebook</a>
+    
+      <a href="/tags#program-design">program-design</a>
+    
+      <a href="/tags#remote-work">remote-work</a>
+    
+      <a href="/tags#ios">ios</a>
+    
+      <a href="/tags#swift">swift</a>
+    
+      <a href="/tags#uitableview">uitableview</a>
+    
+      <a href="/tags#rails">rails</a>
+    
+      <a href="/tags#rails-controller">rails-controller</a>
+    
+      <a href="/tags#ruby">ruby</a>
+    
+      <a href="/tags#circleci">circleci</a>
+    
+      <a href="/tags#ci">ci</a>
+    
+      <a href="/tags#ssh">ssh</a>
+    
+      <a href="/tags#linux">linux</a>
+    
+      <a href="/tags#centos">centos</a>
+    
+      <a href="/tags#printer">printer</a>
+    
+      <a href="/tags#tools">tools</a>
+    
+      <a href="/tags#cron">cron</a>
+    
+      <a href="/tags#uiview">uiview</a>
+    
+      <a href="/tags#ios-safearea">ios-safearea</a>
+    
+      <a href="/tags#service-design">service-design</a>
+    
+      <a href="/tags#design">design</a>
+    
+      <a href="/tags#httpie">httpie</a>
+    
+      <a href="/tags#mysql">mysql</a>
+    
+      <a href="/tags#rspec">rspec</a>
+    
+      <a href="/tags#git">git</a>
+    
+      <a href="/tags#tig">tig</a>
+    
+      <a href="/tags#homebrew">homebrew</a>
+    
+      <a href="/tags#active-record">active-record</a>
+    
+      <a href="/tags#mac">mac</a>
+    
+      <a href="/tags#db">db</a>
+    
+      <a href="/tags#ngrok">ngrok</a>
+    
+      <a href="/tags#ats">ats</a>
+    
+      <a href="/tags#regexp">regexp</a>
+    
+      <a href="/tags#cocoapods">cocoapods</a>
+    
+      <a href="/tags#rbenv">rbenv</a>
+    
+      <a href="/tags#bundler">bundler</a>
+    
+      <a href="/tags#jekyll">jekyll</a>
+    
+      <a href="/tags#github-pages">github-pages</a>
+    
+      <a href="/tags#rack">rack</a>
+    
+      <a href="/tags#rack-middleware">rack-middleware</a>
+    
+      <a href="/tags#p4merge">p4merge</a>
+    
+      <a href="/tags#report">report</a>
+    
+      <a href="/tags#scene-kit">scene-kit</a>
+    
+      <a href="/tags#test">test</a>
+    
+      <a href="/tags#nimble">nimble</a>
+    
+      <a href="/tags#carthage">carthage</a>
+    
+      <a href="/tags#rubocop">rubocop</a>
+    
+      <a href="/tags#rxswift">rxswift</a>
+    
+      <a href="/tags#uitableviewcell">uitableviewcell</a>
+    
+      <a href="/tags#uitableviewdelegate">uitableviewdelegate</a>
+    
+      <a href="/tags#uicollectionview">uicollectionview</a>
+    
+      <a href="/tags#uitableviewdatasource">uitableviewdatasource</a>
+    
+      <a href="/tags#firebase">firebase</a>
+    
+      <a href="/tags#performance-monitoring">performance-monitoring</a>
+    
+      <a href="/tags#xcuitest">xcuitest</a>
+    
+      <a href="/tags#github">github</a>
+    
+      <a href="/tags#gem">gem</a>
+    
+      <a href="/tags#google-analytics">google-analytics</a>
+    
+      <a href="/tags#kiji">kiji</a>
+    
+      <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

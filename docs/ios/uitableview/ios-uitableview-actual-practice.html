@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice","headline":"【初心者必見】UITableViewの実践デザイン分析","dateModified":"2019-10-14T00:00:00+09:00","datePublished":"2019-10-14T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png","description":"UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"datePublished":"2019-10-14T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice"},"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice","image":"https://blog.mothule.com/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png","description":"UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。","headline":"【初心者必見】UITableViewの実践デザイン分析","dateModified":"2019-10-14T00:00:00+09:00","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -214,7 +214,7 @@
 
 <p>今回はApp Storeに上がっているいくつか複数のアプリをピックアップして、だいたい共通しているレイアウトなどを模様した架空のレイアウトを用意しました。</p>
 
-<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/1.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/1.png" width="50%" /></a></p>
+<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/1.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/1.png" width="50%" alt="最近のアプリのレイアウト例" /></a></p>
 
 <p>このレイアウトをUITableViewベースで実装していきたいと思います。
 なお無理にUITableViewにこだわらずともUIStackViewやUICollectionViewでも実装は可能ですが、今回はUITableViewベースで話を進めます。</p>
@@ -227,7 +227,7 @@
 
 <p>次のイメージのようにセルやセクションを今回は分けます。</p>
 
-<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/2.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/2.png" width="50%" /></a></p>
+<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/2.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/2.png" width="50%" alt="レイアウトをセルやセクションで分割" /></a></p>
 
 <h3 id="なぜ-section-header-は使わないのか">なぜ Section Header は使わないのか？</h3>
 
@@ -245,7 +245,7 @@
 
 <p>例えば、最後の「おすすめ」↓ が可変の場合は、ヘッダーセルと商品セルを別セクションにすると、制御がしやすくなります。</p>
 
-<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/3.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/3.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/3.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/3.png" width="100%" alt="可変セル時にセクションを分けた図" /></a></p>
 
 <h2 id="実装フェイズ">実装フェイズ</h2>
 
@@ -259,13 +259,13 @@
 
 <h2 id="storyboardでレイアウトに必要なセルを作成する">storyboardでレイアウトに必要なセルを作成する</h2>
 
-<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/4.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/4.png" width="100%" /></a></p>
+<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/4.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/4.png" width="100%" alt="セルが用意されたStoryboard" /></a></p>
 
 <p>こんな感じでセルを用意します。</p>
 
 <h2 id="ファイル構成">ファイル構成</h2>
 
-<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/5.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/5.png" width="50%" /></a></p>
+<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/5.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/5.png" width="50%" alt="レイアウト実現のファイル構成" /></a></p>
 
 <p>いくつか抜粋して説明します。</p>
 
@@ -276,84 +276,19 @@
 <p>UITableViewのセクション定義になります。Rowの定義は用意していません。Rowの並び順が変わるなど、Section内がより複雑になるのであればあったほうがいいです。</p>
 
 <h3 id="datasourceswift">DataSource.swift</h3>
-<p><code class="highlighter-rouge">UITableViewDataSource</code> と <code class="highlighter-rouge">UITableViewDelegate</code> を採用したクラスです。<br />
-こちらに関しては次の記事が参考になります。</p>
+<p><code class="highlighter-rouge">UITableViewDataSource</code> と <code class="highlighter-rouge">UITableViewDelegate</code> を採用したクラスです。</p>
 
-<div class="link-container">
-  <a href="/ios/uitableview/ios-uitableview-uitableviewdatasource-separate">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-10-06-ios-uitableview-uitableviewdatasource-separate.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>
-UITableView(テーブル)の構築に必須の`UITableViewDataSource`ですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。
-
-しかし実際のアプリ開発では、必ずしもそうとは限らず ViewController が複雑になればリファクタリングとして DataSource を別クラスに分離させることもあります。
-
-今回は別クラスで`UITableViewDataSource`プロトコルを実装する方法と...</span>
-      </div>
-    </div>
-  </a>
-</div>
+<p>▼こちらに関しては次の記事で説明しています。<br />
+<span><a href="/ios/uitableview/ios-uitableview-uitableviewdatasource-separate">【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット</a></span></p>
 
 <h3 id="viewsフォルダ以下">Viewsフォルダ以下</h3>
 <p>UITableViewやUICollectionViewのセル制御クラスになります。</p>
 
-<p>UITableViewの基本に関して分からない場合はこちらの記事をどうぞ。</p>
+<p>▼UITableViewの基本に関して分からない場合はこちらの記事に詳しく説明してあります。<br />
+<span><a href="/ios/uitableview/ios-uitableview-basic">【初心者向け】UITableViewの基本的な使い方を極める【入門】</a></span></p>
 
-<div class="link-container">
-  <a href="/ios/uitableview/ios-uitableview-basic">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>|
-| |
-
-タップした後が残るのを消して欲しい
-
-特に何もしないとタップしてアラートが終わった後もタップした後が残ります。これを解決します。
-
-```swift
-func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-    tableView.deselectRow(at: indexPa...</span>
-      </div>
-    </div>
-  </a>
-</div>
-
-<p>またUICollectionViewに関してはこちらの記事が参考になります。</p>
-
-<div class="link-container">
-  <a href="/ios/uicollectionview/uicollectionview-in-table">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-10-12-uicollectionview-in-table/1.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>
-画像の一覧表示や、画面内の情報密度を上げる際に使われるUICollectionViewですが、別の使い方として1列に画像やカードViewなどを並ばせるCarousel(カルーセル)という使い方があります。
-**今回はこれをUITableViewのCell(セル)に入れる方法について説明します。**
-
-UITableViewのセル内に入れるということは、UICollectionViewの高さが算出できなければいけません。
-できてなければセルの高さが分からず画像がはみ出したり切れたりします。
-
-##...</span>
-      </div>
-    </div>
-  </a>
-</div>
+<p>▼またUICollectionViewに関してはこちらの記事で説明しています。<br />
+<span><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></span></p>
 
 <h3 id="itemswift">Item.swift</h3>
 <p>今回唯一のモデルクラスです。<br />
@@ -361,34 +296,10 @@ UITableViewのセル内に入れるということは、UICollectionViewの高�
 
 <h3 id="nibableswift">Nibable.swift</h3>
 
-<p>UITableViewやUICollectionViewのポイラープレートを収束させたクラスです。<br />
-詳しくはこちらの記事をどうぞ。</p>
+<p>UITableViewやUICollectionViewのポイラープレートを収束させたクラスです。</p>
 
-<div class="link-container">
-  <a href="/ios/ios-xib-optimaize">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-09-29-ios-xib-optimaize.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>StoryboardやXibのロード処理の作りを改善する</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>
-至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。
-そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので
-あまりよろしくありません。
-
-なので私が普段使っている煩わしいロード処理を抑え込んだロード処理実装について説明します。
-
-
-自由に法則性を与えることで実装を簡易にする
-
-Storyboardやxibは自由度が高いため、1storyboardに複数のView Controller...</span>
-      </div>
-    </div>
-  </a>
-</div>
+<p>▼詳しくはこちらの記事で説明しています。<br />
+<span><a href="/ios/ios-xib-optimaize">StoryboardやXibのロード処理の作りを改善する</a></span></p>
 
 <h3 id="apiclientswift">ApiClient.swift</h3>
 
@@ -399,7 +310,7 @@ Storyboardやxibは自由度が高いため、1storyboardに複数のView Contro
 
 <p>重要な部分のみ抜粋します。</p>
 
-<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/6.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/6.png" width="267px" /></a></p>
+<p><a href="/assets/images/2019-10-14-ios-uitableview-actual-practice/6.png"><img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/6.png" width="267px" alt="レイアウト実現のクラス図" /></a></p>
 
 <h3 id="viewcontroller">ViewController</h3>
 
@@ -462,6 +373,56 @@ Storyboardやxibは自由度が高いため、1storyboardに複数のView Contro
             
             
             
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -759,6 +720,14 @@ Storyboardやxibは自由度が高いため、1storyboardに複数のView Contro
       <a href="/tags#kiji">kiji</a>
     
       <a href="/tags#shellscript">shellscript</a>
+    
+      <a href="/tags#lsof">lsof</a>
+    
+      <a href="/tags#web">web</a>
+    
+      <a href="/tags#nginx">nginx</a>
+    
+      <a href="/tags#rubymine">rubymine</a>
     
   </div>
 </div>
