@@ -3,20 +3,36 @@
 
 require 'bundler/setup'
 require 'colorator'
+require 'optparse'
+require 'active_support/all'
+
+show_tree = false
+show_articles = false
+op = OptionParser.new
+op.on('-t', '--tree', 'categories tree') { show_tree = true }
+op.on('-a', '--articles', 'article list') { show_articles = true }
+op.parse(ARGV)
 
 class Article
   attr_accessor :title
   attr_accessor :categories
   attr_accessor :tags
+  attr_accessor :published_at
 
   class << self
     def import_from(path:)
       text = File.read(path)
-      title = text.match(/title: (.*)/).captures.first
-      categories = text.match(/categories: (.*)/).captures.first.split(' ')
-      tags = text.match(/tags: (.*)/).captures.first.split(' ')
+      title = text.match(/title: (.*)/)&.captures&.first || 'untitled'
+      categories = text.match(/categories: (.*)/)&.captures&.first&.split(' ') || []
+      tags = text.match(/tags: (.*)/)&.captures&.first&.split(' ') || []
 
-      Article.new(title: title, categories: categories, tags: tags)
+      published_at = if path.include?('_drafts')
+                       'no publish'
+                     else
+                       File.basename(path).match(/(\d{4}-\d{2}-\d{2})/)&.captures&.first
+                     end
+
+      Article.new(title: title, categories: categories, tags: tags, published_at: published_at)
     end
 
     def report(articles:)
@@ -32,17 +48,22 @@ class Article
     end
   end
 
-  def initialize(title:, categories:, tags:)
+  def initialize(title:, categories:, tags:, published_at:)
     @title = title
     @categories = categories
     @tags = tags
+    @published_at = published_at
   end
 
   def to_s(categories_width:)
-    "#{title_with(width: 32)} |  #{categories.join(' ').ljust(categories_width, ' ').green} | #{tags.join(' ').magenta}"
+    "#{date_with(width: 10)} | #{title_with(width: 32)} |  #{categories.join(' ').ljust(categories_width, ' ').green} | #{tags.join(' ').magenta}"
   end
 
   private
+
+  def date_with(width:)
+    @published_at[0..width]
+  end
 
   def title_with(width:)
     t = title[0..width]
@@ -99,7 +120,8 @@ root = Node.new(parent: nil, category: 'root')
 
 articles = []
 
-Dir.glob('./ws/_posts/*.md') do |post_path|
+article_paths = Array.wrap(Dir.glob('./ws/_posts/*.md')) + Array.wrap(Dir.glob('./ws/_drafts/*.md'))
+article_paths.each do |post_path|
   article = Article.import_from(path: post_path)
   articles << article
   categories = article.categories
@@ -120,6 +142,9 @@ end
 
 puts "記事数: #{article_count}"
 puts '------------------------------'
-Node.print(node: root, depth: 0)
-puts '------------------------------'
-Article.report(articles: articles)
+if show_tree
+  Node.print(node: root, depth: 0)
+  puts '------------------------------'
+end
+
+Article.report(articles: articles.sort_by { |a| a.published_at }) if show_articles
