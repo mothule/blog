@@ -15,7 +15,7 @@ articles.flat_map(&:tags).uniq.sort.each do |tag|
   puts "#{tag}: #{named_tag}"
 end
 
-if unnamed_tags.positive?
+if unnamed_tags.count > 0
   puts '------------------------'
   puts 'Some tags have no names.'
   unnamed_tags.each do |unnamed_tag|
