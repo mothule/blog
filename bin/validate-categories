@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 puts 'Categores validates.'
 
@@ -12,9 +13,7 @@ Dir.glob('./ws/_posts/*.md') do |post_path|
   tags = text.match(/tags: (.*)/).captures.first.split(' ')
 
   categories.each do |category|
-    unless tags.include?(category)
-      raise "Not found #{category} in tags. #{tags} #{post_path}"
-    end
+    raise "Not found #{category} in tags. #{tags} #{post_path}" unless tags.include?(category)
   end
 end
 

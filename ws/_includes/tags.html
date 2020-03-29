@@ -4,7 +4,8 @@
   </div>
   <div>
     {% for tag in site.tags %}
-      <a href="{{ baseurl }}/tags#{{ tag[0] | slugize }}">{{ tag.first }}</a>
+      {% assign tag_name = tag.first %}
+      <a href="{{ baseurl }}/tags#{{ tag[0] | slugize }}">{% tag_label tag_name %}</a>
     {% endfor %}
   </div>
 </div>

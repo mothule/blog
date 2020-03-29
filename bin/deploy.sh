@@ -29,6 +29,7 @@ info "Build blog contents for production...done"
 cd ..
 
 ruby bin/validate-image-existence
+ruby bin/validate-tags.rb
 
 if [[ ! -d './docs' ]] ; then
   if mkdir docs ; then

@@ -1,7 +1,7 @@
 ---
 title: GitHub Page Custom domainメモ
 categories: github
-tags: github github-page 
+tags: github github-pages 
 ---
 # なるべく楽にはてなブログからJekyllに移行する方法
 
