@@ -1,10 +1,7 @@
 ---
 title: RxSwift Scheduler(スケジューラ)の一覧と使い方
-description: RxSwift Scheduler(スケジューラ)の一覧と使い方 RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。このままだと実装の自由度が変わらずでもったいないので、一覧と使い方を少し調べてみることにしました。なおここで提案している使い方が答えと思わず参考程度にすることをオススメします。使い方は１つではないですもんね。
-date: 2019-07-07
 categories: ios swift
-tags: ios swift rxswift rxswift-scheduler
-draft: true
+tags: ios swift rxswift
 ---
 RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。
 

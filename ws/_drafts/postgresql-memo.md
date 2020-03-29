@@ -1,3 +1,9 @@
+---
+title: PostgreSQLメモ
+categories: postgresql
+tags: postgresql
+---
+
 # PostgreSQLのInformation表示
 ```bash
 $ heroku pg:info --app kawakatei-heroku

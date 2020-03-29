@@ -1,3 +1,9 @@
+---
+title: SSHメモ
+categories: tools ssh
+tags: tools ssh
+---
+
 公開鍵認証方式でsshログイン
 公開鍵は接続先
 秘密鍵は接続元

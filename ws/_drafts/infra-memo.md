@@ -1,3 +1,8 @@
+---
+title: インフラメモ
+categories: no-category
+tags: no-tag
+---
 # サーバーセキュリティ対策
 
 - sshでのrootログインを無効化

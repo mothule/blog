@@ -1,3 +1,9 @@
+---
+title: git メモ
+categories: tools git 
+tags: tools git
+---
+
 # Gitでリモートのみファイル削除する方法
 
 ```sh
