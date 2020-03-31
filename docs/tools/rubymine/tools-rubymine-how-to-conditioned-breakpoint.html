@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+      <title>RubyMineで条件付きブレイクポイントを使いこなす方法 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="RubyMineで条件付きブレイクポイントを使いこなす方法" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。" />
+<meta property="og:description" content="みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint" />
+<meta property="og:url" content="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-03-29T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"dateModified":"2020-03-29T00:00:00+09:00","datePublished":"2020-03-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png","headline":"RubyMineで条件付きブレイクポイントを使いこなす方法","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint"},"url":"https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint","description":"みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="RubyMineで条件付きブレイクポイントを使いこなす方法">
+    <meta name="twitter:description" content="みんな大好きRubyMineはRubyのIDEです。IDEと言えばそのソフト一つで開発環境が整っている必要があります。なんせIntegrated Development Envrionmentですもんね。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <section>
+            <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <a href="/">Home</a>
+    
+      
+        / <a href="/tags#tools">ツール</a>
+      
+    
+      
+        / <a href="/tags#rubymine">RubyMine</a>
+      
+    
+      
+        / RubyMineで条件付きブレイクポイントを使いこなす方法
+      
+    
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" alt="RubyMineで条件付きブレイクポイントを使いこなす方法">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>RubyMineで条件付きブレイクポイントを使いこなす方法</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-3-29</li>
+        
+          <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rubymine">RubyMine</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#条件付きブレイクポイントとは">条件付きブレイクポイントとは？</a></li>
+  <li><a href="#無条件ブレイクポイントをかける">無条件ブレイクポイントをかける</a>
+    <ul>
+      <li><a href="#ループ内のブレイクポイントは何回も止まる">ループ内のブレイクポイントは何回も止まる</a></li>
+    </ul>
+  </li>
+  <li><a href="#条件付きブレイクポイントをかける">条件付きブレイクポイントをかける</a>
+    <ul>
+      <li><a href="#enabled-有効状態の設定">Enabled: 有効状態の設定</a></li>
+      <li><a href="#suspend-一時停止の設定">Suspend: 一時停止の設定</a>
+        <ul>
+          <li><a href="#breakpoint-hit-発火をログ出力で通知">“Breakpoint hit”: 発火をログ出力で通知</a></li>
+          <li><a href="#stack-trace-発火時のスタックトレース表示">Stack trace: 発火時のスタックトレース表示</a></li>
+          <li><a href="#evaluate-and-log-発火時に独自ログを表示">Evaluate and log: 発火時に独自ログを表示</a></li>
+          <li><a href="#remove-once-hit-一度だけ止まる">Remove once hit: 一度だけ止まる</a></li>
+          <li><a href="#disable-until-hitting-the-following-breakpoint-他のブレークポイント検知で有効化する">Disable until hitting the following breakpoint: 他のブレークポイント検知で有効化する</a></li>
+        </ul>
+      </li>
+      <li><a href="#condition-条件の設定">Condition: 条件の設定</a></li>
+    </ul>
+  </li>
+  <li><a href="#moreでブレイクポイント管理画面を表示">Moreでブレイクポイント管理画面を表示</a></li>
+  <li><a href="#rubymineにも条件付きブレイクポイントはつけれる">RubyMineにも条件付きブレイクポイントはつけれる</a></li>
+</ul>
+  </div>
+
+  <p>みんな大好きRubyMineはRubyのIDEです。
+IDEと言えばそのソフト一つで開発環境が整っている必要があります。
+なんせ<strong>Integrated Development Envrionment</strong>ですもんね。</p>
+
+<p>そんなIDEの重要機能としてデバッグがあります。
+これが統合されていないIDEはIDEとは絶対に言えないです。</p>
+
+<p>その中でもブレイクポイントはデバッグにおいて要と言える機能です。
+ブレイクポイントができないデバッグは何ができるのか？と疑問なほどです。</p>
+
+<h2 id="条件付きブレイクポイントとは">条件付きブレイクポイントとは？</h2>
+
+<p>そんな便利なブレイクポイントですが、IDEとして用意されているブレイクポイントは一般的に単純なブレイクポイントだけでなく、一定の条件を満たした場合のみ止まってくれる<strong>「条件付きブレイクポイント」</strong> はIDEならではの機能です。</p>
+
+<p>RubyMineにもきちんと用意されてます。今回はこれの使い方を説明します。</p>
+
+<p>コードは何でもいいです、今回はこれを使います。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">10</span><span class="p">).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">i</span> <span class="o">+</span> <span class="mi">1</span>
+  <span class="nb">puts</span> <span class="n">i</span> <span class="o">-</span> <span class="mi">1</span>
+  <span class="nb">puts</span> <span class="n">i</span> <span class="o">*</span> <span class="n">i</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<h2 id="無条件ブレイクポイントをかける">無条件ブレイクポイントをかける</h2>
+
+<p>行の横をクリックすると赤丸がついたらその行にブレイクポイントをつけたことになります。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/1.png"><img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/1.png" width="50%" alt="RubyMineのエディタ画面" /></a></p>
+
+<p>Debug実行するとこの行で止まります。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/2.png"><img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/2.png" width="50%" alt="RubyMineでブレイクポイントで止まった画面" /></a></p>
+
+<p>これでもブレイクポイントがかかっているのでその時のコンテキストでRubyコードを実行したり変数評価したりできます。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/3.png"><img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/3.png" width="50%" alt="RubyMineでブレイクポイントで止めた後のConsole画面" /></a></p>
+
+<h3 id="ループ内のブレイクポイントは何回も止まる">ループ内のブレイクポイントは何回も止まる</h3>
+
+<p>ただこの方法ではループや何回も呼ばれるメソッドなどではその都度止まります。
+例えば決まったコンテキストだけデバッグしたい場合では何度も再開ボタンを連打して飛ばしてしまったりします。</p>
+
+<h2 id="条件付きブレイクポイントをかける">条件付きブレイクポイントをかける</h2>
+
+<p>この無条件のブレイクポイントを右クリック押すとポップアップメニューが出ます。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/4.png"><img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/4.png" width="100%" alt="RubyMineでブレイクポイントの編集ポップアップ" /></a></p>
+
+<ul>
+  <li>Enabled: 有効状態の設定</li>
+  <li>Suspend: 一時停止の設定</li>
+  <li>Condition: 条件の設定</li>
+</ul>
+
+<h3 id="enabled-有効状態の設定">Enabled: 有効状態の設定</h3>
+<p>一時的に有効／無効を設定します。ブレイクポイント自体の削除はしません。
+無効にすると穴のあいた赤丸になります。</p>
+
+<h3 id="suspend-一時停止の設定">Suspend: 一時停止の設定</h3>
+<p>一時停止とはつまるところ停止です。この行で止まります。
+デフォルトではONになっており、これをOFFにするとオレンジ色になります。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/5.png"><img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/5.png" width="100%" alt="RubyMineでブレイクポイントの編集でSuspendOFF" /></a></p>
+
+<p>一時停止する代わりにログ出力のオプションが増えます。</p>
+
+<h4 id="breakpoint-hit-発火をログ出力で通知">“Breakpoint hit”: 発火をログ出力で通知</h4>
+<p>止まる代わりにログを出力します。
+例えば次のコードでブレイクポイントを貼り、
+“Breakpoint hit”をONにします。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="p">(</span><span class="mi">1</span><span class="o">..</span><span class="mi">2</span><span class="p">).</span><span class="nf">each</span> <span class="k">do</span> <span class="o">|</span><span class="n">i</span><span class="o">|</span>
+  <span class="nb">puts</span> <span class="n">i</span> <span class="c1"># ここでブレイクポイントを貼る</span>
+<span class="k">end</span>
+</code></pre></div></div>
+
+<p>結果は次のようになります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1
+4
+
+Process finished with <span class="nb">exit </span>code 0
+Breakpoint reached: main.rb:4
+Breakpoint reached: main.rb:4
+</code></pre></div></div>
+<p>「<strong>“Breakpoint reached: main.rb:4”</strong>」と通過したことをログ出力されてます。</p>
+
+<h4 id="stack-trace-発火時のスタックトレース表示">Stack trace: 発火時のスタックトレース表示</h4>
+<p>ブレイクポイントを通過して発火するとコールスタックを出力します。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1
+4
+
+Process finished with exit code 0
+Stack:
+	main.rb:4
+	main.rb:3
+	debug_program [ruby-debug-ide.rb:100] (singleton class of Debugger)
+	rdebug-ide:204
+Stack:
+	main.rb:4
+	main.rb:3
+	debug_program [ruby-debug-ide.rb:100] (singleton class of Debugger)
+	rdebug-ide:204
+</code></pre></div></div>
+
+<p>どこからこのメソッドが呼ばれてるのか知りたい場合に便利ですね。</p>
+
+<h4 id="evaluate-and-log-発火時に独自ログを表示">Evaluate and log: 発火時に独自ログを表示</h4>
+
+<p>ブレイクポイントを通過して発火すると記載しておいたRubyコードが評価され結果を出力します。
+例えばブレイクポイントに次のコードを仕込んで実行すると</p>
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="s2">"String </span><span class="si">#{</span><span class="n">i</span><span class="si">}</span><span class="s2">"</span>
+</code></pre></div></div>
+<p>ブレイクポイント発火時に次のようにRubyコードの評価結果が出力されます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>1
+4
+
+Process finished with <span class="nb">exit </span>code 0
+String 1
+String 2
+</code></pre></div></div>
+
+<h4 id="remove-once-hit-一度だけ止まる">Remove once hit: 一度だけ止まる</h4>
+
+<p>ブレイクポイントを一度発火するとそのブレイクポイントは削除されます。
+<strong>このブレイクポイントはSuspendがONのときしか機能しません。</strong></p>
+
+<h4 id="disable-until-hitting-the-following-breakpoint-他のブレークポイント検知で有効化する">Disable until hitting the following breakpoint: 他のブレークポイント検知で有効化する</h4>
+<p>このブレイクポイントは他のブレークポイントが発火したらそれをトリガーにブレークポイントが有効化します。</p>
+
+<p>ただシングルスレッドではこの機能は正しく動作していないように思えます。
+対象のブレイクポイント発火時はたしかに有効化しているようなのですが、その後有効状態を継続してもブレイクポイントはヒットしません。
+ここもし詳しく分かる方いたら教えてほしいです。</p>
+
+<h3 id="condition-条件の設定">Condition: 条件の設定</h3>
+
+<p>デフォルトはOFFになっておりONにすることで<code class="highlighter-rouge">Condition</code>内をRubyとして評価し<code class="highlighter-rouge">true</code>になったら止まります。
+条件付きブレイクポイントの場合は赤丸の右下に？マークがつきます。
+次の図では、変数<code class="highlighter-rouge">i</code>が<code class="highlighter-rouge">5</code>になったら止まります。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/6.png"><img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/6.png" width="100%" alt="RubyMineの条件付きブレイクポイント" /></a></p>
+
+<p>例では単純な等価判定ですが、戻り値として<code class="highlighter-rouge">Bool</code>を返せばいいだけなので
+そのコンテキストで得られる情報を使った評価も可能です。
+例えばActiveRecordがアクセスできるコンテキストであれば条件式に入れることも可能です。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">find_by</span><span class="p">(</span><span class="ss">id: </span><span class="n">i</span><span class="p">).</span><span class="nf">admin?</span>
+</code></pre></div></div>
+<p>といったことも可能です。</p>
+
+<h2 id="moreでブレイクポイント管理画面を表示">Moreでブレイクポイント管理画面を表示</h2>
+
+<p>画面左下の<code class="highlighter-rouge">More</code>ラベルをタップするとブレイクポイント一覧と詳細ができる管理画面が表示されます。</p>
+
+<p><a href="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/7.png"><img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/7.png" width="100%" alt="RubyMineブレイクポイント管理画面" /></a></p>
+
+<p>この画面でなくても指定したブレイクポイントの編集は可能です。</p>
+
+<h2 id="rubymineにも条件付きブレイクポイントはつけれる">RubyMineにも条件付きブレイクポイントはつけれる</h2>
+
+<p>他IDEと遜色ない条件付きブレイクポイント機能ですね。
+ただ条件付きブレイクポイントのデメリットとしては、処理が重くなります。
+通るたびに条件を満たしているか評価を行うためその分重くなります。</p>
+
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ruby/ruby-script-basic">iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/tools-training-support-tools-urcoach">実装の速度を養うトレーニングサポートツールを作った</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+        </div>
+    </ul>
+</div>
+
+
+          </section>
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      
+      <a href="/tags#notebook">雑記</a>
+    
+      
+      <a href="/tags#program-design">プログラム設計</a>
+    
+      
+      <a href="/tags#remote-work">リモートワーク</a>
+    
+      
+      <a href="/tags#ios">iOS</a>
+    
+      
+      <a href="/tags#swift">Swift</a>
+    
+      
+      <a href="/tags#uitableview">UITableView</a>
+    
+      
+      <a href="/tags#rails">Rails</a>
+    
+      
+      <a href="/tags#rails-controller">Rails Controller</a>
+    
+      
+      <a href="/tags#ruby">Ruby</a>
+    
+      
+      <a href="/tags#circleci">CircleCI</a>
+    
+      
+      <a href="/tags#ci">CI</a>
+    
+      
+      <a href="/tags#ssh">SSH</a>
+    
+      
+      <a href="/tags#linux">Linux</a>
+    
+      
+      <a href="/tags#centos">CentOS</a>
+    
+      
+      <a href="/tags#printer">Printer</a>
+    
+      
+      <a href="/tags#tools">ツール</a>
+    
+      
+      <a href="/tags#cron">cron</a>
+    
+      
+      <a href="/tags#uiview">UIView</a>
+    
+      
+      <a href="/tags#ios-safearea">iOS SafeArea</a>
+    
+      
+      <a href="/tags#service-design">サービス設計</a>
+    
+      
+      <a href="/tags#design">Design</a>
+    
+      
+      <a href="/tags#httpie">HTTPie</a>
+    
+      
+      <a href="/tags#mysql">MySQL</a>
+    
+      
+      <a href="/tags#rspec">RSpec</a>
+    
+      
+      <a href="/tags#git">Git</a>
+    
+      
+      <a href="/tags#tig">tig</a>
+    
+      
+      <a href="/tags#homebrew">Homebrew</a>
+    
+      
+      <a href="/tags#active-record">ActiveRecord</a>
+    
+      
+      <a href="/tags#mac">Mac</a>
+    
+      
+      <a href="/tags#db">DB</a>
+    
+      
+      <a href="/tags#ngrok">ngrok</a>
+    
+      
+      <a href="/tags#ats">App Transport Security</a>
+    
+      
+      <a href="/tags#regexp">正規表現</a>
+    
+      
+      <a href="/tags#cocoapods">CocoaPods</a>
+    
+      
+      <a href="/tags#rbenv">rbenv</a>
+    
+      
+      <a href="/tags#bundler">Bundler</a>
+    
+      
+      <a href="/tags#jekyll">Jekyll</a>
+    
+      
+      <a href="/tags#github-pages">GitHub Pages</a>
+    
+      
+      <a href="/tags#rack">Rack</a>
+    
+      
+      <a href="/tags#rack-middleware">Rack Middleware</a>
+    
+      
+      <a href="/tags#p4merge">p4merge</a>
+    
+      
+      <a href="/tags#report">レポート</a>
+    
+      
+      <a href="/tags#scene-kit">SceneKit</a>
+    
+      
+      <a href="/tags#test">Test</a>
+    
+      
+      <a href="/tags#nimble">Nimble</a>
+    
+      
+      <a href="/tags#carthage">Carthage</a>
+    
+      
+      <a href="/tags#rubocop">Rubocop</a>
+    
+      
+      <a href="/tags#rxswift">RxSwift</a>
+    
+      
+      <a href="/tags#uitableviewcell">UITableViewCell</a>
+    
+      
+      <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+    
+      
+      <a href="/tags#uicollectionview">UICollectionView</a>
+    
+      
+      <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+    
+      
+      <a href="/tags#firebase">Firebase</a>
+    
+      
+      <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+    
+      
+      <a href="/tags#xcuitest">XCUITest</a>
+    
+      
+      <a href="/tags#github">GitHub</a>
+    
+      
+      <a href="/tags#gem">gem</a>
+    
+      
+      <a href="/tags#google-analytics">Google Analytics</a>
+    
+      
+      <a href="/tags#kiji">kiji</a>
+    
+      
+      <a href="/tags#shellscript">シェルスクリプト</a>
+    
+      
+      <a href="/tags#lsof">lsof</a>
+    
+      
+      <a href="/tags#web">Web</a>
+    
+      
+      <a href="/tags#nginx">nginx</a>
+    
+      
+      <a href="/tags#rubymine">RubyMine</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
