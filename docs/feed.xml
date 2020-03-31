@@ -1,4 +1,168 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-03-30T05:18:55+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server" rel="alternate" type="text/html" title="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-03-29T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server">&lt;p&gt;RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-04-01T00:41:07+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">RubyMineで条件付きブレイクポイントを使いこなす方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint" rel="alternate" type="text/html" title="RubyMineで条件付きブレイクポイントを使いこなす方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-03-29T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint">&lt;p&gt;みんな大好きRubyMineはRubyのIDEです。
+IDEと言えばそのソフト一つで開発環境が整っている必要があります。
+なんせ&lt;strong&gt;Integrated Development Envrionment&lt;/strong&gt;ですもんね。&lt;/p&gt;
+
+&lt;p&gt;そんなIDEの重要機能としてデバッグがあります。
+これが統合されていないIDEはIDEとは絶対に言えないです。&lt;/p&gt;
+
+&lt;p&gt;その中でもブレイクポイントはデバッグにおいて要と言える機能です。
+ブレイクポイントができないデバッグは何ができるのか？と疑問なほどです。&lt;/p&gt;
+
+&lt;h2 id=&quot;条件付きブレイクポイントとは&quot;&gt;条件付きブレイクポイントとは？&lt;/h2&gt;
+
+&lt;p&gt;そんな便利なブレイクポイントですが、IDEとして用意されているブレイクポイントは一般的に単純なブレイクポイントだけでなく、一定の条件を満たした場合のみ止まってくれる&lt;strong&gt;「条件付きブレイクポイント」&lt;/strong&gt; はIDEならではの機能です。&lt;/p&gt;
+
+&lt;p&gt;RubyMineにもきちんと用意されてます。今回はこれの使い方を説明します。&lt;/p&gt;
+
+&lt;p&gt;コードは何でもいいです、今回はこれを使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;無条件ブレイクポイントをかける&quot;&gt;無条件ブレイクポイントをかける&lt;/h2&gt;
+
+&lt;p&gt;行の横をクリックすると赤丸がついたらその行にブレイクポイントをつけたことになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/1.png&quot; width=&quot;50%&quot; alt=&quot;RubyMineのエディタ画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Debug実行するとこの行で止まります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/2.png&quot; width=&quot;50%&quot; alt=&quot;RubyMineでブレイクポイントで止まった画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これでもブレイクポイントがかかっているのでその時のコンテキストでRubyコードを実行したり変数評価したりできます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/3.png&quot; width=&quot;50%&quot; alt=&quot;RubyMineでブレイクポイントで止めた後のConsole画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;ループ内のブレイクポイントは何回も止まる&quot;&gt;ループ内のブレイクポイントは何回も止まる&lt;/h3&gt;
+
+&lt;p&gt;ただこの方法ではループや何回も呼ばれるメソッドなどではその都度止まります。
+例えば決まったコンテキストだけデバッグしたい場合では何度も再開ボタンを連打して飛ばしてしまったりします。&lt;/p&gt;
+
+&lt;h2 id=&quot;条件付きブレイクポイントをかける&quot;&gt;条件付きブレイクポイントをかける&lt;/h2&gt;
+
+&lt;p&gt;この無条件のブレイクポイントを右クリック押すとポップアップメニューが出ます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/4.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineでブレイクポイントの編集ポップアップ&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Enabled: 有効状態の設定&lt;/li&gt;
+  &lt;li&gt;Suspend: 一時停止の設定&lt;/li&gt;
+  &lt;li&gt;Condition: 条件の設定&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;enabled-有効状態の設定&quot;&gt;Enabled: 有効状態の設定&lt;/h3&gt;
+&lt;p&gt;一時的に有効／無効を設定します。ブレイクポイント自体の削除はしません。
+無効にすると穴のあいた赤丸になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;suspend-一時停止の設定&quot;&gt;Suspend: 一時停止の設定&lt;/h3&gt;
+&lt;p&gt;一時停止とはつまるところ停止です。この行で止まります。
+デフォルトではONになっており、これをOFFにするとオレンジ色になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/5.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineでブレイクポイントの編集でSuspendOFF&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;一時停止する代わりにログ出力のオプションが増えます。&lt;/p&gt;
+
+&lt;h4 id=&quot;breakpoint-hit-発火をログ出力で通知&quot;&gt;“Breakpoint hit”: 発火をログ出力で通知&lt;/h4&gt;
+&lt;p&gt;止まる代わりにログを出力します。
+例えば次のコードでブレイクポイントを貼り、
+“Breakpoint hit”をONにします。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ここでブレイクポイントを貼る&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;結果は次のようになります。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1
+4
+
+Process finished with &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;code 0
+Breakpoint reached: main.rb:4
+Breakpoint reached: main.rb:4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;「&lt;strong&gt;“Breakpoint reached: main.rb:4”&lt;/strong&gt;」と通過したことをログ出力されてます。&lt;/p&gt;
+
+&lt;h4 id=&quot;stack-trace-発火時のスタックトレース表示&quot;&gt;Stack trace: 発火時のスタックトレース表示&lt;/h4&gt;
+&lt;p&gt;ブレイクポイントを通過して発火するとコールスタックを出力します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1
+4
+
+Process finished with exit code 0
+Stack:
+	main.rb:4
+	main.rb:3
+	debug_program [ruby-debug-ide.rb:100] (singleton class of Debugger)
+	rdebug-ide:204
+Stack:
+	main.rb:4
+	main.rb:3
+	debug_program [ruby-debug-ide.rb:100] (singleton class of Debugger)
+	rdebug-ide:204
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;どこからこのメソッドが呼ばれてるのか知りたい場合に便利ですね。&lt;/p&gt;
+
+&lt;h4 id=&quot;evaluate-and-log-発火時に独自ログを表示&quot;&gt;Evaluate and log: 発火時に独自ログを表示&lt;/h4&gt;
+
+&lt;p&gt;ブレイクポイントを通過して発火すると記載しておいたRubyコードが評価され結果を出力します。
+例えばブレイクポイントに次のコードを仕込んで実行すると&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s2&quot;&gt;&quot;String &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ブレイクポイント発火時に次のようにRubyコードの評価結果が出力されます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1
+4
+
+Process finished with &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;code 0
+String 1
+String 2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;remove-once-hit-一度だけ止まる&quot;&gt;Remove once hit: 一度だけ止まる&lt;/h4&gt;
+
+&lt;p&gt;ブレイクポイントを一度発火するとそのブレイクポイントは削除されます。
+&lt;strong&gt;このブレイクポイントはSuspendがONのときしか機能しません。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h4 id=&quot;disable-until-hitting-the-following-breakpoint-他のブレークポイント検知で有効化する&quot;&gt;Disable until hitting the following breakpoint: 他のブレークポイント検知で有効化する&lt;/h4&gt;
+&lt;p&gt;このブレイクポイントは他のブレークポイントが発火したらそれをトリガーにブレークポイントが有効化します。&lt;/p&gt;
+
+&lt;p&gt;ただシングルスレッドではこの機能は正しく動作していないように思えます。
+対象のブレイクポイント発火時はたしかに有効化しているようなのですが、その後有効状態を継続してもブレイクポイントはヒットしません。
+ここもし詳しく分かる方いたら教えてほしいです。&lt;/p&gt;
+
+&lt;h3 id=&quot;condition-条件の設定&quot;&gt;Condition: 条件の設定&lt;/h3&gt;
+
+&lt;p&gt;デフォルトはOFFになっておりONにすることで&lt;code class=&quot;highlighter-rouge&quot;&gt;Condition&lt;/code&gt;内をRubyとして評価し&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;になったら止まります。
+条件付きブレイクポイントの場合は赤丸の右下に？マークがつきます。
+次の図では、変数&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;が&lt;code class=&quot;highlighter-rouge&quot;&gt;5&lt;/code&gt;になったら止まります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/6.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineの条件付きブレイクポイント&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;例では単純な等価判定ですが、戻り値として&lt;code class=&quot;highlighter-rouge&quot;&gt;Bool&lt;/code&gt;を返せばいいだけなので
+そのコンテキストで得られる情報を使った評価も可能です。
+例えばActiveRecordがアクセスできるコンテキストであれば条件式に入れることも可能です。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;find_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;id: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;admin?&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;といったことも可能です。&lt;/p&gt;
+
+&lt;h2 id=&quot;moreでブレイクポイント管理画面を表示&quot;&gt;Moreでブレイクポイント管理画面を表示&lt;/h2&gt;
+
+&lt;p&gt;画面左下の&lt;code class=&quot;highlighter-rouge&quot;&gt;More&lt;/code&gt;ラベルをタップするとブレイクポイント一覧と詳細ができる管理画面が表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/7.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineブレイクポイント管理画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;この画面でなくても指定したブレイクポイントの編集は可能です。&lt;/p&gt;
+
+&lt;h2 id=&quot;rubymineにも条件付きブレイクポイントはつけれる&quot;&gt;RubyMineにも条件付きブレイクポイントはつけれる&lt;/h2&gt;
+
+&lt;p&gt;他IDEと遜色ない条件付きブレイクポイント機能ですね。
+ただ条件付きブレイクポイントのデメリットとしては、処理が重くなります。
+通るたびに条件を満たしているか評価を行うためその分重くなります。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><category term="ruby" /><summary type="html">みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" /></entry><entry><title type="html">RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server" rel="alternate" type="text/html" title="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-03-29T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server">&lt;p&gt;RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。
 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。
 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。&lt;/p&gt;
 
@@ -431,150 +595,7 @@ baz
 &lt;h2 id=&quot;rubyのw-i以外にも色々ある記法パーセント記法&quot;&gt;Rubyの%w %i以外にも色々ある%記法(パーセント記法)&lt;/h2&gt;
 
 &lt;p&gt;よく使うのは2つ3つですが、意外と多かったですね。&lt;br /&gt;
-無理して使う必要はないですが、コードリーディングでは必要なので頭の片隅においときたいですね。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><summary type="html">気づいたら忘れてる%記法(パーセント記法)について一覧を確認しました。 %wと%iぐらいしか使うこと少ないですが、他にも色々ありますね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-27-ruby-percent-syntax.png" /></entry><entry><title type="html">Mac上のnginx設定ファイルをドメイン毎に分ける</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac" rel="alternate" type="text/html" title="Mac上のnginx設定ファイルをドメイン毎に分ける" /><published>2020-02-26T00:00:00+09:00</published><updated>2020-02-26T00:00:00+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。
-今回は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;の設定内容をドメイン毎、つまりアプリ毎に分けます。
-分かれてることで複数のアプリ開発を1つの&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.cnf&lt;/code&gt;に集約されなくなり管理しやすくなります。&lt;/p&gt;
-
-&lt;p&gt;▼前回記事はこちらになります。&lt;br /&gt;
-&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step3-on-mac&quot;&gt;Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;ドメイン毎に設定を分ける理由&quot;&gt;ドメイン毎に設定を分ける理由&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.cnf&lt;/code&gt;に直接記述せず、ドメイン毎に設定ファイルを用意する理由とは何でしょうか？
-Macでnginxを使うケースは分けたほうが恩恵をえられます。
-その理由について簡単に説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;macのnginxは開発用途がメイン&quot;&gt;Macのnginxは開発用途がメイン&lt;/h3&gt;
-&lt;p&gt;Macを本番サーバとして使うことはありませんが、開発PCはMacかWindowsが主なOSだと思います。
-そのため1つのMacに複数のアプリが含まれやすいです。
-開発では複数アプリが同時に扱うこともあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;1macに複数ドメインを立ち上げることはよくある&quot;&gt;1Macに複数ドメインを立ち上げることはよくある&lt;/h3&gt;
-&lt;p&gt;例えばMac1台で開発してると下記のように複数アプリが含まれることはよくあります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;アプリA(Web)&lt;/li&gt;
-  &lt;li&gt;アプリB(Web)&lt;/li&gt;
-  &lt;li&gt;アプリB(Backend)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;しかもアプリBだと、WebとBackend両方を立ち上げが必要なケースもあると思います。
-これら各nginx設定は、特に工夫しなければすべて&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に書かれるかと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginxconfに全ドメイン設定を記述できる&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に全ドメイン設定を記述できる&lt;/h3&gt;
-&lt;p&gt;実は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;は複数ドメインの設定を&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;にまとめて全部記述することは可能です。
-しかしそれによりなにかと長期的に面倒なことが続きます。
-それは可読性と他ドメイン影響範囲に悪影響することです。&lt;/p&gt;
-
-&lt;h3 id=&quot;長い設定ファイルはメンテナンスしにくい&quot;&gt;長い設定ファイルはメンテナンスしにくい&lt;/h3&gt;
-&lt;p&gt;前述はドメイン3つですが、人によっては5~10個ドメインが入っているかと思います。
-そうなってくると、&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;には10個の設定が全部記述されるためファイルがとても長くなります。
-その長くて読みにくい設定ファイルから不要な項目を削除する必要があります。&lt;/p&gt;
-
-&lt;h3 id=&quot;開発不要になればそのドメイン設定は不要になる&quot;&gt;開発不要になればそのドメイン設定は不要になる&lt;/h3&gt;
-&lt;p&gt;ドメイン開発が終了すればそのドメインの設定は不要となるため、削除すると思います。
-それも放置すると&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;がとんでも長い行となるためです。&lt;/p&gt;
-
-&lt;p&gt;削除するときにどの項目を削除するべきなのか一つ一つ読み解いて行く必要があります。
-これは変更により他ドメインへの影響範囲内になりますし、誤って消してしまうと動かなくなります。
-本番サーバはチューリング用途ですが、Macだと開発環境つど変更必要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;macのnginxconfは本番サーバと異なり変更頻度が高い&quot;&gt;Macの&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;は本番サーバと異なり変更頻度が高い&lt;/h3&gt;
-
-&lt;p&gt;本番サーバのnginx.confは一度組み込んでしまえばパフォーマンス・チューニング用途以外で変えることは少ないです。
-しかしMac上のnginxは開発用途がメインで、開発不要になれば削除作業が起きますし、新しくアプリ開発すれば追加作業が起きます。
-本番サーバと異なり設定の大きく異なる複数のアプリを何度も消したり追加したりすることとなり、よりミスの可能性が上がります。
-これらはドメインごとに設定ファイルとして分かれてることで望ましいです。&lt;/p&gt;
-
-&lt;h3 id=&quot;ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる&quot;&gt;ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる&lt;/h3&gt;
-
-&lt;p&gt;これらの問題を回避するためにドメイン毎に設定ファイルが用意されていれば解決できます。
-新しくアプリが追加になればファイルごと追加で、アプリが不要になればドメイン設定ファイルを削除するだけで、
-他ドメインの設定に影響を抑えられます。&lt;/p&gt;
-
-&lt;p&gt;これはドメインごとの設定ファイルとシンボリックリンクで実現します。&lt;/p&gt;
-
-&lt;h2 id=&quot;includeディレクティブでアプリ別設定ファイル構築する&quot;&gt;includeディレクティブでアプリ別設定ファイル構築する&lt;/h2&gt;
-&lt;p&gt;では実際の構築方法について説明します。&lt;/p&gt;
-
-&lt;p&gt;仕組みは単純で、ドメイン別の設定ファイルを&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブでロードしているだけです。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブには&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;でまとめてファイル指定もできるので、これを使います。&lt;/p&gt;
-
-&lt;p&gt;流れは次の通りです。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;ドメイン別設定ファイル置き場を用意する&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;でドメイン別設定ファイルをロードする&lt;/li&gt;
-  &lt;li&gt;ドメイン別設定ファイルを用意する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;ドメイン別設定ファイル置き場を用意する&quot;&gt;ドメイン別設定ファイル置き場を用意する&lt;/h3&gt;
-&lt;p&gt;まずは設定ファイルを置く場所を用意します。場所といってもフォルダです。
-フォルダの中に入れておくことで&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;でまとめてロードできて便利だからです。&lt;/p&gt;
-
-&lt;p&gt;置き場となるフォルダ名は&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;とします。これは&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;で既にそういう記述があるためです。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir /usr/local/etc/nginx/servers
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;nginxconfにincludeでドメイン別設定ファイルをロードする&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;でドメイン別設定ファイルをロードする&lt;/h3&gt;
-
-&lt;p&gt;次は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に先程用意したフォルダ内の設定ファイルを全てロードする処理を記述します。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;nginx.conf&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  # 全サーバ共通設定はここ
-
-  # 各個別設定はここ
-  include servers/*;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これにより&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダ内のファイルを全てロードするようになります。&lt;/p&gt;
-
-&lt;h3 id=&quot;ドメイン別設定ファイルを用意する&quot;&gt;ドメイン別設定ファイルを用意する&lt;/h3&gt;
-
-&lt;p&gt;最後はそれぞれドメイン毎の設定ファイルを用意します。
-ファイル名はドメイン名と同じ方がわかりやすいです。
-今回はローカルなので&lt;code class=&quot;highlighter-rouge&quot;&gt;api.localhost&lt;/code&gt;というファイル名を用意します。&lt;/p&gt;
-
-&lt;p&gt;内容は動作確認できればいいので適当に用意しました。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  listen 80;
-  server_name api.localhost;
-  root /usr/local/var/www;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;以上で設定は完了です、nginxを再起動するば反映されます。
- この設定ファイルであれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;http://api.localhost&lt;/code&gt; にアクセスすると、&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/var/www&lt;/code&gt;フォルダの&lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt;のレスポンスを返すようになります。&lt;/p&gt;
-
-&lt;h2 id=&quot;慣習に倣ったバーチャルホスト構築&quot;&gt;慣習に倣ったバーチャルホスト構築&lt;/h2&gt;
-&lt;p&gt;今回紹介したドメイン毎に設定ファイルを分ける方法はnginxではバーチャルホスト構築時は少し慣習から外れた方法なので、Apacheなどからしたら少し分かりにくいかもしれません。目的はローカル上で複数ドメインをMacなど開発用とで立ち上げることなので、問題はないのですが、これが本番サーバの場合はこの方法ではなく次の方法で構築をしてください。&lt;/p&gt;
-
-&lt;p&gt;大きく次のフローとなります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;sites-available フォルダ作成と個別設定ファイル配置&lt;/li&gt;
-  &lt;li&gt;sites-enabled フォルダの作成と&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;フォルダ内の個別設定ファイルへのシンボリックリンク作成&lt;/li&gt;
-  &lt;li&gt;nginx.conf に include ディレクティブで sites-enabled内ファイルをロード&lt;/li&gt;
-  &lt;li&gt;nginx 再起動&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;フォルダが、先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダとなります。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;で読み込む先は&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;ではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;フォルダにしてください。
-直接実ファイルをロードするのではなく、&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;に用意されたシンボリックリンクをロードします。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;が間に一つ入る形になっています。
-これは&lt;code class=&quot;highlighter-rouge&quot;&gt;unlink&lt;/code&gt;すること簡単にバーチャルホストを閉じることが可能となっています。
-設定ファイルの削除や移動などは必要ありません。&lt;/p&gt;
-
-&lt;h2 id=&quot;mac上のnginx設定ファイルをドメイン毎に分ける&quot;&gt;Mac上のnginx設定ファイルをドメイン毎に分ける&lt;/h2&gt;
-&lt;p&gt;今回は設定ファイルを別ファイルからロードすることで&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;をボリュームを抑え、変更影響を受けにくい仕組みの紹介でした。
-直接書くより少し手間だったり慣れていないと確認が面倒だったりはしますが、目の前の手間から逃げ続けると将来一気に避けられない手間を対応するはめに会います。
-可読性やメンテナンス性はエンジニアには重要指標なので、目の前の面倒から逃げずに将来のもっと大きな面倒をなくしていくことは大事ですね。&lt;/p&gt;
-
-&lt;p&gt;次の記事は「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-security-on-mac&quot;&gt;Mac上でnginxのセキュリティ最低限を確認する&lt;/a&gt;&lt;/span&gt;
-」について説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png" /></entry><entry><title type="html">Mac上でnginxのセキュリティ最低限を確認する</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac" rel="alternate" type="text/html" title="Mac上でnginxのセキュリティ最低限を確認する" /><published>2020-02-26T00:00:00+09:00</published><updated>2020-02-26T00:00:00+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。
+無理して使う必要はないですが、コードリーディングでは必要なので頭の片隅においときたいですね。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><summary type="html">気づいたら忘れてる%記法(パーセント記法)について一覧を確認しました。 %wと%iぐらいしか使うこと少ないですが、他にも色々ありますね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-27-ruby-percent-syntax.png" /></entry><entry><title type="html">Mac上でnginxのセキュリティ最低限を確認する</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac" rel="alternate" type="text/html" title="Mac上でnginxのセキュリティ最低限を確認する" /><published>2020-02-26T00:00:00+09:00</published><updated>2020-02-26T00:00:00+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。
 今回を入門シリーズ最後とします。&lt;/p&gt;
 
 &lt;p&gt;最後はMac上にnginxで立てたWebサーバを対象に最低限のセキュリティ項目について確認を行います。
@@ -810,7 +831,150 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
 やはりボリュームとしては結構大きく上手にまとめられていない部分もあったかと思います。
 一方でこのシリーズを通したことでnginxとはなんなのか？nginxでRailsアプリってどう立ち上がるのか？といったぼんやりとした全体像はつかめたのではないかなと思います。&lt;/p&gt;
 
-&lt;p&gt;この記事を皮切りに今後nginxの理解がより深まればいいですね。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png" /></entry><entry><title type="html">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac" rel="alternate" type="text/html" title="Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる" /><published>2020-02-24T00:00:00+09:00</published><updated>2020-02-24T00:00:00+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。&lt;/p&gt;
+&lt;p&gt;この記事を皮切りに今後nginxの理解がより深まればいいですね。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png" /></entry><entry><title type="html">Mac上のnginx設定ファイルをドメイン毎に分ける</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac" rel="alternate" type="text/html" title="Mac上のnginx設定ファイルをドメイン毎に分ける" /><published>2020-02-26T00:00:00+09:00</published><updated>2020-02-26T00:00:00+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。
+今回は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;の設定内容をドメイン毎、つまりアプリ毎に分けます。
+分かれてることで複数のアプリ開発を1つの&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.cnf&lt;/code&gt;に集約されなくなり管理しやすくなります。&lt;/p&gt;
+
+&lt;p&gt;▼前回記事はこちらになります。&lt;br /&gt;
+&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step3-on-mac&quot;&gt;Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;ドメイン毎に設定を分ける理由&quot;&gt;ドメイン毎に設定を分ける理由&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.cnf&lt;/code&gt;に直接記述せず、ドメイン毎に設定ファイルを用意する理由とは何でしょうか？
+Macでnginxを使うケースは分けたほうが恩恵をえられます。
+その理由について簡単に説明します。&lt;/p&gt;
+
+&lt;h3 id=&quot;macのnginxは開発用途がメイン&quot;&gt;Macのnginxは開発用途がメイン&lt;/h3&gt;
+&lt;p&gt;Macを本番サーバとして使うことはありませんが、開発PCはMacかWindowsが主なOSだと思います。
+そのため1つのMacに複数のアプリが含まれやすいです。
+開発では複数アプリが同時に扱うこともあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;1macに複数ドメインを立ち上げることはよくある&quot;&gt;1Macに複数ドメインを立ち上げることはよくある&lt;/h3&gt;
+&lt;p&gt;例えばMac1台で開発してると下記のように複数アプリが含まれることはよくあります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;アプリA(Web)&lt;/li&gt;
+  &lt;li&gt;アプリB(Web)&lt;/li&gt;
+  &lt;li&gt;アプリB(Backend)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;しかもアプリBだと、WebとBackend両方を立ち上げが必要なケースもあると思います。
+これら各nginx設定は、特に工夫しなければすべて&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に書かれるかと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;nginxconfに全ドメイン設定を記述できる&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に全ドメイン設定を記述できる&lt;/h3&gt;
+&lt;p&gt;実は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;は複数ドメインの設定を&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;にまとめて全部記述することは可能です。
+しかしそれによりなにかと長期的に面倒なことが続きます。
+それは可読性と他ドメイン影響範囲に悪影響することです。&lt;/p&gt;
+
+&lt;h3 id=&quot;長い設定ファイルはメンテナンスしにくい&quot;&gt;長い設定ファイルはメンテナンスしにくい&lt;/h3&gt;
+&lt;p&gt;前述はドメイン3つですが、人によっては5~10個ドメインが入っているかと思います。
+そうなってくると、&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;には10個の設定が全部記述されるためファイルがとても長くなります。
+その長くて読みにくい設定ファイルから不要な項目を削除する必要があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;開発不要になればそのドメイン設定は不要になる&quot;&gt;開発不要になればそのドメイン設定は不要になる&lt;/h3&gt;
+&lt;p&gt;ドメイン開発が終了すればそのドメインの設定は不要となるため、削除すると思います。
+それも放置すると&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;がとんでも長い行となるためです。&lt;/p&gt;
+
+&lt;p&gt;削除するときにどの項目を削除するべきなのか一つ一つ読み解いて行く必要があります。
+これは変更により他ドメインへの影響範囲内になりますし、誤って消してしまうと動かなくなります。
+本番サーバはチューリング用途ですが、Macだと開発環境つど変更必要です。&lt;/p&gt;
+
+&lt;h3 id=&quot;macのnginxconfは本番サーバと異なり変更頻度が高い&quot;&gt;Macの&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;は本番サーバと異なり変更頻度が高い&lt;/h3&gt;
+
+&lt;p&gt;本番サーバのnginx.confは一度組み込んでしまえばパフォーマンス・チューニング用途以外で変えることは少ないです。
+しかしMac上のnginxは開発用途がメインで、開発不要になれば削除作業が起きますし、新しくアプリ開発すれば追加作業が起きます。
+本番サーバと異なり設定の大きく異なる複数のアプリを何度も消したり追加したりすることとなり、よりミスの可能性が上がります。
+これらはドメインごとに設定ファイルとして分かれてることで望ましいです。&lt;/p&gt;
+
+&lt;h3 id=&quot;ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる&quot;&gt;ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる&lt;/h3&gt;
+
+&lt;p&gt;これらの問題を回避するためにドメイン毎に設定ファイルが用意されていれば解決できます。
+新しくアプリが追加になればファイルごと追加で、アプリが不要になればドメイン設定ファイルを削除するだけで、
+他ドメインの設定に影響を抑えられます。&lt;/p&gt;
+
+&lt;p&gt;これはドメインごとの設定ファイルとシンボリックリンクで実現します。&lt;/p&gt;
+
+&lt;h2 id=&quot;includeディレクティブでアプリ別設定ファイル構築する&quot;&gt;includeディレクティブでアプリ別設定ファイル構築する&lt;/h2&gt;
+&lt;p&gt;では実際の構築方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;仕組みは単純で、ドメイン別の設定ファイルを&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブでロードしているだけです。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブには&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;でまとめてファイル指定もできるので、これを使います。&lt;/p&gt;
+
+&lt;p&gt;流れは次の通りです。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;ドメイン別設定ファイル置き場を用意する&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;でドメイン別設定ファイルをロードする&lt;/li&gt;
+  &lt;li&gt;ドメイン別設定ファイルを用意する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;ドメイン別設定ファイル置き場を用意する&quot;&gt;ドメイン別設定ファイル置き場を用意する&lt;/h3&gt;
+&lt;p&gt;まずは設定ファイルを置く場所を用意します。場所といってもフォルダです。
+フォルダの中に入れておくことで&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;でまとめてロードできて便利だからです。&lt;/p&gt;
+
+&lt;p&gt;置き場となるフォルダ名は&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;とします。これは&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;で既にそういう記述があるためです。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir /usr/local/etc/nginx/servers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;nginxconfにincludeでドメイン別設定ファイルをロードする&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;でドメイン別設定ファイルをロードする&lt;/h3&gt;
+
+&lt;p&gt;次は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に先程用意したフォルダ内の設定ファイルを全てロードする処理を記述します。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;nginx.conf&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
+  # 全サーバ共通設定はここ
+
+  # 各個別設定はここ
+  include servers/*;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これにより&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダ内のファイルを全てロードするようになります。&lt;/p&gt;
+
+&lt;h3 id=&quot;ドメイン別設定ファイルを用意する&quot;&gt;ドメイン別設定ファイルを用意する&lt;/h3&gt;
+
+&lt;p&gt;最後はそれぞれドメイン毎の設定ファイルを用意します。
+ファイル名はドメイン名と同じ方がわかりやすいです。
+今回はローカルなので&lt;code class=&quot;highlighter-rouge&quot;&gt;api.localhost&lt;/code&gt;というファイル名を用意します。&lt;/p&gt;
+
+&lt;p&gt;内容は動作確認できればいいので適当に用意しました。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
+  listen 80;
+  server_name api.localhost;
+  root /usr/local/var/www;
+}
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;以上で設定は完了です、nginxを再起動するば反映されます。
+ この設定ファイルであれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;http://api.localhost&lt;/code&gt; にアクセスすると、&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/var/www&lt;/code&gt;フォルダの&lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt;のレスポンスを返すようになります。&lt;/p&gt;
+
+&lt;h2 id=&quot;慣習に倣ったバーチャルホスト構築&quot;&gt;慣習に倣ったバーチャルホスト構築&lt;/h2&gt;
+&lt;p&gt;今回紹介したドメイン毎に設定ファイルを分ける方法はnginxではバーチャルホスト構築時は少し慣習から外れた方法なので、Apacheなどからしたら少し分かりにくいかもしれません。目的はローカル上で複数ドメインをMacなど開発用とで立ち上げることなので、問題はないのですが、これが本番サーバの場合はこの方法ではなく次の方法で構築をしてください。&lt;/p&gt;
+
+&lt;p&gt;大きく次のフローとなります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;sites-available フォルダ作成と個別設定ファイル配置&lt;/li&gt;
+  &lt;li&gt;sites-enabled フォルダの作成と&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;フォルダ内の個別設定ファイルへのシンボリックリンク作成&lt;/li&gt;
+  &lt;li&gt;nginx.conf に include ディレクティブで sites-enabled内ファイルをロード&lt;/li&gt;
+  &lt;li&gt;nginx 再起動&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;フォルダが、先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダとなります。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;で読み込む先は&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;ではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;フォルダにしてください。
+直接実ファイルをロードするのではなく、&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;に用意されたシンボリックリンクをロードします。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;が間に一つ入る形になっています。
+これは&lt;code class=&quot;highlighter-rouge&quot;&gt;unlink&lt;/code&gt;すること簡単にバーチャルホストを閉じることが可能となっています。
+設定ファイルの削除や移動などは必要ありません。&lt;/p&gt;
+
+&lt;h2 id=&quot;mac上のnginx設定ファイルをドメイン毎に分ける&quot;&gt;Mac上のnginx設定ファイルをドメイン毎に分ける&lt;/h2&gt;
+&lt;p&gt;今回は設定ファイルを別ファイルからロードすることで&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;をボリュームを抑え、変更影響を受けにくい仕組みの紹介でした。
+直接書くより少し手間だったり慣れていないと確認が面倒だったりはしますが、目の前の手間から逃げ続けると将来一気に避けられない手間を対応するはめに会います。
+可読性やメンテナンス性はエンジニアには重要指標なので、目の前の面倒から逃げずに将来のもっと大きな面倒をなくしていくことは大事ですね。&lt;/p&gt;
+
+&lt;p&gt;次の記事は「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-security-on-mac&quot;&gt;Mac上でnginxのセキュリティ最低限を確認する&lt;/a&gt;&lt;/span&gt;
+」について説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png" /></entry><entry><title type="html">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac" rel="alternate" type="text/html" title="Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる" /><published>2020-02-24T00:00:00+09:00</published><updated>2020-02-24T00:00:00+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step3-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。&lt;/p&gt;
 
 &lt;h2 id=&quot;ゼロからnginxconfを書いてアプリサーバを構築する&quot;&gt;ゼロから&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;を書いてアプリサーバを構築する&lt;/h2&gt;
 
@@ -3011,126 +3175,4 @@ http {
 log_formatを使わず直接access_log にformatを書いても大丈夫です。&lt;/p&gt;
 
 &lt;p&gt;上記の構文を次の記事となる&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step2-on-mac&quot;&gt;Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる&lt;/a&gt;&lt;/span&gt;
-で説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png" /></entry><entry><title type="html">OpenSSL Library not loadedが出たら疑う場所</title><link href="https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error" rel="alternate" type="text/html" title="OpenSSL Library not loadedが出たら疑う場所" /><published>2020-02-20T00:00:00+09:00</published><updated>2020-02-20T00:00:00+09:00</updated><id>https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error</id><content type="html" xml:base="https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error">&lt;p&gt;今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。
-この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;LoadError:
-  dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;何をしたのか&quot;&gt;何をしたのか？&lt;/h2&gt;
-&lt;p&gt;homebrew管理下のnginxを更新(&lt;code class=&quot;highlighter-rouge&quot;&gt;$ brew upgrade nginx&lt;/code&gt;)しました。&lt;/p&gt;
-
-&lt;h3 id=&quot;homebrewでnginxの依存関係を調べる&quot;&gt;homebrewでnginxの依存関係を調べる&lt;/h3&gt;
-
-&lt;p&gt;homebrewには管理してるformulaがどのformulaを使っているのか依存関係を調べることができます。&lt;/p&gt;
-
-&lt;p&gt;下記はその機能を使って、nginxがどのformulaに依存してるのかを調べた結果です。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew deps nginx
-openssl@1.1
-pcre
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;どうやらnginxをバージョン更新した際に依存関係であるopensslに何らかの更新が入り、Ruby/Railsで使われているopensslに影響が起きたようです。&lt;/p&gt;
-
-&lt;h2 id=&quot;原因調査&quot;&gt;原因調査&lt;/h2&gt;
-&lt;p&gt;自分が調べて対処した順番に書いていきます。
-解決した項目だけを実施しても解決しないかも知れません。
-なぜなら問題が複数ケースだったり、順番に実施した内容のなかで必要手順が含まれていたのかもしれないからです。&lt;/p&gt;
-
-&lt;h3 id=&quot;ruby再インストール解決せず&quot;&gt;Ruby再インストール(解決せず)&lt;/h3&gt;
-&lt;p&gt;ネットで調べたところ、 Rubyに紐づくopensslが外れた事で読み込めなくなっているのではないか？と仮説にたどり着きました。
-Rubyはrbenvで管理しているため、rbenvで対象バージョンを再インストールすることで再紐付けされないか？と試してみることにしました。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rbenv install &amp;lt;ruby version&amp;gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;しかし解決はしませんでした。&lt;/p&gt;
-
-&lt;h3 id=&quot;シンボリックリンクを用意解決せず&quot;&gt;シンボリックリンクを用意(解決せず)&lt;/h3&gt;
-
-&lt;p&gt;OpenSSLのライブラリ置き場を確認したら次のように&lt;code class=&quot;highlighter-rouge&quot;&gt;1.0.0&lt;/code&gt;版なくなってました。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-lkh&lt;/span&gt; /usr/local/opt/openssl/lib/
-total 7236
-drwxr-xr-x  4 mothule  staff   128B  9 10 22:13 engines-1.1
-&lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 mothule  staff   2.2M  2 20 21:43 libcrypto.1.1.dylib
-&lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 mothule  staff   3.7M  9 10 22:13 libcrypto.a
-lrwxr-xr-x  1 mothule  staff    19B  9 10 22:13 libcrypto.dylib -&amp;gt; libcrypto.1.1.dylib
-&lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 mothule  staff   474K  2 20 21:43 libssl.1.1.dylib
-&lt;span class=&quot;nt&quot;&gt;-r--r--r--&lt;/span&gt;  1 mothule  staff   704K  9 10 22:13 libssl.a
-lrwxr-xr-x  1 mothule  staff    16B  9 10 22:13 libssl.dylib -&amp;gt; libssl.1.1.dylib
-drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;どうやら存在しないバージョンファイルに対してアクセスをしているため失敗しているようです。&lt;/p&gt;
-
-&lt;p&gt;強引ですが、試しにシンボリックリンクで1.1版に向けてみたら動かないか試してみました。&lt;br /&gt;
-&lt;strong&gt;と思ったのも、セマンティック バージョニングなら1.0.0から1.1はマイナーバージョンアップになるので、運が良ければ破壊変更はないからです。（それでも将来的に考えたらこの方法はNGです）&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; libssl.1.1.dylib libssl.1.0.0.dylib
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; libcrypto.1.1.dylib libcrypto.1.0.0.dylib
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;こちらで試しましたが、MySQLの起動が失敗するようになりました。&lt;/p&gt;
-
-&lt;h3 id=&quot;mysqlが起動しないことが発覚&quot;&gt;MySQLが起動しないことが発覚&lt;/h3&gt;
-&lt;p&gt;ガサツな方法だと解決できない根深さなようなので本腰入れて調べることにしました。&lt;/p&gt;
-
-&lt;p&gt;エラーログを確認すると、opensslはmysql2 gemがopensslを使おうとしてエラーを起こしています。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;LoadError:
-  dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;まず問題を特定するために、そもそもMySQLが起動するかを確認しましたが、MySQLが起動(&lt;code class=&quot;highlighter-rouge&quot;&gt;$ mysql.server start&lt;/code&gt;)しなくなっていました。&lt;/p&gt;
-
-&lt;p&gt;MySQLは都合上最新ではなく MySQL5.6を使っており、homebrewで管理しています。
-なので再インストールをしてみることにしました。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew reinstall mysql@5.6
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;MySQLは立ち上がるようになりました。&lt;/strong&gt; しかしRailsは以前変わらず起動しません。&lt;/p&gt;
-
-&lt;h3 id=&quot;mysql2-gem-を再インストール&quot;&gt;mysql2 gem を再インストール&lt;/h3&gt;
-
-&lt;p&gt;前述したようにエラーはmysql2で起きてます。 MySQLが動くようになったので、今度はRubyとMySQLのアダプターとなる&lt;code class=&quot;highlighter-rouge&quot;&gt;mysql2&lt;/code&gt;を再インストールしました。&lt;/p&gt;
-
-&lt;p&gt;gem直接ではなくbunlder管理なのでbundlerから経由で指示します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;gem uninstall mysql2
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle install
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;結果は変わらず起動していませんが、エラー内容が少し変わりました。&lt;/p&gt;
-
-&lt;h3 id=&quot;ついに動いた&quot;&gt;ついに動いた&lt;/h3&gt;
-
-&lt;p&gt;エラー内容がマイグレーション関係のエラーだったので、マイグレーションを走らせました。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/rake db:migrate:reset db:seed
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これで起動したらついに動きました。&lt;/p&gt;
-
-&lt;h2 id=&quot;それぞれのopensslのパスがズレていた&quot;&gt;それぞれのopensslのパスがズレていた？&lt;/h2&gt;
-&lt;p&gt;振り返ってみると、nginxを更新したことでopensslが更新され、MySQL,ruby,mysql2とそれぞれでopensslのパスがズレたことが原因じゃないかと見ています。&lt;/p&gt;
-
-&lt;p&gt;なので、どれか一つではなく、複数の対処で解決したんじゃないかと思ってます。&lt;/p&gt;
-
-&lt;h2 id=&quot;openssl-library-not-loadedが出たときの対処法&quot;&gt;OpenSSL Library not loadedが出たときの対処法&lt;/h2&gt;
-
-&lt;p&gt;今回自分が行った対処一覧となります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ brew reinstall mysql@5.6&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ rbenv install 2.5.7 &amp;amp;&amp;amp; gem install bundler -v &quot;2.0.2&quot;&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle exec gem uninstall mysql2&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bundle&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ bin/rake db:migrate:reset db:seed RAILS_ENV=test&lt;/code&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;全ての環境で解決はしないと思いますが、その場合は自分のように原因領域の特定と仮説、試行の繰り返しが重要です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rbenv" /><category term="ruby" /><summary type="html">今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png" /></entry></feed>
+で説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png" /></entry></feed>
