@@ -8,6 +8,9 @@ class Article
   attr_accessor :categories
   attr_accessor :tags
   attr_accessor :published_at
+  attr_accessor :path
+  attr_accessor :basename
+  attr_accessor :uri_name
 
   class << self
     def imports_all(contain_drafts: true)
@@ -34,7 +37,11 @@ class Article
                        File.basename(path).match(/(\d{4}-\d{2}-\d{2})/)&.captures&.first
                      end
 
-      Article.new(title: title, categories: categories, tags: tags, published_at: published_at)
+      Article.new(title: title,
+                  categories: categories,
+                  tags: tags,
+                  published_at: published_at,
+                  path: path)
     end
 
     def report(articles:)
@@ -50,11 +57,14 @@ class Article
     end
   end
 
-  def initialize(title:, categories:, tags:, published_at:)
+  def initialize(title:, categories:, tags:, published_at:, path:)
     @title = title
     @categories = categories
     @tags = tags
     @published_at = published_at
+    @path = path
+    @basename = File.basename(path)
+    @uri_name = @basename.match(/^\d{4}-\d+-\d+-(.*)\.md$/).captures.first
   end
 
   def to_s(categories_width:)
