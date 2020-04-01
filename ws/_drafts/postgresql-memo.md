@@ -4,7 +4,8 @@ categories: postgresql
 tags: postgresql
 ---
 
-# PostgreSQLのInformation表示
+## PostgreSQLのInformation表示
+
 ```bash
 $ heroku pg:info --app kawakatei-heroku
 ```
