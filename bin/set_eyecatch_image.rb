@@ -3,6 +3,7 @@
 
 require 'bundler/setup'
 require 'active_support/all'
+require_relative 'src/util'
 
 def main
   default_extension = 'png'
@@ -49,18 +50,14 @@ def prepare_output(output_directory_name:, output_base_path:, default_output_fil
   return "#{output_base_path}#{default_output_file_name}" if output_directory_name.nil?
 
   # Prepare directory
-  Dir.mkdir(output_base_path + output_directory_name) unless Dir.exist?(output_base_path + output_directory_name)
+  FileUtils.mkdir_p(output_base_path + output_directory_name)
+  # Dir.mkdir(output_base_path + output_directory_name) unless Dir.exist?(output_base_path + output_directory_name)
 
   # Resolve file name
-  final_name = ''
-  names = Dir.foreach(output_base_path + output_directory_name)
-  no = 0
-  loop do
-    final_name = "#{no}.#{default_extension}"
-    break unless names.include?(final_name)
-
-    no += 1
-  end
+  final_name = next_image_file_name(
+    target_directory_path: output_base_path + output_directory_name,
+    extension_name: default_extension
+  )
 
   # Final output path
   output_base_path + output_directory_name + '/' + final_name
