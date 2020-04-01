@@ -8,7 +8,8 @@ require 'yaml'
 
 unnamed_tags = []
 named_tags = YAML.load_file('./ws/_data/tag-names.yml')['tags']
-articles = Article.imports_all(contain_drafts: true)
+contain_drafts = (ARGV.first || 'true') == 'true'
+articles = Article.imports_all(contain_drafts: contain_drafts)
 articles.flat_map(&:tags).uniq.sort.each do |tag|
   named_tag = named_tags[tag]
   unnamed_tags << tag if named_tag.nil?

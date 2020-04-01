@@ -64,6 +64,7 @@ class Article
     @published_at = published_at
     @path = path
     @basename = File.basename(path)
+    puts @basename
     @uri_name = @basename.match(/^\d{4}-\d+-\d+-(.*)\.md$/).captures.first
   end
 
