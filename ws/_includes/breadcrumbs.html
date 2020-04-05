@@ -1,13 +1,24 @@
 <div id="breadcrumbs">
   {% assign crumbs = page.url | remove: '/index.html' | split: '/' %}
   {% if crumbs.size > 1 and crumbs.last != "404" %}
-    <a href="/">Home</a>
-    {% for crumb in crumbs offset: 1 %}
-      {% if forloop.last %}
-        / {{ page.title }}
-      {% else %}
-        / <a href="{{baseurl}}/tags#{{ crumb }}">{% tag_label crumb %}</a>
-      {% endif %}
-    {% endfor %}
+    <ul>
+      <li itemscope itemtype="https://data-vocabulary.org/Breadcrumb">
+        <a href="/" itemprop="url">
+          <span itemprop="title">もちゅろぐ</span>
+        </a>
+      </li>
+
+      {% for crumb in crumbs offset: 1 %}
+        {% if forloop.last %}
+          <li>{{ page.title }}</li>
+        {% else %}
+          <li itemscope itemtype="https://data-vocabulary.org/Breadcrumb">
+            <a href="{{baseurl}}/tags#{{ crumb }}" itemprop="url">
+              <span itemprop="title">{% tag_label crumb %}</span>
+            </a>
+          </li>
+        {% endif %}
+      {% endfor %}
+    </ul>
   {% endif %}
 </div>
