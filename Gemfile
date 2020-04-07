@@ -21,6 +21,7 @@ group :jekyll_plugins do
   gem 'jekyll-paginate'
   gem 'jekyll-seo-tag'
   gem 'jekyll-sitemap'
+  gem "jekyll-last-modified-at"
   # gem 'jekyll-plantuml'
   gem 'jekyll-twitter-plugin'
 end
