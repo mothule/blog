@@ -11,8 +11,8 @@
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="概要" />
-<meta property="og:description" content="概要" />
+<meta name="description" content="エラーハンドリングのベストプラクティスについて自分なりに少し調べてみました" />
+<meta property="og:description" content="エラーハンドリングのベストプラクティスについて自分なりに少し調べてみました" />
 <link rel="canonical" href="https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice" />
 <meta property="og:url" content="https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -22,14 +22,14 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"dateModified":"2018-10-21T00:00:00+09:00","datePublished":"2018-10-21T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2018-10-21-rails-error-handling-best-practice.png","headline":"RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice"},"url":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice","description":"概要","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"dateModified":"2018-10-21T00:00:00+09:00","datePublished":"2018-10-21T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2018-10-21-rails-error-handling-best-practice.png","headline":"RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice"},"url":"https://blog.mothule.com/ruby/rails/rails-error-handling-best-practice","description":"エラーハンドリングのベストプラクティスについて自分なりに少し調べてみました","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
     <meta name="twitter:title" content="RailsのController内におけるエラーハンドリングのベストプラクティスについて調べてみた">
-    <meta name="twitter:description" content="概要">
+    <meta name="twitter:description" content="エラーハンドリングのベストプラクティスについて自分なりに少し調べてみました">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2018-10-21-rails-error-handling-best-practice.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -172,13 +172,12 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#概要">概要</a></li>
   <li><a href="#applicationで一律例外検知してハンドリングする方法">Applicationで一律例外検知してハンドリングする方法</a></li>
   <li><a href="#ベストプラクティス">ベストプラクティス</a></li>
 </ul>
   </div>
 
-  <h2 id="概要">概要</h2>
+  <p>エラーハンドリングのベストプラクティスについて自分なりに少し調べてみました</p>
 
 <ul>
   <li>各APIControllerでエラー検知とエラーレスポンスを書くのDRY違反してる</li>
