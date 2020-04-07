@@ -1,5 +1,5 @@
 ---
-title: GitHubのConfirm your account recovery settingsについて
+title: 【今時必須】Confirm your account recovery settingsについて(GitHub)
 categories: tools github
 tags: tools github
 image:
