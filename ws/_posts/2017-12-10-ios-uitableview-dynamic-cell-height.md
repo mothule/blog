@@ -5,8 +5,6 @@ tags: ios swift uitableview
 image:
   path: /assets/images/2017-12-10-ios-uitableview-dynamic-cell-height/2017-12-10-ios-uitableview-dynamic-cell-height.png
 ---
-## 概要
-
 [iOS]({{ site.baseurl }}/categories/ios)で使われるUIベスト3に入る[UITableView]({{ site.baseurl }}/tags#uitableview)
 そのUITableViewのセルの高さを内容に応じて動的に変更する方法についてまとめました。
 

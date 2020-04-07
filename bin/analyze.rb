@@ -56,7 +56,7 @@ class Article
   end
 
   def to_s(categories_width:)
-    "#{date_with(width: 10)} | #{title_with(width: 32)} |  #{categories.join(' ').ljust(categories_width, ' ').green} | #{tags.join(' ').magenta}"
+    "#{date_with(width: 10)} | #{title_with(width: 55)} |  #{categories.join(' ').ljust(categories_width, ' ').green} | #{tags.join(' ').magenta}"
   end
 
   private

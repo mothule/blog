@@ -5,7 +5,9 @@ tags: circleci ci ssh
 image:
   path: /assets/images/2018-11-26-circleci-fail-add-ssh-key.png
 ---
-最近CircleCIを使って定期実行的なことをするために弄り始めました。
+最近CircleCIを使ってジョブの定期実行をするために弄りました。
+そのときにSSHのKey登録がうまく行かないつまづきがあったのでそれについて少しまとめました
+
 
 ## CircleCIの簡単な説明
 CircleCIはGitHubのレポジトリベースで管理されており、セットアップすると自動でread-onlyの鍵がGitHubの対象レポジトリに登録されてます。

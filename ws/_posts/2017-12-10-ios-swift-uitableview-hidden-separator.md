@@ -5,9 +5,6 @@ tags: ios swift uitableview
 image:
   path: /assets/images/2017-12-10-ios-swift-uitableview-hidden-separator.png
 ---
-
-## 概要
-
 [iOS](/categories/ios)で使われるUIベスト3に入る[UITableView](/tags/#uitableview)
 
 そんなUITableViewですがデザイナーからよく指摘される空セルには線(separator)を引かないで消す実装についてまとめました。

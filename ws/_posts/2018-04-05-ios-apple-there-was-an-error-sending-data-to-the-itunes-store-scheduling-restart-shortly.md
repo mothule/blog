@@ -5,7 +5,6 @@ tags: ios
 image:
   path: /assets/images/ios-apple-there-was-an-error-sending-data-to-the-itunes-store-scheduling-restart-shortly.png
 ---
-
 いつもと同じ手順でXcodeのOrganizerでApp Storeへアップロードしたら次のエラーが出ました。
 
 ```

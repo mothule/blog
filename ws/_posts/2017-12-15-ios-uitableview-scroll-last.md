@@ -7,7 +7,6 @@ image:
 ---
 UITableViewで一番下のセルまでスクロールする方法についてまとめました。
 
-
 ## 実装方法
 UITableView#scrollToRow(at:at:animated)を使います。
 

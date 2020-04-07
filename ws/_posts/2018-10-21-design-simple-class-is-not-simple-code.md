@@ -5,6 +5,9 @@ tags: program-design notebook
 image:
   path: /assets/images/2018-10-21-design-simple-class-is-not-simple-code.png
 ---
+複雑な処理を扱いやすくするために動作のみを公開し、複雑な処理は内部化させることで簡易性を出すクラスはよく見かけます。
+そんなクラス名には簡単とい評してSimpleとかEasyといったネーミングがつくこともあると思います。
+
 クラス名は目的やできることや塊を表現する。  
 そのためクラス名にSimpleやEasyがついてる場合
 

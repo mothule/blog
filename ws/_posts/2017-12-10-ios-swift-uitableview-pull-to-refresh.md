@@ -5,7 +5,6 @@ tags: ios uitableview
 image:
   path: /assets/images/2017-12-10-ios-swift-uitableview-pull-to-refresh.png
 ---
-## 概要
 [iOS](/categories/ios)で使われるUIベスト3に入る[UITableView](/tags#uitableview)
 
 そのUITableViewに引っ張って更新する機能（Pull to Refresh）の実装についてまとめました。

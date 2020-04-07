@@ -5,7 +5,7 @@ tags: rails rails-controller ruby
 image:
   path: /assets/images/2018-10-21-rails-error-handling-best-practice.png
 ---
-## 概要
+エラーハンドリングのベストプラクティスについて自分なりに少し調べてみました
 
 - 各APIControllerでエラー検知とエラーレスポンスを書くのDRY違反してる
 - エラーレスポンスは構造が統一できていないとクライアント側が死んでしまう

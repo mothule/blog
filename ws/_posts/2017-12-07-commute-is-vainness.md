@@ -5,7 +5,6 @@ tags: notebook remote-work
 image:
   path: /assets/images/2017-12-07-commute-is-vainness.png
 ---
-
 例えば次の都内にいそうなモデルケースの年収をもとに、通勤コストを求めてみました。
 ※ちなみにモデルケースは私ではない。
 
