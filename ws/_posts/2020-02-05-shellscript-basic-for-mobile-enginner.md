@@ -50,6 +50,7 @@ echo などがそれにあたります。
 - ag: grep高速版
 - pbcopy: クリップボードにコピー
 - pbpaste: クリップボードからペースト
+- mv: ファイル移動
 
 ### echo: 画面に文字列などを出力する
 
@@ -165,6 +166,31 @@ $ echo "hoge" | pbcopy
 $ pbpaste
 hoge
 ```
+
+### mv: ファイルやフォルダを移動
+
+ファイルを別ディレクトリに移動します。
+
+**fileAをdirectoryに移動**  
+```sh
+$ mv fileA directory/
+```
+
+ワイルドカードも使うことができます。
+
+**file-Aとfile-Bをdirectoryに移動**  
+```sh
+$ mv file-* directory/
+```
+
+フォルダの移動もできます。
+
+**directoryBをdirectoryに移動**  
+```sh
+$ mv directoryB/ directory/
+```
+
+
 
 ## 入出力リダイレクト
 
