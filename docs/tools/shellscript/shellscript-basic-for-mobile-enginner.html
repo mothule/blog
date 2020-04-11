@@ -22,7 +22,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png","url":"https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner","headline":"iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門","dateModified":"2020-02-09T16:59:24+09:00","datePublished":"2020-02-05T00:00:00+09:00","description":"bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png","url":"https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner","headline":"iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門","dateModified":"2020-04-12T04:51:29+09:00","datePublished":"2020-02-05T00:00:00+09:00","description":"bashやzsh,ターミナルは弄っていますか？黒い画面は古臭いと思ってませんか？","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/shellscript/shellscript-basic-for-mobile-enginner"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -191,6 +191,7 @@
       <li><a href="#ag-grep高速版">ag: grep高速版</a></li>
       <li><a href="#pbcopy-クリップボードにコピー">pbcopy: クリップボードにコピー</a></li>
       <li><a href="#pbpaste-クリップボードからペースト">pbpaste: クリップボードからペースト</a></li>
+      <li><a href="#mv-ファイルやフォルダを移動">mv: ファイルやフォルダを移動</a></li>
     </ul>
   </li>
   <li><a href="#入出力リダイレクト">入出力リダイレクト</a>
@@ -341,6 +342,7 @@ echo などがそれにあたります。</p>
   <li>ag: grep高速版</li>
   <li>pbcopy: クリップボードにコピー</li>
   <li>pbpaste: クリップボードからペースト</li>
+  <li>mv: ファイル移動</li>
 </ul>
 
 <h3 id="echo-画面に文字列などを出力する">echo: 画面に文字列などを出力する</h3>
@@ -446,6 +448,26 @@ Xcodeでは検索に引っかからない場合もありますし。</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"hoge"</span> | pbcopy
 <span class="nv">$ </span>pbpaste
 hoge
+</code></pre></div></div>
+
+<h3 id="mv-ファイルやフォルダを移動">mv: ファイルやフォルダを移動</h3>
+
+<p>ファイルを別ディレクトリに移動します。</p>
+
+<p><strong>fileAをdirectoryに移動</strong></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mv fileA directory/
+</code></pre></div></div>
+
+<p>ワイルドカードも使うことができます。</p>
+
+<p><strong>file-Aとfile-Bをdirectoryに移動</strong></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mv file-<span class="k">*</span> directory/
+</code></pre></div></div>
+
+<p>フォルダの移動もできます。</p>
+
+<p><strong>directoryBをdirectoryに移動</strong></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mv directoryB/ directory/
 </code></pre></div></div>
 
 <h2 id="入出力リダイレクト">入出力リダイレクト</h2>
