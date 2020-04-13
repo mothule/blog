@@ -8,6 +8,8 @@ image:
 MySQLを最新ではなく5.6で環境構築する機会がありました。
 その時にOpenSSL要因で発生するmysql2がインストールできないエラーの対処法が従来より知ってる方法ではうまく行かず別の方法に変わっていました。
 
+従来より知ってる対処法の詳細は「{% post_link_text 2019-03-22-ruby-rails-mysql2-error %}」になります。
+
 ## 従来は --with-ldflagsと --with-cppflags指定だった
 
 自分が知っている方法はldflagsとcppflagsでOpenSSLのヘッダーファイル群のパスとライブラリファイル群のパスを指定する方法でした。
