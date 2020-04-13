@@ -1,11 +1,21 @@
 ---
-title: rails new -d mysqlでmysql2失敗はOpenSSLを疑え(Mac)
+title: Ruby on Railsのmysql2エラーはOpenSSLを疑え(Mac)
+description: Mac上でRuby on Railsのrails newでDatabaseはMySQL使ったらmysql2でインストールエラー起きたので調査してOpenSSLの問題特定とbundle configを使ったビルドにOpenSSLパスを渡して解決する手順などをまとめました。
 categories: ruby rails
 tags: ruby rails mysql
 image:
   path: /assets/images/2019-03-22-ruby-rails-mysql2-error.png
 ---
-## 前提環境
+この記事はMac上でRuby on Railsで新しくアプリケーションを作る時にデータベースをMySQLを指定したらmysql2 gemが失敗したので調査したらOpenSSLに問題があったのでその時に調べたことをまとめた記事です。
+
+## rails newのmysql2インストールが失敗する
+
+ことの始まりは、Ruby on Railsでアプリを調査する必要があったため、MySQLの古いバージョンでRailsアプリケーションを作成しました。
+しかし、MySQLアダプタであるmysql2 gemのインストールでエラーが発生しました。
+
+構築しようとしたときの環境は次の通りです。
+
+### 前提環境
 
 - MacOS Mojave 10.14.2
 - Ruby 2.3.7
@@ -14,23 +24,21 @@ image:
   - homebrewでインストール
 - rails 5.0.7.2
 
+MySQLのバージョンが5.6系と非常に古いバージョンになります。
 
-
-上記構成でrailsアプリを作るときに初めからdatabaseをMySQLにしたら、いくつか失敗したのでその解消法についてまとめます。
-
-## rails new のときに mysql を指定
-デフォルトだとsqliteになってdatabase.ymlを書き直さないといけないので初めからdatabaseをmysqlに指定したい場合
+### rails newのときにMySQLを指定
+データベースはデフォルトだとSQLiteになってdatabase.ymlを書き直さないといけないので初めからdatabaseをmysqlに指定したい場合は、`-d` または `--database` オプションで`mysql`を指定します。
 
 ```sh
 $ rails new <app name> -d mysql
 ```
-または
-```sh
-$ rails new <app name> -database=mysql
-```
 
+`<app name>`は適当にアプリ名を入れてください。
+このコマンドを実行します。
 
-## rails newでmysql2のインストールが失敗する
+### mysql2 gemのインストールに失敗する
+
+コマンドを実行すると次のようなエラーログが出力されます。
 
 ```sh
 $ rails new <app name> -d mysql
@@ -99,7 +107,8 @@ In Gemfile:
 Could not find gem 'mysql2 (< 0.6.0, >= 0.3.18)' in any of the gem sources listed in your Gemfile.
 ```
 
-↑よく見ると、どうやら失敗してそうなのはOpenSSL周りが怪しそう↓
+このログを見ると、どうやら失敗してそうなのはOpenSSL周りが怪しそうです。以下は怪しそうな箇所をログ抜粋したもの
+
 ```
 checking for SSL_MODE_DISABLED in mysql.h... no
 checking for MYSQL_OPT_SSL_ENFORCE in mysql.h... no
@@ -107,39 +116,104 @@ checking for MYSQL_OPT_SSL_ENFORCE in mysql.h... no
 ld: library not found for -lssl
 ```
 
-## brewでopensslがインストールされてなければ、opensslをインストールする
+{% comment %}
+`
+{% endcomment %}
+
+
+`no`と言われてますし、 なにより`ld`コマンドでライブラリがないと言ってます。  
+ちなみにldコマンドの`-l`オプションでは`ssh`が指定された場合は`libssl.a`というファイルを検索します。  
+そのためここでは`libssl.a`ファイルが見つからないということになります。
+
+
+## mysql2のsslエラー原因を調査する
+
+仮にSSLが原因だと仮定して調査します。  
+ではなぜsslエラーが起きているのでしょうか？
+
+### OpenSSLがインストールされているか確認する
+
+Macで使われるSSLライブラリはOpenSSLとなります。  
+このライブラリがインストールされているかを確認します。  
+確認方法は`openssl version`でバージョン返せばインストールされてることを確認できます。  
+私の環境では次のバージョンです。
+
+```sh
+$ openssl version
+LibreSSL 2.6.5
+```
+
+#### OpenSSLとはツールキットである
+OpenSSLとは、TLS/SSLツールキットであり汎用暗号ライブラリです。  
+様々ながプラットフォームで利用可能なため一般的に広く認知されています。
+
+`LibreSSL`とは過去のハートブリード問題をうけてOpenSSLからフォークされたライブラリです。
+
+### brewでOpenSSLをインストールする
+
+もしOpenSSLが未インストールであるならHomebrewを使って、次のコマンドで簡単にインストールできます。
+
 ```sh
 $ brew install openssl
 ```
 
-## bundle configでmysql2のビルドオプションを変更する
-bundleに対してmysql2インストール時に先程インストールしたopnesslのlibとheaderのパスを指定すれば良いらしい
-**しかしbundleはおろかrails newも未実行なのでbundle configはできない。**
-```sh
-$ bundle config --local build.mysql2 "--with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include"
-```
+インストールが終わったらきちんと動くか`openssl version`で確認してみてください。
 
+### mysql2インストールのリンクで見つけられるようにする
+OpenSSLをインストールしただけではmysql2のインストール時にどこにあるのか分からないままなので失敗してしまいます。  
+そのためインストールの工程の一つであるビルド時にOpenSSLのライブラリとヘッダーのパス情報を渡してあげる必要があります。
 
-## rails newでのbundle installをしないようにする
-mysql2へのビルドコンフィグを設定できるためにbundle installはスキップさせたい。
-これは簡単に出来る。
+通常でgemでのインストール時にパス情報を渡しますが、今回はbundler配下なのでbundleを通してパス情報を渡します。
 
-```sh
-rails new <app name> --skip-bundle
-```
-これだけでbundle installが実行されなくなる。
+## mysql2のビルド設定にOpenSSLパスを渡す
 
-## 改めてbundle configでmysql2のビルドコンフィグを設定
+仮定ではありますが、mysql2のビルド時にSSLライブラリのパスが通っていないと見越して、ビルド設定にOpenSSLのパスを渡すことをトライしてみましょう。
+
+### bundle configでOpenSSLパス情報を渡す
+
+bundleを通してパス情報を渡すには、`bundle config`を使い次のように渡します。
 
 ```sh
 $ bundle config --local build.mysql2 "--with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include"
 ```
 
-## bundle installを実行
+`build.mysql2` とすることでmysql2のビルド時に後ろの文字列を引数として渡すことができます。
+`--local`とすることでこのディレクトリだけの設定となります。
+
+**▼もしこの引数の渡し方でダメな場合は、新しい方法で試してみてください。mysql2が新しくなったことで渡すオプションも変わっています。**  
+{% post_link 2019-07-30-ruby-rails-mysql56-mysql2-error-fix %}
+
+### rails newでのbundle installをしないようにする
+
+既に`rails new`を実行済みであれば前述した`bundle config`は使えます。  
+**しかしbundleはおろかrails newも未実行なのでbundle configはできないです。**
+
+`rails new`すると`mysql2`が失敗する。しかし`mysql2`にビルドコンフィグを渡すには`rails new`が必要…というデッドロック状態です。  
+**これを回避するには、`rails new`のときに`bundle install`をスキップさせます。**  
+これはオプションで`--skip-bundle`を追加するだけで`bundle install`がスキップされます。
+
+```sh
+$ rails new <app name> --skip-bundle
+```
+
+これで`rails new`実行完了後に改めて`bundle config`でパス情報を渡します。
+
+## mysql2にSSLパスを通してbundle installを実行
+OpenSSLをインストール済みの状態で、`rails new`を`--skip-bundle`で実行、`bundle config`でOpenSSLライブラリのパス情報を渡す設定をした状態で、もう一度`bundle install`で`mysql2`のインストールをトライとなります。
+
 ```sh
 $ bundle install -j4 --path=vendor/bundle
 ```
 
-これで初期状態からmysqlをdatabaseにしたrailsアプリが出来上がると思います。
+これで初期状態からMySQLをDatabaseにしたRailsアプリが出来上がると思います。
+
+## rails newでmysql2エラーの対処法まとめ
+
+エラー要因でOpenSSLが怪しい場合は次の対処を試してみてください。
+
+1. OpenSSLをインストール
+1. `rails new`を`--skip-bundle`で実行
+1. `bundle config`で`mysql2`のビルド設定にOpenSSLライブラリのパスを渡す
+1. `bundle install`実行
 
 うまくいかない場合は別の要因かもしれません。
