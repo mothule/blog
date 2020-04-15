@@ -1,12 +1,12 @@
 ---
-title: 【初心者向け】UITableViewのSectionHeaderを変更する
-description: iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズ可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。
+title: 【初心者向け】UITableViewのヘッダーをカスタマイズする
+description: iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。
 categories: ios uitableview
 tags: ios uitableview
 image:
   path: /assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png
 ---
-SectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のカスタマイズ方法について説明します。シンプルなカスタマイズであれば`UITableDataSource`の`titleForHeaderInSection`などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は`UITableViewDelegate`を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。
+UITableViewのヘッダーとはセクション毎の上下表示されるSectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のことを指しこれらはカスタマイズ可能です。シンプルなカスタマイズであれば`UITableDataSource`の`titleForHeaderInSection`などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は`UITableViewDelegate`を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。
 
 
 
