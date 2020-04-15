@@ -1,7 +1,7 @@
 ---
 title: PostgreSQLメモ
-categories: postgresql
-tags: postgresql
+categories: db postgresql
+tags: db postgresql
 ---
 
 ## PostgreSQLのInformation表示
