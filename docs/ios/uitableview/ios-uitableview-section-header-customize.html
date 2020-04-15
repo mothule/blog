@@ -8,15 +8,15 @@
     
 
     
-      <title>【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する - もちゅろぐ</title>
+      <title>【初心者向け】UITableViewのSectionHeaderを変更する - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する" />
+<meta property="og:title" content="【初心者向け】UITableViewのSectionHeaderを変更する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。 基本的な変更であればUITableDataSourceprotocolのtitleForHeaderInSectionなどを変更すれば可能ですが、 より複雑な独自のUIViewなどを設定したい場合はこれとは違う UITableViewDelegateを使った実装が必要になります。" />
-<meta property="og:description" content="SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。 基本的な変更であればUITableDataSourceprotocolのtitleForHeaderInSectionなどを変更すれば可能ですが、 より複雑な独自のUIViewなどを設定したい場合はこれとは違う UITableViewDelegateを使った実装が必要になります。" />
+<meta name="description" content="iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズ可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。" />
+<meta property="og:description" content="iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズ可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。" />
 <link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize" />
 <meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -26,14 +26,14 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize","headline":"【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-29T00:00:00+09:00","description":"SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。 基本的な変更であればUITableDataSourceprotocolのtitleForHeaderInSectionなどを変更すれば可能ですが、 より複雑な独自のUIViewなどを設定したい場合はこれとは違う UITableViewDelegateを使った実装が必要になります。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize","headline":"【初心者向け】UITableViewのSectionHeaderを変更する","dateModified":"2020-04-16T03:39:02+09:00","datePublished":"2019-09-29T00:00:00+09:00","description":"iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズ可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する">
-    <meta name="twitter:description" content="SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。基本的な変更であればUITableDataSourceprotocolのtitleForHeaderInSectionなどを変更すれば可能ですが、より複雑な独自のUIViewなどを設定したい場合はこれとは違う UITableViewDelegateを使った実装が必要になります。">
+    <meta name="twitter:title" content="【初心者向け】UITableViewのSectionHeaderを変更する">
+    <meta name="twitter:description" content="iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズ可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -139,7 +139,7 @@
         
         
           <li>
-            【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する
+            【初心者向け】UITableViewのSectionHeaderを変更する
           </li>
         
       
@@ -153,12 +153,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png" alt="【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png" alt="【初心者向け】UITableViewのSectionHeaderを変更する">
     </div>
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する</h1>
+    <h1>【初心者向け】UITableViewのSectionHeaderを変更する</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
@@ -175,59 +175,28 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#完成イメージ">完成イメージ</a></li>
-  <li><a href="#基礎理解">基礎理解</a></li>
+  <li><a href="#uitableviewのカスタムヘッダー完成イメージ">UITableViewのカスタムヘッダー完成イメージ</a></li>
+  <li><a href="#uitableviewのセクションヘッダーとは">UITableViewのセクションヘッダーとは</a></li>
   <li><a href="#セクションヘッダーとなるuitableviewheaderfooterviewを用意する">セクションヘッダーとなるUITableViewHeaderFooterViewを用意する</a></li>
-  <li><a href="#xibでレイアウトを作成">xibでレイアウトを作成</a></li>
-  <li><a href="#xibをuitableviewに登録する">xibをUITableViewに登録する</a></li>
+  <li><a href="#セクションヘッダーのレイアウトをxibで作成">セクションヘッダーのレイアウトをxibで作成</a></li>
+  <li><a href="#セクションヘッダーxibをuitableviewに登録する">セクションヘッダーxibをUITableViewに登録する</a></li>
   <li><a href="#セクションヘッダーの高さを変更する">セクションヘッダーの高さを変更する</a></li>
   <li><a href="#セクションヘッダーを独自ビューで生成する">セクションヘッダーを独自ビューで生成する</a></li>
   <li><a href="#セクションフッターも同様に可能">セクションフッターも同様に可能</a></li>
 </ul>
   </div>
   <section>
-  <p>SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。<br />
-基本的な変更であれば<code class="highlighter-rouge">UITableDataSource</code>protocolの<code class="highlighter-rouge">titleForHeaderInSection</code>などを変更すれば可能ですが、<br />
-より複雑な独自のUIViewなどを設定したい場合はこれとは違う <code class="highlighter-rouge">UITableViewDelegate</code>を使った実装が必要になります。</p>
+  <p>SectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のカスタマイズ方法について説明します。シンプルなカスタマイズであれば<code class="highlighter-rouge">UITableDataSource</code>の<code class="highlighter-rouge">titleForHeaderInSection</code>などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は<code class="highlighter-rouge">UITableViewDelegate</code>を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。</p>
 
-<p>もし基本的なセクションヘッダーの変更であれば、こちらの記事をどうぞ。</p>
+<p>もし基本的なセクションヘッダーの変更であれば、「<span><a href="/ios/uitableview/ios-uitableview-section-basic">【初心者向け】UITableViewのSection(セクション)の使い方</a></span>
+」の記事を見てください。</p>
 
-<div class="link-container">
-  <a href="/ios/uitableview/ios-uitableview-section-basic">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-09-26-ios-uitableview-section-basic/2019-09-26-ios-uitableview-section-basic.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>【初心者向け】UITableViewのSection(セクション)の使い方</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>
-
-あまり使う機会の少ないと油断してると、必要性が急上昇するSection（セクション）です。
-Section(セクション)を使うとどうなるのか？どういった見た目になるのか？注意点や使い所に関して説明します。
-
-UITableViewのおさらい
-
-テーブルはヘッダー、フッター、SectionとRowに分かれています。
-
-そしてSectionごとにもヘッダーとフッターがあります。
-
-
-Section(セクション)とは？Row(ロウ)とは？
-
-{% page_image -1.png 1...</span>
-      </div>
-    </div>
-  </a>
-</div>
-
-<h2 id="完成イメージ">完成イメージ</h2>
+<h2 id="uitableviewのカスタムヘッダー完成イメージ">UITableViewのカスタムヘッダー完成イメージ</h2>
 <p>リソースは適当に用意したものなので見た目としては酷いですが、機能は満たしてあります。</p>
 
 <video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2019-09-29-ios-uitableview-section-header-customize-1.mp4" width="100%" height="400px">うまく読み込めない場合はリロード</video>
 
-<h2 id="基礎理解">基礎理解</h2>
+<h2 id="uitableviewのセクションヘッダーとは">UITableViewのセクションヘッダーとは</h2>
 <p>セクションヘッダーの定義元には次のようなコメントがあります。</p>
 
 <blockquote>
@@ -253,7 +222,7 @@ Section(セクション)とは？Row(ロウ)とは？
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h2 id="xibでレイアウトを作成">xibでレイアウトを作成</h2>
+<h2 id="セクションヘッダーのレイアウトをxibで作成">セクションヘッダーのレイアウトをxibで作成</h2>
 
 <p>次にxibでレイアウトを用意します。</p>
 
@@ -273,7 +242,7 @@ Section(セクション)とは？Row(ロウ)とは？
 
 <p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png" width="506px" alt="" /></a></p>
 
-<h2 id="xibをuitableviewに登録する">xibをUITableViewに登録する</h2>
+<h2 id="セクションヘッダーxibをuitableviewに登録する">セクションヘッダーxibをUITableViewに登録する</h2>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
