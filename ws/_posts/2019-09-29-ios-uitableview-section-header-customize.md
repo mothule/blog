@@ -1,24 +1,23 @@
 ---
-title: 【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する
+title: 【初心者向け】UITableViewのSectionHeaderを変更する
+description: iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズ可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。
 categories: ios uitableview
 tags: ios uitableview
 image:
   path: /assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png
 ---
-SectionHeader(セクションヘッダー)やSectionFooter(セクションフッター)のカスタマイズについて説明します。  
-基本的な変更であれば`UITableDataSource`protocolの`titleForHeaderInSection`などを変更すれば可能ですが、  
-より複雑な独自のUIViewなどを設定したい場合はこれとは違う `UITableViewDelegate`を使った実装が必要になります。
+SectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のカスタマイズ方法について説明します。シンプルなカスタマイズであれば`UITableDataSource`の`titleForHeaderInSection`などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は`UITableViewDelegate`を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。
 
-もし基本的なセクションヘッダーの変更であれば、こちらの記事をどうぞ。
 
-{% post_link 2019-09-26-ios-uitableview-section-basic %}
 
-## 完成イメージ
+もし基本的なセクションヘッダーの変更であれば、「{% post_link_text 2019-09-26-ios-uitableview-section-basic %}」の記事を見てください。
+
+## UITableViewのカスタムヘッダー完成イメージ
 リソースは適当に用意したものなので見た目としては酷いですが、機能は満たしてあります。
 
 <video autoplay loop muted playsinline src="/assets/videos/2019-09-29-ios-uitableview-section-header-customize-1.mp4" width="100%" height="400px">うまく読み込めない場合はリロード</video>
 
-## 基礎理解
+## UITableViewのセクションヘッダーとは
 セクションヘッダーの定義元には次のようなコメントがあります。
 
 > fixed font style. use custom view (UILabel) if you want something different
@@ -43,7 +42,7 @@ class HeaderView: UITableViewHeaderFooterView {
 }
 ```
 
-## xibでレイアウトを作成
+## セクションヘッダーのレイアウトをxibで作成
 
 次にxibでレイアウトを用意します。
 
@@ -63,7 +62,7 @@ class HeaderView: UITableViewHeaderFooterView {
 
 {% page_image -3.png 506px %}
 
-## xibをUITableViewに登録する
+## セクションヘッダーxibをUITableViewに登録する
 
 ```swift
 override func viewDidLoad() {
