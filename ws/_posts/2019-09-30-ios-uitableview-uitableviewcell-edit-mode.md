@@ -1,5 +1,6 @@
 ---
 title: 【初心者向け】UITableViewのセルの編集制御を極める
+description: UITableViewのセルは編集モードがあり、並び替えや追加や削除、前方スワイプや後方スワイプでアクションやメニュー表示など動作制御や、削除ラベル変更や指定セルの編集禁止など表示制御と多様です。これらをコードと動画で一つずつ説明する詳細記事です。
 categories: ios uitableview
 tags: ios uitableview uitableviewcell
 image:
