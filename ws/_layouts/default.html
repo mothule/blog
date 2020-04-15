@@ -4,9 +4,13 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    {% if page.url == "/404" %}
-    <meta name="robots" content="noindex, nofollow" />
-    {% endif %}
+    {% case page.url %}
+      {% when "/404" %}
+        <meta name="robots" content="noindex, nofollow" />
+      {% when "/page2/" or "/page3/" or "/page4/" or "/page5/" or "/page6/" or "/tags" %}
+        <meta name="robots" content="noindex" />
+      {% else %}
+    {% endcase %}
 
     {% if page.title != site.title %}
       <title>{{ page.title }} - {{ site.title }}</title>
