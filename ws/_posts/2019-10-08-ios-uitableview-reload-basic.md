@@ -98,55 +98,37 @@ private var users: [User] = [] {
 `UITableView`の次の３つのメソッドで更新します。
 
 - `reloadData`: 全てのセルとセクションを更新します。
-- `reloadSections(_:with:)`: 指定セクションと付随するいセルを更新します。
+- `reloadSections(_:with:)`: 指定セクションと付随するセルを更新します。
 - `reloadRows(at:with:)`: 指定セルをアニメ付きで更新します。
 
 今回のケースでは `reloadData` か `reloadSections(_:with:)` で更新ができます。  
 `reloadRows(at:with:)` は更新前と更新後のセクション内のセル数が同じでないとランタイムエラーになります。
 
-### reloadData()の欠点
+### reloadData()は全体更新しかし…
 
-セル数の少ないテーブルであれば、 `reloadData()` で事足ります。
-しかしセル数が増えたりセル内のレイアウトが複雑だったりすると全体更新は負荷がかかります。
+`reloadData`はテーブル全体の更新を行います。
+セルのレイアウトがシンプルなら`reloadData()`を特に何も考えずに呼んでも問題は起こりにくいです。
+テーブル全体更新ですが、効率のために表示中のセルのみが再表示されます。
+またセル可変してもオフセットを調整する仕組みになっています。
 
-動的に変更で呼ばれるメソッドゆえあまり負荷が重くなるとカクツキが起きるようになります。  
-場合によってはスパイクといって数ミリ秒~数秒固まります。
+### セル参照(cellForRowAt)は注意が必要
+セルの表示には`tableView(_:cellForRowAt:) -> UITableViewCell`が呼ばれ内部でセル構築してセルを返します。
 
-### セクション単位とセル単位の更新
+これの注意する点は、スクロールという軽快な動作を求められる場所でセル表示のたびに呼ばれることです。
+そのため1セルが複雑だとそれだけ負荷がかかるため、スクロールにカクつきが起きるようになります。
+場合によってはスパイクといって数ミリ秒固まります。
 
-負荷がセンシティブな要素であるなら、更新範囲を削ることで更新にかかる時間を短くすることが重要になります。
+例えばセル内にUICollectionViewを入れて横スクロールなどを可能にするカルーセルなどは複雑だと思っていいです。
 
-更新範囲を狭くする方法として `reloadSections(_:with:)` と `reloadRows(at:with:)` があります。
-`reloadSections(_:with:)` メソッドはセクション単位での更新になります。
+### セクション単位とセル単位の更新と注意点
 
-また更に絞り込みしたい場合は、 `reloadRows(at:with:)`がありますが、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。
+セル単位とセクション単位の更新は、`reloadSections(_:with:)` と `reloadRows(at:with:)` があります。
 
-## 部分更新で役立つメソッド
+`reloadRows(at:with:)`は、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。
+また`reloadSections(_:with:)`もセクションAとBのセル数と紐づくデータが変化した場合に、セクションAだけを`reloadSections`で更新するとランタイムエラーが発生します。
+これは`reloadSections`は他のセクションのセル数を求める処理が走っているためです。何故このような処理が走っているのかは公式ドキュメントを見ましたが特に記載がありませんでした。
 
-先程紹介した`reloadSections(_:with:)` と `reloadRows(at:with:)`はどちらもセクションまたはセルなど具体的な場所を指定する必要があります。
-
-しかしケースによっては特定するのが難しいことがあります。
-
-その場合は、次のメソッドを使うと特定のヒントまたはそのまま使えます。
-
-- 選択中のセル位置を取得
-  - `UITableView.indexPathsForSelectedRows`
-  - `UITableView.indexPathForSelectedRow`
-- 指定スクリーン座標のセル位置を取得
-  - `UITableView.indexPathsForRows(in:)`
-  - `UITableView.indexPathForRow(at:)`
-- 指定セルのセル位置を取得
-  - `UITableView.indexPath(for:)`
-- 表示中のセル位置を取得
-  - `UITableView.indexPathsForVisibleRows`
-
-例えば表示中セルの全セクションを更新したい場合、次のコードのように工夫すればセクション一覧を取得できます。
-
-```swift
-let sections = Set((tableView.indexPathsForVisibleRows ?? []).map { $0.section }) tableView.reloadSections(IndexSet(sections), with: UITableView.RowAnimation.automatic)
-```
-
-Setに入れてるのはセクションの重複排除のためです。Arrayが持ってた順番保証がなくなりますが、必要ないので問題ないです。
+これらは公式ドキュメントを読む感じだとセルの増減に対する制御処理だと思ったほうが良さそうです。
 
 ## 更新は奥が深い
 ほとんどのテーブルでは更新はあまり意識せず簡単なものですが、  
