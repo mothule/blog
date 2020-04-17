@@ -26,7 +26,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic","headline":"【初心者向け】UITableView(テーブル)の更新方法の基本と注意点","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-08T00:00:00+09:00","description":"UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic","headline":"【初心者向け】UITableView(テーブル)の更新方法の基本と注意点","dateModified":"2020-04-17T14:04:52+09:00","datePublished":"2019-10-08T00:00:00+09:00","description":"UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -182,11 +182,11 @@
   </li>
   <li><a href="#テーブル更新方法">テーブル更新方法</a>
     <ul>
-      <li><a href="#reloaddataの欠点">reloadData()の欠点</a></li>
-      <li><a href="#セクション単位とセル単位の更新">セクション単位とセル単位の更新</a></li>
+      <li><a href="#reloaddataは全体更新しかし">reloadData()は全体更新しかし…</a></li>
+      <li><a href="#セル参照cellforrowatは注意が必要">セル参照(cellForRowAt)は注意が必要</a></li>
+      <li><a href="#セクション単位とセル単位の更新と注意点">セクション単位とセル単位の更新と注意点</a></li>
     </ul>
   </li>
-  <li><a href="#部分更新で役立つメソッド">部分更新で役立つメソッド</a></li>
   <li><a href="#更新は奥が深い">更新は奥が深い</a></li>
 </ul>
   </div>
@@ -302,69 +302,38 @@ Xcodeでプロジェクトを作成し、storyboardを使ってUITextFieldやUIL
 
 <ul>
   <li><code class="highlighter-rouge">reloadData</code>: 全てのセルとセクションを更新します。</li>
-  <li><code class="highlighter-rouge">reloadSections(_:with:)</code>: 指定セクションと付随するいセルを更新します。</li>
+  <li><code class="highlighter-rouge">reloadSections(_:with:)</code>: 指定セクションと付随するセルを更新します。</li>
   <li><code class="highlighter-rouge">reloadRows(at:with:)</code>: 指定セルをアニメ付きで更新します。</li>
 </ul>
 
 <p>今回のケースでは <code class="highlighter-rouge">reloadData</code> か <code class="highlighter-rouge">reloadSections(_:with:)</code> で更新ができます。<br />
 <code class="highlighter-rouge">reloadRows(at:with:)</code> は更新前と更新後のセクション内のセル数が同じでないとランタイムエラーになります。</p>
 
-<h3 id="reloaddataの欠点">reloadData()の欠点</h3>
+<h3 id="reloaddataは全体更新しかし">reloadData()は全体更新しかし…</h3>
 
-<p>セル数の少ないテーブルであれば、 <code class="highlighter-rouge">reloadData()</code> で事足ります。
-しかしセル数が増えたりセル内のレイアウトが複雑だったりすると全体更新は負荷がかかります。</p>
+<p><code class="highlighter-rouge">reloadData</code>はテーブル全体の更新を行います。
+セルのレイアウトがシンプルなら<code class="highlighter-rouge">reloadData()</code>を特に何も考えずに呼んでも問題は起こりにくいです。
+テーブル全体更新ですが、効率のために表示中のセルのみが再表示されます。
+またセル可変してもオフセットを調整する仕組みになっています。</p>
 
-<p>動的に変更で呼ばれるメソッドゆえあまり負荷が重くなるとカクツキが起きるようになります。<br />
-場合によってはスパイクといって数ミリ秒~数秒固まります。</p>
+<h3 id="セル参照cellforrowatは注意が必要">セル参照(cellForRowAt)は注意が必要</h3>
+<p>セルの表示には<code class="highlighter-rouge">tableView(_:cellForRowAt:) -&gt; UITableViewCell</code>が呼ばれ内部でセル構築してセルを返します。</p>
 
-<h3 id="セクション単位とセル単位の更新">セクション単位とセル単位の更新</h3>
+<p>これの注意する点は、スクロールという軽快な動作を求められる場所でセル表示のたびに呼ばれることです。
+そのため1セルが複雑だとそれだけ負荷がかかるため、スクロールにカクつきが起きるようになります。
+場合によってはスパイクといって数ミリ秒固まります。</p>
 
-<p>負荷がセンシティブな要素であるなら、更新範囲を削ることで更新にかかる時間を短くすることが重要になります。</p>
+<p>例えばセル内にUICollectionViewを入れて横スクロールなどを可能にするカルーセルなどは複雑だと思っていいです。</p>
 
-<p>更新範囲を狭くする方法として <code class="highlighter-rouge">reloadSections(_:with:)</code> と <code class="highlighter-rouge">reloadRows(at:with:)</code> があります。
-<code class="highlighter-rouge">reloadSections(_:with:)</code> メソッドはセクション単位での更新になります。</p>
+<h3 id="セクション単位とセル単位の更新と注意点">セクション単位とセル単位の更新と注意点</h3>
 
-<p>また更に絞り込みしたい場合は、 <code class="highlighter-rouge">reloadRows(at:with:)</code>がありますが、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。</p>
+<p>セル単位とセクション単位の更新は、<code class="highlighter-rouge">reloadSections(_:with:)</code> と <code class="highlighter-rouge">reloadRows(at:with:)</code> があります。</p>
 
-<h2 id="部分更新で役立つメソッド">部分更新で役立つメソッド</h2>
+<p><code class="highlighter-rouge">reloadRows(at:with:)</code>は、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。
+また<code class="highlighter-rouge">reloadSections(_:with:)</code>もセクションAとBのセル数と紐づくデータが変化した場合に、セクションAだけを<code class="highlighter-rouge">reloadSections</code>で更新するとランタイムエラーが発生します。
+これは<code class="highlighter-rouge">reloadSections</code>は他のセクションのセル数を求める処理が走っているためです。何故このような処理が走っているのかは公式ドキュメントを見ましたが特に記載がありませんでした。</p>
 
-<p>先程紹介した<code class="highlighter-rouge">reloadSections(_:with:)</code> と <code class="highlighter-rouge">reloadRows(at:with:)</code>はどちらもセクションまたはセルなど具体的な場所を指定する必要があります。</p>
-
-<p>しかしケースによっては特定するのが難しいことがあります。</p>
-
-<p>その場合は、次のメソッドを使うと特定のヒントまたはそのまま使えます。</p>
-
-<ul>
-  <li>選択中のセル位置を取得
-    <ul>
-      <li><code class="highlighter-rouge">UITableView.indexPathsForSelectedRows</code></li>
-      <li><code class="highlighter-rouge">UITableView.indexPathForSelectedRow</code></li>
-    </ul>
-  </li>
-  <li>指定スクリーン座標のセル位置を取得
-    <ul>
-      <li><code class="highlighter-rouge">UITableView.indexPathsForRows(in:)</code></li>
-      <li><code class="highlighter-rouge">UITableView.indexPathForRow(at:)</code></li>
-    </ul>
-  </li>
-  <li>指定セルのセル位置を取得
-    <ul>
-      <li><code class="highlighter-rouge">UITableView.indexPath(for:)</code></li>
-    </ul>
-  </li>
-  <li>表示中のセル位置を取得
-    <ul>
-      <li><code class="highlighter-rouge">UITableView.indexPathsForVisibleRows</code></li>
-    </ul>
-  </li>
-</ul>
-
-<p>例えば表示中セルの全セクションを更新したい場合、次のコードのように工夫すればセクション一覧を取得できます。</p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">sections</span> <span class="o">=</span> <span class="kt">Set</span><span class="p">((</span><span class="n">tableView</span><span class="o">.</span><span class="n">indexPathsForVisibleRows</span> <span class="p">??</span> <span class="p">[])</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nv">$0</span><span class="o">.</span><span class="n">section</span> <span class="p">})</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">reloadSections</span><span class="p">(</span><span class="kt">IndexSet</span><span class="p">(</span><span class="n">sections</span><span class="p">),</span> <span class="nv">with</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">.</span><span class="kt">RowAnimation</span><span class="o">.</span><span class="n">automatic</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>Setに入れてるのはセクションの重複排除のためです。Arrayが持ってた順番保証がなくなりますが、必要ないので問題ないです。</p>
+<p>これらは公式ドキュメントを読む感じだとセルの増減に対する制御処理だと思ったほうが良さそうです。</p>
 
 <h2 id="更新は奥が深い">更新は奥が深い</h2>
 <p>ほとんどのテーブルでは更新はあまり意識せず簡単なものですが、<br />
