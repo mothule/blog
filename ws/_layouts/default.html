@@ -5,12 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     {% case page.url %}
-      {% when "/404" %}
-        <meta name="robots" content="noindex, nofollow" />
-      {% when "/page2/" or "/page3/" or "/page4/" or "/page5/" or "/page6/" or "/tags" or "/about" %}
+      {% when "/page2/" or "/page3/" or "/page4/" or "/page5/" or "/page6/" %}
         <meta name="robots" content="noindex" />
       {% else %}
     {% endcase %}
+
+    {% if page.noindex and page.nofollow %}
+      <meta name="robots" content="noindex, nofollow" />
+    {% elsif page.noindex %}
+      <meta name="robots" content="noindex" />
+    {% elsif page.nofollow %}
+      <meta name="robots" content="nofollow" />
+    {% endif %}
+
 
     {% if page.title != site.title %}
       <title>{{ page.title }} - {{ site.title }}</title>
