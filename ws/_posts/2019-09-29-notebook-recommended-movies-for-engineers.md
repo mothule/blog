@@ -1,6 +1,7 @@
 ---
 title: エンジニアの勉強モチベーション上がるおすすめ映画
 description: エンジニアが仕事に疲れて息抜きする映画や、ちょっとやる気がなくて勉強のモチベーション低下してるときに見るとやる気が出てきてモチベーションを回復できるおすすめ映画や海外ドラマについて紹介しています。どれもAmazon Primeで見れて無料で見れる映画もあります。
+noindex: true
 categories: notebook
 tags: notebook
 image:
