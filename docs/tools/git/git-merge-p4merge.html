@@ -20,16 +20,16 @@
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。" />
 <meta property="og:description" content="gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。" />
-<link rel="canonical" href="https://blog.mothule.com/tools/git/git-merge-p4merge" />
-<meta property="og:url" content="https://blog.mothule.com/tools/git/git-merge-p4merge" />
+<link rel="canonical" href="http://localhost:4000/tools/git/git-merge-p4merge" />
+<meta property="og:url" content="http://localhost:4000/tools/git/git-merge-p4merge" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-02-git-merge-p4merge/2019-09-02-git-merge-p4merge.png" />
+<meta property="og:image" content="http://localhost:4000/assets/images/2019-09-02-git-merge-p4merge/2019-09-02-git-merge-p4merge.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-02T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-09-02-git-merge-p4merge/2019-09-02-git-merge-p4merge.png","url":"https://blog.mothule.com/tools/git/git-merge-p4merge","headline":"p4mergeでgit mergeの衝突を解決する","dateModified":"2019-10-07T19:29:16+09:00","datePublished":"2019-09-02T00:00:00+09:00","description":"gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/git/git-merge-p4merge"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"http://localhost:4000/tools/git/git-merge-p4merge","headline":"p4mergeでgit mergeの衝突を解決する","dateModified":"2019-10-07T19:29:16+09:00","datePublished":"2019-09-02T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/tools/git/git-merge-p4merge"},"image":"http://localhost:4000/assets/images/2019-09-02-git-merge-p4merge/2019-09-02-git-merge-p4merge.png","description":"gitを使っていると必ず出くわすことになるコンフリクト。 機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。 衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。 今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -37,28 +37,18 @@
     
     <meta name="twitter:title" content="p4mergeでgit mergeの衝突を解決する">
     <meta name="twitter:description" content="gitを使っていると必ず出くわすことになるコンフリクト。機械的なマージでは解決できない場合にユーザー自身の手で解決を丸投げする面倒くさいあれです。衝突してるファイルをエディタで見ると、いつ見ても見慣れないセパレータで表現されておりますます嫌になります。今回はGUIでグラフィカルに衝突解決を行うツールp4mergeについて紹介します。">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-02-git-merge-p4merge/2019-09-02-git-merge-p4merge.png">
+    <meta name="twitter:image:src" content="http://localhost:4000/assets/images/2019-09-02-git-merge-p4merge/2019-09-02-git-merge-p4merge.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           rel="stylesheet"
           integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
           crossorigin="anonymous">
-    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
-    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
-    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    <link rel="stylesheet" href=http://localhost:4000/assets/css/styles.css>
+    <link rel="stylesheet" href=http://localhost:4000/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=http://localhost:4000/assets/images/apple-touch-icon.png>
     
-  <!-- Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'UA-18620984-3');
-  </script>
-
-
-    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="もちゅろぐ" />
   </head>
   <body>
 
@@ -280,6 +270,85 @@
             
             
             
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/git/git-memo">git メモ</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -704,9 +773,118 @@
                 
                 
                 
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/git/tig/tig-reverse-resolution">tigでこれどうやるの？逆引き集</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
                     <li><h3><a href="/tools/tig/fix-tig-lib-not-loaded">dylod: Library not loaded でtigが起動しない状態から動くまで</a></h3></li>
                     
                     
+                
+
+            
+                
+                
+                
+
+            
+                
+                
                 
 
             
@@ -909,6 +1087,12 @@
   <div>
     
       
+      <a href="/tags#TODO">To-Do</a>
+    
+      
+      <a href="/tags#debug"></a>
+    
+      
       <a href="/tags#notebook">雑記</a>
     
       
@@ -976,6 +1160,9 @@
     
       
       <a href="/tags#mysql">MySQL</a>
+    
+      
+      <a href="/tags#rxswift">RxSwift</a>
     
       
       <a href="/tags#rspec">RSpec</a>
@@ -1050,9 +1237,6 @@
       <a href="/tags#rubocop">Rubocop</a>
     
       
-      <a href="/tags#rxswift">RxSwift</a>
-    
-      
       <a href="/tags#uitableviewcell">UITableViewCell</a>
     
       
@@ -1071,10 +1255,16 @@
       <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
     
       
+      <a href="/tags#slack">Slack</a>
+    
+      
       <a href="/tags#xcuitest">XCUITest</a>
     
       
       <a href="/tags#github">GitHub</a>
+    
+      
+      <a href="/tags#dotenv">dotenv</a>
     
       
       <a href="/tags#gem">gem</a>
@@ -1099,6 +1289,21 @@
     
       
       <a href="/tags#rubymine">RubyMine</a>
+    
+      
+      <a href="/tags#no-tag">No Tag</a>
+    
+      
+      <a href="/tags#virtualbox">VirtualBox</a>
+    
+      
+      <a href="/tags#jq"></a>
+    
+      
+      <a href="/tags#ag"></a>
+    
+      
+      <a href="/tags#postgresql">PostgreSQL</a>
     
   </div>
 </div>

@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    
+
+    
+
+
+    
+      <title>ActiveRecordでpluckとselectしてpluckに変化はあるか？ - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="VirtualBox" />
+<meta property="og:description" content="VirtualBox" />
+<link rel="canonical" href="http://localhost:4000/ruby/rails/active-record/linux-memo" />
+<meta property="og:url" content="http://localhost:4000/ruby/rails/active-record/linux-memo" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="http://localhost:4000/assets/images/site-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-08-23T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/ruby/rails/active-record/linux-memo","headline":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","dateModified":"2019-09-03T03:04:01+09:00","datePublished":"2019-08-23T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/ruby/rails/active-record/linux-memo"},"image":"http://localhost:4000/assets/images/site-image.png","description":"VirtualBox","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+    <meta name="twitter:description" content="VirtualBox">
+    <meta name="twitter:image:src" content="http://localhost:4000/assets/images/site-image.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=http://localhost:4000/assets/css/styles.css>
+    <link rel="stylesheet" href=http://localhost:4000/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=http://localhost:4000/assets/images/apple-touch-icon.png>
+    
+
+    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ruby" itemprop="item">
+              <span itemprop="name">Ruby</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#rails" itemprop="item">
+              <span itemprop="name">Rails</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#active-record" itemprop="item">
+              <span itemprop="name">ActiveRecord</span>
+            </a>
+            <meta itemprop="position" content="4">
+          </li>
+        
+      
+        
+        
+          <li>
+            ActiveRecordでpluckとselectしてpluckに変化はあるか？
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>ActiveRecordでpluckとselectしてpluckに変化はあるか？</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-8-23</li>
+        
+          <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#active-record">ActiveRecord</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#virtualbox">VirtualBox</a>
+    <ul>
+      <li><a href="#ホストosからゲストosにssh接続する">ホストOSからゲストOSにssh接続する</a></li>
+    </ul>
+  </li>
+  <li><a href="#圧縮解凍">圧縮／解凍</a>
+    <ul>
+      <li><a href="#gzip">gzip</a></li>
+      <li><a href="#gunzip">gunzip</a></li>
+      <li><a href="#bzip2">bzip2</a></li>
+      <li><a href="#tar">tar</a>
+        <ul>
+          <li><a href="#アーカイブ作成">アーカイブ作成</a></li>
+          <li><a href="#アーカイブの展開">アーカイブの展開</a></li>
+        </ul>
+      </li>
+      <li><a href="#フォルダを圧縮">フォルダを圧縮</a>
+        <ul>
+          <li><a href="#もっと簡単な方法">もっと簡単な方法</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#centos">CentOS</a>
+    <ul>
+      <li><a href="#ネットワークアダプタの設定">ネットワークアダプタの設定</a></li>
+      <li><a href="#yum-update-upgrade">yum update upgrade</a></li>
+    </ul>
+  </li>
+</ul>
+  </div>
+  <section>
+  <h1 id="virtualbox">VirtualBox</h1>
+
+<h2 id="ホストosからゲストosにssh接続する">ホストOSからゲストOSにssh接続する</h2>
+<p>ブリッジアダプタを使用する.
+設定&gt;ネットワーク&gt;アダプター
+割当をブリッジアダプターにする
+名前をメモしとく</p>
+
+<p>ゲストOS上で ifconfig でメモした名前のIPアドレスを確認
+ホストOS上からIPアドレスにssh接続する</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh ユーザー名@ゲストOSのIPアドレス
+</code></pre></div></div>
+
+<h1 id="圧縮解凍">圧縮／解凍</h1>
+
+<h2 id="gzip">gzip</h2>
+<p>ファイル圧縮
+gzipのgはGNU Zipのg
+拡張子は.gzとなる</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gzip &lt;ファイル名&gt;
+</code></pre></div></div>
+<p>圧縮はファイルのみでフォルダはできない
+圧縮コマンドを実行すると元のファイルは削除される</p>
+
+<h2 id="gunzip">gunzip</h2>
+<p>圧縮ファイルの展開</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gunzip &lt;圧縮ファイル名&gt;
+</code></pre></div></div>
+<p>解凍コマンドを実行すると元の圧縮ファイルは削除される.
+もし残したいなら</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>gunzip &lt;圧縮ファイル名&gt; &gt; &lt;解凍後ファイル名&gt;
+</code></pre></div></div>
+
+<h2 id="bzip2">bzip2</h2>
+<p>圧縮率の高い新しい圧縮コマンド
+bzip2コマンドとbunzip2コマンドを使う
+利用方法はgzip/gunzip同様
+拡張子.bz2となる</p>
+
+<h2 id="tar">tar</h2>
+<p>アーカイブを作成・展開
+ディレクトリを1つのファイルにアーカイブする
+拡張子は .tar となる</p>
+<h3 id="アーカイブ作成">アーカイブ作成</h3>
+<p>アーカイブ作成は cvf オプションを指定する</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tar cvf &lt;アーカイブファイル名&gt; &lt;ディレクトリ名&gt;
+</code></pre></div></div>
+
+<p>c:アーカイブ作成
+v:verbose
+f:アーカイブファイル名の指定</p>
+
+<h3 id="アーカイブの展開">アーカイブの展開</h3>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tar xvf &lt;アーカイブファイル名&gt;
+</code></pre></div></div>
+
+<h2 id="フォルダを圧縮">フォルダを圧縮</h2>
+<ol>
+  <li>tar でフォルダをアーカイブ後</li>
+  <li>gzip でアーカイブされたファイルを圧縮</li>
+</ol>
+
+<p>圧縮されたフォルダは フォルダ名.tar.gz となる</p>
+
+<h3 id="もっと簡単な方法">もっと簡単な方法</h3>
+<p>zオプション指定する
+tar czvf <アーカイブファイル名> <ディレクトリ名>
+tar xzvf アーカイブファイル名</ディレクトリ名></アーカイブファイル名></p>
+
+<p>圧縮をgzipではなくbzip2を使う場合
+zオプションの代わりにjオプションを指定する</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>locate &lt;file pattern&gt;
+</code></pre></div></div>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ps
+</code></pre></div></div>
+<p>|オプション|説明|
+|—|—|
+|a|全ユーザーのプロセス表示|
+|u|ユーザー名表示|
+|x|全端末のプロセス表示|</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps aux | head <span class="nt">-n</span> 5
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1  19232  1500 ?        Ss   12:54   0:00 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    12:54   0:00 <span class="o">[</span>kthreadd]
+root         3  0.0  0.0      0     0 ?        S    12:54   0:00 <span class="o">[</span>migration/0]
+root         4  0.0  0.0      0     0 ?        S    12:54   0:00 <span class="o">[</span>ksoftirqd/0]
+</code></pre></div></div>
+
+<p>プロセスの親子関係を表示</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mothule@centos ~]<span class="nv">$ </span>pstree
+init─┬─auditd───<span class="o">{</span>auditd<span class="o">}</span>
+     ├─crond
+     ├─dhclient
+     ├─login───bash
+     ├─master─┬─pickup
+     │        └─qmgr
+     ├─5<span class="k">*</span><span class="o">[</span>mingetty]
+     ├─rsyslogd───3<span class="k">*</span><span class="o">[{</span>rsyslogd<span class="o">}]</span>
+     ├─sshd───sshd───sshd───bash─┬─less
+     │                           └─pstree
+     └─udevd───2<span class="k">*</span><span class="o">[</span>udevd]
+</code></pre></div></div>
+
+<p>プロセスに送るシグナル表</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>名</th>
+      <th>動作</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>9</td>
+      <td>KILL</td>
+      <td>強制終了</td>
+    </tr>
+    <tr>
+      <td>15</td>
+      <td>TERM</td>
+      <td>終了(デフォルト)</td>
+    </tr>
+    <tr>
+      <td>18</td>
+      <td>COUNT</td>
+      <td>再開</td>
+    </tr>
+    <tr>
+      <td>19</td>
+      <td>STOP</td>
+      <td>一時停止</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>シグナル送信は kill コマンドを使う</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">kill </span>28000
+</code></pre></div></div>
+
+<p>IDではなくシグナル名を指定する場合は</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">kill</span> <span class="nt">-s</span> TERM 28000
+</code></pre></div></div>
+
+<p>プロセスIDではなくプロセス名でシグナル送信したい場合は</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>killall <span class="nt">-15</span> xclock
+</code></pre></div></div>
+<p>のようにする -15 は シグナルID</p>
+
+<p>ユーザー側の処理単位をジョブ
+1ジョブで複数プロセスが走るので 1ジョブ=1プロセスではない
+実行中のジョブ一覧</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">jobs</span>
+</code></pre></div></div>
+
+<p>コマンドの末尾に &amp; をつけるとバックグラウンドで実行する</p>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>less hoge.txt &amp;
+</code></pre></div></div>
+
+<p>Ctrl+Z でジョブは一時停止状態になる
+一時停止状態のジョブを再開するには
+fg [%ジョブID]</p>
+
+<p>バックグラウンドで再開するには
+bg [%ジョブID]</p>
+
+<p>/etc/hosts にはIPアドレスとホスト名の対応が記述する
+/etc/resolv.conf には利用するDNSサーバやドメイン名を指定する
+/etc/sysconfig/network にはネットワークの基本情報を設定する</p>
+
+<h1 id="centos">CentOS</h1>
+
+<h2 id="ネットワークアダプタの設定">ネットワークアダプタの設定</h2>
+
+<p>NetworkManagerを使う</p>
+
+<p>nmtuiコマンドで [Edit a connection]
+[Automatically connect]にチェックを入れて終了</p>
+
+<h2 id="yum-update-upgrade">yum update upgrade</h2>
+
+<p>yum update -y
+yum upgrade -y</p>
+
+<p>https://www.rem-system.com/linux-first-setting/#14</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ruby/rails/active-record/mini-memo">ActiveRecordでpluckとselectしてpluckに変化はあるか？</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ruby/rails/ruby-rails-params-best-practice">Railsのparams型検証のベストプラクティス</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ruby/rails/ruby-rails-rails-5_2_3-update">Railsを5.0.0から5.2.3に変更した</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-input-control">【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a>
+            </li>
+            
+            <li>
+                <a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</a>
+            </li>
+            
+            <li>
+                <a href="/ios/firebase/firebase-performance-monitoring-basic">Firebase Performance Monitoringの基本の概念と実装について整理した</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      
+      <a href="/tags#TODO">To-Do</a>
+    
+      
+      <a href="/tags#debug"></a>
+    
+      
+      <a href="/tags#notebook">雑記</a>
+    
+      
+      <a href="/tags#program-design">プログラム設計</a>
+    
+      
+      <a href="/tags#remote-work">リモートワーク</a>
+    
+      
+      <a href="/tags#ios">iOS</a>
+    
+      
+      <a href="/tags#swift">Swift</a>
+    
+      
+      <a href="/tags#uitableview">UITableView</a>
+    
+      
+      <a href="/tags#rails">Rails</a>
+    
+      
+      <a href="/tags#rails-controller">Rails Controller</a>
+    
+      
+      <a href="/tags#ruby">Ruby</a>
+    
+      
+      <a href="/tags#circleci">CircleCI</a>
+    
+      
+      <a href="/tags#ci">CI</a>
+    
+      
+      <a href="/tags#ssh">SSH</a>
+    
+      
+      <a href="/tags#linux">Linux</a>
+    
+      
+      <a href="/tags#centos">CentOS</a>
+    
+      
+      <a href="/tags#printer">Printer</a>
+    
+      
+      <a href="/tags#tools">ツール</a>
+    
+      
+      <a href="/tags#cron">cron</a>
+    
+      
+      <a href="/tags#uiview">UIView</a>
+    
+      
+      <a href="/tags#ios-safearea">iOS SafeArea</a>
+    
+      
+      <a href="/tags#service-design">サービス設計</a>
+    
+      
+      <a href="/tags#design">Design</a>
+    
+      
+      <a href="/tags#httpie">HTTPie</a>
+    
+      
+      <a href="/tags#mysql">MySQL</a>
+    
+      
+      <a href="/tags#rxswift">RxSwift</a>
+    
+      
+      <a href="/tags#rspec">RSpec</a>
+    
+      
+      <a href="/tags#git">Git</a>
+    
+      
+      <a href="/tags#tig">tig</a>
+    
+      
+      <a href="/tags#homebrew">Homebrew</a>
+    
+      
+      <a href="/tags#active-record">ActiveRecord</a>
+    
+      
+      <a href="/tags#mac">Mac</a>
+    
+      
+      <a href="/tags#db">DB</a>
+    
+      
+      <a href="/tags#ngrok">ngrok</a>
+    
+      
+      <a href="/tags#ats">App Transport Security</a>
+    
+      
+      <a href="/tags#regexp">正規表現</a>
+    
+      
+      <a href="/tags#cocoapods">CocoaPods</a>
+    
+      
+      <a href="/tags#rbenv">rbenv</a>
+    
+      
+      <a href="/tags#bundler">Bundler</a>
+    
+      
+      <a href="/tags#jekyll">Jekyll</a>
+    
+      
+      <a href="/tags#github-pages">GitHub Pages</a>
+    
+      
+      <a href="/tags#rack">Rack</a>
+    
+      
+      <a href="/tags#rack-middleware">Rack Middleware</a>
+    
+      
+      <a href="/tags#p4merge">p4merge</a>
+    
+      
+      <a href="/tags#report">レポート</a>
+    
+      
+      <a href="/tags#scene-kit">SceneKit</a>
+    
+      
+      <a href="/tags#test">Test</a>
+    
+      
+      <a href="/tags#nimble">Nimble</a>
+    
+      
+      <a href="/tags#carthage">Carthage</a>
+    
+      
+      <a href="/tags#rubocop">Rubocop</a>
+    
+      
+      <a href="/tags#uitableviewcell">UITableViewCell</a>
+    
+      
+      <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+    
+      
+      <a href="/tags#uicollectionview">UICollectionView</a>
+    
+      
+      <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+    
+      
+      <a href="/tags#firebase">Firebase</a>
+    
+      
+      <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+    
+      
+      <a href="/tags#slack">Slack</a>
+    
+      
+      <a href="/tags#xcuitest">XCUITest</a>
+    
+      
+      <a href="/tags#github">GitHub</a>
+    
+      
+      <a href="/tags#dotenv">dotenv</a>
+    
+      
+      <a href="/tags#gem">gem</a>
+    
+      
+      <a href="/tags#google-analytics">Google Analytics</a>
+    
+      
+      <a href="/tags#kiji">kiji</a>
+    
+      
+      <a href="/tags#shellscript">シェルスクリプト</a>
+    
+      
+      <a href="/tags#lsof">lsof</a>
+    
+      
+      <a href="/tags#web">Web</a>
+    
+      
+      <a href="/tags#nginx">nginx</a>
+    
+      
+      <a href="/tags#rubymine">RubyMine</a>
+    
+      
+      <a href="/tags#no-tag">No Tag</a>
+    
+      
+      <a href="/tags#virtualbox">VirtualBox</a>
+    
+      
+      <a href="/tags#jq"></a>
+    
+      
+      <a href="/tags#ag"></a>
+    
+      
+      <a href="/tags#postgresql">PostgreSQL</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
