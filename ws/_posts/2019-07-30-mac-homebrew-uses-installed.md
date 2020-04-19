@@ -1,5 +1,6 @@
 ---
 title: Homebrewのpackage依存関係を確認する
+description: MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。
 categories: mac homebrew
 tags: mac homebrew
 image:
