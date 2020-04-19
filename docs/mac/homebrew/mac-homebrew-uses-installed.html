@@ -11,12 +11,12 @@
 
 
     
-      <title>Homebrewで使われているかを解決する - もちゅろぐ</title>
+      <title>Homebrewのpackage依存関係を確認する - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="Homebrewで使われているかを解決する" />
+<meta property="og:title" content="Homebrewのpackage依存関係を確認する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？ $ brew list -l で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、 「これ何で入れたんだっけ？」と思うパッケージが結構います。" />
 <meta property="og:description" content="長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？ $ brew list -l で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、 「これ何で入れたんだっけ？」と思うパッケージが結構います。" />
@@ -29,13 +29,13 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png","url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed","headline":"Homebrewで使われているかを解決する","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-07-30T00:00:00+09:00","description":"長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？ $ brew list -l で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、 「これ何で入れたんだっけ？」と思うパッケージが結構います。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png","url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed","headline":"Homebrewのpackage依存関係を確認する","dateModified":"2020-04-19T17:06:30+09:00","datePublished":"2019-07-30T00:00:00+09:00","description":"長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？ $ brew list -l で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、 「これ何で入れたんだっけ？」と思うパッケージが結構います。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="Homebrewで使われているかを解決する">
+    <meta name="twitter:title" content="Homebrewのpackage依存関係を確認する">
     <meta name="twitter:description" content="長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？$ brew list -l で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、「これ何で入れたんだっけ？」と思うパッケージが結構います。">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png">
 
@@ -142,7 +142,7 @@
         
         
           <li>
-            Homebrewで使われているかを解決する
+            Homebrewのpackage依存関係を確認する
           </li>
         
       
@@ -156,12 +156,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-07-30-mac-homebrew-uses-installed.png" alt="Homebrewで使われているかを解決する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-07-30-mac-homebrew-uses-installed.png" alt="Homebrewのpackage依存関係を確認する">
     </div>
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>Homebrewで使われているかを解決する</h1>
+    <h1>Homebrewのpackage依存関係を確認する</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
@@ -178,8 +178,28 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#結論">結論</a></li>
-  <li><a href="#使い方">使い方</a></li>
+  <li><a href="#brew-lsでインストールしてるパッケージを確認">brew lsでインストールしてるパッケージを確認</a>
+    <ul>
+      <li><a href="#-lオプションでリスト表示にする">-lオプションでリスト表示にする</a></li>
+    </ul>
+  </li>
+  <li><a href="#brew-depsで依存してるパッケージを確認">brew depsで依存してるパッケージを確認</a>
+    <ul>
+      <li><a href="#treeオプションでツリー構造で依存関係を表示">–treeオプションでツリー構造で依存関係を表示</a></li>
+      <li><a href="#full-nameオプションで具体的な名前を表示">–full-nameオプションで具体的な名前を表示</a></li>
+      <li><a href="#オプションは組み合わせ可能">オプションは組み合わせ可能</a></li>
+    </ul>
+  </li>
+  <li><a href="#brew-usesで依存されてるパッケージを確認">brew usesで依存されてるパッケージを確認</a>
+    <ul>
+      <li><a href="#パッケージ依存をインストール済みに限定する">パッケージ依存をインストール済みに限定する</a></li>
+    </ul>
+  </li>
+  <li><a href="#brewの依存関係を確認できるコマンド整理">brewの依存関係を確認できるコマンド整理</a>
+    <ul>
+      <li><a href="#最後にpackageではなくformula">最後にPackageではなくFormula</a></li>
+    </ul>
+  </li>
 </ul>
   </div>
   <section>
@@ -187,20 +207,181 @@
 <code class="highlighter-rouge">$ brew list -l</code> で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、
 「これ何で入れたんだっけ？」と思うパッケージが結構います。</p>
 
-<h2 id="結論">結論</h2>
-<p>その場合は次のコマンドでどのパッケージで使われているのか分かります。</p>
+<h2 id="brew-lsでインストールしてるパッケージを確認">brew lsでインストールしてるパッケージを確認</h2>
 
-<p><code class="highlighter-rouge">$ brew uses --installed &lt;formula&gt;</code></p>
+<p>まずは自分の環境にインストールされているパッケージ一覧を確認してみます。<br />
+インストール済みパッケージは、<code class="highlighter-rouge">brew list</code>コマンドで確認することができてフォーマットは次の通りです。</p>
 
-<h2 id="使い方">使い方</h2>
+<p><code class="highlighter-rouge">Usage: brew list, ls [options] [formula]</code></p>
 
-<p>例えば自分の環境で <code class="highlighter-rouge">python</code> だと</p>
+<p><code class="highlighter-rouge">brew list</code>や<code class="highlighter-rouge">brew ls</code>でインストール済みパッケージを表示します。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uses <span class="nt">--installed</span> python
-awscli                                       cairo                                        glib                                         gobject-introspection                        harfbuzz                                     httpie                                       pango                                        vim
+<p>他にも<code class="highlighter-rouge">brew ls</code>に機能が備わっていますが、この記事のテーマから外れるので詳細は省きます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew list
+apr				carthage			fribidi				gobject-introspection		jpeg				libvterm			msgpack				pcre				pyenv				selenium-server-standalone	xcparse
+apr-util			chisel				fzf				graphite2			jq				libyaml				mysql@5.6			pcre2				python				sqlite				xctool
+argon2				circleci			gd				graphviz			lame				libzip				neovim				perl				python@2			the_silver_searcher		xvid
+aspell				cmake				gdbm				harfbuzz			libffi				lua				nginx				phantomjs			python@3.8			tig				xz
+autoconf			ctags				gettext				heroku				libpng				luajit				node				php				rbenv				tree				yarn
+automake			curl				git				heroku-node			libpq				lzo				nvm				pixman				rbspy				unibilium
+awscli				ffmpeg				git-flow			httpie				libsodium			mas				oniguruma			pkg-config			readline			unixodbc
+bash				firebase-cli			glib				hugo				libtermkey			mcrypt				openssl				plantuml			redis				vim
+bat				fontconfig			gmp				icu4c				libtiff				mhash				openssl@1.1			pngpaste			rsync				webp
+bitrise				freetds				gnu-getopt			imagemagick			libtool				mkcert				pango				postgresql			ruby				wget
+cairo				freetype			gnu-sed				jemalloc			libuv				mono				parallel			pstree				ruby-build			x264
 </code></pre></div></div>
 
-<p>のようにpythonを使っている一覧が並びます。</p>
+<h3 id="-lオプションでリスト表示にする">-lオプションでリスト表示にする</h3>
+
+<p><code class="highlighter-rouge">-l</code>オプションでAZ順のリスト表示になります。<br />
+ブログで全部表示すると量が多いので一部となります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew list <span class="nt">-l</span>
+total 0
+drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 apr
+drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 apr-util
+drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 argon2
+drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 aspell
+drwxr-xr-x  3 mothule  admin   96 Mar  1  2017 autoconf
+...
+drwxr-xr-x  3 mothule  staff   96 Jul 22  2019 vim
+drwxr-xr-x  4 mothule  admin  128 Jul  1  2018 webp
+drwxr-xr-x  3 mothule  admin   96 Aug 14  2017 wget
+drwxr-xr-x  3 mothule  admin   96 Sep 20  2017 x264
+drwxr-xr-x  3 mothule  admin   96 Apr 15 14:38 xcparse
+drwxr-xr-x  3 mothule  admin   96 Mar 30  2017 xctool
+drwxr-xr-x  3 mothule  admin   96 Sep 20  2017 xvid
+drwxr-xr-x  3 mothule  admin   96 Mar  5  2019 xz
+drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 yarn
+</code></pre></div></div>
+
+<h2 id="brew-depsで依存してるパッケージを確認">brew depsで依存してるパッケージを確認</h2>
+
+<p><code class="highlighter-rouge">brew deps</code>コマンドで渡したパッケージが、どのパッケージを使っているのか確認することができます。
+フォーマットは次の通りです。</p>
+
+<p><code class="highlighter-rouge">Usage: brew deps [options] [formula]</code></p>
+
+<p>例えば下記はRubyバージョン管理パッケージであるrbenvがどのパッケージを使っているのか確認した結果になります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps rbenv
+autoconf
+openssl
+pkg-config
+ruby-build
+</code></pre></div></div>
+
+<h3 id="treeオプションでツリー構造で依存関係を表示">–treeオプションでツリー構造で依存関係を表示</h3>
+
+<p><code class="highlighter-rouge">brew deps</code>に<code class="highlighter-rouge">--tree</code>オプションを渡すことで依存パッケージをツリー形式で表示することができます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--tree</span> rbenv
+rbenv
+├── autoconf
+├── openssl
+├── pkg-config
+└── ruby-build
+    ├── autoconf
+    ├── pkg-config
+    └── readline
+</code></pre></div></div>
+<p>ツリー形式で表示することで<code class="highlighter-rouge">ruby-build</code>はさらに3つのパッケージに依存してることが分かります。</p>
+
+<h3 id="full-nameオプションで具体的な名前を表示">–full-nameオプションで具体的な名前を表示</h3>
+
+<p><code class="highlighter-rouge">brew deps</code>に<code class="highlighter-rouge">--full-name</code>オプションを渡すことで省略表示されているパッケージを実際の名前で表示することが出来ます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--full-name</span> rbenv
+autoconf
+openssl@1.1
+pkg-config
+ruby-build
+</code></pre></div></div>
+
+<p>このように<code class="highlighter-rouge">openssl</code>が1.1バージョンを使っていることが分かります。</p>
+
+<h3 id="オプションは組み合わせ可能">オプションは組み合わせ可能</h3>
+
+<p>オプションは複数使うことで同時に複数効果を得られます。<br />
+次の例は<code class="highlighter-rouge">--full-name</code>と<code class="highlighter-rouge">--tree</code>を使った結果になります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--full-name</span> <span class="nt">--tree</span> rbenv
+rbenv
+├── autoconf
+├── openssl@1.1
+├── pkg-config
+└── ruby-build
+    ├── autoconf
+    ├── pkg-config
+    └── readline
+</code></pre></div></div>
+
+<h2 id="brew-usesで依存されてるパッケージを確認">brew usesで依存されてるパッケージを確認</h2>
+
+<p>先程<code class="highlighter-rouge">rbenv</code>が依存してるパッケージ一覧を確認しました。<br />
+では今度は逆にこの<code class="highlighter-rouge">rbenv</code>を使っているパッケージが存在するか調べてみましょう。
+<code class="highlighter-rouge">brew uses</code>コマンドを使うことで調べられます。フォーマットは次の通りです。</p>
+
+<p><code class="highlighter-rouge">Usage: brew uses [options] formula</code></p>
+
+<p>この<code class="highlighter-rouge">brew uses</code>コマンドで<code class="highlighter-rouge">rbenv</code>を使っているパッケージを調べた結果が次になります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uses rbenv
+rbenv-aliases                     rbenv-bundler                     rbenv-communal-gems               rbenv-gemset                      rbenv-whatis
+rbenv-binstubs                    rbenv-bundler-ruby-version        rbenv-ctags                       rbenv-use
+rbenv-bundle-exec                 rbenv-chefdk                      rbenv-default-gems                rbenv-vars
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">rbenv</code>のプラグインらしきものが並びますね。</p>
+
+<h3 id="パッケージ依存をインストール済みに限定する">パッケージ依存をインストール済みに限定する</h3>
+<p><code class="highlighter-rouge">brew uses</code>コマンドはデフォルトでは<code class="highlighter-rouge">Homebrew</code>で管理されている全てのパッケージが検索対象となります。<br />
+<strong>これを<code class="highlighter-rouge">--installed</code>オプションをつけることで自分のインストール済みに制限できます。</strong><br />
+このオプションをつけてもう一度<code class="highlighter-rouge">brew uses rbenv</code>を実行してみます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uses <span class="nt">--installed</span> rbenv
+
+</code></pre></div></div>
+
+<p>今度は結果が空になりました。これはインストール済みパッケージには、<strong><code class="highlighter-rouge">rbenv</code>を使ったパッケージがないことを表しています。</strong></p>
+
+<h2 id="brewの依存関係を確認できるコマンド整理">brewの依存関係を確認できるコマンド整理</h2>
+
+<p>「依存してる」「依存されてる」と「brew deps」「brew uses」ちょっと混乱してしまい、実際に使う時に「どっちがどっちだっけ？」なりそうです。<br />
+なので最後に整理します。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>目的</th>
+      <th>コマンド</th>
+      <th>便利なオプション</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>何が入ってる？</td>
+      <td><code class="highlighter-rouge">brew ls</code></td>
+      <td><code class="highlighter-rouge">-l</code></td>
+    </tr>
+    <tr>
+      <td>これ誰が使ってる？</td>
+      <td><code class="highlighter-rouge">brew uses</code></td>
+      <td><code class="highlighter-rouge">--installed</code></td>
+    </tr>
+    <tr>
+      <td>これ何が必要？</td>
+      <td><code class="highlighter-rouge">brew deps</code></td>
+      <td><code class="highlighter-rouge">--tree</code></td>
+    </tr>
+  </tbody>
+</table>
+
+<h3 id="最後にpackageではなくformula">最後にPackageではなくFormula</h3>
+<p>最後に、パッケージ(package)という用語で説明していますが、HomebrewではパッケージではなくFormula(フォーミュラ)といいます。製法・調合法という意味です。Homebrew(home-brew)が自家醸造酒という意味なのでビール製法って意味ですね。</p>
+
+<p>Homebrewに不慣れな方は、パッケージという用語で検索が多いのでニーズに合わせてこちらの用語を使いました。</p>
 
   </section>
 
