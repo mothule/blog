@@ -1,0 +1,1036 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    
+
+    
+
+
+    
+      <title>RxSwift Schedulerの一覧と使い方 - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="RxSwift Schedulerの一覧と使い方" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。" />
+<meta property="og:description" content="RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。" />
+<link rel="canonical" href="http://localhost:4000/ios/swift/ios-swift-rxswift-scheduler-basic" />
+<meta property="og:url" content="http://localhost:4000/ios/swift/ios-swift-rxswift-scheduler-basic" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="http://localhost:4000/assets/images/site-image.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2019-08-22T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"http://localhost:4000/ios/swift/ios-swift-rxswift-scheduler-basic","headline":"RxSwift Schedulerの一覧と使い方","dateModified":"2020-03-29T18:29:18+09:00","datePublished":"2019-08-22T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"http://localhost:4000/ios/swift/ios-swift-rxswift-scheduler-basic"},"image":"http://localhost:4000/assets/images/site-image.png","description":"RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="RxSwift Schedulerの一覧と使い方">
+    <meta name="twitter:description" content="RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。">
+    <meta name="twitter:image:src" content="http://localhost:4000/assets/images/site-image.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=http://localhost:4000/assets/css/styles.css>
+    <link rel="stylesheet" href=http://localhost:4000/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=http://localhost:4000/assets/images/apple-touch-icon.png>
+    
+
+    <link type="application/atom+xml" rel="alternate" href="http://localhost:4000/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ios" itemprop="item">
+              <span itemprop="name">iOS</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#swift" itemprop="item">
+              <span itemprop="name">Swift</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            RxSwift Schedulerの一覧と使い方
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>RxSwift Schedulerの一覧と使い方</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2019-8-22</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#rxswift">RxSwift</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#schedulerスケジューラとは">Scheduler(スケジューラ)とは？</a></li>
+  <li><a href="#schedulerスケジューラ一覧">Scheduler(スケジューラ)一覧</a>
+    <ul>
+      <li><a href="#mainscheduler">MainScheduler</a></li>
+      <li><a href="#concurrentmainscheduler">ConcurrentMainScheduler</a></li>
+      <li><a href="#serialdispatchqueuescheduler">SerialDispatchQueueScheduler</a></li>
+      <li><a href="#concurrentdispatchqueuescheduler">ConcurrentDispatchQueueScheduler</a></li>
+      <li><a href="#operationqueuescheduler">OperationQueueScheduler</a></li>
+      <li><a href="#currentthreadscheduler">CurrentThreadScheduler</a></li>
+      <li><a href="#immediatescheduler">ImmediateScheduler</a></li>
+      <li><a href="#historicalschedulertimeconverter">HistoricalSchedulerTimeConverter</a></li>
+      <li><a href="#virtualtimescheduler">VirtualTimeScheduler</a></li>
+    </ul>
+  </li>
+  <li><a href="#まとめ">まとめ</a></li>
+</ul>
+  </div>
+  <section>
+  <p>RxSwiftを使っていると必ず出てくるScheduler(スケジューラー)ですが、どんな種類があるのか把握できずに使っていました。</p>
+
+<p>このままだと実装の自由度が変わらずでもったいないので、一覧と使い方を少し調べてみることにしました。</p>
+
+<p>なおここで提案している使い方が答えと思わず参考程度にすることをオススメします。</p>
+
+<p>使い方は１つではないですもんね。</p>
+
+<h2 id="schedulerスケジューラとは">Scheduler(スケジューラ)とは？</h2>
+<p>そもそも分からない人に超絶ざっくり説明すると、Schedulerとはスレッド制御とまずは覚えておいて、のちのち慣れてきてから詳しく知る順番でいいと思います。</p>
+
+<h2 id="schedulerスケジューラ一覧">Scheduler(スケジューラ)一覧</h2>
+
+<ul>
+  <li>MainScheduler</li>
+  <li>ConcurrentMainScheduler</li>
+  <li>SerialDispatchQueueScheduler</li>
+  <li>ConcurrentDispatchQueueScheduler</li>
+  <li>OperationQueueScheduler</li>
+  <li>CurrentThreadScheduler</li>
+  <li>ImmediateScheduler</li>
+  <li>HistoricalSchedulerTimeConverter</li>
+  <li>VirtualTimeScheduler</li>
+</ul>
+
+<h3 id="mainscheduler">MainScheduler</h3>
+<p>メインスレッドで実行するSchedulerです。
+<code class="highlighter-rouge">observeOn</code>に最適化されておりメインスレッドを指定します。
+<code class="highlighter-rouge">MainScheduler.instance</code> を渡して使います。
+スケジュールするメソッドがメインスレッド上であれば即時実行されます。
+<code class="highlighter-rouge">MainScheduler.asyncInstance</code>は後述する<code class="highlighter-rouge">SerialDispatchQueueScheduler</code>を参照ください。</p>
+
+<h3 id="concurrentmainscheduler">ConcurrentMainScheduler</h3>
+<p>メインスレッドで実行するSchedulerです。
+<code class="highlighter-rouge">subscribeOn</code>に最適化されておりメインスレッドを指定します。
+スケジュールするメソッドがメインスレッド上であれば即時実行されます。</p>
+
+<h3 id="serialdispatchqueuescheduler">SerialDispatchQueueScheduler</h3>
+<p>バックグラウンドで処理を順次実行するのに使います。
+内部でシリアルキューを保持しており、並列キューを渡してもシリアル実行されます。</p>
+
+<h3 id="concurrentdispatchqueuescheduler">ConcurrentDispatchQueueScheduler</h3>
+<p>バックグラウンドで処理を並列実行するのに使います。
+GCD の<code class="highlighter-rouge">dispatch_queue_t</code>か QOSで指定します。</p>
+
+<h3 id="operationqueuescheduler">OperationQueueScheduler</h3>
+<p><code class="highlighter-rouge">NSOperationQueue</code>を使った非同期実行をします。
+同時実行数を制御できるのが便利なところ.</p>
+
+<h3 id="currentthreadscheduler">CurrentThreadScheduler</h3>
+<p>現在のスレッドを指定します。
+処理を一度キューイングしてから実行します。</p>
+
+<h3 id="immediatescheduler">ImmediateScheduler</h3>
+<p>現在のスレッドを指定します。
+処理をキューイングせず即時実行します。</p>
+
+<h3 id="historicalschedulertimeconverter">HistoricalSchedulerTimeConverter</h3>
+<p>時間経過を制御できるSchedulerです。
+n秒後に実行などのテストで便利かと思います。</p>
+
+<h3 id="virtualtimescheduler">VirtualTimeScheduler</h3>
+<p>時間経過をプログラムで制御するSchedulerです。
+受け取った時間を何軸の時間に扱うかなどを制御を実装して使います。
+テストとして使えますが、<code class="highlighter-rouge">HistoricalScheduler</code>を使ったり、ライブラリ側がテストスケジューラを提供したりと、あまり使う機会はないかと思います。</p>
+
+<h2 id="まとめ">まとめ</h2>
+<p>通常であれば<code class="highlighter-rouge">MainScheduler</code>,<code class="highlighter-rouge">ConcurrentDispatchQueueScheduler</code>をよく使いますが、 <code class="highlighter-rouge">CurrentThreadScheduler</code>と<code class="highlighter-rouge">ImmediateScheduler</code>を理解できていると実装が楽になるケースとかありそうですね。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-dictionary-values-to-array">SwiftのDictionary valuesからArrayに変換する方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/rxswift-memo">RxSwiftメモ</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/cocoapods/ios-cocoapods-basic">今さらCocoaPods入門して応用まで</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-error-design">iOSアプリでSwiftによるエラー設計について考えてみた</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/rxswift/ios-swift-rxswfit-basic">RxSwiftの基本を動かして理解する</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+  <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのSectionHeader(セクションヘッダー)を変更する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-input-control">【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a>
+            </li>
+            
+            <li>
+                <a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</a>
+            </li>
+            
+            <li>
+                <a href="/ios/firebase/firebase-performance-monitoring-basic">Firebase Performance Monitoringの基本の概念と実装について整理した</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+  <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+    
+      
+      <a href="/tags#TODO">To-Do</a>
+    
+      
+      <a href="/tags#debug"></a>
+    
+      
+      <a href="/tags#notebook">雑記</a>
+    
+      
+      <a href="/tags#program-design">プログラム設計</a>
+    
+      
+      <a href="/tags#remote-work">リモートワーク</a>
+    
+      
+      <a href="/tags#ios">iOS</a>
+    
+      
+      <a href="/tags#swift">Swift</a>
+    
+      
+      <a href="/tags#uitableview">UITableView</a>
+    
+      
+      <a href="/tags#rails">Rails</a>
+    
+      
+      <a href="/tags#rails-controller">Rails Controller</a>
+    
+      
+      <a href="/tags#ruby">Ruby</a>
+    
+      
+      <a href="/tags#circleci">CircleCI</a>
+    
+      
+      <a href="/tags#ci">CI</a>
+    
+      
+      <a href="/tags#ssh">SSH</a>
+    
+      
+      <a href="/tags#linux">Linux</a>
+    
+      
+      <a href="/tags#centos">CentOS</a>
+    
+      
+      <a href="/tags#printer">Printer</a>
+    
+      
+      <a href="/tags#tools">ツール</a>
+    
+      
+      <a href="/tags#cron">cron</a>
+    
+      
+      <a href="/tags#uiview">UIView</a>
+    
+      
+      <a href="/tags#ios-safearea">iOS SafeArea</a>
+    
+      
+      <a href="/tags#service-design">サービス設計</a>
+    
+      
+      <a href="/tags#design">Design</a>
+    
+      
+      <a href="/tags#httpie">HTTPie</a>
+    
+      
+      <a href="/tags#mysql">MySQL</a>
+    
+      
+      <a href="/tags#rxswift">RxSwift</a>
+    
+      
+      <a href="/tags#rspec">RSpec</a>
+    
+      
+      <a href="/tags#git">Git</a>
+    
+      
+      <a href="/tags#tig">tig</a>
+    
+      
+      <a href="/tags#homebrew">Homebrew</a>
+    
+      
+      <a href="/tags#active-record">ActiveRecord</a>
+    
+      
+      <a href="/tags#mac">Mac</a>
+    
+      
+      <a href="/tags#db">DB</a>
+    
+      
+      <a href="/tags#ngrok">ngrok</a>
+    
+      
+      <a href="/tags#ats">App Transport Security</a>
+    
+      
+      <a href="/tags#regexp">正規表現</a>
+    
+      
+      <a href="/tags#cocoapods">CocoaPods</a>
+    
+      
+      <a href="/tags#rbenv">rbenv</a>
+    
+      
+      <a href="/tags#bundler">Bundler</a>
+    
+      
+      <a href="/tags#jekyll">Jekyll</a>
+    
+      
+      <a href="/tags#github-pages">GitHub Pages</a>
+    
+      
+      <a href="/tags#rack">Rack</a>
+    
+      
+      <a href="/tags#rack-middleware">Rack Middleware</a>
+    
+      
+      <a href="/tags#p4merge">p4merge</a>
+    
+      
+      <a href="/tags#report">レポート</a>
+    
+      
+      <a href="/tags#scene-kit">SceneKit</a>
+    
+      
+      <a href="/tags#test">Test</a>
+    
+      
+      <a href="/tags#nimble">Nimble</a>
+    
+      
+      <a href="/tags#carthage">Carthage</a>
+    
+      
+      <a href="/tags#rubocop">Rubocop</a>
+    
+      
+      <a href="/tags#uitableviewcell">UITableViewCell</a>
+    
+      
+      <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+    
+      
+      <a href="/tags#uicollectionview">UICollectionView</a>
+    
+      
+      <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+    
+      
+      <a href="/tags#firebase">Firebase</a>
+    
+      
+      <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+    
+      
+      <a href="/tags#slack">Slack</a>
+    
+      
+      <a href="/tags#xcuitest">XCUITest</a>
+    
+      
+      <a href="/tags#github">GitHub</a>
+    
+      
+      <a href="/tags#dotenv">dotenv</a>
+    
+      
+      <a href="/tags#gem">gem</a>
+    
+      
+      <a href="/tags#google-analytics">Google Analytics</a>
+    
+      
+      <a href="/tags#kiji">kiji</a>
+    
+      
+      <a href="/tags#shellscript">シェルスクリプト</a>
+    
+      
+      <a href="/tags#lsof">lsof</a>
+    
+      
+      <a href="/tags#web">Web</a>
+    
+      
+      <a href="/tags#nginx">nginx</a>
+    
+      
+      <a href="/tags#rubymine">RubyMine</a>
+    
+      
+      <a href="/tags#no-tag">No Tag</a>
+    
+      
+      <a href="/tags#virtualbox">VirtualBox</a>
+    
+      
+      <a href="/tags#jq"></a>
+    
+      
+      <a href="/tags#ag"></a>
+    
+      
+      <a href="/tags#postgresql">PostgreSQL</a>
+    
+  </div>
+</div>
+
+  <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
