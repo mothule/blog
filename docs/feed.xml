@@ -1,4 +1,270 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-04-20T12:39:06+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">RubyMineで条件付きブレイクポイントを使いこなす方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint" rel="alternate" type="text/html" title="RubyMineで条件付きブレイクポイントを使いこなす方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-04-01T00:40:47+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint">&lt;p&gt;みんな大好きRubyMineはRubyのIDEです。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-04-22T01:54:51+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">アジャイル開発を勘違いしてる企画職やPMがいる会社は苦労する</title><link href="https://blog.mothule.com/notebook/engineers-are-hating-they" rel="alternate" type="text/html" title="アジャイル開発を勘違いしてる企画職やPMがいる会社は苦労する" /><published>2020-04-22T00:00:00+09:00</published><updated>2020-04-22T01:54:43+09:00</updated><id>https://blog.mothule.com/notebook/engineers-are-hating-they</id><content type="html" xml:base="https://blog.mothule.com/notebook/engineers-are-hating-they">&lt;p&gt;Web界隈では開発手法はウォーターフォールからアジャイル開発へとシフトしていると思います。
+従来のウォーターフォール方式では完成した頃には既に二番手三番手、既に古いと思われるほど求められるニーズの変化速度が速くなっているからです。&lt;/p&gt;
+
+&lt;p&gt;この変化に柔軟に対応できる開発方法がアジャイル開発でした。正しく理解し運用することで安定した開発が可能になります。
+また上位レイヤーのリーン開発との相性もよくリーン＋アジャイルでのフットワーク軽い開発スタイルは見かけます。
+しかしこのアジャイル開発を浅く知って勘違いした企画職やPMがアジャイルでもウォーターフォールでもないどちらのメリットもない形に崩すのは典型例です&lt;/p&gt;
+
+&lt;p&gt;この記事はアジャイル開発を5年近く続けて経験した苦労話です。&lt;/p&gt;
+
+&lt;p&gt;なお私が経験したのはアジャイル開発はスクラム＋XPです。&lt;/p&gt;
+
+&lt;h2 id=&quot;アジャイル開発は細かくリリースしやすい&quot;&gt;アジャイル開発は細かくリリースしやすい&lt;/h2&gt;
+
+&lt;p&gt;Webの特徴であるリリースを何回もできることを前提とした、数機能ずつリリースを繰り返すサイクルです。
+実装する機能はスプリント初期に構築したプロダクトバックログのストーリーと呼ばれる機能をシナリオ化した物が並び順になっており、
+1~2週間を1スプリント(SP)と称し1SP内にそのストーリーを対応して、SP終わりにプロダクトオーナー(PO)と呼ばれるプロダクト成長を責務とする人が
+ストーリーを満たしているか受入判定を行います。そしてSP頭になればまた次の優先度のストーリーを進めます。
+プロダクトはSP毎に常にリリース可能な状態となっていなければならず、それにより期限が予定より短くなったり開発が遅れたりすることで優先度の低い未対応ストーリーはそのままで
+リリースすることでプロダクトにとって最も重要な順に対応された機能がユーザーに届けられます。&lt;/p&gt;
+
+&lt;h2 id=&quot;アジャイル開発が非開発者に勘違いされがちなこと&quot;&gt;アジャイル開発が非開発者に勘違いされがちなこと&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;柔軟に仕様を変更できる&lt;/li&gt;
+  &lt;li&gt;細かい仕様書が不要&lt;/li&gt;
+  &lt;li&gt;開発やデザイナーだけで開発が回る&lt;/li&gt;
+  &lt;li&gt;人員増やせばより開発が加速・安定する&lt;/li&gt;
+  &lt;li&gt;ウォーターフォールより早い&lt;/li&gt;
+  &lt;li&gt;立て続けに機能追加できる&lt;/li&gt;
+  &lt;li&gt;プロダクトオーナーは若手でもできる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;柔軟に仕様を変更できる&quot;&gt;柔軟に仕様を変更できる&lt;/h3&gt;
+
+&lt;p&gt;アジャイル開発の利点を概要部分だけ読んだ企画がよく勘違いします。
+そんな夢物語があるわけないです。&lt;/p&gt;
+
+&lt;p&gt;厳密には次の通りです&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;SPレビューからSP計画までの間にプロダクトバックログ内のストーリー単位での未対応ストーリーの優先順位変更が可能&lt;/li&gt;
+  &lt;li&gt;未対応ストーリーの仕様変更が可能&lt;/li&gt;
+  &lt;li&gt;仕様変更したら関連するストーリー全てのポイントが再見積もりとなる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;となります。
+これをSP中にも関わらず対応中の機能の仕様をコロコロ変えたら、そのSPでは何もストーリーを達成できません。
+本来はSPが走り始めたらストーリーを変えてはいけません。対応してよいストーリーはReadyを満たしたものだけになります。&lt;/p&gt;
+
+&lt;p&gt;当たり前ですが、仕様変更するならした分だけ工数は伸びます。これはどの開発手法でも変わりません。&lt;/p&gt;
+
+&lt;h3 id=&quot;細かい仕様書が不要&quot;&gt;細かい仕様書が不要&lt;/h3&gt;
+
+&lt;p&gt;アジャイル開発では「資料よりも対話」を大事にしようと言われています。
+しかしこれを口頭で全部伝えればOK、細かいことは伝えずOKと勘違いする企画がバカのように多いです。&lt;/p&gt;
+
+&lt;p&gt;そもそもの前提が間違っています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;複雑なビジネスロジックや重要機能は最適量の仕様書は必要です。&lt;/li&gt;
+  &lt;li&gt;不要とは言っていません。ちょっとした確認や本当に細かい部分を資料ではなく口頭でやろう。という逆位置からのスタートです。&lt;/li&gt;
+  &lt;li&gt;大前提としてPOが隣や向かいの席など超近接です&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これを仕様も伝えず最も重要な機能も伝えず、違う企画だらけの島に席をおいて、しょっちゅう会議でいない無能POがいます。&lt;/p&gt;
+
+&lt;p&gt;そんなテレパシーを超えたテクノロジーもビックリの情報疎通環境でできるんだと間違うお花畑企画がいます。&lt;/p&gt;
+
+&lt;h3 id=&quot;開発やデザイナーだけで開発が回る&quot;&gt;開発やデザイナーだけで開発が回る&lt;/h3&gt;
+
+&lt;p&gt;SP計画とSPレビューだけ顔出してSP中は一切無関係みたいな勘違いも見かけます。
+スクラムの前提はPOもデザイナーも開発、SMもコアメンバーは一つのチームとして動きます。
+それぞれがスペシャリストでなければいけません。&lt;/p&gt;
+
+&lt;p&gt;それを勘違いして仕様バグ確認や優先順位や精査、プロダクトバックログの整理やユーザー分析などをせず、別の企画の決裁向けプレゼン資料を作ってるバカも多いです。
+シニア企画に多いです。&lt;/p&gt;
+
+&lt;h3 id=&quot;人員増やせばより開発が加速安定する&quot;&gt;人員増やせばより開発が加速・安定する&lt;/h3&gt;
+
+&lt;p&gt;アジャイル開発はメンバー全員が「プロダクトを良くしたい」という同一姿勢が前提で、同じプロダクトに同じメンバーで続けることでチーム内成熟度が熟成し、手戻りや齟齬を減らしたり、付帯作業を抑えたり、プロダクトへの知識を蓄積することでベロシティを安定化させるなど、そのプロダクトにおいてそのチームが最も適切で先鋭となることがアジャイル開発をするチームにおいて重要なことです。&lt;/p&gt;
+
+&lt;p&gt;これを1フェイズ終わったからといって、メンバーをコロコロ変えたり、ベロシティが低くて期限に間に合わないからと言ってメンバーを増員したりなどするのは悪手です。
+アジャイル開発はPOとしてしっかり接していないと、プロダクトバックログやスプリントバックログのマネージメントコストが超非常に高いという事実をまず知らないです。&lt;/p&gt;
+
+&lt;p&gt;これをチームとして参加せず数字だけ見てる人がよくやる典型的なリソースコントロールです。
+机上の空論です。扱ってるリソースが機械だと思ってるのでしょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;ウォーターフォールより早い&quot;&gt;ウォーターフォールより早い&lt;/h3&gt;
+
+&lt;p&gt;アジャイル開発はSP毎にリリースReadyにする、対応ストーリーのみを考慮した開発、先のストーリーは考えない（結局やらない可能性もあるから）といった特徴もあるため
+開発に無駄があります。&lt;/p&gt;
+
+&lt;p&gt;例で言うと、ウォーターフォールでは全部の仕様を策定し、それを確認した上でデータベースのテーブル設計を行います。
+設計されたテーブルは機能をカバーできる設計となります。&lt;/p&gt;
+
+&lt;p&gt;しかしアジャイル開発ではまずはフェイズ１などここまでをリリース対象としようと全部の仕様策定などはしません。
+そのため目の前のストーリーを実現するには適切なテーブル設計でも、次SPや次フェイズのストーリーでは、カバーできない場合があります。
+その場合はマイグレーション処理が発生します。&lt;/p&gt;
+
+&lt;p&gt;これはテーブル設計に関わらずクラス設計にも同様の話です。予め可変性の高い要件が見えていればその部分を柔軟性高めの設計にします。
+しかしそれが見えないため、ガチガチに組んだ設計部があとで実は多様性を持たせないといけないことになり、結局大きめのリファクタリング入ることはよくあります。&lt;/p&gt;
+
+&lt;p&gt;実際見た目はそのままの言語やインフラなどテクノロジーリプレイ案件であれば、不安定で不透明な仕様や追加仕様は存在しないためアジャイル開発でやるメリットがありません。&lt;/p&gt;
+
+&lt;p&gt;アジャイル開発はある程度速度を犠牲にした代わりに柔軟性を手に入れているのです。&lt;/p&gt;
+
+&lt;h3 id=&quot;立て続けに機能追加できる&quot;&gt;立て続けに機能追加できる&lt;/h3&gt;
+
+&lt;p&gt;半分間違ってます。&lt;/p&gt;
+
+&lt;p&gt;技術負債を解消し続けなければ、ちょっとした変更でもリグレッションバグが発生しテスト工数がかさんだり、色々な箇所を読み解く必要があったり、気づけばアジャイルのメリットをなくなってしまいます。&lt;/p&gt;
+
+&lt;p&gt;アジャイル開発はWebサービスなどプロダクトを継続成長させる開発に向いています。
+しかしそれを支えるには負債解消計画も継続的に考慮されてなければいけません。&lt;/p&gt;
+
+&lt;h3 id=&quot;プロダクトオーナーは若手でもできる&quot;&gt;プロダクトオーナーは若手でもできる&lt;/h3&gt;
+&lt;p&gt;もう愚の骨頂です。
+こう思ってる人は愚かにもほどがあります。&lt;/p&gt;
+
+&lt;p&gt;プロダクトの責任を負ってる人が若手ができるわけがありません。
+プロダクトはライバルや市場、ターゲット分析に加えトレンド機能などプラットフォーム知識、そして機能毎のKPI策定やそれらの追跡、問題点の分析と改善などプロダクト成長させ収益を得ることを一手に引き受けます。
+そこらの2年目3年目が一人でこなせる訳ありません。もともとPOは10年目以上のベテランが推奨です。&lt;/p&gt;
+
+&lt;p&gt;ちょっと考えれば分かることをいいように解釈して、本来必要な作業をやらなくても良いと何故か判断する部長などリソースマネージャーがいます。
+アホですね。&lt;/p&gt;
+
+&lt;h2 id=&quot;アジャイル開発は銀の弾丸ではない&quot;&gt;アジャイル開発は銀の弾丸ではない&lt;/h2&gt;
+
+&lt;p&gt;今後も含めいかなる開発手法が登場しても、元々やらなければいけないことの本質が消えることは絶対ありません。
+仕様書も説明もなく仕様は伝わらないし、仕様バグも見つからないし、完了条件も定義できません。&lt;/p&gt;
+
+&lt;p&gt;未だにIT開発をコストと考える古臭い人は非常に多いです。特に数字をメインにしてる人は多いです。
+こういった会社や上司のいる場所は、エンジニアがアジャイル開発を経て幸せになることはまずありません。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><summary type="html">Web界隈では開発手法はウォーターフォールからアジャイル開発へとシフトしていると思います。 従来のウォーターフォール方式では完成した頃には既に二番手三番手、既に古いと思われるほど求められるニーズの変化速度が速くなっているからです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-22-engineers-are-hating-they.png" /></entry><entry><title type="html">RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server" rel="alternate" type="text/html" title="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-03-29T05:12:12+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server">&lt;p&gt;RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。
+しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。
+私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。&lt;/p&gt;
+
+&lt;p&gt;今回はRubyMineを使ってUNIXドメインソケット通信で起動してるRailsアプリにブレイクポイントを仕込んだり、ブレイクポイントで止めたコンテキストからRubyを実行したり、変数をウォッチしたりするいわゆるデバッグする方法についてまとめます。&lt;/p&gt;
+
+&lt;h2 id=&quot;環境&quot;&gt;環境&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RubyMine&lt;/li&gt;
+  &lt;li&gt;PumaにてUNIXドメインソケット通信中のRailsアプリ&lt;/li&gt;
+  &lt;li&gt;Mac&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;rubymineから実行はunixドメインソケット通信による起動がない&quot;&gt;RubyMineから実行はUNIXドメインソケット通信による起動がない&lt;/h2&gt;
+
+&lt;p&gt;通常ならRubyMineからRailsアプリを実行するには、メニューバーの &lt;code class=&quot;highlighter-rouge&quot;&gt;Run &amp;gt; Run... &amp;gt; Development: app_name&lt;/code&gt; の順で実行できます。
+もし設定を変更したい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;Run &amp;gt; Edit Configurations...&lt;/code&gt;を選ぶことで登録された設定情報を変更できる画面が表示されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;▼RubyMineのEdit Configurations…を開いた画面&lt;/em&gt;&lt;br /&gt;
+&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのEdit Configurations...を開いた画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ここでIP addressとPortを指定して実行すればサーバが立ち上がります。
+しかしこの方法はTCP/IPによるポートが開かれるタイプとなり、UNIXドメインソケットによる立ち上げとは異なります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Server&lt;/code&gt;項目を見てもそれらしき項目は見当たりません。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;▼サーバーパラメータ一覧&lt;/em&gt;&lt;br /&gt;
+&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのEdit Configurations...を開いた画面のServer一覧&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;私が調べた限りでは直接UNIXドメインソケット通信として起動する方法はありませんでした。
+これでは起動もデバッグもできずで、RubyMineが使い物にならなくなります。
+しかし、実は少し手間ですがちゃんと手段はあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;unixドメインソケット通信はrubymineでrailsアプリをアタッチする&quot;&gt;UNIXドメインソケット通信はRubyMineでRailsアプリをアタッチする&lt;/h2&gt;
+
+&lt;p&gt;それはメニューバーの&lt;code class=&quot;highlighter-rouge&quot;&gt;Run &amp;gt; Attach to Process...&lt;/code&gt;による&lt;strong&gt;既存プロセスにアタッチ&lt;/strong&gt;する方法です。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;▼メニューバーのRunにAttach to Process…はあります。&lt;/em&gt;&lt;br /&gt;
+&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのメニューバーのRunを開いた画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これを使うことで起動中のRailsアプリに対してアタッチを試み、成功したらRubyMineが介入できる環境を構築してくれます。&lt;/p&gt;
+
+&lt;p&gt;フローは次のようになります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;デバッグしたいRailsアプリをシェルで起動&lt;/li&gt;
+  &lt;li&gt;RubyMineからAttach to Processを実行&lt;/li&gt;
+  &lt;li&gt;Attachが成功するのを待つ&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;デバッグしたいrailsアプリをシェルで起動&quot;&gt;デバッグしたいRailsアプリをシェルで起動&lt;/h3&gt;
+&lt;p&gt;ターミナルからRailsのServerコマンドを実行してRailsアプリを起動します。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;Listening on unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;となっているのでUNIXドメインソケット通信として起動しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/rails s
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Booting Puma
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Rails 6.0.2.1 application starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;development
+&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Run &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;rails server &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more startup options
+Puma starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;single mode...
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Version 4.3.3 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby 2.6.5-p114&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, codename: Mysterious Traveller
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Min threads: 5, max threads: 5
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Environment: development
+&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Listening on unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock
+Use Ctrl-C to stop
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;rubymineからattach-to-processを実行&quot;&gt;RubyMineからAttach to Process…を実行&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Attach to Process...&lt;/code&gt;を選ぶとRubyMineがRubyで起動してるプロセスを見つけて一覧として出してくれます。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;▼Rubyプロセス一覧&lt;/em&gt;&lt;br /&gt;
+&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png&quot; width=&quot;100%&quot; alt=&quot;Attach to Process...で出る一覧画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;先程立ち上げたRailsアプリを見つけてくれます。賢いですね。&lt;/p&gt;
+
+&lt;h3 id=&quot;attachが成功するのを待つ&quot;&gt;Attachが成功するのを待つ&lt;/h3&gt;
+
+&lt;p&gt;次はこれを選ぶことでRubyMineがRailsアプリにアタッチをトライしてくれます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/5.png&quot; width=&quot;100%&quot; alt=&quot;接続中プログレス&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;RubyMineのDebug Toolbarにも次のようなログが流れます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin/bash &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;env RBENV_VERSION=2.6.5 /usr/local/Cellar/rbenv/1.1.2/libexec/rbenv exec ruby /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/gdb_wrapper --pid 15009 --ruby-path /Users/mothule/.rbenv/versions/2.6.5/bin/ruby --include-gem /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib --include-gem /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib -- --key-value --step-over-in-blocks --disable-int-handler --evaluation-timeout 20 --evaluation-control --time-limit 100 --memory-limit 0 --rubymine-protocol-extensions --port 61951 --host 0.0.0.0 --dispatcher-port 61952 --attach-mode&quot;&lt;/span&gt;
+Fast Debugger &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby-debug-ide 0.8.0.beta21, debase 0.3.0.beta23, file filtering is supported, block breakpoints supported, smart steps supported, obtaining &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;values supported, partial obtaining of instance variables supported&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+executed &lt;span class=&quot;s1&quot;&gt;'lldb /Users/mothule/.rbenv/versions/2.6.5/bin/ruby --no-lldbinit'&lt;/span&gt;
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;attach 15009&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread list&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread list&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;1&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bt&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;2&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bt&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+...
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;23&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bt&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;1&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;expr &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;void &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; dlopen&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle&quot;&lt;/span&gt;, 2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;expr &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; debase_start_attach&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;breakpoint &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--shlib&lt;/span&gt; /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; __func_to_set_breakpoint_at&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+continuing
+executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;expr &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;void&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; debase_rb_eval&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;require '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/../lib/ruby-debug-ide/attach/debugger_loader'; load_debugger(['/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib', '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib'], ['--key-value', '--step-over-in-blocks', '--disable-int-handler', '--evaluation-timeout', '20', '--evaluation-control', '--time-limit', '100', '--memory-limit', '0', '--rubymine-protocol-extensions', '--port', '61951', '--host', '0.0.0.0', '--dispatcher-port', '61952', '--attach-mode'])&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;成功するとRailsアプリのログにも次のようなログが出力されます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Fast Debugger &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby-debug-ide 0.8.0.beta21, debase 0.3.0.beta23, file filtering is supported, block breakpoints supported, smart steps supported, obtaining &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;values supported, partial obtaining of instance variables supported&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; listens on 0.0.0.0:61951
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;失敗するときの3つの確認&quot;&gt;失敗するときの3つの確認&lt;/h3&gt;
+
+&lt;p&gt;Attach to Processはアタッチ処理は安定とはいえないです。何回か試して成功するという状態です。
+私がアタッチが失敗した場合にいつも試してることを教えます。
+もし失敗する場合は次の4つを試してみてください。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;タイムアウトを伸ばす&lt;/li&gt;
+  &lt;li&gt;Railsアプリを立ち上げ直す&lt;/li&gt;
+  &lt;li&gt;アタッチトライ中にRailsアプリを動かしてみる&lt;/li&gt;
+  &lt;li&gt;ブレイクポイントをつけてAttachを実行する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;「タイムアウトを伸ばす」はRubyMineのPreferencesから出来ます。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;▼Preferences &amp;gt; Build, Execution, Deployment &amp;gt; Debugger &amp;gt; Ruby &amp;gt; Debug connection timeout&lt;/em&gt;&lt;br /&gt;
+&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのSettingsからDebug connection timeを延長する&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;rubymineでunixドメインソケット通信でもデバッグできるようになる&quot;&gt;RubyMineでUNIXドメインソケット通信でもデバッグできるようになる&lt;/h2&gt;
+&lt;p&gt;通常ではRubyMineから起動したアプリしかデバッグができなかったり、ターミナル上でしかUNIXドメインソケット通信のRailsアプリを起動できなかったりしますが、この方法であれば既に立ち上がっているRubyプロセスでもアタッチすることでデバッグができるようになり便利ですね。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="rubymine" /><category term="nginx" /><category term="tools" /><category term="ruby" /><category term="rails" /><summary type="html">RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" /></entry><entry><title type="html">RubyMineで条件付きブレイクポイントを使いこなす方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint" rel="alternate" type="text/html" title="RubyMineで条件付きブレイクポイントを使いこなす方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-04-01T00:40:47+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint">&lt;p&gt;みんな大好きRubyMineはRubyのIDEです。
 IDEと言えばそのソフト一つで開発環境が整っている必要があります。
 なんせ&lt;strong&gt;Integrated Development Envrionment&lt;/strong&gt;ですもんね。&lt;/p&gt;
 
@@ -162,141 +428,7 @@ String 2
 
 &lt;p&gt;他IDEと遜色ない条件付きブレイクポイント機能ですね。
 ただ条件付きブレイクポイントのデメリットとしては、処理が重くなります。
-通るたびに条件を満たしているか評価を行うためその分重くなります。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><category term="ruby" /><summary type="html">みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" /></entry><entry><title type="html">RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server" rel="alternate" type="text/html" title="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-03-29T05:12:12+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server">&lt;p&gt;RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。
-しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。
-私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。&lt;/p&gt;
-
-&lt;p&gt;今回はRubyMineを使ってUNIXドメインソケット通信で起動してるRailsアプリにブレイクポイントを仕込んだり、ブレイクポイントで止めたコンテキストからRubyを実行したり、変数をウォッチしたりするいわゆるデバッグする方法についてまとめます。&lt;/p&gt;
-
-&lt;h2 id=&quot;環境&quot;&gt;環境&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;RubyMine&lt;/li&gt;
-  &lt;li&gt;PumaにてUNIXドメインソケット通信中のRailsアプリ&lt;/li&gt;
-  &lt;li&gt;Mac&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;rubymineから実行はunixドメインソケット通信による起動がない&quot;&gt;RubyMineから実行はUNIXドメインソケット通信による起動がない&lt;/h2&gt;
-
-&lt;p&gt;通常ならRubyMineからRailsアプリを実行するには、メニューバーの &lt;code class=&quot;highlighter-rouge&quot;&gt;Run &amp;gt; Run... &amp;gt; Development: app_name&lt;/code&gt; の順で実行できます。
-もし設定を変更したい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;Run &amp;gt; Edit Configurations...&lt;/code&gt;を選ぶことで登録された設定情報を変更できる画面が表示されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;▼RubyMineのEdit Configurations…を開いた画面&lt;/em&gt;&lt;br /&gt;
-&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのEdit Configurations...を開いた画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;ここでIP addressとPortを指定して実行すればサーバが立ち上がります。
-しかしこの方法はTCP/IPによるポートが開かれるタイプとなり、UNIXドメインソケットによる立ち上げとは異なります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Server&lt;/code&gt;項目を見てもそれらしき項目は見当たりません。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;▼サーバーパラメータ一覧&lt;/em&gt;&lt;br /&gt;
-&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのEdit Configurations...を開いた画面のServer一覧&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;私が調べた限りでは直接UNIXドメインソケット通信として起動する方法はありませんでした。
-これでは起動もデバッグもできずで、RubyMineが使い物にならなくなります。
-しかし、実は少し手間ですがちゃんと手段はあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;unixドメインソケット通信はrubymineでrailsアプリをアタッチする&quot;&gt;UNIXドメインソケット通信はRubyMineでRailsアプリをアタッチする&lt;/h2&gt;
-
-&lt;p&gt;それはメニューバーの&lt;code class=&quot;highlighter-rouge&quot;&gt;Run &amp;gt; Attach to Process...&lt;/code&gt;による&lt;strong&gt;既存プロセスにアタッチ&lt;/strong&gt;する方法です。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;▼メニューバーのRunにAttach to Process…はあります。&lt;/em&gt;&lt;br /&gt;
-&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのメニューバーのRunを開いた画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;これを使うことで起動中のRailsアプリに対してアタッチを試み、成功したらRubyMineが介入できる環境を構築してくれます。&lt;/p&gt;
-
-&lt;p&gt;フローは次のようになります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;デバッグしたいRailsアプリをシェルで起動&lt;/li&gt;
-  &lt;li&gt;RubyMineからAttach to Processを実行&lt;/li&gt;
-  &lt;li&gt;Attachが成功するのを待つ&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;デバッグしたいrailsアプリをシェルで起動&quot;&gt;デバッグしたいRailsアプリをシェルで起動&lt;/h3&gt;
-&lt;p&gt;ターミナルからRailsのServerコマンドを実行してRailsアプリを起動します。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;Listening on unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;となっているのでUNIXドメインソケット通信として起動しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bin/rails s
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Booting Puma
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Rails 6.0.2.1 application starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;development
-&lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; Run &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;rails server &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;more startup options
-Puma starting &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;single mode...
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Version 4.3.3 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby 2.6.5-p114&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;, codename: Mysterious Traveller
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Min threads: 5, max threads: 5
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Environment: development
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; Listening on unix:///usr/local/var/work/nginx-puma-rails/tmp/sockets/puma.sock
-Use Ctrl-C to stop
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;rubymineからattach-to-processを実行&quot;&gt;RubyMineからAttach to Process…を実行&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Attach to Process...&lt;/code&gt;を選ぶとRubyMineがRubyで起動してるプロセスを見つけて一覧として出してくれます。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;▼Rubyプロセス一覧&lt;/em&gt;&lt;br /&gt;
-&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png&quot; width=&quot;100%&quot; alt=&quot;Attach to Process...で出る一覧画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;先程立ち上げたRailsアプリを見つけてくれます。賢いですね。&lt;/p&gt;
-
-&lt;h3 id=&quot;attachが成功するのを待つ&quot;&gt;Attachが成功するのを待つ&lt;/h3&gt;
-
-&lt;p&gt;次はこれを選ぶことでRubyMineがRailsアプリにアタッチをトライしてくれます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/5.png&quot; width=&quot;100%&quot; alt=&quot;接続中プログレス&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;RubyMineのDebug Toolbarにも次のようなログが流れます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;/bin/bash &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;env RBENV_VERSION=2.6.5 /usr/local/Cellar/rbenv/1.1.2/libexec/rbenv exec ruby /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/gdb_wrapper --pid 15009 --ruby-path /Users/mothule/.rbenv/versions/2.6.5/bin/ruby --include-gem /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib --include-gem /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib -- --key-value --step-over-in-blocks --disable-int-handler --evaluation-timeout 20 --evaluation-control --time-limit 100 --memory-limit 0 --rubymine-protocol-extensions --port 61951 --host 0.0.0.0 --dispatcher-port 61952 --attach-mode&quot;&lt;/span&gt;
-Fast Debugger &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby-debug-ide 0.8.0.beta21, debase 0.3.0.beta23, file filtering is supported, block breakpoints supported, smart steps supported, obtaining &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;values supported, partial obtaining of instance variables supported&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-executed &lt;span class=&quot;s1&quot;&gt;'lldb /Users/mothule/.rbenv/versions/2.6.5/bin/ruby --no-lldbinit'&lt;/span&gt;
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;attach 15009&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread list&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread list&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;1&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bt&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;2&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bt&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-...
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;23&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bt&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;thread &lt;span class=&quot;k&quot;&gt;select &lt;/span&gt;1&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;expr &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;void &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; dlopen&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle&quot;&lt;/span&gt;, 2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;expr &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;int&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; debase_start_attach&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;breakpoint &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--shlib&lt;/span&gt; /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle &lt;span class=&quot;nt&quot;&gt;--name&lt;/span&gt; __func_to_set_breakpoint_at&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-continuing
-executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;expr &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;void&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; debase_rb_eval&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;require '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/../lib/ruby-debug-ide/attach/debugger_loader'; load_debugger(['/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib', '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib'], ['--key-value', '--step-over-in-blocks', '--disable-int-handler', '--evaluation-timeout', '20', '--evaluation-control', '--time-limit', '100', '--memory-limit', '0', '--rubymine-protocol-extensions', '--port', '61951', '--host', '0.0.0.0', '--dispatcher-port', '61952', '--attach-mode'])&quot;&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command &lt;/span&gt;inside lldb.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;成功するとRailsアプリのログにも次のようなログが出力されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Fast Debugger &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ruby-debug-ide 0.8.0.beta21, debase 0.3.0.beta23, file filtering is supported, block breakpoints supported, smart steps supported, obtaining &lt;span class=&quot;k&quot;&gt;return &lt;/span&gt;values supported, partial obtaining of instance variables supported&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; listens on 0.0.0.0:61951
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;失敗するときの3つの確認&quot;&gt;失敗するときの3つの確認&lt;/h3&gt;
-
-&lt;p&gt;Attach to Processはアタッチ処理は安定とはいえないです。何回か試して成功するという状態です。
-私がアタッチが失敗した場合にいつも試してることを教えます。
-もし失敗する場合は次の4つを試してみてください。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;タイムアウトを伸ばす&lt;/li&gt;
-  &lt;li&gt;Railsアプリを立ち上げ直す&lt;/li&gt;
-  &lt;li&gt;アタッチトライ中にRailsアプリを動かしてみる&lt;/li&gt;
-  &lt;li&gt;ブレイクポイントをつけてAttachを実行する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;「タイムアウトを伸ばす」はRubyMineのPreferencesから出来ます。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;▼Preferences &amp;gt; Build, Execution, Deployment &amp;gt; Debugger &amp;gt; Ruby &amp;gt; Debug connection timeout&lt;/em&gt;&lt;br /&gt;
-&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのSettingsからDebug connection timeを延長する&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;rubymineでunixドメインソケット通信でもデバッグできるようになる&quot;&gt;RubyMineでUNIXドメインソケット通信でもデバッグできるようになる&lt;/h2&gt;
-&lt;p&gt;通常ではRubyMineから起動したアプリしかデバッグができなかったり、ターミナル上でしかUNIXドメインソケット通信のRailsアプリを起動できなかったりしますが、この方法であれば既に立ち上がっているRubyプロセスでもアタッチすることでデバッグができるようになり便利ですね。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="rubymine" /><category term="nginx" /><category term="tools" /><category term="ruby" /><category term="rails" /><summary type="html">RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" /></entry><entry><title type="html">Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認</title><link href="https://blog.mothule.com/ruby/ruby-backslash" rel="alternate" type="text/html" title="Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認" /><published>2020-02-28T00:00:00+09:00</published><updated>2020-02-28T05:08:45+09:00</updated><id>https://blog.mothule.com/ruby/ruby-backslash</id><content type="html" xml:base="https://blog.mothule.com/ruby/ruby-backslash">&lt;h2 id=&quot;バックスラッシュ記法とは&quot;&gt;バックスラッシュ記法とは？&lt;/h2&gt;
+通るたびに条件を満たしているか評価を行うためその分重くなります。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><category term="ruby" /><summary type="html">みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" /></entry><entry><title type="html">Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認</title><link href="https://blog.mothule.com/ruby/ruby-backslash" rel="alternate" type="text/html" title="Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認" /><published>2020-02-28T00:00:00+09:00</published><updated>2020-02-28T05:08:45+09:00</updated><id>https://blog.mothule.com/ruby/ruby-backslash</id><content type="html" xml:base="https://blog.mothule.com/ruby/ruby-backslash">&lt;h2 id=&quot;バックスラッシュ記法とは&quot;&gt;バックスラッシュ記法とは？&lt;/h2&gt;
 &lt;p&gt;文字列中でバックスラッシュ(\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。&lt;/p&gt;
 
 &lt;h2 id=&quot;バックスラッシュ記法の一覧&quot;&gt;バックスラッシュ記法の一覧&lt;/h2&gt;
@@ -2941,238 +3073,4 @@ nginx   97024 mothule  txt      REG                1,4   973824 8628277556 /usr/
   &lt;/tbody&gt;
 &lt;/table&gt;
 
-&lt;p&gt;他にも細かい指定はできるのですが、そこまで覚えなくとも上記だけでも便利です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="lsof" /><summary type="html">lsofを使ってプロセスが使っているポートを確認したり、指定したファイルをどのプロセスが開いているかを確認したり、指定プロセスが開いてるファイルを確認する方法をまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-21-tools-lsof-basic.png" /></entry><entry><title type="html">Macでnginxをインストールして起動する</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac" rel="alternate" type="text/html" title="Macでnginxをインストールして起動する" /><published>2020-02-21T00:00:00+09:00</published><updated>2020-03-29T04:28:01+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。
-Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。&lt;/p&gt;
-
-&lt;h2 id=&quot;nginxはwebサーバ&quot;&gt;nginxはWebサーバ&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://ja.wikipedia.org/wiki/Nginx&quot;&gt;nginx - Wikipedia&lt;/a&gt;&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;nginxとはフリーかつオープンソースなWebサーバである。
-処理性能・高い並行性・メモリ使用量の小ささに焦点を当てて開発
-HTTP, HTTPS, SMTP, POP3, IMAPのリバースプロキシの機能や、ロードバランサ、HTTPキャッシュなどの機能も持つ。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;いろんな通信プロトコルや通信機能をカバーした &lt;strong&gt;Webサーバ&lt;/strong&gt; です。&lt;/p&gt;
-
-&lt;p&gt;nginxは1つのマスタープロセスと複数のワーカープロセスで構成されてます。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;マスタープロセス：nginx.confを読み取り、ワーカープロセスを維持する。&lt;/li&gt;
-  &lt;li&gt;ワーカープロセス：リクエスト処理&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;イベントベースのモデルとOS依存メカニズムを使用して、ワーカプロセス間でのリクエストを効率よく分散します。&lt;br /&gt;
-ワーカープロセス数は構成ファイルで定義され、固定値か使用可能なCPUコア数に自動調整します。&lt;/p&gt;
-
-&lt;h3 id=&quot;webサーバとは&quot;&gt;Webサーバとは？&lt;/h3&gt;
-&lt;p&gt;粒度荒く単純に説明するなら&lt;br /&gt;
-ブラウザに、静的コンテンツ(HTMLや画像など)を配信するソフトウェア＋ハードです。&lt;/p&gt;
-
-&lt;p&gt;nginxを使うことでmacOSにポートを開き、ポートからのHTTPリクエストが来たらドキュメントルート内の一致するパス(ファイル)を返すようになります。&lt;br /&gt;
-つまり静的コンテンツなブログのようなサービスを立ち上げることができるということです。&lt;/p&gt;
-
-&lt;h3 id=&quot;ポートとは&quot;&gt;ポートとは？&lt;/h3&gt;
-&lt;p&gt;噛み砕いて説明すると、コンピュータ通信における窓口です。&lt;br /&gt;
-外のコンピュータはこの窓口を通して中のコンピュータに情報を送っています。&lt;br /&gt;
-普段このポートは使わない場合は閉じてあります。
-またポートには番号が割り振られており、ポートは655356個あります。
-一部ポートには用途が予め決められています。
-例えばブラウザが通信で使っているプロトコルHTTPは80番ポートです。&lt;/p&gt;
-
-&lt;h3 id=&quot;ドキュメントルートとは&quot;&gt;ドキュメントルートとは？&lt;/h3&gt;
-&lt;p&gt;Webサーバが外部に公開するためのディレクトリです。
-このディレクトリにファイルを配置することで、パスと名前が一致していればWebサーバはブラウザに一致したファイルを返します。&lt;/p&gt;
-
-&lt;h2 id=&quot;なぜmacでnginxなのか&quot;&gt;なぜMacでnginxなのか？&lt;/h2&gt;
-&lt;p&gt;nginxはWebサーバであり、大抵のサーバOSはLinuxなので、nginxはLinux上で使うことが多いです。&lt;br /&gt;
-MacとLinuxではコマンドやパス構成が異なることから、Mac上で得た知識を完全移行はできません。&lt;/p&gt;
-
-&lt;p&gt;しかし、&lt;strong&gt;nginxの基礎理解のために慣れたOSを手元で試行錯誤することは全体像の理解を促進します。&lt;/strong&gt;&lt;br /&gt;
-また、VirtualBoxなど仮想OSでLinuxをMac上で構築することもできますが、ブリッジなど仮想OS自体の知識が必要だったり純粋にnginxの把握には不向きだったりします。&lt;/p&gt;
-
-&lt;p&gt;加えて、アプリサーバ開発中にWebサーバをnginxで動作確認したいケースもありえます。&lt;/p&gt;
-
-&lt;h2 id=&quot;macにnginxをhomebrewでインストール&quot;&gt;Macにnginxをhomebrewでインストール&lt;/h2&gt;
-&lt;p&gt;Macのパッケージ管理ソフトウェアHomebrewを使ってnginxをインストールします。&lt;/p&gt;
-
-&lt;h3 id=&quot;homebrewでインストール&quot;&gt;homebrewでインストール&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;nginxが入ってるか確認&quot;&gt;nginxが入ってるか確認&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-v&lt;/span&gt;
-nginx version: nginx/1.17.8
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;nginxを起動する&quot;&gt;nginxを起動する&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;launchd&lt;/code&gt;として起動すれば、ログイン時に自動でサービス起動します。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew services start nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;単純起動は &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx&lt;/code&gt; を実行するだけです。&lt;/p&gt;
-
-&lt;p&gt;どのポートを開いてるかは&lt;code class=&quot;highlighter-rouge&quot;&gt;lsof&lt;/code&gt;で確認できます。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;lsof &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; nginx &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;LISTEN
-nginx   97024 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;:8080 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;LISTEN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-nginx   97025 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;:8080 &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;LISTEN&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;この場合は8080が開いてるので、 http://localhost:8080 にアクセスすると表示されます。&lt;/p&gt;
-
-&lt;p&gt;▼&lt;code class=&quot;highlighter-rouge&quot;&gt;lsof&lt;/code&gt;に関しては以下のの記事で説明してます。&lt;br /&gt;
-&lt;span&gt;&lt;a href=&quot;/tools/lsof/tools-lsof-basic&quot;&gt;lsofでプロセスが使用中のポートやファイルを確認&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-
-&lt;p&gt;設定に問題なければ、デフォルトで用意されているhtmlページが表示されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/1.png&quot; width=&quot;75%&quot; alt=&quot;nginx起動初期画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;nginxを停止する&quot;&gt;nginxを停止する&lt;/h3&gt;
-&lt;p&gt;stopシグナルを送ります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ nginx -s stop
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;その他シグナル&quot;&gt;その他シグナル&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;シグナル名&lt;/th&gt;
-      &lt;th&gt;意味&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;nginx -s stop&lt;/td&gt;
-      &lt;td&gt;nginxを停止する。処理中のリクエスト待たずに終了する。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;nginx -s quit&lt;/td&gt;
-      &lt;td&gt;nginxを停止する。処理を待つ。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;nginx -s reopen&lt;/td&gt;
-      &lt;td&gt;ログファイルを開き直す&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;nignx -s reload&lt;/td&gt;
-      &lt;td&gt;nginxの設定ファイルを再読み込みする&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h2 id=&quot;nginxの構成&quot;&gt;nginxの構成&lt;/h2&gt;
-
-&lt;p&gt;nginxの内部構成をざっくり分けると次のようになります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;設定
-    &lt;ul&gt;
-      &lt;li&gt;/usr/local/etc/nginx&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;ドキュメントルート(ディレクトリ)&lt;/li&gt;
-  &lt;li&gt;追加モジュール&lt;/li&gt;
-  &lt;li&gt;ログ&lt;/li&gt;
-  &lt;li&gt;ログローテーション&lt;/li&gt;
-  &lt;li&gt;キャッシュ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;nginxの設定ファイル&quot;&gt;nginxの設定ファイル&lt;/h2&gt;
-&lt;p&gt;nginxには細かな動作やパラメータを設定するファイル（設定ファイル）があります。&lt;br /&gt;
-設定ファイルを変更してnginxをチューニングできます。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginxの設定ファイルの場所&quot;&gt;nginxの設定ファイルの場所&lt;/h3&gt;
-&lt;p&gt;Macの場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/etc/nginx/nginx.conf&lt;/code&gt;になります。
-フォルダ上に&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;だけでなく&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;内部でincludeされている設定ファイル(&lt;code class=&quot;highlighter-rouge&quot;&gt;mime.types&lt;/code&gt;など)が配置されてあります。&lt;/p&gt;
-
-&lt;h4 id=&quot;補足-brew-info-の-usrlocaletcnginxservers&quot;&gt;補足: brew info の /usr/local/etc/nginx/servers/&lt;/h4&gt;
-&lt;p&gt;ちなみに &lt;code class=&quot;highlighter-rouge&quot;&gt;brew info nginx&lt;/code&gt;で&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nginx will load all files &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /usr/local/etc/nginx/servers/.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;とは記述されているのは、 &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;内で&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;include servers/*;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;と記述されてるためです。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダ内にファイルを置くことで設定ファイルとして読み込んでくれるということです。&lt;br /&gt;
-なお、&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダは存在しないため自分で作成が必要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;ドキュメントルートの確認と変更&quot;&gt;ドキュメントルートの確認と変更&lt;/h3&gt;
-&lt;p&gt;ドキュメントルートは&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;内に定義されてます。&lt;/p&gt;
-
-&lt;p&gt;↓は抜粋したものです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  server {
-    location / {
-      root  /usr/local/var/www;
-      index index.html index.hml;
-    }
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ポートの確認と変更&quot;&gt;ポートの確認と変更&lt;/h3&gt;
-
-&lt;p&gt;現在のポート番号は &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;内に定義されてます。&lt;/p&gt;
-
-&lt;p&gt;↓は抜粋したものです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  server {
-    listen  8080;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;この場合は8080ポート番号を開いています。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginxの設定ファイルのテスト&quot;&gt;nginxの設定ファイルのテスト&lt;/h3&gt;
-
-&lt;p&gt;設定ファイルの書き方に問題がないかテストする方法があります。
-方法は２つあり、&lt;/p&gt;
-
-&lt;h4 id=&quot;-nginx--tでテスト結果を表示&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ nginx -t&lt;/code&gt;でテスト結果を表示&lt;/h4&gt;
-&lt;p&gt;設定ファイルをテストして結果を表示する。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-t&lt;/span&gt;
-nginx: the configuration file /usr/local/etc/nginx/nginx.conf syntax is ok
-nginx: configuration file /usr/local/etc/nginx/nginx.conf &lt;span class=&quot;nb&quot;&gt;test &lt;/span&gt;is successful
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;-nginx--tで設定ファイルも表示&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ nginx -T&lt;/code&gt;で設定ファイルも表示&lt;/h4&gt;
-&lt;p&gt;設定ファイルをテストして、設定ファイルinclude含め一つの設定ファイルとして表示する。&lt;/p&gt;
-
-&lt;h2 id=&quot;nginxのログファイル&quot;&gt;nginxのログファイル&lt;/h2&gt;
-&lt;p&gt;ログはアクセスログとエラーログの２酒類です。&lt;br /&gt;
-ログの出力先は設定ファイルで変更できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;nginx.conf&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;error_log  logs/error.log;
-
-...
-
-http {
-  log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
-                    '$status $body_bytes_sent &quot;$http_referer&quot; '
-                    '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
-
-  access_log  logs/accss.log main;
-
-  ...
-
-  server {
-    access_log logs/host.access.log main;
-  }
-
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;httpブロック内のアクセスログでもいいですが、絞りたい場合は serverブロック内のアクセスログもあります。
-log_formatを使わず直接access_log にformatを書いても大丈夫です。&lt;/p&gt;
-
-&lt;p&gt;上記の構文を次の記事となる&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step2-on-mac&quot;&gt;Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる&lt;/a&gt;&lt;/span&gt;
-で説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png" /></entry></feed>
+&lt;p&gt;他にも細かい指定はできるのですが、そこまで覚えなくとも上記だけでも便利です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="lsof" /><summary type="html">lsofを使ってプロセスが使っているポートを確認したり、指定したファイルをどのプロセスが開いているかを確認したり、指定プロセスが開いてるファイルを確認する方法をまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-21-tools-lsof-basic.png" /></entry></feed>
