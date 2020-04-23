@@ -4,6 +4,8 @@ categories: ios rxswift
 tags: ios swift rxswift
 image:
   path: /assets/images/2019-09-18-ios-swift-rxswfit-basic.png
+redirect_from:
+  - /ios/swift/rxswift/ios-swift-rxswfit-basic
 ---
 
 RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？  
