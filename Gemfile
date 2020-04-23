@@ -24,4 +24,5 @@ group :jekyll_plugins do
   gem "jekyll-last-modified-at"
   # gem 'jekyll-plantuml'
   gem 'jekyll-twitter-plugin'
+  gem 'jekyll-redirect-from'
 end
