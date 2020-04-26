@@ -11,33 +11,33 @@
 
 
     
-      <title>MySQLのmy.cnfの場所を見つける - もちゅろぐ</title>
+      <title>MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法 - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="MySQLのmy.cnfの場所を見つける" />
+<meta property="og:title" content="MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。 しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。" />
-<meta property="og:description" content="初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。 しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。" />
+<meta name="description" content="環境構築などでほぼ必ず弄るmy.cnfですが、my.cnfのパスを毎回忘れてしまいます。しょっちゅう触るファイルでもないので忘れてしまうのは仕方ないですね。 しかもmy.cnfは複数配置をサポートしているため、毎回覚えるのは大変です。" />
+<meta property="og:description" content="環境構築などでほぼ必ず弄るmy.cnfですが、my.cnfのパスを毎回忘れてしまいます。しょっちゅう触るファイルでもないので忘れてしまうのは仕方ないですね。 しかもmy.cnfは複数配置をサポートしているため、毎回覚えるのは大変です。" />
 <link rel="canonical" href="https://blog.mothule.com/db/mysql/mysql-find-mycnf" />
 <meta property="og:url" content="https://blog.mothule.com/db/mysql/mysql-find-mycnf" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-02-mysql-find-mycnf.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-02-mysql-find-mycnf/0.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-08-02T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"headline":"MySQLのmy.cnfの場所を見つける","dateModified":"2020-02-02T23:05:11+09:00","datePublished":"2019-08-02T00:00:00+09:00","url":"https://blog.mothule.com/db/mysql/mysql-find-mycnf","image":"https://blog.mothule.com/assets/images/2019-08-02-mysql-find-mycnf.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/mysql-find-mycnf"},"description":"初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。 しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"headline":"MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法","dateModified":"2020-04-26T14:33:25+09:00","datePublished":"2019-08-02T00:00:00+09:00","url":"https://blog.mothule.com/db/mysql/mysql-find-mycnf","image":"https://blog.mothule.com/assets/images/2019-08-02-mysql-find-mycnf/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/mysql-find-mycnf"},"description":"環境構築などでほぼ必ず弄るmy.cnfですが、my.cnfのパスを毎回忘れてしまいます。しょっちゅう触るファイルでもないので忘れてしまうのは仕方ないですね。 しかもmy.cnfは複数配置をサポートしているため、毎回覚えるのは大変です。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="MySQLのmy.cnfの場所を見つける">
-    <meta name="twitter:description" content="初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-02-mysql-find-mycnf.png">
+    <meta name="twitter:title" content="MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法">
+    <meta name="twitter:description" content="環境構築などでほぼ必ず弄るmy.cnfですが、my.cnfのパスを毎回忘れてしまいます。しょっちゅう触るファイルでもないので忘れてしまうのは仕方ないですね。しかもmy.cnfは複数配置をサポートしているため、毎回覚えるのは大変です。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-02-mysql-find-mycnf/0.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           rel="stylesheet"
@@ -142,7 +142,7 @@
         
         
           <li>
-            MySQLのmy.cnfの場所を見つける
+            MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法
           </li>
         
       
@@ -156,12 +156,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-02-mysql-find-mycnf.png" alt="MySQLのmy.cnfの場所を見つける">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-02-mysql-find-mycnf/0.png" alt="MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法">
     </div>
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>MySQLのmy.cnfの場所を見つける</h1>
+    <h1>MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
@@ -178,22 +178,30 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#結論">結論</a></li>
-  <li><a href="#ヘルプに書いてる">ヘルプに書いてる</a></li>
+  <li><a href="#mycnfは複数配置をサポートしてる">my.cnfは複数配置をサポートしてる</a></li>
+  <li><a href="#mycnfの場所と読み込む順番は記載されてる">my.cnfの場所と読み込む順番は記載されてる</a></li>
+  <li><a href="#シェルだけでmycnfの場所と順番を確認する方法">シェルだけでmy.cnfの場所と順番を確認する方法</a></li>
 </ul>
   </div>
   <section>
-  <p>初期環境構築時など必ずと言っていいほど弄る多いmy.cnfですが、パスがなんだったか毎回忘れてしまっています。
-しかし、この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。</p>
+  <p>環境構築などでほぼ必ず弄るmy.cnfですが、my.cnfのパスを毎回忘れてしまいます。しょっちゅう触るファイルでもないので忘れてしまうのは仕方ないですね。
+しかもmy.cnfは複数配置をサポートしているため、毎回覚えるのは大変です。</p>
 
-<h2 id="結論">結論</h2>
+<p>この記事では、複数あるmy.cnfの場所を確認する方法について説明します。
+この方法ならどこにパスが書いてあるかを覚えていれば環境毎にパスが変わっても同様に見つけ出すことができます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">--help</span> | <span class="nb">grep </span>my.cnf
-</code></pre></div></div>
+<h2 id="mycnfは複数配置をサポートしてる">my.cnfは複数配置をサポートしてる</h2>
+<p>MySQLのmy.cnfは1箇所だけでなく決められた複数パスに対してファイルアクセスを試みて存在してたらロードを行います。<br />
+この順番と場所を把握しておかないと、<strong>自分の知っているmy.cnfの変更しても反映されない</strong> などの穴にハマります。</p>
 
-<h2 id="ヘルプに書いてる">ヘルプに書いてる</h2>
+<p>初めて環境構築する場合は基本的に複数のmy.cnfが配置されることはないのでこの穴にハマることはないですが、
+途中からチームに参加した人だとハマる可能性があります。</p>
 
-<p>実はヘルプを見ると長文の中にひっそり書かれています。</p>
+<p><strong>「設定ファイルを変更するだけの作業で反映されないで何時間も時間掛かってしまう」はあるあるです</strong></p>
+
+<h2 id="mycnfの場所と読み込む順番は記載されてる">my.cnfの場所と読み込む順番は記載されてる</h2>
+<p>実はMySQLがmy.cnfファイルにアクセスを試みるパス場所は、MySQLコマンドのヘルプを見ると長文の中にひっそり書かれています。<br />
+下記はヘルプの実行結果を抜粋したものです。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">--help</span>
 ...省略...
@@ -205,13 +213,29 @@ The following groups are <span class="nb">read</span>: mysql client
 ...省略...
 </code></pre></div></div>
 
-<p>なので後は検索して抽出すれば欲しい情報をちょっとブサイクですが表示することができます。
-↓だと3行目ですね。左から順に読み込まれます。</p>
+<p>MySQLは決められた順番でmy.cnfを読み込みます。場所はOSによって変わります。
+次の順番はMacでの読み込み順番とmy.cnfの場所になります。</p>
+
+<ol>
+  <li><code class="highlighter-rouge">/etc/my.cnf</code></li>
+  <li><code class="highlighter-rouge">/etc/mysql/my.cnf</code></li>
+  <li><code class="highlighter-rouge">/usr/local/etc/my.cnf</code></li>
+  <li><code class="highlighter-rouge">~/.my.cnf</code></li>
+</ol>
+
+<p>この順番でmy.cnf読み込みます。</p>
+
+<h2 id="シェルだけでmycnfの場所と順番を確認する方法">シェルだけでmy.cnfの場所と順番を確認する方法</h2>
+<p>MySQLのヘルプに記載されてることが分かれば、後は検索して抽出すれば欲しい情報をちょっとブサイクですが表示することができます。<br />
+下記はgrepでmy.cnfを検索した結果です。grep結果2行目が場所と順番になります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">--help</span> | <span class="nb">grep </span>my.cnf
                       order of preference, my.cnf, <span class="nv">$MYSQL_TCP_PORT</span>,
 /etc/my.cnf /etc/mysql/my.cnf /usr/local/etc/my.cnf ~/.my.cnf
 </code></pre></div></div>
+
+<p>シェルについて分からない方は「<span><a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</a></span>
+」を読んでみてください。</p>
 
   </section>
 
