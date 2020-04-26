@@ -104,4 +104,7 @@ mysql> DELETE FROM table_name [WHERE where_condition]
 
 ## 設定系
 
-[MySQLのmy.cnfの場所を見つける]({% post_url 2019-08-02-mysql-find-mycnf %})
+
+### my.cnfの場所を確認する
+
+{% post_link_text 2019-08-02-mysql-find-mycnf %}
