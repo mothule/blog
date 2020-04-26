@@ -12,7 +12,6 @@ There was an error sending data to the iTunes Store. Scheduling restart shortly.
 ```
 
 考えてみた所いくつか前回と異なる点がありました。
-
 ## いつもと違うところ
 
 - Sierra から High Sierra にバージョンアップした

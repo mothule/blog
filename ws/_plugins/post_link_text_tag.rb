@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'jekyll'
+require_relative 'shared/article'
 
 # Usage:
 # {% post_link_text markdown-file-name %}
@@ -13,66 +14,17 @@ module Jekyll
 
     def render(context)
       site = context.registers[:site]
+      ::Article.imports_all(site: site)
       post_name = @markup
-      post_file_name = post_name + '.md'
-      is_draft = draft?(post_file_name: post_file_name)
 
-      path = site.posts.docs
-                 .select do |p|
-                   if is_draft
-                     p.cleaned_relative_path.gsub('_drafts/', '') == post_name
-                   else
-                     p.cleaned_relative_path[1..-1] == post_name
-                   end
-                 end
-                 .map(&:url)
-                 .first
+      article = Article.find_by(basename_without_ext: post_name)
+      raise StandardError, '指定パスにファイルなし' if article.nil?
 
-      raise StandardError.new('指定パスにファイルなし') unless File.exist?(article_path(post_file_name: post_file_name))
-      post_article = File.read(article_path(post_file_name: post_file_name))
-      title = post_article.match(/title: (.*)/).captures.first
-      image_path = post_article.match(/path: (.*)/)&.captures&.first
-      if image_path.nil?
-        image_path = '/assets/images/site-image.png'
-        puts "アイキャッチ画像がありません。 #{post_file_name}"
-      end
-
-      post = Jekyll::Tags::PostComparer.new(post_name)
-      begin_index = post_article[(post_article.index('---') + 3)..-1].index('---') + 6
-      brief = post_article[begin_index..begin_index + 250]
-              .gsub(/^## /, '')
-              .gsub(/^### /, '')
-              .gsub(/^#### /, '')
-              .gsub(/{% .* %}/, '') + '...'
+      path = article.url_path
+      title = article.title
       <<~"HTML"
         <span><a href='#{path}'>#{@title || title}</a></span>
       HTML
-
-      # tags = "<div class='link-container'>"
-      # tags += "<a href='#{path}'>#{title}</a>"
-      # tags += "<p>📅#{post.date}</p>"
-      # tags += '</div>'
-      # tags
-    end
-
-    private
-
-    def draft?(post_file_name:)
-      if File.exist?('./_posts/' + post_file_name)
-        false
-      elsif File.exist?('./_drafts/' + post_file_name)
-        true
-      else
-        raise "Not found article. post_file_name: #{post_file_name}"
-      end
-    end
-
-    def article_path(post_file_name:)
-      if draft?(post_file_name: post_file_name)
-        './_drafts/' + post_file_name
-      else
-        './_posts/' + post_file_name
-      end
     end
   end
 end

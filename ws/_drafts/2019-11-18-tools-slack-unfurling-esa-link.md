@@ -21,10 +21,7 @@ URLが貼られるだけになります。
 
 このように展開されることでURL先を遷移せずともslack内でざっくりサマリー情報を得ることができます。
 
-
-
 ## メッセージフロー
-
 下記は大まかなフローです。
 
 {% page_image 4.png %}
@@ -37,7 +34,6 @@ URLが貼られるだけになります。
 1. esa botがslackに書き込む
 
 ## ビルドフロー
-
 メッセージフローを構築するフローです。
 
 - Slack App作成
@@ -118,19 +114,16 @@ REDISTOGO_URLはローカル実行限定で、URLとあるがhttp://などでは
 ESA_TEAM_NAMEとは esa のドメイン部を指す。 (例: https://hoge.esa.io なら `hoge`)
 
 ### ngrok 起動
-
 ngrok に関してはこちらの記事をご確認ください。
 
 {% post_link 2019-08-05-how-to-use-ngrok %}
 
 ### Event Subscriptions > Request URL に ngrok の一時URLを設定
-
 先のngrok起動で得られるURLを Request URL に設定します。保存忘れずに。
 
 {% page_image 5.png %}
 
 #### ローカル実行時の注意点
-
 redisを既に別で使ってる場合`flushall`しないと既存データを使おうとしてエラーになるので、
 `redis-cli` で接続後に `flushall` で中のデータを全部クリアする必要があります。
 
