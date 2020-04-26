@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"headline":"【初心者向け】UITableViewDelegateで出来ること","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-27T00:00:00+09:00","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic","image":"https://blog.mothule.com/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic"},"description":"UITableViewDelegateとはUITableViewの操作イベントをハンドリングするプロトコルです。 単純なセルのタップイベントをはじめ、 今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic"},"image":"https://blog.mothule.com/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png","url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic","headline":"【初心者向け】UITableViewDelegateで出来ること","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-27T00:00:00+09:00","description":"UITableViewDelegateとはUITableViewの操作イベントをハンドリングするプロトコルです。 単純なセルのタップイベントをはじめ、 今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -253,13 +253,11 @@ Xcode9以降は<code class="highlighter-rouge">Self-Sizing</code>がデフォル
         <span>【初心者向け】UITableViewCellの高さを可変にする</span>
       </div>
       <div class="link-container-summary-brief">
-        <span>
-
-次の`UITableViewDelegate`のメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。
+        <span>次の`UITableViewDelegate`のメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。
 なぜなら`UITableView.rowHeight`に `UITableView.automaticDimension` を渡し、各セルをAuto-Layoutが効くような実装にすれば  
 自動でセルの高さを計算してくれるためです。
 
-あるとすればセルごとの推測値`estimated`の値を返す。または状態によって一部セルを非表示にするために高さを...</span>
+</span>
       </div>
     </div>
   </a>
@@ -299,8 +297,9 @@ Xcode9以降は<code class="highlighter-rouge">Self-Sizing</code>がデフォル
         <span>【初心者向け】UITableViewのヘッダーをカスタマイズする</span>
       </div>
       <div class="link-container-summary-brief">
-        <span>
-UITableViewのヘッダーとはセクション毎の上下表示されるSectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のことを指しこれらはカスタマイズ可能です。シンプルなカスタマイズであれば`UITableDataSource`の`titleForHeaderInSection`などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は`UITableViewDelegate`を使った実装が必要になります...</span>
+        <span>UITableViewのヘッダーとはセクション毎の上下表示されるSectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のことを指しこれらはカスタマイズ可能です。シンプルなカスタマイズであれば`UITableDataSource`の`titleForHeaderInSection`などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は`UITableViewDelegate`を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。
+
+</span>
       </div>
     </div>
   </a>
@@ -327,21 +326,9 @@ UITableViewのヘッダーとはセクション毎の上下表示されるSectio
         <span>【初心者向け】UITableViewCellのAccessory(アクセサリ)の使い方</span>
       </div>
       <div class="link-container-summary-brief">
-        <span>
-UITableViewCellには予めAccessory(アクセサリ)が用意されており、全部で4種類あります。
+        <span>UITableViewCellには予めAccessory(アクセサリ)が用意されており、全部で4種類あります。
 
-種類の説明と実装方法について説明します。
-
-使い方も簡単で利用用途も比較的高いので覚えておいて損はありません。
-
-Accessory(アクセサリ)を表示
-
-`UITableViewCell.accessoryType` を設定すると表示されます。
-
-Accessory(アクセサリ)一覧
-
-- AccessoryType.checkmark
-- AccessoryType....</span>
+</span>
       </div>
     </div>
   </a>
@@ -379,16 +366,9 @@ Accessory(アクセサリ)一覧
         <span>【初心者向け】UITableViewのセル選択を制御する方法</span>
       </div>
       <div class="link-container-summary-brief">
-        <span>
+        <span>UITableViewのUITableViewCell(セル)をタップを検知する実装方法について説明します。
 
-UITableViewのUITableViewCell(セル)をタップを検知する実装方法について説明します。
-
-一部検知イベントは超基本的で超高頻度で使う機能ですが、難易度は簡単なのでささっと覚えてしまうほうが後々の実装効率は良くなります。
-
-セルの選択イベント一覧
-
-- セルタップ制御: `func tableView(_:shouldHighlightRowAt:) -&gt; Bool`
-- セルハイライト直後: `func tableView(_:didHighlightRowAt:)...</span>
+</span>
       </div>
     </div>
   </a>
@@ -411,17 +391,10 @@ UITableViewのUITableViewCell(セル)をタップを検知する実装方法に�
         <span>【初心者向け】UITableViewのセルの編集制御を極める</span>
       </div>
       <div class="link-container-summary-brief">
-        <span>
-UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。  
+        <span>UITableViewのセルには編集モードというものがあり、セルを並び替えたり削除したり、セルを左右にスワイプすることでアクションメニューを表示したいときに使います。  
 実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。
 
-編集モードとは
-`UITableView.isEditing` を `true` にすると編集モードに切り替わります。
-
-次のように削除と並び替えが出てきます。
-
-
-つまり 編集モードには ...</span>
+</span>
       </div>
     </div>
   </a>
@@ -436,6 +409,7 @@ UITableViewのセルには編集モードというものがあり、セルを並
   </div>
 
 </div>
+
 
 <div class="related">
     <ul class="related-posts">
@@ -657,12 +631,14 @@ UITableViewのセルには編集モードというものがあり、セルを並
 </div>
 
 
+
         </article>
 
         <!-- Side menu -->
         <div class="col-sm-3">
           <aside class="sidebar">
-  <div class="profile">
+  
+    <div class="profile">
   <div class="profile-title">
     Profile
   </div>
@@ -678,7 +654,7 @@ UITableViewのセルには編集モードというものがあり、セルを並
   </div>
 </div>
 
-  <div class="ranking-article-frame">
+    <div class="ranking-article-frame">
     <div class="ranking-article-title">
         人気記事
     </div>
@@ -724,208 +700,208 @@ UITableViewのセルには編集モードというものがあり、セルを並
         </ol>
     </div>
 </div>
-  <div class="tag-cloud">
+    <div class="tag-cloud">
   <div class="tag-cloud-title">
     Tag list
   </div>
   <div>
-    
       
-      <a href="/tags#notebook">雑記</a>
-    
+        
+        <a href="/tags#notebook">雑記</a>
       
-      <a href="/tags#program-design">プログラム設計</a>
-    
+        
+        <a href="/tags#program-design">プログラム設計</a>
       
-      <a href="/tags#remote-work">リモートワーク</a>
-    
+        
+        <a href="/tags#remote-work">リモートワーク</a>
       
-      <a href="/tags#ios">iOS</a>
-    
+        
+        <a href="/tags#ios">iOS</a>
       
-      <a href="/tags#swift">Swift</a>
-    
+        
+        <a href="/tags#swift">Swift</a>
       
-      <a href="/tags#uitableview">UITableView</a>
-    
+        
+        <a href="/tags#uitableview">UITableView</a>
       
-      <a href="/tags#rails">Rails</a>
-    
+        
+        <a href="/tags#rails">Rails</a>
       
-      <a href="/tags#rails-controller">Rails Controller</a>
-    
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
       
-      <a href="/tags#ruby">Ruby</a>
-    
+        
+        <a href="/tags#ruby">Ruby</a>
       
-      <a href="/tags#circleci">CircleCI</a>
-    
+        
+        <a href="/tags#circleci">CircleCI</a>
       
-      <a href="/tags#ci">CI</a>
-    
+        
+        <a href="/tags#ci">CI</a>
       
-      <a href="/tags#ssh">SSH</a>
-    
+        
+        <a href="/tags#ssh">SSH</a>
       
-      <a href="/tags#linux">Linux</a>
-    
+        
+        <a href="/tags#linux">Linux</a>
       
-      <a href="/tags#centos">CentOS</a>
-    
+        
+        <a href="/tags#centos">CentOS</a>
       
-      <a href="/tags#printer">Printer</a>
-    
+        
+        <a href="/tags#printer">Printer</a>
       
-      <a href="/tags#uiview">UIView</a>
-    
+        
+        <a href="/tags#uiview">UIView</a>
       
-      <a href="/tags#ios-safearea">iOS SafeArea</a>
-    
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
       
-      <a href="/tags#service-design">サービス設計</a>
-    
+        
+        <a href="/tags#service-design">サービス設計</a>
       
-      <a href="/tags#design">Design</a>
-    
+        
+        <a href="/tags#design">Design</a>
       
-      <a href="/tags#tools">ツール</a>
-    
+        
+        <a href="/tags#tools">ツール</a>
       
-      <a href="/tags#httpie">HTTPie</a>
-    
+        
+        <a href="/tags#httpie">HTTPie</a>
       
-      <a href="/tags#mysql">MySQL</a>
-    
+        
+        <a href="/tags#mysql">MySQL</a>
       
-      <a href="/tags#rspec">RSpec</a>
-    
+        
+        <a href="/tags#rspec">RSpec</a>
       
-      <a href="/tags#git">Git</a>
-    
+        
+        <a href="/tags#git">Git</a>
       
-      <a href="/tags#tig">tig</a>
-    
+        
+        <a href="/tags#tig">tig</a>
       
-      <a href="/tags#homebrew">Homebrew</a>
-    
+        
+        <a href="/tags#homebrew">Homebrew</a>
       
-      <a href="/tags#active-record">ActiveRecord</a>
-    
+        
+        <a href="/tags#active-record">ActiveRecord</a>
       
-      <a href="/tags#mac">Mac</a>
-    
+        
+        <a href="/tags#mac">Mac</a>
       
-      <a href="/tags#db">DB</a>
-    
+        
+        <a href="/tags#db">DB</a>
       
-      <a href="/tags#ngrok">ngrok</a>
-    
+        
+        <a href="/tags#ngrok">ngrok</a>
       
-      <a href="/tags#ats">App Transport Security</a>
-    
+        
+        <a href="/tags#ats">App Transport Security</a>
       
-      <a href="/tags#regexp">正規表現</a>
-    
+        
+        <a href="/tags#regexp">正規表現</a>
       
-      <a href="/tags#cocoapods">CocoaPods</a>
-    
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
       
-      <a href="/tags#rbenv">rbenv</a>
-    
+        
+        <a href="/tags#rbenv">rbenv</a>
       
-      <a href="/tags#bundler">Bundler</a>
-    
+        
+        <a href="/tags#bundler">Bundler</a>
       
-      <a href="/tags#jekyll">Jekyll</a>
-    
+        
+        <a href="/tags#jekyll">Jekyll</a>
       
-      <a href="/tags#github-pages">GitHub Pages</a>
-    
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
       
-      <a href="/tags#rack">Rack</a>
-    
+        
+        <a href="/tags#rack">Rack</a>
       
-      <a href="/tags#rack-middleware">Rack Middleware</a>
-    
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
       
-      <a href="/tags#p4merge">p4merge</a>
-    
+        
+        <a href="/tags#p4merge">p4merge</a>
       
-      <a href="/tags#report">レポート</a>
-    
+        
+        <a href="/tags#report">レポート</a>
       
-      <a href="/tags#scene-kit">SceneKit</a>
-    
+        
+        <a href="/tags#scene-kit">SceneKit</a>
       
-      <a href="/tags#test">Test</a>
-    
+        
+        <a href="/tags#test">Test</a>
       
-      <a href="/tags#nimble">Nimble</a>
-    
+        
+        <a href="/tags#nimble">Nimble</a>
       
-      <a href="/tags#carthage">Carthage</a>
-    
+        
+        <a href="/tags#carthage">Carthage</a>
       
-      <a href="/tags#rubocop">Rubocop</a>
-    
+        
+        <a href="/tags#rubocop">Rubocop</a>
       
-      <a href="/tags#rxswift">RxSwift</a>
-    
+        
+        <a href="/tags#rxswift">RxSwift</a>
       
-      <a href="/tags#uitableviewcell">UITableViewCell</a>
-    
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
       
-      <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
-    
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
       
-      <a href="/tags#uicollectionview">UICollectionView</a>
-    
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
       
-      <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
-    
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
       
-      <a href="/tags#firebase">Firebase</a>
-    
+        
+        <a href="/tags#firebase">Firebase</a>
       
-      <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
-    
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
       
-      <a href="/tags#xcuitest">XCUITest</a>
-    
+        
+        <a href="/tags#xcuitest">XCUITest</a>
       
-      <a href="/tags#github">GitHub</a>
-    
+        
+        <a href="/tags#github">GitHub</a>
       
-      <a href="/tags#gem">gem</a>
-    
+        
+        <a href="/tags#gem">gem</a>
       
-      <a href="/tags#google-analytics">Google Analytics</a>
-    
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
       
-      <a href="/tags#kiji">kiji</a>
-    
+        
+        <a href="/tags#kiji">kiji</a>
       
-      <a href="/tags#shellscript">シェルスクリプト</a>
-    
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
       
-      <a href="/tags#lsof">lsof</a>
-    
+        
+        <a href="/tags#lsof">lsof</a>
       
-      <a href="/tags#web">Web</a>
-    
+        
+        <a href="/tags#web">Web</a>
       
-      <a href="/tags#nginx">nginx</a>
-    
+        
+        <a href="/tags#nginx">nginx</a>
       
-      <a href="/tags#rubymine">RubyMine</a>
-    
+        
+        <a href="/tags#rubymine">RubyMine</a>
       
-      <a href="/tags#cron">cron</a>
-    
+        
+        <a href="/tags#cron">cron</a>
+      
   </div>
 </div>
 
-  <div class="twitter-timeline">
+    <div class="twitter-timeline">
   <a class="twitter-timeline"
     data-lang="ja"
     data-height="400"
@@ -937,6 +913,7 @@ UITableViewのセルには編集モードというものがあり、セルを並
     charset="utf-8"></script>
 </div>
 
+  
 </aside>
 
         </div>
