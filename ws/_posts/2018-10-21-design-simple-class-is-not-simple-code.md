@@ -1,5 +1,6 @@
 ---
 title: 中堅でも間違えるクラス名のSimpleやEasyは内部構造と比例しない話
+description: SimpleやEasyと名付けられたクラス名が内部構造までもシンプルとは限りません。クラスがもたらす提供機能とその実現方法の隠蔽による関心事の分離を理解していないと中堅でも間違える人は間違える話について綴ります。
 categories: notebook program-design
 tags: program-design notebook
 image:
