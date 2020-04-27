@@ -1,0 +1,1503 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    
+
+    
+
+
+    
+      <title>iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。" />
+<meta property="og:description" content="iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。" />
+<link rel="canonical" href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg" />
+<meta property="og:url" content="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-04-27T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg"},"image":"https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png","url":"https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg","headline":"iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう","dateModified":"2020-04-28T01:21:17+09:00","datePublished":"2020-04-27T00:00:00+09:00","description":"iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう">
+    <meta name="twitter:description" content="iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#notebook" itemprop="item">
+              <span itemprop="name">雑記</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#remote-work" itemprop="item">
+              <span itemprop="name">リモートワーク</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png" alt="iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-4-27</li>
+        
+          <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#remote-work">リモートワーク</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#ffmpeg">FFmpeg</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#quicktime-player">QuickTime Player</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#iosエンジニアの動画欲しいあるある">iOSエンジニアの動画欲しいあるある</a></li>
+  <li><a href="#軽量録画環境で必要なもの">軽量録画環境で必要なもの</a>
+    <ul>
+      <li><a href="#quicktime-playerapp">QuickTime Player.app</a></li>
+      <li><a href="#ffmpeg">FFmpeg</a></li>
+      <li><a href="#ひと手間かけたシェルスクリプト">ひと手間かけたシェルスクリプト</a></li>
+    </ul>
+  </li>
+  <li><a href="#大まかな仕組みについて">大まかな仕組みについて</a>
+    <ul>
+      <li><a href="#録画したいiphoneをusbで接続">録画したいiPhoneをUSBで接続</a></li>
+      <li><a href="#quicktime-playerで録画">QuickTime Playerで録画</a></li>
+      <li><a href="#ffmpegで動画を圧縮">FFmpegで動画を圧縮</a></li>
+    </ul>
+  </li>
+  <li><a href="#手軽な動画環境を構築する">手軽な動画環境を構築する</a>
+    <ul>
+      <li><a href="#ffmepgをインストール">FFmepgをインストール</a></li>
+      <li><a href="#シェルスクリプトを用意">シェルスクリプトを用意</a>
+        <ul>
+          <li><a href="#chmodで実行可能にする">chmodで実行可能にする</a></li>
+          <li><a href="#分からない方向け-全部をまとめて用意するシェルコマンド">分からない方向け: 全部をまとめて用意するシェルコマンド</a></li>
+        </ul>
+      </li>
+      <li><a href="#シェルのパスを通す">シェルのパスを通す</a></li>
+    </ul>
+  </li>
+  <li><a href="#実際に動画を撮る">実際に動画を撮る</a>
+    <ul>
+      <li><a href="#iphoneとmacをusbで接続">iPhoneとMacをUSBで接続</a></li>
+      <li><a href="#quicktime-playerappを立ち上げる">QuickTime Player.appを立ち上げる</a></li>
+      <li><a href="#ターミナルでシェルスクリプトを実行する">ターミナルでシェルスクリプトを実行する</a></li>
+    </ul>
+  </li>
+  <li><a href="#なぜffmpegが必要なのか">なぜFFmpegが必要なのか？</a>
+    <ul>
+      <li><a href="#このファイルサイズが何に影響するのか">このファイルサイズが何に影響するのか</a></li>
+      <li><a href="#mac画面の録画も簡単">Mac画面の録画も簡単</a></li>
+    </ul>
+  </li>
+  <li><a href="#githubはmp4はアップロードできない">GitHubはmp4はアップロードできない</a>
+    <ul>
+      <li><a href="#gifに変換するシェルスクリプト">gifに変換するシェルスクリプト</a></li>
+    </ul>
+  </li>
+  <li><a href="#iosエンジニアなら画面共有に慣れよう">iOSエンジニアなら画面共有に慣れよう</a></li>
+</ul>
+  </div>
+  <section>
+  <p><strong>動画は最強の情報伝達手段です</strong></p>
+
+<h2 id="iosエンジニアの動画欲しいあるある">iOSエンジニアの動画欲しいあるある</h2>
+
+<p>iOSエンジニアがXcodeを使ってxibやstoryboard、SwiftUIで画面作成をしたら次のケースで作成画面を共有します。</p>
+
+<ul>
+  <li>デザインレビュー
+    <ul>
+      <li>デザイナーや他エンジニア、POといった他の人に見てもらう</li>
+    </ul>
+  </li>
+  <li>説明
+    <ul>
+      <li>他の人に説明するときスマホ画面やPC画面をスクショしてSlackにアップロードする</li>
+      <li>GitHubのPRやIssueで変更画面や不具合発生中の画面を載せる</li>
+    </ul>
+  </li>
+  <li>進捗
+    <ul>
+      <li>お昼や打刻前に進捗として開発中の画面をSlackにアップロードする</li>
+    </ul>
+  </li>
+</ul>
+
+<p>このとき、静止画より動画の方がより確実に多くの情報を短時間に伝えられます。</p>
+
+<p>しかし、「動画を撮ろう！」と思っては見たものの…<strong>「無料」で「手軽」</strong> に録画してアップロードできる環境でないと、有料だと諦めたり、面倒だとたまにしかアップロードしなくなります。</p>
+
+<p>この記事は、そんな手っ取り早く手軽にPC画面やiPhone画面を録画してアップロードしたいワガママiOSエンジニア向けに<br />
+<strong>「無料」で「簡単」にiPhone画面やPC画面を録画し、見る側もすぐに再生される軽量な動画の録画環境の構築方法について説明します。</strong></p>
+
+<ul>
+  <li>なおiOSエンジニア限らずAndroidエンジニアもフロントエンドWebエンジニアやデザイナーでも構築できます！</li>
+  <li>なおMac限定記事となります。Windows, Linux残念！</li>
+</ul>
+
+<h2 id="軽量録画環境で必要なもの">軽量録画環境で必要なもの</h2>
+
+<ul>
+  <li>Mac</li>
+  <li>QuickTime Player.app</li>
+  <li>ffmpeg</li>
+  <li>ひと手間かけたシェルスクリプト</li>
+</ul>
+
+<p>Mac以外を簡単に説明します。</p>
+
+<h3 id="quicktime-playerapp">QuickTime Player.app</h3>
+<p><strong>iPhone画面やPC画面の録画に使います</strong></p>
+
+<p>Macに付属する動画再生プレイヤーです。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.png" width="240px" alt="QuickTimePlayerのロゴ" /></a></p>
+
+<p>違います。<strong>録画機能を備えてます。</strong> 「プレイヤー」って名前物凄く紛らわしいですね…</p>
+
+<h3 id="ffmpeg">FFmpeg</h3>
+<p><strong>動画の軽量化に使います</strong></p>
+
+<p><em>Wikipediaより引用</em> した説明です。</p>
+<blockquote>
+  <p>動画と音声を記録・変換・再生するためのフリーソフトウェアです。</p>
+</blockquote>
+
+<p>コマンドラインで使用できる動画と音声の変換として使います。<br />
+インストール方法は後で説明します。</p>
+
+<h3 id="ひと手間かけたシェルスクリプト">ひと手間かけたシェルスクリプト</h3>
+<p><strong>ちょっとした小さく単純なシェルスクリプトファイルです。</strong></p>
+
+<p>これが無くても仕組みは動きますが、あるだけで後で説明する仕組みがスムーズになります。</p>
+
+<p>非エンジニアの方は「シェル」「スクリプト」って聞くと身構えるかもしれませんが、今回説明するシェルスクリプトは極めて単純で言ってしまえば中身を理解せずとも環境を構築できます。<br />
+iOSエンジニアの方でシェルについて分からない方は「<span><a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</a></span>
+」を見て是非ともシェルを理解しましょう。</p>
+
+<h2 id="大まかな仕組みについて">大まかな仕組みについて</h2>
+<p>ここで環境構築前にざっくりと録画の仕組みについて説明します。<br />
+大まかな流れとしては次の通りになります。</p>
+
+<ol>
+  <li>録画したいiPhoneをUSBで接続</li>
+  <li>QuickTime Playerで録画</li>
+  <li>FFmpegで動画を圧縮</li>
+</ol>
+
+<p>なんと、たった3工程で済みます。</p>
+
+<h3 id="録画したいiphoneをusbで接続">録画したいiPhoneをUSBで接続</h3>
+
+<p>キャプチャしたいiPhoneをUSBでMacに接続します。<br />
+PC画面の場合はこの作業は不要です。</p>
+
+<h3 id="quicktime-playerで録画">QuickTime Playerで録画</h3>
+
+<p>QuickTime Player.appを立ち上げて録画を開始します。<br />
+録画終了後は保存して完了です。</p>
+
+<h3 id="ffmpegで動画を圧縮">FFmpegで動画を圧縮</h3>
+
+<p>保存した動画ファイルは無圧縮で重いのでFFmpegで圧縮します。<br />
+このときにシェルスクリプトがあると大変便利です。</p>
+
+<h2 id="手軽な動画環境を構築する">手軽な動画環境を構築する</h2>
+<p>簡単な録画環境を構築するには、事前に仕掛けがあるから動きます。
+<strong>今からその仕掛けを構築します。</strong></p>
+
+<ul>
+  <li>FFmepgをインストール</li>
+  <li>シェルスクリプトを用意</li>
+  <li>シェルのパスを通す</li>
+</ul>
+
+<h3 id="ffmepgをインストール">FFmepgをインストール</h3>
+<p>FFmepgをHomebrewでインストールします。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install ffmpeg
+</code></pre></div></div>
+
+<p>インストールが完了したらインストールされたかを確認します。成功してたら次のような結果になるかと思います。(バージョンは時期で異なります）</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ffmpeg
+ffmpeg version 3.3.4 Copyright <span class="o">(</span>c<span class="o">)</span> 2000-2017 the FFmpeg developers
+</code></pre></div></div>
+
+<p>もし異なる場合は下記の可能性を検討してみてください</p>
+
+<ul>
+  <li>インストールが失敗した</li>
+  <li>homebrewでインストールしたコマンドのパスが通っていない</li>
+</ul>
+
+<h3 id="シェルスクリプトを用意">シェルスクリプトを用意</h3>
+
+<p>このシェルスクリプトを説明する前に、前提情報を知っておく必要があります。</p>
+
+<ul>
+  <li>QuickTime Playerは録画の保存を選ぶと、開かれる保存先は前回保存先になります。</li>
+  <li>保存のデフォルトファイル名は<code class="highlighter-rouge">名称未設定.mov</code>です。</li>
+</ul>
+
+<p>このシェルスクリプトは次の動きをします。</p>
+
+<ol>
+  <li>カレントディレクトリを決められた場所に移動します</li>
+  <li>FFmpegで「名称未設定.mov」を「dest.mp4」にMP4変換します</li>
+</ol>
+
+<p>下記はその動きをするシェルスクリプトになります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+<span class="nb">cd</span> ~/Downloads
+<span class="sb">`</span>ffmpeg <span class="nt">-i</span> 名称未設定.mov dest.mp4 <span class="nt">-y</span><span class="sb">`</span>
+</code></pre></div></div>
+
+<p>たったこれだけです。非常に短く単純なシェルスクリプトです。<br />
+これをファイルとして適当な場所に保存してください。</p>
+
+<p>ここでは説明便宜上、下記パスに保存します。<br />
+「<code class="highlighter-rouge">~/sh/encode_movie.sh</code>」</p>
+
+<p><code class="highlighter-rouge">sh</code>フォルダが無い方は作っておいてください。</p>
+
+<h4 id="chmodで実行可能にする">chmodで実行可能にする</h4>
+<p>次に保存したシェルスクリプトを誰でも実行可能にするためにchmodで実行権限を編集します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>chmod 711 ~/sh/encode_movie.sh
+</code></pre></div></div>
+
+<p>これで<code class="highlighter-rouge">sh</code>コマンドを使わず実行できます。これをしておかないとやはりスムーズとは言えません。</p>
+
+<h4 id="分からない方向け-全部をまとめて用意するシェルコマンド">分からない方向け: 全部をまとめて用意するシェルコマンド</h4>
+
+<p>次のシェルコマンドをターミナルにコピペして実行すれば先程説明した内容をまとめてやってくれます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir <span class="nt">-p</span> ~/sh
+<span class="nb">echo</span> <span class="nt">-n</span> <span class="nt">-e</span> <span class="s2">"#!/bin/bash</span><span class="se">\n</span><span class="s2">cd ~/Downloads</span><span class="se">\n\`</span><span class="s2">ffmpeg -i 名称未設定.mov dest.mp4 -y</span><span class="se">\`</span><span class="s2">"</span> <span class="o">&gt;</span> ~/sh/encode_movie.sh
+chmod 711 ~/sh/encode_movie.sh
+</code></pre></div></div>
+
+<p>このシェルコマンドらは</p>
+
+<ul>
+  <li>自分のホームディレクトリにshディレクトリを作成</li>
+  <li><code class="highlighter-rouge">~/sh</code>に<code class="highlighter-rouge">encode_movie.sh</code>ファイルを作成</li>
+  <li><code class="highlighter-rouge">encode_movie.sh</code>の実行権限を変更</li>
+</ul>
+
+<p>をやってくれます。</p>
+
+<h3 id="シェルのパスを通す">シェルのパスを通す</h3>
+<p>用意したシェルスクリプトは、同じ名前と場所で保存していれば「<code class="highlighter-rouge">~/sh/encode_movie.sh</code>」にあると思います。</p>
+
+<p><strong>しかし、このままでは動画を作成後に、スクリプトを呼ぶためにわざわざパスを指定しなければいけません。</strong><br />
+それだと面倒なのでどこのディレクトリからでも呼べるようにパスを通します。</p>
+
+<p>PATH環境変数に<code class="highlighter-rouge">~/sh</code>のパスを通すことで、ターミナル上からどこでも呼べるようになります。
+ターミナルのデフォルトシェルがbashであれば、<code class="highlighter-rouge">.bash_profile</code>にPATH環境変数にパスを追加する処理を書きます。</p>
+
+<p><code class="highlighter-rouge">$ vim ~/.bash_profile</code>で次の処理を追加します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:~/sh
+</code></pre></div></div>
+
+<p>保存終わったら<code class="highlighter-rouge">$ source ~/.bash_profile</code>でリロードしておきましょう。</p>
+
+<h2 id="実際に動画を撮る">実際に動画を撮る</h2>
+<p>動画環境は整いました。それでは実際にiPhone画面の録画とMac画面の録画をしてみます。</p>
+
+<h3 id="iphoneとmacをusbで接続">iPhoneとMacをUSBで接続</h3>
+
+<p>録画したいiPhoneをMacにUSBで接続します。</p>
+
+<p>もしiPhoneをMacに初めて接続する場合は、次のような確認がiPhoneに表示されるので「信頼」を選んでください。<br />
+そうしないと、次工程のQuickTime Playerで端末を認識しなくなります。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/2.jpg"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/2.jpg" width="50%" alt="iPhone信頼確認画面" /></a></p>
+
+<h3 id="quicktime-playerappを立ち上げる">QuickTime Player.appを立ち上げる</h3>
+
+<p><code class="highlighter-rouge">Spotlight検索</code>で「QuickTime」と入力すれば見つけられます。<br />
+起動したらメニューバーからファイル&gt;新規ムービー収録を選びます。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png" width="50%" alt="QuickTimePlayer新規ムービー収録" /></a></p>
+
+<p>新規ムービー週力を選ぶと、Macやモニターに付属するカメラやiPhone画面の映像が画面に写ります。<br />
+もしiPhone画面になっていない場合は、ウィンドウ下の赤いボタンの右側を押すと撮影先が並ぶので、そこでiPhoneを選んでください。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/4.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/4.png" width="50%" alt="QuickTimePlayer新規ムービーの映像ソース選択" /></a></p>
+
+<p>赤いボタンを押すと、録画が始まります。録画を止める場合はもう一度赤いボタンを押すと終了します。<br />
+試しに自分のブログを閲覧してるSafariを録画してます。</p>
+
+<video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.mp4" width="100%" height="400px">うまく読み込めない場合はリロード</video>
+
+<p>録画が終わると、編集画面になります。<strong>この段階ではまだ保存されていないです。</strong></p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png" width="50%" alt="QuickTimePlayer新規ムービ収録編集画面" /></a></p>
+
+<p>この画面で保存(<code class="highlighter-rouge">cmd+s</code>)を押すと保存先の選択が出ます。</p>
+
+<p>ここでファイル名はそのままの「<strong>名称未設定.mov</strong>」にしてください。<br />
+<strong>ファイル名を変更してしまうと、次工程のシェルスクリプトが動きません。</strong></p>
+
+<p>また保存先（場所）は「<strong>ダウンロード</strong>」にしてください。<br />
+<strong>ここも変更するとシェルスクリプトが動きません。</strong></p>
+
+<p>つまり保存先を<strong>Donwloads</strong> に一度しておくことで、この部分は何も気にせず保存するだけになります。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/6.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/6.png" width="50%" alt="QuickTimePlayerファイル保存確認" /></a></p>
+
+<h3 id="ターミナルでシェルスクリプトを実行する">ターミナルでシェルスクリプトを実行する</h3>
+
+<p>ターミナルを開いて、保存してパスを通しておいたシェルスクリプトファイルを実行します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>encode_movie.sh
+</code></pre></div></div>
+
+<p>パスが通っているので、シェルスクリプトファイル名を指定するだけでいいです。<br />
+実行すると<code class="highlighter-rouge">~/Downloads/dest.mp4</code>にファイルが作成されます。</p>
+
+<h2 id="なぜffmpegが必要なのか">なぜFFmpegが必要なのか？</h2>
+<p>FFmpegやそれを実行するシェルスクリプトが必要な理由は、ファイルサイズにあります。</p>
+
+<p>下記は、QuickTime Playerで作成したファイル「名称未設定.mov」のファイルサイズと<br />
+FFmpegで圧縮したファイル「dest.mp4」のファイルサイズを比較した表です</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ファイル名</th>
+      <th>サイズ</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>名称未設定.mov</td>
+      <td>28.3MB</td>
+    </tr>
+    <tr>
+      <td>dest.mp4</td>
+      <td>2.1MB</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>圧倒的に圧縮したことでサイズが小さくなりました。約1/14です。</p>
+
+<h3 id="このファイルサイズが何に影響するのか">このファイルサイズが何に影響するのか</h3>
+<p><strong>アップロード時間とダウンロード時間に影響します</strong></p>
+
+<p>まずSlackにアップロードするのに時間がかかります。これはまだ自分だけにしか影響を与えません。<br />
+しかし、この動画を見る閲覧者はダウンロードに影響します。<br />
+Slackで再生ボタンを押してもなかなか再生されなかったり、ストリーミングダウロードが間に合わずカクつきます。<br />
+またファイルの大きすぎる動画ファイルはサムネが表示されないケースが多いです。</p>
+
+<p><strong>読み手のことや動画で伝えたい目的を考えると、閲覧側のストレスを抑えるのは自然なことです。</strong></p>
+
+<h3 id="mac画面の録画も簡単">Mac画面の録画も簡単</h3>
+
+<p>PC画面内のキャプチャも簡単です。
+QuickTime Playerで「<strong>新規画面収録</strong>」を選ぶだけです。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/7.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/7.png" width="50%" alt="QuickTimePlayer新規画面収録メニュー" /></a></p>
+
+<p>新規画面収録を選ぶとキャプチャ領域を選ぶ設定になります。
+全画面まるごとと指定範囲の２タイプが選べます。</p>
+
+<p>この画像は指定範囲で選んば場合です。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/8.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/8.png" width="50%" alt="QuickTimePlayer新規画面収録指定範囲" /></a></p>
+
+<p><strong>収録を開始</strong> ボタンを押すことで録画開始になります。</p>
+
+<p>録画停止は、Macのツールバーにボタンがあります。</p>
+
+<p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/9.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/9.png" width="50px" alt="QuickTimePlayer新規画面収録停止ボタン" /></a></p>
+
+<p>もしくはTouch BarのあるMacの場合は、タッチバーにもボタンがあります。</p>
+
+<h2 id="githubはmp4はアップロードできない">GitHubはmp4はアップロードできない</h2>
+<p>先程説明したのはmp4の動画でした。しかしGitHubではIssueやPRではmp4の動画ファイルをアップロードすることができません。</p>
+
+<p>しかしgifは対応しています。そしてFFmpegはgif変換も対応しています。<br />
+なので今度は動画をgifに変換すれば良さそうです。</p>
+
+<p>そしてその方法は非常に簡単に実現できます。</p>
+
+<h3 id="gifに変換するシェルスクリプト">gifに変換するシェルスクリプト</h3>
+<p>このシェルスクリプトはQuickTime Playerで作成した動画ファイルに対し、　　
+30FPSのサイズ320でgifファイルを作成します。</p>
+
+<p>このファイルには一度mp4に変換してからgifに変換しています。　　
+そしてそのmp4に変換する処理は前述で説明したmp4に変換するシェルスクリプト「<code class="highlighter-rouge">encode_movie.sh</code>」を呼んで変換しています。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
+
+<span class="nb">cd</span> ~/Downloads
+
+<span class="nv">rate</span><span class="o">=</span>30
+<span class="nv">scale</span><span class="o">=</span>320
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$# </span><span class="o">==</span> 1 <span class="o">]]</span> <span class="p">;</span> <span class="k">then
+  </span><span class="nv">scale</span><span class="o">=</span><span class="nv">$1</span>
+<span class="k">fi
+
+</span>sh encode_movie.sh
+<span class="sb">`</span>ffmpeg <span class="nt">-i</span> dest.mp4 <span class="nt">-vf</span> <span class="nv">scale</span><span class="o">=</span><span class="nv">$scale</span>:-1 <span class="nt">-r</span> <span class="nv">$rate</span> dest.gif <span class="nt">-y</span><span class="sb">`</span>
+</code></pre></div></div>
+
+<p>またこのスクリプトは引数でスケールを変更することができます。例えばスケールをデフォルトの倍にする場合は</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>encode_gif.sh 640
+</code></pre></div></div>
+<p>とすることでスケールが320から640になります。</p>
+
+<h2 id="iosエンジニアなら画面共有に慣れよう">iOSエンジニアなら画面共有に慣れよう</h2>
+<p>iOSエンジニアは画面デザインがある限り、デザイナーやPOに画面の動きを見せることは非常に多いです。<br />
+Slackでやり取りを円滑にするために、動画で画面の動き共有が気軽にできる環境は非常にコミュニケーションを円滑に進められます。</p>
+
+<p>今回説明した内容は、一度環境を構築しておくだけでよくて、その後は特に弄らずともずっと使い続けられます。
+しかもシェルスクリプトの内容自体も非常にシンプルで、長く見ても短く見てもコスパの良い環境です。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/notebook/remote-work/pitfall-of-remote-work">リモートワーク歴3年以上が教える重要基礎とノウハウと落ちた穴</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/notebook/remote-work/notebook-remote-work-web-letter">フルリモートワーカーが外出せずに紙の郵送できないかWebレターをやってみた</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/notebook/notebook-remote-worker-need-thinkg-just-one">フルリモート1年半で知った、ただ1つの最重要なルーチン</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/notebook/remote-work/commute-is-vainness">年収500万の人は通勤で毎年23万円分の時間を使っている</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+        </div>
+    </ul>
+</div>
+
+
+
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-how-to-find-good-lib">iOS開発におけるライブラリの選定戦略について考えてみた</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-input-control">【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項</a>
+            </li>
+            
+            <li>
+                <a href="/ios/carthage/ios-carthage">Carthageの実務での使い方</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>

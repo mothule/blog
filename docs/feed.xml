@@ -1,4 +1,363 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-04-27T12:32:13+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">crontabの書き方や確認、仕組みや落とし穴を理解する</title><link href="https://blog.mothule.com/tools/how-to-use-cron" rel="alternate" type="text/html" title="crontabの書き方や確認、仕組みや落とし穴を理解する" /><published>2020-04-26T00:00:00+09:00</published><updated>2020-04-26T07:55:19+09:00</updated><id>https://blog.mothule.com/tools/how-to-use-cron</id><content type="html" xml:base="https://blog.mothule.com/tools/how-to-use-cron">&lt;p&gt;定期実行といえばcron、それらスケジュールを制御するコマンドがcrontabです。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-04-28T01:21:29+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg" rel="alternate" type="text/html" title="iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう" /><published>2020-04-27T00:00:00+09:00</published><updated>2020-04-28T01:21:17+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg">&lt;p&gt;&lt;strong&gt;動画は最強の情報伝達手段です&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;iosエンジニアの動画欲しいあるある&quot;&gt;iOSエンジニアの動画欲しいあるある&lt;/h2&gt;
+
+&lt;p&gt;iOSエンジニアがXcodeを使ってxibやstoryboard、SwiftUIで画面作成をしたら次のケースで作成画面を共有します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;デザインレビュー
+    &lt;ul&gt;
+      &lt;li&gt;デザイナーや他エンジニア、POといった他の人に見てもらう&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;説明
+    &lt;ul&gt;
+      &lt;li&gt;他の人に説明するときスマホ画面やPC画面をスクショしてSlackにアップロードする&lt;/li&gt;
+      &lt;li&gt;GitHubのPRやIssueで変更画面や不具合発生中の画面を載せる&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;進捗
+    &lt;ul&gt;
+      &lt;li&gt;お昼や打刻前に進捗として開発中の画面をSlackにアップロードする&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;このとき、静止画より動画の方がより確実に多くの情報を短時間に伝えられます。&lt;/p&gt;
+
+&lt;p&gt;しかし、「動画を撮ろう！」と思っては見たものの…&lt;strong&gt;「無料」で「手軽」&lt;/strong&gt; に録画してアップロードできる環境でないと、有料だと諦めたり、面倒だとたまにしかアップロードしなくなります。&lt;/p&gt;
+
+&lt;p&gt;この記事は、そんな手っ取り早く手軽にPC画面やiPhone画面を録画してアップロードしたいワガママiOSエンジニア向けに&lt;br /&gt;
+&lt;strong&gt;「無料」で「簡単」にiPhone画面やPC画面を録画し、見る側もすぐに再生される軽量な動画の録画環境の構築方法について説明します。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;なおiOSエンジニア限らずAndroidエンジニアもフロントエンドWebエンジニアやデザイナーでも構築できます！&lt;/li&gt;
+  &lt;li&gt;なおMac限定記事となります。Windows, Linux残念！&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;軽量録画環境で必要なもの&quot;&gt;軽量録画環境で必要なもの&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Mac&lt;/li&gt;
+  &lt;li&gt;QuickTime Player.app&lt;/li&gt;
+  &lt;li&gt;ffmpeg&lt;/li&gt;
+  &lt;li&gt;ひと手間かけたシェルスクリプト&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Mac以外を簡単に説明します。&lt;/p&gt;
+
+&lt;h3 id=&quot;quicktime-playerapp&quot;&gt;QuickTime Player.app&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;iPhone画面やPC画面の録画に使います&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Macに付属する動画再生プレイヤーです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.png&quot; width=&quot;240px&quot; alt=&quot;QuickTimePlayerのロゴ&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;違います。&lt;strong&gt;録画機能を備えてます。&lt;/strong&gt; 「プレイヤー」って名前物凄く紛らわしいですね…&lt;/p&gt;
+
+&lt;h3 id=&quot;ffmpeg&quot;&gt;FFmpeg&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;動画の軽量化に使います&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Wikipediaより引用&lt;/em&gt; した説明です。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;動画と音声を記録・変換・再生するためのフリーソフトウェアです。&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;コマンドラインで使用できる動画と音声の変換として使います。&lt;br /&gt;
+インストール方法は後で説明します。&lt;/p&gt;
+
+&lt;h3 id=&quot;ひと手間かけたシェルスクリプト&quot;&gt;ひと手間かけたシェルスクリプト&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;ちょっとした小さく単純なシェルスクリプトファイルです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;これが無くても仕組みは動きますが、あるだけで後で説明する仕組みがスムーズになります。&lt;/p&gt;
+
+&lt;p&gt;非エンジニアの方は「シェル」「スクリプト」って聞くと身構えるかもしれませんが、今回説明するシェルスクリプトは極めて単純で言ってしまえば中身を理解せずとも環境を構築できます。&lt;br /&gt;
+iOSエンジニアの方でシェルについて分からない方は「&lt;span&gt;&lt;a href=&quot;/tools/shellscript/shellscript-basic-for-mobile-enginner&quot;&gt;iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門&lt;/a&gt;&lt;/span&gt;
+」を見て是非ともシェルを理解しましょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;大まかな仕組みについて&quot;&gt;大まかな仕組みについて&lt;/h2&gt;
+&lt;p&gt;ここで環境構築前にざっくりと録画の仕組みについて説明します。&lt;br /&gt;
+大まかな流れとしては次の通りになります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;録画したいiPhoneをUSBで接続&lt;/li&gt;
+  &lt;li&gt;QuickTime Playerで録画&lt;/li&gt;
+  &lt;li&gt;FFmpegで動画を圧縮&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;なんと、たった3工程で済みます。&lt;/p&gt;
+
+&lt;h3 id=&quot;録画したいiphoneをusbで接続&quot;&gt;録画したいiPhoneをUSBで接続&lt;/h3&gt;
+
+&lt;p&gt;キャプチャしたいiPhoneをUSBでMacに接続します。&lt;br /&gt;
+PC画面の場合はこの作業は不要です。&lt;/p&gt;
+
+&lt;h3 id=&quot;quicktime-playerで録画&quot;&gt;QuickTime Playerで録画&lt;/h3&gt;
+
+&lt;p&gt;QuickTime Player.appを立ち上げて録画を開始します。&lt;br /&gt;
+録画終了後は保存して完了です。&lt;/p&gt;
+
+&lt;h3 id=&quot;ffmpegで動画を圧縮&quot;&gt;FFmpegで動画を圧縮&lt;/h3&gt;
+
+&lt;p&gt;保存した動画ファイルは無圧縮で重いのでFFmpegで圧縮します。&lt;br /&gt;
+このときにシェルスクリプトがあると大変便利です。&lt;/p&gt;
+
+&lt;h2 id=&quot;手軽な動画環境を構築する&quot;&gt;手軽な動画環境を構築する&lt;/h2&gt;
+&lt;p&gt;簡単な録画環境を構築するには、事前に仕掛けがあるから動きます。
+&lt;strong&gt;今からその仕掛けを構築します。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;FFmepgをインストール&lt;/li&gt;
+  &lt;li&gt;シェルスクリプトを用意&lt;/li&gt;
+  &lt;li&gt;シェルのパスを通す&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ffmepgをインストール&quot;&gt;FFmepgをインストール&lt;/h3&gt;
+&lt;p&gt;FFmepgをHomebrewでインストールします。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install ffmpeg
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;インストールが完了したらインストールされたかを確認します。成功してたら次のような結果になるかと思います。(バージョンは時期で異なります）&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ffmpeg
+ffmpeg version 3.3.4 Copyright &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 2000-2017 the FFmpeg developers
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;もし異なる場合は下記の可能性を検討してみてください&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;インストールが失敗した&lt;/li&gt;
+  &lt;li&gt;homebrewでインストールしたコマンドのパスが通っていない&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;シェルスクリプトを用意&quot;&gt;シェルスクリプトを用意&lt;/h3&gt;
+
+&lt;p&gt;このシェルスクリプトを説明する前に、前提情報を知っておく必要があります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;QuickTime Playerは録画の保存を選ぶと、開かれる保存先は前回保存先になります。&lt;/li&gt;
+  &lt;li&gt;保存のデフォルトファイル名は&lt;code class=&quot;highlighter-rouge&quot;&gt;名称未設定.mov&lt;/code&gt;です。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;このシェルスクリプトは次の動きをします。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;カレントディレクトリを決められた場所に移動します&lt;/li&gt;
+  &lt;li&gt;FFmpegで「名称未設定.mov」を「dest.mp4」にMP4変換します&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;下記はその動きをするシェルスクリプトになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads
+&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 名称未設定.mov dest.mp4 &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;たったこれだけです。非常に短く単純なシェルスクリプトです。&lt;br /&gt;
+これをファイルとして適当な場所に保存してください。&lt;/p&gt;
+
+&lt;p&gt;ここでは説明便宜上、下記パスに保存します。&lt;br /&gt;
+「&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh/encode_movie.sh&lt;/code&gt;」&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sh&lt;/code&gt;フォルダが無い方は作っておいてください。&lt;/p&gt;
+
+&lt;h4 id=&quot;chmodで実行可能にする&quot;&gt;chmodで実行可能にする&lt;/h4&gt;
+&lt;p&gt;次に保存したシェルスクリプトを誰でも実行可能にするためにchmodで実行権限を編集します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chmod 711 ~/sh/encode_movie.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これで&lt;code class=&quot;highlighter-rouge&quot;&gt;sh&lt;/code&gt;コマンドを使わず実行できます。これをしておかないとやはりスムーズとは言えません。&lt;/p&gt;
+
+&lt;h4 id=&quot;分からない方向け-全部をまとめて用意するシェルコマンド&quot;&gt;分からない方向け: 全部をまとめて用意するシェルコマンド&lt;/h4&gt;
+
+&lt;p&gt;次のシェルコマンドをターミナルにコピペして実行すれば先程説明した内容をまとめてやってくれます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ~/sh
+&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;#!/bin/bash&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;cd ~/Downloads&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ffmpeg -i 名称未設定.mov dest.mp4 -y&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ~/sh/encode_movie.sh
+chmod 711 ~/sh/encode_movie.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;このシェルコマンドらは&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;自分のホームディレクトリにshディレクトリを作成&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;encode_movie.sh&lt;/code&gt;ファイルを作成&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;encode_movie.sh&lt;/code&gt;の実行権限を変更&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;をやってくれます。&lt;/p&gt;
+
+&lt;h3 id=&quot;シェルのパスを通す&quot;&gt;シェルのパスを通す&lt;/h3&gt;
+&lt;p&gt;用意したシェルスクリプトは、同じ名前と場所で保存していれば「&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh/encode_movie.sh&lt;/code&gt;」にあると思います。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;しかし、このままでは動画を作成後に、スクリプトを呼ぶためにわざわざパスを指定しなければいけません。&lt;/strong&gt;&lt;br /&gt;
+それだと面倒なのでどこのディレクトリからでも呼べるようにパスを通します。&lt;/p&gt;
+
+&lt;p&gt;PATH環境変数に&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh&lt;/code&gt;のパスを通すことで、ターミナル上からどこでも呼べるようになります。
+ターミナルのデフォルトシェルがbashであれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;.bash_profile&lt;/code&gt;にPATH環境変数にパスを追加する処理を書きます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ vim ~/.bash_profile&lt;/code&gt;で次の処理を追加します。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:~/sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;保存終わったら&lt;code class=&quot;highlighter-rouge&quot;&gt;$ source ~/.bash_profile&lt;/code&gt;でリロードしておきましょう。&lt;/p&gt;
+
+&lt;h2 id=&quot;実際に動画を撮る&quot;&gt;実際に動画を撮る&lt;/h2&gt;
+&lt;p&gt;動画環境は整いました。それでは実際にiPhone画面の録画とMac画面の録画をしてみます。&lt;/p&gt;
+
+&lt;h3 id=&quot;iphoneとmacをusbで接続&quot;&gt;iPhoneとMacをUSBで接続&lt;/h3&gt;
+
+&lt;p&gt;録画したいiPhoneをMacにUSBで接続します。&lt;/p&gt;
+
+&lt;p&gt;もしiPhoneをMacに初めて接続する場合は、次のような確認がiPhoneに表示されるので「信頼」を選んでください。&lt;br /&gt;
+そうしないと、次工程のQuickTime Playerで端末を認識しなくなります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/2.jpg&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/2.jpg&quot; width=&quot;50%&quot; alt=&quot;iPhone信頼確認画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;quicktime-playerappを立ち上げる&quot;&gt;QuickTime Player.appを立ち上げる&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Spotlight検索&lt;/code&gt;で「QuickTime」と入力すれば見つけられます。&lt;br /&gt;
+起動したらメニューバーからファイル&amp;gt;新規ムービー収録を選びます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規ムービー収録&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;新規ムービー週力を選ぶと、Macやモニターに付属するカメラやiPhone画面の映像が画面に写ります。&lt;br /&gt;
+もしiPhone画面になっていない場合は、ウィンドウ下の赤いボタンの右側を押すと撮影先が並ぶので、そこでiPhoneを選んでください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/4.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規ムービーの映像ソース選択&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;赤いボタンを押すと、録画が始まります。録画を止める場合はもう一度赤いボタンを押すと終了します。&lt;br /&gt;
+試しに自分のブログを閲覧してるSafariを録画してます。&lt;/p&gt;
+
+&lt;video autoplay=&quot;&quot; loop=&quot;&quot; muted=&quot;&quot; playsinline=&quot;&quot; src=&quot;/assets/videos/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.mp4&quot; width=&quot;100%&quot; height=&quot;400px&quot;&gt;うまく読み込めない場合はリロード&lt;/video&gt;
+
+&lt;p&gt;録画が終わると、編集画面になります。&lt;strong&gt;この段階ではまだ保存されていないです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規ムービ収録編集画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;この画面で保存(&lt;code class=&quot;highlighter-rouge&quot;&gt;cmd+s&lt;/code&gt;)を押すと保存先の選択が出ます。&lt;/p&gt;
+
+&lt;p&gt;ここでファイル名はそのままの「&lt;strong&gt;名称未設定.mov&lt;/strong&gt;」にしてください。&lt;br /&gt;
+&lt;strong&gt;ファイル名を変更してしまうと、次工程のシェルスクリプトが動きません。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;また保存先（場所）は「&lt;strong&gt;ダウンロード&lt;/strong&gt;」にしてください。&lt;br /&gt;
+&lt;strong&gt;ここも変更するとシェルスクリプトが動きません。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;つまり保存先を&lt;strong&gt;Donwloads&lt;/strong&gt; に一度しておくことで、この部分は何も気にせず保存するだけになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/6.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayerファイル保存確認&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;ターミナルでシェルスクリプトを実行する&quot;&gt;ターミナルでシェルスクリプトを実行する&lt;/h3&gt;
+
+&lt;p&gt;ターミナルを開いて、保存してパスを通しておいたシェルスクリプトファイルを実行します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;encode_movie.sh
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;パスが通っているので、シェルスクリプトファイル名を指定するだけでいいです。&lt;br /&gt;
+実行すると&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Downloads/dest.mp4&lt;/code&gt;にファイルが作成されます。&lt;/p&gt;
+
+&lt;h2 id=&quot;なぜffmpegが必要なのか&quot;&gt;なぜFFmpegが必要なのか？&lt;/h2&gt;
+&lt;p&gt;FFmpegやそれを実行するシェルスクリプトが必要な理由は、ファイルサイズにあります。&lt;/p&gt;
+
+&lt;p&gt;下記は、QuickTime Playerで作成したファイル「名称未設定.mov」のファイルサイズと&lt;br /&gt;
+FFmpegで圧縮したファイル「dest.mp4」のファイルサイズを比較した表です&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;ファイル名&lt;/th&gt;
+      &lt;th&gt;サイズ&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;名称未設定.mov&lt;/td&gt;
+      &lt;td&gt;28.3MB&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;dest.mp4&lt;/td&gt;
+      &lt;td&gt;2.1MB&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;圧倒的に圧縮したことでサイズが小さくなりました。約1/14です。&lt;/p&gt;
+
+&lt;h3 id=&quot;このファイルサイズが何に影響するのか&quot;&gt;このファイルサイズが何に影響するのか&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;アップロード時間とダウンロード時間に影響します&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;まずSlackにアップロードするのに時間がかかります。これはまだ自分だけにしか影響を与えません。&lt;br /&gt;
+しかし、この動画を見る閲覧者はダウンロードに影響します。&lt;br /&gt;
+Slackで再生ボタンを押してもなかなか再生されなかったり、ストリーミングダウロードが間に合わずカクつきます。&lt;br /&gt;
+またファイルの大きすぎる動画ファイルはサムネが表示されないケースが多いです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;読み手のことや動画で伝えたい目的を考えると、閲覧側のストレスを抑えるのは自然なことです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;mac画面の録画も簡単&quot;&gt;Mac画面の録画も簡単&lt;/h3&gt;
+
+&lt;p&gt;PC画面内のキャプチャも簡単です。
+QuickTime Playerで「&lt;strong&gt;新規画面収録&lt;/strong&gt;」を選ぶだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/7.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規画面収録メニュー&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;新規画面収録を選ぶとキャプチャ領域を選ぶ設定になります。
+全画面まるごとと指定範囲の２タイプが選べます。&lt;/p&gt;
+
+&lt;p&gt;この画像は指定範囲で選んば場合です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/8.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/8.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規画面収録指定範囲&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;収録を開始&lt;/strong&gt; ボタンを押すことで録画開始になります。&lt;/p&gt;
+
+&lt;p&gt;録画停止は、Macのツールバーにボタンがあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/9.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/9.png&quot; width=&quot;50px&quot; alt=&quot;QuickTimePlayer新規画面収録停止ボタン&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;もしくはTouch BarのあるMacの場合は、タッチバーにもボタンがあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;githubはmp4はアップロードできない&quot;&gt;GitHubはmp4はアップロードできない&lt;/h2&gt;
+&lt;p&gt;先程説明したのはmp4の動画でした。しかしGitHubではIssueやPRではmp4の動画ファイルをアップロードすることができません。&lt;/p&gt;
+
+&lt;p&gt;しかしgifは対応しています。そしてFFmpegはgif変換も対応しています。&lt;br /&gt;
+なので今度は動画をgifに変換すれば良さそうです。&lt;/p&gt;
+
+&lt;p&gt;そしてその方法は非常に簡単に実現できます。&lt;/p&gt;
+
+&lt;h3 id=&quot;gifに変換するシェルスクリプト&quot;&gt;gifに変換するシェルスクリプト&lt;/h3&gt;
+&lt;p&gt;このシェルスクリプトはQuickTime Playerで作成した動画ファイルに対し、　　
+30FPSのサイズ320でgifファイルを作成します。&lt;/p&gt;
+
+&lt;p&gt;このファイルには一度mp4に変換してからgifに変換しています。　　
+そしてそのmp4に変換する処理は前述で説明したmp4に変換するシェルスクリプト「&lt;code class=&quot;highlighter-rouge&quot;&gt;encode_movie.sh&lt;/code&gt;」を呼んで変換しています。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
+
+&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads
+
+&lt;span class=&quot;nv&quot;&gt;rate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;30
+&lt;span class=&quot;nv&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;320
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$# &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi
+
+&lt;/span&gt;sh encode_movie.sh
+&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; dest.mp4 &lt;span class=&quot;nt&quot;&gt;-vf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$scale&lt;/span&gt;:-1 &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$rate&lt;/span&gt; dest.gif &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;またこのスクリプトは引数でスケールを変更することができます。例えばスケールをデフォルトの倍にする場合は&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;encode_gif.sh 640
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;とすることでスケールが320から640になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;iosエンジニアなら画面共有に慣れよう&quot;&gt;iOSエンジニアなら画面共有に慣れよう&lt;/h2&gt;
+&lt;p&gt;iOSエンジニアは画面デザインがある限り、デザイナーやPOに画面の動きを見せることは非常に多いです。&lt;br /&gt;
+Slackでやり取りを円滑にするために、動画で画面の動き共有が気軽にできる環境は非常にコミュニケーションを円滑に進められます。&lt;/p&gt;
+
+&lt;p&gt;今回説明した内容は、一度環境を構築しておくだけでよくて、その後は特に弄らずともずっと使い続けられます。
+しかもシェルスクリプトの内容自体も非常にシンプルで、長く見ても短く見てもコスパの良い環境です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><category term="ffmpeg" /><category term="quicktime-player" /><category term="mac" /><summary type="html">動画は最強の情報伝達手段です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png" /></entry><entry><title type="html">crontabの書き方や確認、仕組みや落とし穴を理解する</title><link href="https://blog.mothule.com/tools/how-to-use-cron" rel="alternate" type="text/html" title="crontabの書き方や確認、仕組みや落とし穴を理解する" /><published>2020-04-26T00:00:00+09:00</published><updated>2020-04-26T07:55:19+09:00</updated><id>https://blog.mothule.com/tools/how-to-use-cron</id><content type="html" xml:base="https://blog.mothule.com/tools/how-to-use-cron">&lt;p&gt;定期実行といえばcron、それらスケジュールを制御するコマンドがcrontabです。&lt;/p&gt;
 
 &lt;p&gt;でも、たまにしか触らないのでスケジュールの書き方をよく忘れます。&lt;br /&gt;
 それどころかコマンドの使い方すら忘れるほど触れない時期が長いコマンドですね。&lt;br /&gt;
@@ -2100,1213 +2459,4 @@ Mac1台でnginxでWebサーバとPumaでアプリサーバを立てることで�
 &lt;p&gt;「Mac上でnginx」という本番では無意味な環境でも理解する上ではとても効率の良い環境です。&lt;/p&gt;
 
 &lt;p&gt;次の記事は「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-customize-on-mac&quot;&gt;Mac上のnginx設定ファイルをドメイン毎に分ける&lt;/a&gt;&lt;/span&gt;
-」について説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><category term="ruby" /><category term="rails" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/0.png" /></entry><entry><title type="html">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac" rel="alternate" type="text/html" title="Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる" /><published>2020-02-22T00:00:00+09:00</published><updated>2020-03-29T04:28:01+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。&lt;/p&gt;
-
-&lt;h2 id=&quot;ゼロからnginxconfを書いてhttpサーバを構築します&quot;&gt;ゼロから&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;を書いてHTTPサーバを構築します&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;を一行ずつ読み解いて有無を決めながら簡易な&lt;strong&gt;静的ブログ向け設定ファイルを作り上げていきます。&lt;/strong&gt;&lt;br /&gt;
-また、&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;にはないけど関連するものも取り上げます。&lt;/p&gt;
-
-&lt;p&gt;上から一つずつ設定しており、それぞれの段階で実行が出来る状態になってありますが、&lt;strong&gt;もし途中で躓いた場合は&lt;/strong&gt;
-最後に&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;の全容を載せてます。確認してみてください。&lt;/p&gt;
-
-&lt;h3 id=&quot;インストールや起動方法などが分からない方は過去記事を&quot;&gt;インストールや起動方法などが分からない方は過去記事を&lt;/h3&gt;
-&lt;p&gt;前回はWebサーバの簡単な基礎とnginxのインストールから立ち上げるまでを説明しました。&lt;br /&gt;
-▼前回の記事はこちらになります。&lt;br /&gt;
-&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step1-on-mac&quot;&gt;Macでnginxをインストールして起動する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;最小設定でnginxのhttpサーバを構築する&quot;&gt;最小設定でnginxのHTTPサーバを構築する&lt;/h2&gt;
-
-&lt;p&gt;デフォルトで用意された&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;には色々と書かれてて、やる気が萎えるのし分かりにくいです。&lt;br /&gt;
-なので、まずはこの雛形を削りながら最少設定でHTTPサーバを構築します。&lt;/p&gt;
-
-&lt;p&gt;削りきった最少でHTTPサーバを構築する設定ファイルは下記になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;nginx.conf&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;events &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-
-http &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  server &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;events&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;http&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt; の３つのブロックディレクティブだけでいけました。&lt;br /&gt;
-それ以外はデフォルト値として動いているようです。&lt;br /&gt;
-当然何も機能を設定していないので、ほぼ何もできないHTTPサーバです。&lt;br /&gt;
-ここまで削れればとっかかりやすいですね。&lt;/p&gt;
-
-&lt;p&gt;なおこれらブロックディレクティブのことはコンテキストと呼ぶようです。
-&lt;strong&gt;これらブロックディレクティブに1つも囲まれていない部分(インデントなし部分)をmainコンテキストと呼ぶようです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;次は、デフォルト設定ファイル(&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;)から一つずつ確認しながら先程の最少設定ファイルを埋めていきます。&lt;/p&gt;
-
-&lt;h2 id=&quot;mainコンテキスト&quot;&gt;mainコンテキスト&lt;/h2&gt;
-
-&lt;p&gt;前述したどのブロックディレクティブにも囲まれていない部分から見ていきます。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;ファイルの冒頭部分です。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#user  nobody;
-worker_processes  1;
-
-#error_log  logs/error.log;
-#error_log  logs/error.log  notice;
-#error_log  logs/error.log  info;
-
-#pid        logs/nginx.pid;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;userディレクティブ&quot;&gt;userディレクティブ&lt;/h3&gt;
-&lt;p&gt;workerプロセスを実行するユーザーとグループを設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;user user [group];&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;nobody nobody&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;デフォルトでもコメントアウトされてるように必須項目ではありません。&lt;/p&gt;
-
-&lt;h3 id=&quot;worker_processesディレクティブ&quot;&gt;worker_processesディレクティブ&lt;/h3&gt;
-&lt;p&gt;workerのプロセス数を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;worker_processes *number*|auto;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;worker_processes 1;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;最適値はCPUコア数、ストレージ数、負荷パターンなど多岐に渡ります。&lt;br /&gt;
-悩ましい場合はCPUコア数を推奨します。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;auto&lt;/code&gt;はそれを自動検出します。&lt;/p&gt;
-
-&lt;p&gt;今回はCPUコア数と同じ値にします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;worker_processes 4;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;手元のMacのコア数はシステムレポートのハードウェア概要で確認できます。　　
-システムレポートは &lt;code class=&quot;highlighter-rouge&quot;&gt;Spotlight検索&lt;/code&gt; &amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;このMacについて.app&lt;/code&gt; &amp;gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;システムレポート&lt;/code&gt; でたどり着けます。&lt;/p&gt;
-
-&lt;h3 id=&quot;error_logディレクティブ&quot;&gt;error_logディレクティブ&lt;/h3&gt;
-&lt;p&gt;エラーログ出力先の設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;error_log file [level];&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;error_log logs/error.log error;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;出力パスとログレベルを設定します。&lt;br /&gt;
-ログレベルは&lt;code class=&quot;highlighter-rouge&quot;&gt;debug, info, notice, warn, error, crit, alert, emerg&lt;/code&gt;の8個です。&lt;br /&gt;
-例えばログレベルを&lt;code class=&quot;highlighter-rouge&quot;&gt;error&lt;/code&gt;にすると&lt;code class=&quot;highlighter-rouge&quot;&gt;error, crit, alert, emerg&lt;/code&gt;のレベルのログが出力されます。&lt;/p&gt;
-
-&lt;p&gt;エラーログは欲しいのでログレベルerrorでログを取ろうと思います。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;error_log /usr/local/var/log/nginx/error.log error;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;pidディレクティブ&quot;&gt;pidディレクティブ&lt;/h3&gt;
-&lt;p&gt;メインプロセスのプロセスIDの保存先を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;pid file;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;pid logs/nginx.pid;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;公式のデフォルト値は↑ですが、Macだと &lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/var/run/nginx.pid&lt;/code&gt; にあります。&lt;br /&gt;
-デフォルト値でも問題ない場所にあるので特に指定はしないでいきます。&lt;/p&gt;
-
-&lt;h2 id=&quot;eventsコンテキスト&quot;&gt;eventsコンテキスト&lt;/h2&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;events {
-    worker_connections  10;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;接続処理に影響するブロックディレクティブです。&lt;/p&gt;
-
-&lt;h3 id=&quot;worker_connectionsディレクティブ&quot;&gt;worker_connectionsディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;ワーカープロセスで開くことができる同時接続の最大数を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;worker_connections number;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;worker_connections 512;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;この接続とは、クライアントだけでなくすべての接続（プロキシサーバとの接続など）も含まれます。&lt;br /&gt;
-また、同時接続の実際の数が、&lt;code class=&quot;highlighter-rouge&quot;&gt;worker_rlimit_nofile&lt;/code&gt; に依存します。&lt;br /&gt;
-せっかくなので &lt;code class=&quot;highlighter-rouge&quot;&gt;worker_rlimit_nofile&lt;/code&gt; についても取り上げます。&lt;/p&gt;
-
-&lt;h3 id=&quot;worker_rlimit_nofileディレクティブ&quot;&gt;worker_rlimit_nofileディレクティブ&lt;/h3&gt;
-&lt;p&gt;ワーカープロセスが開けるファイルの最大数(&lt;code class=&quot;highlighter-rouge&quot;&gt;RLIMIT_NOFILE&lt;/code&gt;)の制限を設定します。&lt;br /&gt;
-メインプロセスを再起動せずに制限を増やすために使います。&lt;/p&gt;
-
-&lt;p&gt;通常1プロセスは&lt;code class=&quot;highlighter-rouge&quot;&gt;RLIMIT_NOFILE&lt;/code&gt;の数以上のファイルは開けませんが、&lt;br /&gt;
-この値を設定することでその上限を超えたファイル数を処理できるようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;なおworker_rlimit_nofileディレクティブはmainコンテキスト&lt;/strong&gt;で使えるディレクティブです。**&lt;/p&gt;
-
-&lt;h4 id=&quot;rlimit_nofileとは&quot;&gt;RLIMIT_NOFILEとは？&lt;/h4&gt;
-&lt;p&gt;1プロセスが開けるファイルの上限です。&lt;br /&gt;
-確認するには&lt;code class=&quot;highlighter-rouge&quot;&gt;ulimit -n&lt;/code&gt; で取れます。Macだとデフォルトは&lt;code class=&quot;highlighter-rouge&quot;&gt;256&lt;/code&gt;しかないようです。&lt;/p&gt;
-
-&lt;h2 id=&quot;同時接続に関するパラメータを整理する&quot;&gt;同時接続に関するパラメータを整理する&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;worker_rlimit_nofile&lt;/code&gt;はworkerプロセスが扱えるファイル上限数(&lt;code class=&quot;highlighter-rouge&quot;&gt;RLIMIT_NOFILE&lt;/code&gt;)を設定する&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;RLIMIT_NOFILE&lt;/code&gt;は1プロセスが開けるファイル上限で&lt;code class=&quot;highlighter-rouge&quot;&gt;ulimit -n&lt;/code&gt;で確認できる。デフォルトでは&lt;strong&gt;256&lt;/strong&gt;しかないようです。&lt;/li&gt;
-  &lt;li&gt;OS全体で扱えるファイル数は&lt;code class=&quot;highlighter-rouge&quot;&gt;launchctl limit maxfiles&lt;/code&gt;で確認できる。デフォルトでは&lt;strong&gt;256&lt;/strong&gt;しかないようです。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;launchctl limit maxfiles&lt;/code&gt;を変更は可能ですが、今回は目的ではないのでデフォルトのままにします。
-ちなみに変えたい場合は「launchctl limit maxfiles」で検索するとたくさん出てくるのでそちらを参考にしてください。&lt;/p&gt;
-
-&lt;h3 id=&quot;worker_rlimit_nofileの算出式&quot;&gt;worker_rlimit_nofileの算出式&lt;/h3&gt;
-&lt;p&gt;OS全体ファイル上限、プロセスファイル上限、workerプロセス数の３つからworkerプロセスの同時接続数を算出できそうです。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;workerプロセス数(worker_processes) * プロセスファイル上限(worker_rlimit_nofile) &amp;lt; OS全体ファイル上限(maxfiles)&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;この式からプロセスファイル上限(worker_rlimit_nofile)を求めます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;プロセスファイル上限(&lt;code class=&quot;highlighter-rouge&quot;&gt;worker_rlimit_nofile&lt;/code&gt;) = OS全体ファイル上限(&lt;code class=&quot;highlighter-rouge&quot;&gt;maxfiles&lt;/code&gt;) / workerプロセス数(&lt;code class=&quot;highlighter-rouge&quot;&gt;worker_processes&lt;/code&gt;)&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;この式に実際の値を当てはめます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;256 / 4 = 64&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;ただしMacでnginxを使う目的は学習や開発版で、nginx以外にも様々なアプリでファイルを開いていると思うので、その分を考慮します。
-今回は半分にします。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;64 * 0.5 = 32&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;worker_rlimit_nofile 32;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ということですね。&lt;/p&gt;
-
-&lt;p&gt;次に&lt;code class=&quot;highlighter-rouge&quot;&gt;worker_connections&lt;/code&gt;ですが、1接続1ファイルオープンではなく少なくとも2つは消耗するようです。&lt;a href=&quot;https://qiita.com/mikene_koko/items/85fbe6a342f89bf53e89#%E4%BD%95%E6%95%85-worker_connections-%E3%81%AE2%E5%80%8D%E3%81%AE%E5%80%A4%E3%81%8C-worker_rlimit_nofile-%E4%BB%A5%E4%B8%8B%E3%81%A7%E3%81%82%E3%82%8C%E3%81%B0ok&quot;&gt;参考&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;上記記事からして &lt;code class=&quot;highlighter-rouge&quot;&gt;worker_connections&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;worker_rlimit_nofile&lt;/code&gt; の 1/3 にしておけば余裕だと思います。&lt;/p&gt;
-
-&lt;p&gt;32 の 1/3 は10.6 きりよく10にします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;events {
-  worker_connections 10;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;同時接続は4*10で大体40といったところでしょうか。&lt;/p&gt;
-
-&lt;p&gt;実際のサーバ(Linux)では上限を結構あげたりすると思いますが、上限が上がったからといってその上限まで同時接続を捌けるとは限りません。あくまでもファイルオープンの限界値が増えただけであって、それ以外のCPU負荷やネットワーク負荷、DB負荷、メモリ負荷の問題は以前変わらずです。&lt;/p&gt;
-
-&lt;h2 id=&quot;httpコンテキスト&quot;&gt;httpコンテキスト&lt;/h2&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  include       mime.types;
-  default_type  application/octet-stream;
-
-  #log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
-  #                  '$status $body_bytes_sent &quot;$http_referer&quot; '
-  #                  '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
-
-  #access_log  logs/access.log  main;
-
-  sendfile        on;
-  #tcp_nopush     on;
-
-  #keepalive_timeout  0;
-  keepalive_timeout  65;
-
-  #gzip  on;
-  server {
-
-  }
-}
-
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;HTTPサーバに関するブロックディレクティブです。&lt;/p&gt;
-
-&lt;h3 id=&quot;includeディレクティブ&quot;&gt;includeディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;include file|mask;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;なし&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;別ファイルや一致するファイル群を設定として読み込みます。&lt;br /&gt;
-取り込むファイルは、構文やディレクティブなども見てくれます。&lt;/p&gt;
-
-&lt;p&gt;デフォルトnginx.confの &lt;code class=&quot;highlighter-rouge&quot;&gt;include mime.types;&lt;/code&gt; は &lt;code class=&quot;highlighter-rouge&quot;&gt;minem.types&lt;/code&gt; という別ファイルをロードしているようです。&lt;/p&gt;
-
-&lt;p&gt;このファイルは&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/etc/nginx/&lt;/code&gt;ディレクトリにあります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;mime.types
-&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 mothule  admin  5170  7  1  2018 mime.types
-&lt;span class=&quot;nt&quot;&gt;-rw-r--r--&lt;/span&gt;  1 mothule  admin  5231  2 20 03:07 mime.types.default
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;中身は &lt;code class=&quot;highlighter-rouge&quot;&gt;types&lt;/code&gt; コンテキスト１つにたくさんのファイル・タイプの列挙がされてます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;の行末付近にも&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;は使われています。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;include servers/*;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;これは、サーバー毎の設定ファイルを外部ファイル化し、それをロードする場合に使います。&lt;/p&gt;
-
-&lt;p&gt;▼詳しくは同シリーズの記事をご確認ください。&lt;br /&gt;
-&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-customize-on-mac&quot;&gt;ドメイン別設定ファイル置き場を用意する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;typesコンテキスト&quot;&gt;typesコンテキスト&lt;/h3&gt;
-
-&lt;p&gt;レスポンスのMIMEタイプと拡張子名のマッパーです。&lt;br /&gt;
-追加時は小文字で必須です。&lt;/p&gt;
-
-&lt;p&gt;デフォルトでほとんどのMIMEタイプをカバーできているのでこれはロードしたほうが良いです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  include mime.types;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;default_typesディレクティブ&quot;&gt;default_typesディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;レスポンスのデフォルトMIMEタイプを設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;default_types mime-type;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;default_types text/plain;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;types&lt;/code&gt;コンテキストで設定したMIMEタイプに当てはまらない場合は &lt;code class=&quot;highlighter-rouge&quot;&gt;text/plain&lt;/code&gt; になり、レスポンスによってはやばいものもあると思うので、デフォルトenginx.conf同様&lt;code class=&quot;highlighter-rouge&quot;&gt;application/octet-stream&lt;/code&gt; にしておきます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  default_type  application/octet-stream;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;access_logディレクティブ&quot;&gt;access_logディレクティブ&lt;/h3&gt;
-&lt;p&gt;アクセスログ出力先の設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;access_log file [format [buffer=size][gzip[=level]][flush=time][if=condition]]&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;access_log logs/access.log combined;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;構文内の[]について説明すると、[]内の文字列や値は任意を表します。&lt;br /&gt;
-例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;[buffer=size]&lt;/code&gt; は無指定でも問題ありません。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;[gzip[=level]]&lt;/code&gt;だと無指定, gzip, gzip=level の3つとなります。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;引数&lt;/th&gt;
-      &lt;th&gt;意味&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;file&lt;/td&gt;
-      &lt;td&gt;出力先パス&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;format&lt;/td&gt;
-      &lt;td&gt;1行ログの形式. 複雑な場合は後述するlog_formatの名前を指定します。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;buffer=size&lt;/td&gt;
-      &lt;td&gt;ファイルに書き込む前のバッファサイズ&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;gzip[=level]&lt;/td&gt;
-      &lt;td&gt;圧縮して書き込む.levelは1~9で最大は9,デフォルトは1,ログは&lt;code class=&quot;highlighter-rouge&quot;&gt;zcat&lt;/code&gt;で圧縮解除や読み取り可能です&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;flush=time&lt;/td&gt;
-      &lt;td&gt;バッファをファイルに書き込むインターバル. この時間経過するとバッファをファイルに書き込みます&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;if=condition&lt;/td&gt;
-      &lt;td&gt;条件付きログ. 条件が0または空文字列なら書き込まない&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h4 id=&quot;ifcondition例&quot;&gt;if=condition例&lt;/h4&gt;
-&lt;p&gt;次の例は$statusつまりHTTPコードが200番台,300番台ならログに書き込まない。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;map $status $loggable {
-    ~^[23]  0;
-    default 1;
-}
-
-access_log /path/to/access.log combined if=$loggable;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;log_formatディレクティブ&quot;&gt;log_formatディレクティブ&lt;/h3&gt;
-&lt;p&gt;ログのフォーマットを設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;log_fomat name [escape=deafult|json|none] string ...;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;log_format combined &quot;...&quot;;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;構文内の|について説明すると、|で区切られた値のみを設定できることを表します。&lt;br /&gt;
-例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;escape=default&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;escape=json&lt;/code&gt; &lt;code class=&quot;highlighter-rouge&quot;&gt;escape=none&lt;/code&gt; の3パターンのみとなります。&lt;/p&gt;
-
-&lt;p&gt;string には通常変数とログ書き込み時のみ存在する変数を含めたフォーマットを設定できます。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;変数名&lt;/th&gt;
-      &lt;th&gt;説明&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$bytes_sent&lt;/td&gt;
-      &lt;td&gt;クライアントへ送信したバイト数&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$connection&lt;/td&gt;
-      &lt;td&gt;接続シリアルNo&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$connection_requests&lt;/td&gt;
-      &lt;td&gt;接続を介した現在のリクエスト数&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$msec&lt;/td&gt;
-      &lt;td&gt;ログ書き込み時間(ミリ秒)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$pipe&lt;/td&gt;
-      &lt;td&gt;リクエストがパイプライン化されたら&lt;code class=&quot;highlighter-rouge&quot;&gt;p&lt;/code&gt;が書き込まれ、それ以外は&lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt;が書き込まれます。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$request_length&lt;/td&gt;
-      &lt;td&gt;リクエスト行、ヘッダー、本文含むリクエストの長さ&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$request_time&lt;/td&gt;
-      &lt;td&gt;リクエスト処理時間(ミリ秒).リクエストを受けてから返すまでの時間&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$status&lt;/td&gt;
-      &lt;td&gt;HTTPステータス&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$time_iso8601&lt;/td&gt;
-      &lt;td&gt;ISO8601フォーマットに沿ったローカル時間&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;$time_local&lt;/td&gt;
-      &lt;td&gt;一般的なログフォーマットに沿ったローカル時間&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;ログのデフォルトは &lt;code class=&quot;highlighter-rouge&quot;&gt;$combined&lt;/code&gt; が指定されており、これは次の形式になっています。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;log_format combined '$remote_addr - $remote_user [$time_local] '
-                    '&quot;$request&quot; $status $body_bytes_sent '
-                    '&quot;$http_referer&quot; &quot;$http_user_agent&quot;';
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;実際にnginxサーバにアクセスして&lt;code class=&quot;highlighter-rouge&quot;&gt;access.log&lt;/code&gt;を覗いてみると下記形式でログが書き込まれます。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;127.0.0.1 - - [21/Feb/2020:18:43:21 +0900] &quot;GET / HTTP/1.1&quot; 200 612 &quot;-&quot; &quot;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36&quot;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;デフォルト設定はテストすると落ちる&quot;&gt;デフォルト設定はテストすると落ちる&lt;/h3&gt;
-&lt;p&gt;前述したnginx.confだとテストが落ちます。&lt;br /&gt;
-理由はログのパスがnginxの場所からの相対パスとなっており、そこにフォルダが存在しないためです。&lt;br /&gt;
-また場所もhomebrewの管理下になり、一般的なログ場所とは異なります。&lt;br /&gt;
-ログのパスは下記のように絶対パスで指定します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  access_log  /usr/local/var/log/access.log  main;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;sendfileディレクティブ&quot;&gt;sendfileディレクティブ&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sendfile()&lt;/code&gt; の仕様有無を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;sendfile on|off;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;sendfile off;&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;sendfileとは&quot;&gt;sendfileとは？&lt;/h4&gt;
-&lt;p&gt;ファイルディスクリプター間のデータ転送関数。read/write組み合わせより効率が良い。&lt;br /&gt;
-ただ、動作不安定や静的ファイルが更新不備など不安定な評判もある。&lt;/p&gt;
-
-&lt;p&gt;とりあえず使ってみて動作不安定な気があればここを無効化します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  sendfile on;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;tcp_nopushディレクティブ&quot;&gt;tcp_nopushディレクティブ&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_NOPUSH&lt;/code&gt;ソケットオプション または &lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_CORK&lt;/code&gt;オプションの使用有無を設定します。&lt;br /&gt;
-FreeBSDでは&lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_NOPUSH&lt;/code&gt;でLinuxでは&lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_CORK&lt;/code&gt;を使います。&lt;br /&gt;
-このディレクティブは&lt;code class=&quot;highlighter-rouge&quot;&gt;sendfile&lt;/code&gt;が有効時のみ働きます。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;tcp_nopush on|off;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;tcp_nopush off;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;これが有効だと、レスポンスヘッダーとファイルをまとめて送信するため、パケット数を抑え効率よくなります。&lt;/p&gt;
-
-&lt;p&gt;今回は&lt;code class=&quot;highlighter-rouge&quot;&gt;sendfile&lt;/code&gt;を有効化しており、&lt;code class=&quot;highlighter-rouge&quot;&gt;tcp_nopush&lt;/code&gt;により高速化が見込めるので、ここも有効化します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  tcp_nopush on;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;keepalive_timeoutディレクティブ&quot;&gt;keepalive_timeoutディレクティブ&lt;/h3&gt;
-&lt;p&gt;keep-aliveによる接続時間を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;keepalive_timeout timeout [header_timeout];&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;keepalive_timeout 75s;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;[header_timeout]&lt;/code&gt;は任意オプションです。&lt;br /&gt;
-これはMozillaおよびKonquerorによって認識されます。 MSIEは約60秒でキープアライブ接続を自動的に閉じます。&lt;/p&gt;
-
-&lt;h4 id=&quot;keep-aliveとは&quot;&gt;keep-aliveとは？&lt;/h4&gt;
-
-&lt;p&gt;簡易説明すると、HTTPはリクエスト毎にサーバ／クライアント間で接続を確立し、レスポンスを返します。
-レスポンスを返したら接続を切るため、リクエストが大量にあれば、たとえ同じクライアントだとしてもそれだけ接続／切断を繰り返すことになります。  &lt;br /&gt;
-これでは無駄なので、レスポンス送信後すぐに切断せずにしばらく待つことで、次リクエストの接続処理スキップすることで効率よくなります。&lt;/p&gt;
-
-&lt;p&gt;詳細は&lt;a href=&quot;https://www.atmarkit.co.jp/ait/articles/1605/11/news030_3.html&quot;&gt;こちら&lt;/a&gt;を参考にしてください。&lt;/p&gt;
-
-&lt;p&gt;keep-aliveはタイムアウト値が適切であれば通信処理を効率良く出来るため、入れておきます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  keepalive_timeout: 60s;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;gzipディレクティブ&quot;&gt;gzipディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt;コマンドで圧縮の使用有無を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip on|off;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip off;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;圧縮することで通信量を減らせます。しかしトレードオフとして圧縮に必要なCPUリソースを消費します。また解凍(=展開)が必要になり解凍はクライアント側が行います。つまりクライアント側にも解凍に必要なCPUリソースを消費します。&lt;/p&gt;
-
-&lt;p&gt;今回はonにしてみます。&lt;br /&gt;
-ただし、gzipはon/offの二択ではなく、onの場合に細かいパラメータ設定が可能となっています。&lt;br /&gt;
-せっかくなのでgzipのパラメータ設定用ディレクティブもまとめます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  gzip on;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;gzip_buffersディレクティブ&quot;&gt;gzip_buffersディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;レスポンス圧縮に使うバッファサイズと数を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_buffers number size;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_buffers 32 4k|16 8k;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;デフォルトは1メモリページと同等になってます。そのためプラットフォームに応じて &lt;strong&gt;32個 4kBytes&lt;/strong&gt; か &lt;strong&gt;16個 8kBytes&lt;/strong&gt; のいずれかです。&lt;/p&gt;
-
-&lt;p&gt;ここはバッファサイズがメモリページを横断すると、メモリ操作によるコストがかさむのでデフォルトのままでよいと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;gzip_comp_levelディレクティブ&quot;&gt;gzip_comp_levelディレクティブ&lt;/h3&gt;
-&lt;p&gt;圧縮レベル(1~9)を設定します。小さいほど圧縮率は下がります。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_comp_level level;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_comp_level 1;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;圧縮は線形比例ではありません。なので&lt;strong&gt;9が1より9倍圧縮率が高くなることはありません。&lt;/strong&gt;&lt;br /&gt;
-圧縮レベル別のパフォーマンスは&lt;a href=&quot;https://qiita.com/nmatayoshi/items/9884eea9b0633c1c1f6c&quot;&gt;こちらの記事&lt;/a&gt;が参考になります。&lt;/p&gt;
-
-&lt;p&gt;ここは1か2がコスパよいのでデフォルトと同じ1のままにします。&lt;/p&gt;
-
-&lt;h3 id=&quot;gzip_disableディレクティブ&quot;&gt;gzip_disableディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;いずれかの正規表現に一致する&lt;code class=&quot;highlighter-rouge&quot;&gt;User-Agent&lt;/code&gt;には&lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt;圧縮を無効に設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_disable regex ...;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;今回は特に除外はしないので、未設定にします。&lt;/p&gt;
-
-&lt;h3 id=&quot;gzip_http_versionディレクティブ&quot;&gt;gzip_http_versionディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;レスポンス圧縮に必要な最小HTTPバージョンを設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_http_version 1.0 | 1.1;&lt;/code&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_http_version 1.1;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;最近は1.1は当たり前なので、これはデフォルトのままにします。&lt;/p&gt;
-
-&lt;h3 id=&quot;gzip_min_lengthディレクティブ&quot;&gt;gzip_min_lengthディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;レスポンスを圧縮する最小サイズを設定します。この最小サイズは&lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Length&lt;/code&gt;が使われます。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_min_length length;&lt;/code&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_min_length 20;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;これは無圧縮のほうがコスパ良いサイズについて設定します。&lt;/p&gt;
-
-&lt;p&gt;ここの値は通信帯域やパケットサイズに関係します。デフォルトは小さすぎるので1k(1024)にします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  gzip_min_length 1024;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;gzip_proxiedディレクティブ&quot;&gt;gzip_proxiedディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;リクエスト／レスポンスに応じてプロキシされたリクエストのレスポンスも圧縮するかを設定します。&lt;br /&gt;
-つまり、プロキシから来たリクエストの結果(レスポンス)を圧縮するかどうかを設定します。&lt;/p&gt;
-
-&lt;p&gt;パラメータは複数指定が可能です。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_proxied off|expired|no-cache|no-store|private|no_last_modified|no_etag|auth|any ...;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_proxied off;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;nginxはリバースプロキシ機能を持っており、そこで圧縮したレスポンスを内部ネットワークに応答することもできます。&lt;br /&gt;
-その場合は既に圧縮したレスポンスに関しては何もする必要がありません。&lt;/p&gt;
-
-&lt;p&gt;プロキシ経由かどうかは&lt;code class=&quot;highlighter-rouge&quot;&gt;Via&lt;/code&gt;ヘッダーフィールドの存在で確認できます。&lt;/p&gt;
-
-&lt;p&gt;パラメータが多いので表にします。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;パラメータ&lt;/th&gt;
-      &lt;th&gt;説明&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;off&lt;/td&gt;
-      &lt;td&gt;プロキシされたリクエストのレスポンスの圧縮を無効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;expired&lt;/td&gt;
-      &lt;td&gt;期限切れ&lt;code class=&quot;highlighter-rouge&quot;&gt;Expires&lt;/code&gt;があれば有効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;no-cache&lt;/td&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cache-Control&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;no-cache&lt;/code&gt;があれば有効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;no-store&lt;/td&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cache-Control&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;no-store&lt;/code&gt;があれば有効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;private&lt;/td&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cache-Control&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;private&lt;/code&gt;があれば有効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;no_last_modified&lt;/td&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Last-Modified&lt;/code&gt;が&lt;strong&gt;なければ&lt;/strong&gt;有効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;no_etag&lt;/td&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ETag&lt;/code&gt;が&lt;strong&gt;なければ&lt;/strong&gt;有効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;auth&lt;/td&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Authorization&lt;/code&gt;があれば有効&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;any&lt;/td&gt;
-      &lt;td&gt;プロキシされたリクエストのレスポンスの圧縮を有効&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;複数指定は、スペース区切りで設定します。&lt;/p&gt;
-
-&lt;p&gt;今回はリバースプロキシは介さないのでデフォルト(&lt;code class=&quot;highlighter-rouge&quot;&gt;off&lt;/code&gt;)のままにします。&lt;/p&gt;
-
-&lt;h3 id=&quot;gzip_typesディレクティブ&quot;&gt;gzip_typesディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;圧縮対象となるMIMEタイプを設定します。&lt;br /&gt;
-なお&lt;code class=&quot;highlighter-rouge&quot;&gt;text/html&lt;/code&gt;は常に圧縮されます。また &lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;を指定すると全てのMIMEに一致します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_types mime-type ...;&lt;/code&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_types text/html;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;今回は、CSSやJavascript、JSONも圧縮対象にします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  gzip_types text/css text/javascript application/json;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;gzip_varyディレクティブ&quot;&gt;gzip_varyディレクティブ&lt;/h3&gt;
-&lt;p&gt;圧縮ディレクティブ(&lt;code class=&quot;highlighter-rouge&quot;&gt;gzip&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_static&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;gunzip&lt;/code&gt;)が有効であれば、
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Vary: Accept-Encoding&lt;/code&gt;ヘッダの挿入の有無を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_vary on | off;&lt;/code&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;gzip_vary off;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;これは圧縮可能と不可能の２クライアントから同一リソースにアクセスがあった場合に起きる問題の回避として使います。
-詳しくは&lt;a href=&quot;https://qiita.com/cubicdaiya/items/09c8f23891bfc07b14d3&quot;&gt;こちらの記事&lt;/a&gt;が参考になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;serverコンテキスト&quot;&gt;serverコンテキスト&lt;/h2&gt;
-&lt;p&gt;バーチャルサーバの設定をします。&lt;/p&gt;
-
-&lt;p&gt;少し長いですが&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.cnf.default&lt;/code&gt;から&lt;code class=&quot;highlighter-rouge&quot;&gt;server&lt;/code&gt;を抜粋したものが下記です。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  listen       8080;
-  server_name  localhost;
-
-  #charset koi8-r;
-
-  #access_log  logs/host.access.log  main;
-
-  location / {
-      root   html;
-      index  index.html index.htm;
-  }
-
-  #error_page  404              /404.html;
-
-  # redirect server error pages to the static page /50x.html
-  #
-  error_page   500 502 503 504  /50x.html;
-  location = /50x.html {
-      root   html;
-  }
-
-  # proxy the PHP scripts to Apache listening on 127.0.0.1:80
-  #
-  #location ~ \.php$ {
-  #    proxy_pass   http://127.0.0.1;
-  #}
-
-  # pass the PHP scripts to FastCGI server listening on 127.0.0.1:9000
-  #
-  #location ~ \.php$ {
-  #    root           html;
-  #    fastcgi_pass   127.0.0.1:9000;
-  #    fastcgi_index  index.php;
-  #    fastcgi_param  SCRIPT_FILENAME  /scripts$fastcgi_script_name;
-  #    include        fastcgi_params;
-  #}
-
-  # deny access to .htaccess files, if Apache's document root
-  # concurs with nginx's one
-  #
-  #location ~ /\.ht {
-  #    deny  all;
-  #}
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;listenディレクティブ&quot;&gt;listenディレクティブ&lt;/h3&gt;
-&lt;p&gt;サーバがリクエストを受け付けるか設定します。&lt;/p&gt;
-
-&lt;p&gt;構文:&lt;/p&gt;
-&lt;ol&gt;
-  &lt;li&gt;listen address
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen address[:port] [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number]
- [fastopen=number] [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter]
- [deferred] [bind] [ipv6only=on|off] [reuseport] [so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;listen port
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen port [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number] [fastopen=number]
- [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter] [deferred] [bind]
- [ipv6only=on|off] [reuseport] [so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-  &lt;li&gt;listen unix:path
-    &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;listen unix:path [default_server] [ssl] [http2 | spdy] [proxy_protocol] [backlog=number]
-[rcvbuf=size] [sndbuf=size] [accept_filter=filter] [deferred] [bind]
-[so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;    &lt;/div&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;listen *:80 | *:8000;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;パターンは大きく3つに分かれており、オプションも膨大です。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;パラメータ&lt;/th&gt;
-      &lt;th&gt;説明&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;address&lt;/td&gt;
-      &lt;td&gt;IPまたはホストネーム&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;:port&lt;/td&gt;
-      &lt;td&gt;ポート番号&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;default_server&lt;/td&gt;
-      &lt;td&gt;どのserverにもマッチしない場合はこのオプションがついたサーバに振り向けます&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;ssl&lt;/td&gt;
-      &lt;td&gt;SSL接続必須指定&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;http2&lt;/td&gt;
-      &lt;td&gt;HTTP/2接続 spdyと同時指定はできません&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;spdy&lt;/td&gt;
-      &lt;td&gt;SPDY接続 http2と同時指定はできません&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;proxy_protocol&lt;/td&gt;
-      &lt;td&gt;PROXY protocol必須指定&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;setfib=number&lt;/td&gt;
-      &lt;td&gt;FIB(SO_SETFIB)を設定,FreeBSD限定&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;fastopen=number&lt;/td&gt;
-      &lt;td&gt;TCP Fast Openを有効にし、3ウェイハンドシェイク未完了の接続キューの最大長&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;backlog=number&lt;/td&gt;
-      &lt;td&gt;保留中接続キューの最大長.接続要求が最大長超えると&lt;code class=&quot;highlighter-rouge&quot;&gt;ECONNREFUSED&lt;/code&gt;エラーが起きる.FreeBSD,DragonFly BSD, macOSは-1、その他は511.詳細は&lt;a href=&quot;https://kazuhira-r.hatenablog.com/entry/2019/07/10/015733&quot;&gt;こちら&lt;/a&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;rcvbuf=size&lt;/td&gt;
-      &lt;td&gt;受信バッファサイズ(&lt;code class=&quot;highlighter-rouge&quot;&gt;SO_RCVBUF&lt;/code&gt;)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;sndbuf=size&lt;/td&gt;
-      &lt;td&gt;送信バッファサイズ(&lt;code class=&quot;highlighter-rouge&quot;&gt;SO_SNDBUF&lt;/code&gt;)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;accept_filter=filter&lt;/td&gt;
-      &lt;td&gt;受信フィルタ(SO_ACCEPTFILTER)の名前。FreeBSDとNetBSD5.0+のみ&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;deferred&lt;/td&gt;
-      &lt;td&gt;Linuxで遅延accept()&lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_DEFER_ACCEPT&lt;/code&gt;を使用有無.詳細は&lt;a href=&quot;https://blog.yuuk.io/entry/2013/07/21/022859&quot;&gt;こちら&lt;/a&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;bind&lt;/td&gt;
-      &lt;td&gt;指定された&lt;code class=&quot;highlighter-rouge&quot;&gt;address:port&lt;/code&gt;ペアに個別で&lt;code class=&quot;highlighter-rouge&quot;&gt;bind()&lt;/code&gt;する。hoge:80,fuga:80,&lt;em&gt;:80の3つlistenがあったら,&lt;/em&gt;:80にだけ&lt;code class=&quot;highlighter-rouge&quot;&gt;bind()&lt;/code&gt;する。注意点は接続受付先アドレスの決定に&lt;code class=&quot;highlighter-rouge&quot;&gt;getsockname()&lt;/code&gt;がが使われる。&lt;code class=&quot;highlighter-rouge&quot;&gt;setfib&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;backlog&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;rcvbuf&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;sndbuf&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;accept_fileter&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;deferred&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;ipv6only&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;so_keepalive&lt;/code&gt;が使われたら、渡された&lt;code class=&quot;highlighter-rouge&quot;&gt;address:port&lt;/code&gt;は個々に常に&lt;code class=&quot;highlighter-rouge&quot;&gt;bind()&lt;/code&gt;する&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;ipv6only=&lt;/td&gt;
-      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;IPV6_V6ONLY&lt;/code&gt;を経由してワイルドカードアドレス[::]でlistenしてるIPv6ソケットがIPv6接続だけかIPv4接続の両方を受け付けるかを決める。パラメータは&lt;code class=&quot;highlighter-rouge&quot;&gt;on&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;off&lt;/code&gt;でデフォルトは&lt;code class=&quot;highlighter-rouge&quot;&gt;on&lt;/code&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;reuseport&lt;/td&gt;
-      &lt;td&gt;カーネルが接続をワーカープロセス間に分散して、各ワーカープロセスに&lt;code class=&quot;highlighter-rouge&quot;&gt;SO_REUSEPORT&lt;/code&gt;を使って個々のlistenソケットを生成指示する。Linux3.9+とDragonFly BSDのみ。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]]&lt;/td&gt;
-      &lt;td&gt;TCP keepaliveの挙動設定する。パラメタ省略するとOS値が設定される。&lt;code class=&quot;highlighter-rouge&quot;&gt;on&lt;/code&gt;だと&lt;code class=&quot;highlighter-rouge&quot;&gt;SO_KEEPALIVE&lt;/code&gt;がソケットに対し&lt;code class=&quot;highlighter-rouge&quot;&gt;on&lt;/code&gt;になる。 &lt;code class=&quot;highlighter-rouge&quot;&gt;off&lt;/code&gt;だと&lt;code class=&quot;highlighter-rouge&quot;&gt;SO_KEEPALIVE&lt;/code&gt;に対し&lt;code class=&quot;highlighter-rouge&quot;&gt;off&lt;/code&gt;となる。Linux2.4+, NetBSD 5+ FreeBSD 9.0-Stableでは、&lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_KEEPIDLE&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_KEEPINTVL&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;TCP_KEEPCNT&lt;/code&gt;を使ってkeepaliveをサポートする。省略した場合はOSのデフォルト値が使われる。&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;今回はその他のパラメータは今回は使わず、3030ポートを開こうと思います。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  listen 3030;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;もし既にポートが使われている場合&lt;/strong&gt;
-次のエラーが出力されます。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nginx: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;emerg] &lt;span class=&quot;nb&quot;&gt;bind&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; to 127.0.0.1:8080 failed &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;48: Address already &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;use&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-nginx: &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;emerg] &lt;span class=&quot;nb&quot;&gt;bind&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; to &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;::1]:8080 failed &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;48: Address already &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;use&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;server_nameディレクティブ&quot;&gt;server_nameディレクティブ&lt;/h3&gt;
-&lt;p&gt;バーチャルサーバの名前を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;server_name name ...;&lt;/code&gt;&lt;br /&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;server_name &quot;&quot;;&lt;/code&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;ワイルドカード&quot;&gt;ワイルドカード&lt;/h4&gt;
-&lt;p&gt;サーバ名には最初と最後の名前にワイルドカード(&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;)が使えます。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server_name example.com *.example.com api.example.*;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;ちなみに&lt;code class=&quot;highlighter-rouge&quot;&gt;example.com&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;*.example.com&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;.example.com&lt;/code&gt;に結合できます。&lt;/p&gt;
-
-&lt;h4 id=&quot;正規表現&quot;&gt;正規表現&lt;/h4&gt;
-&lt;p&gt;名前の前にチルダ(&lt;code class=&quot;highlighter-rouge&quot;&gt;~&lt;/code&gt;)をつけて&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;servername www.exmaple.com ~^www\d+\.example\.com$;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;のように正規表現を使えます。&lt;/p&gt;
-
-&lt;p&gt;またキャプチャも使えます。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  server_name ~^(www\.)?(.+)$;
-  location / {
-    root /sites/$2;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;名前付きキャプチャは変数として使えます。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  server_name ~^(www\.)?(?&amp;lt;domain&amp;gt;.+)$;
-
-  location / {
-    root /sites/$domain;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ちなみに &lt;code class=&quot;highlighter-rouge&quot;&gt;$hostname&lt;/code&gt;にはマシンのホスト名が入ります。&lt;/p&gt;
-
-&lt;p&gt;今回はローカルホストにサーバを立てるのでlocalhostを使います。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  server_name localhost;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;charsetディレクティブ&quot;&gt;charsetディレクティブ&lt;/h3&gt;
-&lt;p&gt;指定した文字セットを&lt;code class=&quot;highlighter-rouge&quot;&gt;Content-Type&lt;/code&gt;レスポンスヘッダフィールドに追加します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;charset charset | off;&lt;/code&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;charset off;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;注意点：&lt;code class=&quot;highlighter-rouge&quot;&gt;source_charset&lt;/code&gt; と違うと変換が発生する。&lt;/p&gt;
-
-&lt;p&gt;今回は無難に&lt;code class=&quot;highlighter-rouge&quot;&gt;utf-8&lt;/code&gt;で行きます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  charset utf-8;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;access_logディレクティブ-1&quot;&gt;access_logディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;このディレクティブは前述しているため基本説明は省略します。&lt;/p&gt;
-
-&lt;p&gt;追記としては、このサーバに対するアクセスのみログが記録されます。&lt;/p&gt;
-
-&lt;p&gt;今回はこのサーバだけのアクセスログを残しておきます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  access_log /usr/local/var/log/nginx/localhost.access.log  main;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;formatは既に定義済みの&lt;code class=&quot;highlighter-rouge&quot;&gt;main&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;h4 id=&quot;open-2-no-such-file-or-directory-が出る場合&quot;&gt;open() 2: No such file or directory が出る場合&lt;/h4&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;nginx: [emerg] open() &quot;/usr/local/var/log/enginx/localhost.access.log&quot; failed (2: No such file or directory)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;よく見ると分かりますが、パスが間違ってます。&lt;/p&gt;
-
-&lt;h3 id=&quot;error_pageディレクティブ&quot;&gt;error_pageディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;エラーページとエラーコードのマッピングを設定します。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;uri&lt;/code&gt;には変数を使えます。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;error_page code ... [=[response]] uri;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;例えば404と500番台でエラーページを用意してるなら&lt;/p&gt;
-
-&lt;h4 id=&quot;getに変更してリダイレクト&quot;&gt;GETに変更してリダイレクト&lt;/h4&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  error_page 404 /404.html;
-  error_page 500 502 503 504 /50x.html;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;と設定すると、ステータスコードと一致するページにHEAD以外のリクエストを全て&lt;code class=&quot;highlighter-rouge&quot;&gt;GET&lt;/code&gt;に変更して、内部的にリダイレクトします。&lt;/p&gt;
-
-&lt;h4 id=&quot;応答コードの変更&quot;&gt;応答コードの変更&lt;/h4&gt;
-&lt;p&gt;例えば404ではなく200にしてEmtpy pageを出したいなら&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  error_page 404 = 200 /empty.html;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;のように、応答コードを変更できます。&lt;/p&gt;
-
-&lt;h4 id=&quot;応答ページを別サーバに渡す&quot;&gt;応答ページを別サーバに渡す&lt;/h4&gt;
-&lt;p&gt;例えばPHPなどで404を返すページがある場合&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  error_page 404 = 404php;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;のように設定できます。&lt;/p&gt;
-
-&lt;h4 id=&quot;別locationコンテキストにエラー処理を渡す&quot;&gt;別locationコンテキストにエラー処理を渡す&lt;/h4&gt;
-&lt;p&gt;内部リダイレクトでURIとメソッド変更させない場合は&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  location / {
-    error_page 404 = @fallback;
-  }
-  location @fallback {
-    proxy_pass http://backend;
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;のように別locationに移すことができます。&lt;/p&gt;
-
-&lt;p&gt;今回は404は専用ページを用意する設定にします。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  error_page 404 /404.html;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;locationコンテキスト&quot;&gt;locationコンテキスト&lt;/h2&gt;
-
-&lt;p&gt;リクエストURIに応じて構成を設定する。&lt;/p&gt;
-
-&lt;p&gt;構文:&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;location [ = | ~ | ~* | ^~ ] uri { ... }&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;location @name {... }&lt;/code&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;“%XX”形式エンコードされてテキストはデコード&lt;/li&gt;
-  &lt;li&gt;相対パス&lt;code class=&quot;highlighter-rouge&quot;&gt;.&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;..&lt;/code&gt;の参照は解決&lt;/li&gt;
-  &lt;li&gt;２つ以上続くスラッシュ&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;は1つに差し替え&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;その後、正規化されたURIに対してマッチングが実施される。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;プリフィック文字&lt;/strong&gt;と&lt;strong&gt;正規表現&lt;/strong&gt; の２つで定義できる&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;正規表現のオプション&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;先頭文字が&lt;code class=&quot;highlighter-rouge&quot;&gt;~*&lt;/code&gt;修飾子なら大文字小文字を区別しないマッチング&lt;/li&gt;
-  &lt;li&gt;先頭文字が&lt;code class=&quot;highlighter-rouge&quot;&gt;~&lt;/code&gt;修飾子なら大文字小文字を区別するマッチング&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;locationの検索フロー&quot;&gt;locationの検索フロー&lt;/h3&gt;
-
-&lt;p&gt;指定されたリクエストに合致するlocationを見つけるために、&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;nginxはまずプリフィックス文字列を使って定義されるlcoationを調べます&lt;/li&gt;
-  &lt;li&gt;それらの中で、一番長くマッチするプリフィックスlocationが選択され記憶されます
-    &lt;ul&gt;
-      &lt;li&gt;記憶したプリフィックスlocationに&lt;code class=&quot;highlighter-rouge&quot;&gt;^~&lt;/code&gt;修飾子があれば以降の正規表現チェックはしません。&lt;/li&gt;
-      &lt;li&gt;完全一致&lt;code class=&quot;highlighter-rouge&quot;&gt;=&lt;/code&gt;修飾子で一致したら検索は終了します&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;設定ファイルの中に現れる順番で正規表現を調べます
-    &lt;ol&gt;
-      &lt;li&gt;正規表現の検索は一番最初にマッチした時点で終了します&lt;/li&gt;
-      &lt;li&gt;正規表現にマッチしなかったら、前に記憶されたプリフィックスlocationが使われます&lt;/li&gt;
-    &lt;/ol&gt;
-  &lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;完全一致は指定URIのアクセスが高頻度の場合に適用すると高速化します。&lt;/p&gt;
-
-&lt;h3 id=&quot;検索フロー例&quot;&gt;検索フロー例&lt;/h3&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location = / {
-  # A
-}
-location / {
-  # B
-}
-location /documents/ {
-  # C
-}
-location ^= /images/ {
-  # D
-}
-location ~* \.(gif|jpeg|jpg|png)$ {
-  # E
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;というlocationがあった場合、&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; はAにマッチ&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/index.html&lt;/code&gt; はBにマッチ&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/documents/document.html&lt;/code&gt; はCにマッチ&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/images/1.gif&lt;/code&gt; はDにマッチ&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/documents/1.jpg&lt;/code&gt; はEにマッチ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;というマッチング結果となります。&lt;/p&gt;
-
-&lt;h3 id=&quot;名前付きlocation&quot;&gt;名前付きlocation&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;@&lt;/code&gt;プレフィックスをつけることで名前付きとして定義できます。&lt;br /&gt;
-リクエストのリダイレクトに使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;パーマネントリダイレクト&quot;&gt;パーマネントリダイレクト&lt;/h3&gt;
-&lt;p&gt;locationが末尾が&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;で終わる定義で、設定が &lt;code class=&quot;highlighter-rouge&quot;&gt;proxy_pass&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;fastcgi_pass&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;uwsgi_pass&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;scgi_pass&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;memcached_pass&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;grpc_pass&lt;/code&gt;の1つで処理された場合は、特別処理がされます。
-同じURIだが最後の&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;がないリクエストの応答は、&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;がリクエストのURIに追加されて301として返される。&lt;/p&gt;
-
-&lt;h3 id=&quot;rootディレクティブ&quot;&gt;rootディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;ルートディレクトリを設定する。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;root path;&lt;/code&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;root html;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;例えば次の設定の場合&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /i/ {
-  root /data/wwww;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/i/top.png&lt;/code&gt;リクエストは、&lt;code class=&quot;highlighter-rouge&quot;&gt;/data/www/i/top.png&lt;/code&gt;が応答します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;path&lt;/code&gt; には &lt;code class=&quot;highlighter-rouge&quot;&gt;$document_root&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;$realpath_root&lt;/code&gt;を除く変数が使えます。&lt;/p&gt;
-
-&lt;p&gt;ルートディレクトリの値にURIを追加するだけでファイルパスが構築されます。
-URIを変更する場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;alias&lt;/code&gt;ディレクティブを使います。&lt;/p&gt;
-
-&lt;p&gt;今回はトップページ、記事ページ、画像の3locationを用意します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location = / {
-  root /usr/local/var/www;
-}
-location /articles/ {
-  root /usr/local/var/www;
-}
-location ~* \.(gif|jpg|jpeg|png)$ {
-  root /usr/local/var/www/images;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;aliasディレクティブ&quot;&gt;aliasディレクティブ&lt;/h3&gt;
-&lt;p&gt;指定locationの置き換えを設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;alias path;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;例えば次の設定の場合&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /i/ {
-  alias /data/www/images/;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/i/top.png&lt;/code&gt;リクエストは、&lt;code class=&quot;highlighter-rouge&quot;&gt;/data/www/images/top.png&lt;/code&gt;が応答します。&lt;/p&gt;
-
-&lt;p&gt;もしlocationがディレクティブの最後の場所に一致する場合&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /images/ {
-  alias /data/www/images/;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;この場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;root&lt;/code&gt;ディレクティブを使ったほうがいいです。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location /images/ {
-  root /data/www;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;indexディレクティブ&quot;&gt;indexディレクティブ&lt;/h3&gt;
-
-&lt;p&gt;indexとして使われるファイル定義を設定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;file&lt;/code&gt;には変数を使えます。
-ファイルは設定順でチェックします。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;index file ...;&lt;/code&gt;
-デフォルト: &lt;code class=&quot;highlighter-rouge&quot;&gt;index index.html;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;注意点:&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;index&lt;/code&gt;を使うと内部リダイレクトが発生し、想定外のlocationで処理されることがあります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location = / {
-  index index.html;
-}
-location / {
-  # B
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この場合、&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; リクエストは&lt;code class=&quot;highlighter-rouge&quot;&gt;/index.html&lt;/code&gt;として、2番目のlocation(B)で処理されます。&lt;/p&gt;
-
-&lt;p&gt;今回はトップページのみ指定します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;location = / {
-  root /usr/local/var/www;
-  index index.html;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;denyディレクティブ&quot;&gt;denyディレクティブ&lt;/h3&gt;
-&lt;p&gt;指定ネットワークやアドレスのアクエス拒否を設定します。&lt;/p&gt;
-
-&lt;p&gt;構文: &lt;code class=&quot;highlighter-rouge&quot;&gt;deny address | CIDR | unix: | all;&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;unix:&lt;/code&gt;の場合は全てのUNIXドメインソケットのアクセス拒否になります。&lt;/p&gt;
-
-&lt;p&gt;特定のファイルに対してアクセス拒否したい場合などに使います。&lt;br /&gt;
-今回は特に拒否したいファイルなどはないため設定しません。&lt;/p&gt;
-
-&lt;h2 id=&quot;出来上がった設定ファイルnginxconf&quot;&gt;出来上がった設定ファイル(nginx.conf)&lt;/h2&gt;
-
-&lt;p&gt;この記事を通して&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;から必要なディレクティブのみを設定したものになります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;worker_processes  4;
-
-error_log /usr/local/var/log/nginx/error.log error;
-
-worker_rlimit_nofile 32;
-
-events {
-  worker_connections 1024;
-}
-
-http {
-  include mime.types;
-  default_type application/octet-stream;
-
-  log_format  main  '$remote_addr - $remote_user [$time_local] &quot;$request&quot; '
-                    '$status $body_bytes_sent &quot;$http_referer&quot; '
-                    '&quot;$http_user_agent&quot; &quot;$http_x_forwarded_for&quot;';
-
-  access_log /usr/local/var/log/nginx/access.log main;
-
-  sendfile on;
-  tcp_nopush on;
-
-  keepalive_timeout 60;
-
-  gzip on;
-  gzip_min_length 1024;
-  gzip_types text/css text/javascript application/json;
-
-
-  server {
-    listen 8080;
-    server_name localhost;
-
-    charset utf-8;
-
-    access_log /usr/local/var/log/nginx/localhost.access.log  main;
-
-    error_page 404 /404.html;
-
-    location = / {
-      root /usr/local/var/www;
-    }
-
-    location /articles/ {
-      root /usr/local/var/www;
-    }
-
-    location ~* \.(gif|jpg|jpeg|png)$ {
-      root /usr/local/var/www/images;
-    }
-  }
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ファイル配置図&quot;&gt;ファイル配置図&lt;/h3&gt;
-
-&lt;p&gt;&lt;em&gt;/usr/local/var/www&lt;/em&gt; 配下は次のように配置してます。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;$ tree
-.
-├── 404.html
-├── articles
-│   └── 1.html
-├── images
-│   └── nginx.png
-└── index.html
-&lt;/code&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8080&lt;/code&gt;にアクセスすると &lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt;が返ってきます。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8080/articles/1.html&lt;/code&gt; にアクセスすると &lt;code class=&quot;highlighter-rouge&quot;&gt;1.html&lt;/code&gt; が返ってきます。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8080/nginx.png&lt;/code&gt;にアクセスすると &lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.png&lt;/code&gt;が返ってきます。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;localhost:8080/hoge&lt;/code&gt;にアクセスすると &lt;code class=&quot;highlighter-rouge&quot;&gt;404.html&lt;/code&gt;が返ってきます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;macにnginxでゼロから丁寧に簡易なhttpサーバを立てる&quot;&gt;Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる&lt;/h2&gt;
-
-&lt;p&gt;今回は、とても単純なブログサーバをnginxで立ち上げました。前回と違い結構なボリュームでした。&lt;br /&gt;
-一つずつディレクティブを確認したためこのボリュームになりました。&lt;br /&gt;
-しかしこの部分がnginxでもっとも基礎の中でも重要な基礎となります。&lt;br /&gt;
-ここを理解することで次の記事「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step3-on-mac&quot;&gt;Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる&lt;/a&gt;&lt;/span&gt;
-」へと繋げられます。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。 [so_keepalive=on off [keepidle]:[keepintvl]:[keepcnt]];</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png" /></entry></feed>
+」について説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><category term="ruby" /><category term="rails" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ3回目です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/0.png" /></entry></feed>
