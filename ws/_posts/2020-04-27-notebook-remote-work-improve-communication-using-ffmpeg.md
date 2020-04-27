@@ -1,5 +1,5 @@
 ---
-title: iOSエンジニアなら今すぐ動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう
+title: iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう
 description: iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。
 categories: notebook remote-work
 tags: notebook remote-work ffmpeg quicktime-player mac
