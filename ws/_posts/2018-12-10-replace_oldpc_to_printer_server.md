@@ -43,37 +43,8 @@ PC内のデータやOSは全て削除されます。
 
 ## イメージファイルをUSBフラッシュメモリに書き込む
 
-### USBメモリの初期化
-
-ディスク一覧を確認
-```bash
-$ diskutil list
-```
-
-MS_DOS(FAT)形式で初期化
-ディスク一覧で確認したパーティションが `/dev/disk2` だとしたら
-```bash
-$ diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
-```
-
-マウント解除
-```bash
-$ diskuntil unmountDisk /dev/disk2
-```
-
-ISOイメージをUSBメモリに書き込む
-ここで Finder 上でisoイメージファイルをコピペしても認識されません。
-ddコマンド使って書き込む。
-
-以下は isoイメージファイルが ~/Downloads/centos.iso とした場合
-```bash
-$ sudo dd if=~/Downloads/centos.iso of=/dev/disk2 bs=4028
-```
-
-ディスク取り出し
-```bash
-$ diskutil eject /dev/disk2
-```
+次にイメージファイルをUSBフラッシュメモリに書き込みます。
+書き込む方法は「{% post_link_text 2020-04-29-linux-write-iso-to-usb-flash-drive %}」をご覧ください。
 
 ## BIOSのブート順序を変える
 1. PCの電源を入れてF2を押しておき、F12が押せるように設定を変更
@@ -94,13 +65,14 @@ $ yum install cups cups-devel
 権限エラーの場合はsudo つけてください
 
 ### 次のような必要ファイルが見つからない場合は
-```実行コマンド = rpm -Uvh ./packages/cnijfilter-common-3.30-1.i386.rpm
+```
+実行コマンド = rpm -Uvh ./packages/cnijfilter-common-3.30-1.i386.rpm
 エラー: 依存性の欠如:
 	libcups.so.2 は cnijfilter-common-3.30-1.i386 に必要とされています
 	libpopt.so.0 は cnijfilter-common-3.30-1.i386 に必要とされています
 ```
 
-```bash
+```sh
 $ yum provides libcups.so.2
 ```
 のようにすることで内包してるパッケージ名を確認できます。
@@ -299,7 +271,6 @@ OSの再起動を試してみてください。
 
 ## 参考URL
 
-- [Mac OSX上でISOイメージからBootable USBを作成する - 1日ひとつだけ強くなる](http://hal0taso.hateblo.jp/entry/2016/09/08/190140)
 - [SambaとCUPSと各種プリンター（CUPS・プリンタ編） - Qiita](https://qiita.com/yyano/items/e0c27eda5d8e70de66e0)
 - [【丁寧解説】Linuxのファイアウォール firewalld の使い方](https://eng-entrance.com/linux-centos-firewall)
 - [CUPS 設定 - CentOS プリンタ 管理](http://centos86config.web.fc2.com/cups-setting.html)
