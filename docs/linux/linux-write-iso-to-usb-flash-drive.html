@@ -11,33 +11,33 @@
 
 
     
-      <title>【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する - もちゅろぐ</title>
+      <title>MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する" />
+<meta property="og:title" content="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="UICollectionViewを使ったCarousel(カルーセル)を実装します。" />
-<meta property="og:description" content="UICollectionViewを使ったCarousel(カルーセル)を実装します。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple" />
-<meta property="og:url" content="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple" />
+<meta name="description" content="Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。" />
+<meta property="og:description" content="Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive" />
+<meta property="og:url" content="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-10-12T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-04-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple"},"image":"https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png","url":"https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple","headline":"【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-12T00:00:00+09:00","description":"UICollectionViewを使ったCarousel(カルーセル)を実装します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive"},"image":"https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png","url":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive","headline":"MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む","dateModified":"2020-04-29T22:54:00+09:00","datePublished":"2020-04-29T00:00:00+09:00","description":"Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する">
-    <meta name="twitter:description" content="UICollectionViewを使ったCarousel(カルーセル)を実装します。">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png">
+    <meta name="twitter:title" content="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む">
+    <meta name="twitter:description" content="Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
           rel="stylesheet"
@@ -122,8 +122,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ios" itemprop="item">
-              <span itemprop="name">iOS</span>
+            <a href="/tags#linux" itemprop="item">
+              <span itemprop="name">Linux</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -131,18 +131,8 @@
       
         
         
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#uicollectionview" itemprop="item">
-              <span itemprop="name">UICollectionView</span>
-            </a>
-            <meta itemprop="position" content="3">
-          </li>
-        
-      
-        
-        
           <li>
-            【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する
+            MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む
           </li>
         
       
@@ -156,20 +146,22 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" alt="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" alt="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む">
     </div>
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</h1>
+    <h1>MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
-        <li class="list-inline-item">2019-10-12</li>
+        <li class="list-inline-item">2020-4-29</li>
         
-          <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+          <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
         
-          <li class="list-inline-item"><a href="/tags#uicollectionview">UICollectionView</a></li>
+          <li class="list-inline-item"><a href="/tags#mint">Mint</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
         
       </ul>
     </div>
@@ -178,100 +170,223 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#実装する">実装する</a>
+  <li><a href="#macでisoイメージファイルをusbに焼く流れ">MacでISOイメージファイルをUSBに焼く流れ</a></li>
+  <li><a href="#isoイメージファイルをサイトからダウンロード">ISOイメージファイルをサイトからダウンロード</a></li>
+  <li><a href="#usbフラッシュメモリドライブをmacにセット">USBフラッシュメモリドライブをMacにセット</a></li>
+  <li><a href="#diskutilコマンドでusbフラッシュメモリを初期化">diskutilコマンドでUSBフラッシュメモリを初期化</a>
     <ul>
-      <li><a href="#storyboard">storyboard</a></li>
-      <li><a href="#コード">コード</a></li>
+      <li><a href="#diskutilとは">diskutilとは？</a></li>
+      <li><a href="#初期化の手順">初期化の手順</a></li>
+      <li><a href="#diskutil-listコマンドで対象ドライブのパス確認">diskutil listコマンドで対象ドライブのパス確認</a></li>
+      <li><a href="#diskutil-erasediskコマンドでパス指定で削除">diskutil eraseDiskコマンドでパス指定で削除</a></li>
+      <li><a href="#diskutil-unmountdiskコマンドでドライブのマウント解除">diskutil unmountDiskコマンドでドライブのマウント解除</a></li>
     </ul>
   </li>
-  <li><a href="#まとめ">まとめ</a></li>
+  <li><a href="#ddコマンドでisoイメージファイルをusbフラッシュメモリにコピー">ddコマンドでisoイメージファイルをUSBフラッシュメモリにコピー</a>
+    <ul>
+      <li><a href="#ddコマンドとは">ddコマンドとは？</a></li>
+      <li><a href="#ddコマンドでisoファイルをusbメモリにコピーする">ddコマンドでISOファイルをUSBメモリにコピーする</a></li>
+      <li><a href="#usbフラッシュメモリドライブを抜く">USBフラッシュメモリドライブを抜く</a></li>
+    </ul>
+  </li>
+  <li><a href="#インストールメディアは単純だけど慣れるほど使わない">インストールメディアは単純だけど慣れるほど使わない</a></li>
 </ul>
   </div>
   <section>
-  <p>UICollectionViewを使ったCarousel(カルーセル)を実装します。</p>
+  <p><strong>Linux触るならシェルで焼こう</strong></p>
 
-<p>カルーセルとは横にバナー画像が並んだ画像ビューワーです。
-主な用途として期間中のキャンペーンバナーの表示として使われます。</p>
+<p>使わなくなったPCにLinuxをインストールして触れる機会を増やし、慣れて知識を増やそう作戦の最初の壁。<br />
+それがLinuxのインストール…ではなく<strong>インストール用ドライブの作成です。</strong><br />
+単純にUSBメディアにISOファイルを入れるだけと思って、Finderで外部デバイスにコピーしたけどちゃんとできない人がいるのでは？</p>
 
-<p>色々な実装方法がありますが、今回はとにかくシンプルを優先して実装します。</p>
+<p>インストールメディア用として認識させるには、ちゃんとした段取りで正しい方法で用意する必要があります。<br />
+この記事は、Macを使ってLinuxのISOイメージファイルをターミナルを使って作成する手順について説明しています。</p>
 
-<p>なお記事中の解説画像は<a href="https://placeholder.com">Placeholder.com</a>で生成したものを使っています。</p>
+<h2 id="macでisoイメージファイルをusbに焼く流れ">MacでISOイメージファイルをUSBに焼く流れ</h2>
 
-<h2 id="実装する">実装する</h2>
+<ol>
+  <li>イメージファイルをサイトから<strong>ダウンロード</strong></li>
+  <li><strong>USBフラッシュメモリドライブ</strong> をMacにセット</li>
+  <li>diskutilコマンドで<strong>USBフラッシュメモリを初期化</strong></li>
+  <li>ddコマンドで<strong>isoイメージファイルをUSBフラッシュメモリにコピー</strong></li>
+</ol>
 
-<p>今回実装するのは次のようなカルーセルです。</p>
+<h2 id="isoイメージファイルをサイトからダウンロード">ISOイメージファイルをサイトからダウンロード</h2>
+<p>OSのISOイメージファイルを公式サイトからダウンロードします。</p>
 
-<p>背景色は識別用に出しているだけなのでデフォルトに戻しても問題ありません。</p>
+<p>今回OSは<a href="https://www.linuxmint.com/">Linux Mint</a>にします。</p>
 
-<p><a href="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif"><img src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif" width="100%" alt="" /></a></p>
+<p><a href="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/4.png"><img src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/4.png" width="50%" alt="LinuxMintLogo" /></a></p>
 
-<h3 id="storyboard">storyboard</h3>
+<p>Linux MintのISOイメージファイルを<a href="https://www.linuxmint.com/download.php">Linux Mintのダウンロードページ</a>から落とします。</p>
 
-<p><a href="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png"><img src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png" width="100%" alt="" /></a></p>
+<h2 id="usbフラッシュメモリドライブをmacにセット">USBフラッシュメモリドライブをMacにセット</h2>
 
-<p>スクロールをページングスタイルにするために、 <code class="highlighter-rouge">Paging Enabled</code> を <code class="highlighter-rouge">ON</code> にします。
-<a href="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png"><img src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png" width="50%" alt="" /></a></p>
+<p>使うUSBフラッシュメモリなら何でもいいです、今回は手元にあるものから用意しました。</p>
 
-<h3 id="コード">コード</h3>
+<p><a href="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/1.jpg"><img src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/1.jpg" width="50%" alt="USBフラッシュメモリ" /></a></p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">images</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIImage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image1"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image2"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image3"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image4"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image5"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image6"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image7"</span><span class="p">)</span><span class="o">!</span>
-<span class="p">]</span>
+<p>用意したUSBフラッシュメモリドライブをMacに挿します。<br />
+もし下記アラートが出たら「無視」を選んでください。</p>
 
-<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
-    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="o">!</span>
-    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">collectionViewHeightConstraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">!</span>
+<p><a href="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/2.png"><img src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/2.png" width="50%" alt="MacUSB認識不可ディスクアラート" /></a></p>
 
-    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
-        <span class="n">collectionView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
-    <span class="p">}</span>
+<h2 id="diskutilコマンドでusbフラッシュメモリを初期化">diskutilコマンドでUSBフラッシュメモリを初期化</h2>
 
-    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLayoutSubviews</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLayoutSubviews</span><span class="p">()</span>
-        <span class="k">let</span> <span class="nv">layout</span> <span class="o">=</span> <span class="kt">UICollectionViewFlowLayout</span><span class="p">()</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">scrollDirection</span> <span class="o">=</span> <span class="o">.</span><span class="n">horizontal</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">minimumInteritemSpacing</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">minimumLineSpacing</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">itemSize</span> <span class="o">=</span> <span class="n">collectionView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span>
-        <span class="n">collectionView</span><span class="o">.</span><span class="n">collectionViewLayout</span> <span class="o">=</span> <span class="n">layout</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<p>ターミナルでdiskutilコマンドを使ってドライブ初期化を実行します。</p>
 
-<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UICollectionViewDataSource</span> <span class="p">{</span>
-    <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="p">,</span> <span class="n">numberOfItemsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">images</span><span class="o">.</span><span class="n">count</span>
-    <span class="p">}</span>
+<h3 id="diskutilとは">diskutilとは？</h3>
+<p>diskutilとはディスクユーティリティツールです。<br />
+<strong>ローカルのディスクとボリュームを管理</strong> するユーティリティです。<br />
+ほとんどのコマンドにはsudoが必要です。</p>
 
-    <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="p">,</span> <span class="n">cellForItemAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewCell</span> <span class="p">{</span>
-        <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">collectionView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withReuseIdentifier</span><span class="p">:</span> <span class="s">"CollectionViewCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">CollectionViewCell</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">item</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">cell</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<h3 id="初期化の手順">初期化の手順</h3>
+<p>diskutilコマンドを使ってドライブを初期化するには、次の手順になります。</p>
 
-<span class="kd">class</span> <span class="kt">CollectionViewCell</span><span class="p">:</span> <span class="kt">UICollectionViewCell</span> <span class="p">{</span>
-    <span class="kd">@IBOutlet</span>  <span class="k">weak</span> <span class="k">var</span> <span class="nv">imageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="o">!</span>
-<span class="p">}</span>
+<ol>
+  <li>diskutil listコマンドで<strong>対象ドライブのパス確認</strong></li>
+  <li>diskutil eraseDiskコマンドで<strong>パス指定で削除</strong></li>
+  <li>diskutil unmountDiskコマンドでドライブのマウント解除</li>
+</ol>
+
+<h3 id="diskutil-listコマンドで対象ドライブのパス確認">diskutil listコマンドで対象ドライブのパス確認</h3>
+<p><code class="highlighter-rouge">diskutil list</code>コマンドで現在マウントしてるUSBフラッシュメモリドライブを探します。</p>
+
+<p>例えば下記は自分の環境で<code class="highlighter-rouge">diskutil list</code>を実行した結果です。<br />
+この場合だと最後<code class="highlighter-rouge">external</code>と<code class="highlighter-rouge">physical</code>と表示されてる<code class="highlighter-rouge">/dev/disk2</code>ですね。<br />
+容量(SIZE)も用意したUSBフラッシュメモリと同じなので間違いないです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
+/dev/disk0 (internal):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                         251.0 GB   disk0
+   1:                        EFI EFI                     314.6 MB   disk0s1
+   2:                 Apple_APFS Container disk1         250.7 GB   disk0s2
+
+/dev/disk1 (synthesized):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      APFS Container Scheme -                      +250.7 GB   disk1
+                                 Physical Store disk0s2
+   1:                APFS Volume Macintosh HD            206.4 GB   disk1s1
+   2:                APFS Volume Preboot                 47.8 MB    disk1s2
+   3:                APFS Volume Recovery                522.7 MB   disk1s3
+   4:                APFS Volume VM                      3.2 GB     disk1s4
+
+/dev/disk2 (external, physical):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:     FDisk_partition_scheme                        *4.0 GB     disk2
+   1:                       0xEF                         9.2 MB     disk2s2
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">viewDidLoad</code> ではなく <code class="highlighter-rouge">viewDidLayoutSubviews</code> に実装してるのは、画面回転に対応するためです。</p>
+<h3 id="diskutil-erasediskコマンドでパス指定で削除">diskutil eraseDiskコマンドでパス指定で削除</h3>
+<p><code class="highlighter-rouge">diskutil eraseDisk</code>コマンドで対象ディスクのパスを指定してディスクを初期化します。<br />
+使い方を簡単にすると下記です。</p>
 
-<p><code class="highlighter-rouge">itemSize</code> を UICollectionViewのサイズと同じにすることで1スクリーンに1セルになります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eraseDisk format name ドライブのパス
+</code></pre></div></div>
 
-<p>あとはこれを横スクロールにすれば、カルーセルの完成です。</p>
+<p>ドライブのパスは、先程調べたパス(<code class="highlighter-rouge">/dev/disk2</code>)になるので結果的に実行するコマンドは下記になります。</p>
 
-<p>よりカルーセルらしく見せるには画像の比率を合わせることで余白がなくなりそれっぽく見えます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
+</code></pre></div></div>
 
-<h2 id="まとめ">まとめ</h2>
+<p><code class="highlighter-rouge">MS-DOS</code>はファイルフォーマット<code class="highlighter-rouge">FAT</code>となります。<code class="highlighter-rouge">FAT32</code>は古いので大抵のOSではサポートしてるため。
+今回はUSBフラッシュメモリの容量は4GBなので<code class="highlighter-rouge">FAT</code>でちょうど良かったりする。
+(FATの最大ファイルサイズは4GiB)<br />
+<code class="highlighter-rouge">UNTITLED</code>は何でもいいです。</p>
 
-<p>UIデザインパターンの1つで、ECサイトやキュレーションサイトなど様々なサービスで使われやすいデザインなので覚えておいて損はないと思います。</p>
+<p>下記は先程のコマンドを実行した結果です。<br />
+<code class="highlighter-rouge">Finished erase on disk2</code>と出て無事初期化成功しています。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
+Started erase on disk2
+Unmounting disk
+Creating the partition map
+Waiting <span class="k">for </span>partitions to activate
+Formatting disk2s2 as MS-DOS <span class="o">(</span>FAT<span class="o">)</span> with name UNTITLED
+512 bytes per physical sector
+/dev/rdisk2s2: 7478992 sectors <span class="k">in </span>934874 FAT32 clusters <span class="o">(</span>4096 bytes/cluster<span class="o">)</span>
+<span class="nv">bps</span><span class="o">=</span>512 <span class="nv">spc</span><span class="o">=</span>8 <span class="nv">res</span><span class="o">=</span>32 <span class="nv">nft</span><span class="o">=</span>2 <span class="nv">mid</span><span class="o">=</span>0xf8 <span class="nv">spt</span><span class="o">=</span>32 <span class="nv">hds</span><span class="o">=</span>255 <span class="nv">hid</span><span class="o">=</span>411648 <span class="nv">drv</span><span class="o">=</span>0x80 <span class="nv">bsec</span><span class="o">=</span>7493632 <span class="nv">bspf</span><span class="o">=</span>7304 <span class="nv">rdcl</span><span class="o">=</span>2 <span class="nv">infs</span><span class="o">=</span>1 <span class="nv">bkbs</span><span class="o">=</span>6
+Mounting disk
+Finished erase on disk2
+</code></pre></div></div>
+
+<h3 id="diskutil-unmountdiskコマンドでドライブのマウント解除">diskutil unmountDiskコマンドでドライブのマウント解除</h3>
+<p>削除工程の最後は、マウント解除です。<br />
+これをせず次工程のISOイメージファイルをコピーしようとすると下記エラーとなります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dd: /dev/disk2: Resource busy
+</code></pre></div></div>
+
+<p>下記は<code class="highlighter-rouge">diskutil unmountDisk</code>コマンドでマウント解除した結果です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil unmountDisk /dev/disk2
+Unmount of all volumes on disk2 was successful
+</code></pre></div></div>
+
+<h2 id="ddコマンドでisoイメージファイルをusbフラッシュメモリにコピー">ddコマンドでisoイメージファイルをUSBフラッシュメモリにコピー</h2>
+
+<p><code class="highlighter-rouge">diskutil eraseDisk</code>でUSBフラッシュメモリをキレイにできました。<br />
+今度はisoイメージファイルをUSBフラッシュメモリにコピーします。<br />
+コピーには<code class="highlighter-rouge">dd</code>コマンドを使います。</p>
+
+<h3 id="ddコマンドとは">ddコマンドとは？</h3>
+<p>ファイルの変換とコピーするコマンドです。
+標準入力を標準出力にコピーします。
+入力データは512バイトのブロック毎に入力・出力します。</p>
+
+<h3 id="ddコマンドでisoファイルをusbメモリにコピーする">ddコマンドでISOファイルをUSBメモリにコピーする</h3>
+<p><code class="highlighter-rouge">dd</code>コマンドを次のように指定します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>dd <span class="k">if</span><span class="o">=</span>~/Downloads/linuxmint-19.3-xfce-32bit.iso <span class="nv">of</span><span class="o">=</span>/dev/disk2 <span class="nv">bs</span><span class="o">=</span>4028
+489925+1 records <span class="k">in
+</span>489925+1 records out
+1973420032 bytes transferred <span class="k">in </span>1604.956170 secs <span class="o">(</span>1229579 bytes/sec<span class="o">)</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">dd</code>コマンドのオプションに<code class="highlighter-rouge">if</code>と<code class="highlighter-rouge">of</code>と<code class="highlighter-rouge">bs</code>オプションを使います。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">if=</code>オプションで入力ファイルとなるISOイメージファイルのパスを指定します。</li>
+  <li><code class="highlighter-rouge">of=</code>オプションで出力ファイルとなるドライブのパスを指定します。</li>
+  <li><code class="highlighter-rouge">bs=</code>オプションでブロックサイズを指定します。未指定時は512バイトです。</li>
+</ul>
+
+<p>このコマンドは完了に時間がかかります。<br />
+動いてるかどうかは、USBフラッシュメモリドライブによっては、入出力の点灯で確認できます。</p>
+
+<h3 id="usbフラッシュメモリドライブを抜く">USBフラッシュメモリドライブを抜く</h3>
+
+<p>ISOイメージファイルをUSBフラッシュメモリへコピーが完了したらマウント解除して安全にUSBドライブが抜けるようにします。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eject /dev/disk2
+Disk /dev/disk2 ejected
+</code></pre></div></div>
+
+<p>下記は<code class="highlighter-rouge">diskutil list</code>を実行した結果です。消えてることが分かります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
+/dev/disk0 (internal):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      GUID_partition_scheme                         251.0 GB   disk0
+   1:                        EFI EFI                     314.6 MB   disk0s1
+   2:                 Apple_APFS Container disk1         250.7 GB   disk0s2
+
+/dev/disk1 (synthesized):
+   #:                       TYPE NAME                    SIZE       IDENTIFIER
+   0:      APFS Container Scheme -                      +250.7 GB   disk1
+                                 Physical Store disk0s2
+   1:                APFS Volume Macintosh HD            206.4 GB   disk1s1
+   2:                APFS Volume Preboot                 47.8 MB    disk1s2
+   3:                APFS Volume Recovery                522.7 MB   disk1s3
+   4:                APFS Volume VM                      3.2 GB     disk1s4
+</code></pre></div></div>
+
+<h2 id="インストールメディアは単純だけど慣れるほど使わない">インストールメディアは単純だけど慣れるほど使わない</h2>
+<p>一回でも手を動かしてインストールメディアを作成してしまえば、思いの外単純だと思います。
+でもそう何回もインストールメディアを作ることはなく、必要となったときには忘れてしまいます。</p>
+
+<p>こういうのは、慣れるより探せです。</p>
 
   </section>
 
@@ -463,10 +578,6 @@
                 
                 
                 
-                    <li><h3><a href="/ios/uicollectionview/uicollectionview-in-table">UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</a></h3></li>
-                    
-                    
-                
 
             
                 
@@ -526,10 +637,6 @@
             
                 
                 
-                
-                    <li><h3><a href="/ios/ios-xib-optimaize">StoryboardやXibのロード処理の作りを改善する</a></h3></li>
-                    
-                    
                 
 
             
