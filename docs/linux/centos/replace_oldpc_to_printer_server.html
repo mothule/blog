@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/centos/replace_oldpc_to_printer_server"},"image":"https://blog.mothule.com/assets/images/2018-12-10-replace_oldpc_to_printer_server.png","url":"https://blog.mothule.com/linux/centos/replace_oldpc_to_printer_server","headline":"古いPCにLinux(CentOS 7)をUSBメモリでインストールしてプリンターサーバーとして再生させる","dateModified":"2020-02-02T23:05:11+09:00","datePublished":"2018-12-10T00:00:00+09:00","description":"こないだ断捨離してたら独身の頃買ったネットブックを発見。 長らく使っておらず今後も予定なかったので、破棄も考えたのですが比較的使っているプリントサーバとして勉強がてら復活させました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/centos/replace_oldpc_to_printer_server"},"image":"https://blog.mothule.com/assets/images/2018-12-10-replace_oldpc_to_printer_server.png","url":"https://blog.mothule.com/linux/centos/replace_oldpc_to_printer_server","headline":"古いPCにLinux(CentOS 7)をUSBメモリでインストールしてプリンターサーバーとして再生させる","dateModified":"2020-04-29T22:53:02+09:00","datePublished":"2018-12-10T00:00:00+09:00","description":"こないだ断捨離してたら独身の頃買ったネットブックを発見。 長らく使っておらず今後も予定なかったので、破棄も考えたのですが比較的使っているプリントサーバとして勉強がてら復活させました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -184,11 +184,7 @@
   <li><a href="#構築したプリントサーバ">構築したプリントサーバ</a></li>
   <li><a href="#注意">注意</a></li>
   <li><a href="#イメージファイルをダウンロード">イメージファイルをダウンロード</a></li>
-  <li><a href="#イメージファイルをusbフラッシュメモリに書き込む">イメージファイルをUSBフラッシュメモリに書き込む</a>
-    <ul>
-      <li><a href="#usbメモリの初期化">USBメモリの初期化</a></li>
-    </ul>
-  </li>
+  <li><a href="#イメージファイルをusbフラッシュメモリに書き込む">イメージファイルをUSBフラッシュメモリに書き込む</a></li>
   <li><a href="#biosのブート順序を変える">BIOSのブート順序を変える</a></li>
   <li><a href="#yum-を使う準備">yum を使う準備</a></li>
   <li><a href="#cupsをインストール">CUPSをインストール</a>
@@ -284,32 +280,9 @@ system-config-printer は GUI なのでそれ以外の方法で構築します</
 
 <h2 id="イメージファイルをusbフラッシュメモリに書き込む">イメージファイルをUSBフラッシュメモリに書き込む</h2>
 
-<h3 id="usbメモリの初期化">USBメモリの初期化</h3>
-
-<p>ディスク一覧を確認</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil list
-</code></pre></div></div>
-
-<p>MS_DOS(FAT)形式で初期化
-ディスク一覧で確認したパーティションが <code class="highlighter-rouge">/dev/disk2</code> だとしたら</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
-</code></pre></div></div>
-
-<p>マウント解除</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskuntil unmountDisk /dev/disk2
-</code></pre></div></div>
-
-<p>ISOイメージをUSBメモリに書き込む
-ここで Finder 上でisoイメージファイルをコピペしても認識されません。
-ddコマンド使って書き込む。</p>
-
-<p>以下は isoイメージファイルが ~/Downloads/centos.iso とした場合</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>dd <span class="k">if</span><span class="o">=</span>~/Downloads/centos.iso <span class="nv">of</span><span class="o">=</span>/dev/disk2 <span class="nv">bs</span><span class="o">=</span>4028
-</code></pre></div></div>
-
-<p>ディスク取り出し</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eject /dev/disk2
-</code></pre></div></div>
+<p>次にイメージファイルをUSBフラッシュメモリに書き込みます。
+書き込む方法は「<span><a href="/linux/linux-write-iso-to-usb-flash-drive">MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む</a></span>
+」をご覧ください。</p>
 
 <h2 id="biosのブート順序を変える">BIOSのブート順序を変える</h2>
 <ol>
@@ -330,13 +303,13 @@ ddコマンド使って書き込む。</p>
 <p>権限エラーの場合はsudo つけてください</p>
 
 <h3 id="次のような必要ファイルが見つからない場合は">次のような必要ファイルが見つからない場合は</h3>
-<p>```実行コマンド = rpm -Uvh ./packages/cnijfilter-common-3.30-1.i386.rpm
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>実行コマンド = rpm -Uvh ./packages/cnijfilter-common-3.30-1.i386.rpm
 エラー: 依存性の欠如:
 	libcups.so.2 は cnijfilter-common-3.30-1.i386 に必要とされています
-	libpopt.so.0 は cnijfilter-common-3.30-1.i386 に必要とされています</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>
-```bash
-$ yum provides libcups.so.2
+	libpopt.so.0 は cnijfilter-common-3.30-1.i386 に必要とされています
+</code></pre></div></div>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>yum provides libcups.so.2
 </code></pre></div></div>
 <p>のようにすることで内包してるパッケージ名を確認できます。</p>
 
@@ -508,7 +481,6 @@ exclude=kernel*
 <h2 id="参考url">参考URL</h2>
 
 <ul>
-  <li><a href="http://hal0taso.hateblo.jp/entry/2016/09/08/190140">Mac OSX上でISOイメージからBootable USBを作成する - 1日ひとつだけ強くなる</a></li>
   <li><a href="https://qiita.com/yyano/items/e0c27eda5d8e70de66e0">SambaとCUPSと各種プリンター（CUPS・プリンタ編） - Qiita</a></li>
   <li><a href="https://eng-entrance.com/linux-centos-firewall">【丁寧解説】Linuxのファイアウォール firewalld の使い方</a></li>
   <li><a href="http://centos86config.web.fc2.com/cups-setting.html">CUPS 設定 - CentOS プリンタ 管理</a></li>
@@ -534,6 +506,11 @@ exclude=kernel*
             
             
             
+
+            
+                
+                
+                
 
             
                 
@@ -1362,6 +1339,9 @@ exclude=kernel*
       
         
         <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
       
   </div>
 </div>
