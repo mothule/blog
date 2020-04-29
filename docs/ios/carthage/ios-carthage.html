@@ -11,15 +11,15 @@
 
 
     
-      <title>Carthageの実務での使い方 - もちゅろぐ</title>
+      <title>Carthageの使い方を体系的に理解する - もちゅろぐ</title>
     
 
     <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="Carthageの実務での使い方" />
+<meta property="og:title" content="Carthageの使い方を体系的に理解する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。" />
-<meta property="og:description" content="ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。" />
+<meta name="description" content="iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。" />
+<meta property="og:description" content="iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。" />
 <link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage" />
 <meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -29,14 +29,14 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png","url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの実務での使い方","dateModified":"2020-04-09T12:02:08+09:00","datePublished":"2019-09-15T00:00:00+09:00","description":"ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-04-30T04:46:58+09:00","datePublished":"2019-09-15T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
     
     
-    <meta name="twitter:title" content="Carthageの実務での使い方">
-    <meta name="twitter:description" content="ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。">
+    <meta name="twitter:title" content="Carthageの使い方を体系的に理解する">
+    <meta name="twitter:description" content="iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。">
     <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png">
 
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -142,7 +142,7 @@
         
         
           <li>
-            Carthageの実務での使い方
+            Carthageの使い方を体系的に理解する
           </li>
         
       
@@ -156,12 +156,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png" alt="Carthageの実務での使い方">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png" alt="Carthageの使い方を体系的に理解する">
     </div>
   
 
   <div class="post-content-title border-bottom mb-4">
-    <h1>Carthageの実務での使い方</h1>
+    <h1>Carthageの使い方を体系的に理解する</h1>
 
     <div class="post-content-tags">
       <ul class="list-inline">
@@ -178,15 +178,21 @@
   <div class="post-content-toc">
     <p>Table of Contents</p>
     <ul>
-  <li><a href="#carthageの読み方">Carthageの読み方</a></li>
-  <li><a href="#carthageとはswift製ライブラリ管理ツール">CarthageとはSwift製ライブラリ管理ツール</a></li>
+  <li><a href="#carthageの基本情報を理解する">Carthageの基本情報を理解する</a>
+    <ul>
+      <li><a href="#carthageの読み方">Carthageの読み方</a></li>
+      <li><a href="#carthageとは">Carthageとは？</a></li>
+    </ul>
+  </li>
   <li><a href="#carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</a>
     <ul>
       <li><a href="#cocoapods">CocoaPods</a></li>
       <li><a href="#carthage">Carthage</a></li>
+      <li><a href="#違いは手軽or柔軟">違いは「手軽」or「柔軟」</a></li>
+      <li><a href="#昔の話">昔の話</a></li>
     </ul>
   </li>
-  <li><a href="#carthageのメリットは早くて安定">Carthageのメリットは早くて安定</a>
+  <li><a href="#carthageのメリット">Carthageのメリット</a>
     <ul>
       <li><a href="#ビルド時間の短縮">ビルド時間の短縮</a>
         <ul>
@@ -196,7 +202,7 @@
       <li><a href="#xcodeの仕様変更に影響しにくい">Xcodeの仕様変更に影響しにくい</a></li>
     </ul>
   </li>
-  <li><a href="#carthageのデメリットは初期導入と対応ライブラリ数とライブラリ削除">Carthageのデメリットは初期導入と対応ライブラリ数とライブラリ削除</a></li>
+  <li><a href="#carthageのデメリット">Carthageのデメリット</a></li>
   <li><a href="#carthageを導入する">Carthageを導入する</a>
     <ul>
       <li><a href="#carghageをインストール">Carghageをインストール</a></li>
@@ -240,53 +246,107 @@
 </ul>
   </div>
   <section>
-  <p>ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、iOS/Swiftに入門したばかりの人や使う機会がなかった人などもいると思います。</p>
+  <p>ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、<br />
+次のケースに該当する方もいると思います。</p>
 
-<p>また個人では使ったことあるけど会社などチームとして使ったことがない人もいるかと思います。</p>
+<ul>
+  <li>そもそも使う機会がなかった人</li>
+  <li>個人利用はあるが会社で使ったことがない人</li>
+  <li>iOS/Swiftに入門したての人</li>
+</ul>
 
-<p>そんな人たち向けに改めてCarthageとは何か？どう便利なのか？どう使うのか？についてまとめてみました。<br />
-なお、iOSアプリに主軸を置いて説明しています。</p>
+<p>そんな人向けにCarthageの基本情報から利用方法など、<br />
+実務で必要な知識を体系的に理解できる範囲で説明します。</p>
 
-<p>この記事は実際に実務において私が運用から得た知見を元にまとめた記事となります。</p>
+<p>この記事は、実務から得た知見ベースで構成しており、<br />
+iOSアプリに主軸を置いて説明しています。</p>
 
-<h2 id="carthageの読み方">Carthageの読み方</h2>
-<p><code class="highlighter-rouge">カーセージ</code>と<code class="highlighter-rouge">カルタゴ</code>の２つに大きく分かれています。
+<h2 id="carthageの基本情報を理解する">Carthageの基本情報を理解する</h2>
+
+<p>Carthageの導入に入る前に、Carthageとはそもそも何か？を説明します。<br />
+「なぜCocoaPodsの後発なのに人気を得ているのか？」など<br />
+歴史を知ることでCocoaPodsとの方針の違いを知ることができます。</p>
+
+<h3 id="carthageの読み方">Carthageの読み方</h3>
+<p>読み方を知らないと脳内音読が捗りませんね。</p>
+
+<p><code class="highlighter-rouge">カーセージ</code>と<code class="highlighter-rouge">カルタゴ</code>の２つに大きく分かれています。<br />
 <a href="https://ja.wikipedia.org/wiki/%E3%82%AB%E3%83%BC%E3%82%BB%E3%83%83%E3%82%B8">Wikipedia</a>見た感じだと、
-<code class="highlighter-rouge">カーセッジ</code>が正解な気もします。<br />
-が、私としてはどれでもいいのです。</p>
+<code class="highlighter-rouge">カーセッジ</code>が正解な気もしますが、<br />
+私としてはどれでもいいのです。</p>
 
-<h2 id="carthageとはswift製ライブラリ管理ツール">CarthageとはSwift製ライブラリ管理ツール</h2>
+<h3 id="carthageとは">Carthageとは？</h3>
+<p><strong>Carthageとは、Swift製のCocoa用ライブラリ管理ツールです。</strong></p>
 
-<p>Carthageとは、Swift製のライブラリ管理ツールです。</p>
+<p>Carthageの特徴は次の点です。</p>
 
-<p>CocoaPodsと同様の立ち位置で、ライブラリ管理に便利なツールとなります。</p>
+<ul>
+  <li>framework追加がシンプルであること</li>
+  <li>プロジェクトファイルやビルド設定を変更しない</li>
+</ul>
+
+<p>Carthageは、バイナリフレームワーク(.framework)の構築しかしません。<br />
+プロジェクトへの追加はユーザー手動です。</p>
 
 <h2 id="carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</h2>
 
+<p>CocoaPodsと比較して何が異なるのか見てみます。</p>
+
 <h3 id="cocoapods">CocoaPods</h3>
 
-<p>CocoaPodsは<code class="highlighter-rouge">$ pod install</code>でライブラリをインストールすると、対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、
+<p>CocoaPodsは<code class="highlighter-rouge">$ pod install</code>でライブラリをインストールすると、<br />
+対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、<br />
 プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。</p>
 
-<p>作成されたワークスペースには、対象プロジェクトとは別に Podsプロジェクト(Pods.xcodeproj)が作成されており、
-その中にライブラリとなるソースコードが含まれています。
-ビルドすることでPodsプロジェクト内のソースコードも一緒にビルドされて、対象プロジェクトにはフレームワークとしてリンクされます。</p>
+<p>作成されたワークスペースには、対象プロジェクトとは別に<br />
+Podsプロジェクト(Pods.xcodeproj)が作成されており、<br />
+その中にライブラリとなるソースコードが含まれています。</p>
+
+<p>ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、<br />
+対象プロジェクトにはフレームワークとしてリンクされます。</p>
 
 <p>リンク処理も全てCocoaPodsが自動で行ってくれます。</p>
 
 <h3 id="carthage">Carthage</h3>
 
-<p>Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。
-ワークスペースを作成したり、フレームワークをプロジェクトにリンクしたりはしません。
-つまり、リンク処理は自分で行う必要があります。</p>
+<p>Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。　　
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。　　
+プロジェクトへのフレームワーク追加は、自分で行う必要があります。</p>
 
-<h2 id="carthageのメリットは早くて安定">Carthageのメリットは早くて安定</h2>
+<h3 id="違いは手軽or柔軟">違いは「手軽」or「柔軟」</h3>
+<p><code class="highlighter-rouge">CocoaPods</code>は、ポータルサイトなどpodを検索したり、Podfileにライブラリを記入してインストール実行すれば、<br />
+プロジェクトへのフレームワーク登録などをやってくれるなど、<strong>使いやすい</strong> がアプローチです。</p>
+
+<p>一方<code class="highlighter-rouge">Carthage</code>は、ポータルサイトはないためCarthageに対応したライブラリはGitHubなどに頼って自力検索です。<br />
+frameworkの作成はしてくれても、それをプロジェクトに追加するのは自分になります。<br />
+しかし、サイト等の統一システムがない分Carthage自体のメンテナンス作業は減り、利用側としても単一障害点がありません。<br />
+またXcodeの仕様変更に対して影響がないため、<strong>柔軟で邪魔しない</strong> がアプローチです。</p>
+
+<h3 id="昔の話">昔の話</h3>
+<p>私はiOSとは2012年から関わっております。<br />
+その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。</p>
+
+<p>CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、<br />
+そのため実務ではリリース毎にPodsファイル含めた全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。</p>
+
+<p>Carthageがよく目にするようになったのはiOS7あたりだったと思います。  <br />
+Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。<br />
+そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、<br />
+Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。</p>
+
+<p>当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）</p>
+
+<p>昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。</p>
+
+<h2 id="carthageのメリット">Carthageのメリット</h2>
+
+<p>Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。</p>
 
 <h3 id="ビルド時間の短縮">ビルド時間の短縮</h3>
 <p>フレームワークのリンク構築を自分で行う必要がある、Carthageの利点は<strong>ビルド時間の短縮</strong>になります。</p>
 
-<p>Carthageはコマンド実行するとライブラリをインストールしてフレームワークを作成します。
-その作成されたフレームワークを、プロジェクトにリンクすることになるため、
+<p>Carthageはコマンド実行するとライブラリをインストールしてフレームワークを作成します。<br />
+その作成されたフレームワークを、プロジェクトにリンクすることになるため、<br />
 つまり事前にフレームワークを作っておくことで、プロジェクトに対してのビルド時間が短くできます。</p>
 
 <h4 id="速度差を測定してみる">速度差を測定してみる</h4>
@@ -334,14 +394,17 @@
 <h3 id="xcodeの仕様変更に影響しにくい">Xcodeの仕様変更に影響しにくい</h3>
 
 <p>Xcode内部の設定や仕様変更が行われるとCocoaPodsの場合は、ワークスペースや設定などを作成・更新をするため
-ときとして動かないケースに出くわします。この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。</p>
+動かないケースに出くわします。<br />
+この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。</p>
 
-<p>その点、Carthageはフレームワークを作成するだけなので、フレームワークの仕様が破壊変更されるなど、Xcodeの変更の影響を受けにくいので
+<p>その点でCarthageはフレームワークを作成するだけなので、Xcodeの仕様変更の影響を受けにくいので<br />
 開発安定性はCocoaPodsより勝っているとも言えます。</p>
 
-<h2 id="carthageのデメリットは初期導入と対応ライブラリ数とライブラリ削除">Carthageのデメリットは初期導入と対応ライブラリ数とライブラリ削除</h2>
+<p>CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。</p>
 
-<p>旨味の多いCarthageですが、欠点としては、</p>
+<h2 id="carthageのデメリット">Carthageのデメリット</h2>
+
+<p>旨味の多いCarthageですが、欠点もあります。</p>
 
 <ul>
   <li>対応ライブラリがCocoaPodsより少ない</li>
@@ -349,12 +412,10 @@
   <li>フレームワークの削除が少々面倒</li>
 </ul>
 
-<p>の3つを上げておきます。</p>
-
-<p>フレームワークの削除は、リンクを外す処理が必要になるため、その手間分面倒ということになります。
+<p>フレームワークの削除は、リンクを外す処理が必要になるため、その手間分面倒ということになります。<br />
 CocoaPodsの場合、Podfileから削除してインストールするだけで自動でリンクを外してくれます。</p>
 
-<p>そして、対応ライブラリが少ないというのは、今の所一番痛い課題かと思います。
+<p>そして、対応ライブラリが少ないというのは、今の所一番痛い課題かと思います。<br />
 これに関しては今後時間による量が増えるのを期待するしかなさそうです。</p>
 
 <h2 id="carthageを導入する">Carthageを導入する</h2>
@@ -483,22 +544,26 @@ Carthage/Checkouts
 </code></pre></div></div>
 
 <h3 id="carthage-buildはgitに必要">Carthage BuildはGitに必要</h3>
-<p>Carthage update などを実行することでライブラリとなるソースコードがダウンロードされてローカルでビルドされたり、サイト上に配置されたバイナリをダウンロードして解凍されることで、成果物をBuildディレクトリに展開されます。
+<p>Carthage updateを実行することで、ライブラリのソースコードがダウンロードしてビルドするか、<br />
+サイト上に配置されたバイナリをダウンロードして解凍されることで、<br />
+成果物をBuildディレクトリに展開されます。<br />
 この中にXcodeに指定するフレームワークが格納されています。</p>
 
 <p>そのためここをGitにあげないと他環境からビルドした場合にフレームワークが見つからずビルドエラーとなります。</p>
 
 <h2 id="carthage-no-use-binariesでデバッグ可能にする">Carthage –no-use-binariesでデバッグ可能にする</h2>
-<p>ライブラリによってはGitHubなどに既にビルド済みのフレームワークが用意されており、Carthageは特に指定がなければそれを使ってインストールして時間短縮を行っています。</p>
+<p>ライブラリによってはGitHubなどに既にビルド済みのフレームワークが用意されており、<br />
+Carthageは特に指定がなければそれを使ってインストールして時間短縮を行っています。</p>
 
-<p>しかし、事前に構築されたフレームワークは、フレームワークが構築されたPC以外でのステップ実行などはできません。
+<p>しかし、事前に構築されたフレームワークは、フレームワークが構築されたPC以外でのステップ実行などはできません。<br />
 その場合は、</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span> &lt;library name&gt;
 </code></pre></div></div>
 <p>というふうに <strong>–no-use-binaries</strong> オプションんを使うことで解決することができます。</p>
 
 <h2 id="carthageのcartfileでライブラリのバージョン指定する方法">CarthageのCartfileでライブラリのバージョン指定する方法</h2>
-<p>Carthageでライブラリのバージョンを指定するには、Cartfileに決まった書き方をすることでライブラリのバージョンを制御することができます。</p>
+<p>Carthageでライブラリのバージョンを指定するには、<br />
+Cartfileに決まった書き方をすることでライブラリのバージョンを制御することができます。</p>
 
 <p>例えば次のようなCartfileが</p>
 
@@ -522,7 +587,8 @@ github "Moga" "ab12c3ef4"
   <li>5.0.0</li>
 </ul>
 
-<p>このときにCartfileで<code class="highlighter-rouge">github "Hoge" ~&gt; 4.2.0</code>が記入された状態で<code class="highlighter-rouge">update</code>を実行したら<code class="highlighter-rouge">4.2.1</code>までアップデートします。<br />
+<p>このときにCartfileで<code class="highlighter-rouge">github "Hoge" ~&gt; 4.2.0</code>が記入された状態で<br />
+<code class="highlighter-rouge">update</code>を実行したら<code class="highlighter-rouge">4.2.1</code>までアップデートします。<br />
 もし<code class="highlighter-rouge">github "Hoge" ~&gt; 4.2</code>が記入されてたら<code class="highlighter-rouge">4.3.0</code>までアップデートします。</p>
 
 <p>なかなか範囲が覚えにくいと思いますが、最後の数字が<code class="highlighter-rouge">x</code>に置き換えて見れば分かりやすくなります。<br />
@@ -531,8 +597,8 @@ github "Moga" "ab12c3ef4"
 
 <h3 id="-で指定バージョン以上">&gt;= で指定バージョン以上</h3>
 
-<p>指定バージョン値以上のバージョンを指定します。
-Cartfileに<code class="highlighter-rouge">github "Hoge" &gt;= 4.2.1</code>と記入された状態で
+<p>指定バージョン値以上のバージョンを指定します。<br />
+Cartfileに<code class="highlighter-rouge">github "Hoge" &gt;= 4.2.1</code>と記入された状態で<br />
 バージョン履歴が下記だった場合は、<code class="highlighter-rouge">5.0.0</code>がインストールされます。</p>
 
 <ul>
@@ -547,8 +613,8 @@ Cartfileに<code class="highlighter-rouge">github "Hoge" &gt;= 4.2.1</code>と�
 
 <h3 id="-で指定バージョンのみ">== で指定バージョンのみ</h3>
 
-<p>もっとも安全なバージョン指定方法です。
-Cartfileに<code class="highlighter-rouge">github "Hoge" == 4.2.1</code>と記入されていたら
+<p>もっとも安全なバージョン指定方法です。<br />
+Cartfileに<code class="highlighter-rouge">github "Hoge" == 4.2.1</code>と記入されていたら<br />
 他にバージョンが出ていても <code class="highlighter-rouge">4.2.1</code>しかインストールされません。</p>
 
 <p>丁寧にバージョンアップをしたいライブラリや開発運用に適した方法です。</p>
@@ -558,15 +624,15 @@ Cartfileに<code class="highlighter-rouge">github "Hoge" == 4.2.1</code>と記�
 <p>GitHub上のコミットを名指しでインストールします。コミットで発行されているrevisionを使います。<br />
 またrevisionだけでなくブランチ名でも使えます。</p>
 
-<p>使っていたライブラリに不具合や脆弱性、iOS最新版が出たけどライブラリ側がバージョンを切っていない状態など
+<p>使っていたライブラリに不具合や脆弱性、iOS最新版が出たけどライブラリ側がバージョンを切っていない状態など<br />
 緊急時で使うことがあるので覚えておいたほうがいいです。</p>
 
 <p><a href="https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement">Carthage公式のVersion requirement</a>でも英語ですが説明セクションはあります。</p>
 
 <h2 id="carthageでgithub以外のライブラリを使う方法">CarthageでGitHub以外のライブラリを使う方法</h2>
 
-<p>大半のライブラリはGitHubにあるとは思いますが、全てのライブラリではありません。
-例えば社内限定であれば自社内にOSSのGitレポジトリがありますし、GitLabやGitBucketもあります。
+<p>大半のライブラリはGitHubにあるとは思いますが、全てのライブラリではありません。<br />
+例えば社内限定であれば自社内にOSSのGitレポジトリがありますし、GitLabやGitBucketもあります。<br />
 その場合はCartfileに次の書き方でそれぞれのライブラリをインストールできるようになります。</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "https://enterprise.local/hoge/fuga/perfect-library" # GitHub Enterprise
@@ -574,20 +640,19 @@ git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
 </code></pre></div></div>
 
 <h2 id="carthageにテスト用ライブラリをインストールする方法">Carthageにテスト用ライブラリをインストールする方法</h2>
-<p>テストでしか使用しないフレームワークは通常のCartfileではなく<code class="highlighter-rouge">Cartfile.private</code>ファイルを用意して、インストールします。</p>
+<p>テストでしか使用しないフレームワークはCartfileではなく<br />
+<code class="highlighter-rouge">Cartfile.private</code>ファイルを用意して、インストールします。</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch Cartfile.private
 </code></pre></div></div>
 
-<p>中身の書き方は通常のCartfileと変わりません。</p>
-
-<p>注意点としては、プロジェクトへのリンク設定で、ターゲットをテストに対して行うことを忘れずに。</p>
+<p>中身の書き方は通常のCartfileと変わりません。<br />
+注意点としては、プロジェクトへのリンク設定で、ターゲットをテストに対して行うことを忘れずに。</p>
 
 <h2 id="carthage-updateでライブラリ更新する方法">Carthage updateでライブラリ更新する方法</h2>
 
-<p>ライブラリが更新されたらCarthageにはライブラリを更新するコマンドが用意されています。</p>
-
-<p>例えば次のシェルはこのような意味になります。</p>
+<p>ライブラリが更新されたらCarthageにはライブラリを更新するコマンドが用意されています。<br />
+例えば次のシェルはこのような意味になります。</p>
 
 <ul>
   <li><code class="highlighter-rouge">SwiftJSON</code>と<code class="highlighter-rouge">APIKit</code>を更新</li>
@@ -598,9 +663,14 @@ git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update SwiftyJSON APIKit <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">--platform iOS</code>はiOSアプリでしか使わないのであれば他プラットフォーム用ビルドをしても意味ないので、その場合はこのオプションをつけます。<br />
-<code class="highlighter-rouge">--no-use-binaries</code>はGitHubなどにビルド済みがzipなどでアップロードされてる場合はそれを使おうとするので、それを使わずコードからビルドしたい場合はこのオプションをつけます。
-バイナリ使ったほうが更新処理は早いのですが、もしアップロードされてるSwiftバージョンが異なったりするとエラーとなるので、そこが気になるならこのオプションをつけといたほうがいいです。
+<p><code class="highlighter-rouge">--platform iOS</code>はiOSアプリでしか使わないのであれば他プラットフォーム用ビルドをしても意味ないので、<br />
+その場合はこのオプションをつけます。</p>
+
+<p><code class="highlighter-rouge">--no-use-binaries</code>はGitHubにビルド済みがアップロードされてる場合はそれを使おうとするので、<br />
+それを使わずコードからビルドしたい場合はこのオプションをつけます。<br />
+バイナリ使ったほうが更新処理は早いのですが、<br />
+もしアップロードされてるSwiftバージョンが異なったりするとエラーとなるので、<br />
+そこが気になるならこのオプションをつけといたほうがいいです。<br />
 少し時間がかかるぐらいなので。</p>
 
 <h2 id="carthage-bootstrapで非更新でビルドする">Carthage bootstrapで非更新でビルドする</h2>
@@ -617,11 +687,15 @@ git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
 <p>になります。</p>
 
 <h3 id="carthage-updateで最新版あればそれ使う">Carthage updateで最新版あればそれ使う</h3>
-<p><code class="highlighter-rouge">$ carthage udpate</code>はCartfileに記載されたライブラリやバージョンからライブラリをビルドしてフレームワークを作成します。
-そのため、実行時に新しいバージョンが公開されていて、かつCartfileにそのバージョンを取り入れる書き方をしていたら新しいバージョンを取り込んでフレームワークを作成します。</p>
+<p><code class="highlighter-rouge">$ carthage udpate</code>はCartfileに記載されたライブラリとバージョン情報から<br />
+ライブラリをビルドしてフレームワークを作成します。</p>
+
+<p>そのため、実行時に新しいバージョンが公開されていてCartfileにもそのバージョンを取り入れる書き方をしていたら<br />
+新しいバージョンを取り込んでフレームワークを作成します。</p>
 
 <h3 id="carthage-bootstrapで環境を再現する">Carthage bootstrapで環境を再現する</h3>
-<p><code class="highlighter-rouge">$ carthage bootstrap</code>はCartfileではなく、Cartfile.resolvedに指定されているバージョンを使ってフレームワークを作成します。新しいバージョンが出ていても、Cartfile.resolved更新当時のバージョンが使われます。</p>
+<p><code class="highlighter-rouge">$ carthage bootstrap</code>は<code class="highlighter-rouge">update</code>と異なりCartfileではなく、Cartfile.resolvedでフレームワークを作成します。<br />
+新しいバージョンが出ていても、Cartfile.resolved更新当時のバージョンが使われます。</p>
 
 <h3 id="ライブラリ更新者はupdateでciや環境構築はbootstrapを使う">ライブラリ更新者はupdateでCIや環境構築はbootstrapを使う</h3>
 <p>これら２つの使い分けに関しては、次のルールにそうといいでしょう</p>
@@ -640,13 +714,14 @@ git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
   </li>
 </ul>
 
-<p>面倒であれば前述したようにBuildディレクトリをgit管理下にすることで<code class="highlighter-rouge">update</code>に絞ることができると思います。</p>
+<p>使い分けが面倒なら前述したように<br />
+Buildディレクトリをgit管理下にすれば<code class="highlighter-rouge">update</code>に絞ることができます。</p>
 
 <h2 id="まとめ">まとめ</h2>
 
-<p>他にも色々な機能や仕様を含んでおりますが、全部紹介せずとも実際に実務で使う分には十分なボリュームになっているかと思います。</p>
+<p>他にも色々な機能や仕様を含んでおりますが、全部紹介せずとも実務で使う分には十分なボリュームになっているかと思います。</p>
 
-<p>当然ながら、<a href="https://github.com/Carthage/Carthage">公式</a>には記載がされているので暇があったら少しずつ追うのもいいかもしれません。
+<p>当然ながら、<a href="https://github.com/Carthage/Carthage">公式</a>には記載がされているので暇があったら少しずつ追うのもいいかもしれません。<br />
 README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/master/Documentation">Documentation</a>もあるので見落とさず。</p>
 
 <p>今後も<code class="highlighter-rouge">Carthage</code>自体がシンプルなままで、対応ライブラリが増えるといいですね。</p>
