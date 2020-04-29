@@ -13,5 +13,4 @@ tags: linux mint
 執筆現在の最新版は19.3(Tricia)です。
 
 
-
-ISOファイルをUSBフラッシュメモリへの焼き方は「{% post_link_text 2020-04-30-linux-mint-install-to-acer-aspire-1410-bb22 %}」を見てください。
+ISOイメージファイルをUSBフラッシュメモリに焼く方法は「{% post_link_text 2020-04-29-linux-write-iso-to-usb-flash-drive %}」に記載してあります。
