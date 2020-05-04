@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    
+
+    
+
+
+    
+      <title>SwiftのArrayの前方挿入は遅い - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="SwiftのArrayの前方挿入は遅い" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。" />
+<meta property="og:description" content="Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" />
+<meta property="og:url" content="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-04T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow","headline":"SwiftのArrayの前方挿入は遅い","dateModified":"2020-05-05T02:40:36+09:00","datePublished":"2020-05-04T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow"},"description":"Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="SwiftのArrayの前方挿入は遅い">
+    <meta name="twitter:description" content="Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ios" itemprop="item">
+              <span itemprop="name">iOS</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#swift" itemprop="item">
+              <span itemprop="name">Swift</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            SwiftのArrayの前方挿入は遅い
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" alt="SwiftのArrayの前方挿入は遅い">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>SwiftのArrayの前方挿入は遅い</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-5-4</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <div class="post-content-toc">
+    <p>Table of Contents</p>
+    <ul>
+  <li><a href="#きっかけ">きっかけ</a></li>
+  <li><a href="#メモリが直列とは">メモリが直列とは？</a>
+    <ul>
+      <li><a href="#直列を維持するリスク">直列を維持するリスク</a></li>
+    </ul>
+  </li>
+  <li><a href="#swiftソースコードで直列か確認">Swiftソースコードで直列か確認</a>
+    <ul>
+      <li><a href="#処理をトレースする">処理をトレースする</a>
+        <ul>
+          <li><a href="#_makemutableandunique-">_makeMutableAndUnique ①</a></li>
+          <li><a href="#pointermoveinitialize-">pointer.moveInitialize ②</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#仮説">仮説</a></li>
+  <li><a href="#検証">検証</a>
+    <ul>
+      <li><a href="#検証コード">検証コード</a></li>
+    </ul>
+  </li>
+  <li><a href="#結果">結果</a>
+    <ul>
+      <li><a href="#おまけ更に要素サイズを上げる">おまけ:更に要素サイズを上げる</a></li>
+    </ul>
+  </li>
+  <li><a href="#考察">考察</a></li>
+</ul>
+  </div>
+  <section>
+  <p>Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</p>
+
+<p><strong>この記事では、Arrayの内部特性を理解し特性が含むリスクに対して、速度パフォーマンスを測定して何が重い実験した結果をまとめたレポートです。</strong></p>
+
+<h2 id="きっかけ">きっかけ</h2>
+
+<ul>
+  <li>Arrayを再作成するかappend/removeをするか考えてた</li>
+  <li>考えてみればArrayは本当に配列（メモリは直列）なのか？</li>
+  <li>内部データ構造はListだったりしないか？</li>
+  <li>内部データ構造が配列ならstd::vector同様に前方削除や追加が重いのでは？</li>
+</ul>
+
+<h2 id="メモリが直列とは">メモリが直列とは？</h2>
+
+<p>直列とは物理的なメモリ上に横並びにデータが展開されていることを指します。</p>
+
+<h3 id="直列を維持するリスク">直列を維持するリスク</h3>
+
+<p>例えば添字の0はメモリだと先頭でなければいけません。逆も然りです。
+では先頭に新しくデータ追加した場合は、どうするのか？</p>
+
+<p>メモリは一度アロケートすると先頭アドレスとサイズをブロックとして確保します。
+追加でメモリが必要な場合は、改めて必要なサイズのメモリを確保しなければいけません。
+その後、既存データと新規データ両方をセットする必要があります。</p>
+
+<p>このとき最後尾に追加する場合は最後の領域にセットして完了ですが、
+最後尾以外に追加する場合は、新規データのサイズ分ズラす必要があります。
+しかもメモリ操作領域が大きければ大きいほど負荷が高くなります。</p>
+
+<h2 id="swiftソースコードで直列か確認">Swiftソースコードで直列か確認</h2>
+
+<p>Swiftのソースコードは<a href="https://github.com/apple/swift">GitHub</a>にあります。<br />
+Arrayのビルドインされた実装はその中の<a href="https://github.com/apple/swift/blob/master/stdlib/public/runtime/Array.cpp">/stdlib/public/runtime/Array.cpp</a>になります。<br />
+Arrayのインターフェイスは、<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift">/stdlib/public/core/Array.swift</a>で実装されています。</p>
+
+<h3 id="処理をトレースする">処理をトレースする</h3>
+
+<p>Array.remove(at:)からArray.cppに実装されているコピー操作までの処理をトレースします。</p>
+
+<p>今回swift側検証コードは下記になります。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">,</span><span class="mi">3</span><span class="p">,</span><span class="mi">4</span><span class="p">,</span><span class="mi">5</span><span class="p">]</span>
+<span class="n">array</span><span class="o">.</span><span class="nf">remove</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>この<code class="highlighter-rouge">array.remove(at: 0)</code>の処理をトレースするとざっくり下記になります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- remove(at:)
+  - _makeMutableAndUnique()
+    - _createNewBuffer(bufferIsUnique:minimumCapacity:growForAppend)
+      - ContiguousArrayBuffer._copyContents(subRange:,initializing:)
+        - ...
+          - swift_arrayInitWithCopy(OpaqueValue*,OpaqueValue*,size_t,const Metadata*)
+  - moveInitialize(from:count:)
+    - ...
+      - swift_arrayInitWithTakeFrontToBack(OpaqueValue*,OpaqueValue*,size_t,const Metadata*)
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">remove(at:) -&gt; Element</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1292-L1306">/stdlib/public/core/Array.swift#L1292-L1306</a>で実装されています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">remove</span><span class="p">(</span><span class="n">at</span> <span class="nv">index</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Element</span> <span class="p">{</span>
+  <span class="nf">_makeMutableAndUnique</span><span class="p">()</span> <span class="c1">// ①</span>
+  <span class="k">let</span> <span class="nv">currentCount</span> <span class="o">=</span> <span class="nf">_getCount</span><span class="p">()</span>
+  <span class="k">let</span> <span class="nv">newCount</span> <span class="o">=</span> <span class="n">currentCount</span> <span class="o">-</span> <span class="mi">1</span>
+  <span class="k">let</span> <span class="nv">pointer</span> <span class="o">=</span> <span class="p">(</span><span class="n">_buffer</span><span class="o">.</span><span class="n">firstElementAddress</span> <span class="o">+</span> <span class="n">index</span><span class="p">)</span>
+  <span class="k">let</span> <span class="nv">result</span> <span class="o">=</span> <span class="n">pointer</span><span class="o">.</span><span class="nf">move</span><span class="p">()</span>
+  <span class="n">pointer</span><span class="o">.</span><span class="nf">moveInitialize</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">pointer</span> <span class="o">+</span> <span class="mi">1</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="n">newCount</span> <span class="o">-</span> <span class="n">index</span><span class="p">)</span> <span class="c1">// ②</span>
+  <span class="n">_buffer</span><span class="o">.</span><span class="n">count</span> <span class="o">=</span> <span class="n">newCount</span>
+  <span class="k">return</span> <span class="n">result</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h4 id="_makemutableandunique-">_makeMutableAndUnique ①</h4>
+
+<p><code class="highlighter-rouge">_makeMutableAndUnique</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L345-L352">/stdlib/public/core/Array.swift#L345-L352</a>で実装されており、
+内部では<code class="highlighter-rouge">_createNewBuffer</code>が呼ばれています。</p>
+
+<p>この<code class="highlighter-rouge">_createNewBuffer</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1051-L1080">/stdlib/public/core/Array.swift#L1051-L1080</a>で実装されており、
+内部では新しいキャパシティサイズの<code class="highlighter-rouge">_ContiguousArrayBuffer</code>をしたのちに<code class="highlighter-rouge">_buffer._copyContents</code>を呼んでいます。</p>
+
+<p>これは内部でArray.cppの<a href="https://github.com/apple/swift/blob/31af116df62d40779b0f43ffc61c2806469a53cc/stdlib/public/runtime/Array.cpp#L137-L142">swift_arrayInitWithCopy</a>を呼んでいます。</p>
+
+<h4 id="pointermoveinitialize-">pointer.moveInitialize ②</h4>
+
+<p><code class="highlighter-rouge">pointer.moveInitialize</code>とは<a href="https://github.com/apple/swift/blob/d7b5de95f3fdfe281dee9dfec66b220e27675ca3/stdlib/public/core/UnsafePointer.swift#L786-L812">/stdlib/public/core/UnsafePointer.swift#L786-L812</a>で実装されています。</p>
+
+<p>この関数内でArray.cppの<a href="/stdlib/public/runtime/Array.cpp#L151-L156">swift_arrayInitWithTakeFrontToBack</a>か<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/runtime/Array.cpp#L158-L163">swift_arrayInitWithTakeBackToFront</a>が呼ばれていると思われます。</p>
+
+<p><code class="highlighter-rouge">remove(at:)</code>で引数indexに0を渡すと、<code class="highlighter-rouge">pointer.moveInitialize</code>を介してデータサイズ*データ数のメモリ移動が発生します。</p>
+
+<h2 id="仮説">仮説</h2>
+
+<p>メモリが直列であれば、前方削除や前方挿入が後方より重いはずです。</p>
+
+<h2 id="検証">検証</h2>
+
+<p>下記環境下で検証します。</p>
+
+<ul>
+  <li>iOS環境</li>
+  <li>Simulator</li>
+  <li>配列数9900〜99000を10回に分ける</li>
+  <li>検証回数10回</li>
+  <li>これらのサイズを8バイトと32バイトでする</li>
+  <li>検証メソッドまたはシナリオ
+    <ul>
+      <li>removeFirst()</li>
+      <li>removeLast()</li>
+      <li>insert(:at:0)</li>
+      <li>insert(:at:count-1)</li>
+      <li>append()</li>
+      <li>reserveCapacity()後にinsert(:at:0)</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="検証コード">検証コード</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Item</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">price</span><span class="p">:</span> <span class="kt">Int</span>
+<span class="p">}</span>
+
+<span class="kd">func</span> <span class="nf">main</span><span class="p">()</span> <span class="p">{</span>
+    <span class="k">var</span> <span class="nv">results</span><span class="p">:</span> <span class="p">[</span><span class="kt">Perf</span><span class="o">.</span><span class="kt">Result</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">let</span> <span class="nv">numberOfCaptures</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="k">var</span> <span class="nv">samplingCount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">1000</span><span class="p">)</span>
+  <span class="kd">typealias</span> <span class="kt">ElemType</span> <span class="o">=</span> <span class="kt">Item</span>
+    <span class="k">let</span> <span class="nv">genElem</span><span class="p">:</span> <span class="p">(</span><span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">ElemType</span> <span class="o">=</span> <span class="p">{</span> <span class="n">no</span> <span class="k">in</span> <span class="kt">Item</span><span class="p">(</span><span class="nv">id</span><span class="p">:</span> <span class="n">no</span><span class="p">,</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"A</span><span class="se">\(</span><span class="n">no</span><span class="se">)</span><span class="s">"</span><span class="p">,</span> <span class="nv">price</span><span class="p">:</span> <span class="n">no</span> <span class="o">*</span> <span class="mi">10</span><span class="p">)</span> <span class="p">}</span>
+<span class="c1">//    typealias ElemType = Int</span>
+<span class="c1">//    let genElem: (Int) -&gt; ElemType = { no in no }</span>
+
+    <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">maxValue</span> <span class="o">=</span> <span class="p">((</span><span class="mi">100000</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">samplingCount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="n">maxValue</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="n">maxValue</span><span class="p">)</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span>
+            <span class="kt">Perf</span><span class="p">(</span><span class="nv">numberOfCaptures</span><span class="p">:</span> <span class="n">numberOfCaptures</span><span class="p">)</span><span class="o">.</span><span class="nf">capture</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"insert(:at:last)"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">var</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">ElemType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">samplingCount</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">no</span> <span class="k">in</span>
+                    <span class="k">let</span> <span class="nv">lastIndex</span> <span class="o">=</span> <span class="nf">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">array</span><span class="o">.</span><span class="n">count</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+                    <span class="n">array</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="nf">genElem</span><span class="p">(</span><span class="n">no</span><span class="p">),</span> <span class="nv">at</span><span class="p">:</span> <span class="n">lastIndex</span><span class="p">)</span>
+                <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">maxValue</span> <span class="o">=</span> <span class="p">((</span><span class="mi">100000</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">samplingCount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="n">maxValue</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span>
+            <span class="kt">Perf</span><span class="p">(</span><span class="nv">numberOfCaptures</span><span class="p">:</span> <span class="n">numberOfCaptures</span><span class="p">)</span><span class="o">.</span><span class="nf">capture</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"append()"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">var</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">ElemType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">samplingCount</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">no</span> <span class="k">in</span> <span class="n">array</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span><span class="nf">genElem</span><span class="p">(</span><span class="n">no</span><span class="p">))</span> <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">maxValue</span> <span class="o">=</span> <span class="p">((</span><span class="mi">100000</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">samplingCount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="n">maxValue</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span>
+            <span class="kt">Perf</span><span class="p">(</span><span class="nv">numberOfCaptures</span><span class="p">:</span> <span class="n">numberOfCaptures</span><span class="p">)</span><span class="o">.</span><span class="nf">capture</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"Use reserveCapacity"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">var</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">ElemType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">array</span><span class="o">.</span><span class="nf">reserveCapacity</span><span class="p">(</span><span class="n">numberOfCaptures</span><span class="p">)</span>
+                <span class="n">samplingCount</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">no</span> <span class="k">in</span> <span class="n">array</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="nf">genElem</span><span class="p">(</span><span class="n">no</span><span class="p">),</span> <span class="nv">at</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span> <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">maxValue</span> <span class="o">=</span> <span class="p">((</span><span class="mi">100000</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">samplingCount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="n">maxValue</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span>
+            <span class="kt">Perf</span><span class="p">(</span><span class="nv">numberOfCaptures</span><span class="p">:</span> <span class="n">numberOfCaptures</span><span class="p">)</span><span class="o">.</span><span class="nf">capture</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"removeLast()"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">var</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">ElemType</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplingCount</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nf">genElem</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">}</span>
+                <span class="n">array</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">_</span> <span class="k">in</span> <span class="n">array</span><span class="o">.</span><span class="nf">removeLast</span><span class="p">()</span> <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">maxValue</span> <span class="o">=</span> <span class="p">((</span><span class="mi">100000</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">samplingCount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="n">maxValue</span><span class="p">)</span>
+        <span class="n">results</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span>
+            <span class="kt">Perf</span><span class="p">(</span><span class="nv">numberOfCaptures</span><span class="p">:</span> <span class="n">numberOfCaptures</span><span class="p">)</span><span class="o">.</span><span class="nf">capture</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"insert(:at:0)"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">var</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">ElemType</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="n">samplingCount</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">no</span> <span class="k">in</span> <span class="n">array</span><span class="o">.</span><span class="nf">insert</span><span class="p">(</span><span class="nf">genElem</span><span class="p">(</span><span class="n">no</span><span class="p">),</span> <span class="nv">at</span><span class="p">:</span><span class="mi">0</span><span class="p">)</span> <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">10</span><span class="p">)</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">index</span> <span class="k">in</span>
+        <span class="k">let</span> <span class="nv">maxValue</span> <span class="o">=</span> <span class="p">((</span><span class="mi">100000</span> <span class="o">-</span> <span class="mi">1000</span><span class="p">)</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">index</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">samplingCount</span> <span class="o">=</span> <span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="n">maxValue</span><span class="p">)</span>
+
+        <span class="n">results</span><span class="o">.</span><span class="nf">append</span><span class="p">(</span>
+            <span class="kt">Perf</span><span class="p">(</span><span class="nv">numberOfCaptures</span><span class="p">:</span> <span class="n">numberOfCaptures</span><span class="p">)</span><span class="o">.</span><span class="nf">capture</span><span class="p">(</span><span class="nv">label</span><span class="p">:</span> <span class="s">"removeFirst()"</span><span class="p">)</span> <span class="p">{</span>
+                <span class="k">var</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">ElemType</span><span class="p">]</span> <span class="o">=</span> <span class="n">samplingCount</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="nf">genElem</span><span class="p">(</span><span class="nv">$0</span><span class="p">)</span> <span class="p">}</span>
+                <span class="n">array</span><span class="o">.</span><span class="n">count</span><span class="o">.</span><span class="n">times</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">_</span> <span class="k">in</span> <span class="n">array</span><span class="o">.</span><span class="nf">removeLast</span><span class="p">()</span> <span class="p">})</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+    <span class="p">})</span>
+
+    <span class="nf">print</span><span class="p">(</span><span class="kt">Perf</span><span class="o">.</span><span class="nf">toCSV</span><span class="p">(</span><span class="nv">from</span><span class="p">:</span> <span class="n">results</span><span class="p">))</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="結果">結果</h2>
+
+<p>下図は検証コードから得た結果を整理してものです。<br />
+X軸が配列数で、Y軸が処理時間(秒)になります。</p>
+
+<p>要素サイズの32バイトの<code class="highlighter-rouge">insert(:at:)</code>が群を抜いて負荷がかかっています。</p>
+
+<p><a href="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/1.png"><img src="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/1.png" width="100%" alt="SwiftArrayパフォーマンス全体図" /></a></p>
+
+<p>2枚目は上図で下層で束なってる部分のみの図となります。</p>
+
+<p><a href="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/2.png"><img src="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/2.png" width="100%" alt="SwiftArrayパフォーマンス縮図" /></a></p>
+
+<ul>
+  <li><strong>前方挿入は重い</strong></li>
+  <li><strong>配列の要素サイズが大きいと 前方挿入は非常に重い</strong></li>
+  <li>reserveCapacityはほぼ効果ない</li>
+  <li>insert(:at:last)よりappendのほうが少し速い</li>
+  <li>removeFirstは重いがそこまで気にしなくていい程度</li>
+</ul>
+
+<h3 id="おまけ更に要素サイズを上げる">おまけ:更に要素サイズを上げる</h3>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Item</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">price</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">regularPrice</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">brand</span><span class="p">:</span> <span class="kt">Brand</span>
+    <span class="k">let</span> <span class="nv">publishDate</span><span class="p">:</span> <span class="kt">Date</span>
+<span class="p">}</span>
+<span class="kd">struct</span> <span class="kt">Brand</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">startDate</span><span class="p">:</span> <span class="kt">Date</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>上記のような80バイトで最も重い<code class="highlighter-rouge">insert(:at:0)</code>で試してみます。
+先程郡を抜いていた32バイトより更に重くなっています。</p>
+
+<p><a href="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/3.png"><img src="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/3.png" width="100%" alt="SwiftArrayパフォーマンスサイズ大" /></a></p>
+
+<h2 id="考察">考察</h2>
+<p>32バイトはInt2つでString1つしかありません。</p>
+
+<p>80バイト程度で1~2万件のデータを扱う時に前方挿入をする処理が多いとスパイクが起きるレベルです。<br />
+これがECなどで1つの商品情報を扱う場合は更にでかいサイズかと思います。<br />
+そうなると1万件以下でも重くなるでしょう。<br />
+追加するタイミングによっては無視できない重さになると思います。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-create-perf-script">簡易なSwiftパフォーマンス測定クラスを作った</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/rxswift/ios-swift-rxswfit-basic">RxSwiftの基本を動かして理解する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/scene-kit/ios-scene-kit-abc">360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/uiview/disapper-cause-safe-area-when-fade-out-anim">画面外へスライドアニメすると表示が消えてからスライドするのはSafeAreaが原因</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-optional-extension-compile-error">Optional<String>をExtension化したのにエラーになって役に立たなかった話</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-how-to-find-good-lib">iOS開発におけるライブラリの選定戦略について考えてみた</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-input-control">【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項</a>
+            </li>
+            
+            <li>
+                <a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
