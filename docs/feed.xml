@@ -1,4 +1,88 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-04-30T19:25:57+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む</title><link href="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive" rel="alternate" type="text/html" title="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" /><published>2020-04-29T00:00:00+09:00</published><updated>2020-04-29T22:54:00+09:00</updated><id>https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive">&lt;p&gt;&lt;strong&gt;Linux触るならシェルで焼こう&lt;/strong&gt;&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-04T15:47:24+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-04T15:47:13+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
+
+&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
+
+&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
+  &lt;li&gt;検証コードを実装&lt;/li&gt;
+  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
+  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
+なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
+&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
+仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
+
+&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
+&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
+頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
+毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
+&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
+そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
+
+&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
+&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
+ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
+
+&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
+&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
+単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
+&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
+
+&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
+また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
+  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
+  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
+
+&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
+
+&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
+そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
+新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
+
+&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
+&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/0.png" /></entry><entry><title type="html">MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む</title><link href="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive" rel="alternate" type="text/html" title="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" /><published>2020-04-29T00:00:00+09:00</published><updated>2020-04-29T22:54:00+09:00</updated><id>https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive">&lt;p&gt;&lt;strong&gt;Linux触るならシェルで焼こう&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;使わなくなったPCにLinuxをインストールして触れる機会を増やし、慣れて知識を増やそう作戦の最初の壁。&lt;br /&gt;
 それがLinuxのインストール…ではなく&lt;strong&gt;インストール用ドライブの作成です。&lt;/strong&gt;&lt;br /&gt;
@@ -1851,147 +1935,4 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
 やはりボリュームとしては結構大きく上手にまとめられていない部分もあったかと思います。
 一方でこのシリーズを通したことでnginxとはなんなのか？nginxでRailsアプリってどう立ち上がるのか？といったぼんやりとした全体像はつかめたのではないかなと思います。&lt;/p&gt;
 
-&lt;p&gt;この記事を皮切りに今後nginxの理解がより深まればいいですね。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png" /></entry><entry><title type="html">Mac上のnginx設定ファイルをドメイン毎に分ける</title><link href="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac" rel="alternate" type="text/html" title="Mac上のnginx設定ファイルをドメイン毎に分ける" /><published>2020-02-26T00:00:00+09:00</published><updated>2020-03-29T04:28:01+09:00</updated><id>https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac</id><content type="html" xml:base="https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac">&lt;p&gt;MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。
-今回は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;の設定内容をドメイン毎、つまりアプリ毎に分けます。
-分かれてることで複数のアプリ開発を1つの&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.cnf&lt;/code&gt;に集約されなくなり管理しやすくなります。&lt;/p&gt;
-
-&lt;p&gt;▼前回記事はこちらになります。&lt;br /&gt;
-&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step3-on-mac&quot;&gt;Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;ドメイン毎に設定を分ける理由&quot;&gt;ドメイン毎に設定を分ける理由&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.cnf&lt;/code&gt;に直接記述せず、ドメイン毎に設定ファイルを用意する理由とは何でしょうか？
-Macでnginxを使うケースは分けたほうが恩恵をえられます。
-その理由について簡単に説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;macのnginxは開発用途がメイン&quot;&gt;Macのnginxは開発用途がメイン&lt;/h3&gt;
-&lt;p&gt;Macを本番サーバとして使うことはありませんが、開発PCはMacかWindowsが主なOSだと思います。
-そのため1つのMacに複数のアプリが含まれやすいです。
-開発では複数アプリが同時に扱うこともあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;1macに複数ドメインを立ち上げることはよくある&quot;&gt;1Macに複数ドメインを立ち上げることはよくある&lt;/h3&gt;
-&lt;p&gt;例えばMac1台で開発してると下記のように複数アプリが含まれることはよくあります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;アプリA(Web)&lt;/li&gt;
-  &lt;li&gt;アプリB(Web)&lt;/li&gt;
-  &lt;li&gt;アプリB(Backend)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;しかもアプリBだと、WebとBackend両方を立ち上げが必要なケースもあると思います。
-これら各nginx設定は、特に工夫しなければすべて&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に書かれるかと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginxconfに全ドメイン設定を記述できる&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に全ドメイン設定を記述できる&lt;/h3&gt;
-&lt;p&gt;実は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;は複数ドメインの設定を&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;にまとめて全部記述することは可能です。
-しかしそれによりなにかと長期的に面倒なことが続きます。
-それは可読性と他ドメイン影響範囲に悪影響することです。&lt;/p&gt;
-
-&lt;h3 id=&quot;長い設定ファイルはメンテナンスしにくい&quot;&gt;長い設定ファイルはメンテナンスしにくい&lt;/h3&gt;
-&lt;p&gt;前述はドメイン3つですが、人によっては5~10個ドメインが入っているかと思います。
-そうなってくると、&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;には10個の設定が全部記述されるためファイルがとても長くなります。
-その長くて読みにくい設定ファイルから不要な項目を削除する必要があります。&lt;/p&gt;
-
-&lt;h3 id=&quot;開発不要になればそのドメイン設定は不要になる&quot;&gt;開発不要になればそのドメイン設定は不要になる&lt;/h3&gt;
-&lt;p&gt;ドメイン開発が終了すればそのドメインの設定は不要となるため、削除すると思います。
-それも放置すると&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;がとんでも長い行となるためです。&lt;/p&gt;
-
-&lt;p&gt;削除するときにどの項目を削除するべきなのか一つ一つ読み解いて行く必要があります。
-これは変更により他ドメインへの影響範囲内になりますし、誤って消してしまうと動かなくなります。
-本番サーバはチューリング用途ですが、Macだと開発環境つど変更必要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;macのnginxconfは本番サーバと異なり変更頻度が高い&quot;&gt;Macの&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;は本番サーバと異なり変更頻度が高い&lt;/h3&gt;
-
-&lt;p&gt;本番サーバのnginx.confは一度組み込んでしまえばパフォーマンス・チューニング用途以外で変えることは少ないです。
-しかしMac上のnginxは開発用途がメインで、開発不要になれば削除作業が起きますし、新しくアプリ開発すれば追加作業が起きます。
-本番サーバと異なり設定の大きく異なる複数のアプリを何度も消したり追加したりすることとなり、よりミスの可能性が上がります。
-これらはドメインごとに設定ファイルとして分かれてることで望ましいです。&lt;/p&gt;
-
-&lt;h3 id=&quot;ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる&quot;&gt;ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる&lt;/h3&gt;
-
-&lt;p&gt;これらの問題を回避するためにドメイン毎に設定ファイルが用意されていれば解決できます。
-新しくアプリが追加になればファイルごと追加で、アプリが不要になればドメイン設定ファイルを削除するだけで、
-他ドメインの設定に影響を抑えられます。&lt;/p&gt;
-
-&lt;p&gt;これはドメインごとの設定ファイルとシンボリックリンクで実現します。&lt;/p&gt;
-
-&lt;h2 id=&quot;includeディレクティブでアプリ別設定ファイル構築する&quot;&gt;includeディレクティブでアプリ別設定ファイル構築する&lt;/h2&gt;
-&lt;p&gt;では実際の構築方法について説明します。&lt;/p&gt;
-
-&lt;p&gt;仕組みは単純で、ドメイン別の設定ファイルを&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブでロードしているだけです。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブには&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;でまとめてファイル指定もできるので、これを使います。&lt;/p&gt;
-
-&lt;p&gt;流れは次の通りです。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;ドメイン別設定ファイル置き場を用意する&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;でドメイン別設定ファイルをロードする&lt;/li&gt;
-  &lt;li&gt;ドメイン別設定ファイルを用意する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;ドメイン別設定ファイル置き場を用意する&quot;&gt;ドメイン別設定ファイル置き場を用意する&lt;/h3&gt;
-&lt;p&gt;まずは設定ファイルを置く場所を用意します。場所といってもフォルダです。
-フォルダの中に入れておくことで&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;でまとめてロードできて便利だからです。&lt;/p&gt;
-
-&lt;p&gt;置き場となるフォルダ名は&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;とします。これは&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf.default&lt;/code&gt;で既にそういう記述があるためです。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mkdir /usr/local/etc/nginx/servers
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;nginxconfにincludeでドメイン別設定ファイルをロードする&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;でドメイン別設定ファイルをロードする&lt;/h3&gt;
-
-&lt;p&gt;次は&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に先程用意したフォルダ内の設定ファイルを全てロードする処理を記述します。&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;nginx.conf&lt;/em&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;http {
-  # 全サーバ共通設定はここ
-
-  # 各個別設定はここ
-  include servers/*;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これにより&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダ内のファイルを全てロードするようになります。&lt;/p&gt;
-
-&lt;h3 id=&quot;ドメイン別設定ファイルを用意する&quot;&gt;ドメイン別設定ファイルを用意する&lt;/h3&gt;
-
-&lt;p&gt;最後はそれぞれドメイン毎の設定ファイルを用意します。
-ファイル名はドメイン名と同じ方がわかりやすいです。
-今回はローカルなので&lt;code class=&quot;highlighter-rouge&quot;&gt;api.localhost&lt;/code&gt;というファイル名を用意します。&lt;/p&gt;
-
-&lt;p&gt;内容は動作確認できればいいので適当に用意しました。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;server {
-  listen 80;
-  server_name api.localhost;
-  root /usr/local/var/www;
-}
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;以上で設定は完了です、nginxを再起動するば反映されます。
- この設定ファイルであれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;http://api.localhost&lt;/code&gt; にアクセスすると、&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/var/www&lt;/code&gt;フォルダの&lt;code class=&quot;highlighter-rouge&quot;&gt;index.html&lt;/code&gt;のレスポンスを返すようになります。&lt;/p&gt;
-
-&lt;h2 id=&quot;慣習に倣ったバーチャルホスト構築&quot;&gt;慣習に倣ったバーチャルホスト構築&lt;/h2&gt;
-&lt;p&gt;今回紹介したドメイン毎に設定ファイルを分ける方法はnginxではバーチャルホスト構築時は少し慣習から外れた方法なので、Apacheなどからしたら少し分かりにくいかもしれません。目的はローカル上で複数ドメインをMacなど開発用とで立ち上げることなので、問題はないのですが、これが本番サーバの場合はこの方法ではなく次の方法で構築をしてください。&lt;/p&gt;
-
-&lt;p&gt;大きく次のフローとなります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;sites-available フォルダ作成と個別設定ファイル配置&lt;/li&gt;
-  &lt;li&gt;sites-enabled フォルダの作成と&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;フォルダ内の個別設定ファイルへのシンボリックリンク作成&lt;/li&gt;
-  &lt;li&gt;nginx.conf に include ディレクティブで sites-enabled内ファイルをロード&lt;/li&gt;
-  &lt;li&gt;nginx 再起動&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;フォルダが、先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;servers&lt;/code&gt;フォルダとなります。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;で読み込む先は&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-available&lt;/code&gt;ではなく&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;フォルダにしてください。
-直接実ファイルをロードするのではなく、&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;に用意されたシンボリックリンクをロードします。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sites-enabled&lt;/code&gt;が間に一つ入る形になっています。
-これは&lt;code class=&quot;highlighter-rouge&quot;&gt;unlink&lt;/code&gt;すること簡単にバーチャルホストを閉じることが可能となっています。
-設定ファイルの削除や移動などは必要ありません。&lt;/p&gt;
-
-&lt;h2 id=&quot;mac上のnginx設定ファイルをドメイン毎に分ける&quot;&gt;Mac上のnginx設定ファイルをドメイン毎に分ける&lt;/h2&gt;
-&lt;p&gt;今回は設定ファイルを別ファイルからロードすることで&lt;code class=&quot;highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;をボリュームを抑え、変更影響を受けにくい仕組みの紹介でした。
-直接書くより少し手間だったり慣れていないと確認が面倒だったりはしますが、目の前の手間から逃げ続けると将来一気に避けられない手間を対応するはめに会います。
-可読性やメンテナンス性はエンジニアには重要指標なので、目の前の面倒から逃げずに将来のもっと大きな面倒をなくしていくことは大事ですね。&lt;/p&gt;
-
-&lt;p&gt;次の記事は「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-security-on-mac&quot;&gt;Mac上でnginxのセキュリティ最低限を確認する&lt;/a&gt;&lt;/span&gt;
-」について説明します。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png" /></entry></feed>
+&lt;p&gt;この記事を皮切りに今後nginxの理解がより深まればいいですね。&lt;/p&gt;</content><author><name></name></author><category term="web" /><category term="nginx" /><category term="mac" /><summary type="html">MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png" /></entry></feed>
