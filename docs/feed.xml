@@ -1,88 +1,527 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-06T00:01:40+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-04T15:47:13+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-06T05:08:28+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">rablの使い方を丁寧に説明</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic" rel="alternate" type="text/html" title="rablの使い方を丁寧に説明" /><published>2020-05-05T00:00:00+09:00</published><updated>2020-05-06T05:08:17+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic">&lt;p&gt;この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。&lt;/p&gt;
 
-&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
+&lt;p&gt;流れは大きく次の順番で説明していきます。&lt;/p&gt;
 
-&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
-  &lt;li&gt;検証コードを実装&lt;/li&gt;
-  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
-  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
-なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
-&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
-仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
-
-&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
-&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
-頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
-毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
-&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
-そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
-
-&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
-&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
-ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
-
-&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
-
-&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
-&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
-単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
-&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
-
-&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
-また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
 &lt;ul&gt;
-  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
-  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
-  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
+  &lt;li&gt;rablとは？&lt;/li&gt;
+  &lt;li&gt;rabl環境構築&lt;/li&gt;
+  &lt;li&gt;rabl DSLの書き方&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
+&lt;h2 id=&quot;rablとは&quot;&gt;rablとは？&lt;/h2&gt;
 
-&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;RABL(Ruby API Builder Language)&lt;/li&gt;
+  &lt;li&gt;Rails向けRuby用テンプレートシステム&lt;/li&gt;
+  &lt;li&gt;json, bson, xml, plist, msgpackサポート&lt;/li&gt;
+  &lt;li&gt;表示データとその表現を分離させている&lt;/li&gt;
+  &lt;li&gt;GitHubは&lt;a href=&quot;https://github.com/nesquena/rabl&quot;&gt;nesquena/rabl&lt;/a&gt;&lt;/li&gt;
+  &lt;li&gt;RubyGemsは&lt;a href=&quot;https://rubygems.org/gems/rabl/versions/0.11.6&quot;&gt;rabl&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
-そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
+&lt;h2 id=&quot;rabl環境の構築&quot;&gt;rabl環境の構築&lt;/h2&gt;
 
-&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
-新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
+&lt;ol&gt;
+  &lt;li&gt;gem用意&lt;/li&gt;
+  &lt;li&gt;設定ファイル登録&lt;/li&gt;
+  &lt;li&gt;rablファイル用意&lt;/li&gt;
+&lt;/ol&gt;
 
-&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
-&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
+&lt;h3 id=&quot;gem用意&quot;&gt;gem用意&lt;/h3&gt;
+&lt;p&gt;Gemfileにgemを追加します。&lt;/p&gt;
 
-&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/0.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-05T02:40:36+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rabl'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;を忘れずに。&lt;/p&gt;
+
+&lt;h3 id=&quot;設定ファイル登録&quot;&gt;設定ファイル登録&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;config/initializers&lt;/code&gt;に&lt;strong&gt;rabl_init.rb&lt;/strong&gt;を追加します。&lt;/p&gt;
+
+&lt;p&gt;内容は最低限下記を記載します。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rabl'&lt;/span&gt;
+
+&lt;span class=&quot;no&quot;&gt;Rabl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;まずは設定は特になしで問題ありません。後ほど一部設定項目について説明します。&lt;/p&gt;
+
+&lt;h3 id=&quot;rablファイル用意&quot;&gt;rablファイル用意&lt;/h3&gt;
+&lt;p&gt;viewsフォルダに例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;index.rabl&lt;/code&gt;を用意します。&lt;br /&gt;
+レスポンスがJSONのControllerであれば直接&lt;code class=&quot;highlighter-rouge&quot;&gt;.rabl&lt;/code&gt;でも動きます。&lt;/p&gt;
+
+&lt;h2 id=&quot;rablに慣れる&quot;&gt;rablに慣れる&lt;/h2&gt;
+&lt;p&gt;まずは簡単なrablの書き方から入ってrablに触れて少し慣れましょう。&lt;/p&gt;
+
+&lt;h3 id=&quot;最初のrabl&quot;&gt;最初のrabl&lt;/h3&gt;
+&lt;p&gt;まずはrablで最も単純なrabl記法です。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;結果はこれになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;rubyオブジェクトの値を表示する&quot;&gt;Rubyオブジェクトの値を表示する&lt;/h3&gt;
+&lt;p&gt;次は先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;を使ってRubyオブジェクトを表示します。&lt;br /&gt;
+手元で動かす場合は、ControllerやModelは適宜用意してください。&lt;/p&gt;
+
+&lt;p&gt;Model側:&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;create_table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;integer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamps&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Controller側：&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UsersController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationController&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;show&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;View側:&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;birth_date&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;score&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ http get &quot;http://localhost:3000/users/1&quot;&lt;/code&gt;のレスポンスです。※&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;※&lt;code class=&quot;highlighter-rouge&quot;&gt;$ http get&lt;/code&gt;はHTTPieといってcurlよりも書き方が直感的なCLIツールです。気になる方は、「&lt;span&gt;&lt;a href=&quot;/tools/httpie/recommend-httpie&quot;&gt;クライアントエンジニアにはcurlよりHTTPieがお薦め&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;rabl上でrubyコードを書く&quot;&gt;rabl上でRubyコードを書く&lt;/h3&gt;
+&lt;p&gt;rablファイル上ではRubyコードを書くことが可能です。&lt;br /&gt;
+次のコードはユーザー数が2つなら複数モデルを表示します。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UsersController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationController&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;rablコード&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+    &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;ss&quot;&gt;birth_date: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+        &lt;span class=&quot;ss&quot;&gt;score: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;score&lt;/span&gt;
+      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;レスポンス&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;のブロック内がRubyコードを評価されます。&lt;br /&gt;
+このブロック内ではrabl記法は評価されません。&lt;/p&gt;
+
+&lt;h3 id=&quot;nodeだけでは本領発揮&quot;&gt;nodeだけでは本領発揮&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;ではrablの本領を発揮していません。
+rablは通常は表示データはモデルであり、レスポンスはRuby DSLを使ってrablファイルに記述します。&lt;/p&gt;
+
+&lt;h2 id=&quot;rablのobjectを使う&quot;&gt;rablのobjectを使う&lt;/h2&gt;
+&lt;p&gt;ActiveRecordのUserを表示する場合は次のrablコードになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attribute&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'birth_day'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:down_case_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;downcase&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これのレスポンスです。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;upper_name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;にモデルを渡すことで表示のためのDSLがそのモデルを情報として使うようになります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;attributes&lt;/code&gt;の渡してる文字列はJSONとモデルで使われます
+    &lt;ul&gt;
+      &lt;li&gt;JSONのメンバー名になる&lt;/li&gt;
+      &lt;li&gt;モデルのカラム名として呼ばれる&lt;/li&gt;
+      &lt;li&gt;Hash構造を渡せばJSONのメンバー名とモデルのメソッド名を分けれます。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;も使えます。
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;にモデルが引数として渡されます。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;rablはモデルのメソッドを呼んでいる&quot;&gt;rablはモデルのメソッドを呼んでいる&lt;/h3&gt;
+&lt;p&gt;rablの&lt;code class=&quot;highlighter-rouge&quot;&gt;attributes&lt;/code&gt;はカラム値を取得してるのではなく、&lt;br /&gt;
+ARモデルのメソッドを呼んで結果を取得しています。&lt;br /&gt;
+なので先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;node(:down_case_name)&lt;/code&gt;はメソッド名としてARモデル側に用意すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;attributes&lt;/code&gt;として指定できます。&lt;/p&gt;
+
+&lt;p&gt;ARモデル:&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;down_case_name&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;downcase&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;rabl:&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attribute&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'birth_day'&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attribute&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:down_case_name&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ルートノードを外すまたは変える&quot;&gt;ルートノードを外すまたは変える&lt;/h3&gt;
+&lt;p&gt;objectを使ったレスポンスではルートノードに&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;という括りがされています。&lt;br /&gt;
+これを違う名前にしたかったり、外したい場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;にオプションを渡します。&lt;/p&gt;
+
+&lt;p&gt;無指定だと&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# user:&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;が入ります&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Hash形式でシンボル値を渡すと&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:gamer&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;渡したシンボル名になります。&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gamer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;※シンボル指定です。文字列だと&lt;code class=&quot;highlighter-rouge&quot;&gt;string&lt;/code&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;を渡すと&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ルートノードはなしになります。&lt;/p&gt;
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;rablのcollectionを使う&quot;&gt;rablのcollectionを使う&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;がモデル1つだとしたら、&lt;code class=&quot;highlighter-rouge&quot;&gt;collection&lt;/code&gt;は複数形です。&lt;/p&gt;
+
+&lt;p&gt;最初に載せたNodeを使った複数Userを表示するrablを&lt;code class=&quot;highlighter-rouge&quot;&gt;collection&lt;/code&gt;を使うとこうなります。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;結果はこうなります。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;オブジェクトルートを変更または消す&quot;&gt;オブジェクトルートを変更または消す&lt;/h3&gt;
+&lt;p&gt;モデル毎に&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;というオブジェクトルートが入っているのでこれを消すには&lt;code class=&quot;highlighter-rouge&quot;&gt;collection&lt;/code&gt;にオプションを渡します。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;と同じで&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;ではなくシンボルを渡せば&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;ではなく別名に変更できます。&lt;/p&gt;
+
+&lt;h3 id=&quot;ルートノードをつける&quot;&gt;ルートノードをつける&lt;/h3&gt;
+&lt;p&gt;ルートノードをつけたい場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;root&lt;/code&gt;オプションを渡します。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'gamers'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;結果はこうなります。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gamers&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rablのchildを使う&quot;&gt;rablのchildを使う&lt;/h2&gt;
+&lt;p&gt;objectとcollectionはルートレベルにモデルがマッピングされている場合に使えます。&lt;br /&gt;
+しかし次のルートレベルにモデル以外のレスポンスが必要なケースがあります。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;    
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;にして&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;形式と&lt;code class=&quot;highlighter-rouge&quot;&gt;child&lt;/code&gt;を使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object_root&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;にしておかないとモデル毎に&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;というキーが入ります。&lt;/p&gt;
+
+&lt;h2 id=&quot;親子関係はchildを使う&quot;&gt;親子関係はchildを使う&lt;/h2&gt;
+
+&lt;p&gt;Userモデルと住所モデルがあり、Userが住所を複数個持っている関係とした場合&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;has_many&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;inverse_of: :user&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;belongs_to&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;inverse_of: :addresses&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;rablでは&lt;code class=&quot;highlighter-rouge&quot;&gt;child&lt;/code&gt;を使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ルートレベルにオブジェクトが紐付いているため、シンボルを渡すことでそのオブジェクトのメソッドとして評価されます。　　
+次のコードと同じ意味になります。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rablのglueを使う&quot;&gt;rablのglueを使う&lt;/h2&gt;
+&lt;p&gt;glueとはモデルとはリレーションシップのないモデルを繋ぎます。&lt;br /&gt;
+glueの和訳は「接着剤」または「接着する」するです。&lt;br /&gt;
+つまりあるデータとあるデータをくっつける場合に使います。&lt;/p&gt;
+
+&lt;p&gt;Controller側で異なるUserのアドレスを1件取っておきます。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;show&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
+  &lt;span class=&quot;vi&quot;&gt;@other_address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;rabl側では&lt;code class=&quot;highlighter-rouge&quot;&gt;glue&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;@other_address&lt;/code&gt;の情報を&lt;code class=&quot;highlighter-rouge&quot;&gt;@user&lt;/code&gt;の情報と合わせて一つのレスポンスとして返します。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;glue&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@other_addresses&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:other_post_code&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;レスポンスでは無関係なモデルが1つのレスポンスとしてかえってきます。&lt;/p&gt;
+
+&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;addresses&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;post_code&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1680064&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;other_post_code&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;5680068&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rablのextendsを使う&quot;&gt;rablのextendsを使う&lt;/h2&gt;
+&lt;p&gt;rablで部分テンプレート(partial)を使うには&lt;code class=&quot;highlighter-rouge&quot;&gt;extends&lt;/code&gt;を使います。&lt;/p&gt;
+
+&lt;p&gt;次のコードはUser単体を表示するrablです。&lt;br /&gt;
+rablの場所を&lt;code class=&quot;highlighter-rouge&quot;&gt;users/show&lt;/code&gt;とします。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;次のコードはUser一覧表示を上のrablを&lt;code class=&quot;highlighter-rouge&quot;&gt;extends&lt;/code&gt;を使って表示するrablです。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'users/show'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;extends先のobjectやcollectionは上書きされる&quot;&gt;extends先のobjectやcollectionは上書きされる&lt;/h3&gt;
+&lt;p&gt;extends先のrablのobjectやcollectionは呼び出し元に渡されたオブジェクトになります。&lt;br /&gt;
+上記の場合は単体のUserモデルが渡されることになります。&lt;/p&gt;
+
+&lt;p&gt;child内のextendsでも同じです。&lt;/p&gt;
+
+&lt;p&gt;下記rablファイル(&lt;code class=&quot;highlighter-rouge&quot;&gt;addresses/index&lt;/code&gt;)があった場合に&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@addresses&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Userモデルからextendsで呼ばれたら、collectionにはUserモデルのaddressesが入ります。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'addresses/index'&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;呼び出し元でオブジェクトを指定することもできます。&lt;/p&gt;
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;addresses/index&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object: &lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@other_addresses&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;rablでcacheを使う&quot;&gt;rablでcacheを使う&lt;/h2&gt;
+&lt;p&gt;rablでフラグメントキャッシュを使うには&lt;code class=&quot;highlighter-rouge&quot;&gt;cache&lt;/code&gt;を使います。&lt;br /&gt;
+デフォルトでは、Railsのキャッシュシステムを使います。&lt;br /&gt;
+利用にはキャッシュ用のキーが必要になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;キャッシュキー&quot;&gt;キャッシュキー&lt;/h3&gt;
+&lt;p&gt;キーは文字列になります。&lt;/p&gt;
+
+&lt;p&gt;文字列以外を渡す場合は、文字列へ変換されます。例えば&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;モデルを渡す場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;cache_key&lt;/code&gt;メソッドが定義されて文字列を返す必要があります。&lt;/li&gt;
+  &lt;li&gt;配列の場合は先頭から各要素を文字列変換後にスラッシュ(&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;)で結合します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'lists'&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# lists&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# @user.cache_key&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hoge'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# &quot;hoge/#{@user.cache_key}&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;キャッシュ期限&quot;&gt;キャッシュ期限&lt;/h3&gt;
+&lt;p&gt;オプションで&lt;code class=&quot;highlighter-rouge&quot;&gt;expires_in&lt;/code&gt;を渡すことでキャッシュの期限を設定できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;expires_in: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hour&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;extends先のキャッシュ&quot;&gt;extends先のキャッシュ&lt;/h3&gt;
+&lt;p&gt;cacheコマンドはextends先のrablでも使えます。&lt;/p&gt;
+
+&lt;p&gt;自身の呼び出し元のオブジェクトを参照したい場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;root_object&lt;/code&gt;を使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;list&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;root_object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ルートノードの表示のデフォルト値を設定する&quot;&gt;ルートノードの表示のデフォルト値を設定する&lt;/h2&gt;
+&lt;p&gt;ルートノードはオブジェクトルートの表示をrabl毎に設定せずに一律デフォルト値を設定する場合は&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;/config/initializers/rabl_init.rb&lt;/code&gt;に次の2つを指定することでデフォルト値の変更ができます。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Rabl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;include_json_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;include_child_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;他にもrablの設定では&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;存在しない属性にRuntimeErrorを発生させる(productionはtrue非推奨)&lt;/li&gt;
+  &lt;li&gt;nilは空の文字列に変換する&lt;/li&gt;
+  &lt;li&gt;nilの場合はレスポンスから除外&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などの変更ができます。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# 存在しない属性にRuntimeErrorを発生させる(productionはtrue非推奨)&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;raise_onmissing_attribute&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# nilは空の文字列に変換する&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;replace_nil_values_with_empty_strings&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# nilの場合はレスポンスから除外&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;exclude_nil_values&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;詳しくは&lt;a href=&quot;https://github.com/nesquena/rabl#configuration&quot;&gt;GitHubのConfiguration&lt;/a&gt;にて説明されています。&lt;/p&gt;
+
+&lt;h2 id=&quot;rablは使いにくい&quot;&gt;rablは使いにくい&lt;/h2&gt;
+&lt;p&gt;個人的にはRuby on Railsでrablは採用しないほうがいいです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;DSLの書き方が独自なため流動性が低い&lt;/li&gt;
+  &lt;li&gt;repositoryが活発的とは言えない&lt;/li&gt;
+  &lt;li&gt;ARモデル表示に特化しすぎていてページネーションとかARモデル外の柔軟性が低い&lt;/li&gt;
+  &lt;li&gt;日本語記事が少ない&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/0.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-05T02:40:36+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;この記事では、Arrayの内部特性を理解し特性が含むリスクに対して、速度パフォーマンスを測定して何が重い実験した結果をまとめたレポートです。&lt;/strong&gt;&lt;/p&gt;
 
@@ -342,7 +781,91 @@ X軸が配列数で、Y軸が処理時間(秒)になります。&lt;/p&gt;
 &lt;p&gt;80バイト程度で1~2万件のデータを扱う時に前方挿入をする処理が多いとスパイクが起きるレベルです。&lt;br /&gt;
 これがECなどで1つの商品情報を扱う場合は更にでかいサイズかと思います。&lt;br /&gt;
 そうなると1万件以下でも重くなるでしょう。&lt;br /&gt;
-追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
+追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-04T15:47:13+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
+
+&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
+
+&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
+  &lt;li&gt;検証コードを実装&lt;/li&gt;
+  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
+  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
+なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
+&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
+仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
+
+&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
+&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
+頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
+毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
+&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
+そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
+
+&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
+&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
+ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
+
+&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
+&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
+単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
+&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
+
+&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
+また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
+  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
+  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
+
+&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
+
+&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
+そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
+新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
+
+&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
+&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/0.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
 この2つを使いこなすことは、iOSエンジニアとして重要なことです。&lt;/p&gt;
 
 &lt;p&gt;Swift特有の使い方、つまりイディオムを理解することでSwiftyなコーディングができるようにもなります。&lt;/p&gt;
@@ -1937,176 +2460,4 @@ String 2
 
 &lt;p&gt;他IDEと遜色ない条件付きブレイクポイント機能ですね。
 ただ条件付きブレイクポイントのデメリットとしては、処理が重くなります。
-通るたびに条件を満たしているか評価を行うためその分重くなります。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><category term="ruby" /><summary type="html">みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" /></entry><entry><title type="html">Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認</title><link href="https://blog.mothule.com/ruby/ruby-backslash" rel="alternate" type="text/html" title="Rubyのバックスラッシュ記法(\t \n \sなど)一覧を確認" /><published>2020-02-28T00:00:00+09:00</published><updated>2020-02-28T05:08:45+09:00</updated><id>https://blog.mothule.com/ruby/ruby-backslash</id><content type="html" xml:base="https://blog.mothule.com/ruby/ruby-backslash">&lt;h2 id=&quot;バックスラッシュ記法とは&quot;&gt;バックスラッシュ記法とは？&lt;/h2&gt;
-&lt;p&gt;文字列中でバックスラッシュ(\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。&lt;/p&gt;
-
-&lt;h2 id=&quot;バックスラッシュ記法の一覧&quot;&gt;バックスラッシュ記法の一覧&lt;/h2&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;バックスラッシュ記法&lt;/th&gt;
-      &lt;th&gt;意味&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\t&lt;/td&gt;
-      &lt;td&gt;タブ(0x09)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\v&lt;/td&gt;
-      &lt;td&gt;垂直タブ(0x0b)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\n&lt;/td&gt;
-      &lt;td&gt;改行(0x0a)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\r&lt;/td&gt;
-      &lt;td&gt;キャリッジリターン(0x0d)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\f&lt;/td&gt;
-      &lt;td&gt;改ページ(0x0c)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\b&lt;/td&gt;
-      &lt;td&gt;バックスペース (0x08)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\a&lt;/td&gt;
-      &lt;td&gt;ベル (0x07)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\e&lt;/td&gt;
-      &lt;td&gt;エスケープ (0x1b)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\s&lt;/td&gt;
-      &lt;td&gt;空白 (0x20)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\nnn&lt;/td&gt;
-      &lt;td&gt;8 進数表記 (n は 0-7)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\xnn&lt;/td&gt;
-      &lt;td&gt;16 進数表記 (n は 0-9,a-f)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\cx or \C-x&lt;/td&gt;
-      &lt;td&gt;コントロール文字 (x は ASCII 文字)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\M-x&lt;/td&gt;
-      &lt;td&gt;メタ x (c | 0x80)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\M-\C-x&lt;/td&gt;
-      &lt;td&gt;メタ コントロール x&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\x&lt;/td&gt;
-      &lt;td&gt;文字 x そのもの&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\unnnn&lt;/td&gt;
-      &lt;td&gt;Unicode 文字(n は 0-9,a-f,A-F、16進数4桁で指定)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\u{nnnn}&lt;/td&gt;
-      &lt;td&gt;Unicode 文字列(n は 0-9,a-f,A-F)。nnnnは16進数で1桁から6桁まで指定可能。スペースかタブ区切りで複数の Unicode 文字を指定できる。例: “\u{30eb 30d3 30fc a}” # =&amp;gt; “ルビー\n”&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;\改行&lt;/td&gt;
-      &lt;td&gt;文字列中に改行を含めずに改行&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://docs.ruby-lang.org/ja/latest/doc/spec=2fliteral.html#backslash&quot;&gt;Rubyリファレンスマニュアルより抜粋引用&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;タブt&quot;&gt;タブ(\t)&lt;/h3&gt;
-
-&lt;p&gt;分かりにくいですが、fooとbarの間にスペースではなく、タブが入ります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\t&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bar&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;	&lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;垂直タブv&quot;&gt;垂直タブ(\v)&lt;/h3&gt;
-&lt;p&gt;真下に移動します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\v&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bar&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;
-   &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;バックスペースb&quot;&gt;バックスペース(\b)&lt;/h3&gt;
-
-&lt;p&gt;キーボードのバックスペース同様、手前1文字を消します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\b&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bar&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;fobar&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ベルa&quot;&gt;ベル(\a)&lt;/h3&gt;
-
-&lt;p&gt;実行すると音がなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\a&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bar&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;foobar&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;空白s&quot;&gt;空白(\s)&lt;/h3&gt;
-
-&lt;p&gt;スペース1文字入ります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\s&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bar&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;8進数表記-16進数表記-コントロール文字&quot;&gt;8進数表記, 16進数表記, コントロール文字&lt;/h3&gt;
-
-&lt;p&gt;これらは直接制御文字を指定する方法です。
-制御文字のコードと命令については&lt;a href=&quot;https://ja.wikipedia.org/wiki/%E5%88%B6%E5%BE%A1%E6%96%87%E5%AD%97&quot;&gt;Wikipedia&lt;/a&gt;が分かりやすいです。&lt;/p&gt;
-
-&lt;p&gt;例えば前述したタブの場合は コントロール文字であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;^I&lt;/code&gt;16進数なら&lt;code class=&quot;highlighter-rouge&quot;&gt;09&lt;/code&gt;なので、
-Rubyではこう書きます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\c&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;Ibar&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;	&lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\x09&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;bar&quot;&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;foo&lt;/span&gt;	&lt;span class=&quot;n&quot;&gt;bar&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;unicode文字-unicode文字列&quot;&gt;Unicode文字, Unicode文字列&lt;/h3&gt;
-
-&lt;p&gt;Unicodeを直接指定します。
-例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;A&lt;/code&gt;の場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;0x0041&lt;/code&gt;なので&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;0041&quot;&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;A&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;文字列&lt;code class=&quot;highlighter-rouge&quot;&gt;ABC&lt;/code&gt;の場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;0x0041 0x0042 0x0043&lt;/code&gt;なので&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\u&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;{0041 0042 0043}&quot;&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;ABC&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;文字列中に改行を含めずに改行改行&quot;&gt;文字列中に改行を含めずに改行(\改行)&lt;/h3&gt;
-
-&lt;p&gt;文字列を作成中に改行しても文字列作成中を継続する場合に使います。
-これ意味わかりにくいですが、コード見ると何のことかすぐ分かります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;hoge&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;foo\
-bar\
-baz&quot;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hoge&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# foobarbaz&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rubyのバックスラッシュ記法一覧確認したけど&quot;&gt;Rubyのバックスラッシュ記法一覧確認したけど&lt;/h2&gt;
-&lt;p&gt;用途や効果の分からない記法もありました。長年実務でも見かけたことのないものなので特別なシステム開発でしか使われないかと思います。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><summary type="html">バックスラッシュ記法とは？ 文字列中でバックスラッシュ(\)の後に記述する文字によって特別な意味を持つ記法です。制御文字とも呼ばれます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-02-28-ruby-backslash.png" /></entry></feed>
+通るたびに条件を満たしているか評価を行うためその分重くなります。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><category term="ruby" /><summary type="html">みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" /></entry></feed>
