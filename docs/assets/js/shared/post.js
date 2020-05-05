@@ -2,10 +2,7 @@
     var toc = $('.post-content-toc');
     var sidebar = $('.sidebar');
     var article = $('article');
-    console.log('article tag height:' + article.height());
-    console.log('sidebar class height:' + sidebar.height());
     sidebar.height(article.height());
+    $('#side-toc-id').append('<p>目次</p>')
     toc.clone(false).appendTo($('#side-toc-id'));
-
 });
-
