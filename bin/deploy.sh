@@ -43,6 +43,7 @@ else
 fi
 
 # clean sitemap.xml
+info 'Clean sitemap.xml'
 clean_sitemap.rb
 
 # rsync
