@@ -1,4 +1,171 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-07T22:21:35+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">rablの使い方を丁寧に説明</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic" rel="alternate" type="text/html" title="rablの使い方を丁寧に説明" /><published>2020-05-05T00:00:00+09:00</published><updated>2020-05-06T05:08:17+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic">&lt;p&gt;この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-08T03:29:00+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">質問の返答速度をXcode起動速度より速くする【ag】</title><link href="https://blog.mothule.com/tools/ag/tools-ag-silver-serach" rel="alternate" type="text/html" title="質問の返答速度をXcode起動速度より速くする【ag】" /><published>2020-05-08T00:00:00+09:00</published><updated>2020-05-08T03:28:47+09:00</updated><id>https://blog.mothule.com/tools/ag/tools-ag-silver-serach</id><content type="html" xml:base="https://blog.mothule.com/tools/ag/tools-ag-silver-serach">&lt;p&gt;&lt;strong&gt;「◯◯って使ってますか？」の返答速度を爆速にします。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;esaのドキュメント更新中や会議など「Xcodeちょっとお休み😇」と
+&lt;strong&gt;Xcode立ち上げてないときに限って&lt;/strong&gt;&lt;br /&gt;
+&lt;strong&gt;「◯◯の変更対応進めたいですが、ハードコーディングしてる箇所何個ありますか？」&lt;/strong&gt;&lt;br /&gt;
+…モニター監視でもしてるの？と疑うくらい、この2つのセット率は無駄に高いです。&lt;/p&gt;
+
+&lt;p&gt;この記事は、&lt;strong&gt;iOSエンジニアが会議中にXcodeを起動せず&lt;/strong&gt; &lt;br /&gt;
+「これ使ってますか？」攻撃に「（タカタカターンッ）使ってないですね」とその場で質問形式の調べ物タスクを解決し、&lt;strong&gt;できるiOSエンジニアを演じるためのロードマップです。&lt;/strong&gt;&lt;br /&gt;
+ag(The Silver Searcher)のインストール解説はついでです。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcode起動とロードと検索の間にシェルコマンドを叩く&quot;&gt;Xcode起動とロードと検索の間にシェルコマンドを叩く&lt;/h2&gt;
+&lt;p&gt;XcodeはGUIのなかでも起動とロードが遅いです。&lt;br /&gt;
+しかもロード後に全文検索も始めたら更に時間がかかります。&lt;/p&gt;
+
+&lt;p&gt;実は単純検索で目的である質問の返答が返せる場合は、&lt;br /&gt;
+&lt;strong&gt;シェルコマンドで高速検索したほうが短時間で目的を達成できるパターンが存在します。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;シェルコマンドを勧める理由&quot;&gt;シェルコマンドを勧める理由&lt;/h2&gt;
+&lt;p&gt;シェルコマンドは土台がCUIつまり文字です。その分余計なデータ処理は発生しないのでGUIより軽く&lt;strong&gt;大抵&lt;/strong&gt;が速いです。&lt;/p&gt;
+
+&lt;p&gt;そしてiOSエンジニアはMac使いです。&lt;br /&gt;
+ターミナルにも色気を出して丁度よい「iTerm2」あたりで「option+space氏便利〜」とミサワってます。&lt;br /&gt;
+つまりこれは、Xcodeでロード後の状態が整っていると同義です。&lt;/p&gt;
+
+&lt;h2 id=&quot;grepは遅い&quot;&gt;grepは遅い&lt;/h2&gt;
+
+&lt;p&gt;しかしシェルコマンドと言えど全文検索はCPUパワーに依存する機能です。
+検索対象ファイルが多いければ多いほど時間がかかるのも事実です。&lt;/p&gt;
+
+&lt;p&gt;純粋なgrepは止めましょう。grepと交際してはいけません。&lt;/p&gt;
+
+&lt;p&gt;大抵バトル漫画では、日の呼吸や魔人ブーなどオリジナルや現祖や純粋なキャラほど強いのが定番ですが、IT世界ではそんなことはなく後発ほど強いです。現代社会の若い人ほどIT環境や勉学に恵まれて育ち、新卒なのに中堅より戦闘力が高いのと同じです。&lt;/p&gt;
+
+&lt;h2 id=&quot;the-silver-searcherは速い&quot;&gt;The Silver Searcherは速い&lt;/h2&gt;
+&lt;p&gt;グレップ オソイ…オレ アイツ ヨリ ハヤイ&lt;/p&gt;
+
+&lt;p&gt;後発の全文検索では高速の部類に入るツールです。
+&lt;a href=&quot;https://github.com/ggreer/the_silver_searcher&quot;&gt;ggreer/the_silver_searcher&lt;/a&gt;でソースコードを公開しており、
+「あいつより速いコード検索ツール」という謳い文句で人気を得てます。&lt;/p&gt;
+
+&lt;h3 id=&quot;実際に質問に答える&quot;&gt;実際に質問に答える&lt;/h3&gt;
+&lt;p&gt;では実際にありそうな質問に対して答えて見ようと思います。&lt;br /&gt;
+執筆時点で少しトレンドな質問を用意しました。&lt;br /&gt;
+「UIWebViewが非推奨になりWKWebView移行しないとリジェクトされるようになりました。iOSプロジェクトでUIWebViewは使ってますか？」&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/2.gif&quot; width=&quot;100%&quot; alt=&quot;iTerm+ag操作&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;「AFNetworkingで使ってます（キリッ」&lt;/p&gt;
+
+&lt;p&gt;ちなみに検索ボリュームをそれっぽい規模にするため、実際に実務で使ってるレポジトリ（ファイル数約5.4万個の約2Gバイト）に対して検索してます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/3.png&quot; width=&quot;50%&quot; alt=&quot;2Gバイトをagで高速検索&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;the-silver-searcheragの特徴&quot;&gt;The Silver Searcher(ag)の特徴&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;並列による高速検索&lt;/li&gt;
+  &lt;li&gt;.gitフォルダを検索しない&lt;/li&gt;
+  &lt;li&gt;.gitignoreの内容も検索しない&lt;/li&gt;
+  &lt;li&gt;隠しファイルやフォルダは検索しない&lt;/li&gt;
+  &lt;li&gt;バイナリは検索しない&lt;/li&gt;
+  &lt;li&gt;検索ファイルのタイプ指定可能&lt;/li&gt;
+  &lt;li&gt;正規表現検索&lt;/li&gt;
+  &lt;li&gt;再帰検索する&lt;/li&gt;
+  &lt;li&gt;独自の検索除外ファイル&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;なぜag&quot;&gt;なぜag？&lt;/h4&gt;
+&lt;p&gt;the silver searcher→silver→銀→ag&lt;/p&gt;
+
+&lt;h3 id=&quot;the-silver-searcheragのインストール方法&quot;&gt;The Silver Searcher(ag)のインストール方法&lt;/h3&gt;
+
+&lt;p&gt;MacなのでHomebrewで簡単インストールできます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install the_silver_searcher
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;agthe-silver-searcherを使う&quot;&gt;ag(The Silver Searcher)を使う&lt;/h2&gt;
+
+&lt;p&gt;agはデフォルト設定が既にコード検索に適しておりあまり弄ることはないですが、少し詳しく知りたくなったらここを思い出してください。&lt;/p&gt;
+
+&lt;h3 id=&quot;検索オプション&quot;&gt;検索オプション&lt;/h3&gt;
+
+&lt;h4 id=&quot;カレントディレクトリ以下を検索&quot;&gt;カレントディレクトリ以下を検索&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;指定ディレクトリ以下を検索&quot;&gt;指定ディレクトリ以下を検索&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag UIWebView Pods
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;検索ファイルを指定---filetype&quot;&gt;検索ファイルを指定: (&lt;code class=&quot;highlighter-rouge&quot;&gt;--filetype&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--cpp&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;指定可能なファイルタイプを確認&quot;&gt;指定可能なファイル・タイプを確認&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--list-file-types&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;大文字小文字を区別する-s&quot;&gt;大文字小文字を区別する(&lt;code class=&quot;highlighter-rouge&quot;&gt;-s&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;大文字小文字を区別しないデフォルト&quot;&gt;大文字小文字を区別しない(&lt;code class=&quot;highlighter-rouge&quot;&gt;デフォルト&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt; uiwebview
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;検索文字を正規表現で指定デフォルト&quot;&gt;検索文字を正規表現で指定（&lt;code class=&quot;highlighter-rouge&quot;&gt;デフォルト&lt;/code&gt;）&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;s1&quot;&gt;'..WebView'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;検索文字で正規表現を無効化&quot;&gt;検索文字で正規表現を無効化&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-Q&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'UIWebView+'&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;ファイル名やディレクトリ名を正規表現で指定-g-pattern&quot;&gt;ファイル名やディレクトリ名を正規表現で指定（&lt;code class=&quot;highlighter-rouge&quot;&gt;-G pattern&lt;/code&gt;）&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'\.(c|h|swift)'&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;ファイルを検索-g-pattern&quot;&gt;ファイルを検索(&lt;code class=&quot;highlighter-rouge&quot;&gt;-g pattern&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;隠しファイルも検索--hidden&quot;&gt;隠しファイルも検索(&lt;code class=&quot;highlighter-rouge&quot;&gt;--hidden&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--hidden&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;全ファイル検索-u&quot;&gt;全ファイル検索(&lt;code class=&quot;highlighter-rouge&quot;&gt;-u&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;再帰ディレクトリの深さ指定--depth-n&quot;&gt;再帰ディレクトリの深さ指定(&lt;code class=&quot;highlighter-rouge&quot;&gt;--depth n&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--depth&lt;/span&gt; 1 UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;デフォルトは25。無制限ではないので注意。無制限は-1&lt;/p&gt;
+
+&lt;h3 id=&quot;出力オプション&quot;&gt;出力オプション&lt;/h3&gt;
+&lt;h4 id=&quot;ファイル名だけ表示-l&quot;&gt;ファイル名だけ表示(&lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;マッチしないファイル名だけ表示l&quot;&gt;マッチしないファイル名だけ表示(&lt;code class=&quot;highlighter-rouge&quot;&gt;L&lt;/code&gt;)&lt;/h4&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; UIWebView
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;検索除外&quot;&gt;検索除外&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.agingnore&lt;/code&gt;ファイルをホームディレクトリに配置して、　　
+中身に検索対象から外したいパターンを列挙することで検索対象から除外されます。&lt;/p&gt;
+
+&lt;h2 id=&quot;agに拘らずxcodeを使う&quot;&gt;agに拘らずXcodeを使う&lt;/h2&gt;
+
+&lt;p&gt;agをインストールしてiTermをスタンバイさせましょう。
+これで会議で急に質問されてもカッコよくできるエンジニアっぽく返せます。&lt;/p&gt;
+
+&lt;p&gt;でもXcodeが立ち上がってるなら素直にXcodeで検索しましょう。
+Xcodeで開発中にagを使うとか「IDEなにそれ美味しいの」的な動きはせず素直に検索したほうがいいです。&lt;/p&gt;
+
+&lt;p&gt;agは検索こそ速けれど、その次のステップがないからです。&lt;br /&gt;
+つまり、検索結果から次ステップが面倒です。どのみちXcode開くと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;agより早いツール&quot;&gt;agより早いツール&lt;/h3&gt;
+
+&lt;p&gt;あります。でもまだ速度差によるアドバンテージは低いので好みの問題です。
+今よりもでかい環境で調べた時に重くなったら考えるとかで十分です。&lt;/p&gt;
+
+&lt;h3 id=&quot;grepで十分&quot;&gt;grepで十分&lt;/h3&gt;
+
+&lt;p&gt;今よりもでかい環境で調べた時に重くなったら考えるとかで十分です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ag" /><summary type="html">「◯◯って使ってますか？」の返答速度を爆速にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-08-tools-ag-silver-serach/0.png" /></entry><entry><title type="html">rablの使い方を丁寧に説明</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic" rel="alternate" type="text/html" title="rablの使い方を丁寧に説明" /><published>2020-05-05T00:00:00+09:00</published><updated>2020-05-06T05:08:17+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic">&lt;p&gt;この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。&lt;/p&gt;
 
 &lt;p&gt;流れは大きく次の順番で説明していきます。&lt;/p&gt;
 
@@ -521,7 +688,91 @@ rablの場所を&lt;code class=&quot;highlighter-rouge&quot;&gt;users/show&lt;/c
   &lt;li&gt;日本語記事が少ない&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/0.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-05T02:40:36+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
+&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/0.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-04T15:47:13+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
+
+&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
+
+&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
+  &lt;li&gt;検証コードを実装&lt;/li&gt;
+  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
+  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
+なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
+&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
+仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
+
+&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
+&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
+頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
+毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
+&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
+そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
+
+&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
+&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
+ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
+
+&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
+&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
+単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
+&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
+
+&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
+また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
+  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
+  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
+
+&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
+
+&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
+そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
+新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
+
+&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
+&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/0.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-05T02:40:36+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;この記事では、Arrayの内部特性を理解し特性が含むリスクに対して、速度パフォーマンスを測定して何が重い実験した結果をまとめたレポートです。&lt;/strong&gt;&lt;/p&gt;
 
@@ -781,91 +1032,7 @@ X軸が配列数で、Y軸が処理時間(秒)になります。&lt;/p&gt;
 &lt;p&gt;80バイト程度で1~2万件のデータを扱う時に前方挿入をする処理が多いとスパイクが起きるレベルです。&lt;br /&gt;
 これがECなどで1つの商品情報を扱う場合は更にでかいサイズかと思います。&lt;br /&gt;
 そうなると1万件以下でも重くなるでしょう。&lt;br /&gt;
-追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-04T15:47:13+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
-
-&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
-
-&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
-  &lt;li&gt;検証コードを実装&lt;/li&gt;
-  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
-  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
-なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
-&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
-仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
-
-&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
-&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
-頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
-毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
-&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
-そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
-
-&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
-&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
-ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
-
-&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
-
-&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
-&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
-単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
-&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
-
-&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
-また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
-  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
-  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
-
-&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
-
-&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
-そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
-新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
-
-&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
-&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/0.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
+追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
 この2つを使いこなすことは、iOSエンジニアとして重要なことです。&lt;/p&gt;
 
 &lt;p&gt;Swift特有の使い方、つまりイディオムを理解することでSwiftyなコーディングができるようにもなります。&lt;/p&gt;
@@ -2296,168 +2463,4 @@ executed &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;expr &lt;span class=&quo
 &lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/6.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineのSettingsからDebug connection timeを延長する&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;rubymineでunixドメインソケット通信でもデバッグできるようになる&quot;&gt;RubyMineでUNIXドメインソケット通信でもデバッグできるようになる&lt;/h2&gt;
-&lt;p&gt;通常ではRubyMineから起動したアプリしかデバッグができなかったり、ターミナル上でしかUNIXドメインソケット通信のRailsアプリを起動できなかったりしますが、この方法であれば既に立ち上がっているRubyプロセスでもアタッチすることでデバッグができるようになり便利ですね。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="rubymine" /><category term="nginx" /><category term="tools" /><category term="ruby" /><category term="rails" /><summary type="html">RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" /></entry><entry><title type="html">RubyMineで条件付きブレイクポイントを使いこなす方法</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint" rel="alternate" type="text/html" title="RubyMineで条件付きブレイクポイントを使いこなす方法" /><published>2020-03-29T00:00:00+09:00</published><updated>2020-04-01T00:40:47+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint">&lt;p&gt;みんな大好きRubyMineはRubyのIDEです。
-IDEと言えばそのソフト一つで開発環境が整っている必要があります。
-なんせ&lt;strong&gt;Integrated Development Envrionment&lt;/strong&gt;ですもんね。&lt;/p&gt;
-
-&lt;p&gt;そんなIDEの重要機能としてデバッグがあります。
-これが統合されていないIDEはIDEとは絶対に言えないです。&lt;/p&gt;
-
-&lt;p&gt;その中でもブレイクポイントはデバッグにおいて要と言える機能です。
-ブレイクポイントができないデバッグは何ができるのか？と疑問なほどです。&lt;/p&gt;
-
-&lt;h2 id=&quot;条件付きブレイクポイントとは&quot;&gt;条件付きブレイクポイントとは？&lt;/h2&gt;
-
-&lt;p&gt;そんな便利なブレイクポイントですが、IDEとして用意されているブレイクポイントは一般的に単純なブレイクポイントだけでなく、一定の条件を満たした場合のみ止まってくれる&lt;strong&gt;「条件付きブレイクポイント」&lt;/strong&gt; はIDEならではの機能です。&lt;/p&gt;
-
-&lt;p&gt;RubyMineにもきちんと用意されてます。今回はこれの使い方を説明します。&lt;/p&gt;
-
-&lt;p&gt;コードは何でもいいです、今回はこれを使います。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;無条件ブレイクポイントをかける&quot;&gt;無条件ブレイクポイントをかける&lt;/h2&gt;
-
-&lt;p&gt;行の横をクリックすると赤丸がついたらその行にブレイクポイントをつけたことになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/1.png&quot; width=&quot;50%&quot; alt=&quot;RubyMineのエディタ画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Debug実行するとこの行で止まります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/2.png&quot; width=&quot;50%&quot; alt=&quot;RubyMineでブレイクポイントで止まった画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;これでもブレイクポイントがかかっているのでその時のコンテキストでRubyコードを実行したり変数評価したりできます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/3.png&quot; width=&quot;50%&quot; alt=&quot;RubyMineでブレイクポイントで止めた後のConsole画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;ループ内のブレイクポイントは何回も止まる&quot;&gt;ループ内のブレイクポイントは何回も止まる&lt;/h3&gt;
-
-&lt;p&gt;ただこの方法ではループや何回も呼ばれるメソッドなどではその都度止まります。
-例えば決まったコンテキストだけデバッグしたい場合では何度も再開ボタンを連打して飛ばしてしまったりします。&lt;/p&gt;
-
-&lt;h2 id=&quot;条件付きブレイクポイントをかける&quot;&gt;条件付きブレイクポイントをかける&lt;/h2&gt;
-
-&lt;p&gt;この無条件のブレイクポイントを右クリック押すとポップアップメニューが出ます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/4.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineでブレイクポイントの編集ポップアップ&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Enabled: 有効状態の設定&lt;/li&gt;
-  &lt;li&gt;Suspend: 一時停止の設定&lt;/li&gt;
-  &lt;li&gt;Condition: 条件の設定&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;enabled-有効状態の設定&quot;&gt;Enabled: 有効状態の設定&lt;/h3&gt;
-&lt;p&gt;一時的に有効／無効を設定します。ブレイクポイント自体の削除はしません。
-無効にすると穴のあいた赤丸になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;suspend-一時停止の設定&quot;&gt;Suspend: 一時停止の設定&lt;/h3&gt;
-&lt;p&gt;一時停止とはつまるところ停止です。この行で止まります。
-デフォルトではONになっており、これをOFFにするとオレンジ色になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/5.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineでブレイクポイントの編集でSuspendOFF&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;一時停止する代わりにログ出力のオプションが増えます。&lt;/p&gt;
-
-&lt;h4 id=&quot;breakpoint-hit-発火をログ出力で通知&quot;&gt;“Breakpoint hit”: 発火をログ出力で通知&lt;/h4&gt;
-&lt;p&gt;止まる代わりにログを出力します。
-例えば次のコードでブレイクポイントを貼り、
-“Breakpoint hit”をONにします。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;each&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;nb&quot;&gt;puts&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;i&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ここでブレイクポイントを貼る&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;結果は次のようになります。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1
-4
-
-Process finished with &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;code 0
-Breakpoint reached: main.rb:4
-Breakpoint reached: main.rb:4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;「&lt;strong&gt;“Breakpoint reached: main.rb:4”&lt;/strong&gt;」と通過したことをログ出力されてます。&lt;/p&gt;
-
-&lt;h4 id=&quot;stack-trace-発火時のスタックトレース表示&quot;&gt;Stack trace: 発火時のスタックトレース表示&lt;/h4&gt;
-&lt;p&gt;ブレイクポイントを通過して発火するとコールスタックを出力します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1
-4
-
-Process finished with exit code 0
-Stack:
-	main.rb:4
-	main.rb:3
-	debug_program [ruby-debug-ide.rb:100] (singleton class of Debugger)
-	rdebug-ide:204
-Stack:
-	main.rb:4
-	main.rb:3
-	debug_program [ruby-debug-ide.rb:100] (singleton class of Debugger)
-	rdebug-ide:204
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;どこからこのメソッドが呼ばれてるのか知りたい場合に便利ですね。&lt;/p&gt;
-
-&lt;h4 id=&quot;evaluate-and-log-発火時に独自ログを表示&quot;&gt;Evaluate and log: 発火時に独自ログを表示&lt;/h4&gt;
-
-&lt;p&gt;ブレイクポイントを通過して発火すると記載しておいたRubyコードが評価され結果を出力します。
-例えばブレイクポイントに次のコードを仕込んで実行すると&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;s2&quot;&gt;&quot;String &lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;ブレイクポイント発火時に次のようにRubyコードの評価結果が出力されます。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;1
-4
-
-Process finished with &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;code 0
-String 1
-String 2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;remove-once-hit-一度だけ止まる&quot;&gt;Remove once hit: 一度だけ止まる&lt;/h4&gt;
-
-&lt;p&gt;ブレイクポイントを一度発火するとそのブレイクポイントは削除されます。
-&lt;strong&gt;このブレイクポイントはSuspendがONのときしか機能しません。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;disable-until-hitting-the-following-breakpoint-他のブレークポイント検知で有効化する&quot;&gt;Disable until hitting the following breakpoint: 他のブレークポイント検知で有効化する&lt;/h4&gt;
-&lt;p&gt;このブレイクポイントは他のブレークポイントが発火したらそれをトリガーにブレークポイントが有効化します。&lt;/p&gt;
-
-&lt;p&gt;ただシングルスレッドではこの機能は正しく動作していないように思えます。
-対象のブレイクポイント発火時はたしかに有効化しているようなのですが、その後有効状態を継続してもブレイクポイントはヒットしません。
-ここもし詳しく分かる方いたら教えてほしいです。&lt;/p&gt;
-
-&lt;h3 id=&quot;condition-条件の設定&quot;&gt;Condition: 条件の設定&lt;/h3&gt;
-
-&lt;p&gt;デフォルトはOFFになっておりONにすることで&lt;code class=&quot;highlighter-rouge&quot;&gt;Condition&lt;/code&gt;内をRubyとして評価し&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;になったら止まります。
-条件付きブレイクポイントの場合は赤丸の右下に？マークがつきます。
-次の図では、変数&lt;code class=&quot;highlighter-rouge&quot;&gt;i&lt;/code&gt;が&lt;code class=&quot;highlighter-rouge&quot;&gt;5&lt;/code&gt;になったら止まります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/6.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineの条件付きブレイクポイント&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;例では単純な等価判定ですが、戻り値として&lt;code class=&quot;highlighter-rouge&quot;&gt;Bool&lt;/code&gt;を返せばいいだけなので
-そのコンテキストで得られる情報を使った評価も可能です。
-例えばActiveRecordがアクセスできるコンテキストであれば条件式に入れることも可能です。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;find_by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;id: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;i&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;).&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;admin?&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;といったことも可能です。&lt;/p&gt;
-
-&lt;h2 id=&quot;moreでブレイクポイント管理画面を表示&quot;&gt;Moreでブレイクポイント管理画面を表示&lt;/h2&gt;
-
-&lt;p&gt;画面左下の&lt;code class=&quot;highlighter-rouge&quot;&gt;More&lt;/code&gt;ラベルをタップするとブレイクポイント一覧と詳細ができる管理画面が表示されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/7.png&quot; width=&quot;100%&quot; alt=&quot;RubyMineブレイクポイント管理画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;この画面でなくても指定したブレイクポイントの編集は可能です。&lt;/p&gt;
-
-&lt;h2 id=&quot;rubymineにも条件付きブレイクポイントはつけれる&quot;&gt;RubyMineにも条件付きブレイクポイントはつけれる&lt;/h2&gt;
-
-&lt;p&gt;他IDEと遜色ない条件付きブレイクポイント機能ですね。
-ただ条件付きブレイクポイントのデメリットとしては、処理が重くなります。
-通るたびに条件を満たしているか評価を行うためその分重くなります。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><category term="ruby" /><summary type="html">みんな大好きRubyMineはRubyのIDEです。 IDEと言えばそのソフト一つで開発環境が整っている必要があります。 なんせIntegrated Development Envrionmentですもんね。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" /></entry></feed>
+&lt;p&gt;通常ではRubyMineから起動したアプリしかデバッグができなかったり、ターミナル上でしかUNIXドメインソケット通信のRailsアプリを起動できなかったりしますが、この方法であれば既に立ち上がっているRubyプロセスでもアタッチすることでデバッグができるようになり便利ですね。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="rubymine" /><category term="nginx" /><category term="tools" /><category term="ruby" /><category term="rails" /><summary type="html">RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" /></entry></feed>
