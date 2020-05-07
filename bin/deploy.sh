@@ -42,6 +42,9 @@ else
   log "/docs folder already existing."
 fi
 
+# clean sitemap.xml
+clean_sitemap.rb
+
 # rsync
 info "Copy to docs/ ... start"
 rsync -auv --delete ws/_site/ docs
