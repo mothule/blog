@@ -1,5 +1,6 @@
 ---
 title: UITableViewのサイズ可変なセル内画像を非同期で単体更新する
+description: UITableViewのUITableViewCell(セル)内のUIImageViewに設定する画像をサイズ可変で非同期で単体更新するにはLayoutConstraintとセル単体更新とIndexPathの取得方法が重要で実装方法についてまとめました。
 categories: ios uitableview
 tags: ios uitableview
 image:
