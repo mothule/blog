@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    
+
+    
+
+
+    
+      <title>UITableViewのサイズ可変なセル内画像を非同期で単体更新する - もちゅろぐ</title>
+    
+
+    <!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。" />
+<meta property="og:description" content="キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" />
+<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-09T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update","headline":"UITableViewのサイズ可変なセル内画像を非同期で単体更新する","dateModified":"2020-05-09T02:23:21+09:00","datePublished":"2020-05-09T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update"},"description":"キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+    
+    
+    <meta name="twitter:title" content="UITableViewのサイズ可変なセル内画像を非同期で単体更新する">
+    <meta name="twitter:description" content="キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。">
+    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png">
+
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          rel="stylesheet"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+    
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+  </head>
+  <body>
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <div class="container">
+
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom: 32px;">
+        <!-- Content -->
+        <article class="col-sm-9">
+          <div class="breadcrumbs">
+  <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ios" itemprop="item">
+              <span itemprop="name">iOS</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#uitableview" itemprop="item">
+              <span itemprop="name">UITableView</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            UITableViewのサイズ可変なセル内画像を非同期で単体更新する
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+</div>
+
+<div class="post-content">
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" alt="UITableViewのサイズ可変なセル内画像を非同期で単体更新する">
+    </div>
+  
+
+  <div class="post-content-title border-bottom mb-4">
+    <h1>UITableViewのサイズ可変なセル内画像を非同期で単体更新する</h1>
+
+    <div class="post-content-tags">
+      <ul class="list-inline">
+        <li class="list-inline-item">2020-5-9</li>
+        
+          <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+        
+          <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
+        
+      </ul>
+    </div>
+  </div>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#実際に動いてる映像">実際に動いてる映像</a></li>
+  <li><a href="#セルの可変な画像非同期単体更新のポイント">セルの可変な画像、非同期、単体更新のポイント</a></li>
+  <li><a href="#レイアウトを構築する">レイアウトを構築する</a>
+    <ul>
+      <li><a href="#重要ポイント">重要ポイント</a></li>
+    </ul>
+  </li>
+  <li><a href="#uiviewcontrollerを実装する">UIViewControllerを実装する</a></li>
+  <li><a href="#画像キャッシュ機構を構築する">画像キャッシュ機構を構築する</a></li>
+  <li><a href="#テーブルセルを実装する">テーブルセルを実装する</a></li>
+  <li><a href="#まとめ課題はキャッシュ必須性">まとめ：課題はキャッシュ必須性</a></li>
+</ul>
+  </div>
+  <section>
+  <p>キャッシュとLayoutConstraintとセル単体更新と<code class="highlighter-rouge">indexPath(for:)</code>を使います。</p>
+
+<p>今回は、要件てんこ盛りなUITableViewのセル制御について説明します。
+要件について整理します。</p>
+
+<ul>
+  <li>セル内にUIImageViewがある</li>
+  <li>画像はネットから取得する</li>
+  <li>画像のサイズはバラバラ</li>
+  <li>画像取得が終わったセルのみを更新</li>
+</ul>
+
+<h2 id="実際に動いてる映像">実際に動いてる映像</h2>
+
+<p>要件だけだとイメージしにくいので実際に動いてるとこを見たほうが早いです。</p>
+
+<p><a href="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/1.gif"><img src="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/1.gif" width="50%" alt="画像サイズ可変" /></a></p>
+
+<p>セル表示時にhttps://placehold.jp/ からランダムな画像を取ってきて<br />
+画像のアスペクトを維持して横幅をベースに表示しています。</p>
+
+<p>今回は説明しやすいようにフェードやキャッシュ状態によるフェードやアニメなしかの表示制御といった処理は入れず一律アニメなしでセル更新を行っています。</p>
+
+<h2 id="セルの可変な画像非同期単体更新のポイント">セルの可変な画像、非同期、単体更新のポイント</h2>
+
+<p>セル内の可変画像の対応は、画像ダウンロード後に画像比率を調べて、動的にAutoLayoutのAspectを使って可変にします。</p>
+
+<p>非同期に関しては、色々と試しましたが、キャッシュを用いなければ実現はできないと思います。</p>
+
+<p>単体更新は、<code class="highlighter-rouge">UITableView.reloadRows(at:,with:)</code>で実現できるのですが、 <strong>渡すパラメータを間違うとクラッシュします。</strong> 今回ここが一番の穴だと思います。</p>
+
+<h2 id="レイアウトを構築する">レイアウトを構築する</h2>
+
+<p>今回ビューデータ側はなるべくシンプルに抑えてあります。</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>ビューツリー</th>
+      <th>画面プレビュー</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><a href="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/2.png"><img src="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/2.png" width="100%" alt="" /></a></td>
+      <td><a href="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/3.png"><img src="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/3.png" width="100%" alt="" /></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<p>ビューツリーを単純化するとこうなります。</p>
+
+<ul>
+  <li>View
+    <ul>
+      <li>Table View
+        <ul>
+          <li>Table View Cell
+            <ul>
+              <li>Image View</li>
+              <li>Label</li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<p>結構単純なレイアウトになっていることがわかると思います。</p>
+
+<p>いくつかポイントを説明します。</p>
+
+<ul>
+  <li>まずは、セル高さ幅が自動算出できるレイアウトを作ります。</li>
+  <li>UIImageViewは親セルやラベルに密着させます。</li>
+</ul>
+
+<p>自動算出できるレイアウトの組み方が分からない方は「<span><a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a></span>
+」を見てください。</p>
+
+<h3 id="重要ポイント">重要ポイント</h3>
+<p>レイアウトの中で通常とは異なる設定をしている点とその理由について説明します。</p>
+
+<ul>
+  <li>UIImageViewのConstraintの四辺いずれかの優先度を1000未満にする(下画像参照)
+    <ul>
+      <li>画像ロード前でセル内の自動生成されるAutolayoutと衝突回避のため</li>
+    </ul>
+  </li>
+  <li>UIImageViewの高さはざっくり表示したい画像の高さ幅にする
+    <ul>
+      <li>セル高さが小さくなり一度に多量にセルが表示されて通信が発生します</li>
+      <li>高さ幅を与えておくことで表示セル数を通常時と同じにできて無駄な通信を抑えます</li>
+    </ul>
+  </li>
+  <li>UIImageViewの高さも優先度を1000未満にしてください。(下図参照)
+    <ul>
+      <li>ここを1000のままにしてると画像がConstraintの高さ幅より長くても伸びなくなります。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>2つの優先度を下げるとこうなります。</p>
+
+<p><a href="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/4.png"><img src="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/4.png" width="50%" alt="優先度下げたConstraints" /></a></p>
+
+<p>レイアウトの準備はこれで終わりです。</p>
+
+<h2 id="uiviewcontrollerを実装する">UIViewControllerを実装する</h2>
+
+<p>まずUIViewControllerから説明します。
+なぜならとても単純過ぎて説明するポイントが特にないからです。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+
+    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
+        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
+        <span class="n">tableView</span><span class="o">.</span><span class="n">estimatedRowHeight</span> <span class="o">=</span> <span class="mi">300</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
+        <span class="k">return</span> <span class="n">sales</span><span class="o">.</span><span class="n">count</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+        <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"TableViewCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">TableViewCell</span>
+        <span class="n">cell</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="nv">sale</span><span class="p">:</span> <span class="n">sales</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">row</span><span class="p">],</span> <span class="nv">owner</span><span class="p">:</span> <span class="n">tableView</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">cell</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p><code class="highlighter-rouge">sales</code>については表示用モデルとしてこのように定義してます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Sale</span> <span class="p">{</span>
+    <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
+    <span class="k">let</span> <span class="nv">imageURL</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">}</span>
+
+<span class="k">let</span> <span class="nv">sales</span><span class="p">:</span> <span class="p">[</span><span class="kt">Sale</span><span class="p">]</span> <span class="o">=</span> <span class="kt">Array</span><span class="p">(</span><span class="mi">0</span><span class="o">..&lt;</span><span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">map</span> <span class="p">{</span> <span class="n">_</span> <span class="k">in</span>
+    <span class="k">let</span> <span class="nv">w</span> <span class="o">=</span> <span class="kt">Int</span><span class="o">.</span><span class="nf">random</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="mi">300</span><span class="o">..&lt;</span><span class="mi">400</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">h</span> <span class="o">=</span> <span class="kt">Int</span><span class="o">.</span><span class="nf">random</span><span class="p">(</span><span class="nv">in</span><span class="p">:</span> <span class="mi">200</span><span class="o">..&lt;</span><span class="mi">300</span><span class="p">)</span>
+    <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="s">"https://placehold.jp/</span><span class="se">\(</span><span class="n">w</span><span class="se">)</span><span class="s">x</span><span class="se">\(</span><span class="n">h</span><span class="se">)</span><span class="s">.png"</span>
+    <span class="k">return</span> <span class="kt">Sale</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"</span><span class="se">\(</span><span class="n">w</span><span class="se">)</span><span class="s">x</span><span class="se">\(</span><span class="n">h</span><span class="se">)</span><span class="s">"</span><span class="p">,</span> <span class="nv">imageURL</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="画像キャッシュ機構を構築する">画像キャッシュ機構を構築する</h2>
+<p>簡易ではありますが、画像をキャッシュするクラスを用意します。この構造に従う必要はありません。各自独自のオンメモリキャッシュを活用してください。今回は画像ロードライブラリやデータ管理などを簡易させるために用意してあります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ImageCache</span> <span class="p">{</span>
+    <span class="kd">static</span> <span class="k">var</span> <span class="nv">shared</span><span class="p">:</span> <span class="kt">ImageCache</span> <span class="o">=</span> <span class="o">.</span><span class="nf">init</span><span class="p">()</span>
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">cacheSize</span> <span class="o">=</span> <span class="mi">20</span>
+    <span class="kd">private</span> <span class="k">let</span> <span class="nv">clearSize</span> <span class="o">=</span> <span class="mi">5</span>
+
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">cachedImages</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[:]</span>
+
+    <span class="kd">func</span> <span class="nf">fetch</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIImage</span><span class="p">?</span> <span class="p">{</span> <span class="n">cachedImages</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="p">}</span>
+    <span class="kd">func</span> <span class="nf">set</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="n">cachedImages</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="n">cachedImages</span><span class="o">.</span><span class="n">count</span> <span class="o">&gt;</span> <span class="n">cacheSize</span> <span class="p">{</span>
+            <span class="n">cachedImages</span><span class="o">.</span><span class="n">keys</span><span class="o">.</span><span class="nf">shuffled</span><span class="p">()</span><span class="o">.</span><span class="nf">prefix</span><span class="p">(</span><span class="n">clearSize</span><span class="p">)</span><span class="o">.</span><span class="nf">forEach</span><span class="p">({</span> <span class="n">key</span> <span class="k">in</span>
+                <span class="n">cachedImages</span><span class="o">.</span><span class="nf">removeValue</span><span class="p">(</span><span class="nv">forKey</span><span class="p">:</span> <span class="n">key</span><span class="p">)</span>
+            <span class="p">})</span>
+            <span class="nf">print</span><span class="p">(</span><span class="kt">String</span><span class="p">(</span><span class="nv">describing</span><span class="p">:</span> <span class="k">self</span><span class="p">),</span> <span class="kd">#function</span><span class="p">,</span> <span class="s">"Cleared some cache."</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p>URLをキーにUIImageをキャッシュしておくデータ構造です。<br />
+実際の動きににせるため、キャッシュ処理時にキャッシュ数が上限超えたらいくつかランダムでキャッシュ画像をクリアする処理をいれてあります。</p>
+
+<h2 id="テーブルセルを実装する">テーブルセルを実装する</h2>
+
+<p>今回もっとも複雑なコードになります。</p>
+
+<ul>
+  <li>セル参照時に<code class="highlighter-rouge">setup(sale:owner:)</code></li>
+  <li>画像ロード後に<code class="highlighter-rouge">onFetchedImage(image:table:)</code></li>
+</ul>
+
+<p>という流れになっています。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableViewCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">mainImageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="o">!</span>
+    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">captionLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+    <span class="k">var</span> <span class="nv">imageAspect</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">!</span>
+
+    <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">sale</span><span class="p">:</span> <span class="kt">Sale</span><span class="p">,</span> <span class="nv">owner</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="n">captionLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">sale</span><span class="o">.</span><span class="n">name</span>
+        <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">sale</span><span class="o">.</span><span class="n">imageURL</span><span class="p">)</span><span class="o">!</span>
+
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="kt">ImageCache</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">fetch</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="n">sale</span><span class="o">.</span><span class="n">imageURL</span><span class="p">)</span> <span class="p">{</span>
+            <span class="nf">onFetchedImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="nv">table</span><span class="p">:</span> <span class="n">owner</span><span class="p">)</span>
+
+        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
+            <span class="n">mainImageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">nil</span>
+            <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+                <span class="k">guard</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+                <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
+                <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+                    <span class="k">if</span> <span class="k">let</span> <span class="nv">img</span> <span class="o">=</span> <span class="n">image</span> <span class="p">{</span>
+                        <span class="kt">ImageCache</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="n">sale</span><span class="o">.</span><span class="n">imageURL</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">img</span><span class="p">)</span>
+                    <span class="p">}</span>
+                    <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="nf">onFetchedImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span>
+                                         <span class="nv">table</span><span class="p">:</span> <span class="n">owner</span><span class="p">)</span>
+                <span class="p">}</span>
+            <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+
+    <span class="kd">func</span> <span class="nf">onFetchedImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">table</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">guard</span> <span class="k">let</span> <span class="nv">mainImageView</span> <span class="o">=</span> <span class="n">mainImageView</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+
+        <span class="k">if</span> <span class="n">imageAspect</span> <span class="o">!=</span> <span class="kc">nil</span> <span class="p">{</span>
+            <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="nf">deactivate</span><span class="p">([</span><span class="n">imageAspect</span><span class="p">])</span>
+        <span class="p">}</span>
+
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="n">image</span> <span class="p">{</span>
+            <span class="k">let</span> <span class="nv">aspect</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">height</span> <span class="o">/</span> <span class="n">image</span><span class="o">.</span><span class="n">size</span><span class="o">.</span><span class="n">width</span>
+            <span class="k">let</span> <span class="nv">constraint</span> <span class="o">=</span> <span class="kt">NSLayoutConstraint</span><span class="p">(</span><span class="nv">item</span><span class="p">:</span> <span class="n">mainImageView</span><span class="p">,</span>
+                                           <span class="nv">attribute</span><span class="p">:</span> <span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                                           <span class="nv">relatedBy</span><span class="p">:</span> <span class="o">.</span><span class="n">equal</span><span class="p">,</span>
+                                           <span class="nv">toItem</span><span class="p">:</span> <span class="n">mainImageView</span><span class="p">,</span>
+                                           <span class="nv">attribute</span><span class="p">:</span> <span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                                           <span class="nv">multiplier</span><span class="p">:</span> <span class="n">aspect</span><span class="p">,</span>
+                                           <span class="nv">constant</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
+            <span class="kt">NSLayoutConstraint</span><span class="o">.</span><span class="nf">activate</span><span class="p">([</span><span class="n">constraint</span><span class="p">])</span>
+            <span class="n">imageAspect</span> <span class="o">=</span> <span class="n">constraint</span>
+        <span class="p">}</span>
+
+        <span class="n">mainImageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
+
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">ip</span> <span class="o">=</span> <span class="n">table</span><span class="p">?</span><span class="o">.</span><span class="nf">indexPath</span><span class="p">(</span><span class="nv">for</span><span class="p">:</span> <span class="k">self</span><span class="p">)</span> <span class="p">{</span>
+            <span class="n">table</span><span class="p">?</span><span class="o">.</span><span class="nf">reloadRows</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="p">[</span><span class="n">ip</span><span class="p">],</span> <span class="nv">with</span><span class="p">:</span> <span class="o">.</span><span class="k">none</span><span class="p">)</span>
+            <span class="nf">print</span><span class="p">(</span><span class="s">"##"</span><span class="p">,</span> <span class="n">ip</span><span class="p">)</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></div>
+
+<p>まず、親テーブルがセル参照時に<code class="highlighter-rouge">setup(sale:owner:)</code>メソッド使って、テーブルセルに表示モデルと親テーブルを渡します。<br />
+<code class="highlighter-rouge">setup(sale:owner:)</code>メソッド内では、表示モデル(<code class="highlighter-rouge">sale</code>)が持つ画像URLがキャッシュにないか調べます。
+キャッシュヒットすれば画像を受け取り<code class="highlighter-rouge">onFetchedImage(image:table:)</code>を呼びます。</p>
+
+<p>キャッシュになければURLSessionを使って画像データをダウンロードします。
+画像ロードが終われば、キャッシュした後に<code class="highlighter-rouge">onFetchedImage(image:table:)</code>を呼びます。</p>
+
+<p>キャッシュ有無問わず画像を得たら必ず<code class="highlighter-rouge">onFetchedImage(image:table:)</code>が呼ばれます。</p>
+
+<p><code class="highlighter-rouge">onFetchedImage(image:table:)</code>では、最初に保持している画像アスペクト用Constraintを解除した後に
+画像のサイズ比率から新しく画像アスペクト用Constraintを登録します。</p>
+
+<p>画像の表示設定が終わったら、最後は自身のセルのIndexPathを親テーブルから取得します。<br />
+<strong>このときにIndexPathをセル参照時のIndexPathをテーブルセルが保持しておいて、セル更新時に渡してもクラッシュを起こします。</strong><br />
+親テーブルから取得したIndexPathを使って<code class="highlighter-rouge">reloadRows(at:,with:)</code>で更新します。</p>
+
+<h2 id="まとめ課題はキャッシュ必須性">まとめ：課題はキャッシュ必須性</h2>
+
+<p>今記事執筆となった事の経緯は、画像サイズに依存しないテーブルセルを作りたかったためです。
+その上で課題となるのが、</p>
+
+<ol>
+  <li>可変画像の対応方法</li>
+  <li>セル幅変更後の更新方法</li>
+</ol>
+
+<p>この2点でした。</p>
+
+<p>前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、以外な問題となったのは、キャッシュの存在でした。</p>
+
+<p>もともとはキャッシュなしで画像をダウンロード後にセルを更新する処理を書いていました。
+しかし、非同期でセル操作を行うとそのあとにセルの表示が荒ぶり、セルの再表示が繰り返し呼ばれ、ずっと非同期処理が走るという無限ループに陥りました。</p>
+
+<p>実際今回のコードでもキャッシュ登録をコメントアウトするとそれが再現されると思います。</p>
+
+<p>実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思いますが、自分が想定していた挙動とは異なる結果を得ることができました。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a><script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic">【初心者向け】UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+
+<script src="/assets/js/shared/post.js" defer></script>
+
+        </article>
+
+        <!-- Side menu -->
+        <div class="col-sm-3">
+          <aside class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-how-to-find-good-lib">iOS開発におけるライブラリの選定戦略について考えてみた</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-input-control">【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項</a>
+            </li>
+            
+            <li>
+                <a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-toc" id="side-toc-id">
+  </div>
+</aside>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+  </body>
+</html>
