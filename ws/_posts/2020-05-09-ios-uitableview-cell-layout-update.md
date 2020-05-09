@@ -152,10 +152,10 @@ URLをキーにUIImageをキャッシュしておくデータ構造です。
 
 今回もっとも複雑なコードになります。
 
+メソッドはそれぞれ次のときに呼ばれます。
+
 - セル参照時に`setup(sale:owner:)`
 - 画像ロード後に`onFetchedImage(image:table:)`
-
-という流れになっています。
 
 ```swift
 class TableViewCell: UITableViewCell {
@@ -163,27 +163,28 @@ class TableViewCell: UITableViewCell {
     @IBOutlet private weak var captionLabel: UILabel!
     var imageAspect: NSLayoutConstraint!
 
+    private var sale: Sale?
+
     func setup(sale: Sale, owner: UITableView?) {
+        if let s = self.sale {
+            guard s != sale else { return }
+        }
+
         captionLabel.text = sale.name
         let url = URL(string: sale.imageURL)!
 
-        if let image = ImageCache.shared.fetch(key: sale.imageURL) {
-            onFetchedImage(image: image, table: owner)
+        mainImageView.image = nil
+        URLSession.shared.dataTask(with: url) { [weak self] (data, res, error) in
+            guard let data = data else { return }
+            guard error == nil else { return }
+            let image = UIImage(data: data)
 
-        } else {
-            mainImageView.image = nil
-            URLSession.shared.dataTask(with: url) { [weak self] (data, res, error) in
-                guard let data = data else { return }
-                let image = UIImage(data: data)
-                DispatchQueue.main.async {
-                    if let img = image {
-                        ImageCache.shared.set(key: sale.imageURL, value: img)
-                    }
-                    self?.onFetchedImage(image: image,
-                                         table: owner)
-                }
-            }.resume()
-        }
+            DispatchQueue.main.async {
+                self?.sale = sale
+                self?.onFetchedImage(image: image,
+                                     table: owner)
+            }
+        }.resume()
     }
 
     func onFetchedImage(image: UIImage?, table: UITableView?) {
@@ -217,13 +218,11 @@ class TableViewCell: UITableViewCell {
 ```
 
 まず、親テーブルがセル参照時に`setup(sale:owner:)`メソッド使って、テーブルセルに表示モデルと親テーブルを渡します。  
-`setup(sale:owner:)`メソッド内では、表示モデル(`sale`)が持つ画像URLがキャッシュにないか調べます。
-キャッシュヒットすれば画像を受け取り`onFetchedImage(image:table:)`を呼びます。
+`setup(sale:owner:)`メソッド内では、自身がキャッシュしてる表示モデル(`sale`)と同一か調べます。
+同一であれば表示状態は同じとみなし処理を終了します。
 
-キャッシュになければURLSessionを使って画像データをダウンロードします。
-画像ロードが終われば、キャッシュした後に`onFetchedImage(image:table:)`を呼びます。
-
-キャッシュ有無問わず画像を得たら必ず`onFetchedImage(image:table:)`が呼ばれます。
+表示データが異なればURLSessionを使って画像データをダウンロードします。
+画像ロードが終われば、表示モデルをキャッシュした後に`onFetchedImage(image:table:)`を呼びます。
 
 `onFetchedImage(image:table:)`では、最初に保持している画像アスペクト用Constraintを解除した後に
 画像のサイズ比率から新しく画像アスペクト用Constraintを登録します。
@@ -232,7 +231,7 @@ class TableViewCell: UITableViewCell {
 **このときにIndexPathをセル参照時のIndexPathをテーブルセルが保持しておいて、セル更新時に渡してもクラッシュを起こします。**  
 親テーブルから取得したIndexPathを使って`reloadRows(at:,with:)`で更新します。
 
-## まとめ：課題はキャッシュ必須性
+## まとめ
 
 今記事執筆となった事の経緯は、画像サイズに依存しないテーブルセルを作りたかったためです。
 その上で課題となるのが、
@@ -242,11 +241,31 @@ class TableViewCell: UITableViewCell {
 
 この2点でした。
 
-前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、以外な問題となったのは、キャッシュの存在でした。
+前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、意外な問題となったのは、キャッシュの存在でした。
+
+### キャッシュ必須性
 
 もともとはキャッシュなしで画像をダウンロード後にセルを更新する処理を書いていました。
 しかし、非同期でセル操作を行うとそのあとにセルの表示が荒ぶり、セルの再表示が繰り返し呼ばれ、ずっと非同期処理が走るという無限ループに陥りました。
 
-実際今回のコードでもキャッシュ登録をコメントアウトするとそれが再現されると思います。
+実際今回のコードでもキャッシュ処理をコメントアウトするとそれが再現されると思います。
 
 実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思いますが、自分が想定していた挙動とは異なる結果を得ることができました。
+
+また今回のキャッシュモデルは実務ではとても耐えられない仕組みなのでご注意ください。
+その理由は下記点となります。
+
+1. キャッシュ期限がない
+1. URLは同じでも画像は変更可能
+
+今回キャッシュは、目的とは異なるため簡易化させています。
+
+### スマートUIグレイ判定
+UI、つまりビューにロジカルな処理を入れ込み完結させるのは、ビュー層にロジックが入るこむため、スマートUIとしてアンチパターンと言われてます。
+今回はサンプルのためこのアンチパターンに片足突っ込んでいます。
+
+- ビュー層以外の処理(インフラ層)が入ってる
+- 画像の非同期ダウンロードは、他UIでも同様のニーズがある
+- 拘ればエラーハンドリングが介入する
+
+このような場合は、SDWebImageのようにライブラリ化して関心事を分離とDRY違反解決などが必要となります。
