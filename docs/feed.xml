@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-09T02:38:15+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" rel="alternate" type="text/html" title="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" /><published>2020-05-09T00:00:00+09:00</published><updated>2020-05-09T02:38:10+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update">&lt;p&gt;キャッシュとLayoutConstraintとセル単体更新と&lt;code class=&quot;highlighter-rouge&quot;&gt;indexPath(for:)&lt;/code&gt;を使います。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-10T03:30:24+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" rel="alternate" type="text/html" title="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" /><published>2020-05-09T00:00:00+09:00</published><updated>2020-05-10T03:30:13+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update">&lt;p&gt;キャッシュとLayoutConstraintとセル単体更新と&lt;code class=&quot;highlighter-rouge&quot;&gt;indexPath(for:)&lt;/code&gt;を使います。&lt;/p&gt;
 
 &lt;p&gt;今回は、要件てんこ盛りなUITableViewのセル制御について説明します。
 要件について整理します。&lt;/p&gt;
@@ -178,39 +178,40 @@
 
 &lt;p&gt;今回もっとも複雑なコードになります。&lt;/p&gt;
 
+&lt;p&gt;メソッドはそれぞれ次のときに呼ばれます。&lt;/p&gt;
+
 &lt;ul&gt;
   &lt;li&gt;セル参照時に&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;&lt;/li&gt;
   &lt;li&gt;画像ロード後に&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;&lt;/li&gt;
 &lt;/ul&gt;
-
-&lt;p&gt;という流れになっています。&lt;/p&gt;
 
 &lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TableViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
     &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;captionLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UILabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
     &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;imageAspect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
 
+    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;
+
     &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;owner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
         &lt;span class=&quot;n&quot;&gt;captionLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
         &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
 
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ImageCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;nf&quot;&gt;onFetchedImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;owner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;
+        &lt;span class=&quot;kt&quot;&gt;URLSession&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dataTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
 
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;URLSession&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dataTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;img&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                        &lt;span class=&quot;kt&quot;&gt;ImageCache&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;set&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;img&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                    &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onFetchedImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                         &lt;span class=&quot;nv&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;owner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;resume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+            &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;
+                &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onFetchedImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
+                                     &lt;span class=&quot;nv&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;owner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;resume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
     &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 
     &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onFetchedImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
@@ -244,13 +245,11 @@
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
 &lt;p&gt;まず、親テーブルがセル参照時に&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッド使って、テーブルセルに表示モデルと親テーブルを渡します。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッド内では、表示モデル(&lt;code class=&quot;highlighter-rouge&quot;&gt;sale&lt;/code&gt;)が持つ画像URLがキャッシュにないか調べます。
-キャッシュヒットすれば画像を受け取り&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;を呼びます。&lt;/p&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッド内では、自身がキャッシュしてる表示モデル(&lt;code class=&quot;highlighter-rouge&quot;&gt;sale&lt;/code&gt;)と同一か調べます。
+同一であれば表示状態は同じとみなし処理を終了します。&lt;/p&gt;
 
-&lt;p&gt;キャッシュになければURLSessionを使って画像データをダウンロードします。
-画像ロードが終われば、キャッシュした後に&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;を呼びます。&lt;/p&gt;
-
-&lt;p&gt;キャッシュ有無問わず画像を得たら必ず&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;が呼ばれます。&lt;/p&gt;
+&lt;p&gt;表示データが異なればURLSessionを使って画像データをダウンロードします。
+画像ロードが終われば、表示モデルをキャッシュした後に&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;を呼びます。&lt;/p&gt;
 
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;では、最初に保持している画像アスペクト用Constraintを解除した後に
 画像のサイズ比率から新しく画像アスペクト用Constraintを登録します。&lt;/p&gt;
@@ -259,7 +258,7 @@
 &lt;strong&gt;このときにIndexPathをセル参照時のIndexPathをテーブルセルが保持しておいて、セル更新時に渡してもクラッシュを起こします。&lt;/strong&gt;&lt;br /&gt;
 親テーブルから取得したIndexPathを使って&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:,with:)&lt;/code&gt;で更新します。&lt;/p&gt;
 
-&lt;h2 id=&quot;まとめ課題はキャッシュ必須性&quot;&gt;まとめ：課題はキャッシュ必須性&lt;/h2&gt;
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 
 &lt;p&gt;今記事執筆となった事の経緯は、画像サイズに依存しないテーブルセルを作りたかったためです。
 その上で課題となるのが、&lt;/p&gt;
@@ -271,14 +270,38 @@
 
 &lt;p&gt;この2点でした。&lt;/p&gt;
 
-&lt;p&gt;前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、以外な問題となったのは、キャッシュの存在でした。&lt;/p&gt;
+&lt;p&gt;前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、意外な問題となったのは、キャッシュの存在でした。&lt;/p&gt;
+
+&lt;h3 id=&quot;キャッシュ必須性&quot;&gt;キャッシュ必須性&lt;/h3&gt;
 
 &lt;p&gt;もともとはキャッシュなしで画像をダウンロード後にセルを更新する処理を書いていました。
 しかし、非同期でセル操作を行うとそのあとにセルの表示が荒ぶり、セルの再表示が繰り返し呼ばれ、ずっと非同期処理が走るという無限ループに陥りました。&lt;/p&gt;
 
-&lt;p&gt;実際今回のコードでもキャッシュ登録をコメントアウトするとそれが再現されると思います。&lt;/p&gt;
+&lt;p&gt;実際今回のコードでもキャッシュ処理をコメントアウトするとそれが再現されると思います。&lt;/p&gt;
 
-&lt;p&gt;実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思いますが、自分が想定していた挙動とは異なる結果を得ることができました。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" /></entry><entry><title type="html">質問の返答速度をXcode起動速度より速くする【ag】</title><link href="https://blog.mothule.com/tools/ag/tools-ag-silver-serach" rel="alternate" type="text/html" title="質問の返答速度をXcode起動速度より速くする【ag】" /><published>2020-05-08T00:00:00+09:00</published><updated>2020-05-08T03:28:47+09:00</updated><id>https://blog.mothule.com/tools/ag/tools-ag-silver-serach</id><content type="html" xml:base="https://blog.mothule.com/tools/ag/tools-ag-silver-serach">&lt;p&gt;&lt;strong&gt;「◯◯って使ってますか？」の返答速度を爆速にします。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思いますが、自分が想定していた挙動とは異なる結果を得ることができました。&lt;/p&gt;
+
+&lt;p&gt;また今回のキャッシュモデルは実務ではとても耐えられない仕組みなのでご注意ください。
+その理由は下記点となります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;キャッシュ期限がない&lt;/li&gt;
+  &lt;li&gt;URLは同じでも画像は変更可能&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;今回キャッシュは、目的とは異なるため簡易化させています。&lt;/p&gt;
+
+&lt;h3 id=&quot;スマートuiグレイ判定&quot;&gt;スマートUIグレイ判定&lt;/h3&gt;
+&lt;p&gt;UI、つまりビューにロジカルな処理を入れ込み完結させるのは、ビュー層にロジックが入るこむため、スマートUIとしてアンチパターンと言われてます。
+今回はサンプルのためこのアンチパターンに片足突っ込んでいます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ビュー層以外の処理(インフラ層)が入ってる&lt;/li&gt;
+  &lt;li&gt;画像の非同期ダウンロードは、他UIでも同様のニーズがある&lt;/li&gt;
+  &lt;li&gt;拘ればエラーハンドリングが介入する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;このような場合は、SDWebImageのようにライブラリ化して関心事を分離とDRY違反解決などが必要となります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" /></entry><entry><title type="html">質問の返答速度をXcode起動速度より速くする【ag】</title><link href="https://blog.mothule.com/tools/ag/tools-ag-silver-serach" rel="alternate" type="text/html" title="質問の返答速度をXcode起動速度より速くする【ag】" /><published>2020-05-08T00:00:00+09:00</published><updated>2020-05-08T03:28:47+09:00</updated><id>https://blog.mothule.com/tools/ag/tools-ag-silver-serach</id><content type="html" xml:base="https://blog.mothule.com/tools/ag/tools-ag-silver-serach">&lt;p&gt;&lt;strong&gt;「◯◯って使ってますか？」の返答速度を爆速にします。&lt;/strong&gt;&lt;/p&gt;
 
 &lt;p&gt;esaのドキュメント更新中や会議など「Xcodeちょっとお休み😇」と
 &lt;strong&gt;Xcode立ち上げてないときに限って&lt;/strong&gt;&lt;br /&gt;

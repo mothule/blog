@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update","headline":"UITableViewのサイズ可変なセル内画像を非同期で単体更新する","dateModified":"2020-05-09T02:38:10+09:00","datePublished":"2020-05-09T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update"},"description":"UITableViewのUITableViewCell(セル)内のUIImageViewに設定する画像をサイズ可変で非同期で単体更新するにはLayoutConstraintとセル単体更新とIndexPathの取得方法が重要で実装方法についてまとめました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update","headline":"UITableViewのサイズ可変なセル内画像を非同期で単体更新する","dateModified":"2020-05-10T03:30:13+09:00","datePublished":"2020-05-09T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update"},"description":"UITableViewのUITableViewCell(セル)内のUIImageViewに設定する画像をサイズ可変で非同期で単体更新するにはLayoutConstraintとセル単体更新とIndexPathの取得方法が重要で実装方法についてまとめました。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -188,7 +188,12 @@
   <li><a href="#uiviewcontrollerを実装する">UIViewControllerを実装する</a></li>
   <li><a href="#画像キャッシュ機構を構築する">画像キャッシュ機構を構築する</a></li>
   <li><a href="#テーブルセルを実装する">テーブルセルを実装する</a></li>
-  <li><a href="#まとめ課題はキャッシュ必須性">まとめ：課題はキャッシュ必須性</a></li>
+  <li><a href="#まとめ">まとめ</a>
+    <ul>
+      <li><a href="#キャッシュ必須性">キャッシュ必須性</a></li>
+      <li><a href="#スマートuiグレイ判定">スマートUIグレイ判定</a></li>
+    </ul>
+  </li>
 </ul>
   </div>
   <section>
@@ -372,39 +377,40 @@
 
 <p>今回もっとも複雑なコードになります。</p>
 
+<p>メソッドはそれぞれ次のときに呼ばれます。</p>
+
 <ul>
   <li>セル参照時に<code class="highlighter-rouge">setup(sale:owner:)</code></li>
   <li>画像ロード後に<code class="highlighter-rouge">onFetchedImage(image:table:)</code></li>
 </ul>
-
-<p>という流れになっています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableViewCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
     <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">mainImageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="o">!</span>
     <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">captionLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
     <span class="k">var</span> <span class="nv">imageAspect</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">!</span>
 
+    <span class="kd">private</span> <span class="k">var</span> <span class="nv">sale</span><span class="p">:</span> <span class="kt">Sale</span><span class="p">?</span>
+
     <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">sale</span><span class="p">:</span> <span class="kt">Sale</span><span class="p">,</span> <span class="nv">owner</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">?)</span> <span class="p">{</span>
+        <span class="k">if</span> <span class="k">let</span> <span class="nv">s</span> <span class="o">=</span> <span class="k">self</span><span class="o">.</span><span class="n">sale</span> <span class="p">{</span>
+            <span class="k">guard</span> <span class="n">s</span> <span class="o">!=</span> <span class="n">sale</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+        <span class="p">}</span>
+
         <span class="n">captionLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">sale</span><span class="o">.</span><span class="n">name</span>
         <span class="k">let</span> <span class="nv">url</span> <span class="o">=</span> <span class="kt">URL</span><span class="p">(</span><span class="nv">string</span><span class="p">:</span> <span class="n">sale</span><span class="o">.</span><span class="n">imageURL</span><span class="p">)</span><span class="o">!</span>
 
-        <span class="k">if</span> <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="kt">ImageCache</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">fetch</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="n">sale</span><span class="o">.</span><span class="n">imageURL</span><span class="p">)</span> <span class="p">{</span>
-            <span class="nf">onFetchedImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span> <span class="nv">table</span><span class="p">:</span> <span class="n">owner</span><span class="p">)</span>
+        <span class="n">mainImageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">nil</span>
+        <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
+            <span class="k">guard</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+            <span class="k">guard</span> <span class="n">error</span> <span class="o">==</span> <span class="kc">nil</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
+            <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
 
-        <span class="p">}</span> <span class="k">else</span> <span class="p">{</span>
-            <span class="n">mainImageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="kc">nil</span>
-            <span class="kt">URLSession</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">dataTask</span><span class="p">(</span><span class="nv">with</span><span class="p">:</span> <span class="n">url</span><span class="p">)</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span><span class="p">]</span> <span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">res</span><span class="p">,</span> <span class="n">error</span><span class="p">)</span> <span class="k">in</span>
-                <span class="k">guard</span> <span class="k">let</span> <span class="nv">data</span> <span class="o">=</span> <span class="n">data</span> <span class="k">else</span> <span class="p">{</span> <span class="k">return</span> <span class="p">}</span>
-                <span class="k">let</span> <span class="nv">image</span> <span class="o">=</span> <span class="kt">UIImage</span><span class="p">(</span><span class="nv">data</span><span class="p">:</span> <span class="n">data</span><span class="p">)</span>
-                <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
-                    <span class="k">if</span> <span class="k">let</span> <span class="nv">img</span> <span class="o">=</span> <span class="n">image</span> <span class="p">{</span>
-                        <span class="kt">ImageCache</span><span class="o">.</span><span class="n">shared</span><span class="o">.</span><span class="nf">set</span><span class="p">(</span><span class="nv">key</span><span class="p">:</span> <span class="n">sale</span><span class="o">.</span><span class="n">imageURL</span><span class="p">,</span> <span class="nv">value</span><span class="p">:</span> <span class="n">img</span><span class="p">)</span>
-                    <span class="p">}</span>
-                    <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="nf">onFetchedImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span>
-                                         <span class="nv">table</span><span class="p">:</span> <span class="n">owner</span><span class="p">)</span>
-                <span class="p">}</span>
-            <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
-        <span class="p">}</span>
+            <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="n">async</span> <span class="p">{</span>
+                <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="n">sale</span> <span class="o">=</span> <span class="n">sale</span>
+                <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="nf">onFetchedImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="n">image</span><span class="p">,</span>
+                                     <span class="nv">table</span><span class="p">:</span> <span class="n">owner</span><span class="p">)</span>
+            <span class="p">}</span>
+        <span class="p">}</span><span class="o">.</span><span class="nf">resume</span><span class="p">()</span>
     <span class="p">}</span>
 
     <span class="kd">func</span> <span class="nf">onFetchedImage</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?,</span> <span class="nv">table</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">?)</span> <span class="p">{</span>
@@ -438,13 +444,11 @@
 </code></pre></div></div>
 
 <p>まず、親テーブルがセル参照時に<code class="highlighter-rouge">setup(sale:owner:)</code>メソッド使って、テーブルセルに表示モデルと親テーブルを渡します。<br />
-<code class="highlighter-rouge">setup(sale:owner:)</code>メソッド内では、表示モデル(<code class="highlighter-rouge">sale</code>)が持つ画像URLがキャッシュにないか調べます。
-キャッシュヒットすれば画像を受け取り<code class="highlighter-rouge">onFetchedImage(image:table:)</code>を呼びます。</p>
+<code class="highlighter-rouge">setup(sale:owner:)</code>メソッド内では、自身がキャッシュしてる表示モデル(<code class="highlighter-rouge">sale</code>)と同一か調べます。
+同一であれば表示状態は同じとみなし処理を終了します。</p>
 
-<p>キャッシュになければURLSessionを使って画像データをダウンロードします。
-画像ロードが終われば、キャッシュした後に<code class="highlighter-rouge">onFetchedImage(image:table:)</code>を呼びます。</p>
-
-<p>キャッシュ有無問わず画像を得たら必ず<code class="highlighter-rouge">onFetchedImage(image:table:)</code>が呼ばれます。</p>
+<p>表示データが異なればURLSessionを使って画像データをダウンロードします。
+画像ロードが終われば、表示モデルをキャッシュした後に<code class="highlighter-rouge">onFetchedImage(image:table:)</code>を呼びます。</p>
 
 <p><code class="highlighter-rouge">onFetchedImage(image:table:)</code>では、最初に保持している画像アスペクト用Constraintを解除した後に
 画像のサイズ比率から新しく画像アスペクト用Constraintを登録します。</p>
@@ -453,7 +457,7 @@
 <strong>このときにIndexPathをセル参照時のIndexPathをテーブルセルが保持しておいて、セル更新時に渡してもクラッシュを起こします。</strong><br />
 親テーブルから取得したIndexPathを使って<code class="highlighter-rouge">reloadRows(at:,with:)</code>で更新します。</p>
 
-<h2 id="まとめ課題はキャッシュ必須性">まとめ：課題はキャッシュ必須性</h2>
+<h2 id="まとめ">まとめ</h2>
 
 <p>今記事執筆となった事の経緯は、画像サイズに依存しないテーブルセルを作りたかったためです。
 その上で課題となるのが、</p>
@@ -465,14 +469,38 @@
 
 <p>この2点でした。</p>
 
-<p>前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、以外な問題となったのは、キャッシュの存在でした。</p>
+<p>前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、意外な問題となったのは、キャッシュの存在でした。</p>
+
+<h3 id="キャッシュ必須性">キャッシュ必須性</h3>
 
 <p>もともとはキャッシュなしで画像をダウンロード後にセルを更新する処理を書いていました。
 しかし、非同期でセル操作を行うとそのあとにセルの表示が荒ぶり、セルの再表示が繰り返し呼ばれ、ずっと非同期処理が走るという無限ループに陥りました。</p>
 
-<p>実際今回のコードでもキャッシュ登録をコメントアウトするとそれが再現されると思います。</p>
+<p>実際今回のコードでもキャッシュ処理をコメントアウトするとそれが再現されると思います。</p>
 
 <p>実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思いますが、自分が想定していた挙動とは異なる結果を得ることができました。</p>
+
+<p>また今回のキャッシュモデルは実務ではとても耐えられない仕組みなのでご注意ください。
+その理由は下記点となります。</p>
+
+<ol>
+  <li>キャッシュ期限がない</li>
+  <li>URLは同じでも画像は変更可能</li>
+</ol>
+
+<p>今回キャッシュは、目的とは異なるため簡易化させています。</p>
+
+<h3 id="スマートuiグレイ判定">スマートUIグレイ判定</h3>
+<p>UI、つまりビューにロジカルな処理を入れ込み完結させるのは、ビュー層にロジックが入るこむため、スマートUIとしてアンチパターンと言われてます。
+今回はサンプルのためこのアンチパターンに片足突っ込んでいます。</p>
+
+<ul>
+  <li>ビュー層以外の処理(インフラ層)が入ってる</li>
+  <li>画像の非同期ダウンロードは、他UIでも同様のニーズがある</li>
+  <li>拘ればエラーハンドリングが介入する</li>
+</ul>
+
+<p>このような場合は、SDWebImageのようにライブラリ化して関心事を分離とDRY違反解決などが必要となります。</p>
 
   </section>
 
