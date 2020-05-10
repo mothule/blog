@@ -4,7 +4,7 @@
     var windowWidth = $(window).width();
     if(windowWidth > 991) {
         buildTableOfContentsOnSide()
-        buildShareButtonsOnSide()
+        showShareButtonsOnSide()
     }
 
     // Table of Contents作成
@@ -18,15 +18,7 @@
     }
 
     // シェアボタン群作成
-    function buildShareButtonsOnSide() {
-      var hatena_bookmark_button = `
-      <li>{% include hatena_bookmark_button.html %}</li>
-      `;
-
-      var pocket_button = `
-        <li>{% include pocket_button.html %}</li>
-      `;
-      $('#side-share-id>ul').append(pocket_button);
-      $('#side-share-id>ul').append(hatena_bookmark_button);
-  }
+    function showShareButtonsOnSide() {
+      $('#side-share-id').css('display', 'block');
+    }
 });

@@ -6,11 +6,20 @@
     {% include twitter-timeline.html %}
   {% endif %}
   <div class="side-sticky">
+    <!-- TOC -->
     <div class="side-toc" id="side-toc-id">
     </div>
-    <div class="side-share" id="side-share-id">
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
       {% if jekyll.build_environment != 'local' %}
-      <ul></ul>
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li>{% include hatena_bookmark_button.html %}</li>
+        <li>{% include pocket_button.html %}</li>
+      </ul>
       {% endif %}
     </div>
   </div>
