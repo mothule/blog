@@ -23,8 +23,8 @@
       `;
 
       var pocket_button = `
-        <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
-
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
       `;
       $('#side-share-id>ul').append(pocket_button);
       $('#side-share-id>ul').append(hatena_bookmark_button);
