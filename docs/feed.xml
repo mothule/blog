@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-10T17:12:36+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" rel="alternate" type="text/html" title="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" /><published>2020-05-09T00:00:00+09:00</published><updated>2020-05-10T03:30:13+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update">&lt;p&gt;キャッシュとLayoutConstraintとセル単体更新と&lt;code class=&quot;highlighter-rouge&quot;&gt;indexPath(for:)&lt;/code&gt;を使います。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-10T20:27:45+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" rel="alternate" type="text/html" title="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" /><published>2020-05-09T00:00:00+09:00</published><updated>2020-05-10T20:27:27+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update">&lt;p&gt;キャッシュとLayoutConstraintとセル単体更新と&lt;code class=&quot;highlighter-rouge&quot;&gt;indexPath(for:)&lt;/code&gt;を使います。&lt;/p&gt;
 
 &lt;p&gt;今回は、要件てんこ盛りなUITableViewのセル制御について説明します。
 要件について整理します。&lt;/p&gt;
@@ -244,23 +244,29 @@
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;まず、親テーブルがセル参照時に&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッド使って、テーブルセルに表示モデルと親テーブルを渡します。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッド内では、自身がキャッシュしてる表示モデル(&lt;code class=&quot;highlighter-rouge&quot;&gt;sale&lt;/code&gt;)と同一か調べます。
-同一であれば表示状態は同じとみなし処理を終了します。&lt;/p&gt;
+&lt;h3 id=&quot;コードを解説する&quot;&gt;コードを解説する&lt;/h3&gt;
 
-&lt;p&gt;表示データが異なればURLSessionを使って画像データをダウンロードします。
-画像ロードが終われば、表示モデルをキャッシュした後に&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;を呼びます。&lt;/p&gt;
+&lt;p&gt;まず親テーブルがセル参照時に&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッドが呼ばれます。&lt;br /&gt;
+ここでテーブルセルに表示モデルと親テーブルを渡します。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;では、最初に保持している画像アスペクト用Constraintを解除した後に
-画像のサイズ比率から新しく画像アスペクト用Constraintを登録します。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッド内では、自身がキャッシュしてる表示モデル(&lt;code class=&quot;highlighter-rouge&quot;&gt;sale&lt;/code&gt;)と同一か調べます。&lt;br /&gt;
+同一であれば表示状態は同じとみなして処理を終了します。&lt;/p&gt;
 
-&lt;p&gt;画像の表示設定が終わったら、最後は自身のセルのIndexPathを親テーブルから取得します。&lt;br /&gt;
-&lt;strong&gt;このときにIndexPathをセル参照時のIndexPathをテーブルセルが保持しておいて、セル更新時に渡してもクラッシュを起こします。&lt;/strong&gt;&lt;br /&gt;
-親テーブルから取得したIndexPathを使って&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:,with:)&lt;/code&gt;で更新します。&lt;/p&gt;
+&lt;p&gt;表示データが異なればURLSessionを使って画像データをダウンロードします。&lt;br /&gt;
+ダウンロードができたら、表示モデルをキャッシュした後に&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;を呼びます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;ではまず登録中の画像アスペクト用Constraintを解除します。&lt;br /&gt;
+その後渡された画像のサイズ比率から新しく画像アスペクト用Constraintを登録します。&lt;/p&gt;
+
+&lt;p&gt;画像の表示設定が終わったら、最後は自身のセルを更新します。&lt;br /&gt;
+セルのIndexPathは&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:,with:)&lt;/code&gt;で取得します。&lt;/p&gt;
+
+&lt;h4 id=&quot;注意&quot;&gt;注意&lt;/h4&gt;
+&lt;p&gt;&lt;strong&gt;IndexPathをセル参照時のIndexPathをセル更新時に渡してもクラッシュを起こします。&lt;/strong&gt;&lt;/p&gt;
 
 &lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
 
-&lt;p&gt;今記事執筆となった事の経緯は、画像サイズに依存しないテーブルセルを作りたかったためです。
+&lt;p&gt;今記事執筆となった事の経緯は、画像サイズに依存しないテーブルセルを作りたかったためです。&lt;br /&gt;
 その上で課題となるのが、&lt;/p&gt;
 
 &lt;ol&gt;
@@ -270,18 +276,23 @@
 
 &lt;p&gt;この2点でした。&lt;/p&gt;
 
-&lt;p&gt;前者はConstraintの画像比率を使うことで実現可能なことは分かったのですが、後者はreloadDataを呼ぶと負荷がかかるだろうと思いセル単体の更新方法について調べてました。結果的にできたからいいのですが、意外な問題となったのは、キャッシュの存在でした。&lt;/p&gt;
+&lt;p&gt;前者はConstraintの画像比率を使うことで実現可能なことは分かってました。&lt;br /&gt;
+後者はreloadDataを呼ぶと負荷がかかると思い、セル単体の更新方法について調べてました。&lt;br /&gt;
+結果的にできたからいいのですが、意外な問題となったのは、キャッシュの存在でした。&lt;/p&gt;
 
 &lt;h3 id=&quot;キャッシュ必須性&quot;&gt;キャッシュ必須性&lt;/h3&gt;
 
-&lt;p&gt;もともとはキャッシュなしで画像をダウンロード後にセルを更新する処理を書いていました。
-しかし、非同期でセル操作を行うとそのあとにセルの表示が荒ぶり、セルの再表示が繰り返し呼ばれ、ずっと非同期処理が走るという無限ループに陥りました。&lt;/p&gt;
+&lt;p&gt;もともとは、セルの更新都度に非同期で画像をダウンロードしてセルを更新させるつもりでした。&lt;/p&gt;
 
-&lt;p&gt;実際今回のコードでもキャッシュ処理をコメントアウトするとそれが再現されると思います。&lt;/p&gt;
+&lt;p&gt;しかし、更新の都度非同期でセル操作を行うとテーブル表示が安定せずにセルの再表示が呼ばれ続けます。&lt;br /&gt;
+その結果、レイアウトは崩れ続け、ずっと非同期処理が走るという無限ループに陥りました。&lt;br /&gt;
+実際今回のコードでもキャッシュ処理をコメントアウトするとそれが再現されると思います。&lt;/p&gt;
 
-&lt;p&gt;実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思いますが、自分が想定していた挙動とは異なる結果を得ることができました。&lt;/p&gt;
+&lt;p&gt;実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思います。&lt;br /&gt;
+が、自分が想定していた挙動とは異なる結果を得ることができました。&lt;/p&gt;
 
-&lt;p&gt;また今回のキャッシュモデルは実務ではとても耐えられない仕組みなのでご注意ください。
+&lt;h4 id=&quot;注意-1&quot;&gt;注意&lt;/h4&gt;
+&lt;p&gt;今回のキャッシュモデルは実務ではとても耐えられない仕組みなのでご注意ください。
 その理由は下記点となります。&lt;/p&gt;
 
 &lt;ol&gt;
