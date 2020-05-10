@@ -5,9 +5,6 @@ tags: ios uitableview uitableviewcell
 image:
   path: /assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png
 ---
-TODO: リード文
-
-
 簡単なユーザー情報を表示するテーブルを題材に話を進めます。
 
 ## UITableViewCellを継承したセルクラスを用意する
