@@ -24,7 +24,7 @@
       `;
 
       var pocket_button = `
-        {% include pocket_button.html %}
+        <li>{% include pocket_button.html %}</li>
       `;
       $('#side-share-id>ul').append(pocket_button);
       $('#side-share-id>ul').append(hatena_bookmark_button);
