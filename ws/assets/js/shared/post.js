@@ -21,8 +21,12 @@
     function buildShareButtonsOnSide() {
       var hatena_bookmark_button = `
       <li>{% include hatena_bookmark_button.html %}</li>
-      <li>{% include pocket_button.html %}</li>
       `;
+
+      var pocket_button = `
+        {% include pocket_button.html %}
+      `;
+      $('#side-share-id>ul').append(pocket_button);
       $('#side-share-id>ul').append(hatena_bookmark_button);
-    }
+  }
 });
