@@ -1,22 +1,10 @@
----
-layout: default
----
-
-<div class="body-summary border-bottom mb-4">
-  <h1>最近の投稿</h1>
-</div>
-
-{% for post in paginator.posts %}
-  {% include article.html %}
-{% endfor %}
-
 <!-- Pagination links -->
 <div class="pagination">
   {% if paginator.previous_page %}
     {% if paginator.previous_page == 1 %}
       <a href="/" class="previous">Previous　</a>
     {% else %}
-      <a href="/page{{paginator.previous_page}}" class="previous">Previous　</a>
+      <a href="{{include.permalink}}{{paginator.previous_page}}" class="previous">Previous　</a>
     {% endif %}
   {% else %}
     <span class="previous">Previous　</span>
@@ -25,7 +13,7 @@ layout: default
   <span class="page_number">{{ paginator.page }} of {{ paginator.total_pages }}</span>
 
   {% if paginator.next_page %}
-    <a href="/page{{paginator.next_page}}" class="next">　Next</a>
+    <a href="{{include.permalink}}{{paginator.next_page}}" class="next">　Next</a>
   {% else %}
     <span class="next">　Next</span>
   {% endif %}

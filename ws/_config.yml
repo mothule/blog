@@ -46,7 +46,7 @@ plugins:
   - jekyll-sitemap
   - jekyll-last-modified-at
   - jekyll-seo-tag
-  - jekyll-paginate
+  - jekyll-paginate-v2
   - jekyll-gist
   - jekyll-twitter-plugin
   - jekyll-redirect-from
@@ -56,7 +56,16 @@ exclude: [docs, tools]
 lsi: false
 
 # Page settings
-paginate: 30
+# v1
+# paginate: 30
+# paginate_path: "/articles/page:num/"
+# v2
+pagination:
+  enabled: true
+  per_page: 30
+  permalink: '/page/:num/'
+  sort_reverse: true
+  # title: ':title - :num'
 
 # Page variables
 bootstrap_url: https://stackpath.bootstrapcdn.com/bootstrap/4.3.1

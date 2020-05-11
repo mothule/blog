@@ -1,0 +1,202 @@
+---
+layout: default
+---
+
+<main class="top-main">
+
+  <!-- プロフィールセクション -->
+  <div class="top-profile-section">
+    <div class="row">
+      <div class="col-sm-3">
+        <header><h2>Profile</h2></header>
+        <div class="mask">
+          <img class="top-profile-image" src="{{ site.user_image }}" alt="mothule's profile image">
+        </div>
+      </div>
+
+      <div class="col-sm-9">
+        <div class="top-profile-name">
+          <h3>もちゅる</h3>
+          <a href="https://twitter.com/{{ site.twitter.username }}?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+            Follow @mothule
+          </a>
+          <script deffer src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        </div>
+        <div class="top-profile-bio">
+          <ol class="top-profile-bio-list">
+            <li>18年近くコード触れてるエンジニア。</li>
+            <li>BtoCのCX/UX/UI/企画にも手を出してるサービス志向エンジニアです。</li>
+            <li><strong>Swift/iOSとRuby/Railsの記事を主に書いてます。</strong></li>
+            <li>その他にチームビルディングやアジャイル、デザインなどサービス開発に関する記事も書いてます。</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 最新記事セクション -->
+  <div class="top-latest-articles-section">
+    <header><h2>最近の記事</h2></header>
+
+    <div class="row">
+      <!-- 最新1件 -->
+      <div class="col-sm-6">
+        {% assign post = site.posts.first %}
+        <article class="top-latest1-article">
+          {% include top-article.html %}
+        </article>
+      </div>
+
+      <!-- 最新4件 -->
+      <div class="col-sm-6">
+        <div class="row">
+            {% assign posts = site.posts | slice: 1, 2 %}
+            {% for post in posts %}
+            <article class="col-sm-6 top-latest2-5-article">
+              {% include top-article.html %}
+            </article>
+            {% endfor %}
+        </div>
+
+        <div class="row">
+            {% assign posts = site.posts | slice: 3, 2 %}
+            {% for post in posts %}
+            <article class="col-sm-6 top-latest2-5-article">
+              {% include top-article.html %}
+            </article>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    <!-- more button -->
+    <div class="row justify-content-end">
+      <div class="text-sm-right col-sm-6">
+        <a href="{{ baseurl }}/page">もっと見る</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ランキング記事セクション -->
+  <div class="top-ranking-section">
+    <header><h2>人気記事</h2></header>
+    <div class="row">
+
+      {% assign posts = "" | split: "|" %}
+
+      {% assign ranking_articles = site.data.article-ranking | slice: 0, 4 %}
+      {% for ranking_article in ranking_articles %}
+        {% for p in site.posts %}
+          {% if p.url == ranking_article.path %}
+            {% assign posts = posts | push: p %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+
+      {% for post in posts %}
+        <article class="col-sm-6">
+          {% include top-article.html date="false" %}
+        </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- 指定カテゴリ記事セクション -->
+  <div class="top-category-section">
+    <header><h2>iOS/Swiftカテゴリ</h2></header>
+    <div class="row">
+      {% assign posts = site.categories["ios"] %}
+      {% assign limited_posts = posts | slice: 0, 4 %}
+      {% for post in limited_posts %}
+      <article class="col-sm-3">
+        {% include top-article.html date="false" %}
+      </article>
+      {% endfor %}
+    </div>
+    <!-- more button -->
+    <div class="row justify-content-end">
+      <div class="text-sm-right col-sm-6">
+        <a href="{{ baseurl }}/categories/ios">もっと見る</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 指定カテゴリ記事セクション -->
+  <div class="top-category-section">
+    <header><h2>Ruby/Railsカテゴリ</h2></header>
+    <div class="row" id="ruby-category-section">
+      {% assign posts = site.categories["ruby"] %}
+      {% assign limited_posts = posts | slice: 0, 4 %}
+      {% for post in limited_posts %}
+      <article class="col-sm-3">
+        {% include top-article.html date="false" %}
+      </article>
+      {% endfor %}
+    </div>
+    <!-- more button -->
+    <div class="row justify-content-end">
+      <div class="text-sm-right col-sm-6">
+        <a href="{{ baseurl }}/categories/ruby">もっと見る</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- ピックアップ記事セクション -->
+  <div class="top-pickup-section">
+    <header><h2>ピックアップ記事</h2></header>
+    <div class="row">
+      {% assign urls = "" | split: "|" %}
+      {% assign urls = urls | push: "/ios/carthage/ios-carthage" %}
+      {% assign urls = urls | push: "/linux/linux-write-iso-to-usb-flash-drive" %}
+      {% assign urls = urls | push: "/tools/how-to-use-cron" %}
+      {% assign urls = urls | push: "/tools/rubymine/tools-rubymine-debugging-unix-socket-server" %}
+
+      {% assign posts = "" | split: "|" %}
+      {% for url in urls %}
+        {% for p in site.posts %}
+          {% if p.url == url %}
+            {% assign posts = posts | push: p %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      {% endfor %}
+
+      {% for post in posts %}
+      <article class="col-sm-6">
+        {% include top-article.html date="false" %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- 指定カテゴリ記事セクション -->
+  <div class="top-category-section">
+    <header><h2>ツール系カテゴリ</h2></header>
+    <div class="row">
+      {% assign posts = site.categories["tools"] %}
+      {% assign limited_posts = posts | slice: 0, 4 %}
+      {% for post in limited_posts %}
+      <article class="col-sm-3">
+        {% include top-article.html date="false" %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+
+  <!-- 指定カテゴリ記事セクション -->
+  <div class="top-category-section">
+    <header><h2>雑記カテゴリ</h2></header>
+    <div class="row">
+      {% assign posts = site.categories["notebook"] %}
+      {% assign limited_posts = posts | slice: 0, 4 %}
+      {% for post in limited_posts %}
+      <article class="col-sm-3">
+        {% include top-article.html date="false" %}
+      </article>
+      {% endfor %}
+    </div>
+  </div>
+</main>
+
+<script src="/assets/js/shared/top.js" defer></script>

@@ -1,0 +1,14 @@
+<div>
+  <a href="{{ post.url }}">
+    <img src="{{ post.image.path }}" alt="{{ post.title }}" style="width: 100%; object-fit: contain;">
+    <h2>{{ post.title }}</h2>
+    <ul class="list-inline">
+      {% if include.date != "false" %}
+      <li class="list-inline-item"><time>{{ post.date | date: "%Y-%-m-%-d" }}</time></li>
+      {% endif %}
+      {% for tag_name in post.tags %}
+        <li class="list-inline-item"><a href="{{ baseurl }}/tags#{{ tag_name | slugize }}">{% tag_label tag_name %}</a></li>
+      {% endfor %}
+    </ul>
+  </a>
+</div>

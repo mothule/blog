@@ -1,0 +1,26 @@
+---
+index: false
+follow: false
+---
+{
+  "articles": [
+    {% for post in site.posts %}
+    {
+      "title": "{{ post.title }}",
+      "categories": [
+        {%- for category in post.categories %}
+          "{{ category }}",
+        {%- endfor %}
+      ],
+      "tags": [
+        {%- for tag in post.tags %}
+          "{{ tag }}",
+        {%- endfor %}
+      ],
+      "url": "{{ post.url }}",
+      "eyecatch_path": "{{ post.image.path }}",
+      "published_at": '{{ post.date | date: "%Y-%-m-%-d" }}'
+    },
+    {% endfor %}
+  ]
+}

@@ -1,58 +1,10 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    {% case page.url %}
-      {% when "/page2/" or "/page3/" or "/page4/" or "/page5/" or "/page6/" or "/page7/" or "/page8/" or "/page9/" or "/page10" %}
-        <meta name="robots" content="noindex, follow" />
-      {% when "/page11/" or "/page12/" or "/page13/" or "/page14/" or "/page15/" or "/page16/" %}
-        <meta name="robots" content="noindex, follow" />
-      {% else %}
-    {% endcase %}
-
-    {% if page.noindex and page.nofollow %}
-      <meta name="robots" content="noindex, nofollow" />
-    {% elsif page.noindex %}
-      <meta name="robots" content="noindex, follow" />
-    {% elsif page.nofollow %}
-      <meta name="robots" content="index, nofollow" />
-    {% endif %}
-
-
-    {% if page.title != site.title %}
-      <title>{{ page.title }} - {{ site.title }}</title>
-    {% else %}
-      <title>{{ site.title }} - {{ site.subtitle }}</title>
-    {% endif %}
-
-    {% seo title=false %}
-
-    {% assign twitter_description = page.description | default: page.excerpt | default: site.description %}
-    {% assign twitter_description = twitter_description | markdownify | strip_html | strip_newlines | escape_once %}
-    <meta name="twitter:title" content="{{ page.title }}">
-    <meta name="twitter:description" content="{{ twitter_description }}">
-    <meta name="twitter:image:src" content="{{ page.image.path | default: site.site_image | absolute_url }}">
-
-    <link href="{{ site.bootstrap_url }}/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href={{ "/assets/css/styles.css" | absolute_url }}>
-    <link rel="stylesheet" href={{ "/assets/css/syntax.css" | absolute_url }}>
-    <link rel="apple-touch-icon" sizes="180x180" href={{ "/assets/images/apple-touch-icon.png" | absolute_url }}>
-    {% include google-analytics.html %}
-    {% feed_meta %}
+    {% include default-head.html %}
   </head>
   <body>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
     <div class="container">
-
       <!-- Haeder -->
       <div class="row">
         <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
@@ -60,17 +12,7 @@
         </div>
       </div>
 
-      <main class="row" style="margin-bottom: 32px;">
-        <!-- Content -->
-        <article class="col-sm-9 root-article">
-          {{ content }}
-        </article>
-
-        <!-- Side menu -->
-        <aside class="col-sm-3">
-          {% include side-menu.html %}
-        </aside>
-      </main>
+      {{ content }}
 
       <!-- Footer -->
       <div class="row">
