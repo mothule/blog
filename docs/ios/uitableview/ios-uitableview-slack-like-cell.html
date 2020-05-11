@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    
-    
-
-    
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    
-      <title>iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方 - もちゅろぐ</title>
-    
 
-    <!-- Begin Jekyll SEO tag v2.5.0 -->
+
+
+
+
+
+  <title>iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方 - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方" />
 <meta property="og:locale" content="ja_JP" />
@@ -30,24 +29,24 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell","headline":"iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方","dateModified":"2020-04-12T17:43:52+09:00","datePublished":"2019-10-01T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell"},"description":"この記事はiOSでUITableViewとUITableViewCellでSlackみたいな 「可変テキストがアイコン高さ幅より下回ってもアイコンよりは小さくならず」「可変テキストがアイコン高さ幅より上回っていたらセルの高さ幅が可変テキストに追従する」 セルをプログラムは特別な実装は不要でUITableViewCellの AutoLayout設計 で Constraintsを2つ制約つけるテクニック で実装する方法について説明します。Twitterみたいなセルでもイメージは同じです。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell","headline":"iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方","dateModified":"2020-04-12T17:43:52+09:00","datePublished":"2019-10-01T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell"},"image":"https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png","description":"この記事はiOSでUITableViewとUITableViewCellでSlackみたいな 「可変テキストがアイコン高さ幅より下回ってもアイコンよりは小さくならず」「可変テキストがアイコン高さ幅より上回っていたらセルの高さ幅が可変テキストに追従する」 セルをプログラムは特別な実装は不要でUITableViewCellの AutoLayout設計 で Constraintsを2つ制約つけるテクニック で実装する方法について説明します。Twitterみたいなセルでもイメージは同じです。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
-    
-    
-    <meta name="twitter:title" content="iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方">
-    <meta name="twitter:description" content="この記事はiOSでUITableViewとUITableViewCellでSlackみたいな 「可変テキストがアイコン高さ幅より下回ってもアイコンよりは小さくならず」「可変テキストがアイコン高さ幅より上回っていたらセルの高さ幅が可変テキストに追従する」 セルをプログラムは特別な実装は不要でUITableViewCellの AutoLayout設計 で Constraintsを2つ制約つけるテクニック で実装する方法について説明します。Twitterみたいなセルでもイメージは同じです。">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png">
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
-    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
-    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
-    
+
+<meta name="twitter:title" content="iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方">
+<meta name="twitter:description" content="この記事はiOSでUITableViewとUITableViewCellでSlackみたいな 「可変テキストがアイコン高さ幅より下回ってもアイコンよりは小さくならず」「可変テキストがアイコン高さ幅より上回っていたらセルの高さ幅が可変テキストに追従する」 セルをプログラムは特別な実装は不要でUITableViewCellの AutoLayout設計 で Constraintsを2つ制約つけるテクニック で実装する方法について説明します。Twitterみたいなセルでもイメージは同じです。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
   <!-- Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
   <script>
@@ -59,15 +58,14 @@
   </script>
 
 
-    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
   </head>
   <body>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
     <div class="container">
-
       <!-- Haeder -->
       <div class="row">
         <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
@@ -107,9 +105,9 @@
       </div>
 
       <main class="row" style="margin-bottom: 32px;">
-        <!-- Content -->
-        <article class="col-sm-9 root-article">
-          <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 
 <div class="post-content">
   <div class="breadcrumbs">
@@ -631,11 +629,11 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 <script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
 <script src="/assets/js/shared/post.js" defer></script>
 
-        </article>
+  </article>
 
-        <!-- Side menu -->
-        <aside class="col-sm-3">
-          <div class="sidebar">
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
   
     <div class="profile">
   <div class="profile-title">
@@ -699,6 +697,7 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
         </ol>
     </div>
 </div>
+
     <div class="tag-cloud">
   <div class="tag-cloud-title">
     Tag list
@@ -947,8 +946,9 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
   </div>
 </div>
 
-        </aside>
-      </main>
+  </aside>
+</main>
+
 
       <!-- Footer -->
       <div class="row">
