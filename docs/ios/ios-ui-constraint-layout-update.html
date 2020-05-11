@@ -11,33 +11,33 @@
 
 
 
-  <title>CocoaPodsをrbenv+bundlerで管理する - もちゅろぐ</title>
+  <title>setNeedsLayoutやlayoutSubviewsなどの役割を整理する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="CocoaPodsをrbenv+bundlerで管理する" />
+<meta property="og:title" content="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。" />
-<meta property="og:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
-<meta property="og:url" content="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
+<meta name="description" content="layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。" />
+<meta property="og:description" content="layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" />
+<meta property="og:url" content="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-08-30T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-12T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler","headline":"CocoaPodsをrbenv+bundlerで管理する","dateModified":"2019-09-01T23:48:12+09:00","datePublished":"2019-08-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler"},"image":"https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png","description":"iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/ios-ui-constraint-layout-update","headline":"setNeedsLayoutやlayoutSubviewsなどの役割を整理する","dateModified":"2020-05-12T05:47:47+09:00","datePublished":"2020-05-12T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/ios-ui-constraint-layout-update"},"image":"https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png","description":"layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="CocoaPodsをrbenv+bundlerで管理する">
-<meta name="twitter:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png">
+<meta name="twitter:title" content="setNeedsLayoutやlayoutSubviewsなどの役割を整理する">
+<meta name="twitter:description" content="layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -136,18 +136,8 @@
       
         
         
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#cocoapods" itemprop="item">
-              <span itemprop="name">CocoaPods</span>
-            </a>
-            <meta itemprop="position" content="3">
-          </li>
-        
-      
-        
-        
           <li>
-            CocoaPodsをrbenv+bundlerで管理する
+            setNeedsLayoutやlayoutSubviewsなどの役割を整理する
           </li>
         
       
@@ -159,12 +149,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" alt="CocoaPodsをrbenv+bundlerで管理する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png" alt="setNeedsLayoutやlayoutSubviewsなどの役割を整理する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>CocoaPodsをrbenv+bundlerで管理する</h1>
+    <h1>setNeedsLayoutやlayoutSubviewsなどの役割を整理する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -172,16 +162,10 @@
           
             <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
           
-            <li class="list-inline-item"><a href="/tags#cocoapods">CocoaPods</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
-          
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-8-30</time></span>
+        <span"><time class="post-date">2020-5-12</time></span>
       </div>
     </div>
   </header>
@@ -189,214 +173,169 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#結論">結論</a></li>
-  <li><a href="#rbenvでruby管理してgem管理はbundler">rbenvでRuby管理してgem管理はbundler</a>
+  <li><a href="#iosのレイアウト更新をメソッド整理する">iOSのレイアウト更新をメソッド整理する</a>
     <ul>
-      <li><a href="#gemとはrubyが提供するライブラリ単位">gemとはRubyが提供するライブラリ単位</a></li>
-      <li><a href="#rubyバージョン毎にgemがインストールされている">Rubyバージョン毎にgemがインストールされている</a></li>
+      <li><a href="#updateconstraints">updateConstraints</a></li>
+      <li><a href="#setneedsupdateconstraints">setNeedsUpdateConstraints</a></li>
+      <li><a href="#updateconstraintsifneeded">updateConstraintsIfNeeded</a></li>
+      <li><a href="#layoutsubviews">layoutSubviews</a></li>
+      <li><a href="#setneedslayout">setNeedsLayout</a></li>
+      <li><a href="#layoutifneeded">layoutIfNeeded</a></li>
     </ul>
   </li>
-  <li><a href="#rubyバージョン管理はrbenv">Rubyバージョン管理はrbenv</a></li>
-  <li><a href="#bundler-で-cocoapodsを動かす">bundler で CocoaPodsを動かす</a>
+  <li><a href="#制約変更してすぐにレイアウトが欲しい場合">制約変更してすぐにレイアウトが欲しい場合</a>
     <ul>
-      <li><a href="#bundlerでcocoapodsをインストールする">bundlerでCocoaPodsをインストールする</a></li>
-      <li><a href="#bundlerでcocoapodsを動かす">bundlerでCocoaPodsを動かす</a></li>
+      <li><a href="#コードで表す">コードで表す</a></li>
+      <li><a href="#親ビューを更新しないといけない">親ビューを更新しないといけない</a></li>
+      <li><a href="#setneedslayoutは無効化するだけ">setNeedsLayoutは無効化するだけ</a></li>
+      <li><a href="#constraint更新してもフレーム位置は変わらない">Constraint更新してもフレーム位置は変わらない</a></li>
     </ul>
   </li>
-  <li><a href="#rbenv-に-binstubs-をインストール">rbenv に binstubs をインストール</a></li>
-  <li><a href="#cocoapodsのバージョンアップはbundler操作">CocoaPodsのバージョンアップはbundler操作</a></li>
-  <li><a href="#rubyバージョンはrbenv操作">Rubyバージョンはrbenv操作</a></li>
-  <li><a href="#まとめ">まとめ</a></li>
+  <li><a href="#あまり使うケース少ない">あまり使うケース少ない</a></li>
 </ul>
   </div>
   <section>
-  <p>iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
-CocoaPods単体であれば特に考えず <code class="highlighter-rouge">$ gem install cocoapods</code> で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、
-fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</p>
+  <p><code class="highlighter-rouge">layoutIfNeeded</code>はビュー位置すぐ分かって便利。<code class="highlighter-rouge">layoutSubviews</code>は呼んだらいけない。<code class="highlighter-rouge">setNeedsLayout</code>はパフォーマンス良し。</p>
 
-<p>なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、
-チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては
-人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。</p>
+<p>ビュー周りをコーディング中にUIが反映されない不具合に遭遇したら、<br />
+「ビューが反映されていない。とりあえず可能性を潰すために<code class="highlighter-rouge">Constraint</code>や<code class="highlighter-rouge">Layout</code>を更新」<br />
+って思って、Xcode上で<code class="highlighter-rouge">constraint</code>とか<code class="highlighter-rouge">layout</code>って打ったら候補に上がるたくさんのメソッド。
+「とりあえずそれぞれ何個か呼べば反映処理は走るだろう・・・」<br />
+なんてことないですか？</p>
 
-<p>このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。</p>
+<p>この記事では、<code class="highlighter-rouge">setNeedsLayout</code>,<code class="highlighter-rouge">layoutIfNeeded</code>,<code class="highlighter-rouge">layoutSubviews</code>,<code class="highlighter-rouge">updateConstraints</code>,<code class="highlighter-rouge">setNeedsUpdateConstraints</code>,<code class="highlighter-rouge">updateConstraintsIfNeeded</code>について調べて、詳細は省いて噛み砕いて説明します。</p>
 
-<h2 id="結論">結論</h2>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>xcode-select <span class="nt">--install</span>
-<span class="nv">$ </span>brew install rbenv ruby-build
-rbenv install <span class="nt">--list</span> でインストールしたいバージョンを決める
-<span class="nv">$ </span>rbenv install <span class="o">[</span>Ruby version]
-<span class="nv">$ </span>gem install bundler
-<span class="nv">$ </span>bundle init
-Gemfileに gem <span class="s1">'cocoapods'</span> を追加.バージョン指定はCocoaPodsと同じ.
-<span class="nv">$ </span>git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
-<span class="nv">$ </span>bundle install <span class="nt">--path</span><span class="o">=</span>vendor/bundle <span class="nt">--binstubs</span><span class="o">=</span>vendor/bin
-<span class="nv">$ </span>pod install
-</code></pre></div></div>
-
-<h2 id="rbenvでruby管理してgem管理はbundler">rbenvでRuby管理してgem管理はbundler</h2>
-
-<p>bundlerの前にRubyバージョンを管理するためにrbenvを入れて、RubyバージョンとbundlerバージョンとCocoaPodsバージョンをあわせます。</p>
+<h2 id="iosのレイアウト更新をメソッド整理する">iOSのレイアウト更新をメソッド整理する</h2>
 
 <ul>
-  <li>rbenv が Ruby 管理</li>
-  <li>Ruby の bundler gem が CocoaPods gem 管理</li>
+  <li>制約系
+    <ul>
+      <li><code class="highlighter-rouge">updateConstraints</code></li>
+      <li><code class="highlighter-rouge">setNeedsUpdateConstraints</code></li>
+      <li><code class="highlighter-rouge">updateConstraintsIfNeeded</code></li>
+    </ul>
+  </li>
+  <li>レイアウト系
+    <ul>
+      <li><code class="highlighter-rouge">layoutSubviews</code></li>
+      <li><code class="highlighter-rouge">setNeedsLayout</code></li>
+      <li><code class="highlighter-rouge">layoutIfNeeded</code></li>
+    </ul>
+  </li>
 </ul>
 
-<p>って感じです。 これだけだと分からないので、一つずつ説明していきます。</p>
+<h3 id="updateconstraints">updateConstraints</h3>
+<p>システムが制約更新に呼ぶ
+自分らが直接呼ばない。</p>
 
-<h3 id="gemとはrubyが提供するライブラリ単位">gemとはRubyが提供するライブラリ単位</h3>
+<p>使う用途は、オーバーライドして制約更新の最適化。
+そもそも、これをオーバーライドしてまでパフォーマンスを求められる複雑な画面はつくらないほうがいい。</p>
 
-<p>gemはRubyが提供するライブラリの単位です。
-これはRubyのバージョン毎にgemが管理されています。
-例えば Ruby 2.3のgem一覧と Ruby 2.6のgem一覧はインストールされているgemは異なります。</p>
+<h3 id="setneedsupdateconstraints">setNeedsUpdateConstraints</h3>
+<p>事前に更新予約することで複数ビュー更新時の無駄な再計算の抑制。
+フラグセット処理なので処理は軽い。その場で処理はされない。</p>
 
-<p>現在のRubyのバージョンは <code class="highlighter-rouge">$ ruby -v</code> で確認できます。
-そして、このバージョンにインストールされているgem一覧は、<code class="highlighter-rouge">$ gem list</code> で確認できます。
-例えば自分が作っているアプリの環境は次のような感じです。</p>
+<h3 id="updateconstraintsifneeded">updateConstraintsIfNeeded</h3>
+<p>システムがレイアウト更新時に呼ぶ。最新の制約を得たい場合は手動で呼ぶことも可能。
+<code class="highlighter-rouge">setNeedsUpdateConstraints</code>の後にこれを呼ぶと制約更新が走る。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ruby <span class="nt">-v</span>
-ruby 2.5.3p105 <span class="o">(</span>2018-10-18 revision 65156<span class="o">)</span> <span class="o">[</span>x86_64-darwin18]
+<h3 id="layoutsubviews">layoutSubviews</h3>
+<p>制約を使いサブビューのサイズと位置を決定する。<br />
+このメソッドは直接呼んではならない、代わりに<code class="highlighter-rouge">setNeedsLayout</code>使うこと。<br />
+もし、ビューのレイアウトをすぐ欲しい場合は、<code class="highlighter-rouge">layoutIfNeeded</code>を呼ぶこと。</p>
 
-<span class="nv">$ </span>gem list
+<h3 id="setneedslayout">setNeedsLayout</h3>
+<p>サブビューのレイアウトを無効化する＝次回レイアウト更新時に更新を必須とする。<br />
+全てのレイアウト更新を1回の更新サイクルで済ませられるのでパフォーマンス良い。</p>
 
-<span class="k">***</span> LOCAL GEMS <span class="k">***</span>
+<h3 id="layoutifneeded">layoutIfNeeded</h3>
+<p>サブビューが保留中ならすぐさま更新する。更新不要なら何もしない。<br />
+呼んだビューをルートとして、サブビューのレイアウト更新する。<br />
+内部では制約の変更も更新する。<br />
+<code class="highlighter-rouge">setNeedsLayout</code>を呼んだビューで呼ぶとその場でレイアウト更新処理が走る。</p>
 
-bigdecimal <span class="o">(</span>default: 1.3.4<span class="o">)</span>
-bundler <span class="o">(</span>1.17.3<span class="o">)</span>
-cmath <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-csv <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-date <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-dbm <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-did_you_mean <span class="o">(</span>1.2.0<span class="o">)</span>
-etc <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-fcntl <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-fiddle <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-fileutils <span class="o">(</span>default: 1.0.2<span class="o">)</span>
-gdbm <span class="o">(</span>default: 2.0.0<span class="o">)</span>
-io-console <span class="o">(</span>default: 0.4.6<span class="o">)</span>
-ipaddr <span class="o">(</span>default: 1.2.0<span class="o">)</span>
-json <span class="o">(</span>default: 2.1.0<span class="o">)</span>
-minitest <span class="o">(</span>5.10.3<span class="o">)</span>
-net-telnet <span class="o">(</span>0.1.1<span class="o">)</span>
-openssl <span class="o">(</span>default: 2.1.2<span class="o">)</span>
-power_assert <span class="o">(</span>1.1.1<span class="o">)</span>
-psych <span class="o">(</span>default: 3.0.2<span class="o">)</span>
-rake <span class="o">(</span>12.3.0<span class="o">)</span>
-rdoc <span class="o">(</span>default: 6.0.1<span class="o">)</span>
-scanf <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-sdbm <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-stringio <span class="o">(</span>default: 0.0.1<span class="o">)</span>
-strscan <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-test-unit <span class="o">(</span>3.2.7<span class="o">)</span>
-webrick <span class="o">(</span>default: 1.4.2<span class="o">)</span>
-xmlrpc <span class="o">(</span>0.3.0<span class="o">)</span>
-zlib <span class="o">(</span>default: 1.0.0<span class="o">)</span>
+<h2 id="制約変更してすぐにレイアウトが欲しい場合">制約変更してすぐにレイアウトが欲しい場合</h2>
+<p>制約を変更した直後に、影響を受けた後のビュー状態が欲しい場合は、<br />
+影響を受けるビューの親ビューの<code class="highlighter-rouge">layoutIfNeeded</code>を呼ぶ。<br />
+これにより無効化されたビューのレイアウト更新が実行されます。<br />
+レイアウト更新は内部で<code class="highlighter-rouge">updateConstraints</code>が呼ばれてから、<code class="highlighter-rouge">layoutSubviews</code>が呼ばれてます。</p>
+
+<h3 id="コードで表す">コードで表す</h3>
+
+<p>あるUIViewControllerにUILabelが配置されてるとする。<br />
+UILabelは左右と上にsuperviewとConstraintを引いている。<br />
+左右のConstraintsはそれぞれ<code class="highlighter-rouge">16</code>になっている。</p>
+
+<p>左右のConstraints(<code class="highlighter-rouge">labelRightConstraint</code>と<code class="highlighter-rouge">labelLeftConstraint</code>)の値を変更。<br />
+ラベルの中身も変更する。</p>
+
+<p>この状態で制約変更後のラベルの座標が欲しい場合は、<code class="highlighter-rouge">layoutIfNeeded</code>を呼ぶ。<br />
+<code class="highlighter-rouge">setNeedsLayout</code>は呼ばなくてもラベルの変更によりレイアウトが無効化（更新必須化）されている。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">labelLeftConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"asdfasdfasdfasdf"</span>
+<span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="nf">layoutIfNeeded</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"ラベルX:"</span><span class="p">,</span> <span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>上記見ると分かるように<code class="highlighter-rouge">bundler</code>も一つのgemです。
-このbundlerを使うことで他のgemのバージョン管理を行うことができます。</p>
-
-<h3 id="rubyバージョン毎にgemがインストールされている">Rubyバージョン毎にgemがインストールされている</h3>
-<p><strong>つまりRubyバージョンも合わせる必要があります。</strong></p>
-
-<p>例えばAさんが環境構築したとき<code class="highlighter-rouge">Ruby</code>バージョンは<code class="highlighter-rouge">2.0</code>でした。
-<code class="highlighter-rouge">CocoaPods</code>は<code class="highlighter-rouge">Ruby 2.0</code>の構文で書かれたバージョンをインストールできるようになります。
-2年後,Bさんがチーム参画し、環境構築したら<code class="highlighter-rouge">Ruby</code>バージョンは<code class="highlighter-rouge">2.5</code>でした。
-<code class="highlighter-rouge">CocoaPods</code>は<code class="highlighter-rouge">Ruby 2.5</code>の構文で書かれたバージョンをインストールできるようになります。
-その結果、Aさんの<code class="highlighter-rouge">CocoaPods</code>の最新バージョン<code class="highlighter-rouge">1.2</code>ですが、Bさんの<code class="highlighter-rouge">CocoaPods</code>は最新バージョンは<code class="highlighter-rouge">2.1</code>でした。
-Bさんは<code class="highlighter-rouge">CocoaPods</code>をAさんと同じ<code class="highlighter-rouge">1.2</code>に合わせたくとも、<code class="highlighter-rouge">Ruby 2.5</code>では動かず…なんてことが起こりえます。</p>
-
-<p><strong>そのため、Rubyバージョンをあわせておく必要があります。</strong></p>
-
-<p>※↑例なので、バージョンや互換性は適当です。</p>
-
-<h2 id="rubyバージョン管理はrbenv">Rubyバージョン管理はrbenv</h2>
-
-<p><code class="highlighter-rouge">rbenv</code>は<code class="highlighter-rouge">Homebrew</code>でインストールできます。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install rbenv ruby-build
-</code></pre></div></div>
-<p>(もしxcrunとかでエラーが出るようであれば <code class="highlighter-rouge">$ xcode-select --instal</code> を実行して xcodeパッケージツールのインストールをしてみてください。)</p>
-
-<p><code class="highlighter-rouge">$ rbenv versions</code>を実行すると、今rbenvが管理してるRubyのバージョン一覧が表示され、 <code class="highlighter-rouge">*</code> がつくバージョンが現在のRubyバージョンになります。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv versions
-  system
-  2.1.10
-  2.1.2
-  2.2.1
-<span class="k">*</span> 2.3.0 <span class="o">(</span><span class="nb">set </span>by /Users/mothule/.rbenv/version<span class="o">)</span>
-  2.3.6
-  2.3.7
-  2.4.4
-  2.5.1
-  2.5.3
-  2.6.2
-</code></pre></div></div>
-<p>これをiOSプロジェクトだけ2.5.3にしたい場合は、次のコマンドを実行して生成されたファイルをiOSプロジェクト配下(git管理下)においてください。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv <span class="nb">local </span>2.5.3
-</code></pre></div></div>
-<p>このコマンドを実行すると <code class="highlighter-rouge">.ruby-version</code>というファイルが生成され、もう一度Rubyバージョンを確認すると次のようになります。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv versions
-  system
-  2.1.10
-  2.1.2
-  2.2.1
-  2.3.0
-  2.3.6
-  2.3.7
-  2.4.4
-  2.5.1
-<span class="k">*</span> 2.5.3 <span class="o">(</span><span class="nb">set </span>by /Users/mothule/workspace/ios-project/.ruby-version<span class="o">)</span>
-  2.6.2
-</code></pre></div></div>
-<p>このようにRubyバージョン2.5.3が動くようになっています。 これは <code class="highlighter-rouge">.ruby-version</code>でバージョン指定されているためです。
-ちなみに <code class="highlighter-rouge">.ruby-version</code>は <code class="highlighter-rouge">2.5.3</code> と書いてあるだけです。
-<strong>この <code class="highlighter-rouge">.ruby-version</code>をgit管理し、各開発環境がrbenvを使えば、Rubyバージョンを合わせることができます。</strong></p>
-
-<h2 id="bundler-で-cocoapodsを動かす">bundler で CocoaPodsを動かす</h2>
-
-<h3 id="bundlerでcocoapodsをインストールする">bundlerでCocoaPodsをインストールする</h3>
-
-<p><code class="highlighter-rouge">$ gem install cocoapods</code>ではなく<code class="highlighter-rouge">bundle install</code>で<code class="highlighter-rouge">cocoapods</code>をインストールします。
-そのためにbundlerが管理するファイル<code class="highlighter-rouge">Gemfile</code>を<code class="highlighter-rouge">$ bundle init</code>で作ります。
-エディタで<code class="highlighter-rouge">Gemfile</code>を開くと次のようにgemを追加します。</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s2">"cocoapods"</span>
-</code></pre></div></div>
-<p>保存後に <code class="highlighter-rouge">$ bunlder install --path=vendor/bundle</code>を実行すると, <code class="highlighter-rouge">cocoapods</code>がインストールされます。
-<code class="highlighter-rouge">--path=vendor/bundle</code>とはgemのインストール場所を示すオプションで、iosプロジェクト配下にvendor/bundleフォルダを作成し、その中に <code class="highlighter-rouge">cocoapods</code> のコードがインストールされます。
-この <code class="highlighter-rouge">vendor/</code> は Gemfileがあれば再現可能なので git管理下から外しても構いません。</p>
-
-<h3 id="bundlerでcocoapodsを動かす">bundlerでCocoaPodsを動かす</h3>
-
-<p>bundler配下のgemを動かすには<code class="highlighter-rouge">$ bunlder exec command</code>のフォーマットに従わなくてはなりません。
-例えば <code class="highlighter-rouge">pod install</code>のインストールを実行するには、 <code class="highlighter-rouge">$ bundle exec pod install</code> となります。
-これは少し手間ですね。次のプラグインをインストールすることで <code class="highlighter-rouge">bundle exec</code>の部分を省くことができます。</p>
-
-<h2 id="rbenv-に-binstubs-をインストール">rbenv に binstubs をインストール</h2>
-<p>直接CocoaPodsをインストールした場合は、パスが通っているため <code class="highlighter-rouge">pod install</code>のように実行することができますが、
-<code class="highlighter-rouge">bundler</code>によってインストールした場合は、パスが通っていないため <code class="highlighter-rouge">pod install</code> を実行しても違うCocoaPodsのgemが動いてしまいます。(直接インストールしたCocoaPodsが動く)
-これをパスを通してくれるようになるプラグインが rbenv-binstubsです。<code class="highlighter-rouge">bundle exec</code>が不要になります。
-プラグインインストールは次の場所にgit cloneで配置するだけです。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
+<p><em>コンソール</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 40.0
 </code></pre></div></div>
 
-<p>また<code class="highlighter-rouge">bundle install</code> にオプションを追加して再実行します。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle install <span class="nt">--path</span><span class="o">=</span>vendor/bundle <span class="nt">--binstubs</span><span class="o">=</span>vendor/bin
+<h3 id="親ビューを更新しないといけない">親ビューを更新しないといけない</h3>
+
+<p><code class="highlighter-rouge">layoutIfNeeded</code>をラベルの親ビューではなく、ラベル自身で呼んでも変更されない。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">labelLeftConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"asdfasdfasdfasdf"</span>
+<span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="nf">layoutIfNeeded</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"ラベルX:"</span><span class="p">,</span> <span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>こうすることで、 <code class="highlighter-rouge">bundler</code> によってインストールgemにもパスが通るようになるため<code class="highlighter-rouge">pod install</code>だけで、bundler管轄のcocoapodsが呼べるようになります。</p>
+<p><em>コンソール</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
+</code></pre></div></div>
 
-<h2 id="cocoapodsのバージョンアップはbundler操作">CocoaPodsのバージョンアップはbundler操作</h2>
-<p>bundlerによって管理されたcocoapodsをバージョンアップする場合は、
-<code class="highlighter-rouge">$ bundler update</code>で管轄gemをバージョン指定ルールに従った最新版にアップデートします。</p>
+<h3 id="setneedslayoutは無効化するだけ">setNeedsLayoutは無効化するだけ</h3>
 
-<h2 id="rubyバージョンはrbenv操作">Rubyバージョンはrbenv操作</h2>
-<p>CocoaPodsや別ソフトウェアによりRubyバージョンを上げる必要がある場合は、 rbenv で新しくインストールし <code class="highlighter-rouge">.ruby-version</code>を変更することでバージョンを変えることができます。
-Rubyバージョンを更新した場合は、 <code class="highlighter-rouge">$ gem install bunlder</code> で <code class="highlighter-rouge">bundler</code> のインストール後に <code class="highlighter-rouge">$ bundle install</code>で新しいRubyバージョンでのbundlerとcocoapodsのインストールが必要になります。</p>
+<p><code class="highlighter-rouge">setNeedsLayout</code>を呼ぶと次回更新時に更新されるが、その場で更新はされない。</p>
 
-<h2 id="まとめ">まとめ</h2>
-<p>iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
-今回のような開発環境整備に役立てることができるようになります。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">labelLeftConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"asdfasdfasdfasdf"</span>
+<span class="k">self</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="nf">setNeedsLayout</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"ラベルX:"</span><span class="p">,</span> <span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><em>コンソール</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
+</code></pre></div></div>
+
+<h3 id="constraint更新してもフレーム位置は変わらない">Constraint更新してもフレーム位置は変わらない</h3>
+
+<p><code class="highlighter-rouge">setNeedsUpdateConstraints</code>と<code class="highlighter-rouge">updateConstraintsIfNeeded</code>で制約更新しても<br />
+レイアウト更新はされないので、ラベルの位置は更新されない。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">labelLeftConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">"asdfasdfasdfasdf"</span>
+<span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="nf">setNeedsUpdateConstraints</span><span class="p">()</span>
+<span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="nf">updateConstraintsIfNeeded</span><span class="p">()</span>
+<span class="nf">print</span><span class="p">(</span><span class="s">"ラベルX:"</span><span class="p">,</span> <span class="k">self</span><span class="o">.</span><span class="n">label</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">origin</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p><em>コンソール</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
+</code></pre></div></div>
+
+<h2 id="あまり使うケース少ない">あまり使うケース少ない</h2>
+<p><code class="highlighter-rouge">setNeedsLayout</code>と<code class="highlighter-rouge">setNeedsUpdateConstraints</code>はパフォーマンス良いと説明されている。<br />
+だけど呼ばなくても最近のiPhoneでは動く。<br />
+そしてUIベースのアプリは、これが必要なほど凝ったUIは作るべきではないと私は思う。</p>
+
+<p>かろうじて使うのは<code class="highlighter-rouge">layoutIfNeeded</code>だろうか。</p>
 
   </section>
 
@@ -545,10 +484,6 @@ Rubyバージョンを更新した場合は、 <code class="highlighter-rouge">$
             
                 
                 
-                
-                    <li><h3><a href="/ruby/ruby-script-basic">iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</a></h3></li>
-                    
-                    
                 
 
             

@@ -1,4 +1,144 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-12T01:27:33+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" rel="alternate" type="text/html" title="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" /><published>2020-05-09T00:00:00+09:00</published><updated>2020-05-10T20:27:27+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update">&lt;p&gt;キャッシュとLayoutConstraintとセル単体更新と&lt;code class=&quot;highlighter-rouge&quot;&gt;indexPath(for:)&lt;/code&gt;を使います。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-12T05:47:57+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">setNeedsLayoutやlayoutSubviewsなどの役割を整理する</title><link href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" rel="alternate" type="text/html" title="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" /><published>2020-05-12T00:00:00+09:00</published><updated>2020-05-12T05:47:47+09:00</updated><id>https://blog.mothule.com/ios/ios-ui-constraint-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-ui-constraint-layout-update">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;はビュー位置すぐ分かって便利。&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;は呼んだらいけない。&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;はパフォーマンス良し。&lt;/p&gt;
+
+&lt;p&gt;ビュー周りをコーディング中にUIが反映されない不具合に遭遇したら、&lt;br /&gt;
+「ビューが反映されていない。とりあえず可能性を潰すために&lt;code class=&quot;highlighter-rouge&quot;&gt;Constraint&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Layout&lt;/code&gt;を更新」&lt;br /&gt;
+って思って、Xcode上で&lt;code class=&quot;highlighter-rouge&quot;&gt;constraint&lt;/code&gt;とか&lt;code class=&quot;highlighter-rouge&quot;&gt;layout&lt;/code&gt;って打ったら候補に上がるたくさんのメソッド。
+「とりあえずそれぞれ何個か呼べば反映処理は走るだろう・・・」&lt;br /&gt;
+なんてことないですか？&lt;/p&gt;
+
+&lt;p&gt;この記事では、&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;updateConstraints&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsUpdateConstraints&lt;/code&gt;,&lt;code class=&quot;highlighter-rouge&quot;&gt;updateConstraintsIfNeeded&lt;/code&gt;について調べて、詳細は省いて噛み砕いて説明します。&lt;/p&gt;
+
+&lt;h2 id=&quot;iosのレイアウト更新をメソッド整理する&quot;&gt;iOSのレイアウト更新をメソッド整理する&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;制約系
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;updateConstraints&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsUpdateConstraints&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;updateConstraintsIfNeeded&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;レイアウト系
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;updateconstraints&quot;&gt;updateConstraints&lt;/h3&gt;
+&lt;p&gt;システムが制約更新に呼ぶ
+自分らが直接呼ばない。&lt;/p&gt;
+
+&lt;p&gt;使う用途は、オーバーライドして制約更新の最適化。
+そもそも、これをオーバーライドしてまでパフォーマンスを求められる複雑な画面はつくらないほうがいい。&lt;/p&gt;
+
+&lt;h3 id=&quot;setneedsupdateconstraints&quot;&gt;setNeedsUpdateConstraints&lt;/h3&gt;
+&lt;p&gt;事前に更新予約することで複数ビュー更新時の無駄な再計算の抑制。
+フラグセット処理なので処理は軽い。その場で処理はされない。&lt;/p&gt;
+
+&lt;h3 id=&quot;updateconstraintsifneeded&quot;&gt;updateConstraintsIfNeeded&lt;/h3&gt;
+&lt;p&gt;システムがレイアウト更新時に呼ぶ。最新の制約を得たい場合は手動で呼ぶことも可能。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsUpdateConstraints&lt;/code&gt;の後にこれを呼ぶと制約更新が走る。&lt;/p&gt;
+
+&lt;h3 id=&quot;layoutsubviews&quot;&gt;layoutSubviews&lt;/h3&gt;
+&lt;p&gt;制約を使いサブビューのサイズと位置を決定する。&lt;br /&gt;
+このメソッドは直接呼んではならない、代わりに&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;使うこと。&lt;br /&gt;
+もし、ビューのレイアウトをすぐ欲しい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;を呼ぶこと。&lt;/p&gt;
+
+&lt;h3 id=&quot;setneedslayout&quot;&gt;setNeedsLayout&lt;/h3&gt;
+&lt;p&gt;サブビューのレイアウトを無効化する＝次回レイアウト更新時に更新を必須とする。&lt;br /&gt;
+全てのレイアウト更新を1回の更新サイクルで済ませられるのでパフォーマンス良い。&lt;/p&gt;
+
+&lt;h3 id=&quot;layoutifneeded&quot;&gt;layoutIfNeeded&lt;/h3&gt;
+&lt;p&gt;サブビューが保留中ならすぐさま更新する。更新不要なら何もしない。&lt;br /&gt;
+呼んだビューをルートとして、サブビューのレイアウト更新する。&lt;br /&gt;
+内部では制約の変更も更新する。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;を呼んだビューで呼ぶとその場でレイアウト更新処理が走る。&lt;/p&gt;
+
+&lt;h2 id=&quot;制約変更してすぐにレイアウトが欲しい場合&quot;&gt;制約変更してすぐにレイアウトが欲しい場合&lt;/h2&gt;
+&lt;p&gt;制約を変更した直後に、影響を受けた後のビュー状態が欲しい場合は、&lt;br /&gt;
+影響を受けるビューの親ビューの&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;を呼ぶ。&lt;br /&gt;
+これにより無効化されたビューのレイアウト更新が実行されます。&lt;br /&gt;
+レイアウト更新は内部で&lt;code class=&quot;highlighter-rouge&quot;&gt;updateConstraints&lt;/code&gt;が呼ばれてから、&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;が呼ばれてます。&lt;/p&gt;
+
+&lt;h3 id=&quot;コードで表す&quot;&gt;コードで表す&lt;/h3&gt;
+
+&lt;p&gt;あるUIViewControllerにUILabelが配置されてるとする。&lt;br /&gt;
+UILabelは左右と上にsuperviewとConstraintを引いている。&lt;br /&gt;
+左右のConstraintsはそれぞれ&lt;code class=&quot;highlighter-rouge&quot;&gt;16&lt;/code&gt;になっている。&lt;/p&gt;
+
+&lt;p&gt;左右のConstraints(&lt;code class=&quot;highlighter-rouge&quot;&gt;labelRightConstraint&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;labelLeftConstraint&lt;/code&gt;)の値を変更。&lt;br /&gt;
+ラベルの中身も変更する。&lt;/p&gt;
+
+&lt;p&gt;この状態で制約変更後のラベルの座標が欲しい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;を呼ぶ。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;は呼ばなくてもラベルの変更によりレイアウトが無効化（更新必須化）されている。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelRightConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;30.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelLeftConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;40.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;asdfasdfasdfasdf&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;layoutIfNeeded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ラベルX:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;コンソール&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ラベルX: 40.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;親ビューを更新しないといけない&quot;&gt;親ビューを更新しないといけない&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;をラベルの親ビューではなく、ラベル自身で呼んでも変更されない。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelRightConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;30.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelLeftConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;40.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;asdfasdfasdfasdf&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;layoutIfNeeded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ラベルX:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;コンソール&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ラベルX: 16.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;setneedslayoutは無効化するだけ&quot;&gt;setNeedsLayoutは無効化するだけ&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;を呼ぶと次回更新時に更新されるが、その場で更新はされない。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelRightConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;30.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelLeftConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;40.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;asdfasdfasdfasdf&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;view&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setNeedsLayout&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ラベルX:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;コンソール&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ラベルX: 16.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;constraint更新してもフレーム位置は変わらない&quot;&gt;Constraint更新してもフレーム位置は変わらない&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsUpdateConstraints&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;updateConstraintsIfNeeded&lt;/code&gt;で制約更新しても&lt;br /&gt;
+レイアウト更新はされないので、ラベルの位置は更新されない。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelRightConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;30.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;labelLeftConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constant&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;40.0&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;asdfasdfasdfasdf&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setNeedsUpdateConstraints&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;updateConstraintsIfNeeded&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;ラベルX:&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;frame&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;origin&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;コンソール&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;ラベルX: 16.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;あまり使うケース少ない&quot;&gt;あまり使うケース少ない&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsUpdateConstraints&lt;/code&gt;はパフォーマンス良いと説明されている。&lt;br /&gt;
+だけど呼ばなくても最近のiPhoneでは動く。&lt;br /&gt;
+そしてUIベースのアプリは、これが必要なほど凝ったUIは作るべきではないと私は思う。&lt;/p&gt;
+
+&lt;p&gt;かろうじて使うのは&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;だろうか。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png" /></entry><entry><title type="html">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" rel="alternate" type="text/html" title="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" /><published>2020-05-09T00:00:00+09:00</published><updated>2020-05-10T20:27:27+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update">&lt;p&gt;キャッシュとLayoutConstraintとセル単体更新と&lt;code class=&quot;highlighter-rouge&quot;&gt;indexPath(for:)&lt;/code&gt;を使います。&lt;/p&gt;
 
 &lt;p&gt;今回は、要件てんこ盛りなUITableViewのセル制御について説明します。
 要件について整理します。&lt;/p&gt;
@@ -1006,7 +1146,91 @@ rablの場所を&lt;code class=&quot;highlighter-rouge&quot;&gt;users/show&lt;/c
   &lt;li&gt;日本語記事が少ない&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/0.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-05T02:40:36+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
+&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/0.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-04T15:47:13+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
+
+&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
+
+&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
+  &lt;li&gt;検証コードを実装&lt;/li&gt;
+  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
+  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
+なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
+&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
+仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
+
+&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
+&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
+頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
+毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
+&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
+そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
+
+&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
+&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
+ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
+
+&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
+&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
+単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
+&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
+
+&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
+また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
+  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
+  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
+
+&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
+
+&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
+そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
+新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
+
+&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
+&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/0.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-05T02:40:36+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;この記事では、Arrayの内部特性を理解し特性が含むリスクに対して、速度パフォーマンスを測定して何が重い実験した結果をまとめたレポートです。&lt;/strong&gt;&lt;/p&gt;
 
@@ -1266,91 +1490,7 @@ X軸が配列数で、Y軸が処理時間(秒)になります。&lt;/p&gt;
 &lt;p&gt;80バイト程度で1~2万件のデータを扱う時に前方挿入をする処理が多いとスパイクが起きるレベルです。&lt;br /&gt;
 これがECなどで1つの商品情報を扱う場合は更にでかいサイズかと思います。&lt;br /&gt;
 そうなると1万件以下でも重くなるでしょう。&lt;br /&gt;
-追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-04T15:47:13+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
-
-&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
-
-&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
-  &lt;li&gt;検証コードを実装&lt;/li&gt;
-  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
-  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
-なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
-&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
-仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
-
-&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
-&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
-頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
-毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
-&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
-そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
-
-&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
-&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
-ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
-
-&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
-
-&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
-&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
-単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
-&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
-
-&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
-また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
-  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
-  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
-
-&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
-
-&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
-そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
-新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
-
-&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
-&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/0.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
+追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
 この2つを使いこなすことは、iOSエンジニアとして重要なことです。&lt;/p&gt;
 
 &lt;p&gt;Swift特有の使い方、つまりイディオムを理解することでSwiftyなコーディングができるようにもなります。&lt;/p&gt;
@@ -2515,136 +2655,4 @@ cronが実行される環境では、コマンドへのPATHが通っていない
 &lt;p&gt;ただ決まった時間に実行するスケジューラーでもcronの仕組みやcronとcrontabとの関係を知ることで、理解が深まります。
 落とし穴を知ることで、シェルやターミナルも少し理解が進みます。&lt;/p&gt;
 
-&lt;p&gt;以上がcrontabの記事でした。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="cron" /><summary type="html">定期実行といえばcron、それらスケジュールを制御するコマンドがcrontabです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-26-how-to-use-cron/0.png" /></entry><entry><title type="html">アジャイル開発を勘違いしてる企画職やPMがいる会社は苦労する</title><link href="https://blog.mothule.com/notebook/engineers-are-hating-they" rel="alternate" type="text/html" title="アジャイル開発を勘違いしてる企画職やPMがいる会社は苦労する" /><published>2020-04-22T00:00:00+09:00</published><updated>2020-04-22T02:22:15+09:00</updated><id>https://blog.mothule.com/notebook/engineers-are-hating-they</id><content type="html" xml:base="https://blog.mothule.com/notebook/engineers-are-hating-they">&lt;p&gt;Web界隈では開発手法はウォーターフォールからアジャイル開発へとシフトしていると思います。
-従来のウォーターフォール方式では完成した頃には既に二番手三番手、既に古いと思われるほど求められるニーズの変化速度が速くなっているからです。&lt;/p&gt;
-
-&lt;p&gt;この変化に柔軟に対応できる開発方法がアジャイル開発でした。正しく理解し運用することで安定した開発が可能になります。
-また上位レイヤーのリーン開発との相性もよくリーン＋アジャイルでのフットワーク軽い開発スタイルは見かけます。
-しかしこのアジャイル開発を浅く知って勘違いした企画職やPMがアジャイルでもウォーターフォールでもないどちらのメリットもない形に崩すのは典型例です&lt;/p&gt;
-
-&lt;p&gt;この記事はアジャイル開発を5年近く続けて経験した苦労話です。&lt;/p&gt;
-
-&lt;p&gt;なお私が経験したのはアジャイル開発はスクラム＋XPです。&lt;/p&gt;
-
-&lt;h2 id=&quot;アジャイル開発は細かくリリースしやすい&quot;&gt;アジャイル開発は細かくリリースしやすい&lt;/h2&gt;
-
-&lt;p&gt;Webの特徴であるリリースを何回もできることを前提とした、数機能ずつリリースを繰り返すサイクルです。
-実装する機能はスプリント初期に構築したプロダクトバックログのストーリーと呼ばれる機能をシナリオ化した物が並び順になっており、
-1~2週間を1スプリント(SP)と称し1SP内にそのストーリーを対応して、SP終わりにプロダクトオーナー(PO)と呼ばれるプロダクト成長を責務とする人が
-ストーリーを満たしているか受入判定を行います。そしてSP頭になればまた次の優先度のストーリーを進めます。
-プロダクトはSP毎に常にリリース可能な状態となっていなければならず、それにより期限が予定より短くなったり開発が遅れたりすることで優先度の低い未対応ストーリーはそのままで
-リリースすることでプロダクトにとって最も重要な順に対応された機能がユーザーに届けられます。&lt;/p&gt;
-
-&lt;h2 id=&quot;アジャイル開発が非開発者に勘違いされがちなこと&quot;&gt;アジャイル開発が非開発者に勘違いされがちなこと&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;柔軟に仕様を変更できる&lt;/li&gt;
-  &lt;li&gt;細かい仕様書が不要&lt;/li&gt;
-  &lt;li&gt;開発やデザイナーだけで開発が回る&lt;/li&gt;
-  &lt;li&gt;人員増やせばより開発が加速・安定する&lt;/li&gt;
-  &lt;li&gt;ウォーターフォールより早い&lt;/li&gt;
-  &lt;li&gt;立て続けに機能追加できる&lt;/li&gt;
-  &lt;li&gt;プロダクトオーナーは若手でもできる&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;柔軟に仕様を変更できる&quot;&gt;柔軟に仕様を変更できる&lt;/h3&gt;
-
-&lt;p&gt;アジャイル開発の利点を概要部分だけ読んだ企画がよく勘違いします。
-そんな夢物語があるわけないです。&lt;/p&gt;
-
-&lt;p&gt;厳密には次の通りです&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;SPレビューからSP計画までの間にプロダクトバックログ内のストーリー単位での未対応ストーリーの優先順位変更が可能&lt;/li&gt;
-  &lt;li&gt;未対応ストーリーの仕様変更が可能&lt;/li&gt;
-  &lt;li&gt;仕様変更したら関連するストーリー全てのポイントが再見積もりとなる&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;となります。
-これをSP中にも関わらず対応中の機能の仕様をコロコロ変えたら、そのSPでは何もストーリーを達成できません。
-本来はSPが走り始めたらストーリーを変えてはいけません。対応してよいストーリーはReadyを満たしたものだけになります。&lt;/p&gt;
-
-&lt;p&gt;当たり前ですが、仕様変更するならした分だけ工数は伸びます。これはどの開発手法でも変わりません。&lt;/p&gt;
-
-&lt;h3 id=&quot;細かい仕様書が不要&quot;&gt;細かい仕様書が不要&lt;/h3&gt;
-
-&lt;p&gt;アジャイル開発では「資料よりも対話」を大事にしようと言われています。
-しかしこれを口頭で全部伝えればOK、細かいことは伝えずOKと勘違いする企画がバカのように多いです。&lt;/p&gt;
-
-&lt;p&gt;そもそもの前提が間違っています。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;複雑なビジネスロジックや重要機能は最適量の仕様書は必要です。&lt;/li&gt;
-  &lt;li&gt;不要とは言っていません。ちょっとした確認や本当に細かい部分を資料ではなく口頭でやろう。という逆位置からのスタートです。&lt;/li&gt;
-  &lt;li&gt;大前提としてPOが隣や向かいの席など超近接です&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これを仕様も伝えず最も重要な機能も伝えず、違う企画だらけの島に席をおいて、しょっちゅう会議でいない無能POがいます。&lt;/p&gt;
-
-&lt;p&gt;そんなテレパシーを超えたテクノロジーもビックリの情報疎通環境でできるんだと間違うお花畑企画がいます。&lt;/p&gt;
-
-&lt;h3 id=&quot;開発やデザイナーだけで開発が回る&quot;&gt;開発やデザイナーだけで開発が回る&lt;/h3&gt;
-
-&lt;p&gt;SP計画とSPレビューだけ顔出してSP中は一切無関係みたいな勘違いも見かけます。
-スクラムの前提はPOもデザイナーも開発、SMもコアメンバーは一つのチームとして動きます。
-それぞれがスペシャリストでなければいけません。&lt;/p&gt;
-
-&lt;p&gt;それを勘違いして仕様バグ確認や優先順位や精査、プロダクトバックログの整理やユーザー分析などをせず、別の企画の決裁向けプレゼン資料を作ってるバカも多いです。
-シニア企画に多いです。&lt;/p&gt;
-
-&lt;h3 id=&quot;人員増やせばより開発が加速安定する&quot;&gt;人員増やせばより開発が加速・安定する&lt;/h3&gt;
-
-&lt;p&gt;アジャイル開発はメンバー全員が「プロダクトを良くしたい」という同一姿勢が前提で、同じプロダクトに同じメンバーで続けることでチーム内成熟度が熟成し、手戻りや齟齬を減らしたり、付帯作業を抑えたり、プロダクトへの知識を蓄積することでベロシティを安定化させるなど、そのプロダクトにおいてそのチームが最も適切で先鋭となることがアジャイル開発をするチームにおいて重要なことです。&lt;/p&gt;
-
-&lt;p&gt;これを1フェイズ終わったからといって、メンバーをコロコロ変えたり、ベロシティが低くて期限に間に合わないからと言ってメンバーを増員したりなどするのは悪手です。
-アジャイル開発はPOとしてしっかり接していないと、プロダクトバックログやスプリントバックログのマネージメントコストが超非常に高いという事実をまず知らないです。&lt;/p&gt;
-
-&lt;p&gt;これをチームとして参加せず数字だけ見てる人がよくやる典型的なリソースコントロールです。
-机上の空論です。扱ってるリソースが機械だと思ってるのでしょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;ウォーターフォールより早い&quot;&gt;ウォーターフォールより早い&lt;/h3&gt;
-
-&lt;p&gt;アジャイル開発はSP毎にリリースReadyにする、対応ストーリーのみを考慮した開発、先のストーリーは考えない（結局やらない可能性もあるから）といった特徴もあるため
-開発に無駄があります。&lt;/p&gt;
-
-&lt;p&gt;例で言うと、ウォーターフォールでは全部の仕様を策定し、それを確認した上でデータベースのテーブル設計を行います。
-設計されたテーブルは機能をカバーできる設計となります。&lt;/p&gt;
-
-&lt;p&gt;しかしアジャイル開発ではまずはフェイズ１などここまでをリリース対象としようと全部の仕様策定などはしません。
-そのため目の前のストーリーを実現するには適切なテーブル設計でも、次SPや次フェイズのストーリーでは、カバーできない場合があります。
-その場合はマイグレーション処理が発生します。&lt;/p&gt;
-
-&lt;p&gt;これはテーブル設計に関わらずクラス設計にも同様の話です。予め可変性の高い要件が見えていればその部分を柔軟性高めの設計にします。
-しかしそれが見えないため、ガチガチに組んだ設計部があとで実は多様性を持たせないといけないことになり、結局大きめのリファクタリング入ることはよくあります。&lt;/p&gt;
-
-&lt;p&gt;実際見た目はそのままの言語やインフラなどテクノロジーリプレイ案件であれば、不安定で不透明な仕様や追加仕様は存在しないためアジャイル開発でやるメリットがありません。&lt;/p&gt;
-
-&lt;p&gt;アジャイル開発はある程度速度を犠牲にした代わりに柔軟性を手に入れているのです。&lt;/p&gt;
-
-&lt;h3 id=&quot;立て続けに機能追加できる&quot;&gt;立て続けに機能追加できる&lt;/h3&gt;
-
-&lt;p&gt;半分間違ってます。&lt;/p&gt;
-
-&lt;p&gt;技術負債を解消し続けなければ、ちょっとした変更でもリグレッションバグが発生しテスト工数がかさんだり、色々な箇所を読み解く必要があったり、気づけばアジャイルのメリットをなくなってしまいます。&lt;/p&gt;
-
-&lt;p&gt;アジャイル開発はWebサービスなどプロダクトを継続成長させる開発に向いています。
-しかしそれを支えるには負債解消計画も継続的に考慮されてなければいけません。&lt;/p&gt;
-
-&lt;h3 id=&quot;プロダクトオーナーは若手でもできる&quot;&gt;プロダクトオーナーは若手でもできる&lt;/h3&gt;
-&lt;p&gt;もう愚の骨頂です。
-こう思ってる人は愚かにもほどがあります。&lt;/p&gt;
-
-&lt;p&gt;プロダクトの責任を負ってる人が若手ができるわけがありません。
-プロダクトはライバルや市場、ターゲット分析に加えトレンド機能などプラットフォーム知識、そして機能毎のKPI策定やそれらの追跡、問題点の分析と改善などプロダクト成長させ収益を得ることを一手に引き受けます。
-そこらの2年目3年目が一人でこなせる訳ありません。もともとPOは10年目以上のベテランが推奨です。&lt;/p&gt;
-
-&lt;p&gt;ちょっと考えれば分かることをいいように解釈して、本来必要な作業をやらなくても良いと何故か判断する部長などリソースマネージャーがいます。
-アホですね。&lt;/p&gt;
-
-&lt;h2 id=&quot;アジャイル開発は銀の弾丸ではない&quot;&gt;アジャイル開発は銀の弾丸ではない&lt;/h2&gt;
-
-&lt;p&gt;今後も含めいかなる開発手法が登場しても、元々やらなければいけないことの本質が消えることは絶対ありません。
-仕様書も説明もなく仕様は伝わらないし、仕様バグも見つからないし、完了条件も定義できません。&lt;/p&gt;
-
-&lt;p&gt;未だにIT開発をコストと考える古臭い人は非常に多いです。特に数字をメインにしてる人は多いです。
-こういった会社や上司のいる場所は、エンジニアがアジャイル開発を経て幸せになることはまずありません。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><summary type="html">Web界隈では開発手法はウォーターフォールからアジャイル開発へとシフトしていると思います。 従来のウォーターフォール方式では完成した頃には既に二番手三番手、既に古いと思われるほど求められるニーズの変化速度が速くなっているからです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-22-engineers-are-hating-they.png" /></entry></feed>
+&lt;p&gt;以上がcrontabの記事でした。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="cron" /><summary type="html">定期実行といえばcron、それらスケジュールを制御するコマンドがcrontabです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-26-how-to-use-cron/0.png" /></entry></feed>
