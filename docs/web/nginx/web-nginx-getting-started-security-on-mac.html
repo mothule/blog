@@ -1,21 +1,20 @@
 <!DOCTYPE html>
 <html lang="ja">
   <head>
-    
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    
-    
-
-    
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 
-    
-      <title>Mac上でnginxのセキュリティ最低限を確認する - もちゅろぐ</title>
-    
 
-    <!-- Begin Jekyll SEO tag v2.5.0 -->
+
+
+
+
+
+  <title>Mac上でnginxのセキュリティ最低限を確認する - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="Mac上でnginxのセキュリティ最低限を確認する" />
 <meta property="og:locale" content="ja_JP" />
@@ -30,24 +29,24 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac","headline":"Mac上でnginxのセキュリティ最低限を確認する","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-26T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac","headline":"Mac上でnginxのセキュリティ最低限を確認する","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-26T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac"},"image":"https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png","description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
-    
-    
-    <meta name="twitter:title" content="Mac上でnginxのセキュリティ最低限を確認する">
-    <meta name="twitter:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。今回を入門シリーズ最後とします。">
-    <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png">
 
-    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
-          rel="stylesheet"
-          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
-          crossorigin="anonymous">
-    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
-    <link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
-    <link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
-    
+
+<meta name="twitter:title" content="Mac上でnginxのセキュリティ最低限を確認する">
+<meta name="twitter:description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。今回を入門シリーズ最後とします。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
   <!-- Analytics -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
   <script>
@@ -59,15 +58,14 @@
   </script>
 
 
-    <link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
   </head>
   <body>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
-
     <div class="container">
-
       <!-- Haeder -->
       <div class="row">
         <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
@@ -107,9 +105,9 @@
       </div>
 
       <main class="row" style="margin-bottom: 32px;">
-        <!-- Content -->
-        <article class="col-sm-9 root-article">
-          <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
 
 <div class="post-content">
   <div class="breadcrumbs">
@@ -607,11 +605,11 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
 <script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
 <script src="/assets/js/shared/post.js" defer></script>
 
-        </article>
+  </article>
 
-        <!-- Side menu -->
-        <aside class="col-sm-3">
-          <div class="sidebar">
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
   
     <div class="profile">
   <div class="profile-title">
@@ -675,6 +673,7 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
         </ol>
     </div>
 </div>
+
     <div class="tag-cloud">
   <div class="tag-cloud-title">
     Tag list
@@ -923,8 +922,9 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
   </div>
 </div>
 
-        </aside>
-      </main>
+  </aside>
+</main>
+
 
       <!-- Footer -->
       <div class="row">
