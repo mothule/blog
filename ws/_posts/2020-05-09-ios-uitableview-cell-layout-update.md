@@ -120,34 +120,6 @@ let sales: [Sale] = Array(0..<100).map { _ in
 }
 ```
 
-## 画像キャッシュ機構を構築する
-簡易ではありますが、画像をキャッシュするクラスを用意します。この構造に従う必要はありません。各自独自のオンメモリキャッシュを活用してください。今回は画像ロードライブラリやデータ管理などを簡易させるために用意してあります。
-
-```swift
-class ImageCache {
-    static var shared: ImageCache = .init()
-    private let cacheSize = 20
-    private let clearSize = 5
-
-    private var cachedImages: [String: UIImage] = [:]
-
-    func fetch(key: String) -> UIImage? { cachedImages[key] }
-    func set(key: String, value: UIImage?) {
-        cachedImages[key] = value
-
-        if cachedImages.count > cacheSize {
-            cachedImages.keys.shuffled().prefix(clearSize).forEach({ key in
-                cachedImages.removeValue(forKey: key)
-            })
-            print(String(describing: self), #function, "Cleared some cache.")
-        }
-    }
-}
-```
-URLをキーにUIImageをキャッシュしておくデータ構造です。  
-実際の動きににせるため、キャッシュ処理時にキャッシュ数が上限超えたらいくつかランダムでキャッシュ画像をクリアする処理をいれてあります。
-
-
 ## テーブルセルを実装する
 
 今回もっとも複雑なコードになります。
