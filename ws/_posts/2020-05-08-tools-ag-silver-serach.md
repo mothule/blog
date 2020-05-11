@@ -1,5 +1,5 @@
 ---
-title: 質問の返答速度をXcode起動速度より速くする【ag】
+title: 質問の返答速度をagでXcode起動速度より速くする
 categories: tools ag
 tags: tools ag
 image:
