@@ -111,6 +111,8 @@ $ ag --cpp UIWebView
 ```sh
 $ ag --list-file-types
 ```
+ここにない拡張子は1つ上の`--filetype`オプションは使えません。  
+その場合は`-G`オプションで検索対象ファイル名を正規表現で指定する。
 
 #### 大文字小文字を区別する(`-s`)
 ```sh
@@ -138,9 +140,12 @@ $ ag -G '\.(c|h|swift)' UIWebView
 ```
 
 #### ファイルを検索(`-g pattern`)
+
+`UIWebView`というファイル名を検索する。  
 ```sh
 $ ag -g UIWebView
 ```
+
 
 #### 隠しファイルも検索(`--hidden`)
 ```sh
