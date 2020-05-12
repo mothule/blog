@@ -23,13 +23,13 @@
 <link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage" />
 <meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png" />
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-15T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-04-30T04:51:03+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-12T23:34:28+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -37,7 +37,7 @@
 
 <meta name="twitter:title" content="Carthageの使い方を体系的に理解する">
 <meta name="twitter:description" content="iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -159,7 +159,7 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png" alt="Carthageの使い方を体系的に理解する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-15-ios-carthage/eyecatch.png" alt="Carthageの使い方を体系的に理解する">
     </div>
   
 
@@ -230,7 +230,7 @@
       <li><a href="#carthage-buildはgitに必要">Carthage BuildはGitに必要</a></li>
     </ul>
   </li>
-  <li><a href="#carthage-no-use-binariesでデバッグ可能にする">Carthage –no-use-binariesでデバッグ可能にする</a></li>
+  <li><a href="#carthage---no-use-binariesでデバッグ可能にする">Carthage –no-use-binariesでデバッグ可能にする</a></li>
   <li><a href="#carthageのcartfileでライブラリのバージョン指定する方法">CarthageのCartfileでライブラリのバージョン指定する方法</a>
     <ul>
       <li><a href="#で範囲指定する">~&gt;で範囲指定する</a></li>
@@ -560,7 +560,7 @@ Carthage/Checkouts
 
 <p>そのためここをGitにあげないと他環境からビルドした場合にフレームワークが見つからずビルドエラーとなります。</p>
 
-<h2 id="carthage-no-use-binariesでデバッグ可能にする">Carthage –no-use-binariesでデバッグ可能にする</h2>
+<h2 id="carthage---no-use-binariesでデバッグ可能にする">Carthage --no-use-binariesでデバッグ可能にする</h2>
 <p>ライブラリによってはGitHubなどに既にビルド済みのフレームワークが用意されており、<br />
 Carthageは特に指定がなければそれを使ってインストールして時間短縮を行っています。</p>
 
@@ -568,7 +568,7 @@ Carthageは特に指定がなければそれを使ってインストールして
 その場合は、</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span> &lt;library name&gt;
 </code></pre></div></div>
-<p>というふうに <strong>–no-use-binaries</strong> オプションんを使うことで解決することができます。</p>
+<p>というふうに <strong><code class="highlighter-rouge">--no-use-binaries</code></strong> オプションんを使うことで解決することができます。</p>
 
 <h2 id="carthageのcartfileでライブラリのバージョン指定する方法">CarthageのCartfileでライブラリのバージョン指定する方法</h2>
 <p>Carthageでライブラリのバージョンを指定するには、<br />
