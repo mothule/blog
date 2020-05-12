@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist","headline":"CarthageでInput File Listsにxcfilelistを渡す利点と方法","dateModified":"2020-05-13T04:39:30+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist"},"image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png","description":"CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist","headline":"CarthageでInput File Listsにxcfilelistを渡す利点と方法","dateModified":"2020-05-13T04:52:06+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist"},"image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png","description":"CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -203,7 +203,7 @@
 </ul>
   </div>
   <section>
-  <p><code class="highlighter-rouge">xcfilelist</code>で依存ライブラリを管理すると<code class="highlighter-rouge">.xcodeproj</code>が汚れません。✨</p>
+  <p><code class="highlighter-rouge">xcfilelist</code>で依存ライブラリを管理すると楽です</p>
 
 <p>この記事は<code class="highlighter-rouge">xcfilelist</code>を使って<code class="highlighter-rouge">Carthage</code>の環境を構築する方法と利点について説明します。</p>
 
@@ -232,13 +232,10 @@
 
 <h2 id="input-file-listsを使う利点">Input File Listsを使う利点</h2>
 
-<p><code class="highlighter-rouge">Input Files</code>でframeworkのパスを指定するほうが分かりやすいです。<br />
+<p><code class="highlighter-rouge">Input Files</code>でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
 <code class="highlighter-rouge">Input File Lists</code>を使う利点がないと使う気にならないと思います。</p>
 
-<p>使う利点は、一度<code class="highlighter-rouge">xcfilelist</code>のパスを指定すれば、新しくframeworkが増えたり減ったりしても<br />
-Xcodeプロジェクト(<code class="highlighter-rouge">.xcodeproj</code>)を編集する必要がありません。</p>
-
-<p>つまり<strong>「コンフリクトを気にしなくてもよくなる」</strong> ことです。</p>
+<p>使う利点は、一度<code class="highlighter-rouge">xcfilelist</code>のパスを指定すれば、<code class="highlighter-rouge">Run Script</code>の使いにくいUIを使わなくて済みます。</p>
 
 <h2 id="xcfilelistを用意する">xcfilelistを用意する</h2>
 
@@ -298,8 +295,7 @@ $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
 
 <h2 id="後からでも対応できる">後からでも対応できる</h2>
 <p>この対応は、プロジェクトが初期段階でも後からでも対応できます。<br />
-ライブラリが多くても手間はそこまで変わりません。<br />
-<strong>またチームメンバーが多いほど効果は大きいです。</strong></p>
+ライブラリが多くても手間はそこまで変わりません。</p>
 
   </section>
 
