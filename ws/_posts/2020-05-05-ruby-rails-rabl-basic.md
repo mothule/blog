@@ -4,7 +4,7 @@ description: Railsのビューテンプレートエンジンにも使われるra
 categories: ruby rails
 tags: ruby rails
 image:
-  path: /assets/images/2020-05-05-ruby-rails-rabl-basic/0.png
+  path: /assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png
 ---
 この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。
 
