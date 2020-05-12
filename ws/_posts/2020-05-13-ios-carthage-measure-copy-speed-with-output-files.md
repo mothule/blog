@@ -9,17 +9,19 @@ image:
 ---
 この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。
 
+なおCarthageのインストールや基礎など詳細は「{% post_link_text 2019-09-15-ios-carthage %}」にまとめてあります。
 
 ## 調査のきっかけ
 
-[Carthage Quick Start](https://github.com/Carthage/Carthage#quick-start)や[Carghage Adding frameworks to an application](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application)には、`Output Files`や`Output File Lists`を設定しろと書かれている。
+[Carthage Quick Start](https://github.com/Carthage/Carthage#quick-start)や[Carghage Adding frameworks to an application](https://github.com/Carthage/Carthage#adding-frameworks-to-an-application)には、`Output Files`や`Output File Lists`を設定しろと書かれています。
 
-しかし、[carthage copy-frameworksのコード](https://github.com/Carthage/Carthage/blob/master/Source/carthage/CopyFrameworks.swift)では使われていない。
+しかし、[carthage copy-frameworksのコード](https://github.com/Carthage/Carthage/blob/master/Source/carthage/CopyFrameworks.swift)では使われていません。
 
-最初はただの更新漏れかと思ったが、調べたら[Pull Request](https://github.com/Carthage/Carthage/pull/2025)を見つけた。
+最初はただの更新漏れかと思ったが、調べたら[Pull Request](https://github.com/Carthage/Carthage/pull/2025)を見つけました。
 
-どうやらWWDCの発表によると、`Output Files`が設定されていると、`Input Files`の変更がなければスクリプトの実行をスキップするらしい。  
-そして、これがビルド時間の短縮に繋がる。
+どうやらWWDCの発表によると、`Output Files`が設定されていると、`Input Files`の変更がなければスクリプトの実行をスキップするらしいです。
+
+つまり**`Output Files`は未設定でも動作上問題はないですが、設定はすることでビルド時間の短縮に繋がる**ようです。
 
 では「どれぐらい違うのか？」を調べようと思いました。
 

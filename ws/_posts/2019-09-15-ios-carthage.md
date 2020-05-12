@@ -249,16 +249,30 @@ drwxr-xr-x  3 mothule  staff     96  9 15 14:31 SwiftyJSON.framework.dSYM
 
 {% page_image -5.png %}
 
-`Run Script`フェイズが作成されるので、中にコマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。
+`Run Script`フェイズが作成されるので、中に`carthage copy-frameworks`コマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。
 
 {% page_image -6.png %}
 
-ちなみにこの `carthage copy-frameworks` を実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。
+`Output Files`はコピー先を指定します。
+
+{% page_image 7.png 50% Carthage_Run_Script_Output_Files %}
+
+ちなみにこの`Output Files`は指定せずとも動作に問題はありません。しかしビルドパフォーマンスに影響します。
+詳しくは「{% post_link_text 2020-05-13-ios-carthage-measure-copy-speed-with-output-files %}」に調査結果をまとめてあります。
+
+
+#### carthage copy-frameworksを忘れるとランタイムエラー
+
+コマンド`carthage copy-frameworks`をビルドフェイズで実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。
 ```
 dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
   Referenced from: /Users/mothule/Library/Developer/CoreSimulator/Devices/1DB7E7C4-D7CD-44BA-B3F9-F66DC4E5EC51/data/Containers/Bundle/Application/6B0FDFCC-9D12-47D5-9B74-B837BE8FC983/UseCarthage.app/UseCarthage
   Reason: image not found
 ```
+
+これは実行環境(実機やシミュレータ)にframeworkが配置されてないことで、動的ロードでファイルが見つからずランタイムエラーになるためです。
+
+
 
 ### まとめて指定も可能
 
