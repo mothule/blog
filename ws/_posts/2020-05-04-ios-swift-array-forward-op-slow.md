@@ -3,7 +3,7 @@ title: SwiftのArrayの前方挿入は遅い
 categories: ios swift
 tags: ios swift
 image:
-  path: /assets/images/2020-05-04-ios-swift-array-forward-op-slow/0.png
+  path: /assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png
 ---
 Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。
 
