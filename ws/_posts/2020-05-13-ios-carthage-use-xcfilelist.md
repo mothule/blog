@@ -37,7 +37,8 @@ Carthageのインストール解説記事には、`xcfilelist`を使った解説
 `Input Files`でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
 `Input File Lists`を使う利点がないと使う気にならないと思います。  
 
-使う利点は、一度`xcfilelist`のパスを指定すれば、`Run Script`の使いにくいUIを使わなくて済みます。
+使う利点は、一度`xcfilelist`のパスを指定すれば、`Run Script`の使いにくいUIを使わなくて済みます。    
+またフレームワークの追加や削除時に`xcodeproj`がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。
 
 ## xcfilelistを用意する
 
