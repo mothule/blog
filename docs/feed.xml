@@ -1,4 +1,100 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-13T03:06:22+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T03:06:05+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-13T04:39:43+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CarthageでInput File Listsにxcfilelistを渡す利点と方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" rel="alternate" type="text/html" title="CarthageでInput File Listsにxcfilelistを渡す利点と方法" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T04:39:30+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;で依存ライブラリを管理すると&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcodeproj&lt;/code&gt;が汚れません。✨&lt;/p&gt;
+
+&lt;p&gt;この記事は&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;の環境を構築する方法と利点について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;の基本や使い方の詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthage公式解説に出てくるxcfilelist&quot;&gt;Carthage公式解説に出てくるxcfilelist&lt;/h2&gt;
+
+&lt;p&gt;Carthageのインストール解説記事には、&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使った解説は見かけません。&lt;br /&gt;
+大抵&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;に直接パスを指定する記事が多いです。&lt;br /&gt;
+しかし、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;Carthageの公式&lt;/a&gt;では&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使っており、むしろそっちがメインにも見えます。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcfilelistの正体&quot;&gt;xcfilelistの正体&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はXcodeのファイル一覧を表すファイル・タイプです。&lt;br /&gt;
+といってもただのテキストファイルです。&lt;br /&gt;
+テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;とするだけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcfilelistを使う場所&quot;&gt;xcfilelistを使う場所&lt;/h2&gt;
+
+&lt;p&gt;公式では英文で&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を見かけますが、これを使う場所がパッと見では分かりません。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使う場所は下の画像の&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File List&lt;/code&gt;です。&lt;br /&gt;
+この中に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildPhaseのCarthage用RunScriptPhase&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;input-file-listsを使う利点&quot;&gt;Input File Listsを使う利点&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;でframeworkのパスを指定するほうが分かりやすいです。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;を使う利点がないと使う気にならないと思います。&lt;/p&gt;
+
+&lt;p&gt;使う利点は、一度&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定すれば、新しくframeworkが増えたり減ったりしても&lt;br /&gt;
+Xcodeプロジェクト(&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcodeproj&lt;/code&gt;)を編集する必要がありません。&lt;/p&gt;
+
+&lt;p&gt;つまり&lt;strong&gt;「コンフリクトを気にしなくてもよくなる」&lt;/strong&gt; ことです。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcfilelistを用意する&quot;&gt;xcfilelistを用意する&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はパスさえ合っていればどこに置いても問題ないですが、&lt;br /&gt;
+他環境でも動くようにまずはgit管理下が必須だと思います。&lt;br /&gt;
+次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら&lt;br /&gt;
+&lt;strong&gt;プロジェクトディレクトリ配下に置くことが最適です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot; width=&quot;50%&quot; alt=&quot;Xcode-Project-Navigator&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;中身は次のように&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;で指定するパスを並べるだけです。
+これを&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;として保存すれば準備は整います。
+ファイル名は何でもいいです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
+$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
+$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
+$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
+$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
+$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
+$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;xcfilelistをinput-file-listsに渡す&quot;&gt;xcfilelistをInput File Listsに渡す&lt;/h2&gt;
+
+&lt;p&gt;Xcodeの&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;用スクリプトフェイズの&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;に先程用意した&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+
+&lt;p&gt;先程の用意した場所であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeのInputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;output-file-listsもxcfilelistを使う&quot;&gt;Output File Listsもxcfilelistを使う&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;も同様に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;として出力パスを列挙しておけば&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定するだけです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;こちらも&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と同じ場所場所であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;で指定するパスは、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot; width=&quot;50%&quot; alt=&quot;XcodeのOutputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;output-file-listsを指定する理由&quot;&gt;Output File Listsを指定する理由&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。&lt;br /&gt;
+なぜ指定するのかは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-measure-copy-speed-with-output-files&quot;&gt;CarthageのビルドフェイズでOutput Files指定による速度調査&lt;/a&gt;&lt;/span&gt;
+」に詳細をまとめてます。&lt;/p&gt;
+
+&lt;h2 id=&quot;後からでも対応できる&quot;&gt;後からでも対応できる&lt;/h2&gt;
+&lt;p&gt;この対応は、プロジェクトが初期段階でも後からでも対応できます。&lt;br /&gt;
+ライブラリが多くても手間はそこまで変わりません。&lt;br /&gt;
+&lt;strong&gt;またチームメンバーが多いほど効果は大きいです。&lt;/strong&gt;&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">xcfilelistで依存ライブラリを管理すると.xcodeprojが汚れません。✨</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" /></entry><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T03:06:05+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
 
 &lt;p&gt;なおCarthageのインストールや基礎など詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
 」にまとめてあります。&lt;/p&gt;
@@ -1250,7 +1346,91 @@ rablの場所を&lt;code class=&quot;highlighter-rouge&quot;&gt;users/show&lt;/c
   &lt;li&gt;日本語記事が少ない&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T22:51:26+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
+&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T21:47:25+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
+
+&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
+
+&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
+  &lt;li&gt;検証コードを実装&lt;/li&gt;
+  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
+  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
+なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
+&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
+仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
+
+&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
+&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
+頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
+毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
+&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
+そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
+
+&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
+&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
+ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
+
+&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
+&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
+単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
+&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
+
+&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
+また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
+  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
+  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
+
+&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
+
+&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
+そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
+新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
+
+&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
+&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/eyecatch.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T22:51:26+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;この記事では、Arrayの内部特性を理解し特性が含むリスクに対して、速度パフォーマンスを測定して何が重い実験した結果をまとめたレポートです。&lt;/strong&gt;&lt;/p&gt;
 
@@ -1510,91 +1690,7 @@ X軸が配列数で、Y軸が処理時間(秒)になります。&lt;/p&gt;
 &lt;p&gt;80バイト程度で1~2万件のデータを扱う時に前方挿入をする処理が多いとスパイクが起きるレベルです。&lt;br /&gt;
 これがECなどで1つの商品情報を扱う場合は更にでかいサイズかと思います。&lt;br /&gt;
 そうなると1万件以下でも重くなるでしょう。&lt;br /&gt;
-追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T21:47:25+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
-
-&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
-
-&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
-  &lt;li&gt;検証コードを実装&lt;/li&gt;
-  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
-  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
-なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
-&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
-仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
-
-&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
-&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
-頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
-毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
-&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
-そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
-
-&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
-&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
-ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
-
-&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
-
-&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
-&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
-単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
-&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
-
-&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
-また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
-  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
-  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
-
-&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
-
-&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
-そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
-新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
-
-&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
-&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/eyecatch.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
+追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
 この2つを使いこなすことは、iOSエンジニアとして重要なことです。&lt;/p&gt;
 
 &lt;p&gt;Swift特有の使い方、つまりイディオムを理解することでSwiftyなコーディングができるようにもなります。&lt;/p&gt;
@@ -2064,363 +2160,4 @@ Disk /dev/disk2 ejected
 &lt;p&gt;一回でも手を動かしてインストールメディアを作成してしまえば、思いの外単純だと思います。
 でもそう何回もインストールメディアを作ることはなく、必要となったときには忘れてしまいます。&lt;/p&gt;
 
-&lt;p&gt;こういうのは、慣れるより探せです。&lt;/p&gt;</content><author><name></name></author><category term="linux" /><category term="mint" /><category term="mac" /><summary type="html">Linux触るならシェルで焼こう</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" /></entry><entry><title type="html">iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg" rel="alternate" type="text/html" title="iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう" /><published>2020-04-27T00:00:00+09:00</published><updated>2020-04-28T01:24:40+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg">&lt;p&gt;&lt;strong&gt;動画は最強の情報伝達手段です&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;iosエンジニアの動画欲しいあるある&quot;&gt;iOSエンジニアの動画欲しいあるある&lt;/h2&gt;
-
-&lt;p&gt;iOSエンジニアがXcodeを使ってxibやstoryboard、SwiftUIで画面作成をしたら次のケースで作成画面を共有します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;デザインレビュー
-    &lt;ul&gt;
-      &lt;li&gt;デザイナーや他エンジニア、POといった他の人に見てもらう&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;説明
-    &lt;ul&gt;
-      &lt;li&gt;他の人に説明するときスマホ画面やPC画面をスクショしてSlackにアップロードする&lt;/li&gt;
-      &lt;li&gt;GitHubのPRやIssueで変更画面や不具合発生中の画面を載せる&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;進捗
-    &lt;ul&gt;
-      &lt;li&gt;お昼や打刻前に進捗として開発中の画面をSlackにアップロードする&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;このとき、静止画より動画の方がより確実に多くの情報を短時間に伝えられます。&lt;/p&gt;
-
-&lt;p&gt;しかし、「動画を撮ろう！」と思っては見たものの…&lt;strong&gt;「無料」で「手軽」&lt;/strong&gt; に録画してアップロードできる環境でないと、有料だと諦めたり、面倒だとたまにしかアップロードしなくなります。&lt;/p&gt;
-
-&lt;p&gt;この記事は、そんな手っ取り早く手軽にPC画面やiPhone画面を録画してアップロードしたいワガママiOSエンジニア向けに&lt;br /&gt;
-&lt;strong&gt;「無料」で「簡単」にiPhone画面やPC画面を録画し、見る側もすぐに再生される軽量な動画の録画環境の構築方法について説明します。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;なおiOSエンジニア限らずAndroidエンジニアもフロントエンドWebエンジニアやデザイナーでも構築できます！&lt;/li&gt;
-  &lt;li&gt;なおMac限定記事となります。Windows, Linux残念！&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;軽量録画環境で必要なもの&quot;&gt;軽量録画環境で必要なもの&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Mac&lt;/li&gt;
-  &lt;li&gt;QuickTime Player.app&lt;/li&gt;
-  &lt;li&gt;ffmpeg&lt;/li&gt;
-  &lt;li&gt;ひと手間かけたシェルスクリプト&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;Mac以外を簡単に説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;quicktime-playerapp&quot;&gt;QuickTime Player.app&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;iPhone画面やPC画面の録画に使います&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Macに付属する動画再生プレイヤーです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.png&quot; width=&quot;240px&quot; alt=&quot;QuickTimePlayerのロゴ&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;違います。&lt;strong&gt;録画機能を備えてます。&lt;/strong&gt; 「プレイヤー」って名前物凄く紛らわしいですね…&lt;/p&gt;
-
-&lt;h3 id=&quot;ffmpeg&quot;&gt;FFmpeg&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;動画の軽量化に使います&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;em&gt;Wikipediaより引用&lt;/em&gt; した説明です。&lt;/p&gt;
-&lt;blockquote&gt;
-  &lt;p&gt;動画と音声を記録・変換・再生するためのフリーソフトウェアです。&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;コマンドラインで使用できる動画と音声の変換として使います。&lt;br /&gt;
-インストール方法は後で説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;ひと手間かけたシェルスクリプト&quot;&gt;ひと手間かけたシェルスクリプト&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;ちょっとした小さく単純なシェルスクリプトファイルです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;これが無くても仕組みは動きますが、あるだけで後で説明する仕組みがスムーズになります。&lt;/p&gt;
-
-&lt;p&gt;非エンジニアの方は「シェル」「スクリプト」って聞くと身構えるかもしれませんが、今回説明するシェルスクリプトは極めて単純で言ってしまえば中身を理解せずとも環境を構築できます。&lt;br /&gt;
-iOSエンジニアの方でシェルについて分からない方は「&lt;span&gt;&lt;a href=&quot;/tools/shellscript/shellscript-basic-for-mobile-enginner&quot;&gt;iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門&lt;/a&gt;&lt;/span&gt;
-」を見て是非ともシェルを理解しましょう。&lt;/p&gt;
-
-&lt;h2 id=&quot;大まかな仕組みについて&quot;&gt;大まかな仕組みについて&lt;/h2&gt;
-&lt;p&gt;ここで環境構築前にざっくりと録画の仕組みについて説明します。&lt;br /&gt;
-大まかな流れとしては次の通りになります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;録画したいiPhoneをUSBで接続&lt;/li&gt;
-  &lt;li&gt;QuickTime Playerで録画&lt;/li&gt;
-  &lt;li&gt;FFmpegで動画を圧縮&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;なんと、たった3工程で済みます。&lt;/p&gt;
-
-&lt;h3 id=&quot;録画したいiphoneをusbで接続&quot;&gt;録画したいiPhoneをUSBで接続&lt;/h3&gt;
-
-&lt;p&gt;キャプチャしたいiPhoneをUSBでMacに接続します。&lt;br /&gt;
-PC画面の場合はこの作業は不要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;quicktime-playerで録画&quot;&gt;QuickTime Playerで録画&lt;/h3&gt;
-
-&lt;p&gt;QuickTime Player.appを立ち上げて録画を開始します。&lt;br /&gt;
-録画終了後は保存して完了です。&lt;/p&gt;
-
-&lt;h3 id=&quot;ffmpegで動画を圧縮&quot;&gt;FFmpegで動画を圧縮&lt;/h3&gt;
-
-&lt;p&gt;保存した動画ファイルは無圧縮で重いのでFFmpegで圧縮します。&lt;br /&gt;
-このときにシェルスクリプトがあると大変便利です。&lt;/p&gt;
-
-&lt;h2 id=&quot;手軽な動画環境を構築する&quot;&gt;手軽な動画環境を構築する&lt;/h2&gt;
-&lt;p&gt;簡単な録画環境を構築するには、事前に仕掛けがあるから動きます。
-&lt;strong&gt;今からその仕掛けを構築します。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;FFmepgをインストール&lt;/li&gt;
-  &lt;li&gt;シェルスクリプトを用意&lt;/li&gt;
-  &lt;li&gt;シェルのパスを通す&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;ffmepgをインストール&quot;&gt;FFmepgをインストール&lt;/h3&gt;
-&lt;p&gt;FFmepgをHomebrewでインストールします。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install ffmpeg
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;インストールが完了したらインストールされたかを確認します。成功してたら次のような結果になるかと思います。(バージョンは時期で異なります）&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ffmpeg
-ffmpeg version 3.3.4 Copyright &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;c&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; 2000-2017 the FFmpeg developers
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;もし異なる場合は下記の可能性を検討してみてください&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;インストールが失敗した&lt;/li&gt;
-  &lt;li&gt;homebrewでインストールしたコマンドのパスが通っていない&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;シェルスクリプトを用意&quot;&gt;シェルスクリプトを用意&lt;/h3&gt;
-
-&lt;p&gt;このシェルスクリプトを説明する前に、前提情報を知っておく必要があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;QuickTime Playerは録画の保存を選ぶと、開かれる保存先は前回保存先になります。&lt;/li&gt;
-  &lt;li&gt;保存のデフォルトファイル名は&lt;code class=&quot;highlighter-rouge&quot;&gt;名称未設定.mov&lt;/code&gt;です。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;このシェルスクリプトは次の動きをします。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;カレントディレクトリを決められた場所に移動します&lt;/li&gt;
-  &lt;li&gt;FFmpegで「名称未設定.mov」を「dest.mp4」にMP4変換します&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;下記はその動きをするシェルスクリプトになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads
-&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; 名称未設定.mov dest.mp4 &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;たったこれだけです。非常に短く単純なシェルスクリプトです。&lt;br /&gt;
-これをファイルとして適当な場所に保存してください。&lt;/p&gt;
-
-&lt;p&gt;ここでは説明便宜上、下記パスに保存します。&lt;br /&gt;
-「&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh/encode_movie.sh&lt;/code&gt;」&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sh&lt;/code&gt;フォルダが無い方は作っておいてください。&lt;/p&gt;
-
-&lt;h4 id=&quot;chmodで実行可能にする&quot;&gt;chmodで実行可能にする&lt;/h4&gt;
-&lt;p&gt;次に保存したシェルスクリプトを誰でも実行可能にするためにchmodで実行権限を編集します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chmod 711 ~/sh/encode_movie.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これで&lt;code class=&quot;highlighter-rouge&quot;&gt;sh&lt;/code&gt;コマンドを使わず実行できます。これをしておかないとやはりスムーズとは言えません。&lt;/p&gt;
-
-&lt;h4 id=&quot;分からない方向け-全部をまとめて用意するシェルコマンド&quot;&gt;分からない方向け: 全部をまとめて用意するシェルコマンド&lt;/h4&gt;
-
-&lt;p&gt;次のシェルコマンドをターミナルにコピペして実行すれば先程説明した内容をまとめてやってくれます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mkdir &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ~/sh
-&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-n&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;#!/bin/bash&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;cd ~/Downloads&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\n\`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;ffmpeg -i 名称未設定.mov dest.mp4 -y&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; ~/sh/encode_movie.sh
-chmod 711 ~/sh/encode_movie.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このシェルコマンドらは&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;自分のホームディレクトリにshディレクトリを作成&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;encode_movie.sh&lt;/code&gt;ファイルを作成&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;encode_movie.sh&lt;/code&gt;の実行権限を変更&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;をやってくれます。&lt;/p&gt;
-
-&lt;h3 id=&quot;シェルのパスを通す&quot;&gt;シェルのパスを通す&lt;/h3&gt;
-&lt;p&gt;用意したシェルスクリプトは、同じ名前と場所で保存していれば「&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh/encode_movie.sh&lt;/code&gt;」にあると思います。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;しかし、このままでは動画を作成後に、スクリプトを呼ぶためにわざわざパスを指定しなければいけません。&lt;/strong&gt;&lt;br /&gt;
-それだと面倒なのでどこのディレクトリからでも呼べるようにパスを通します。&lt;/p&gt;
-
-&lt;p&gt;PATH環境変数に&lt;code class=&quot;highlighter-rouge&quot;&gt;~/sh&lt;/code&gt;のパスを通すことで、ターミナル上からどこでも呼べるようになります。
-ターミナルのデフォルトシェルがbashであれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;.bash_profile&lt;/code&gt;にPATH環境変数にパスを追加する処理を書きます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ vim ~/.bash_profile&lt;/code&gt;で次の処理を追加します。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:~/sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;保存終わったら&lt;code class=&quot;highlighter-rouge&quot;&gt;$ source ~/.bash_profile&lt;/code&gt;でリロードしておきましょう。&lt;/p&gt;
-
-&lt;h2 id=&quot;実際に動画を撮る&quot;&gt;実際に動画を撮る&lt;/h2&gt;
-&lt;p&gt;動画環境は整いました。それでは実際にiPhone画面の録画とMac画面の録画をしてみます。&lt;/p&gt;
-
-&lt;h3 id=&quot;iphoneとmacをusbで接続&quot;&gt;iPhoneとMacをUSBで接続&lt;/h3&gt;
-
-&lt;p&gt;録画したいiPhoneをMacにUSBで接続します。&lt;/p&gt;
-
-&lt;p&gt;もしiPhoneをMacに初めて接続する場合は、次のような確認がiPhoneに表示されるので「信頼」を選んでください。&lt;br /&gt;
-そうしないと、次工程のQuickTime Playerで端末を認識しなくなります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/2.jpg&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/2.jpg&quot; width=&quot;50%&quot; alt=&quot;iPhone信頼確認画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;quicktime-playerappを立ち上げる&quot;&gt;QuickTime Player.appを立ち上げる&lt;/h3&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Spotlight検索&lt;/code&gt;で「QuickTime」と入力すれば見つけられます。&lt;br /&gt;
-起動したらメニューバーからファイル&amp;gt;新規ムービー収録を選びます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規ムービー収録&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;新規ムービー週力を選ぶと、Macやモニターに付属するカメラやiPhone画面の映像が画面に写ります。&lt;br /&gt;
-もしiPhone画面になっていない場合は、ウィンドウ下の赤いボタンの右側を押すと撮影先が並ぶので、そこでiPhoneを選んでください。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/4.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規ムービーの映像ソース選択&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;赤いボタンを押すと、録画が始まります。録画を止める場合はもう一度赤いボタンを押すと終了します。&lt;br /&gt;
-試しに自分のブログを閲覧してるSafariを録画してます。&lt;/p&gt;
-
-&lt;video autoplay=&quot;&quot; loop=&quot;&quot; muted=&quot;&quot; playsinline=&quot;&quot; src=&quot;/assets/videos/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/1.mp4&quot; width=&quot;100%&quot; height=&quot;400px&quot;&gt;うまく読み込めない場合はリロード&lt;/video&gt;
-
-&lt;p&gt;録画が終わると、編集画面になります。&lt;strong&gt;この段階ではまだ保存されていないです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規ムービ収録編集画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;この画面で保存(&lt;code class=&quot;highlighter-rouge&quot;&gt;cmd+s&lt;/code&gt;)を押すと保存先の選択が出ます。&lt;/p&gt;
-
-&lt;p&gt;ここでファイル名はそのままの「&lt;strong&gt;名称未設定.mov&lt;/strong&gt;」にしてください。&lt;br /&gt;
-&lt;strong&gt;ファイル名を変更してしまうと、次工程のシェルスクリプトが動きません。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;また保存先（場所）は「&lt;strong&gt;ダウンロード&lt;/strong&gt;」にしてください。&lt;br /&gt;
-&lt;strong&gt;ここも変更するとシェルスクリプトが動きません。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;つまり保存先を&lt;strong&gt;Donwloads&lt;/strong&gt; に一度しておくことで、この部分は何も気にせず保存するだけになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/6.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayerファイル保存確認&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;ターミナルでシェルスクリプトを実行する&quot;&gt;ターミナルでシェルスクリプトを実行する&lt;/h3&gt;
-
-&lt;p&gt;ターミナルを開いて、保存してパスを通しておいたシェルスクリプトファイルを実行します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;encode_movie.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;パスが通っているので、シェルスクリプトファイル名を指定するだけでいいです。&lt;br /&gt;
-実行すると&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Downloads/dest.mp4&lt;/code&gt;にファイルが作成されます。&lt;/p&gt;
-
-&lt;h2 id=&quot;なぜffmpegが必要なのか&quot;&gt;なぜFFmpegが必要なのか？&lt;/h2&gt;
-&lt;p&gt;FFmpegやそれを実行するシェルスクリプトが必要な理由は、ファイルサイズにあります。&lt;/p&gt;
-
-&lt;p&gt;下記は、QuickTime Playerで作成したファイル「名称未設定.mov」のファイルサイズと&lt;br /&gt;
-FFmpegで圧縮したファイル「dest.mp4」のファイルサイズを比較した表です&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;ファイル名&lt;/th&gt;
-      &lt;th&gt;サイズ&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;名称未設定.mov&lt;/td&gt;
-      &lt;td&gt;28.3MB&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;dest.mp4&lt;/td&gt;
-      &lt;td&gt;2.1MB&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;圧倒的に圧縮したことでサイズが小さくなりました。約1/14です。&lt;/p&gt;
-
-&lt;h3 id=&quot;このファイルサイズが何に影響するのか&quot;&gt;このファイルサイズが何に影響するのか&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;アップロード時間とダウンロード時間に影響します&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;まずSlackにアップロードするのに時間がかかります。これはまだ自分だけにしか影響を与えません。&lt;br /&gt;
-しかし、この動画を見る閲覧者はダウンロードに影響します。&lt;br /&gt;
-Slackで再生ボタンを押してもなかなか再生されなかったり、ストリーミングダウロードが間に合わずカクつきます。&lt;br /&gt;
-またファイルの大きすぎる動画ファイルはサムネが表示されないケースが多いです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;読み手のことや動画で伝えたい目的を考えると、閲覧側のストレスを抑えるのは自然なことです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;mac画面の録画も簡単&quot;&gt;Mac画面の録画も簡単&lt;/h3&gt;
-
-&lt;p&gt;PC画面内のキャプチャも簡単です。
-QuickTime Playerで「&lt;strong&gt;新規画面収録&lt;/strong&gt;」を選ぶだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/7.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規画面収録メニュー&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;新規画面収録を選ぶとキャプチャ領域を選ぶ設定になります。
-全画面まるごとと指定範囲の２タイプが選べます。&lt;/p&gt;
-
-&lt;p&gt;この画像は指定範囲で選んば場合です。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/8.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/8.png&quot; width=&quot;50%&quot; alt=&quot;QuickTimePlayer新規画面収録指定範囲&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;収録を開始&lt;/strong&gt; ボタンを押すことで録画開始になります。&lt;/p&gt;
-
-&lt;p&gt;録画停止は、Macのツールバーにボタンがあります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/9.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/9.png&quot; width=&quot;50px&quot; alt=&quot;QuickTimePlayer新規画面収録停止ボタン&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;もしくはTouch BarのあるMacの場合は、タッチバーにもボタンがあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;githubはmp4はアップロードできない&quot;&gt;GitHubはmp4はアップロードできない&lt;/h2&gt;
-&lt;p&gt;先程説明したのはmp4の動画でした。しかしGitHubではIssueやPRではmp4の動画ファイルをアップロードすることができません。&lt;/p&gt;
-
-&lt;p&gt;しかしgifは対応しています。そしてFFmpegはgif変換も対応しています。&lt;br /&gt;
-なので今度は動画をgifに変換すれば良さそうです。&lt;/p&gt;
-
-&lt;p&gt;そしてその方法は非常に簡単に実現できます。&lt;/p&gt;
-
-&lt;h3 id=&quot;gifに変換するシェルスクリプト&quot;&gt;gifに変換するシェルスクリプト&lt;/h3&gt;
-&lt;p&gt;このシェルスクリプトはQuickTime Playerで作成した動画ファイルに対し、　　
-30FPSのサイズ320でgifファイルを作成します。&lt;/p&gt;
-
-&lt;p&gt;このファイルには一度mp4に変換してからgifに変換しています。　　
-そしてそのmp4に変換する処理は前述で説明したmp4に変換するシェルスクリプト「&lt;code class=&quot;highlighter-rouge&quot;&gt;encode_movie.sh&lt;/code&gt;」を呼んで変換しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/bash&lt;/span&gt;
-
-&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/Downloads
-
-&lt;span class=&quot;nv&quot;&gt;rate&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;30
-&lt;span class=&quot;nv&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;320
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$# &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
-  &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;fi
-
-&lt;/span&gt;sh encode_movie.sh
-&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ffmpeg &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; dest.mp4 &lt;span class=&quot;nt&quot;&gt;-vf&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;scale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$scale&lt;/span&gt;:-1 &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$rate&lt;/span&gt; dest.gif &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;またこのスクリプトは引数でスケールを変更することができます。例えばスケールをデフォルトの倍にする場合は&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;encode_gif.sh 640
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;とすることでスケールが320から640になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;iosエンジニアなら画面共有に慣れよう&quot;&gt;iOSエンジニアなら画面共有に慣れよう&lt;/h2&gt;
-&lt;p&gt;iOSエンジニアは画面デザインがある限り、デザイナーやPOに画面の動きを見せることは非常に多いです。&lt;br /&gt;
-Slackでやり取りを円滑にするために、動画で画面の動き共有が気軽にできる環境は非常にコミュニケーションを円滑に進められます。&lt;/p&gt;
-
-&lt;p&gt;今回説明した内容は、一度環境を構築しておくだけでよくて、その後は特に弄らずともずっと使い続けられます。
-しかもシェルスクリプトの内容自体も非常にシンプルで、長く見ても短く見てもコスパの良い環境です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><category term="ffmpeg" /><category term="quicktime-player" /><category term="mac" /><summary type="html">動画は最強の情報伝達手段です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png" /></entry></feed>
+&lt;p&gt;こういうのは、慣れるより探せです。&lt;/p&gt;</content><author><name></name></author><category term="linux" /><category term="mint" /><category term="mac" /><summary type="html">Linux触るならシェルで焼こう</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" /></entry></feed>

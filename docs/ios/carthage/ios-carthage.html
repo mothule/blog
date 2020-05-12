@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-13T03:06:05+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-13T04:39:22+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -224,6 +224,8 @@
       <li><a href="#フレームワークをリンクする">フレームワークをリンクする</a>
         <ul>
           <li><a href="#carthage-copy-frameworksを忘れるとランタイムエラー">carthage copy-frameworksを忘れるとランタイムエラー</a></li>
+          <li><a href="#input-filesで渡すframeworkのパスが間違ってる場合">Input Filesで渡すframeworkのパスが間違ってる場合</a></li>
+          <li><a href="#embed-contentだとビルドエラーになる">Embed Contentだとビルドエラーになる</a></li>
         </ul>
       </li>
       <li><a href="#まとめて指定も可能">まとめて指定も可能</a></li>
@@ -552,6 +554,30 @@ drwxr-xr-x  3 mothule  staff     96  9 15 14:31 SwiftyJSON.framework.dSYM
 
 <p>これは実行環境(実機やシミュレータ)にframeworkが配置されてないことで、動的ロードでファイルが見つからずランタイムエラーになるためです。</p>
 
+<h4 id="input-filesで渡すframeworkのパスが間違ってる場合">Input Filesで渡すframeworkのパスが間違ってる場合</h4>
+
+<p><code class="highlighter-rouge">carthage copy-frameworks</code>コマンドが走るとき、つまりビルド時に次のようなエラーが表示されます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Could not find framework "&lt;framework name&gt;" at path &lt;wrong framework path&gt;.
+Ensure that the given path is appropriately entered and that your "Input Files" and "Input File Lists" have been entered correctly.
+</code></pre></div></div>
+
+<p>この場合は<code class="highlighter-rouge">Input Files</code>または<code class="highlighter-rouge">Input File Lists</code>で渡してるframeworkのパスが間違っていないか確認してください。</p>
+
+<h4 id="embed-contentだとビルドエラーになる">Embed Contentだとビルドエラーになる</h4>
+
+<p><code class="highlighter-rouge">Target &gt; General &gt; Frameworks, Libraries, and Embedded Content</code>からframeworkを追加すると、デフォルトでは<code class="highlighter-rouge">Embed &amp; Sign</code>になっており、このままビルドすると次のようなビルドエラーが起きます。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Multiple commands produce '.../YOUR-APP-NAME.app/Frameworks/&lt;FRAMEWORK NAME&gt;.framework':
+
+1) Target '&lt;YOUR TARGET NAME&gt;' has copy command from
+'/your/project/path/Carthage/Build/iOS/&lt;FRAMEWORK NAME&gt;.framework' to '.../YOUR-APP-NAME.app/Frameworks/&lt;FRAMEWORK NAME&gt;.framework'
+
+2) That command depends on command in Target '&lt;YOUR TARGET NAME&gt;': script phase “Run Script”
+</code></pre></div></div>
+
+<p>Embedded Frameworkではないので、<code class="highlighter-rouge">Do Not Embed</code>に直してください。</p>
+
 <h3 id="まとめて指定も可能">まとめて指定も可能</h3>
 
 <p>Inputfilesに各フレームワーク毎にパス追記せずとも、xcfilelistという拡張子で指定することで一律管理も可能です。
@@ -774,6 +800,15 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
             
             
             
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage-use-xcfilelist">CarthageでInput File Listsにxcfilelistを渡す利点と方法</a></h3></li>
+                    
+                    
+                
 
             
                 

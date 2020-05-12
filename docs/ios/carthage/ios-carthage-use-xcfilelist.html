@@ -11,33 +11,33 @@
 
 
 
-  <title>【初心者向け】UITableViewのヘッダーをカスタマイズする - もちゅろぐ</title>
+  <title>CarthageでInput File Listsにxcfilelistを渡す利点と方法 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="【初心者向け】UITableViewのヘッダーをカスタマイズする" />
+<meta property="og:title" content="CarthageでInput File Listsにxcfilelistを渡す利点と方法" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。" />
-<meta property="og:description" content="iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize" />
-<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize" />
+<meta name="description" content="CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。" />
+<meta property="og:description" content="CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" />
+<meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-09-29T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-13T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize","headline":"【初心者向け】UITableViewのヘッダーをカスタマイズする","dateModified":"2020-04-16T03:52:12+09:00","datePublished":"2019-09-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize"},"image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png","description":"iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist","headline":"CarthageでInput File Listsにxcfilelistを渡す利点と方法","dateModified":"2020-05-13T04:39:30+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist"},"image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png","description":"CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="【初心者向け】UITableViewのヘッダーをカスタマイズする">
-<meta name="twitter:description" content="iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png">
+<meta name="twitter:title" content="CarthageでInput File Listsにxcfilelistを渡す利点と方法">
+<meta name="twitter:description" content="CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -137,8 +137,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#uitableview" itemprop="item">
-              <span itemprop="name">UITableView</span>
+            <a href="/tags#carthage" itemprop="item">
+              <span itemprop="name">Carthage</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -147,7 +147,7 @@
         
         
           <li>
-            【初心者向け】UITableViewのヘッダーをカスタマイズする
+            CarthageでInput File Listsにxcfilelistを渡す利点と方法
           </li>
         
       
@@ -159,12 +159,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png" alt="【初心者向け】UITableViewのヘッダーをカスタマイズする">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" alt="CarthageでInput File Listsにxcfilelistを渡す利点と方法">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>【初心者向け】UITableViewのヘッダーをカスタマイズする</h1>
+    <h1>CarthageでInput File Listsにxcfilelistを渡す利点と方法</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -172,12 +172,12 @@
           
             <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
           
-            <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
+            <li class="list-inline-item"><a href="/tags#carthage">Carthage</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-9-29</time></span>
+        <span"><time class="post-date">2020-5-13</time></span>
       </div>
     </div>
   </header>
@@ -185,139 +185,121 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#uitableviewのカスタムヘッダー完成イメージ">UITableViewのカスタムヘッダー完成イメージ</a></li>
-  <li><a href="#uitableviewのセクションヘッダーとは">UITableViewのセクションヘッダーとは</a></li>
-  <li><a href="#セクションヘッダーとなるuitableviewheaderfooterviewを用意する">セクションヘッダーとなるUITableViewHeaderFooterViewを用意する</a></li>
-  <li><a href="#セクションヘッダーのレイアウトをxibで作成">セクションヘッダーのレイアウトをxibで作成</a></li>
-  <li><a href="#セクションヘッダーxibをuitableviewに登録する">セクションヘッダーxibをUITableViewに登録する</a></li>
-  <li><a href="#セクションヘッダーの高さを変更する">セクションヘッダーの高さを変更する</a></li>
-  <li><a href="#セクションヘッダーを独自ビューで生成する">セクションヘッダーを独自ビューで生成する</a></li>
-  <li><a href="#セクションフッターも同様に可能">セクションフッターも同様に可能</a></li>
+  <li><a href="#carthage公式解説に出てくるxcfilelist">Carthage公式解説に出てくるxcfilelist</a>
+    <ul>
+      <li><a href="#xcfilelistの正体">xcfilelistの正体</a></li>
+    </ul>
+  </li>
+  <li><a href="#xcfilelistを使う場所">xcfilelistを使う場所</a></li>
+  <li><a href="#input-file-listsを使う利点">Input File Listsを使う利点</a></li>
+  <li><a href="#xcfilelistを用意する">xcfilelistを用意する</a></li>
+  <li><a href="#xcfilelistをinput-file-listsに渡す">xcfilelistをInput File Listsに渡す</a></li>
+  <li><a href="#output-file-listsもxcfilelistを使う">Output File Listsもxcfilelistを使う</a>
+    <ul>
+      <li><a href="#output-file-listsを指定する理由">Output File Listsを指定する理由</a></li>
+    </ul>
+  </li>
+  <li><a href="#後からでも対応できる">後からでも対応できる</a></li>
 </ul>
   </div>
   <section>
-  <p>UITableViewのヘッダーとはセクション毎の上下表示されるSectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のことを指しこれらはカスタマイズ可能です。シンプルなカスタマイズであれば<code class="highlighter-rouge">UITableDataSource</code>の<code class="highlighter-rouge">titleForHeaderInSection</code>などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は<code class="highlighter-rouge">UITableViewDelegate</code>を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。</p>
+  <p><code class="highlighter-rouge">xcfilelist</code>で依存ライブラリを管理すると<code class="highlighter-rouge">.xcodeproj</code>が汚れません。✨</p>
 
-<p>もし基本的なセクションヘッダーの変更であれば、「<span><a href="/ios/uitableview/ios-uitableview-section-basic">【初心者向け】UITableViewのSection(セクション)の使い方</a></span>
-」の記事を見てください。</p>
+<p>この記事は<code class="highlighter-rouge">xcfilelist</code>を使って<code class="highlighter-rouge">Carthage</code>の環境を構築する方法と利点について説明します。</p>
 
-<h2 id="uitableviewのカスタムヘッダー完成イメージ">UITableViewのカスタムヘッダー完成イメージ</h2>
-<p>リソースは適当に用意したものなので見た目としては酷いですが、機能は満たしてあります。</p>
+<p><code class="highlighter-rouge">Carghage</code>の基本や使い方の詳細は「<span><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></span>
+」にまとめてあります。</p>
 
-<video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2019-09-29-ios-uitableview-section-header-customize-1.mp4" width="100%" height="400px">うまく読み込めない場合はリロード</video>
+<h2 id="carthage公式解説に出てくるxcfilelist">Carthage公式解説に出てくるxcfilelist</h2>
 
-<h2 id="uitableviewのセクションヘッダーとは">UITableViewのセクションヘッダーとは</h2>
-<p>セクションヘッダーの定義元には次のようなコメントがあります。</p>
+<p>Carthageのインストール解説記事には、<code class="highlighter-rouge">xcfilelist</code>を使った解説は見かけません。<br />
+大抵<code class="highlighter-rouge">Input Files</code>に直接パスを指定する記事が多いです。<br />
+しかし、<a href="https://github.com/Carthage/Carthage">Carthageの公式</a>では<code class="highlighter-rouge">xcfilelist</code>を使っており、むしろそっちがメインにも見えます。</p>
 
-<blockquote>
-  <p>fixed font style. use custom view (UILabel) if you want something different</p>
-</blockquote>
+<h3 id="xcfilelistの正体">xcfilelistの正体</h3>
 
-<p>つまり、この方法ではフォントは固定で、もしカスタマイズしたい場合は、UILabelを使います。
-これを実装するには、<code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -&gt; UIView?</code> を実装します。<br />
-なぜ急に<code class="highlighter-rouge">delegate</code>？ と多少違和感を感じますが、少なくとも<code class="highlighter-rouge">DataSource</code>ではないと思うと多少疑念が和らぎます。</p>
+<p><code class="highlighter-rouge">xcfilelist</code>はXcodeのファイル一覧を表すファイル・タイプです。<br />
+といってもただのテキストファイルです。<br />
+テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を<code class="highlighter-rouge">.xcfilelist</code>とするだけです。</p>
 
-<h2 id="セクションヘッダーとなるuitableviewheaderfooterviewを用意する">セクションヘッダーとなるUITableViewHeaderFooterViewを用意する</h2>
+<h2 id="xcfilelistを使う場所">xcfilelistを使う場所</h2>
 
-<p>レイアウトは今回は画像とラベル１つずつ使おうと思います。なので次のようなコードになります。</p>
+<p>公式では英文で<code class="highlighter-rouge">xcfilelist</code>を見かけますが、これを使う場所がパッと見では分かりません。<br />
+<code class="highlighter-rouge">xcfilelist</code>を使う場所は下の画像の<code class="highlighter-rouge">Input File Lists</code>と<code class="highlighter-rouge">Output File List</code>です。<br />
+この中に<code class="highlighter-rouge">xcfilelist</code>のパスを指定します。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">HeaderView</span><span class="p">:</span> <span class="kt">UITableViewHeaderFooterView</span> <span class="p">{</span>
-    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">imageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="o">!</span>
-    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">titleLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="o">!</span>
+<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png" width="100%" alt="XcodeBuildPhaseのCarthage用RunScriptPhase" /></a></p>
 
-    <span class="kd">func</span> <span class="nf">setup</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{</span>
-        <span class="n">imageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">image</span>
-        <span class="n">titleLabel</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="n">title</span>
-    <span class="p">}</span>
-<span class="p">}</span>
+<h2 id="input-file-listsを使う利点">Input File Listsを使う利点</h2>
+
+<p><code class="highlighter-rouge">Input Files</code>でframeworkのパスを指定するほうが分かりやすいです。<br />
+<code class="highlighter-rouge">Input File Lists</code>を使う利点がないと使う気にならないと思います。</p>
+
+<p>使う利点は、一度<code class="highlighter-rouge">xcfilelist</code>のパスを指定すれば、新しくframeworkが増えたり減ったりしても<br />
+Xcodeプロジェクト(<code class="highlighter-rouge">.xcodeproj</code>)を編集する必要がありません。</p>
+
+<p>つまり<strong>「コンフリクトを気にしなくてもよくなる」</strong> ことです。</p>
+
+<h2 id="xcfilelistを用意する">xcfilelistを用意する</h2>
+
+<p><code class="highlighter-rouge">xcfilelist</code>はパスさえ合っていればどこに置いても問題ないですが、<br />
+他環境でも動くようにまずはgit管理下が必須だと思います。<br />
+次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら<br />
+<strong>プロジェクトディレクトリ配下に置くことが最適です。</strong></p>
+
+<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png" width="50%" alt="Xcode-Project-Navigator" /></a></p>
+
+<p>中身は次のように<code class="highlighter-rouge">Input Files</code>で指定するパスを並べるだけです。
+これを<code class="highlighter-rouge">.xcfilelist</code>として保存すれば準備は整います。
+ファイル名は何でもいいです。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
+$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
+$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
+$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
+$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
+$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
+$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
 </code></pre></div></div>
 
-<h2 id="セクションヘッダーのレイアウトをxibで作成">セクションヘッダーのレイアウトをxibで作成</h2>
+<h2 id="xcfilelistをinput-file-listsに渡す">xcfilelistをInput File Listsに渡す</h2>
 
-<p>次にxibでレイアウトを用意します。</p>
+<p>Xcodeの<code class="highlighter-rouge">Build Phases</code>の<code class="highlighter-rouge">Carthage</code>用スクリプトフェイズの<code class="highlighter-rouge">Input File Lists</code>に先程用意した<code class="highlighter-rouge">.xcfilelist</code>のパスを指定します。</p>
 
-<p>デフォルトではiPhoneサイズのViewになっており変更もできないので、下記画像のように状態を変更します。</p>
+<p>先程の用意した場所であれば、<code class="highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist</code>になります。</p>
 
-<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-1.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-1.png" width="514px" alt="" /></a></p>
+<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png" width="100%" alt="XcodeのInputFileLists" /></a></p>
 
-<p>これで角をドラッグすることでサイズ変更が可能となります。<br />
-またバッテリーアイコンなど余計なアイコンもでなくなります。<br />
-ホームバーについては消す方法がなかったです。</p>
+<h2 id="output-file-listsもxcfilelistを使う">Output File Listsもxcfilelistを使う</h2>
 
-<p>レイアウトは今回は画像とラベル１つずつ次のように配置しました。</p>
+<p><code class="highlighter-rouge">Output File Lists</code>も同様に<code class="highlighter-rouge">xcfilelist</code>として出力パスを列挙しておけば<code class="highlighter-rouge">xcfilelist</code>のパスを指定するだけです。</p>
 
-<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-2.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-2.png" width="100%" alt="" /></a></p>
-
-<p>制御クラスは先程作成したクラスを紐付けます。</p>
-
-<p><a href="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png"><img src="/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize-3.png" width="506px" alt="" /></a></p>
-
-<h2 id="セクションヘッダーxibをuitableviewに登録する">セクションヘッダーxibをUITableViewに登録する</h2>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
-  <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
-  <span class="k">let</span> <span class="nv">nib</span> <span class="o">=</span> <span class="kt">UINib</span><span class="p">(</span><span class="nv">nibName</span><span class="p">:</span> <span class="s">"HeaderView"</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
-  <span class="n">tableView</span><span class="o">.</span><span class="nf">register</span><span class="p">(</span><span class="n">nib</span><span class="p">,</span> <span class="nv">forHeaderFooterViewReuseIdentifier</span><span class="p">:</span> <span class="s">"HeaderView"</span><span class="p">)</span>
-  <span class="c1">// ...</span>
-<span class="p">}</span>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
 </code></pre></div></div>
 
-<h2 id="セクションヘッダーの高さを変更する">セクションヘッダーの高さを変更する</h2>
+<p>こちらも<code class="highlighter-rouge">Input File Lists</code>と同じ場所場所であれば<code class="highlighter-rouge">Output File Lists</code>で指定するパスは、<code class="highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist</code>になります。</p>
 
-<p>デフォルトではセクションヘッダーも高さが決まっているので変えておかないと小さいです。
-変更方法は <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">heightForHeaderInSection</code> でセクション単位で変更する方法と、<br />
-<code class="highlighter-rouge">UITableView.sectionHeaderHeight</code> で一律変更する方法です。</p>
+<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png" width="50%" alt="XcodeのOutputFileLists" /></a></p>
 
-<p>今回は一律でサイズは予め分かっているので固定値にします。<code class="highlighter-rouge">delegate</code>や<code class="highlighter-rouge">dataSource</code>の設定の下あたりに置いときます。</p>
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="n">sectionHeaderHeight</span> <span class="o">=</span> <span class="mi">88</span>
-</code></pre></div></div>
+<h3 id="output-file-listsを指定する理由">Output File Listsを指定する理由</h3>
+<p><code class="highlighter-rouge">Output Files</code>や<code class="highlighter-rouge">Output File Lists</code>でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。<br />
+なぜ指定するのかは「<span><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></span>
+」に詳細をまとめてます。</p>
 
-<h2 id="セクションヘッダーを独自ビューで生成する">セクションヘッダーを独自ビューで生成する</h2>
-
-<p>ではパーツの準備ができたので、実際のそのパーツを組み込みます。</p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDelegate</span> <span class="p">{</span>
-    <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">viewForHeaderInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UIView</span><span class="p">?</span> <span class="p">{</span>
-        <span class="k">let</span> <span class="nv">view</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableHeaderFooterView</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"HeaderView"</span><span class="p">)</span>
-        <span class="k">if</span> <span class="k">let</span> <span class="nv">headerView</span> <span class="o">=</span> <span class="n">view</span> <span class="k">as?</span> <span class="kt">HeaderView</span> <span class="p">{</span>
-            <span class="n">headerView</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon2"</span><span class="p">)</span> <span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"Hoge"</span><span class="p">)</span>
-        <span class="p">}</span>
-        <span class="k">return</span> <span class="n">view</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><code class="highlighter-rouge">dequeueReusableHeaderFooterView</code> を使ってID指定で取り出します。<br />
-注意点としては、メソッド名に書いてるようにヘッダーとフッター両方が取れます。<br />
-実装によっては判別を行う必要があります。</p>
-
-<p>なお他のコードはただのテーブル表示なので省略します。</p>
-
-<p>もしUITableViewの使い方に関しては、こちらの記事をどうぞ。</p>
-
-<div class="link-container">
-  <a href="/ios/uitableview/ios-uitableview-basic">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>初心者向けにiOSのUITableViewの基本的な使い方について説明します。
-この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。
-
-</span>
-      </div>
-    </div>
-  </a>
-</div>
-
-<h2 id="セクションフッターも同様に可能">セクションフッターも同様に可能</h2>
-
-<p>セクションフッターもヘッダー同様に追加することが可能です。
-変更点は、呼び出すメソッドが <code class="highlighter-rouge">tableView(_:viewForFooterInSection:) -&gt; UIView?</code>になります。</p>
+<h2 id="後からでも対応できる">後からでも対応できる</h2>
+<p>この対応は、プロジェクトが初期段階でも後からでも対応できます。<br />
+ライブラリが多くても手間はそこまで変わりません。<br />
+<strong>またチームメンバーが多いほど効果は大きいです。</strong></p>
 
   </section>
 
@@ -352,17 +334,7 @@
                 
                 
                 
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-cell-layout-update">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</a></h3></li>
+                    <li><h3><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></h3></li>
                     
                     
                 
@@ -556,7 +528,172 @@
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></h3></li>
                     
                     
                 
@@ -575,28 +712,223 @@
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></h3></li>
-                    
-                    
+
+            
+                
+                
                 
 
             
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></h3></li>
-                    
-                    
+
+            
+                
+                
                 
 
             
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a></h3></li>
-                    
-                    
-                        
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
         </div>
     </ul>
 </div>
