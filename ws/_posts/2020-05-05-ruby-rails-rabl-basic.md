@@ -1,5 +1,5 @@
 ---
-title: rablの使い方を丁寧に説明
+title: RABLの使い方を丁寧に説明
 description: Railsのビューテンプレートエンジンにも使われるrablの導入やDSLの書き方であるnode,object,collection,attributes,attribute,child,glue,extends,cacheについて説明します。
 categories: ruby rails
 tags: ruby rails
