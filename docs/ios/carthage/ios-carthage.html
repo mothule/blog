@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-12T23:34:28+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-13T03:06:05+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -221,7 +221,11 @@
         </ul>
       </li>
       <li><a href="#プロジェクトにフレームワークをリンクする">プロジェクトにフレームワークをリンクする</a></li>
-      <li><a href="#フレームワークをリンクする">フレームワークをリンクする</a></li>
+      <li><a href="#フレームワークをリンクする">フレームワークをリンクする</a>
+        <ul>
+          <li><a href="#carthage-copy-frameworksを忘れるとランタイムエラー">carthage copy-frameworksを忘れるとランタイムエラー</a></li>
+        </ul>
+      </li>
       <li><a href="#まとめて指定も可能">まとめて指定も可能</a></li>
     </ul>
   </li>
@@ -526,15 +530,27 @@ drwxr-xr-x  3 mothule  staff     96  9 15 14:31 SwiftyJSON.framework.dSYM
 
 <p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png" width="100%" alt="" /></a></p>
 
-<p><code class="highlighter-rouge">Run Script</code>フェイズが作成されるので、中にコマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。</p>
+<p><code class="highlighter-rouge">Run Script</code>フェイズが作成されるので、中に<code class="highlighter-rouge">carthage copy-frameworks</code>コマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。</p>
 
 <p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png" width="100%" alt="" /></a></p>
 
-<p>ちなみにこの <code class="highlighter-rouge">carthage copy-frameworks</code> を実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。</p>
+<p><code class="highlighter-rouge">Output Files</code>はコピー先を指定します。</p>
+
+<p><a href="/assets/images/2019-09-15-ios-carthage/7.png"><img src="/assets/images/2019-09-15-ios-carthage/7.png" width="50%" alt="Carthage_Run_Script_Output_Files" /></a></p>
+
+<p>ちなみにこの<code class="highlighter-rouge">Output Files</code>は指定せずとも動作に問題はありません。しかしビルドパフォーマンスに影響します。
+詳しくは「<span><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></span>
+」に調査結果をまとめてあります。</p>
+
+<h4 id="carthage-copy-frameworksを忘れるとランタイムエラー">carthage copy-frameworksを忘れるとランタイムエラー</h4>
+
+<p>コマンド<code class="highlighter-rouge">carthage copy-frameworks</code>をビルドフェイズで実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
   Referenced from: /Users/mothule/Library/Developer/CoreSimulator/Devices/1DB7E7C4-D7CD-44BA-B3F9-F66DC4E5EC51/data/Containers/Bundle/Application/6B0FDFCC-9D12-47D5-9B74-B837BE8FC983/UseCarthage.app/UseCarthage
   Reason: image not found
 </code></pre></div></div>
+
+<p>これは実行環境(実機やシミュレータ)にframeworkが配置されてないことで、動的ロードでファイルが見つからずランタイムエラーになるためです。</p>
 
 <h3 id="まとめて指定も可能">まとめて指定も可能</h3>
 
@@ -758,6 +774,15 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
             
             
             
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></h3></li>
+                    
+                    
+                
 
             
                 

@@ -1,4 +1,134 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-12T23:34:39+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">setNeedsLayoutやlayoutSubviewsなどの役割を整理する</title><link href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" rel="alternate" type="text/html" title="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" /><published>2020-05-12T00:00:00+09:00</published><updated>2020-05-12T05:47:47+09:00</updated><id>https://blog.mothule.com/ios/ios-ui-constraint-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-ui-constraint-layout-update">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;はビュー位置すぐ分かって便利。&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;は呼んだらいけない。&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;はパフォーマンス良し。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-13T03:06:22+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T03:06:05+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
+
+&lt;p&gt;なおCarthageのインストールや基礎など詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;調査のきっかけ&quot;&gt;調査のきっかけ&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/Carthage/Carthage#quick-start&quot;&gt;Carthage Quick Start&lt;/a&gt;や&lt;a href=&quot;https://github.com/Carthage/Carthage#adding-frameworks-to-an-application&quot;&gt;Carghage Adding frameworks to an application&lt;/a&gt;には、&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;を設定しろと書かれています。&lt;/p&gt;
+
+&lt;p&gt;しかし、&lt;a href=&quot;https://github.com/Carthage/Carthage/blob/master/Source/carthage/CopyFrameworks.swift&quot;&gt;carthage copy-frameworksのコード&lt;/a&gt;では使われていません。&lt;/p&gt;
+
+&lt;p&gt;最初はただの更新漏れかと思ったが、調べたら&lt;a href=&quot;https://github.com/Carthage/Carthage/pull/2025&quot;&gt;Pull Request&lt;/a&gt;を見つけました。&lt;/p&gt;
+
+&lt;p&gt;どうやらWWDCの発表によると、&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;が設定されていると、&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;の変更がなければスクリプトの実行をスキップするらしいです。&lt;/p&gt;
+
+&lt;p&gt;つまり&lt;strong&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;は未設定でも動作上問題はないですが、設定はすることでビルド時間の短縮に繋がる&lt;/strong&gt;ようです。&lt;/p&gt;
+
+&lt;p&gt;では「どれぐらい違うのか？」を調べようと思いました。&lt;/p&gt;
+
+&lt;p&gt;小さな差分でも、開発では何十回もビルドを走らせます。&lt;br /&gt;
+トータルタイムでいくと効果は侮れません。&lt;/p&gt;
+
+&lt;h2 id=&quot;調査方法&quot;&gt;調査方法&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;プロジェクトは新規プロジェクトの初期状態＋Carthage&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;の「あり」「なし」それぞれのビルド時間を10回ずつ測定&lt;/li&gt;
+  &lt;li&gt;ビルドを走らせる前に適当なソースファイルを1つ弄ってから実行する&lt;/li&gt;
+  &lt;li&gt;ビルド時間はXcodeのPreferences(ShowBuildOperationDuration)を使う&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;フレームワークのコピー処理の有無ということで、&lt;em&gt;Cartfile&lt;/em&gt; はそれっぽい数7個用意。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;github &quot;AFNetworking/AFNetworking&quot;
+github &quot;suzuki-0000/SKPhotoBrowser&quot;
+github &quot;SVProgressHUD/SVProgressHUD&quot;
+github &quot;SwiftyJSON/SwiftyJSON&quot;
+github &quot;SDWebImage/SDWebImage&quot;
+github &quot;payjp/payjp-ios&quot;
+github &quot;adjust/ios_sdk&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;測定結果&quot;&gt;測定結果&lt;/h2&gt;
+
+&lt;p&gt;次の表は調査方法に基づいた調査結果です。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;#&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;なし&lt;/td&gt;
+      &lt;td&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;あり&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1&lt;/td&gt;
+      &lt;td&gt;2.300&lt;/td&gt;
+      &lt;td&gt;1.569&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;2&lt;/td&gt;
+      &lt;td&gt;2.521&lt;/td&gt;
+      &lt;td&gt;1.427&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;3&lt;/td&gt;
+      &lt;td&gt;2.229&lt;/td&gt;
+      &lt;td&gt;1.455&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;4&lt;/td&gt;
+      &lt;td&gt;1.867&lt;/td&gt;
+      &lt;td&gt;1.493&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;5&lt;/td&gt;
+      &lt;td&gt;2.516&lt;/td&gt;
+      &lt;td&gt;1.343&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;6&lt;/td&gt;
+      &lt;td&gt;2.364&lt;/td&gt;
+      &lt;td&gt;1.710&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;7&lt;/td&gt;
+      &lt;td&gt;2.158&lt;/td&gt;
+      &lt;td&gt;1.568&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;8&lt;/td&gt;
+      &lt;td&gt;2.360&lt;/td&gt;
+      &lt;td&gt;1.467&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;9&lt;/td&gt;
+      &lt;td&gt;2.123&lt;/td&gt;
+      &lt;td&gt;1.575&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;10&lt;/td&gt;
+      &lt;td&gt;2.243&lt;/td&gt;
+      &lt;td&gt;1.479&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Avg&lt;/td&gt;
+      &lt;td&gt;2.2681&lt;/td&gt;
+      &lt;td&gt;1.5086&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;平均値の差分は0.7595秒つまり34%短縮しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;感想&quot;&gt;感想&lt;/h2&gt;
+
+&lt;p&gt;想定以上の効果がありました。&lt;br /&gt;
+調査中も違いを体感で分かるほどです。&lt;br /&gt;
+ワンテンポ違いました。&lt;/p&gt;
+
+&lt;p&gt;しかし、仮に仕事で15分おきに1回ビルドを走らせてるとした場合、&lt;br /&gt;
+9時間 x 4回 * 0.7595秒 = 27.342秒の違いが出ます。&lt;br /&gt;
+大したことないですね…&lt;br /&gt;
+でも短時間に何度もビルドを走らせる状況ではチリツモ効果は出てると予想します。&lt;/p&gt;
+
+&lt;p&gt;なお、このパフォーマンスは、Cartfile管理下のライブラリ数とライブラリ規模に依存します。&lt;/p&gt;
+
+&lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;一定のパフォーマンス効果はある&lt;/li&gt;
+  &lt;li&gt;おとなしく設定したほうがいい&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" /></entry><entry><title type="html">setNeedsLayoutやlayoutSubviewsなどの役割を整理する</title><link href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" rel="alternate" type="text/html" title="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" /><published>2020-05-12T00:00:00+09:00</published><updated>2020-05-12T05:47:47+09:00</updated><id>https://blog.mothule.com/ios/ios-ui-constraint-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-ui-constraint-layout-update">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;はビュー位置すぐ分かって便利。&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;は呼んだらいけない。&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;はパフォーマンス良し。&lt;/p&gt;
 
 &lt;p&gt;ビュー周りをコーディング中にUIが反映されない不具合に遭遇したら、&lt;br /&gt;
 「ビューが反映されていない。とりあえず可能性を潰すために&lt;code class=&quot;highlighter-rouge&quot;&gt;Constraint&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Layout&lt;/code&gt;を更新」&lt;br /&gt;
@@ -1120,91 +1250,7 @@ rablの場所を&lt;code class=&quot;highlighter-rouge&quot;&gt;users/show&lt;/c
   &lt;li&gt;日本語記事が少ない&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T21:47:25+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
-
-&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
-
-&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
-  &lt;li&gt;検証コードを実装&lt;/li&gt;
-  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
-  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
-なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
-&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
-仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
-
-&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
-&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
-頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
-毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
-&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
-そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
-
-&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
-&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
-ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
-
-&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
-
-&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
-&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
-単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
-&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
-
-&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
-また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
-  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
-  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
-
-&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
-
-&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
-そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
-新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
-
-&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
-&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/eyecatch.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T22:51:26+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
+&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T22:51:26+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
 
 &lt;p&gt;&lt;strong&gt;この記事では、Arrayの内部特性を理解し特性が含むリスクに対して、速度パフォーマンスを測定して何が重い実験した結果をまとめたレポートです。&lt;/strong&gt;&lt;/p&gt;
 
@@ -1464,7 +1510,91 @@ X軸が配列数で、Y軸が処理時間(秒)になります。&lt;/p&gt;
 &lt;p&gt;80バイト程度で1~2万件のデータを扱う時に前方挿入をする処理が多いとスパイクが起きるレベルです。&lt;br /&gt;
 これがECなどで1つの商品情報を扱う場合は更にでかいサイズかと思います。&lt;br /&gt;
 そうなると1万件以下でも重くなるでしょう。&lt;br /&gt;
-追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
+追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T21:47:25+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
+
+&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
+
+&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
+  &lt;li&gt;検証コードを実装&lt;/li&gt;
+  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
+  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
+  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
+&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
+なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
+&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
+&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
+仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
+
+&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
+&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
+頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
+毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
+&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
+そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
+
+&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
+&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
+ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
+
+&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
+&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
+単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
+&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
+
+&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
+また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
+&lt;ul&gt;
+  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
+  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
+  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
+
+&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
+
+&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
+そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
+新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
+
+&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
+&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/eyecatch.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
 この2つを使いこなすことは、iOSエンジニアとして重要なことです。&lt;/p&gt;
 
 &lt;p&gt;Swift特有の使い方、つまりイディオムを理解することでSwiftyなコーディングができるようにもなります。&lt;/p&gt;
@@ -2293,340 +2423,4 @@ QuickTime Playerで「&lt;strong&gt;新規画面収録&lt;/strong&gt;」を選�
 Slackでやり取りを円滑にするために、動画で画面の動き共有が気軽にできる環境は非常にコミュニケーションを円滑に進められます。&lt;/p&gt;
 
 &lt;p&gt;今回説明した内容は、一度環境を構築しておくだけでよくて、その後は特に弄らずともずっと使い続けられます。
-しかもシェルスクリプトの内容自体も非常にシンプルで、長く見ても短く見てもコスパの良い環境です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><category term="ffmpeg" /><category term="quicktime-player" /><category term="mac" /><summary type="html">動画は最強の情報伝達手段です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png" /></entry><entry><title type="html">crontabの書き方や確認、仕組みや落とし穴を理解する</title><link href="https://blog.mothule.com/tools/how-to-use-cron" rel="alternate" type="text/html" title="crontabの書き方や確認、仕組みや落とし穴を理解する" /><published>2020-04-26T00:00:00+09:00</published><updated>2020-04-26T07:55:19+09:00</updated><id>https://blog.mothule.com/tools/how-to-use-cron</id><content type="html" xml:base="https://blog.mothule.com/tools/how-to-use-cron">&lt;p&gt;定期実行といえばcron、それらスケジュールを制御するコマンドがcrontabです。&lt;/p&gt;
-
-&lt;p&gt;でも、たまにしか触らないのでスケジュールの書き方をよく忘れます。&lt;br /&gt;
-それどころかコマンドの使い方すら忘れるほど触れない時期が長いコマンドですね。&lt;br /&gt;
-そして「cronは定期実行」というコマンドとしては比較的理解しやすい役割をもつため、きちんと仕組みについて理解せずとも使えたりします。&lt;/p&gt;
-
-&lt;p&gt;この記事では書き方や今登録されているスケジュールの確認方法だけでなく、そもそもの動作仕組みや慣れてないとよくハマる落とし穴について、普段のメモ的な確認から基礎理解までまとめました。&lt;/p&gt;
-
-&lt;h2 id=&quot;cronとcrontabの違い&quot;&gt;cronとcrontabの違い&lt;/h2&gt;
-
-&lt;p&gt;cron、crontab、crontabファイルと似た言葉があるので、まずは超ざっくり用語整理します。&lt;/p&gt;
-
-&lt;h3 id=&quot;cronとは&quot;&gt;cronとは？&lt;/h3&gt;
-&lt;p&gt;crontabにスケジュールされたコマンドを実行する&lt;strong&gt;デーモン&lt;/strong&gt;です。&lt;/p&gt;
-
-&lt;h3 id=&quot;crontabとは&quot;&gt;crontabとは？&lt;/h3&gt;
-&lt;p&gt;個々のユーザのcrontabファイルをメンテナンスする&lt;strong&gt;コマンド&lt;/strong&gt;です。&lt;/p&gt;
-
-&lt;h3 id=&quot;crontabファイルとは&quot;&gt;crontabファイルとは？&lt;/h3&gt;
-&lt;p&gt;crontabコマンドによって作成された&lt;strong&gt;ファイル&lt;/strong&gt;です。&lt;br /&gt;
-中身はcronが解釈可能な記法で記載されたスケジュールが並んでいます。&lt;/p&gt;
-
-&lt;h4 id=&quot;crontabファイルを覗いてみる&quot;&gt;crontabファイルを覗いてみる&lt;/h4&gt;
-&lt;p&gt;実際ファイルを覗いてみるとこんな感じです。&lt;code class=&quot;highlighter-rouge&quot;&gt;#&lt;/code&gt;はコメント行です。&lt;br /&gt;
-コメントに書いてるように&lt;strong&gt;このファイルを直接編集してはいけません。&lt;/strong&gt;&lt;br /&gt;
-この場合では1つスケジュールが登録されています。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# DO NOT EDIT THIS FILE - edit the master and reinstall.
-# (/tmp/crontab.S21fXH5GxY installed on Sat Jun  2 23:14:39 2018)
-# (Cron version -- $FreeBSD: src/usr.sbin/cron/crontab/crontab.c,v 1.24 2006/09/03 17:52:19 ru Exp $)
-*/10 5-22 * * 1-5 ~/cron/sh/hoge.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;cronの動きを理解する&quot;&gt;cronの動きを理解する&lt;/h2&gt;
-&lt;p&gt;crontabにスケジュールされたコマンドを実行するデーモンです。&lt;/p&gt;
-
-&lt;h3 id=&quot;誰がcronを起動するのか&quot;&gt;誰がcronを起動するのか？&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;デーモン起動は自動です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/crontab&lt;/code&gt;または&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib/cron/tabs&lt;/code&gt;内にファイル存在を検知すると起動します。&lt;br /&gt;
-ユーザは手動でcronデーモンを起動する必要ありません。&lt;/p&gt;
-
-&lt;h3 id=&quot;どこからcrontabファイルをロードするのか&quot;&gt;どこからcrontabファイルをロードするのか？&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/passwd&lt;/code&gt;のアカウント名にちなんで名付けられたcrontabファイルを&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib/cron/tabs&lt;/code&gt;から検索します。&lt;br /&gt;
-見つけたcrontabはメモリ上にロードされます。&lt;br /&gt;
-また異なる形式の&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/crontab&lt;/code&gt;も検索対象です。&lt;/p&gt;
-
-&lt;h3 id=&quot;指定時間にコマンド実行する仕組み&quot;&gt;指定時間にコマンド実行する仕組み&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;cronは毎分起動してます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;cronは毎分起動し保存されてるcrontabを調べ現在の分で実行する必要があるか確認します。&lt;br /&gt;
-コマンドを実行すると、出力はcrontab所有者またはMAILTO環境変数で指定されたユーザーにメールで送信されます。&lt;/p&gt;
-
-&lt;h3 id=&quot;crontabファイルを反映する方法&quot;&gt;crontabファイルを反映する方法&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;crontabの変更は自動更新です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;cronはcrontabが変更されたかどうかを毎分チェックしており、変更されていればcrontabファイルを再ロードします。&lt;br /&gt;
-そのためにcrontabで変更してもcron再起動は不要です。&lt;/p&gt;
-
-&lt;h2 id=&quot;crontabを理解する&quot;&gt;crontabを理解する&lt;/h2&gt;
-&lt;p&gt;crontabコマンドはcrontabファイルを編集したり現在のスケジュールを確認するためのコマンドです。&lt;br /&gt;
-crontabでスケジュール追加や変更することでcronが自動で起動またはリロードします。&lt;/p&gt;
-
-&lt;h3 id=&quot;crontabのtabとは&quot;&gt;crontabのtabとは？&lt;/h3&gt;
-&lt;p&gt;明確な情報はありませんが、tableのtabだと思います。&lt;br /&gt;
-crontabは行毎が1情報となっており、何個もcronがスケジュールされていると表(table)のようになるからだと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;crontabファイルの場所&quot;&gt;crontabファイルの場所&lt;/h3&gt;
-&lt;p&gt;crontabファイルは、&lt;code class=&quot;highlighter-rouge&quot;&gt;/etc/crontab&lt;/code&gt;または&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib/cron/tabs&lt;/code&gt;内にあります。&lt;br /&gt;
-ファイル名はユーザー名になっています。&lt;/p&gt;
-
-&lt;p&gt;私のMac環境では&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib/cron/tabs&lt;/code&gt;内にありました。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# ls /usr/lib/cron/tabs
-mothule
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;crontabの形式&quot;&gt;crontabの形式&lt;/h3&gt;
-&lt;p&gt;crontabファイルはフォーマットに従わなければいけません。&lt;br /&gt;
-1行毎にスケジュールが並んでおり、1行で実行時間と実行内容が並びます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;分 時 日 月 曜日 コマンド
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この順番で並んでいるなければいけません。&lt;/p&gt;
-
-&lt;h2 id=&quot;crontabコマンドの使い方&quot;&gt;crontabコマンドの使い方&lt;/h2&gt;
-&lt;p&gt;使用方法は次のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;crontab [-u user] file
-crontab [-u user] { -l | -r | -e }
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;オプションそれぞれについて説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;-u-ユーザ名の指定&quot;&gt;-u: ユーザ名の指定&lt;/h3&gt;
-
-&lt;p&gt;crontabを調整するユーザを指定します。&lt;br /&gt;
-&lt;strong&gt;未指定の場合は、実行中ユーザ&lt;/strong&gt; のcrontabを調整します。&lt;/p&gt;
-
-&lt;h4 id=&quot;注意&quot;&gt;注意&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;su&lt;/code&gt;コマンド中にcrontabを実行するとどのユーザで実行するか不安定になるため、安全のために&lt;code class=&quot;highlighter-rouge&quot;&gt;-u&lt;/code&gt;オプションが必要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;-l-現在のスケジュールを確認&quot;&gt;-l: 現在のスケジュールを確認&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt;オプションをつけることで、現在ロードされてるcrontabファイルを確認できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;crontab &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;/10 5-22 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; 1-5 ~/cron/sh/hoge.sh
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;-r-現在のスケジュールを全て削除&quot;&gt;-r: 現在のスケジュールを全て削除&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-r&lt;/code&gt;オプションをつけることで、crontabファイルを削除します。&lt;/p&gt;
-
-&lt;p&gt;次のシェルは実際にcrontabファイルを削除したあとに確認してます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;crontab &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;/10 5-22 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; 1-5 ~/cron/sh/hoge.sh
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;crontab &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;crontab &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
-crontab: no crontab &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;mothule
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;-e-現在のスケジュールを編集&quot;&gt;-e: 現在のスケジュールを編集&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-e&lt;/code&gt;オプションをつけることで、スケジュールを編集します。&lt;br /&gt;
-VISUAL環境変数またはEDITOR環境変数で指定されたエディタアプリで編集します。&lt;br /&gt;
-エディタ終了すると自動的に適用されます。&lt;/p&gt;
-
-&lt;p&gt;次のシェルは空の状態から新しくスケジュールを登録してます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;crontab &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt;
-crontab: no crontab &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;mothule - using an empty one
-crontab: installing new crontab
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;注意-1&quot;&gt;注意&lt;/h4&gt;
-&lt;p&gt;ファイルを直接編集する必要があるため、ファイルのリンクを解除して再生成するエディタは使えません。&lt;/p&gt;
-
-&lt;h2 id=&quot;crontabの実行権限を制御する&quot;&gt;crontabの実行権限を制御する&lt;/h2&gt;
-&lt;p&gt;crontabは定期実行のスケジュールを編集できるコマンドです。&lt;br /&gt;
-実行されるコマンドによっては重要な処理だったりします。&lt;br /&gt;
-誰でも編集できる状態だと、悪意なくとも人為的なミスが起きるリスクが存在し続けます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;このリスクヘッジとして、cron.allowとcron.denyを使うことでcrontabの実行権限を制御できます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;cron.allow&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;cron.deny&lt;/code&gt;ファイルはそれぞれ、&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib/cron/cron.allow&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/lib/cron/cron.deny&lt;/code&gt;として配置することで有効化されます。&lt;/p&gt;
-
-&lt;p&gt;それぞれの中身は行ごとに1ユーザーの名前が並びます。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;cron.allow&lt;/code&gt;ファイルが存在する場合は、その中に記載されたユーザーのみが使えます。つまりホワイトリストですね。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;cron.deny&lt;/code&gt;ファイルが存在する場合は、その中に記載されたユーザーは使えません。つまりブラックリストですね。&lt;/p&gt;
-
-&lt;h2 id=&quot;crontabの書き方&quot;&gt;crontabの書き方&lt;/h2&gt;
-
-&lt;p&gt;&lt;strong&gt;crontabの書き方は覚えにくいです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;特性上何度も書くこともないし、他コマンドなどで同じフォーマットがないためです。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;分 時 日 月 曜日 コマンド
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;日時の範囲&quot;&gt;日時の範囲&lt;/h3&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;時間&lt;/th&gt;
-      &lt;th&gt;値範囲&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;分&lt;/td&gt;
-      &lt;td&gt;0~59&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;時&lt;/td&gt;
-      &lt;td&gt;0~23&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;日&lt;/td&gt;
-      &lt;td&gt;1~31&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;月&lt;/td&gt;
-      &lt;td&gt;1~12 or jan~dec&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;曜日&lt;/td&gt;
-      &lt;td&gt;0~7 or sun ~ sat&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&quot;アスタリスクはどの値にも当てはまる&quot;&gt;アスタリスク(&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;)はどの値にも当てはまる&lt;/h3&gt;
-&lt;p&gt;例えば次のスケジュールは毎分実行されます。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;項目となる部分をアスタリスク(&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;)とすることで、その項目はどの値であってもパスするようになります。&lt;/p&gt;
-
-&lt;h3 id=&quot;-で区切ると複数時間を指定できる&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;,&lt;/code&gt; で区切ると複数時間を指定できる&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;月曜と水曜のみ実行&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; 1,3 &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;-で挟むと範囲時間を指定できる&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;で挟むと範囲時間を指定できる&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;9時〜22時のみ実行&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* 9-22 * * * command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;-を--で割ると一定時間おきに実行する&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt; を &lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt; で割ると一定時間おきに実行する&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;3時間置きに実行&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;/3 &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;command&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;※ この記法は Linux だと動かないかも&lt;/p&gt;
-
-&lt;h2 id=&quot;ケース別crontabの書き例&quot;&gt;ケース別crontabの書き例&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;1分毎に実行&lt;/li&gt;
-  &lt;li&gt;15分毎に実行&lt;/li&gt;
-  &lt;li&gt;1時間毎に実行&lt;/li&gt;
-  &lt;li&gt;毎日21時に実行&lt;/li&gt;
-  &lt;li&gt;毎週日曜の9時と21時に実行&lt;/li&gt;
-  &lt;li&gt;12月の平日の9時から22時までの間10分毎に実行&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;1分毎に実行&quot;&gt;1分毎に実行&lt;/h3&gt;
-
-&lt;p&gt;これは特に説明不要ですね。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* * * * * command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;15分毎に実行&quot;&gt;15分毎に実行&lt;/h3&gt;
-
-&lt;p&gt;分を15で割ることで15分毎になります&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*/15 * * * * command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;1時間毎に実行&quot;&gt;1時間毎に実行&lt;/h3&gt;
-
-&lt;p&gt;分を固定値にすることで1時間毎になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;毎時0分に実行&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0 * * * * command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;strong&gt;毎時27分に実行&lt;/strong&gt;&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;27 * * * * command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;毎日21時に実行&quot;&gt;毎日21時に実行&lt;/h3&gt;
-
-&lt;p&gt;時を固定値にすることで毎日21時に実行します&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0 21 * * * command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;分をアスタリスク(&lt;code class=&quot;highlighter-rouge&quot;&gt;*&lt;/code&gt;)だと21時00分〜21時59分の60回実行されてしまうので注意です。&lt;/p&gt;
-
-&lt;h3 id=&quot;毎週日曜の9時と21時に実行&quot;&gt;毎週日曜の9時と21時に実行&lt;/h3&gt;
-
-&lt;p&gt;曜日で日にちを縛って、カンマで9時と21時を指定します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;0 9,21 * * sun command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;曜日は数字でも英字でも指定できます。日曜日は数字だと0です&lt;/p&gt;
-
-&lt;h3 id=&quot;9月の平日の9時から22時までの間10分毎に実行&quot;&gt;9月の平日の9時から22時までの間10分毎に実行&lt;/h3&gt;
-
-&lt;p&gt;ハイフン(&lt;code class=&quot;highlighter-rouge&quot;&gt;-&lt;/code&gt;)で月を範囲指定し、曜日で平日に制限します。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;*/10 9-22 * 9 1-5 command
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;cronローカル活用術&quot;&gt;cronローカル活用術&lt;/h2&gt;
-
-&lt;p&gt;cronはサーバーでバッチ処理のイメージが強いですが、個人のPCでも十分使いこなすことができます。&lt;br /&gt;
-crontabに記載するコマンドはシェルコマンドであれば何でもいいので、外部シェルやRubyスクリプトを実行することもできます。&lt;/p&gt;
-
-&lt;p&gt;例えば次のスケジュールをMac上のcrontabで登録すると毎分通知をすることができます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;* * * * * /Users/mothule/.rbenv/shims/terminal-notifier -message '1分経過'
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-26-how-to-use-cron/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-26-how-to-use-cron/1.png&quot; width=&quot;100%&quot; alt=&quot;terminal-notifierによるMac通知&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;上記例だと単純に1分毎に決められた文言が通知されるだけですが、&lt;strong&gt;Rubyスクリプトなどで25分/5分のポモドーロ・テクニックを使って通知させたりもできます。&lt;/strong&gt; また通信して変更があればslackに通知といったこともできます。&lt;/p&gt;
-
-&lt;h2 id=&quot;cronの実行時エラーをログで確認する&quot;&gt;cronの実行時エラーをログで確認する&lt;/h2&gt;
-&lt;p&gt;crontabに並ぶコマンドを実行してエラーが発生したらログとして残ります。&lt;/p&gt;
-
-&lt;p&gt;ログが更新されたかどうかはターミナルを弄ってると通知されます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$
-You have mail in /var/mail/mothule
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このパスがログとなっています。&lt;/p&gt;
-
-&lt;h2 id=&quot;cronだとcommand-not-foundが出る場合&quot;&gt;cronだとcommand not foundが出る場合&lt;/h2&gt;
-&lt;p&gt;ターミナル上では動くコマンドでもcron実行だと&lt;code class=&quot;highlighter-rouge&quot;&gt;command not found&lt;/code&gt;と出て実行されない場合があります。&lt;br /&gt;
-cronが実行される環境では、コマンドへのPATHが通っていないことが考えられます。&lt;br /&gt;
-シェルとターミナルの関係性を理解してると分かりますが、ターミナルが立ち上がるときにPATH設定など事前準備後にターミナルが立ち上がります。&lt;/p&gt;
-
-&lt;p&gt;cronはターミナルを通していないため、PATH環境変数が異なります。&lt;/p&gt;
-
-&lt;p&gt;この場合の解決方法は２つあります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;コマンドを絶対パスで指定&lt;/li&gt;
-  &lt;li&gt;PATH環境変数を設定してコマンド実行&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;コマンドを絶対パスで指定&quot;&gt;コマンドを絶対パスで指定&lt;/h3&gt;
-
-&lt;p&gt;例えば前述した&lt;code class=&quot;highlighter-rouge&quot;&gt;terminal-notifier&lt;/code&gt;コマンドであれば、私の環境での絶対パスは&lt;code class=&quot;highlighter-rouge&quot;&gt;/Users/mothule/.rbenv/shims/terminal-notifier&lt;/code&gt;です。
-これは&lt;code class=&quot;highlighter-rouge&quot;&gt;which&lt;/code&gt;コマンドで調べることができます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;which terminal-notifier
-/Users/mothule/.rbenv/shims/terminal-notifier
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;path環境変数を設定してコマンド実行&quot;&gt;PATH環境変数を設定してコマンド実行&lt;/h3&gt;
-
-&lt;p&gt;シェルコマンドは環境変数を設定してから実行することが可能です。
-この仕組を使って、crontabに設定するコマンドの手前に、PATHにコマンドのパスを追加することで、コマンドだけの実行でもパスが通っていることで実行可能となります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;PATH&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$PATH&lt;/span&gt;:/Users/mothule/.rbenv/shims terminal-notifier &lt;span class=&quot;nt&quot;&gt;-message&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;test&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;crontabで色々な理解を深める&quot;&gt;crontabで色々な理解を深める&lt;/h2&gt;
-&lt;p&gt;ただ決まった時間に実行するスケジューラーでもcronの仕組みやcronとcrontabとの関係を知ることで、理解が深まります。
-落とし穴を知ることで、シェルやターミナルも少し理解が進みます。&lt;/p&gt;
-
-&lt;p&gt;以上がcrontabの記事でした。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="cron" /><summary type="html">定期実行といえばcron、それらスケジュールを制御するコマンドがcrontabです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-26-how-to-use-cron/0.png" /></entry></feed>
+しかもシェルスクリプトの内容自体も非常にシンプルで、長く見ても短く見てもコスパの良い環境です。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="remote-work" /><category term="ffmpeg" /><category term="quicktime-player" /><category term="mac" /><summary type="html">動画は最強の情報伝達手段です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png" /></entry></feed>

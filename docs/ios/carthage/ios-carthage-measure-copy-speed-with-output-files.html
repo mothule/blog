@@ -11,33 +11,33 @@
 
 
 
-  <title>ActiveRecordでpluckとselectしてpluckに変化はあるか？ - もちゅろぐ</title>
+  <title>CarthageのビルドフェイズでOutput Files指定による速度調査 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:title" content="CarthageのビルドフェイズでOutput Files指定による速度調査" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。" />
-<meta property="og:description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
+<meta name="description" content="Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。" />
+<meta property="og:description" content="Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" />
+<meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-13T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord","headline":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","dateModified":"2020-02-02T20:42:57+09:00","datePublished":"2019-08-05T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord"},"image":"https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png","description":"ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files","headline":"CarthageのビルドフェイズでOutput Files指定による速度調査","dateModified":"2020-05-13T03:06:05+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files"},"image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png","description":"Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
-<meta name="twitter:description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png">
+<meta name="twitter:title" content="CarthageのビルドフェイズでOutput Files指定による速度調査">
+<meta name="twitter:description" content="Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -127,8 +127,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ruby" itemprop="item">
-              <span itemprop="name">Ruby</span>
+            <a href="/tags#ios" itemprop="item">
+              <span itemprop="name">iOS</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -137,8 +137,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#rails" itemprop="item">
-              <span itemprop="name">Rails</span>
+            <a href="/tags#carthage" itemprop="item">
+              <span itemprop="name">Carthage</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -146,18 +146,8 @@
       
         
         
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#active-record" itemprop="item">
-              <span itemprop="name">ActiveRecord</span>
-            </a>
-            <meta itemprop="position" content="4">
-          </li>
-        
-      
-        
-        
           <li>
-            ActiveRecordでpluckとselectしてpluckに変化はあるか？
+            CarthageのビルドフェイズでOutput Files指定による速度調査
           </li>
         
       
@@ -169,27 +159,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-05-ruby-rails-activerecord.png" alt="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" alt="CarthageのビルドフェイズでOutput Files指定による速度調査">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>ActiveRecordでpluckとselectしてpluckに変化はあるか？</h1>
+    <h1>CarthageのビルドフェイズでOutput Files指定による速度調査</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
           
-            <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#active-record">ActiveRecord</a></li>
+            <li class="list-inline-item"><a href="/tags#carthage">Carthage</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-8-5</time></span>
+        <span"><time class="post-date">2020-5-13</time></span>
       </div>
     </div>
   </header>
@@ -197,96 +185,145 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#sqlは同じ">SQLは同じ</a></li>
-  <li><a href="#速度は微妙な変化">速度は微妙な変化</a></li>
-  <li><a href="#しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</a></li>
+  <li><a href="#調査のきっかけ">調査のきっかけ</a></li>
+  <li><a href="#調査方法">調査方法</a></li>
+  <li><a href="#測定結果">測定結果</a></li>
+  <li><a href="#感想">感想</a></li>
   <li><a href="#結論">結論</a></li>
 </ul>
   </div>
   <section>
-  <p>ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</p>
+  <p>この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="ss">:name</span><span class="p">).</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<p>なおCarthageのインストールや基礎など詳細は「<span><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></span>
+」にまとめてあります。</p>
+
+<h2 id="調査のきっかけ">調査のきっかけ</h2>
+
+<p><a href="https://github.com/Carthage/Carthage#quick-start">Carthage Quick Start</a>や<a href="https://github.com/Carthage/Carthage#adding-frameworks-to-an-application">Carghage Adding frameworks to an application</a>には、<code class="highlighter-rouge">Output Files</code>や<code class="highlighter-rouge">Output File Lists</code>を設定しろと書かれています。</p>
+
+<p>しかし、<a href="https://github.com/Carthage/Carthage/blob/master/Source/carthage/CopyFrameworks.swift">carthage copy-frameworksのコード</a>では使われていません。</p>
+
+<p>最初はただの更新漏れかと思ったが、調べたら<a href="https://github.com/Carthage/Carthage/pull/2025">Pull Request</a>を見つけました。</p>
+
+<p>どうやらWWDCの発表によると、<code class="highlighter-rouge">Output Files</code>が設定されていると、<code class="highlighter-rouge">Input Files</code>の変更がなければスクリプトの実行をスキップするらしいです。</p>
+
+<p>つまり<strong><code class="highlighter-rouge">Output Files</code>は未設定でも動作上問題はないですが、設定はすることでビルド時間の短縮に繋がる</strong>ようです。</p>
+
+<p>では「どれぐらい違うのか？」を調べようと思いました。</p>
+
+<p>小さな差分でも、開発では何十回もビルドを走らせます。<br />
+トータルタイムでいくと効果は侮れません。</p>
+
+<h2 id="調査方法">調査方法</h2>
+
+<ul>
+  <li>プロジェクトは新規プロジェクトの初期状態＋Carthage</li>
+  <li><code class="highlighter-rouge">Output Files</code>の「あり」「なし」それぞれのビルド時間を10回ずつ測定</li>
+  <li>ビルドを走らせる前に適当なソースファイルを1つ弄ってから実行する</li>
+  <li>ビルド時間はXcodeのPreferences(ShowBuildOperationDuration)を使う</li>
+</ul>
+
+<p>フレームワークのコピー処理の有無ということで、<em>Cartfile</em> はそれっぽい数7個用意。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "AFNetworking/AFNetworking"
+github "suzuki-0000/SKPhotoBrowser"
+github "SVProgressHUD/SVProgressHUD"
+github "SwiftyJSON/SwiftyJSON"
+github "SDWebImage/SDWebImage"
+github "payjp/payjp-ios"
+github "adjust/ios_sdk"
 </code></pre></div></div>
 
-<p>と</p>
+<h2 id="測定結果">測定結果</h2>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
-</code></pre></div></div>
-
-<p>に速度差や消費メモリ差はあるのか？</p>
-
-<h2 id="sqlは同じ">SQLは同じ</h2>
-
-<p>出力されるSQLはどちらも同じでした。</p>
-
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="nv">`users`</span><span class="p">.</span><span class="nv">`name`</span> <span class="k">FROM</span> <span class="nv">`users`</span>
-</code></pre></div></div>
-
-<h2 id="速度は微妙な変化">速度は微妙な変化</h2>
-
-<p>90万件に対して行った結果</p>
+<p>次の表は調査方法に基づいた調査結果です。</p>
 
 <table>
-  <thead>
-    <tr>
-      <th>pluckのみ</th>
-      <th>select+pluck</th>
-    </tr>
-  </thead>
   <tbody>
     <tr>
-      <td>3228</td>
-      <td>3349</td>
+      <td>#</td>
+      <td><code class="highlighter-rouge">Output Files</code>なし</td>
+      <td><code class="highlighter-rouge">Output Files</code>あり</td>
     </tr>
     <tr>
-      <td>3152</td>
-      <td>2972</td>
+      <td>1</td>
+      <td>2.300</td>
+      <td>1.569</td>
     </tr>
     <tr>
-      <td>3126</td>
-      <td>3370</td>
+      <td>2</td>
+      <td>2.521</td>
+      <td>1.427</td>
     </tr>
     <tr>
-      <td>3101</td>
-      <td>3144</td>
+      <td>3</td>
+      <td>2.229</td>
+      <td>1.455</td>
     </tr>
     <tr>
-      <td>3271</td>
-      <td>2945</td>
+      <td>4</td>
+      <td>1.867</td>
+      <td>1.493</td>
     </tr>
     <tr>
-      <td>3454</td>
-      <td>3227</td>
+      <td>5</td>
+      <td>2.516</td>
+      <td>1.343</td>
     </tr>
     <tr>
-      <td>3120</td>
-      <td>3306</td>
+      <td>6</td>
+      <td>2.364</td>
+      <td>1.710</td>
     </tr>
     <tr>
-      <td>3488</td>
-      <td>3577</td>
+      <td>7</td>
+      <td>2.158</td>
+      <td>1.568</td>
     </tr>
     <tr>
-      <td>3046</td>
-      <td>3072</td>
+      <td>8</td>
+      <td>2.360</td>
+      <td>1.467</td>
     </tr>
     <tr>
-      <td>3228</td>
-      <td>3413</td>
+      <td>9</td>
+      <td>2.123</td>
+      <td>1.575</td>
+    </tr>
+    <tr>
+      <td>10</td>
+      <td>2.243</td>
+      <td>1.479</td>
+    </tr>
+    <tr>
+      <td>Avg</td>
+      <td>2.2681</td>
+      <td>1.5086</td>
     </tr>
   </tbody>
 </table>
 
-<p>pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms</p>
+<p>平均値の差分は0.7595秒つまり34%短縮しました。</p>
 
-<h2 id="しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</h2>
+<h2 id="感想">感想</h2>
 
-<p>SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。</p>
+<p>想定以上の効果がありました。<br />
+調査中も違いを体感で分かるほどです。<br />
+ワンテンポ違いました。</p>
+
+<p>しかし、仮に仕事で15分おきに1回ビルドを走らせてるとした場合、<br />
+9時間 x 4回 * 0.7595秒 = 27.342秒の違いが出ます。<br />
+大したことないですね…<br />
+でも短時間に何度もビルドを走らせる状況ではチリツモ効果は出てると予想します。</p>
+
+<p>なお、このパフォーマンスは、Cartfile管理下のライブラリ数とライブラリ規模に依存します。</p>
 
 <h2 id="結論">結論</h2>
 
-<p>実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 <strong>pluckを呼ぶのであれば,selectは呼ぶ必要はない。</strong></p>
+<ul>
+  <li>一定のパフォーマンス効果はある</li>
+  <li>おとなしく設定したほうがいい</li>
+</ul>
 
   </section>
 
@@ -336,7 +373,342 @@
                 
                 
                 
-                    <li><h3><a href="/ruby/rails/ruby-rails-rabl-basic">RABLの使い方を丁寧に説明</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></h3></li>
                     
                     
                 
@@ -385,38 +757,10 @@
                 
                 
                 
-                    <li><h3><a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</a></h3></li>
-                    
-                    
-                
 
             
                 
                 
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></h3></li>
-                    
-                    
                 
 
             
@@ -508,19 +852,98 @@
                 
                 
                 
-                    <li><h3><a href="/ruby/rails/ruby-rails-rails-5_2_3-update">Railsを5.0.0から5.2.3に変更した</a></h3></li>
-                    
-                    
+
+            
+                
+                
                 
 
             
                 
                 
                 
-                    <li><h3><a href="/ruby/rails/ruby-rails-update-rails-version">rails updateでgemバージョン依存を解決してみる</a></h3></li>
-                    
-                    
-                        
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
         </div>
     </ul>
 </div>
