@@ -272,6 +272,32 @@ dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
 
 これは実行環境(実機やシミュレータ)にframeworkが配置されてないことで、動的ロードでファイルが見つからずランタイムエラーになるためです。
 
+#### Input Filesで渡すframeworkのパスが間違ってる場合
+
+`carthage copy-frameworks`コマンドが走るとき、つまりビルド時に次のようなエラーが表示されます。
+
+```
+Could not find framework "<framework name>" at path <wrong framework path>.
+Ensure that the given path is appropriately entered and that your "Input Files" and "Input File Lists" have been entered correctly.
+```
+
+この場合は`Input Files`または`Input File Lists`で渡してるframeworkのパスが間違っていないか確認してください。
+
+
+#### Embed Contentだとビルドエラーになる
+
+`Target > General > Frameworks, Libraries, and Embedded Content`からframeworkを追加すると、デフォルトでは`Embed & Sign`になっており、このままビルドすると次のようなビルドエラーが起きます。
+
+```
+Multiple commands produce '.../YOUR-APP-NAME.app/Frameworks/<FRAMEWORK NAME>.framework':
+
+1) Target '<YOUR TARGET NAME>' has copy command from
+'/your/project/path/Carthage/Build/iOS/<FRAMEWORK NAME>.framework' to '.../YOUR-APP-NAME.app/Frameworks/<FRAMEWORK NAME>.framework'
+
+2) That command depends on command in Target '<YOUR TARGET NAME>': script phase “Run Script”
+```
+
+Embedded Frameworkではないので、`Do Not Embed`に直してください。
 
 
 ### まとめて指定も可能
