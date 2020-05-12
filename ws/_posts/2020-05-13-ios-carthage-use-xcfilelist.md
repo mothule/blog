@@ -6,7 +6,7 @@ tags: ios carthage
 image:
   path: /assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png
 ---
-`xcfilelist`で依存ライブラリを管理すると`.xcodeproj`が汚れません。✨
+`xcfilelist`で依存ライブラリを管理すると楽です
 
 この記事は`xcfilelist`を使って`Carthage`の環境を構築する方法と利点について説明します。
 
@@ -34,13 +34,10 @@ Carthageのインストール解説記事には、`xcfilelist`を使った解説
 
 ## Input File Listsを使う利点
 
-`Input Files`でframeworkのパスを指定するほうが分かりやすいです。  
+`Input Files`でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
 `Input File Lists`を使う利点がないと使う気にならないと思います。  
 
-使う利点は、一度`xcfilelist`のパスを指定すれば、新しくframeworkが増えたり減ったりしても  
-Xcodeプロジェクト(`.xcodeproj`)を編集する必要がありません。
-
-つまり**「コンフリクトを気にしなくてもよくなる」** ことです。
+使う利点は、一度`xcfilelist`のパスを指定すれば、`Run Script`の使いにくいUIを使わなくて済みます。
 
 ## xcfilelistを用意する
 
@@ -102,4 +99,3 @@ $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
 ## 後からでも対応できる
 この対応は、プロジェクトが初期段階でも後からでも対応できます。  
 ライブラリが多くても手間はそこまで変わりません。  
-**またチームメンバーが多いほど効果は大きいです。**
