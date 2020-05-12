@@ -4,7 +4,7 @@ description: iOSのCarthageのインストールやCocoaPodsとの違いやメ�
 categories: ios carthage
 tags: ios carthage
 image:
-  path: /assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage.png
+  path: /assets/images/2019-09-15-ios-carthage/eyecatch.png
 ---
 ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、  
 次のケースに該当する方もいると思います。
@@ -286,7 +286,7 @@ Carthage updateを実行することで、ライブラリのソースコード�
 
 そのためここをGitにあげないと他環境からビルドした場合にフレームワークが見つからずビルドエラーとなります。
 
-## Carthage --no-use-binariesでデバッグ可能にする
+## Carthage \--no-use-binariesでデバッグ可能にする
 ライブラリによってはGitHubなどに既にビルド済みのフレームワークが用意されており、  
 Carthageは特に指定がなければそれを使ってインストールして時間短縮を行っています。
 
@@ -295,7 +295,7 @@ Carthageは特に指定がなければそれを使ってインストールして
 ```sh
 $ carthage update --platform iOS --no-use-binaries <library name>
 ```
-というふうに **--no-use-binaries** オプションんを使うことで解決することができます。
+というふうに **`--no-use-binaries`** オプションんを使うことで解決することができます。
 
 ## CarthageのCartfileでライブラリのバージョン指定する方法
 Carthageでライブラリのバージョンを指定するには、  
