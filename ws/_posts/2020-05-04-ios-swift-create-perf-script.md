@@ -3,7 +3,7 @@ title: 簡易なSwiftパフォーマンス測定クラスを作った
 categories: ios swift
 tags: ios swift
 image:
-  path: /assets/images/2020-05-04-ios-swift-create-perf-script/0.png
+  path: /assets/images/2020-05-04-ios-swift-create-perf-script/eyecatch.png
 ---
 普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。
 
