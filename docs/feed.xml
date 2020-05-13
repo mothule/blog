@@ -1,97 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-13T04:58:39+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CarthageでInput File Listsにxcfilelistを渡す利点と方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" rel="alternate" type="text/html" title="CarthageでInput File Listsにxcfilelistを渡す利点と方法" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T04:58:36+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;で依存ライブラリを管理すると楽です&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-13T16:48:07+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
 
-&lt;p&gt;この記事は&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;の環境を構築する方法と利点について説明します。&lt;/p&gt;
+&lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
+なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;の基本や使い方の詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
+&lt;h2 id=&quot;macでgoogle日本語入力がおかしくなる&quot;&gt;MacでGoogle日本語入力がおかしくなる&lt;/h2&gt;
 
-&lt;h2 id=&quot;carthage公式解説に出てくるxcfilelist&quot;&gt;Carthage公式解説に出てくるxcfilelist&lt;/h2&gt;
+&lt;p&gt;正常稼働してるGoogle日本語入力は、次の画像のようにタイプしてる文字の近くに変換候補が並んだポップアップが表示される。
+これがおかしくなると、ポップアップの位置が画面の四隅に固定されてしまう現象が発生する。&lt;/p&gt;
 
-&lt;p&gt;Carthageのインストール解説記事には、&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使った解説は見かけません。&lt;br /&gt;
-大抵&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;に直接パスを指定する記事が多いです。&lt;br /&gt;
-しかし、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;Carthageの公式&lt;/a&gt;では&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使っており、むしろそっちがメインにも見えます。&lt;/p&gt;
+&lt;h3 id=&quot;正常時&quot;&gt;正常時&lt;/h3&gt;
 
-&lt;h3 id=&quot;xcfilelistの正体&quot;&gt;xcfilelistの正体&lt;/h3&gt;
+&lt;p&gt;正常時は、タイプしてる文字の近くに表示される。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はXcodeのファイル一覧を表すファイル・タイプです。&lt;br /&gt;
-といってもただのテキストファイルです。&lt;br /&gt;
-テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;とするだけです。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInput&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;xcfilelistを使う場所&quot;&gt;xcfilelistを使う場所&lt;/h2&gt;
+&lt;h3 id=&quot;異常時&quot;&gt;異常時&lt;/h3&gt;
 
-&lt;p&gt;公式では英文で&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を見かけますが、これを使う場所がパッと見では分かりません。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使う場所は下の画像の&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File List&lt;/code&gt;です。&lt;br /&gt;
-この中に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+&lt;p&gt;問題がおきると、これが隅っこで表示される。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildPhaseのCarthage用RunScriptPhase&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInputWithBug&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;input-file-listsを使う利点&quot;&gt;Input File Listsを使う利点&lt;/h2&gt;
+&lt;h3 id=&quot;分かってること&quot;&gt;分かってること&lt;/h3&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;を使う利点がないと使う気にならないと思います。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;自分が立ち上げているアプリケーションを全て終了しても解決しない&lt;/li&gt;
+  &lt;li&gt;再起動すると解決する&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;使う利点は、一度&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定すれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Script&lt;/code&gt;の使いにくいUIを使わなくて済みます。  &lt;br /&gt;
-またフレームワークの追加や削除時に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodeproj&lt;/code&gt;がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。&lt;/p&gt;
+&lt;h3 id=&quot;仮説&quot;&gt;仮説&lt;/h3&gt;
+&lt;p&gt;プロセス再起動で解決するのでは？&lt;/p&gt;
 
-&lt;h2 id=&quot;xcfilelistを用意する&quot;&gt;xcfilelistを用意する&lt;/h2&gt;
+&lt;h2 id=&quot;macのプロセス一覧でgoogle日本語入力を探す&quot;&gt;Macのプロセス一覧でGoogle日本語入力を探す&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はパスさえ合っていればどこに置いても問題ないですが、&lt;br /&gt;
-他環境でも動くようにまずはgit管理下が必須だと思います。&lt;br /&gt;
-次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら&lt;br /&gt;
-&lt;strong&gt;プロジェクトディレクトリ配下に置くことが最適です。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Macでプロセス一覧を見るには&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドを使う。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot; width=&quot;50%&quot; alt=&quot;Xcode-Project-Navigator&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ターミナルで&lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux | grep GoogleJapaneseInput&lt;/code&gt;を実行
+このときGoogle Chromeは閉じておく&lt;/p&gt;
 
-&lt;p&gt;中身は次のように&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;で指定するパスを並べるだけです。
-これを&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;として保存すれば準備は整います。
-ファイル名は何でもいいです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
-$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
-$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
-$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
-$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
-$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
-$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps x | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
+  879   ??  S      1:23.75 /Library/Input Methods/GoogleJapaneseInput.app/Contents/MacOS/GoogleJapaneseInput
+ 1213   ??  S      1:40.55 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputRenderer.app/Contents/MacOS/GoogleJapaneseInputRenderer
+ 2059   ??  S      1:15.08 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputConverter.app/Contents/MacOS/GoogleJapaneseInputConverter
+99614 s001  S+     0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;xcfilelistをinput-file-listsに渡す&quot;&gt;xcfilelistをInput File Listsに渡す&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt;のプロセスがヒットする。&lt;br /&gt;
+(最後のプロセスはgrepプロセスなので無関係)&lt;/p&gt;
 
-&lt;p&gt;Xcodeの&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;用スクリプトフェイズの&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;に先程用意した&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+&lt;p&gt;おそらく名前からしてこうだろう。&lt;/p&gt;
 
-&lt;p&gt;先程の用意した場所であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt; : 設定全般 or 統括&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt; : 描画関係&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt; : 変換関係&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeのInputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;変換自体はうまく動いているので、おかしいのは変換以外の2つだと思われる。
+もっとも怪しいのは描画を司っているであろう&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;だと予想。&lt;/p&gt;
 
-&lt;h2 id=&quot;output-file-listsもxcfilelistを使う&quot;&gt;Output File Listsもxcfilelistを使う&lt;/h2&gt;
+&lt;h2 id=&quot;macのプロセスをkillコマンドで終了させる&quot;&gt;Macのプロセスをkillコマンドで終了させる&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;も同様に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;として出力パスを列挙しておけば&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定するだけです。&lt;/p&gt;
+&lt;p&gt;Macでプロセスを終了させるには&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドを使う。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;googlejapaneseinputrendererプロセスのプロセスidを探す&quot;&gt;GoogleJapaneseInputRendererプロセスのプロセスIDを探す&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドの結果は表形式でプロセスが並ぶ。
+１つ目のカラムはプロセスIDを表す。&lt;/p&gt;
 
-&lt;p&gt;こちらも&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と同じ場所場所であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;で指定するパスは、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+&lt;p&gt;先程の表で&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDは&lt;code class=&quot;highlighter-rouge&quot;&gt;1213&lt;/code&gt;になる。&lt;br /&gt;
+なおこのプロセスIDはいつもこの値ではないので注意。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot; width=&quot;50%&quot; alt=&quot;XcodeのOutputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;killコマンドでgooglejapaneseinputrendererを終了させる&quot;&gt;killコマンドでGoogleJapaneseInputRendererを終了させる&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDが分かったので最終的には、&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$ kill 1213&lt;/code&gt;をターミナル上で実行すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が終了する。&lt;/p&gt;
 
-&lt;h3 id=&quot;output-file-listsを指定する理由&quot;&gt;Output File Listsを指定する理由&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。&lt;br /&gt;
-なぜ指定するのかは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-measure-copy-speed-with-output-files&quot;&gt;CarthageのビルドフェイズでOutput Files指定による速度調査&lt;/a&gt;&lt;/span&gt;
-」に詳細をまとめてます。&lt;/p&gt;
-
-&lt;h2 id=&quot;後からでも対応できる&quot;&gt;後からでも対応できる&lt;/h2&gt;
-&lt;p&gt;この対応は、プロジェクトが初期段階でも後からでも対応できます。&lt;br /&gt;
-ライブラリが多くても手間はそこまで変わりません。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">xcfilelistで依存ライブラリを管理すると楽です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" /></entry><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T03:06:05+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
+&lt;h2 id=&quot;macのgoogle日本語入力が直った&quot;&gt;MacのGoogle日本語入力が直った&lt;/h2&gt;
+&lt;p&gt;仮説と予想は的中し、&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;プロセスを終了し、再度テキストエディで文字入力したら&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="google-japanese-input" /><summary type="html">プロセスを再起動すれば直る。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png" /></entry><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T03:06:05+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
 
 &lt;p&gt;なおCarthageのインストールや基礎など詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
 」にまとめてあります。&lt;/p&gt;
@@ -221,7 +205,100 @@ github &quot;adjust/ios_sdk&quot;
 &lt;ul&gt;
   &lt;li&gt;一定のパフォーマンス効果はある&lt;/li&gt;
   &lt;li&gt;おとなしく設定したほうがいい&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" /></entry><entry><title type="html">setNeedsLayoutやlayoutSubviewsなどの役割を整理する</title><link href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" rel="alternate" type="text/html" title="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" /><published>2020-05-12T00:00:00+09:00</published><updated>2020-05-12T05:47:47+09:00</updated><id>https://blog.mothule.com/ios/ios-ui-constraint-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-ui-constraint-layout-update">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;はビュー位置すぐ分かって便利。&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;は呼んだらいけない。&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;はパフォーマンス良し。&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" /></entry><entry><title type="html">CarthageでInput File Listsにxcfilelistを渡す利点と方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" rel="alternate" type="text/html" title="CarthageでInput File Listsにxcfilelistを渡す利点と方法" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T04:58:36+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;で依存ライブラリを管理すると楽です&lt;/p&gt;
+
+&lt;p&gt;この記事は&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;の環境を構築する方法と利点について説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;の基本や使い方の詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthage公式解説に出てくるxcfilelist&quot;&gt;Carthage公式解説に出てくるxcfilelist&lt;/h2&gt;
+
+&lt;p&gt;Carthageのインストール解説記事には、&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使った解説は見かけません。&lt;br /&gt;
+大抵&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;に直接パスを指定する記事が多いです。&lt;br /&gt;
+しかし、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;Carthageの公式&lt;/a&gt;では&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使っており、むしろそっちがメインにも見えます。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcfilelistの正体&quot;&gt;xcfilelistの正体&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はXcodeのファイル一覧を表すファイル・タイプです。&lt;br /&gt;
+といってもただのテキストファイルです。&lt;br /&gt;
+テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;とするだけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcfilelistを使う場所&quot;&gt;xcfilelistを使う場所&lt;/h2&gt;
+
+&lt;p&gt;公式では英文で&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を見かけますが、これを使う場所がパッと見では分かりません。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使う場所は下の画像の&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File List&lt;/code&gt;です。&lt;br /&gt;
+この中に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildPhaseのCarthage用RunScriptPhase&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;input-file-listsを使う利点&quot;&gt;Input File Listsを使う利点&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;を使う利点がないと使う気にならないと思います。&lt;/p&gt;
+
+&lt;p&gt;使う利点は、一度&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定すれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Script&lt;/code&gt;の使いにくいUIを使わなくて済みます。  &lt;br /&gt;
+またフレームワークの追加や削除時に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodeproj&lt;/code&gt;がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcfilelistを用意する&quot;&gt;xcfilelistを用意する&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はパスさえ合っていればどこに置いても問題ないですが、&lt;br /&gt;
+他環境でも動くようにまずはgit管理下が必須だと思います。&lt;br /&gt;
+次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら&lt;br /&gt;
+&lt;strong&gt;プロジェクトディレクトリ配下に置くことが最適です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot; width=&quot;50%&quot; alt=&quot;Xcode-Project-Navigator&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;中身は次のように&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;で指定するパスを並べるだけです。
+これを&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;として保存すれば準備は整います。
+ファイル名は何でもいいです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
+$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
+$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
+$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
+$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
+$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
+$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;xcfilelistをinput-file-listsに渡す&quot;&gt;xcfilelistをInput File Listsに渡す&lt;/h2&gt;
+
+&lt;p&gt;Xcodeの&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;用スクリプトフェイズの&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;に先程用意した&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+
+&lt;p&gt;先程の用意した場所であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeのInputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;output-file-listsもxcfilelistを使う&quot;&gt;Output File Listsもxcfilelistを使う&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;も同様に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;として出力パスを列挙しておけば&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定するだけです。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;こちらも&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と同じ場所場所であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;で指定するパスは、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot; width=&quot;50%&quot; alt=&quot;XcodeのOutputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;output-file-listsを指定する理由&quot;&gt;Output File Listsを指定する理由&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。&lt;br /&gt;
+なぜ指定するのかは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-measure-copy-speed-with-output-files&quot;&gt;CarthageのビルドフェイズでOutput Files指定による速度調査&lt;/a&gt;&lt;/span&gt;
+」に詳細をまとめてます。&lt;/p&gt;
+
+&lt;h2 id=&quot;後からでも対応できる&quot;&gt;後からでも対応できる&lt;/h2&gt;
+&lt;p&gt;この対応は、プロジェクトが初期段階でも後からでも対応できます。&lt;br /&gt;
+ライブラリが多くても手間はそこまで変わりません。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">xcfilelistで依存ライブラリを管理すると楽です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" /></entry><entry><title type="html">setNeedsLayoutやlayoutSubviewsなどの役割を整理する</title><link href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" rel="alternate" type="text/html" title="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" /><published>2020-05-12T00:00:00+09:00</published><updated>2020-05-12T05:47:47+09:00</updated><id>https://blog.mothule.com/ios/ios-ui-constraint-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-ui-constraint-layout-update">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;はビュー位置すぐ分かって便利。&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;は呼んだらいけない。&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;はパフォーマンス良し。&lt;/p&gt;
 
 &lt;p&gt;ビュー周りをコーディング中にUIが反映されない不具合に遭遇したら、&lt;br /&gt;
 「ビューが反映されていない。とりあえず可能性を潰すために&lt;code class=&quot;highlighter-rouge&quot;&gt;Constraint&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Layout&lt;/code&gt;を更新」&lt;br /&gt;
@@ -1964,197 +2041,4 @@ Arrayのinitにわたすことで&lt;code class=&quot;highlighter-rouge&quot;&gt
 別の見方をすえば、Swiftでしか使えない知識です。&lt;/p&gt;
 
 &lt;p&gt;他言語ではまた違った書き方になるため知識の再利用がしにくいです。&lt;br /&gt;
-しかしながら、実際にSwiftに触れている間でもっとも使われるのがイディオムです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftではデータ構造の代表格としてArrayとDictionaryがあります。 この2つを使いこなすことは、iOSエンジニアとして重要なことです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-01-ios-swift-collection-idiom/0.png" /></entry><entry><title type="html">MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む</title><link href="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive" rel="alternate" type="text/html" title="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" /><published>2020-04-29T00:00:00+09:00</published><updated>2020-04-29T22:54:00+09:00</updated><id>https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive">&lt;p&gt;&lt;strong&gt;Linux触るならシェルで焼こう&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;使わなくなったPCにLinuxをインストールして触れる機会を増やし、慣れて知識を増やそう作戦の最初の壁。&lt;br /&gt;
-それがLinuxのインストール…ではなく&lt;strong&gt;インストール用ドライブの作成です。&lt;/strong&gt;&lt;br /&gt;
-単純にUSBメディアにISOファイルを入れるだけと思って、Finderで外部デバイスにコピーしたけどちゃんとできない人がいるのでは？&lt;/p&gt;
-
-&lt;p&gt;インストールメディア用として認識させるには、ちゃんとした段取りで正しい方法で用意する必要があります。&lt;br /&gt;
-この記事は、Macを使ってLinuxのISOイメージファイルをターミナルを使って作成する手順について説明しています。&lt;/p&gt;
-
-&lt;h2 id=&quot;macでisoイメージファイルをusbに焼く流れ&quot;&gt;MacでISOイメージファイルをUSBに焼く流れ&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;イメージファイルをサイトから&lt;strong&gt;ダウンロード&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;USBフラッシュメモリドライブ&lt;/strong&gt; をMacにセット&lt;/li&gt;
-  &lt;li&gt;diskutilコマンドで&lt;strong&gt;USBフラッシュメモリを初期化&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;ddコマンドで&lt;strong&gt;isoイメージファイルをUSBフラッシュメモリにコピー&lt;/strong&gt;&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;isoイメージファイルをサイトからダウンロード&quot;&gt;ISOイメージファイルをサイトからダウンロード&lt;/h2&gt;
-&lt;p&gt;OSのISOイメージファイルを公式サイトからダウンロードします。&lt;/p&gt;
-
-&lt;p&gt;今回OSは&lt;a href=&quot;https://www.linuxmint.com/&quot;&gt;Linux Mint&lt;/a&gt;にします。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/4.png&quot; width=&quot;50%&quot; alt=&quot;LinuxMintLogo&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Linux MintのISOイメージファイルを&lt;a href=&quot;https://www.linuxmint.com/download.php&quot;&gt;Linux Mintのダウンロードページ&lt;/a&gt;から落とします。&lt;/p&gt;
-
-&lt;h2 id=&quot;usbフラッシュメモリドライブをmacにセット&quot;&gt;USBフラッシュメモリドライブをMacにセット&lt;/h2&gt;
-
-&lt;p&gt;使うUSBフラッシュメモリなら何でもいいです、今回は手元にあるものから用意しました。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/1.jpg&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/1.jpg&quot; width=&quot;50%&quot; alt=&quot;USBフラッシュメモリ&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;用意したUSBフラッシュメモリドライブをMacに挿します。&lt;br /&gt;
-もし下記アラートが出たら「無視」を選んでください。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/2.png&quot; width=&quot;50%&quot; alt=&quot;MacUSB認識不可ディスクアラート&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;diskutilコマンドでusbフラッシュメモリを初期化&quot;&gt;diskutilコマンドでUSBフラッシュメモリを初期化&lt;/h2&gt;
-
-&lt;p&gt;ターミナルでdiskutilコマンドを使ってドライブ初期化を実行します。&lt;/p&gt;
-
-&lt;h3 id=&quot;diskutilとは&quot;&gt;diskutilとは？&lt;/h3&gt;
-&lt;p&gt;diskutilとはディスクユーティリティツールです。&lt;br /&gt;
-&lt;strong&gt;ローカルのディスクとボリュームを管理&lt;/strong&gt; するユーティリティです。&lt;br /&gt;
-ほとんどのコマンドにはsudoが必要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;初期化の手順&quot;&gt;初期化の手順&lt;/h3&gt;
-&lt;p&gt;diskutilコマンドを使ってドライブを初期化するには、次の手順になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;diskutil listコマンドで&lt;strong&gt;対象ドライブのパス確認&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;diskutil eraseDiskコマンドで&lt;strong&gt;パス指定で削除&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;diskutil unmountDiskコマンドでドライブのマウント解除&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;diskutil-listコマンドで対象ドライブのパス確認&quot;&gt;diskutil listコマンドで対象ドライブのパス確認&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil list&lt;/code&gt;コマンドで現在マウントしてるUSBフラッシュメモリドライブを探します。&lt;/p&gt;
-
-&lt;p&gt;例えば下記は自分の環境で&lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil list&lt;/code&gt;を実行した結果です。&lt;br /&gt;
-この場合だと最後&lt;code class=&quot;highlighter-rouge&quot;&gt;external&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;physical&lt;/code&gt;と表示されてる&lt;code class=&quot;highlighter-rouge&quot;&gt;/dev/disk2&lt;/code&gt;ですね。&lt;br /&gt;
-容量(SIZE)も用意したUSBフラッシュメモリと同じなので間違いないです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ diskutil list
-/dev/disk0 (internal):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      GUID_partition_scheme                         251.0 GB   disk0
-   1:                        EFI EFI                     314.6 MB   disk0s1
-   2:                 Apple_APFS Container disk1         250.7 GB   disk0s2
-
-/dev/disk1 (synthesized):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      APFS Container Scheme -                      +250.7 GB   disk1
-                                 Physical Store disk0s2
-   1:                APFS Volume Macintosh HD            206.4 GB   disk1s1
-   2:                APFS Volume Preboot                 47.8 MB    disk1s2
-   3:                APFS Volume Recovery                522.7 MB   disk1s3
-   4:                APFS Volume VM                      3.2 GB     disk1s4
-
-/dev/disk2 (external, physical):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:     FDisk_partition_scheme                        *4.0 GB     disk2
-   1:                       0xEF                         9.2 MB     disk2s2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;diskutil-erasediskコマンドでパス指定で削除&quot;&gt;diskutil eraseDiskコマンドでパス指定で削除&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil eraseDisk&lt;/code&gt;コマンドで対象ディスクのパスを指定してディスクを初期化します。&lt;br /&gt;
-使い方を簡単にすると下記です。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;diskutil eraseDisk format name ドライブのパス
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ドライブのパスは、先程調べたパス(&lt;code class=&quot;highlighter-rouge&quot;&gt;/dev/disk2&lt;/code&gt;)になるので結果的に実行するコマンドは下記になります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;MS-DOS&lt;/code&gt;はファイルフォーマット&lt;code class=&quot;highlighter-rouge&quot;&gt;FAT&lt;/code&gt;となります。&lt;code class=&quot;highlighter-rouge&quot;&gt;FAT32&lt;/code&gt;は古いので大抵のOSではサポートしてるため。
-今回はUSBフラッシュメモリの容量は4GBなので&lt;code class=&quot;highlighter-rouge&quot;&gt;FAT&lt;/code&gt;でちょうど良かったりする。
-(FATの最大ファイルサイズは4GiB)&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;UNTITLED&lt;/code&gt;は何でもいいです。&lt;/p&gt;
-
-&lt;p&gt;下記は先程のコマンドを実行した結果です。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Finished erase on disk2&lt;/code&gt;と出て無事初期化成功しています。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
-Started erase on disk2
-Unmounting disk
-Creating the partition map
-Waiting &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;partitions to activate
-Formatting disk2s2 as MS-DOS &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;FAT&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; with name UNTITLED
-512 bytes per physical sector
-/dev/rdisk2s2: 7478992 sectors &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;934874 FAT32 clusters &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;4096 bytes/cluster&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;bps&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;512 &lt;span class=&quot;nv&quot;&gt;spc&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;8 &lt;span class=&quot;nv&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;32 &lt;span class=&quot;nv&quot;&gt;nft&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2 &lt;span class=&quot;nv&quot;&gt;mid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0xf8 &lt;span class=&quot;nv&quot;&gt;spt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;32 &lt;span class=&quot;nv&quot;&gt;hds&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;255 &lt;span class=&quot;nv&quot;&gt;hid&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;411648 &lt;span class=&quot;nv&quot;&gt;drv&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;0x80 &lt;span class=&quot;nv&quot;&gt;bsec&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7493632 &lt;span class=&quot;nv&quot;&gt;bspf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;7304 &lt;span class=&quot;nv&quot;&gt;rdcl&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;2 &lt;span class=&quot;nv&quot;&gt;infs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;1 &lt;span class=&quot;nv&quot;&gt;bkbs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;6
-Mounting disk
-Finished erase on disk2
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;diskutil-unmountdiskコマンドでドライブのマウント解除&quot;&gt;diskutil unmountDiskコマンドでドライブのマウント解除&lt;/h3&gt;
-&lt;p&gt;削除工程の最後は、マウント解除です。&lt;br /&gt;
-これをせず次工程のISOイメージファイルをコピーしようとすると下記エラーとなります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dd: /dev/disk2: Resource busy
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;下記は&lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil unmountDisk&lt;/code&gt;コマンドでマウント解除した結果です。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;diskutil unmountDisk /dev/disk2
-Unmount of all volumes on disk2 was successful
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ddコマンドでisoイメージファイルをusbフラッシュメモリにコピー&quot;&gt;ddコマンドでisoイメージファイルをUSBフラッシュメモリにコピー&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil eraseDisk&lt;/code&gt;でUSBフラッシュメモリをキレイにできました。&lt;br /&gt;
-今度はisoイメージファイルをUSBフラッシュメモリにコピーします。&lt;br /&gt;
-コピーには&lt;code class=&quot;highlighter-rouge&quot;&gt;dd&lt;/code&gt;コマンドを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;ddコマンドとは&quot;&gt;ddコマンドとは？&lt;/h3&gt;
-&lt;p&gt;ファイルの変換とコピーするコマンドです。
-標準入力を標準出力にコピーします。
-入力データは512バイトのブロック毎に入力・出力します。&lt;/p&gt;
-
-&lt;h3 id=&quot;ddコマンドでisoファイルをusbメモリにコピーする&quot;&gt;ddコマンドでISOファイルをUSBメモリにコピーする&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dd&lt;/code&gt;コマンドを次のように指定します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;dd &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~/Downloads/linuxmint-19.3-xfce-32bit.iso &lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/dev/disk2 &lt;span class=&quot;nv&quot;&gt;bs&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;4028
-489925+1 records &lt;span class=&quot;k&quot;&gt;in
-&lt;/span&gt;489925+1 records out
-1973420032 bytes transferred &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;1604.956170 secs &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1229579 bytes/sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dd&lt;/code&gt;コマンドのオプションに&lt;code class=&quot;highlighter-rouge&quot;&gt;if&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;of&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;bs&lt;/code&gt;オプションを使います。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;if=&lt;/code&gt;オプションで入力ファイルとなるISOイメージファイルのパスを指定します。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;of=&lt;/code&gt;オプションで出力ファイルとなるドライブのパスを指定します。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bs=&lt;/code&gt;オプションでブロックサイズを指定します。未指定時は512バイトです。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;このコマンドは完了に時間がかかります。&lt;br /&gt;
-動いてるかどうかは、USBフラッシュメモリドライブによっては、入出力の点灯で確認できます。&lt;/p&gt;
-
-&lt;h3 id=&quot;usbフラッシュメモリドライブを抜く&quot;&gt;USBフラッシュメモリドライブを抜く&lt;/h3&gt;
-
-&lt;p&gt;ISOイメージファイルをUSBフラッシュメモリへコピーが完了したらマウント解除して安全にUSBドライブが抜けるようにします。&lt;/p&gt;
-
-&lt;div class=&quot;language-bash highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;diskutil eject /dev/disk2
-Disk /dev/disk2 ejected
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;下記は&lt;code class=&quot;highlighter-rouge&quot;&gt;diskutil list&lt;/code&gt;を実行した結果です。消えてることが分かります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ diskutil list
-/dev/disk0 (internal):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      GUID_partition_scheme                         251.0 GB   disk0
-   1:                        EFI EFI                     314.6 MB   disk0s1
-   2:                 Apple_APFS Container disk1         250.7 GB   disk0s2
-
-/dev/disk1 (synthesized):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      APFS Container Scheme -                      +250.7 GB   disk1
-                                 Physical Store disk0s2
-   1:                APFS Volume Macintosh HD            206.4 GB   disk1s1
-   2:                APFS Volume Preboot                 47.8 MB    disk1s2
-   3:                APFS Volume Recovery                522.7 MB   disk1s3
-   4:                APFS Volume VM                      3.2 GB     disk1s4
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;インストールメディアは単純だけど慣れるほど使わない&quot;&gt;インストールメディアは単純だけど慣れるほど使わない&lt;/h2&gt;
-&lt;p&gt;一回でも手を動かしてインストールメディアを作成してしまえば、思いの外単純だと思います。
-でもそう何回もインストールメディアを作ることはなく、必要となったときには忘れてしまいます。&lt;/p&gt;
-
-&lt;p&gt;こういうのは、慣れるより探せです。&lt;/p&gt;</content><author><name></name></author><category term="linux" /><category term="mint" /><category term="mac" /><summary type="html">Linux触るならシェルで焼こう</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" /></entry></feed>
+しかしながら、実際にSwiftに触れている間でもっとも使われるのがイディオムです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftではデータ構造の代表格としてArrayとDictionaryがあります。 この2つを使いこなすことは、iOSエンジニアとして重要なことです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-01-ios-swift-collection-idiom/0.png" /></entry></feed>
