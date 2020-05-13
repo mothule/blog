@@ -1,7 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'active_support/core_ext/hash'
+# require 'active_support/core_ext/hash'
+require_relative 'src/all'
 require 'erb'
 
 sitemap_path = './ws/_site/sitemap.xml'

@@ -1,10 +1,8 @@
 #!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'bundler/setup'
-require 'colorator'
+require_relative 'src/all'
 require 'optparse'
-require 'active_support/all'
 
 show_tree = false
 show_articles = false
