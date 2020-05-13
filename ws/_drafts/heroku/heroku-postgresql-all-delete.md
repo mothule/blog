@@ -1,5 +1,5 @@
 ---
-title: PostgreSQLメモ
+title: Heroku上のPostgreSQLデータを全削除する
 categories: db postgresql
 tags: db postgresql
 ---
