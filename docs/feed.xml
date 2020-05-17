@@ -1,4 +1,626 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-13T23:17:54+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-17T18:08:04+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Carthage bootstrapとGit管理をチーム運用観点で整理</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration" rel="alternate" type="text/html" title="Carthage bootstrapとGit管理をチーム運用観点で整理" /><published>2020-05-15T00:00:00+09:00</published><updated>2020-05-17T17:23:49+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration">&lt;p&gt;この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthage-updateとbootstrapの違い&quot;&gt;carthage updateとbootstrapの違い&lt;/h2&gt;
+&lt;p&gt;carthage bootstrapについて説明します。&lt;/p&gt;
+
+&lt;p&gt;説明には、carthage bootstrapと比較するコマンドや関係するファイルを用いて説明します。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;carthage updateは&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;を見てframeworkと&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;を作成する&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;は実際に作成したframeworkの&lt;code class=&quot;highlighter-rouge&quot;&gt;ライブラリ&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;バージョン&lt;/code&gt;が記載されてる&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage bootstrap&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;を見てframeworkを作成する&lt;/li&gt;
+  &lt;li&gt;carthage updateは&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;を見て&lt;strong&gt;なるべく最新&lt;/strong&gt;のライブラリバージョンを選ぶ&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;1、2、3をイメージで説明します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/1.png&quot; width=&quot;100%&quot; alt=&quot;Carthageのupdateとbootstrapの違い&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;carthage updateはCartfileを使ってCartfile.resolvedとフレームワークを更新します。&lt;/li&gt;
+  &lt;li&gt;carthage bootstrapはCartfile.resolvedを使ってフレームワークを更新します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;そして最も大きな違いは、&lt;strong&gt;carthage updateには冪等性がなく、carthage bootstrapには冪等性がある点です。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage-updateの動き&quot;&gt;carthage updateの動き&lt;/h3&gt;
+&lt;p&gt;例えば、carthage updateを5月1日に実行して、SwiftyJSON ver4のframeworkが作成されます。&lt;br /&gt;
+半月後にSwiftyJSONが新しいバージョンver5をリリースします。&lt;br /&gt;
+更に&lt;strong&gt;半月後にもう一度carthage updateを実行すると、SwiftyJSON ver5のframeworkが作成されます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/2.png&quot; width=&quot;100%&quot; alt=&quot;Carthage updateの動き&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;つまり、&lt;strong&gt;carthage updateはライブラリ更新をします。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage-bootstrapの動き&quot;&gt;carthage bootstrapの動き&lt;/h3&gt;
+&lt;p&gt;updateではなくbootstrapですると、&lt;br /&gt;
+1ヶ月後でもframeworkのバージョンは変わりません。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/3.png&quot; width=&quot;100%&quot; alt=&quot;Carthage updateの動き&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;つまり、&lt;strong&gt;carthage updateは環境を再現します。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage-updateとbootstrapの使い分け&quot;&gt;carthage updateとbootstrapの使い分け&lt;/h3&gt;
+
+&lt;p&gt;ライブラリの新規・更新はupdate、環境構築はbootstrapとして使います。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;updateを使うケース
+    &lt;ul&gt;
+      &lt;li&gt;ライブラリを追加する&lt;/li&gt;
+      &lt;li&gt;ライブラリのバージョンを上げる&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;bootstrapを使うケース
+    &lt;ul&gt;
+      &lt;li&gt;新しくチームメンバーが入ってきて、開発環境を構築する&lt;/li&gt;
+      &lt;li&gt;別メンバーがライブラリのバージョンを更新した&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;carthageとgit管理&quot;&gt;CarthageとGit管理&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;で&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;ディレクトリと&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage.resolved&lt;/code&gt;ファイルが生成されますが、&lt;br /&gt;
+これらはGit管理下に加えるべきでしょうか？除外すべきでしょうか？&lt;/p&gt;
+
+&lt;p&gt;方法は2つあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;だけをGit管理下において、&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage bootstrap&lt;/code&gt;で&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリを再現する方法と、&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリの両方をGit管理下においてgit cloneだけで再現環境を実現する方法です。&lt;/p&gt;
+
+&lt;h3 id=&quot;cartfileresolvedのみをgit管理下にする&quot;&gt;Cartfile.resolvedのみをGit管理下にする&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;はライブラリ名とそれらのバージョンが記載されたファイルであることは説明しました。&lt;br /&gt;
+しかし&lt;code class=&quot;highlighter-rouge&quot;&gt;framework&lt;/code&gt;はないので、&lt;code class=&quot;highlighter-rouge&quot;&gt;carthge bootstrap&lt;/code&gt;コマンドを使って必要なframeworkを構築します。&lt;/p&gt;
+
+&lt;h3 id=&quot;cartfileresolvedとcarthageディレクトリ&quot;&gt;Cartfile.resolvedとCarthageディレクトリ&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;は他環境で再現をする上で必要です。&lt;br /&gt;
+そこに加えて、&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリがあることで、frameworkの生成が不要になります。&lt;/p&gt;
+
+&lt;h4 id=&quot;buildのみにする&quot;&gt;Buildのみにする&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリ全てをGit管理下不要です。&lt;br /&gt;
+必要なのは生成済みframeworkなのため、&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage/Build&lt;/code&gt;ディレクトリのみで問題ありません。&lt;/p&gt;
+
+&lt;p&gt;そのため&lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;に追記が必要です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Carthage/Checkouts
+!Carthage/Build
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;どちらがいいのか&quot;&gt;どちらがいいのか？&lt;/h3&gt;
+&lt;p&gt;これは議論されているので、どちらがいいのか確定的なものはありません。&lt;br /&gt;
+答えとしては案件によります。&lt;br /&gt;
+なのでネットで「こちらがいい」と書いてあっても鵜呑みは危険です。&lt;br /&gt;
+理由を見てそれが自分が適用しようとしてる条件に一致しているか判断することを進めます。&lt;/p&gt;
+
+&lt;p&gt;ここではそれぞれのメリット・デメリットを部分的に抜粋します。&lt;br /&gt;
+公平にするため、私情は入れず事実のみを載せます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Cartfile.resolvedのみ
+    &lt;ul&gt;
+      &lt;li&gt;CIで毎回bootstrapでframework作成が必要&lt;/li&gt;
+      &lt;li&gt;bootstrapが失敗するリスクがある&lt;/li&gt;
+      &lt;li&gt;ライブラリ更新済みと未更新ブランチをまたぐとbootstrapが必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Cartfile.resolvedとCarthage
+    &lt;ul&gt;
+      &lt;li&gt;Swift versionを変更すると再生成が必要&lt;/li&gt;
+      &lt;li&gt;Pull Requestでdiffが増える&lt;/li&gt;
+      &lt;li&gt;git cloneが遅くなる&lt;/li&gt;
+      &lt;li&gt;1ファイル100MBがあるとプッシュできない&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;swift-versionを変更すると再生成が必要&quot;&gt;Swift versionを変更すると再生成が必要&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Module Stability&lt;/code&gt;の有効になっていないライブラリでは、Swiftのバージョンを上げるたびにframeworkの再生成が必要です。&lt;/p&gt;
+
+&lt;h3 id=&quot;ライブラリ更新後はbootstrapが必要&quot;&gt;ライブラリ更新後はbootstrapが必要&lt;/h3&gt;
+&lt;p&gt;別メンバーがライブラリを更新したブランチをマージさせたら、&lt;br /&gt;
+bootstrapでframework再生成が必要です。&lt;/p&gt;
+
+&lt;h4 id=&quot;pull-requestでdiffが増える&quot;&gt;Pull Requestでdiffが増える&lt;/h4&gt;
+&lt;p&gt;frameworkは1つのファイルではなくディレクトリになっており、中にファイルやディレクトリがあります。&lt;br /&gt;
+そのファイル数だけGit管理となるため、frameworkを追加や変更したときのdiffは量が増えます。&lt;/p&gt;
+
+&lt;h4 id=&quot;ciで毎回bootstrapでframework作成が必要&quot;&gt;CIで毎回bootstrapでframework作成が必要&lt;/h4&gt;
+&lt;p&gt;CIなど新規環境下で環境構築をする場合は、bootstrapを実行してframeworkを生成する必要があります。&lt;br /&gt;
+当然ですが、その分CI時間はかかります。&lt;/p&gt;
+
+&lt;h4 id=&quot;bootstrapが失敗するリスクがある&quot;&gt;bootstrapが失敗するリスクがある&lt;/h4&gt;
+&lt;p&gt;Carthageはxcodebuildでframeworkを生成しています。&lt;br /&gt;
+可能性は低いのですが、私の環境でも何度か起きており、xcodebuildのバージョン差異や他要因で失敗することがあります。&lt;/p&gt;
+
+&lt;p&gt;つまりそれは最悪Git管理下の情報だけでは環境再現が不可能となります。&lt;/p&gt;
+
+&lt;h4 id=&quot;git-cloneが遅くなる&quot;&gt;git cloneが遅くなる&lt;/h4&gt;
+&lt;p&gt;frameworkに関するファイル数が増える分、ファイル数やデータ数は増えるのでそれだけclone時やpull/fecthでのダウンロード時間は増えます。&lt;/p&gt;
+
+&lt;h4 id=&quot;1ファイル100mbがあるとプッシュできない&quot;&gt;1ファイル100MBがあるとプッシュできない&lt;/h4&gt;
+&lt;p&gt;GitHubでは1ファイル100MB以上のファイルコミットはできない制限が設けられており、LFSの設定が必要になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;私のチーム運用観点&quot;&gt;私のチーム運用観点&lt;/h2&gt;
+
+&lt;p&gt;私が過去に経験してきたチームでのCarthage運用は次の通りです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage/Build&lt;/code&gt;ディレクトリはコミットしない&lt;/li&gt;
+  &lt;li&gt;Swiftバージョン更新時は、別ブランチからPull Request通す&lt;/li&gt;
+  &lt;li&gt;Cartfileではバージョン指定してる&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;そして下記はそれぞれのメリット・デメリットに対する考えです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Swift versionを変更すると再生成が必要
+    &lt;ul&gt;
+      &lt;li&gt;バージョン上がる度毎回変更してます&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;ライブラリ更新後はbootstrapが必要
+    &lt;ul&gt;
+      &lt;li&gt;不要です。しかしGitからの取得量は増えます。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Pull Requestでdiffが増える
+    &lt;ul&gt;
+      &lt;li&gt;バージョンを上げるだけのブランチなのでそもそもそのdiffを殆ど見ないです&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;CIで毎回bootstrapでframework作成が必要
+    &lt;ul&gt;
+      &lt;li&gt;これはコミットしてるので不要です&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;bootstrapが失敗するリスクがある
+    &lt;ul&gt;
+      &lt;li&gt;バージョン固定してるので&lt;code class=&quot;highlighter-rouge&quot;&gt;bootstrap&lt;/code&gt;を使ってないです&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;git cloneが遅くなる
+    &lt;ul&gt;
+      &lt;li&gt;使っているfrmaeworkは10個ですが、それぞれのサイズは大きくはないので気になるほどになってないです&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;1ファイル100MBがあると運用不可能
+    &lt;ul&gt;
+      &lt;li&gt;使ってるframeworkに1ファイル100MBを超えるものはありません。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;バージョン上がるたびに全てのframework生成は時間がかかります。&lt;br /&gt;
+それ以上に回数的にCIにかかる時間が増えます。&lt;br /&gt;
+CIにキャッシュ仕込むのもありますが、CIが限定されますし、そのために開発環境が多少複雑にはなります。&lt;br /&gt;
+git cloneが時間かかるとありますが、git cloneよりbootstrapの方が遥かに時間がかかります。&lt;br /&gt;
+そして昔のCocoaPodsのように再現性がなくなることのリスクも気になります。&lt;/p&gt;
+
+&lt;p&gt;なおこれは私の経験した案件にフィットした運用ですので鵜呑みにせず参考にしてください。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:07:46+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
+
+&lt;p&gt;この記事は、iOSアプリにCarthage環境を導入する手順について説明します。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;MacにCarghageをインストールする&lt;/li&gt;
+  &lt;li&gt;Cartfileにライブラリを記入&lt;/li&gt;
+  &lt;li&gt;Cartfileからframework作成&lt;/li&gt;
+  &lt;li&gt;プロジェクトにframeworkをリンク&lt;/li&gt;
+  &lt;li&gt;ビルドフェイズにframeworkのコピースクリプトを作成&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;なお、チーム運用、git管理、ライブラリのバージョン運用など詳細は、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;
+
+&lt;h2 id=&quot;macにcarghageをインストールする&quot;&gt;MacにCarghageをインストールする&lt;/h2&gt;
+
+&lt;p&gt;CarthageはHomebrewでインストールできます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install carthage
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;cartfileにライブラリを記入&quot;&gt;Cartfileにライブラリを記入&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;とはCarthageのライブラリ管理ファイルです。&lt;br /&gt;
+テキストファイルになってて、&lt;br /&gt;
+この中にCarthageで管理したいライブラリをまとめます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Cartfileファイルの用意&lt;/li&gt;
+  &lt;li&gt;Cartfileの編集&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cartfileファイルの用意&quot;&gt;Cartfileファイルの用意&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;はプロジェクト毎に用意できます。&lt;br /&gt;
+対象プロジェクトのディレクトリ上に&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;を用意します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/your/xcode/project/path
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;touch Cartfile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;cartfile編集&quot;&gt;Cartfile編集&lt;/h3&gt;
+&lt;p&gt;インストールしたいライブラリを&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;に記入します。&lt;br /&gt;
+例えば&lt;a href=&quot;https://github.com/SwiftyJSON/SwiftyJSON&quot;&gt;SwiftyJSON&lt;/a&gt;であればに次のように記入します。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;github &quot;SwiftyJSON/SwiftyJSON&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;cartfileからframework作成&quot;&gt;Cartfileからframework作成&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;の準備ができたら&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;コマンドでフレームワークを作成します。&lt;br /&gt;
+オプションに&lt;code class=&quot;highlighter-rouge&quot;&gt;--platform&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;--no-use-binaries&lt;/code&gt;をつけます。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;オプション&lt;/th&gt;
+      &lt;th&gt;説明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;--platform&lt;/td&gt;
+      &lt;td&gt;対象プラットフォーム指定。未指定は全環境のフレームワークを作成します&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;--no-use-binaries&lt;/td&gt;
+      &lt;td&gt;予めビルドされたバイナリを使わずコードからビルドします&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;コマンドを実行するとframework作成処理が走ります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;carthage update &lt;span class=&quot;nt&quot;&gt;--platform&lt;/span&gt; iOS &lt;span class=&quot;nt&quot;&gt;--no-use-binaries&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; Fetching SwiftyJSON
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; Checking out SwiftyJSON at &lt;span class=&quot;s2&quot;&gt;&quot;5.0.0&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; xcodebuild output can be found &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; /var/folders/45/7f_wlrcs3xv6rmstcz2l5_000000gn/T/carthage-xcodebuild.IBF3eg.log
+&lt;span class=&quot;k&quot;&gt;***&lt;/span&gt; Building scheme &lt;span class=&quot;s2&quot;&gt;&quot;SwiftyJSON iOS&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;SwiftyJSON.xcworkspace
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;成功すると&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリと&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;ファイルが作成されます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Cartfile.resolved
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;で最終的な依存ライブラリ情報をまとめたテキストファイル&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Carthage
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;で作成されたライブラリのフレームワークが格納されたディレクトリ&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Cartfile.resolvedの詳細については「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-team-collaboration&quot;&gt;Carthage bootstrapとGit管理をチーム運用観点で整理&lt;/a&gt;&lt;/span&gt;
+」でまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;プロジェクトにframeworkをリンク&quot;&gt;プロジェクトにframeworkをリンク&lt;/h2&gt;
+&lt;p&gt;frameworkはプロジェクトにリンクしないと使えません。&lt;br /&gt;
+プロジェクトの&lt;code class=&quot;highlighter-rouge&quot;&gt;Target &amp;gt; General &amp;gt; Linked frameworks and Libraries&lt;/code&gt;を ＋ ボタンを押してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/1.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;フレームワーク／ライブラリの選択画面が出るので、&lt;code class=&quot;highlighter-rouge&quot;&gt;Add Other...&lt;/code&gt; ボタンを押してください。
+&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/2.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;ここで先程作成したframeworkを指定します。&lt;br /&gt;
+なおフレームワークは、&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage/Build/iOS&lt;/code&gt;ディレクトリの中にあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/3.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;frameworkを選ぶとXcodeプロジェクトに追加されます。&lt;br /&gt;
+このとき&lt;strong&gt;Do Not Embed&lt;/strong&gt;になってることを確認してください。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/4.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これでプロジェクトにframeworkがリンクされて、&lt;br /&gt;
+コード上のimportで対象frameworkを見つけられるようになります。&lt;/p&gt;
+
+&lt;p&gt;なお、ボタンをポチポチせずにframeworkをドラッグ＆ドロップでも追加できます。&lt;/p&gt;
+
+&lt;h3 id=&quot;注意embed-contentだとビルドエラーになる&quot;&gt;注意：Embed Contentだとビルドエラーになる&lt;/h3&gt;
+
+&lt;p&gt;frameworkのリンク経路は、&lt;code class=&quot;highlighter-rouge&quot;&gt;Target &amp;gt; General&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Target &amp;gt; Build Phases&lt;/code&gt;の2つあり&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;General&lt;/code&gt;からframeworkを追加すると、デフォルトでは&lt;code class=&quot;highlighter-rouge&quot;&gt;Embed &amp;amp; Sign&lt;/code&gt;になります。&lt;br /&gt;
+このままビルドすると次のようなビルドエラーが起きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Multiple commands produce '.../YOUR-APP-NAME.app/Frameworks/&amp;lt;FRAMEWORK NAME&amp;gt;.framework':
+
+1) Target '&amp;lt;YOUR TARGET NAME&amp;gt;' has copy command from
+'/your/project/path/Carthage/Build/iOS/&amp;lt;FRAMEWORK NAME&amp;gt;.framework' to '.../YOUR-APP-NAME.app/Frameworks/&amp;lt;FRAMEWORK NAME&amp;gt;.framework'
+
+2) That command depends on command in Target '&amp;lt;YOUR TARGET NAME&amp;gt;': script phase “Run Script”
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Embedded Frameworkではないので、&lt;code class=&quot;highlighter-rouge&quot;&gt;Do Not Embed&lt;/code&gt;に直してください。&lt;/p&gt;
+
+&lt;h2 id=&quot;ビルドフェイズにフレームワークのコピースクリプトを作成&quot;&gt;ビルドフェイズにフレームワークのコピースクリプトを作成&lt;/h2&gt;
+&lt;p&gt;リンクでビルドは通りますが、プロダクト内にframeworkが配置されていません。&lt;br /&gt;
+&lt;strong&gt;ビルド時にframeworkをコピーするスクリプトを用意します。&lt;/strong&gt;&lt;br /&gt;
+コピー処理は&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;コマンドを使います。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;ビルドフェイズにスクリプトフェイズ追加&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;コマンドをセット&lt;/li&gt;
+  &lt;li&gt;スクリプトの入力情報をセット&lt;/li&gt;
+  &lt;li&gt;スクリプトの出力情報をセット&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h3 id=&quot;1-ビルドフェイズにスクリプトフェイズ追加&quot;&gt;1. ビルドフェイズにスクリプトフェイズ追加&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;上の ＋ ボタンを押して&lt;code class=&quot;highlighter-rouge&quot;&gt;New Run Script Phase&lt;/code&gt;を選ぶと&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Script&lt;/code&gt;フェイズが作成されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/5.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;2-carthage-copy-frameworksコマンドをセット&quot;&gt;2. &lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;コマンドをセット&lt;/h3&gt;
+&lt;p&gt;Shellはシェルコマンドが呼べればいいので&lt;code class=&quot;highlighter-rouge&quot;&gt;/bin/sh&lt;/code&gt;のままです。&lt;br /&gt;
+スクリプト内で&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;コマンドを追記します。&lt;br /&gt;
+絶対パスでも相対パスでもパスが通っていればどちらでも大丈夫です。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/6.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;3-スクリプトの入力情報をセット&quot;&gt;3. スクリプトの入力情報をセット&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;はframeworkのパスを渡すと、ビルド対象プロジェクト内にコピーします。&lt;br /&gt;
+厳密には&lt;code class=&quot;highlighter-rouge&quot;&gt;$BUILD_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH&lt;/code&gt;パスにコピーします。&lt;a href=&quot;https://github.com/Carthage/Carthage/blob/f656edfe35651b54eec50d814e79d079f8eea7c4/Source/carthage/CopyFrameworks.swift#L25&quot;&gt;GitHub/Carthage&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/7.png&quot; width=&quot;100%&quot; alt=&quot;Carthage Xcode Build Phases Run Script Input Files&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;4-スクリプトの出力情報をセット&quot;&gt;4. スクリプトの出力情報をセット&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;はコピー先を指定します。&lt;/p&gt;
+
+&lt;p&gt;実は&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;は指定せずとも動作に問題はありません。&lt;strong&gt;しかしビルドパフォーマンスに影響します。&lt;/strong&gt;&lt;br /&gt;
+詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-measure-copy-speed-with-output-files&quot;&gt;CarthageのビルドフェイズでOutput Files指定による速度調査&lt;/a&gt;&lt;/span&gt;
+」に調査結果をまとめてあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/8.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-14-ios-carthage-install-guide/8.png&quot; width=&quot;100%&quot; alt=&quot;Carthage Xcode Build Phases Run Script Output Files&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;注意-carthage-copy-frameworksを忘れるとランタイムエラー&quot;&gt;注意: carthage copy-frameworksを忘れるとランタイムエラー&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;コマンドを実行しなくてもビルドは通ります。&lt;br /&gt;
+しかし実行すると次のようなにライブラリのロードエラーが起きます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
+  Referenced from: /Users/mothule/Library/Developer/CoreSimulator/Devices/1DB7E7C4-D7CD-44BA-B3F9-F66DC4E5EC51/data/Containers/Bundle/Application/6B0FDFCC-9D12-47D5-9B74-B837BE8FC983/UseCarthage.app/UseCarthage
+  Reason: image not found
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これはプロダクト内にframeworkが配置されてないことで、&lt;br /&gt;
+実行環境にプロダクトがインストールされてもframeworkが見つからずdyldがランタイムエラーを起こすためです。&lt;/p&gt;
+
+&lt;h3 id=&quot;注意-input-filesで渡すframeworkのパスを間違えるとビルドエラー&quot;&gt;注意: Input Filesで渡すframeworkのパスを間違えるとビルドエラー&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;コマンドに渡すframeworkのパスが間違っているとビルドエラーが発生します。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;または&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;で渡してるframeworkのパスが正しいか確認してください。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Could not find framework &quot;&amp;lt;framework name&amp;gt;&quot; at path &amp;lt;wrong framework path&amp;gt;.
+Ensure that the given path is appropriately entered and that your &quot;Input Files&quot; and &quot;Input File Lists&quot; have been entered correctly.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;フレームワークのパスはまとめて指定も可能&quot;&gt;フレームワークのパスはまとめて指定も可能&lt;/h3&gt;
+
+&lt;p&gt;Input Filesに各フレームワークのパスをセットしなくても、xcfilelistという拡張子で指定することで一律管理も可能です。
+詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-use-xcfilelist&quot;&gt;CarthageでInput File Listsにxcfilelistを渡す利点と方法&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;ライブラリを追加する&quot;&gt;ライブラリを追加する&lt;/h2&gt;
+&lt;p&gt;新しくframeworkを追加や更新する場合は、&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage copy-frameworks&lt;/code&gt;コマンドの登録以外の作業をやります。&lt;br /&gt;
+また&lt;code class=&quot;highlighter-rouge&quot;&gt;update&lt;/code&gt;にオプションが一つ増えます&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Cartfileにライブラリ追加&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;でライブラリ個別更新&lt;/li&gt;
+  &lt;li&gt;リンクにframeworkを追加&lt;/li&gt;
+  &lt;li&gt;コピースクリプトのInput FilesとOutput Filesに追加&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;新しくビルドフェイズにスクリプトを追加はしません。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage-updateでライブラリ個別更新&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;でライブラリ個別更新&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;とするとCartfileにかかれている全てのライブラリが対象となります。&lt;br /&gt;
+他のライブラリのバージョンは更新せず追加したライブラリだけのframework作成をしたい場合は、&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;にライブラリ名を渡します。&lt;/p&gt;
+
+&lt;p&gt;例えば新しく追加したライブラリが&lt;code class=&quot;highlighter-rouge&quot;&gt;SDWebImage&lt;/code&gt;であれば、コマンドラインは次のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;carthage update &lt;span class=&quot;nt&quot;&gt;--platform&lt;/span&gt; iOS &lt;span class=&quot;nt&quot;&gt;--no-use-binaries&lt;/span&gt; SDWebImage
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これで既存ライブラリは更新されません。&lt;/p&gt;
+
+&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
+
+&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
+もしチーム運用、git管理、ライブラリのバージョン運用など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T17:23:49+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
+
+&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
+  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
+    &lt;ul&gt;
+      &lt;li&gt;単一障害点となる&lt;/li&gt;
+      &lt;li&gt;メンテナンス必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
+  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
+  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
+  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
+  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
+    &lt;ul&gt;
+      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
+      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
+  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
+  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
+  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
+
+&lt;h4 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h4&gt;
+
+&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
+対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
+プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
+
+&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
+Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
+その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
+
+&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
+対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
+
+&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
+
+&lt;h4 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h4&gt;
+
+&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
+プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
+
+&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
+
+&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
+CocoaPodsはとにかく楽です。&lt;/p&gt;
+
+&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
+&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
+
+&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
+あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
+&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
+
+&lt;p&gt;Carthageの勝ちです。
+CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
+以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
+framework側でコンパイルが走ることはありません。&lt;/p&gt;
+
+&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
+&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
+  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
+  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;環境&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CocoaPods&lt;/td&gt;
+      &lt;td&gt;3.208s&lt;/td&gt;
+      &lt;td&gt;3.492s&lt;/td&gt;
+      &lt;td&gt;3.308s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Carthage&lt;/td&gt;
+      &lt;td&gt;1.478s&lt;/td&gt;
+      &lt;td&gt;1.765s&lt;/td&gt;
+      &lt;td&gt;1.60725s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;vanilla&lt;/td&gt;
+      &lt;td&gt;0.932s&lt;/td&gt;
+      &lt;td&gt;1.143s&lt;/td&gt;
+      &lt;td&gt;1.04967s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
+&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
+
+&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
+そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
+この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
+
+&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
+ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
+
+&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
+CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
+&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
+ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
+
+&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
+&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
+その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
+Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
+
+&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
+&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
+そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
+「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
+Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
+その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
+&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
+Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
+そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
+Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
+
+&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
+
+&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
+&lt;p&gt;現時点ではどちらがいいとはいえないです。
+Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
+
+&lt;p&gt;またケースによっても変わってくると思います。
+何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
+
+&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
 
 &lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
 なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
@@ -1420,625 +2042,4 @@ rablの場所を&lt;code class=&quot;highlighter-rouge&quot;&gt;users/show&lt;/c
   &lt;li&gt;日本語記事が少ない&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" /></entry><entry><title type="html">簡易なSwiftパフォーマンス測定クラスを作った</title><link href="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script" rel="alternate" type="text/html" title="簡易なSwiftパフォーマンス測定クラスを作った" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T21:47:25+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-create-perf-script</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-create-perf-script">&lt;p&gt;普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。&lt;/p&gt;
-
-&lt;p&gt;Swift自体のコードを読めば理解できるかもしれません。しかしコンパイラコードを読むのはかなりの労力を時間を必要とします。目的が「どっちの書き方が速いか？」だけであればコスパ悪いです。&lt;/p&gt;
-
-&lt;p&gt;この記事では、速度パフォーマンスのコード検証におけるボイラープレートコードの説明と、それを軽減するために私が作成したクラスを紹介する記事です。&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定の仕組み&quot;&gt;速度パフォーマンス測定の仕組み&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスを検証するなら大抵は次の工程になります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Playgroundや簡単なXcodeプロジェクトを用意&lt;/li&gt;
-  &lt;li&gt;検証コードを実装&lt;/li&gt;
-  &lt;li&gt;検証コード前後に開始と終了の差分時間を確保&lt;/li&gt;
-  &lt;li&gt;複数回実行して差分時間を集める&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最遅を除去&lt;/li&gt;
-  &lt;li&gt;差分時間の最速／最速／平均を算出する&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;複数回実行する理由&quot;&gt;複数回実行する理由&lt;/h3&gt;
-&lt;p&gt;&lt;strong&gt;1回の測定では測定誤差の解消ができません。&lt;/strong&gt;&lt;br /&gt;
-なので通常は複数回コードの検証を実施結果の平均値などを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;最速と最遅を除去する理由&quot;&gt;最速と最遅を除去する理由&lt;/h3&gt;
-&lt;p&gt;測定誤差の影響を強く受けた最速と最遅をなくすためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftのコード検証はコスパ悪い&quot;&gt;Swiftのコード検証はコスパ悪い&lt;/h2&gt;
-&lt;p&gt;速度パフォーマンスの仕組みは単純です。しかし目的に対する労力が見合ってません。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;簡単なコード検証をしたいだけなのに、測定の仕組みを用意するのは面倒です。&lt;/strong&gt;&lt;br /&gt;
-仕組みは単純でも、検証のたびに必要になるし、検証コードよりも測定コードが長いことも…&lt;/p&gt;
-
-&lt;h3 id=&quot;コード検証はフットワークが重要&quot;&gt;コード検証はフットワークが重要&lt;/h3&gt;
-&lt;p&gt;ふと思いついたこと、どっちがいいのかモヤモヤしてるときに「ササッ」と調べたいですよね。&lt;br /&gt;
-頭の中に検証コードは入ってるのに、それ以上に検証に時間がかかるのはストレスです。&lt;br /&gt;
-毎度その状態だと、次第に検証を諦めてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証は、結果と同じぐらい速度が重要です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;速度パフォーマンス測定クラスの作成&quot;&gt;速度パフォーマンス測定クラスの作成&lt;/h2&gt;
-&lt;p&gt;検証コードの実装や結果を得る作業が正味作業だとすれば、測定の仕組みを実装するのは付帯作業です。&lt;br /&gt;
-そして毎回同じ測定の仕組みを実装するのは無駄作業です。&lt;/p&gt;
-
-&lt;p&gt;なので検証コードに注力できるように、&lt;strong&gt;速度パフォーマンス測定において最低限の機能をもつクラスを作成しました。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/mothule/Perf&quot;&gt;mothule/Perf - GitHub&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;主に自分向け&quot;&gt;主に自分向け&lt;/h3&gt;
-&lt;p&gt;主に自分用に用意しました。&lt;br /&gt;
-ローカルにこのファイルを置いてても場所を忘れたりPCリプレイスやPC故障でロストを考えてGitHubに上げました。&lt;/p&gt;
-
-&lt;p&gt;とはいえ内容はシンプルでユースケースも明確なので使いたい方は使っていただいても構いません。&lt;/p&gt;
-
-&lt;h3 id=&quot;手軽さ重視&quot;&gt;手軽さ重視&lt;/h3&gt;
-&lt;p&gt;パフォーマンス測定時の環境を考えて、libかframeworkにせず、CocoaPodsやCarthageにも対応しません。&lt;br /&gt;
-単純にファイル単体を落として参照して使うだけです。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;コード検証時にはそれぐらい単純な方がコスパがよいためです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;仕組みについて&quot;&gt;仕組みについて&lt;/h3&gt;
-&lt;p&gt;仕組みは、検証回数と検証コードをクロージャで渡せば、戻り値で検証結果を得られます。&lt;/p&gt;
-
-&lt;p&gt;検証結果には、検証名、最速時間、最遅時間、平均時間の情報を保持しています。&lt;br /&gt;
-また最速と最遅は除外してるため検証回数-2が検証結果数になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;検証作業はスペシャリストへの階段&quot;&gt;検証作業はスペシャリストへの階段&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;どっちの書き方がいいのか？&lt;/li&gt;
-  &lt;li&gt;この処理って実は重いのか？&lt;/li&gt;
-  &lt;li&gt;どう書けば速いのか？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などは、実はCPUやレジストリ、キャッシュ、メインメモリ、仮想メモリ等ハードウェアに依存していたり、言語自体の実装に依存することが多いです。&lt;/p&gt;
-
-&lt;p&gt;C/C++では、vtableやオーバーヘッドなど言語自体の要因もありますが、ハードウェアよりの依存が比率的に高くなります。&lt;/p&gt;
-
-&lt;p&gt;一方SwiftはCやアセンブラと異なり直接メモリ操作を指示するコードはほぼほぼ使いません。&lt;br /&gt;
-そのため、「どの書き方がメモリに親切なのか」「無駄な処理が走らないか」などはSwift言語自体のコードを読まないとわかりません。&lt;strong&gt;しかし測定することでそれを結果として知ることはできます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;Swiftは主にiOSで使われる言語で主に高レイヤーな領域のコーディングで使われることが多いですが、
-新しいデータ構造を自作したりキャッシュ機構を自作したりなど少し低レイヤーな領域のコーディングするときに、どの書き方なら安定して速度を出せるのか？を知っているだけコードのパフォーマンスは変わります。&lt;/p&gt;
-
-&lt;p&gt;速く書けるだけがスペシャリストではありません。&lt;br /&gt;
-&lt;strong&gt;速く動くコードを書けるのもスペシャリストとして大事なことです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;そのために検証作業は大事な手段となり、今回用意したコードは検証速度を円滑にするツールとなります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">普段からSwift言語でコーディングしても、Swift内部の動きが分からず書き方の違いでパフォーマンスが変わります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-create-perf-script/eyecatch.png" /></entry><entry><title type="html">SwiftのArrayの前方挿入は遅い</title><link href="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow" rel="alternate" type="text/html" title="SwiftのArrayの前方挿入は遅い" /><published>2020-05-04T00:00:00+09:00</published><updated>2020-05-12T22:51:26+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow">&lt;p&gt;Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;この記事では、Arrayの内部特性を理解し特性が含むリスクに対して、速度パフォーマンスを測定して何が重い実験した結果をまとめたレポートです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;きっかけ&quot;&gt;きっかけ&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Arrayを再作成するかappend/removeをするか考えてた&lt;/li&gt;
-  &lt;li&gt;考えてみればArrayは本当に配列（メモリは直列）なのか？&lt;/li&gt;
-  &lt;li&gt;内部データ構造はListだったりしないか？&lt;/li&gt;
-  &lt;li&gt;内部データ構造が配列ならstd::vector同様に前方削除や追加が重いのでは？&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;メモリが直列とは&quot;&gt;メモリが直列とは？&lt;/h2&gt;
-
-&lt;p&gt;直列とは物理的なメモリ上に横並びにデータが展開されていることを指します。&lt;/p&gt;
-
-&lt;h3 id=&quot;直列を維持するリスク&quot;&gt;直列を維持するリスク&lt;/h3&gt;
-
-&lt;p&gt;例えば添字の0はメモリだと先頭でなければいけません。逆も然りです。
-では先頭に新しくデータ追加した場合は、どうするのか？&lt;/p&gt;
-
-&lt;p&gt;メモリは一度アロケートすると先頭アドレスとサイズをブロックとして確保します。
-追加でメモリが必要な場合は、改めて必要なサイズのメモリを確保しなければいけません。
-その後、既存データと新規データ両方をセットする必要があります。&lt;/p&gt;
-
-&lt;p&gt;このとき最後尾に追加する場合は最後の領域にセットして完了ですが、
-最後尾以外に追加する場合は、新規データのサイズ分ズラす必要があります。
-しかもメモリ操作領域が大きければ大きいほど負荷が高くなります。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftソースコードで直列か確認&quot;&gt;Swiftソースコードで直列か確認&lt;/h2&gt;
-
-&lt;p&gt;Swiftのソースコードは&lt;a href=&quot;https://github.com/apple/swift&quot;&gt;GitHub&lt;/a&gt;にあります。&lt;br /&gt;
-Arrayのビルドインされた実装はその中の&lt;a href=&quot;https://github.com/apple/swift/blob/master/stdlib/public/runtime/Array.cpp&quot;&gt;/stdlib/public/runtime/Array.cpp&lt;/a&gt;になります。&lt;br /&gt;
-Arrayのインターフェイスは、&lt;a href=&quot;https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift&quot;&gt;/stdlib/public/core/Array.swift&lt;/a&gt;で実装されています。&lt;/p&gt;
-
-&lt;h3 id=&quot;処理をトレースする&quot;&gt;処理をトレースする&lt;/h3&gt;
-
-&lt;p&gt;Array.remove(at:)からArray.cppに実装されているコピー操作までの処理をトレースします。&lt;/p&gt;
-
-&lt;p&gt;今回swift側検証コードは下記になります。&lt;/p&gt;
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この&lt;code class=&quot;highlighter-rouge&quot;&gt;array.remove(at: 0)&lt;/code&gt;の処理をトレースするとざっくり下記になります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;- remove(at:)
-  - _makeMutableAndUnique()
-    - _createNewBuffer(bufferIsUnique:minimumCapacity:growForAppend)
-      - ContiguousArrayBuffer._copyContents(subRange:,initializing:)
-        - ...
-          - swift_arrayInitWithCopy(OpaqueValue*,OpaqueValue*,size_t,const Metadata*)
-  - moveInitialize(from:count:)
-    - ...
-      - swift_arrayInitWithTakeFrontToBack(OpaqueValue*,OpaqueValue*,size_t,const Metadata*)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;remove(at:) -&amp;gt; Element&lt;/code&gt;は&lt;a href=&quot;https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1292-L1306&quot;&gt;/stdlib/public/core/Array.swift#L1292-L1306&lt;/a&gt;で実装されています。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;mutating&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;remove&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;at&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Element&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;_makeMutableAndUnique&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ①&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;currentCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;_getCount&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;newCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;currentCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;pointer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_buffer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;firstElementAddress&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;result&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pointer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;move&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;pointer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;moveInitialize&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;pointer&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ②&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;_buffer&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;newCount&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;_makemutableandunique-&quot;&gt;_makeMutableAndUnique ①&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;_makeMutableAndUnique&lt;/code&gt;は&lt;a href=&quot;https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L345-L352&quot;&gt;/stdlib/public/core/Array.swift#L345-L352&lt;/a&gt;で実装されており、
-内部では&lt;code class=&quot;highlighter-rouge&quot;&gt;_createNewBuffer&lt;/code&gt;が呼ばれています。&lt;/p&gt;
-
-&lt;p&gt;この&lt;code class=&quot;highlighter-rouge&quot;&gt;_createNewBuffer&lt;/code&gt;は&lt;a href=&quot;https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1051-L1080&quot;&gt;/stdlib/public/core/Array.swift#L1051-L1080&lt;/a&gt;で実装されており、
-内部では新しいキャパシティサイズの&lt;code class=&quot;highlighter-rouge&quot;&gt;_ContiguousArrayBuffer&lt;/code&gt;をしたのちに&lt;code class=&quot;highlighter-rouge&quot;&gt;_buffer._copyContents&lt;/code&gt;を呼んでいます。&lt;/p&gt;
-
-&lt;p&gt;これは内部でArray.cppの&lt;a href=&quot;https://github.com/apple/swift/blob/31af116df62d40779b0f43ffc61c2806469a53cc/stdlib/public/runtime/Array.cpp#L137-L142&quot;&gt;swift_arrayInitWithCopy&lt;/a&gt;を呼んでいます。&lt;/p&gt;
-
-&lt;h4 id=&quot;pointermoveinitialize-&quot;&gt;pointer.moveInitialize ②&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;pointer.moveInitialize&lt;/code&gt;とは&lt;a href=&quot;https://github.com/apple/swift/blob/d7b5de95f3fdfe281dee9dfec66b220e27675ca3/stdlib/public/core/UnsafePointer.swift#L786-L812&quot;&gt;/stdlib/public/core/UnsafePointer.swift#L786-L812&lt;/a&gt;で実装されています。&lt;/p&gt;
-
-&lt;p&gt;この関数内でArray.cppの&lt;a href=&quot;/stdlib/public/runtime/Array.cpp#L151-L156&quot;&gt;swift_arrayInitWithTakeFrontToBack&lt;/a&gt;か&lt;a href=&quot;https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/runtime/Array.cpp#L158-L163&quot;&gt;swift_arrayInitWithTakeBackToFront&lt;/a&gt;が呼ばれていると思われます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;remove(at:)&lt;/code&gt;で引数indexに0を渡すと、&lt;code class=&quot;highlighter-rouge&quot;&gt;pointer.moveInitialize&lt;/code&gt;を介してデータサイズ*データ数のメモリ移動が発生します。&lt;/p&gt;
-
-&lt;h2 id=&quot;仮説&quot;&gt;仮説&lt;/h2&gt;
-
-&lt;p&gt;メモリが直列であれば、前方削除や前方挿入が後方より重いはずです。&lt;/p&gt;
-
-&lt;h2 id=&quot;検証&quot;&gt;検証&lt;/h2&gt;
-
-&lt;p&gt;下記環境下で検証します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;iOS環境&lt;/li&gt;
-  &lt;li&gt;Simulator&lt;/li&gt;
-  &lt;li&gt;配列数9900〜99000を10回に分ける&lt;/li&gt;
-  &lt;li&gt;検証回数10回&lt;/li&gt;
-  &lt;li&gt;これらのサイズを8バイトと32バイトでする&lt;/li&gt;
-  &lt;li&gt;検証メソッドまたはシナリオ
-    &lt;ul&gt;
-      &lt;li&gt;removeFirst()&lt;/li&gt;
-      &lt;li&gt;removeLast()&lt;/li&gt;
-      &lt;li&gt;insert(:at:0)&lt;/li&gt;
-      &lt;li&gt;insert(:at:count-1)&lt;/li&gt;
-      &lt;li&gt;append()&lt;/li&gt;
-      &lt;li&gt;reserveCapacity()後にinsert(:at:0)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;検証コード&quot;&gt;検証コード&lt;/h3&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numberOfCaptures&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;samplingCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;kd&quot;&gt;typealias&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;genElem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;A&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//    typealias ElemType = Int&lt;/span&gt;
-&lt;span class=&quot;c1&quot;&gt;//    let genElem: (Int) -&amp;gt; ElemType = { no in no }&lt;/span&gt;
-
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;maxValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;insert(:at:last)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-                    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;lastIndex&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                    &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;genElem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;lastIndex&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;maxValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;append()&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;genElem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;maxValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;Use reserveCapacity&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reserveCapacity&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;genElem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;maxValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;removeLast()&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;genElem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;times&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;removeLast&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;maxValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;insert(:at:0)&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[]&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;no&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;insert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;genElem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;no&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-    &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;maxValue&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;maxValue&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;append&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfCaptures&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;capture&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;label&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;removeFirst()&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;ElemType&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;samplingCount&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;genElem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;times&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;removeLast&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Perf&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;toCSV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;results&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;結果&quot;&gt;結果&lt;/h2&gt;
-
-&lt;p&gt;下図は検証コードから得た結果を整理してものです。&lt;br /&gt;
-X軸が配列数で、Y軸が処理時間(秒)になります。&lt;/p&gt;
-
-&lt;p&gt;要素サイズの32バイトの&lt;code class=&quot;highlighter-rouge&quot;&gt;insert(:at:)&lt;/code&gt;が群を抜いて負荷がかかっています。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-04-ios-swift-array-forward-op-slow/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-04-ios-swift-array-forward-op-slow/1.png&quot; width=&quot;100%&quot; alt=&quot;SwiftArrayパフォーマンス全体図&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;2枚目は上図で下層で束なってる部分のみの図となります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-04-ios-swift-array-forward-op-slow/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-04-ios-swift-array-forward-op-slow/2.png&quot; width=&quot;100%&quot; alt=&quot;SwiftArrayパフォーマンス縮図&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;strong&gt;前方挿入は重い&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;&lt;strong&gt;配列の要素サイズが大きいと 前方挿入は非常に重い&lt;/strong&gt;&lt;/li&gt;
-  &lt;li&gt;reserveCapacityはほぼ効果ない&lt;/li&gt;
-  &lt;li&gt;insert(:at:last)よりappendのほうが少し速い&lt;/li&gt;
-  &lt;li&gt;removeFirstは重いがそこまで気にしなくていい程度&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;おまけ更に要素サイズを上げる&quot;&gt;おまけ:更に要素サイズを上げる&lt;/h3&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;regularPrice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;brand&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Brand&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;publishDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Date&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Brand&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;startDate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Date&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;上記のような80バイトで最も重い&lt;code class=&quot;highlighter-rouge&quot;&gt;insert(:at:0)&lt;/code&gt;で試してみます。
-先程郡を抜いていた32バイトより更に重くなっています。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-04-ios-swift-array-forward-op-slow/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-04-ios-swift-array-forward-op-slow/3.png&quot; width=&quot;100%&quot; alt=&quot;SwiftArrayパフォーマンスサイズ大&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;考察&quot;&gt;考察&lt;/h2&gt;
-&lt;p&gt;32バイトはInt2つでString1つしかありません。&lt;/p&gt;
-
-&lt;p&gt;80バイト程度で1~2万件のデータを扱う時に前方挿入をする処理が多いとスパイクが起きるレベルです。&lt;br /&gt;
-これがECなどで1つの商品情報を扱う場合は更にでかいサイズかと思います。&lt;br /&gt;
-そうなると1万件以下でも重くなるでしょう。&lt;br /&gt;
-追加するタイミングによっては無視できない重さになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png" /></entry><entry><title type="html">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom" rel="alternate" type="text/html" title="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" /><published>2020-05-01T00:00:00+09:00</published><updated>2020-05-05T19:12:44+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-idiom</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-idiom">&lt;p&gt;Swiftではデータ構造の代表格としてArrayとDictionaryがあります。
-この2つを使いこなすことは、iOSエンジニアとして重要なことです。&lt;/p&gt;
-
-&lt;p&gt;Swift特有の使い方、つまりイディオムを理解することでSwiftyなコーディングができるようにもなります。&lt;/p&gt;
-
-&lt;p&gt;この記事で紹介するものが全てを網羅していませんが、&lt;br /&gt;
-iOSエンジニアなら知っておくべきSwiftのArrayとDictionaryに関するイディオムについて説明します。&lt;/p&gt;
-
-&lt;h2 id=&quot;isemptyの反対を追加する&quot;&gt;isEmptyの反対を追加する&lt;/h2&gt;
-
-&lt;p&gt;ArrayやDictionary、StringにはあるisEmptyプロパティは状態の否定形なので使い勝手が悪いです。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;isanyを用意する&quot;&gt;isAnyを用意する&lt;/h3&gt;
-&lt;p&gt;isEmptyの反対としてisAnyを用意します。
-下記コードはisAnyをArray,Dictionary,StringにisEmptyの反対の結果を返すプロパティisAnyを定義してます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Collection&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;isAny&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;isAny&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これによりさっきのコードがこう書けます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;params&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;1&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;2&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;params&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isAny&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isAny&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;arrayからdictionaryに変換する&quot;&gt;ArrayからDictionaryに変換する&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;reduce&lt;/code&gt;で配列要素をDictionaryのKeyとValueに変換します。&lt;br /&gt;
-変換には、&lt;strong&gt;配列の要素をKeyとValueへの分解が必須条件です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;下記はある&lt;code class=&quot;highlighter-rouge&quot;&gt;[商品]&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;[商品ID: 商品]&lt;/code&gt;の型に変換するコードです。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;梅干し&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;230&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;砂糖&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;512&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;唐辛子&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;223&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reduce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;into&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[:],&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;result&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;value&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dict&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;コンソール結果&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;[1: Item(id: 1, name: &quot;砂糖&quot;, price: 512), 2: Item(id: 2, name: &quot;唐辛子&quot;, price: 223), 0: Item(id: 0, name: &quot;梅干し&quot;, price: 230)]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;データ加工を段階的に分解する&quot;&gt;データ加工を段階的に分解する&lt;/h2&gt;
-
-&lt;p&gt;次のItem構造体とその配列があるとします。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;regularPrice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;isSale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;price&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;regularPrice&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;梅干し&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;230&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;regularPrice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;砂糖&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;512&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;regularPrice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;700&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-  &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;init&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;唐辛子&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;223&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;regularPrice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;223&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このarrayから「Item配列から値引き合計額を求める」処理を&lt;code class=&quot;highlighter-rouge&quot;&gt;reduce&lt;/code&gt;だけで書くとこうなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reduce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;total&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;total&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isSale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;regularPrice&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;price&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;totalPrice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをデータ加工を段階に分けるコードが下記になります。&lt;br /&gt;
-一つ一つの処理内容がシンプルになり、一連の処理として見た時に読みやすくなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;price&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;filter&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isSale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                 &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;regularPrice&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;price&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-                 &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reduce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;totalPrice&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;トレードオフ&quot;&gt;トレードオフ&lt;/h3&gt;
-&lt;p&gt;しかしトレードオフとしてパフォーマンスが低下します。&lt;br /&gt;
-次の表は30万個の配列からそれぞれを実施した結果です。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;パターン&lt;/th&gt;
-      &lt;th&gt;最速&lt;/th&gt;
-      &lt;th&gt;最遅&lt;/th&gt;
-      &lt;th&gt;平均(秒)&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;reduceのみ&lt;/td&gt;
-      &lt;td&gt;0.095&lt;/td&gt;
-      &lt;td&gt;0.11&lt;/td&gt;
-      &lt;td&gt;0.099&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;組み合わせ&lt;/td&gt;
-      &lt;td&gt;0.124&lt;/td&gt;
-      &lt;td&gt;0.129&lt;/td&gt;
-      &lt;td&gt;0.126&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;30万個を多いかどうかは作ってる物依存なので各自判断となります。&lt;/p&gt;
-
-&lt;h2 id=&quot;arrayで単体検索ならfilterよりfirst&quot;&gt;Arrayで単体検索ならfilterよりfirst&lt;/h2&gt;
-&lt;p&gt;&lt;strong&gt;filterは全要素アクセスするが、firstは条件満たしたら中断する&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;filter&lt;/code&gt;は要素の絞り込みが目的です。各要素すべてに対して条件評価するので単体検索には不向きです。&lt;br /&gt;
-一方で&lt;code class=&quot;highlighter-rouge&quot;&gt;first&lt;/code&gt;は最初の条件クリアする要素を見つけた時点で終了するので平均して速いです。&lt;/p&gt;
-
-&lt;h3 id=&quot;実際に動きを見る&quot;&gt;実際に動きを見る&lt;/h3&gt;
-
-&lt;p&gt;下記コードは&lt;code class=&quot;highlighter-rouge&quot;&gt;filter&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;exit&lt;/code&gt;を探す処理です。&lt;br /&gt;
-3回目で&lt;code class=&quot;highlighter-rouge&quot;&gt;exit&lt;/code&gt;を見つけてますが、最後の要素まで繰り返します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;exit&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;exit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;exit&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;first&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;found &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;コンソール結果&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;A
-B
-exit
-C
-found exit
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;下記コードは&lt;code class=&quot;highlighter-rouge&quot;&gt;first&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;exit&lt;/code&gt;を探す処理です。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;exit&lt;/code&gt;が見つかった時点で以降の要素にはアクセスしていません。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;exit&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;C&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;exit&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;exit&quot;&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;found &lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;exit&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;コンソール結果&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;A
-B
-exit
-found exit
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このように単体検索なら&lt;code class=&quot;highlighter-rouge&quot;&gt;first&lt;/code&gt;の方が効率的です。&lt;/p&gt;
-
-&lt;h2 id=&quot;arrayで存在確認ならfirstよりcontains&quot;&gt;Arrayで存在確認ならfirstよりcontains&lt;/h2&gt;
-&lt;p&gt;firstとcontainsはともに条件ヒットしたら終了します。&lt;br /&gt;
-もし要素の有無を調べるだけであれば、containsを使いましょう。&lt;br /&gt;
-containsの戻り値はboolで、探してた要素を使わない場合はこちらのほうがシンプルになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;exit&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;found exit&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;一方firstを使うと戻り値が助長になります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;where&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;exit&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;found exit&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rangeで指定範囲の数字を繰り返す&quot;&gt;Rangeで指定範囲の数字を繰り返す&lt;/h2&gt;
-
-&lt;p&gt;指定範囲でfor文を回したい時に便利です。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;15&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;forEach&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;コンソール結果&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;10
-11
-12
-13
-14
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rangeで指定数だけ繰り返す&quot;&gt;Rangeで指定数だけ繰り返す&lt;/h2&gt;
-
-&lt;p&gt;範囲に寄る繰り返しで開始値を0に固定にして、Intのextensionに次のメソッド用意するだけで、RubyのActiveSupportにあるような書き方ができるようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;times&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;CountableRange&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;times&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;forEach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;   
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;strings&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;times&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;strings&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;collectionの安全な添字アクセス&quot;&gt;Collectionの安全な添字アクセス&lt;/h2&gt;
-
-&lt;p&gt;Dictionaryのsubscriptのように無効であればnilを返すようにする拡張メソッドです。
-通常であれば例外になるArrayの添字アクセスもこのメソッドを通すことで安全にアクセスできるようになります。&lt;/p&gt;
-
-&lt;p&gt;これは割と有名かと思われます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;extension&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Collection&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;nf&quot;&gt;subscript&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;safe&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Element&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;indices&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;?&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;index&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;safe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;safe&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;コンソール&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Optional(1)
-nil
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;arrayで要素数を気にせず範囲取得&quot;&gt;Arrayで要素数を気にせず範囲取得&lt;/h2&gt;
-
-&lt;p&gt;配列の要素数を気にせず範囲取得したい場合に「先頭からN」または「後方からN」のパターンであれば&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;prefix&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;suffix&lt;/code&gt;を使うことで、要素数を上回るとり方をしてもクラッシュせず範囲取得ができます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [1, 2, 3]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;prefixの戻り値は&lt;code class=&quot;highlighter-rouge&quot;&gt;ArraySlice&lt;/code&gt;型であって&lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt;ではありません。&lt;br /&gt;
-Arrayのinitにわたすことで&lt;code class=&quot;highlighter-rouge&quot;&gt;Array&lt;/code&gt;に変換できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;ここをシンタックスシュガー表現にすると、違う結果になるので注意です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;array&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;prefix&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [ArraySlice([1, 2, 3])]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;イディオムは寿命と活用範囲が狭く短い&quot;&gt;イディオムは寿命と活用範囲が狭く短い&lt;/h2&gt;
-&lt;p&gt;イディオムとは特定の領域でしか活用できないノウハウのことです。&lt;br /&gt;
-一般的にアーキテクチャ→デザインパターン→イディオムの並びで表されます。&lt;/p&gt;
-
-&lt;p&gt;SwiftにおけるSwiftの特性を活かした使い方、それがSwiftのイディオムです。
-別の見方をすえば、Swiftでしか使えない知識です。&lt;/p&gt;
-
-&lt;p&gt;他言語ではまた違った書き方になるため知識の再利用がしにくいです。&lt;br /&gt;
-しかしながら、実際にSwiftに触れている間でもっとも使われるのがイディオムです。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">Swiftではデータ構造の代表格としてArrayとDictionaryがあります。 この2つを使いこなすことは、iOSエンジニアとして重要なことです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-01-ios-swift-collection-idiom/0.png" /></entry></feed>
+&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" /></entry></feed>

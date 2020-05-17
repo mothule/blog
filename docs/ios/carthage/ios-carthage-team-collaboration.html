@@ -1,0 +1,1204 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+
+
+  <title>Carthage bootstrapとGit管理をチーム運用観点で整理 - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="Carthage bootstrapとGit管理をチーム運用観点で整理" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。" />
+<meta property="og:description" content="この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration" />
+<meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-05-15T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration","headline":"Carthage bootstrapとGit管理をチーム運用観点で整理","dateModified":"2020-05-17T17:23:49+09:00","datePublished":"2020-05-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration"},"image":"https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png","description":"この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:title" content="Carthage bootstrapとGit管理をチーム運用観点で整理">
+<meta name="twitter:description" content="この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+  </head>
+  <body>
+    <div class="container">
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <main class="row" style="margin-bottom: 32px;">
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<div class="post-content">
+  <div class="breadcrumbs">
+    <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ios" itemprop="item">
+              <span itemprop="name">iOS</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#carthage" itemprop="item">
+              <span itemprop="name">Carthage</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            Carthage bootstrapとGit管理をチーム運用観点で整理
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+  </div>
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" alt="Carthage bootstrapとGit管理をチーム運用観点で整理">
+    </div>
+  
+
+  <header class="post-content-title border-bottom mb-4">
+    <h1>Carthage bootstrapとGit管理をチーム運用観点で整理</h1>
+
+    <div class="row">
+      <div class="col-sm-10 post-content-tags">
+        <ul class="list-inline">
+          
+            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#carthage">Carthage</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-sm-2 text-right">
+        <span"><time class="post-date">2020-5-15</time></span>
+      </div>
+    </div>
+  </header>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#carthage-updateとbootstrapの違い">carthage updateとbootstrapの違い</a>
+    <ul>
+      <li><a href="#carthage-updateの動き">carthage updateの動き</a></li>
+      <li><a href="#carthage-bootstrapの動き">carthage bootstrapの動き</a></li>
+      <li><a href="#carthage-updateとbootstrapの使い分け">carthage updateとbootstrapの使い分け</a></li>
+    </ul>
+  </li>
+  <li><a href="#carthageとgit管理">CarthageとGit管理</a>
+    <ul>
+      <li><a href="#cartfileresolvedのみをgit管理下にする">Cartfile.resolvedのみをGit管理下にする</a></li>
+      <li><a href="#cartfileresolvedとcarthageディレクトリ">Cartfile.resolvedとCarthageディレクトリ</a>
+        <ul>
+          <li><a href="#buildのみにする">Buildのみにする</a></li>
+        </ul>
+      </li>
+      <li><a href="#どちらがいいのか">どちらがいいのか？</a>
+        <ul>
+          <li><a href="#swift-versionを変更すると再生成が必要">Swift versionを変更すると再生成が必要</a></li>
+        </ul>
+      </li>
+      <li><a href="#ライブラリ更新後はbootstrapが必要">ライブラリ更新後はbootstrapが必要</a>
+        <ul>
+          <li><a href="#pull-requestでdiffが増える">Pull Requestでdiffが増える</a></li>
+          <li><a href="#ciで毎回bootstrapでframework作成が必要">CIで毎回bootstrapでframework作成が必要</a></li>
+          <li><a href="#bootstrapが失敗するリスクがある">bootstrapが失敗するリスクがある</a></li>
+          <li><a href="#git-cloneが遅くなる">git cloneが遅くなる</a></li>
+          <li><a href="#1ファイル100mbがあるとプッシュできない">1ファイル100MBがあるとプッシュできない</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#私のチーム運用観点">私のチーム運用観点</a></li>
+</ul>
+  </div>
+  <section>
+  <p>この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</p>
+
+<h2 id="carthage-updateとbootstrapの違い">carthage updateとbootstrapの違い</h2>
+<p>carthage bootstrapについて説明します。</p>
+
+<p>説明には、carthage bootstrapと比較するコマンドや関係するファイルを用いて説明します。</p>
+
+<ol>
+  <li>carthage updateは<code class="highlighter-rouge">Cartfile</code>を見てframeworkと<code class="highlighter-rouge">Cartfile.resolved</code>を作成する</li>
+  <li><code class="highlighter-rouge">Cartfile.resolved</code>は実際に作成したframeworkの<code class="highlighter-rouge">ライブラリ</code>と<code class="highlighter-rouge">バージョン</code>が記載されてる</li>
+  <li><code class="highlighter-rouge">carthage bootstrap</code>は<code class="highlighter-rouge">Cartfile.resolved</code>を見てframeworkを作成する</li>
+  <li>carthage updateは<code class="highlighter-rouge">Cartfile</code>を見て<strong>なるべく最新</strong>のライブラリバージョンを選ぶ</li>
+</ol>
+
+<p>1、2、3をイメージで説明します。</p>
+
+<p><a href="/assets/images/2020-05-15-ios-carthage-team-collaboration/1.png"><img src="/assets/images/2020-05-15-ios-carthage-team-collaboration/1.png" width="100%" alt="Carthageのupdateとbootstrapの違い" /></a></p>
+
+<ul>
+  <li>carthage updateはCartfileを使ってCartfile.resolvedとフレームワークを更新します。</li>
+  <li>carthage bootstrapはCartfile.resolvedを使ってフレームワークを更新します。</li>
+</ul>
+
+<p>そして最も大きな違いは、<strong>carthage updateには冪等性がなく、carthage bootstrapには冪等性がある点です。</strong></p>
+
+<h3 id="carthage-updateの動き">carthage updateの動き</h3>
+<p>例えば、carthage updateを5月1日に実行して、SwiftyJSON ver4のframeworkが作成されます。<br />
+半月後にSwiftyJSONが新しいバージョンver5をリリースします。<br />
+更に<strong>半月後にもう一度carthage updateを実行すると、SwiftyJSON ver5のframeworkが作成されます。</strong></p>
+
+<p><a href="/assets/images/2020-05-15-ios-carthage-team-collaboration/2.png"><img src="/assets/images/2020-05-15-ios-carthage-team-collaboration/2.png" width="100%" alt="Carthage updateの動き" /></a></p>
+
+<p>つまり、<strong>carthage updateはライブラリ更新をします。</strong></p>
+
+<h3 id="carthage-bootstrapの動き">carthage bootstrapの動き</h3>
+<p>updateではなくbootstrapですると、<br />
+1ヶ月後でもframeworkのバージョンは変わりません。</p>
+
+<p><a href="/assets/images/2020-05-15-ios-carthage-team-collaboration/3.png"><img src="/assets/images/2020-05-15-ios-carthage-team-collaboration/3.png" width="100%" alt="Carthage updateの動き" /></a></p>
+
+<p>つまり、<strong>carthage updateは環境を再現します。</strong></p>
+
+<h3 id="carthage-updateとbootstrapの使い分け">carthage updateとbootstrapの使い分け</h3>
+
+<p>ライブラリの新規・更新はupdate、環境構築はbootstrapとして使います。</p>
+
+<ul>
+  <li>updateを使うケース
+    <ul>
+      <li>ライブラリを追加する</li>
+      <li>ライブラリのバージョンを上げる</li>
+    </ul>
+  </li>
+  <li>bootstrapを使うケース
+    <ul>
+      <li>新しくチームメンバーが入ってきて、開発環境を構築する</li>
+      <li>別メンバーがライブラリのバージョンを更新した</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="carthageとgit管理">CarthageとGit管理</h2>
+
+<p><code class="highlighter-rouge">carthage update</code>で<code class="highlighter-rouge">Carghage</code>ディレクトリと<code class="highlighter-rouge">Carthage.resolved</code>ファイルが生成されますが、<br />
+これらはGit管理下に加えるべきでしょうか？除外すべきでしょうか？</p>
+
+<p>方法は2つあります。</p>
+
+<p><code class="highlighter-rouge">Cartfile.resolved</code>だけをGit管理下において、<code class="highlighter-rouge">carthage bootstrap</code>で<code class="highlighter-rouge">Carthage</code>ディレクトリを再現する方法と、<br />
+<code class="highlighter-rouge">Cartfile.resolved</code>と<code class="highlighter-rouge">Carthage</code>ディレクトリの両方をGit管理下においてgit cloneだけで再現環境を実現する方法です。</p>
+
+<h3 id="cartfileresolvedのみをgit管理下にする">Cartfile.resolvedのみをGit管理下にする</h3>
+<p><code class="highlighter-rouge">Cartfile.resolved</code>はライブラリ名とそれらのバージョンが記載されたファイルであることは説明しました。<br />
+しかし<code class="highlighter-rouge">framework</code>はないので、<code class="highlighter-rouge">carthge bootstrap</code>コマンドを使って必要なframeworkを構築します。</p>
+
+<h3 id="cartfileresolvedとcarthageディレクトリ">Cartfile.resolvedとCarthageディレクトリ</h3>
+<p><code class="highlighter-rouge">Cartfile.resolved</code>は他環境で再現をする上で必要です。<br />
+そこに加えて、<code class="highlighter-rouge">Carthage</code>ディレクトリがあることで、frameworkの生成が不要になります。</p>
+
+<h4 id="buildのみにする">Buildのみにする</h4>
+<p><code class="highlighter-rouge">Carthage</code>ディレクトリ全てをGit管理下不要です。<br />
+必要なのは生成済みframeworkなのため、<code class="highlighter-rouge">Carthage/Build</code>ディレクトリのみで問題ありません。</p>
+
+<p>そのため<code class="highlighter-rouge">.gitignore</code>に追記が必要です。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Carthage/Checkouts
+!Carthage/Build
+</code></pre></div></div>
+
+<h3 id="どちらがいいのか">どちらがいいのか？</h3>
+<p>これは議論されているので、どちらがいいのか確定的なものはありません。<br />
+答えとしては案件によります。<br />
+なのでネットで「こちらがいい」と書いてあっても鵜呑みは危険です。<br />
+理由を見てそれが自分が適用しようとしてる条件に一致しているか判断することを進めます。</p>
+
+<p>ここではそれぞれのメリット・デメリットを部分的に抜粋します。<br />
+公平にするため、私情は入れず事実のみを載せます。</p>
+
+<ul>
+  <li>Cartfile.resolvedのみ
+    <ul>
+      <li>CIで毎回bootstrapでframework作成が必要</li>
+      <li>bootstrapが失敗するリスクがある</li>
+      <li>ライブラリ更新済みと未更新ブランチをまたぐとbootstrapが必要</li>
+    </ul>
+  </li>
+  <li>Cartfile.resolvedとCarthage
+    <ul>
+      <li>Swift versionを変更すると再生成が必要</li>
+      <li>Pull Requestでdiffが増える</li>
+      <li>git cloneが遅くなる</li>
+      <li>1ファイル100MBがあるとプッシュできない</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="swift-versionを変更すると再生成が必要">Swift versionを変更すると再生成が必要</h4>
+<p><code class="highlighter-rouge">Module Stability</code>の有効になっていないライブラリでは、Swiftのバージョンを上げるたびにframeworkの再生成が必要です。</p>
+
+<h3 id="ライブラリ更新後はbootstrapが必要">ライブラリ更新後はbootstrapが必要</h3>
+<p>別メンバーがライブラリを更新したブランチをマージさせたら、<br />
+bootstrapでframework再生成が必要です。</p>
+
+<h4 id="pull-requestでdiffが増える">Pull Requestでdiffが増える</h4>
+<p>frameworkは1つのファイルではなくディレクトリになっており、中にファイルやディレクトリがあります。<br />
+そのファイル数だけGit管理となるため、frameworkを追加や変更したときのdiffは量が増えます。</p>
+
+<h4 id="ciで毎回bootstrapでframework作成が必要">CIで毎回bootstrapでframework作成が必要</h4>
+<p>CIなど新規環境下で環境構築をする場合は、bootstrapを実行してframeworkを生成する必要があります。<br />
+当然ですが、その分CI時間はかかります。</p>
+
+<h4 id="bootstrapが失敗するリスクがある">bootstrapが失敗するリスクがある</h4>
+<p>Carthageはxcodebuildでframeworkを生成しています。<br />
+可能性は低いのですが、私の環境でも何度か起きており、xcodebuildのバージョン差異や他要因で失敗することがあります。</p>
+
+<p>つまりそれは最悪Git管理下の情報だけでは環境再現が不可能となります。</p>
+
+<h4 id="git-cloneが遅くなる">git cloneが遅くなる</h4>
+<p>frameworkに関するファイル数が増える分、ファイル数やデータ数は増えるのでそれだけclone時やpull/fecthでのダウンロード時間は増えます。</p>
+
+<h4 id="1ファイル100mbがあるとプッシュできない">1ファイル100MBがあるとプッシュできない</h4>
+<p>GitHubでは1ファイル100MB以上のファイルコミットはできない制限が設けられており、LFSの設定が必要になります。</p>
+
+<h2 id="私のチーム運用観点">私のチーム運用観点</h2>
+
+<p>私が過去に経験してきたチームでのCarthage運用は次の通りです。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">Carthage/Build</code>ディレクトリはコミットしない</li>
+  <li>Swiftバージョン更新時は、別ブランチからPull Request通す</li>
+  <li>Cartfileではバージョン指定してる</li>
+</ul>
+
+<p>そして下記はそれぞれのメリット・デメリットに対する考えです。</p>
+
+<ul>
+  <li>Swift versionを変更すると再生成が必要
+    <ul>
+      <li>バージョン上がる度毎回変更してます</li>
+    </ul>
+  </li>
+  <li>ライブラリ更新後はbootstrapが必要
+    <ul>
+      <li>不要です。しかしGitからの取得量は増えます。</li>
+    </ul>
+  </li>
+  <li>Pull Requestでdiffが増える
+    <ul>
+      <li>バージョンを上げるだけのブランチなのでそもそもそのdiffを殆ど見ないです</li>
+    </ul>
+  </li>
+  <li>CIで毎回bootstrapでframework作成が必要
+    <ul>
+      <li>これはコミットしてるので不要です</li>
+    </ul>
+  </li>
+  <li>bootstrapが失敗するリスクがある
+    <ul>
+      <li>バージョン固定してるので<code class="highlighter-rouge">bootstrap</code>を使ってないです</li>
+    </ul>
+  </li>
+  <li>git cloneが遅くなる
+    <ul>
+      <li>使っているfrmaeworkは10個ですが、それぞれのサイズは大きくはないので気になるほどになってないです</li>
+    </ul>
+  </li>
+  <li>1ファイル100MBがあると運用不可能
+    <ul>
+      <li>使ってるframeworkに1ファイル100MBを超えるものはありません。</li>
+    </ul>
+  </li>
+</ul>
+
+<p>バージョン上がるたびに全てのframework生成は時間がかかります。<br />
+それ以上に回数的にCIにかかる時間が増えます。<br />
+CIにキャッシュ仕込むのもありますが、CIが限定されますし、そのために開発環境が多少複雑にはなります。<br />
+git cloneが時間かかるとありますが、git cloneよりbootstrapの方が遥かに時間がかかります。<br />
+そして昔のCocoaPodsのように再現性がなくなることのリスクも気になります。</p>
+
+<p>なおこれは私の経験した案件にフィットした運用ですので鵜呑みにせず参考にしてください。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+
+    <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/ios-carthage-vs-cocoapods">CarthageとCocoaPodsの違いを経験交えて比較する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage-install-guide">iOSのCarthage導入手順と注意点</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage-use-xcfilelist">CarthageでInput File Listsにxcfilelistを渡す利点と方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+<script src="/assets/js/shared/post.js" defer></script>
+
+  </article>
+
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">【初心者向け】UITableViewCellをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-input-control">【初心者向け】UITableViewでボタンやテキスト入力の使い方や注意事項</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-xcassets-basic">【初心者向け】Assets.xcassetsを理解して使う</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+        
+        <a href="/tags#google-japanese-input">Google日本語入力</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-sticky">
+    <!-- TOC -->
+    <div class="side-toc" id="side-toc-id">
+    </div>
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
+      
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li><a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+</li>
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+  </aside>
+</main>
+
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+  </body>
+</html>
