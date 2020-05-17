@@ -11,8 +11,10 @@ pagination:
   <h1>新着順の記事一覧</h1>
 </div>
 
-{% for post in paginator.posts %}
-  {% include article.html %}
-{% endfor %}
+{% if jekyll.build_environment != "local" %}
+  {% for post in paginator.posts %}
+    {% include article.html %}
+  {% endfor %}
 
-{% include pagination.html permalink='/page/' %}
+  {% include pagination.html permalink='/page/' %}
+{% endif %}
