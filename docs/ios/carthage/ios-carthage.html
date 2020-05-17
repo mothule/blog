@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-13T04:39:22+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-17T18:07:46+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -185,59 +185,36 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#carthageの基本情報を理解する">Carthageの基本情報を理解する</a>
+  <li><a href="#はじめに">はじめに</a>
+    <ul>
+      <li><a href="#対象読者">対象読者</a></li>
+      <li><a href="#記事の内容">記事の内容</a></li>
+      <li><a href="#記事の読み方">記事の読み方</a></li>
+      <li><a href="#注意点">注意点</a></li>
+    </ul>
+  </li>
+  <li><a href="#carthageの基本情報">Carthageの基本情報</a>
     <ul>
       <li><a href="#carthageの読み方">Carthageの読み方</a></li>
       <li><a href="#carthageとは">Carthageとは？</a></li>
-    </ul>
-  </li>
-  <li><a href="#carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</a>
-    <ul>
-      <li><a href="#cocoapods">CocoaPods</a></li>
-      <li><a href="#carthage">Carthage</a></li>
-      <li><a href="#違いは手軽or柔軟">違いは「手軽」or「柔軟」</a></li>
-      <li><a href="#昔の話">昔の話</a></li>
-    </ul>
-  </li>
-  <li><a href="#carthageのメリット">Carthageのメリット</a>
-    <ul>
-      <li><a href="#ビルド時間の短縮">ビルド時間の短縮</a>
+      <li><a href="#carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</a>
         <ul>
-          <li><a href="#速度差を測定してみる">速度差を測定してみる</a></li>
+          <li><a href="#cocoapodsは使いやすさ重視">CocoaPodsは使いやすさ重視</a></li>
+          <li><a href="#carthageは柔軟性と独立性を重視">Carthageは柔軟性と独立性を重視</a></li>
         </ul>
       </li>
-      <li><a href="#xcodeの仕様変更に影響しにくい">Xcodeの仕様変更に影響しにくい</a></li>
-    </ul>
-  </li>
-  <li><a href="#carthageのデメリット">Carthageのデメリット</a></li>
-  <li><a href="#carthageを導入する">Carthageを導入する</a>
-    <ul>
-      <li><a href="#carghageをインストール">Carghageをインストール</a></li>
-      <li><a href="#cartfileを用意してライブラリを記入">Cartfileを用意してライブラリを記入</a>
+      <li><a href="#carthageのメリットとデメリット">Carthageのメリットとデメリット</a>
         <ul>
-          <li><a href="#cartfile作成">Cartfile作成</a></li>
-          <li><a href="#cartfile編集">Cartfile編集</a></li>
-          <li><a href="#コマンドでインストールする">コマンドでインストールする</a></li>
+          <li><a href="#cocoapodsより対応ライブラリが少ない">CocoaPodsより対応ライブラリが少ない</a></li>
+          <li><a href="#cocoapodsよりビルド時間が短い">CocoaPodsよりビルド時間が短い</a></li>
         </ul>
       </li>
-      <li><a href="#プロジェクトにフレームワークをリンクする">プロジェクトにフレームワークをリンクする</a></li>
-      <li><a href="#フレームワークをリンクする">フレームワークをリンクする</a>
-        <ul>
-          <li><a href="#carthage-copy-frameworksを忘れるとランタイムエラー">carthage copy-frameworksを忘れるとランタイムエラー</a></li>
-          <li><a href="#input-filesで渡すframeworkのパスが間違ってる場合">Input Filesで渡すframeworkのパスが間違ってる場合</a></li>
-          <li><a href="#embed-contentだとビルドエラーになる">Embed Contentだとビルドエラーになる</a></li>
-        </ul>
-      </li>
-      <li><a href="#まとめて指定も可能">まとめて指定も可能</a></li>
     </ul>
   </li>
-  <li><a href="#carthage成果物のgit管理について">Carthage成果物のgit管理について</a>
-    <ul>
-      <li><a href="#carthage-buildはgitに必要">Carthage BuildはGitに必要</a></li>
-    </ul>
-  </li>
-  <li><a href="#carthage---no-use-binariesでデバッグ可能にする">Carthage –no-use-binariesでデバッグ可能にする</a></li>
-  <li><a href="#carthageのcartfileでライブラリのバージョン指定する方法">CarthageのCartfileでライブラリのバージョン指定する方法</a>
+  <li><a href="#carthageの導入手順">Carthageの導入手順</a></li>
+  <li><a href="#carthageのgit管理について">Carthageのgit管理について</a></li>
+  <li><a href="#carthageのデバッグ環境について">Carthageのデバッグ環境について</a></li>
+  <li><a href="#carthage管理下ライブラリのバージョン制御について">Carthage管理下ライブラリのバージョン制御について</a>
     <ul>
       <li><a href="#で範囲指定する">~&gt;で範囲指定する</a></li>
       <li><a href="#-で指定バージョン以上">&gt;= で指定バージョン以上</a></li>
@@ -245,16 +222,10 @@
       <li><a href="#revisionでコミット指定">revisionでコミット指定</a></li>
     </ul>
   </li>
-  <li><a href="#carthageでgithub以外のライブラリを使う方法">CarthageでGitHub以外のライブラリを使う方法</a></li>
+  <li><a href="#carthage管理下のライブラリの個別更新">Carthage管理下のライブラリの個別更新</a></li>
   <li><a href="#carthageにテスト用ライブラリをインストールする方法">Carthageにテスト用ライブラリをインストールする方法</a></li>
-  <li><a href="#carthage-updateでライブラリ更新する方法">Carthage updateでライブラリ更新する方法</a></li>
-  <li><a href="#carthage-bootstrapで非更新でビルドする">Carthage bootstrapで非更新でビルドする</a>
-    <ul>
-      <li><a href="#carthage-updateで最新版あればそれ使う">Carthage updateで最新版あればそれ使う</a></li>
-      <li><a href="#carthage-bootstrapで環境を再現する">Carthage bootstrapで環境を再現する</a></li>
-      <li><a href="#ライブラリ更新者はupdateでciや環境構築はbootstrapを使う">ライブラリ更新者はupdateでCIや環境構築はbootstrapを使う</a></li>
-    </ul>
-  </li>
+  <li><a href="#新しいバージョンを確認する">新しいバージョンを確認する</a></li>
+  <li><a href="#carthageでgithub以外のライブラリを使う方法">CarthageでGitHub以外のライブラリを使う方法</a></li>
   <li><a href="#まとめ">まとめ</a></li>
 </ul>
   </div>
@@ -262,357 +233,163 @@
   <p>ライブラリ管理ツールとして市民権を得て暫く経つCarthageですが、<br />
 次のケースに該当する方もいると思います。</p>
 
+<h2 id="はじめに">はじめに</h2>
+
+<h3 id="対象読者">対象読者</h3>
+
 <ul>
-  <li>そもそも使う機会がなかった人</li>
-  <li>個人利用はあるが会社で使ったことがない人</li>
+  <li>使う機会がなかった人</li>
+  <li>個人利用はあるが会社ではまだの人</li>
   <li>iOS/Swiftに入門したての人</li>
 </ul>
 
-<p>そんな人向けにCarthageの基本情報から利用方法など、<br />
-実務で必要な知識を体系的に理解できる範囲で説明します。</p>
+<h3 id="記事の内容">記事の内容</h3>
+<p>Carthageの基礎から利用、そして運用など、<br />
+実務で必要な知識を体系的に説明します。</p>
 
-<p>この記事は、実務から得た知見ベースで構成しており、<br />
+<ul>
+  <li>基本情報</li>
+  <li>導入手順</li>
+  <li>git管理について</li>
+  <li>デバッグ環境</li>
+  <li>ライブラリのバージョン制御</li>
+  <li>ライブラリの更新</li>
+  <li>テスト用ライブラリ</li>
+  <li>新しいバージョンを確認する</li>
+  <li>GitHub以外のライブラリ</li>
+</ul>
+
+<h3 id="記事の読み方">記事の読み方</h3>
+<p>1記事に収まらないボリュームのため、複数の記事に分けてます。<br />
+分けた記事はこの記事からリンクで追跡できます。合わせてお読みください。</p>
+
+<h3 id="注意点">注意点</h3>
+<p>この記事の内容は、主に実務から得た知見ベースです。<br />
 iOSアプリに主軸を置いて説明しています。</p>
 
-<h2 id="carthageの基本情報を理解する">Carthageの基本情報を理解する</h2>
+<h2 id="carthageの基本情報">Carthageの基本情報</h2>
 
-<p>Carthageの導入に入る前に、Carthageとはそもそも何か？を説明します。<br />
-「なぜCocoaPodsの後発なのに人気を得ているのか？」など<br />
-歴史を知ることでCocoaPodsとの方針の違いを知ることができます。</p>
+<ul>
+  <li>Carthageとは何か？</li>
+  <li>なぜCocoaPodsと比較されるのか？</li>
+  <li>メリットとデメリットは何か？</li>
+</ul>
+
+<p>CocoaPodsとの違いで方針を知りましょう。</p>
 
 <h3 id="carthageの読み方">Carthageの読み方</h3>
-<p>読み方を知らないと脳内音読が捗りませんね。</p>
-
-<p><code class="highlighter-rouge">カーセージ</code>と<code class="highlighter-rouge">カルタゴ</code>の２つに大きく分かれています。<br />
-<a href="https://ja.wikipedia.org/wiki/%E3%82%AB%E3%83%BC%E3%82%BB%E3%83%83%E3%82%B8">Wikipedia</a>見た感じだと、
-<code class="highlighter-rouge">カーセッジ</code>が正解な気もしますが、<br />
-私としてはどれでもいいのです。</p>
+<p><a href="https://ja.wikipedia.org/wiki/カーセッジ">Wikipedia</a>だと<code class="highlighter-rouge">カーセージ</code>と<code class="highlighter-rouge">カルタゴ</code>の２つあります。<br />
+作者の出身や公式ロゴ背景から考えて<code class="highlighter-rouge">カルタゴ</code>な気がしますが、<br />
+呼びやすい方でいいと思います。</p>
 
 <h3 id="carthageとは">Carthageとは？</h3>
-<p><strong>Carthageとは、Swift製のCocoa用ライブラリ管理ツールです。</strong></p>
 
-<p>Carthageの特徴は次の点です。</p>
+<p>Swift製の<strong>Cocoa用ライブラリ管理ツール</strong>です。</p>
 
-<ul>
-  <li>framework追加がシンプルであること</li>
-  <li>プロジェクトファイルやビルド設定を変更しない</li>
-</ul>
-
-<p>Carthageは、バイナリフレームワーク(.framework)の構築しかしません。<br />
-プロジェクトへの追加はユーザー手動です。</p>
-
-<h2 id="carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</h2>
-
-<p>CocoaPodsと比較して何が異なるのか見てみます。</p>
-
-<h3 id="cocoapods">CocoaPods</h3>
-
-<p>CocoaPodsは<code class="highlighter-rouge">$ pod install</code>でライブラリをインストールすると、<br />
-対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、<br />
-プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。</p>
-
-<p>作成されたワークスペースには、対象プロジェクトとは別に<br />
-Podsプロジェクト(Pods.xcodeproj)が作成されており、<br />
-その中にライブラリとなるソースコードが含まれています。</p>
-
-<p>ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、<br />
-対象プロジェクトにはフレームワークとしてリンクされます。</p>
-
-<p>リンク処理も全てCocoaPodsが自動で行ってくれます。</p>
-
-<h3 id="carthage">Carthage</h3>
-
-<p>Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。　　
-ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。　　
-プロジェクトへのフレームワーク追加は、自分で行う必要があります。</p>
-
-<h3 id="違いは手軽or柔軟">違いは「手軽」or「柔軟」</h3>
-<p><code class="highlighter-rouge">CocoaPods</code>は、ポータルサイトが用意されてるため対応ライブラリを探すのが簡単です。<br />
-そしてPodfileにライブラリを記入してインストール実行すれば、<br />
-プロジェクトへのフレームワーク登録などをやってくれるなど、<strong>使いやすい</strong> がアプローチです。</p>
-
-<p>一方<code class="highlighter-rouge">Carthage</code>は、ポータルサイトはなく対応ライブラリはGitHubなどで自力検索です。<br />
-frameworkの作成はしてくれても、それをプロジェクトに追加するのは自分になります。<br />
-しかし、サイト等の統一システムがない分Carthage自体のメンテナンス作業は減り、<br />
-利用側としても単一障害点がありません。<br />
-またXcodeの仕様変更に対して影響がないため、<strong>柔軟で邪魔しない</strong> がアプローチです。</p>
-
-<h3 id="昔の話">昔の話</h3>
-<p>私はiOSとは2012年から関わっております。<br />
-その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。</p>
-
-<p>CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、<br />
-そのため実務ではリリース毎にPodsファイル含めた全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。</p>
-
-<p>Carthageがよく目にするようになったのはiOS7あたりだったと思います。  <br />
-Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。<br />
-そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、<br />
-Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。</p>
-
-<p>当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）</p>
-
-<p>昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。</p>
-
-<h2 id="carthageのメリット">Carthageのメリット</h2>
-
-<p>Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。</p>
-
-<h3 id="ビルド時間の短縮">ビルド時間の短縮</h3>
-<p>フレームワークのリンク構築を自分で行う必要がある、Carthageの利点は<strong>ビルド時間の短縮</strong>になります。</p>
-
-<p>Carthageはコマンド実行するとライブラリをインストールしてフレームワークを作成します。<br />
-その作成されたフレームワークを、プロジェクトにリンクすることになるため、<br />
-つまり事前にフレームワークを作っておくことで、プロジェクトに対してのビルド時間が短くできます。</p>
-
-<h4 id="速度差を測定してみる">速度差を測定してみる</h4>
-<p>ここでそれぞれのビルド時間を測定してみました。</p>
+<p>機能は大きく2つです</p>
 
 <ul>
-  <li>測定は最初の5回は慣らし、5回目から数回測定。</li>
-  <li>測定ではRebuild(Clean+Build)で測定する。</li>
-  <li>インストールライブラリはSwiftJSON。</li>
+  <li>ライブラリ毎の.frameworkを作成と更新</li>
+  <li>ビルド時の.frameworkコピーをサポート</li>
 </ul>
 
-<table>
-  <thead>
-    <tr>
-      <th>環境</th>
-      <th>min</th>
-      <th>max</th>
-      <th>avg</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>CocoaPods</td>
-      <td>3.208s</td>
-      <td>3.492s</td>
-      <td>3.308s</td>
-    </tr>
-    <tr>
-      <td>Carthage</td>
-      <td>1.478s</td>
-      <td>1.765s</td>
-      <td>1.60725s</td>
-    </tr>
-    <tr>
-      <td>vanilla</td>
-      <td>0.932s</td>
-      <td>1.143s</td>
-      <td>1.04967s</td>
-    </tr>
-  </tbody>
-</table>
+<p>なお、プロジェクトへの追加は手動です。</p>
 
-<p>効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。</p>
+<h3 id="carthageとcocoapodsの違い">CarthageとCocoaPodsの違い</h3>
+<p>2つの違いは「手軽」と「柔軟」です。<br />
+簡単に説明します。</p>
 
-<h3 id="xcodeの仕様変更に影響しにくい">Xcodeの仕様変更に影響しにくい</h3>
-
-<p>Xcode内部の設定や仕様変更が行われるとCocoaPodsの場合は、ワークスペースや設定などを作成・更新をするため
-動かないケースに出くわします。<br />
-この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。</p>
-
-<p>その点でCarthageはフレームワークを作成するだけなので、Xcodeの仕様変更の影響を受けにくいので<br />
-開発安定性はCocoaPodsより勝っているとも言えます。</p>
-
-<p>CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。</p>
-
-<h2 id="carthageのデメリット">Carthageのデメリット</h2>
-
-<p>旨味の多いCarthageですが、欠点もあります。</p>
+<h4 id="cocoapodsは使いやすさ重視">CocoaPodsは使いやすさ重視</h4>
 
 <ul>
-  <li>対応ライブラリがCocoaPodsより少ない</li>
-  <li>初期導入が少々面倒</li>
-  <li>フレームワークの削除が少々面倒</li>
+  <li>Xcodeワークスペースを自動作成・更新</li>
+  <li>ライブラリのビルドからリンクまで統合</li>
 </ul>
 
-<p>フレームワークの削除は、リンクを外す処理が必要になるため、その手間分面倒ということになります。<br />
-CocoaPodsの場合、Podfileから削除してインストールするだけで自動でリンクを外してくれます。</p>
+<h4 id="carthageは柔軟性と独立性を重視">Carthageは柔軟性と独立性を重視</h4>
 
-<p>そして、対応ライブラリが少ないというのは、今の所一番痛い課題かと思います。<br />
-これに関しては今後時間による量が増えるのを期待するしかなさそうです。</p>
+<ul>
+  <li>フレームワークをビルド</li>
+  <li>Xcodeプロジェクト操作をしない</li>
+  <li>ライブラリのリンクはしない</li>
+</ul>
 
-<h2 id="carthageを導入する">Carthageを導入する</h2>
+<h3 id="carthageのメリットとデメリット">Carthageのメリットとデメリット</h3>
 
-<p>ではCarthageの概要や利点について説明したので、実際に導入する手順について説明します。</p>
+<ul>
+  <li>メリット
+    <ul>
+      <li>CocoaPodsよりビルド時間が短い</li>
+      <li>Xcodeの仕様変更に影響されにくい</li>
+    </ul>
+  </li>
+  <li>デメリット
+    <ul>
+      <li>CocoaPodsより対応ライブラリが少ない</li>
+      <li>CocoaPodsより導入とフレームワーク管理が面倒</li>
+    </ul>
+  </li>
+</ul>
+
+<h4 id="cocoapodsより対応ライブラリが少ない">CocoaPodsより対応ライブラリが少ない</h4>
+
+<p>CocoaPodsと比べると、対応ライブラリは多く印象です。<br />
+使用ライブラリがCocoaPodsしか対応していないことはよく目の当たりにします。</p>
+
+<h4 id="cocoapodsよりビルド時間が短い">CocoaPodsよりビルド時間が短い</h4>
+
+<p>測定結果によると、CarthageはCocoaPodsよりビルド時間が半分近く短いです。</p>
+
+<p>詳細と残りのメリット・デメリットは「<span><a href="/ios/ios-carthage-vs-cocoapods">CarthageとCocoaPodsの違いを経験交えて比較する</a></span>
+」にまとめてあります。</p>
+
+<h2 id="carthageの導入手順">Carthageの導入手順</h2>
+
+<p>CarthageのMacへのインストールも含めると大きく4手順になります。</p>
 
 <ol>
-  <li>Carghageをインストール</li>
-  <li>Cartfileにインストールしたいライブラリを記入</li>
-  <li>コマンド実行</li>
-  <li>リンク設定</li>
+  <li>HomebrewでCarthageインストール</li>
+  <li>Podfile作成と編集</li>
+  <li>Podfileからframework作成</li>
+  <li>frameworkリンキングとコピー</li>
 </ol>
 
-<p>になります。</p>
+<p>これら手順毎に説明すると記事ボリュームが大きくて読みにくいので<br />
+別記事として「<span><a href="/ios/carthage/ios-carthage-install-guide">iOSのCarthage導入手順と注意点</a></span>
+」にまとめてます。</p>
 
-<h3 id="carghageをインストール">Carghageをインストール</h3>
+<h2 id="carthageのgit管理について">Carthageのgit管理について</h2>
+<p><code class="highlighter-rouge">carthage update</code>が生成したデータは、<strong>全てをgit管理する必要はありません。</strong><br />
+git管理下には別PCでも環境再現ができればいいのですから、<br />
+最低限で言えば<code class="highlighter-rouge">Cartfile.resolved</code>だけで環境の再現は可能です。<br />
+しかしそれだと大抵はCIで困ることが起きます。<br />
+詳細は「<span><a href="/ios/carthage/ios-carthage-team-collaboration">Carthage bootstrapとGit管理をチーム運用観点で整理</a></span>
+」にまとめてます。</p>
 
-<p>最も手軽なHomebrewでインストールします。</p>
+<h2 id="carthageのデバッグ環境について">Carthageのデバッグ環境について</h2>
+<p>fromeworkをDebug Configurationでビルドする必要があります。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install carthage
+<p>Xcodeでは他環境で作成されたframeworkをステップ実行できません。
+またビルドConfigurationがReleaseだとコンパイラがコード最適化することでコードと実際のステップ数に違いが起きたり変数が使えなくなります。
+ライブラリによってはGitHubなどに既にビルド済みのフレームワークが用意されており、<br />
+Carthageは特に指定がなければそれを使ってインストールして時間短縮を行っています。
+しかし大抵はRelease Configurationでビルドされているため、ステップ実行はできません。</p>
+
+<p>手元でかつDebug Configurationでビルドすればステップ実行できるようになります。<br />
+Build Configurationを指定するには、<strong>–configuration</strong> オプションを使います。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthge update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span> <span class="nt">--configuration</span> Debug
 </code></pre></div></div>
-<p>インストールされない場合は <code class="highlighter-rouge">$ brew update</code> 実行後の再実行してみてください。</p>
+<p><code class="highlighter-rouge">update</code>ではなくとも<code class="highlighter-rouge">bootstrap</code>でも大丈夫です。</p>
 
-<h3 id="cartfileを用意してライブラリを記入">Cartfileを用意してライブラリを記入</h3>
+<p>またBuild ConfigirationがReleaseなどでコード最適化されている場合は、ステップ実行すると次のログがコンソールに表示されます。</p>
 
-<ul>
-  <li>Cartfileファイルの用意</li>
-  <li>Cartfileの編集</li>
-</ul>
+<blockquote>
+  <p>SwiftyJSON was compiled with optimization - stepping may behave oddly; variables may not be available.</p>
+</blockquote>
 
-<p>の順番でCartfileを作成します。</p>
+<h2 id="carthage管理下ライブラリのバージョン制御について">Carthage管理下ライブラリのバージョン制御について</h2>
 
-<h4 id="cartfile作成">Cartfile作成</h4>
-
-<p>対象プロジェクトがあるディレクトリ上に <code class="highlighter-rouge">Cartfile</code> を作成してください。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> &lt;your xcode project&gt;
-<span class="nv">$ </span>touch Cartfile
-</code></pre></div></div>
-
-<p>※ touch: Cartfileという名前のファイルを作るだけのコマンドです。中身は空です。</p>
-
-<h4 id="cartfile編集">Cartfile編集</h4>
-
-<p>テキストエディタでインストールしたいライブラリを追記します。
-例えば SwiftyJSON であれば次のようにします。
-これは githubのSwiftyJSONユーザーのSwiftyJSONレポジトリーを指しています。 <a href="https://github.com/SwiftyJSON/SwiftyJSON">SwifthJSON</a></p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>Cartfile
-github <span class="s2">"SwiftyJSON/SwiftyJSON"</span>
-</code></pre></div></div>
-
-<h4 id="コマンドでインストールする">コマンドでインストールする</h4>
-
-<p>記入が終わったら保存して下記コマンドを実行します。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS
-</code></pre></div></div>
-<p><code class="highlighter-rouge">--platfrom iOS</code>というオプションは作成するフレームワークをiOSのみに指定するオプションです。
-これがない場合、ライブラリによっては、OSXやwatchOS用もビルドが走ります。今回は使わないのでiOS指定をしています。</p>
-
-<p>下記は、自分の環境で実行したときの結果です。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS
-<span class="k">***</span> Cloning SwiftyJSON
-<span class="k">***</span> Checking out SwiftyJSON at <span class="s2">"5.0.0"</span>
-<span class="k">***</span> xcodebuild output can be found <span class="k">in</span> /var/folders/45/7f_wlrcs3xv6rmstcz2l5_000000gn/T/carthage-xcodebuild.MQ3JFo.log
-<span class="k">***</span> Building scheme <span class="s2">"SwiftyJSON iOS"</span> <span class="k">in </span>SwiftyJSON.xcworkspace
-</code></pre></div></div>
-
-<h3 id="プロジェクトにフレームワークをリンクする">プロジェクトにフレームワークをリンクする</h3>
-
-<p>コマンドによってフレームワークが作成されますが、まだプロジェクトにはリンクされていません。
-プロジェクトに対してフレームワーク使うよう設定する必要があります。</p>
-
-<h3 id="フレームワークをリンクする">フレームワークをリンクする</h3>
-
-<p>プロジェクトのターゲットのGeneralを開いて、 <code class="highlighter-rouge">Linked frameworks and Libraries</code> を ＋ ボタンを押してください。
-<a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-1.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-1.png" width="100%" alt="" /></a></p>
-
-<p>フレームワーク／ライブラリの選択画面が出るので、<code class="highlighter-rouge">Add Other...</code> ボタンを押してください。
-<a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-2.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-2.png" width="100%" alt="" /></a></p>
-
-<p>ここで先程作成したフレームワークを指定します。</p>
-
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-3.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-3.png" width="100%" alt="" /></a></p>
-
-<p>なおフレームワークは</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> Carthage/Build/iOS
-total 288
-<span class="nt">-rw-------</span>  1 mothule  staff  73046  9 15 14:31 11B6ADD2-B8F8-3816-830A-C3C0B53B18B2.bcsymbolmap
-<span class="nt">-rw-------</span>  1 mothule  staff  70266  9 15 14:31 36F8ED49-B83F-3A70-B0D4-DED92A0D89E2.bcsymbolmap
-drwxr-xr-x  6 mothule  staff    192  9 15 14:31 SwiftyJSON.framework
-drwxr-xr-x  3 mothule  staff     96  9 15 14:31 SwiftyJSON.framework.dSYM
-</code></pre></div></div>
-<p>に作成されています。
-次の図のように追加されていればOKです。</p>
-
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-4.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-4.png" width="100%" alt="" /></a></p>
-
-<p>次に <code class="highlighter-rouge">Build Phases</code>上の ＋ ボタンを押して <code class="highlighter-rouge">New Run Script Phase</code> を選んでください。</p>
-
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-5.png" width="100%" alt="" /></a></p>
-
-<p><code class="highlighter-rouge">Run Script</code>フェイズが作成されるので、中に<code class="highlighter-rouge">carthage copy-frameworks</code>コマンドと、コマンドに渡す引数としてフレームワークのパスを指定します。</p>
-
-<p><a href="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png"><img src="/assets/images/2019-09-15-ios-carthage/2019-09-15-ios-carthage-6.png" width="100%" alt="" /></a></p>
-
-<p><code class="highlighter-rouge">Output Files</code>はコピー先を指定します。</p>
-
-<p><a href="/assets/images/2019-09-15-ios-carthage/7.png"><img src="/assets/images/2019-09-15-ios-carthage/7.png" width="50%" alt="Carthage_Run_Script_Output_Files" /></a></p>
-
-<p>ちなみにこの<code class="highlighter-rouge">Output Files</code>は指定せずとも動作に問題はありません。しかしビルドパフォーマンスに影響します。
-詳しくは「<span><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></span>
-」に調査結果をまとめてあります。</p>
-
-<h4 id="carthage-copy-frameworksを忘れるとランタイムエラー">carthage copy-frameworksを忘れるとランタイムエラー</h4>
-
-<p>コマンド<code class="highlighter-rouge">carthage copy-frameworks</code>をビルドフェイズで実行しなかった場合、ビルドは通りますが、実行すると次のエラーが起きます。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
-  Referenced from: /Users/mothule/Library/Developer/CoreSimulator/Devices/1DB7E7C4-D7CD-44BA-B3F9-F66DC4E5EC51/data/Containers/Bundle/Application/6B0FDFCC-9D12-47D5-9B74-B837BE8FC983/UseCarthage.app/UseCarthage
-  Reason: image not found
-</code></pre></div></div>
-
-<p>これは実行環境(実機やシミュレータ)にframeworkが配置されてないことで、動的ロードでファイルが見つからずランタイムエラーになるためです。</p>
-
-<h4 id="input-filesで渡すframeworkのパスが間違ってる場合">Input Filesで渡すframeworkのパスが間違ってる場合</h4>
-
-<p><code class="highlighter-rouge">carthage copy-frameworks</code>コマンドが走るとき、つまりビルド時に次のようなエラーが表示されます。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Could not find framework "&lt;framework name&gt;" at path &lt;wrong framework path&gt;.
-Ensure that the given path is appropriately entered and that your "Input Files" and "Input File Lists" have been entered correctly.
-</code></pre></div></div>
-
-<p>この場合は<code class="highlighter-rouge">Input Files</code>または<code class="highlighter-rouge">Input File Lists</code>で渡してるframeworkのパスが間違っていないか確認してください。</p>
-
-<h4 id="embed-contentだとビルドエラーになる">Embed Contentだとビルドエラーになる</h4>
-
-<p><code class="highlighter-rouge">Target &gt; General &gt; Frameworks, Libraries, and Embedded Content</code>からframeworkを追加すると、デフォルトでは<code class="highlighter-rouge">Embed &amp; Sign</code>になっており、このままビルドすると次のようなビルドエラーが起きます。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Multiple commands produce '.../YOUR-APP-NAME.app/Frameworks/&lt;FRAMEWORK NAME&gt;.framework':
-
-1) Target '&lt;YOUR TARGET NAME&gt;' has copy command from
-'/your/project/path/Carthage/Build/iOS/&lt;FRAMEWORK NAME&gt;.framework' to '.../YOUR-APP-NAME.app/Frameworks/&lt;FRAMEWORK NAME&gt;.framework'
-
-2) That command depends on command in Target '&lt;YOUR TARGET NAME&gt;': script phase “Run Script”
-</code></pre></div></div>
-
-<p>Embedded Frameworkではないので、<code class="highlighter-rouge">Do Not Embed</code>に直してください。</p>
-
-<h3 id="まとめて指定も可能">まとめて指定も可能</h3>
-
-<p>Inputfilesに各フレームワーク毎にパス追記せずとも、xcfilelistという拡張子で指定することで一律管理も可能です。
-手順は<a href="https://github.com/Carthage/Carthage#if-youre-building-for-ios-tvos-or-watchos">公式</a>に記載されています。
-番号5~9になります。英語ですが、英語読めなくとも手順は読み取れると思います。</p>
-
-<h2 id="carthage成果物のgit管理について">Carthage成果物のgit管理について</h2>
-<p>作成されたフレームワークやその他データに関して全てのgit管理する必要はありません。
-使うのはフレームワーク成果物だけで、それ以外の途中データは、再現可能なデータであるため.gitignoreに追加しても大丈夫です。</p>
-
-<p>私の環境では次のようにしています。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code># Carthage
-Carthage/Checkouts
-!Carthage/Build
-</code></pre></div></div>
-
-<h3 id="carthage-buildはgitに必要">Carthage BuildはGitに必要</h3>
-<p>Carthage updateを実行することで、ライブラリのソースコードがダウンロードしてビルドするか、<br />
-サイト上に配置されたバイナリをダウンロードして解凍されることで、<br />
-成果物をBuildディレクトリに展開されます。<br />
-この中にXcodeに指定するフレームワークが格納されています。</p>
-
-<p>そのためここをGitにあげないと他環境からビルドした場合にフレームワークが見つからずビルドエラーとなります。</p>
-
-<h2 id="carthage---no-use-binariesでデバッグ可能にする">Carthage --no-use-binariesでデバッグ可能にする</h2>
-<p>ライブラリによってはGitHubなどに既にビルド済みのフレームワークが用意されており、<br />
-Carthageは特に指定がなければそれを使ってインストールして時間短縮を行っています。</p>
-
-<p>しかし、事前に構築されたフレームワークは、フレームワークが構築されたPC以外でのステップ実行などはできません。<br />
-その場合は、</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span> &lt;library name&gt;
-</code></pre></div></div>
-<p>というふうに <strong><code class="highlighter-rouge">--no-use-binaries</code></strong> オプションんを使うことで解決することができます。</p>
-
-<h2 id="carthageのcartfileでライブラリのバージョン指定する方法">CarthageのCartfileでライブラリのバージョン指定する方法</h2>
 <p>Carthageでライブラリのバージョンを指定するには、<br />
 Cartfileに決まった書き方をすることでライブラリのバージョンを制御することができます。</p>
 
@@ -680,27 +457,7 @@ Cartfileに<code class="highlighter-rouge">github "Hoge" == 4.2.1</code>と記�
 
 <p><a href="https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement">Carthage公式のVersion requirement</a>でも英語ですが説明セクションはあります。</p>
 
-<h2 id="carthageでgithub以外のライブラリを使う方法">CarthageでGitHub以外のライブラリを使う方法</h2>
-
-<p>大半のライブラリはGitHubにあるとは思いますが、全てのライブラリではありません。<br />
-例えば社内限定であれば自社内にOSSのGitレポジトリがありますし、GitLabやGitBucketもあります。<br />
-その場合はCartfileに次の書き方でそれぞれのライブラリをインストールできるようになります。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "https://enterprise.local/hoge/fuga/perfect-library" # GitHub Enterprise
-git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
-</code></pre></div></div>
-
-<h2 id="carthageにテスト用ライブラリをインストールする方法">Carthageにテスト用ライブラリをインストールする方法</h2>
-<p>テストでしか使用しないフレームワークはCartfileではなく<br />
-<code class="highlighter-rouge">Cartfile.private</code>ファイルを用意して、インストールします。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch Cartfile.private
-</code></pre></div></div>
-
-<p>中身の書き方は通常のCartfileと変わりません。<br />
-注意点としては、プロジェクトへのリンク設定で、ターゲットをテストに対して行うことを忘れずに。</p>
-
-<h2 id="carthage-updateでライブラリ更新する方法">Carthage updateでライブラリ更新する方法</h2>
+<h2 id="carthage管理下のライブラリの個別更新">Carthage管理下のライブラリの個別更新</h2>
 
 <p>ライブラリが更新されたらCarthageにはライブラリを更新するコマンドが用意されています。<br />
 例えば次のシェルはこのような意味になります。</p>
@@ -724,49 +481,37 @@ git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
 そこが気になるならこのオプションをつけといたほうがいいです。<br />
 少し時間がかかるぐらいなので。</p>
 
-<h2 id="carthage-bootstrapで非更新でビルドする">Carthage bootstrapで非更新でビルドする</h2>
+<h2 id="carthageにテスト用ライブラリをインストールする方法">Carthageにテスト用ライブラリをインストールする方法</h2>
+<p>テストでしか使用しないフレームワークはCartfileではなく<br />
+<code class="highlighter-rouge">Cartfile.private</code>ファイルを用意して、インストールします。</p>
 
-<p>Carthageにはフレームワークをビルドする方法として <code class="highlighter-rouge">update</code> ともう一つ <code class="highlighter-rouge">bootstrap</code>があります。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch Cartfile.private
+</code></pre></div></div>
 
-<p>この２つの違いをざっくり表すと</p>
+<p>中身の書き方は通常のCartfileと変わりません。<br />
+注意点としては、プロジェクトへのリンク設定で、ターゲットをテストに対して行うことを忘れずに。</p>
 
-<ul>
-  <li>update: 最新版あればそれ使う</li>
-  <li>bootstrap: 環境を再現する</li>
-</ul>
+<h2 id="新しいバージョンを確認する">新しいバージョンを確認する</h2>
+<p>開発ではライブラリを使っていると新しいバージョンがリリースされたら追従させる必要があります。
+Carthageで管理してるライブラリに新しいバージョンがリリースされているかどうかを調べる方法があります。
+<code class="highlighter-rouge">carthage outdated</code>コマンドを実行すると一覧で確認することができます。</p>
 
-<p>になります。</p>
+<p>例えばSwiftyJSONに新しいバージョンが出てる場合です。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage outdated
+<span class="k">***</span> Fetching SwiftyJSON
+The following dependencies are outdated:
+SwiftyJSON <span class="s2">"4.3.0"</span> -&gt; <span class="s2">"4.3.0"</span> <span class="o">(</span>Latest: <span class="s2">"5.0.0"</span><span class="o">)</span>
+</code></pre></div></div>
 
-<h3 id="carthage-updateで最新版あればそれ使う">Carthage updateで最新版あればそれ使う</h3>
-<p><code class="highlighter-rouge">$ carthage udpate</code>はCartfileに記載されたライブラリとバージョン情報から<br />
-ライブラリをビルドしてフレームワークを作成します。</p>
+<h2 id="carthageでgithub以外のライブラリを使う方法">CarthageでGitHub以外のライブラリを使う方法</h2>
 
-<p>そのため、実行時に新しいバージョンが公開されていてCartfileにもそのバージョンを取り入れる書き方をしていたら<br />
-新しいバージョンを取り込んでフレームワークを作成します。</p>
+<p>大半のライブラリはGitHubにあるとは思いますが、全てのライブラリではありません。<br />
+例えば社内限定であれば自社内にOSSのGitレポジトリがありますし、GitLabやGitBucketもあります。<br />
+その場合はCartfileに次の書き方でそれぞれのライブラリをインストールできるようになります。</p>
 
-<h3 id="carthage-bootstrapで環境を再現する">Carthage bootstrapで環境を再現する</h3>
-<p><code class="highlighter-rouge">$ carthage bootstrap</code>は<code class="highlighter-rouge">update</code>と異なりCartfileではなく、Cartfile.resolvedでフレームワークを作成します。<br />
-新しいバージョンが出ていても、Cartfile.resolved更新当時のバージョンが使われます。</p>
-
-<h3 id="ライブラリ更新者はupdateでciや環境構築はbootstrapを使う">ライブラリ更新者はupdateでCIや環境構築はbootstrapを使う</h3>
-<p>これら２つの使い分けに関しては、次のルールにそうといいでしょう</p>
-
-<ul>
-  <li><code class="highlighter-rouge">update</code>
-    <ul>
-      <li>ライブラリ更新者が実施する</li>
-    </ul>
-  </li>
-  <li><code class="highlighter-rouge">bootstrap</code>
-    <ul>
-      <li>CIでcarthageを使う場合</li>
-      <li>Buildディレクトリをgitにあげない運用で他環境で環境構築する場合</li>
-    </ul>
-  </li>
-</ul>
-
-<p>使い分けが面倒なら前述したように<br />
-Buildディレクトリをgit管理下にすれば<code class="highlighter-rouge">update</code>に絞ることができます。</p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "https://enterprise.local/hoge/fuga/perfect-library" # GitHub Enterprise
+git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
+</code></pre></div></div>
 
 <h2 id="まとめ">まとめ</h2>
 
@@ -805,6 +550,33 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
                 
                 
                 
+                    <li><h3><a href="/ios/carthage/ios-carthage-team-collaboration">Carthage bootstrapとGit管理をチーム運用観点で整理</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/ios-carthage-vs-cocoapods">CarthageとCocoaPodsの違いを経験交えて比較する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage-install-guide">iOSのCarthage導入手順と注意点</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
 
             
                 
@@ -822,594 +594,7 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
                     <li><h3><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></h3></li>
                     
                     
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
+                        
         </div>
     </ul>
 </div>
