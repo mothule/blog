@@ -12,8 +12,10 @@ pagination:
   <h1>iOSやSwiftカテゴリの記事一覧</h1>
 </div>
 
-{% for post in paginator.posts %}
-  {% include article.html %}
-{% endfor %}
+{% if jekyll.build_environment != "local" %}
+  {% for post in paginator.posts %}
+    {% include article.html %}
+  {% endfor %}
 
-{% include pagination.html permalink='/categories/ios/' %}
+  {% include pagination.html permalink='/categories/ios/' %}
+{% endif %}
