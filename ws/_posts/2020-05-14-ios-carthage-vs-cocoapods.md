@@ -42,7 +42,7 @@ CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。
 
 ## CarthageとCocoaPodsの各ライブラリ管理方法
 
-#### CocoaPods
+### CocoaPods
 
 CocoaPodsは`$ pod install`でライブラリをインストールすると、  
 対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、  
@@ -59,7 +59,7 @@ Podsプロジェクト(Pods.xcodeproj)が作成されており、
 
 {% comment %} CocoaPodsインストールの記事作ったらここにリンク貼る {% endcomment %}
 
-#### Carthage
+### Carthage
 
 Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。  
 ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。  
