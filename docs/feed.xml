@@ -1,4 +1,96 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-17T18:26:01+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Carthage bootstrapとGit管理をチーム運用観点で整理</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration" rel="alternate" type="text/html" title="Carthage bootstrapとGit管理をチーム運用観点で整理" /><published>2020-05-15T00:00:00+09:00</published><updated>2020-05-17T18:25:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration">&lt;p&gt;この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-17T18:55:09+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CarthageのCartfileの書き方と個別更新方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format" rel="alternate" type="text/html" title="CarthageのCartfileの書き方と個別更新方法" /><published>2020-05-17T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format">&lt;p&gt;Podfileと書き方が微妙に異なるので注意です。カンマは使いません。&lt;/p&gt;
+
+&lt;p&gt;ライブラリを導入したら新しいバージョンが公開されたら追従しなければいけません。
+この記事ではCarthageで管理してるライブラリのバージョン追従方法について説明します。&lt;/p&gt;
+
+&lt;h2 id=&quot;cartfileでバージョンを指定する&quot;&gt;Cartfileでバージョンを指定する&lt;/h2&gt;
+
+&lt;p&gt;例えばCartfileでは次のようにライブラリのバージョンを指定することができます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;github &quot;SwiftyJSON&quot; ~&amp;gt; 4.2.0
+github &quot;Hoge&quot; &amp;gt;= 4.2.0
+github &quot;Fuga&quot; == 4.2.0
+github &quot;Nuga&quot; &quot;develop&quot;
+github &quot;Moga&quot; &quot;ab12c3ef4&quot;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;それぞれ順に説明していきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;で範囲指定する&quot;&gt;~&amp;gt;で範囲指定する&lt;/h3&gt;
+&lt;p&gt;最も多く使われてるであろう書き方です。
+例えばバージョン履歴が下記だった場合で説明します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;4.2.0&lt;/li&gt;
+  &lt;li&gt;4.2.1&lt;/li&gt;
+  &lt;li&gt;4.3.0&lt;/li&gt;
+  &lt;li&gt;5.0.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;このときにCartfileで&lt;code class=&quot;highlighter-rouge&quot;&gt;github &quot;Hoge&quot; ~&amp;gt; 4.2.0&lt;/code&gt;が記入された状態で&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;update&lt;/code&gt;を実行したら&lt;code class=&quot;highlighter-rouge&quot;&gt;4.2.1&lt;/code&gt;までアップデートします。&lt;br /&gt;
+もし&lt;code class=&quot;highlighter-rouge&quot;&gt;github &quot;Hoge&quot; ~&amp;gt; 4.2&lt;/code&gt;が記入されてたら&lt;code class=&quot;highlighter-rouge&quot;&gt;4.3.0&lt;/code&gt;までアップデートします。&lt;/p&gt;
+
+&lt;p&gt;なかなか範囲が覚えにくいと思いますが、最後の数字が&lt;code class=&quot;highlighter-rouge&quot;&gt;x&lt;/code&gt;に置き換えて見れば分かりやすくなります。&lt;br /&gt;
+例えば &lt;code class=&quot;highlighter-rouge&quot;&gt;github &quot;Hoge&quot; ~&amp;gt; 4.2.0&lt;/code&gt;であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;4.2.x&lt;/code&gt;系です。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;4.2&lt;/code&gt;なら&lt;code class=&quot;highlighter-rouge&quot;&gt;4.x&lt;/code&gt;系です。つまり4系バージョンですね。&lt;/p&gt;
+
+&lt;h3 id=&quot;-で指定バージョン以上&quot;&gt;&amp;gt;= で指定バージョン以上&lt;/h3&gt;
+
+&lt;p&gt;指定バージョン値以上のバージョンを指定します。&lt;br /&gt;
+Cartfileに&lt;code class=&quot;highlighter-rouge&quot;&gt;github &quot;Hoge&quot; &amp;gt;= 4.2.1&lt;/code&gt;と記入された状態で&lt;br /&gt;
+バージョン履歴が下記だった場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;5.0.0&lt;/code&gt;がインストールされます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;4.2.0&lt;/li&gt;
+  &lt;li&gt;4.2.1&lt;/li&gt;
+  &lt;li&gt;4.3.0&lt;/li&gt;
+  &lt;li&gt;5.0.0&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;この書き方は少し破壊変更リスクが伴うため使う側としてはオススメしないです。&lt;br /&gt;
+こっちよりも前述した範囲指定のほうが安全性をそれなりに維持できます。&lt;/p&gt;
+
+&lt;h3 id=&quot;-で指定バージョンのみ&quot;&gt;== で指定バージョンのみ&lt;/h3&gt;
+
+&lt;p&gt;もっとも安全なバージョン指定方法です。&lt;br /&gt;
+Cartfileに&lt;code class=&quot;highlighter-rouge&quot;&gt;github &quot;Hoge&quot; == 4.2.1&lt;/code&gt;と記入されていたら&lt;br /&gt;
+他にバージョンが出ていても &lt;code class=&quot;highlighter-rouge&quot;&gt;4.2.1&lt;/code&gt;しかインストールされません。&lt;/p&gt;
+
+&lt;p&gt;丁寧にバージョンアップをしたいライブラリや開発運用に適した方法です。&lt;/p&gt;
+
+&lt;h3 id=&quot;revisionでコミット指定&quot;&gt;revisionでコミット指定&lt;/h3&gt;
+
+&lt;p&gt;GitHub上のコミットを名指しでインストールします。コミットで発行されているrevisionを使います。&lt;br /&gt;
+またrevisionだけでなくブランチ名でも使えます。&lt;/p&gt;
+
+&lt;p&gt;使っていたライブラリに不具合や脆弱性、iOS最新版が出たけどライブラリ側がバージョンを切っていない状態など&lt;br /&gt;
+緊急時で使うことがあるので覚えておいたほうがいいです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement&quot;&gt;Carthage公式のVersion requirement&lt;/a&gt;でも英語ですが説明セクションはあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;ライブラリの個別更新&quot;&gt;ライブラリの個別更新&lt;/h2&gt;
+&lt;p&gt;更新したいライブラリをCartfileに書いて&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;を実行すると、更新不要なライブラリも更新対象となります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthge update&lt;/code&gt;ではライブラリ名を渡せばそのライブラリのみを更新してくれます。
+SwiftyJSONのみを更新する場合&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;carthage update SwiftyJSON &lt;span class=&quot;nt&quot;&gt;--platform&lt;/span&gt; iOS
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ビルド済みライブラリのスキップ&quot;&gt;ビルド済みライブラリのスキップ&lt;/h2&gt;
+&lt;p&gt;先程と同じテーマですが、&lt;code class=&quot;highlighter-rouge&quot;&gt;--cache-builds&lt;/code&gt;オプションを渡すことでビルド済みのライブラリの場合はスキップしてくれます。
+この場合は個別でライブラリ名を指定は必要ありません。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;carthage update &lt;span class=&quot;nt&quot;&gt;--platform&lt;/span&gt; iOS &lt;span class=&quot;nt&quot;&gt;--cache-builds&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
+
+&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
+もしチーム運用、git管理、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Podfileと書き方が微妙に異なるので注意です。カンマは使いません。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-17-ios-carthage-cartfile-format/0.png" /></entry><entry><title type="html">Carthage bootstrapとGit管理をチーム運用観点で整理</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration" rel="alternate" type="text/html" title="Carthage bootstrapとGit管理をチーム運用観点で整理" /><published>2020-05-15T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration">&lt;p&gt;この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。&lt;/p&gt;
 
 &lt;h2 id=&quot;carthage-updateとbootstrapの違い&quot;&gt;carthage updateとbootstrapの違い&lt;/h2&gt;
 &lt;p&gt;carthage bootstrapについて説明します。&lt;/p&gt;
@@ -197,7 +289,202 @@ CIにキャッシュ仕込むのもありますが、CIが限定されますし�
 git cloneが時間かかるとありますが、git cloneよりbootstrapの方が遥かに時間がかかります。&lt;br /&gt;
 そして昔のCocoaPodsのように再現性がなくなることのリスクも気になります。&lt;/p&gt;
 
-&lt;p&gt;なおこれは私の経験した案件にフィットした運用ですので鵜呑みにせず参考にしてください。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:25:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
+&lt;p&gt;なおこれは私の経験した案件にフィットした運用ですので鵜呑みにせず参考にしてください。&lt;/p&gt;
+
+&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
+&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
+もしCartfileの書き方や個別更新、インストール手順、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
+
+&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
+  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
+    &lt;ul&gt;
+      &lt;li&gt;単一障害点となる&lt;/li&gt;
+      &lt;li&gt;メンテナンス必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
+  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
+  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
+  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
+  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
+    &lt;ul&gt;
+      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
+      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
+  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
+  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
+  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
+
+&lt;h4 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h4&gt;
+
+&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
+対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
+プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
+
+&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
+Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
+その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
+
+&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
+対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
+
+&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
+
+&lt;h4 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h4&gt;
+
+&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
+プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
+
+&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
+
+&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
+CocoaPodsはとにかく楽です。&lt;/p&gt;
+
+&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
+&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
+
+&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
+あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
+&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
+
+&lt;p&gt;Carthageの勝ちです。
+CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
+以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
+framework側でコンパイルが走ることはありません。&lt;/p&gt;
+
+&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
+&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
+  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
+  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;環境&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CocoaPods&lt;/td&gt;
+      &lt;td&gt;3.208s&lt;/td&gt;
+      &lt;td&gt;3.492s&lt;/td&gt;
+      &lt;td&gt;3.308s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Carthage&lt;/td&gt;
+      &lt;td&gt;1.478s&lt;/td&gt;
+      &lt;td&gt;1.765s&lt;/td&gt;
+      &lt;td&gt;1.60725s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;vanilla&lt;/td&gt;
+      &lt;td&gt;0.932s&lt;/td&gt;
+      &lt;td&gt;1.143s&lt;/td&gt;
+      &lt;td&gt;1.04967s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
+&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
+
+&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
+そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
+この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
+
+&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
+ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
+
+&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
+CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
+&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
+ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
+
+&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
+&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
+その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
+Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
+
+&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
+&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
+そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
+「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
+Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
+その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
+&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
+Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
+そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
+Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
+
+&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
+
+&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
+&lt;p&gt;現時点ではどちらがいいとはいえないです。
+Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
+
+&lt;p&gt;またケースによっても変わってくると思います。
+何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
+
+&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
+&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
+もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
 
 &lt;p&gt;この記事は、iOSアプリにCarthage環境を導入する手順について説明します。&lt;/p&gt;
 
@@ -246,6 +533,9 @@ git cloneが時間かかるとありますが、git cloneよりbootstrapの方�
 
 &lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;github &quot;SwiftyJSON/SwiftyJSON&quot;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;バージョン指定をしたい場合は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-cartfile-format&quot;&gt;CarthageのCartfileの書き方と個別更新方法&lt;/a&gt;&lt;/span&gt;
+」に書き方をまとめてあります。&lt;/p&gt;
 
 &lt;h2 id=&quot;cartfileからframework作成&quot;&gt;Cartfileからframework作成&lt;/h2&gt;
 &lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;の準備ができたら&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;コマンドでフレームワークを作成します。&lt;br /&gt;
@@ -437,190 +727,7 @@ Ensure that the given path is appropriately entered and that your &quot;Input Fi
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしチーム運用、git管理、ライブラリのバージョン運用など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T17:23:49+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
-
-&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
-  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
-    &lt;ul&gt;
-      &lt;li&gt;単一障害点となる&lt;/li&gt;
-      &lt;li&gt;メンテナンス必要&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
-  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
-  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
-  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
-  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
-    &lt;ul&gt;
-      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
-      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
-  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
-  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
-  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
-
-&lt;h4 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h4&gt;
-
-&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
-対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
-プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
-
-&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
-Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
-その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
-
-&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
-対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
-
-&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
-
-&lt;h4 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h4&gt;
-
-&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
-ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
-プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
-
-&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
-
-&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
-CocoaPodsはとにかく楽です。&lt;/p&gt;
-
-&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
-&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
-
-&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
-あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
-
-&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
-&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
-
-&lt;p&gt;Carthageの勝ちです。
-CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
-以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
-framework側でコンパイルが走ることはありません。&lt;/p&gt;
-
-&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
-&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
-  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
-  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;環境&lt;/th&gt;
-      &lt;th&gt;min&lt;/th&gt;
-      &lt;th&gt;max&lt;/th&gt;
-      &lt;th&gt;avg&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;CocoaPods&lt;/td&gt;
-      &lt;td&gt;3.208s&lt;/td&gt;
-      &lt;td&gt;3.492s&lt;/td&gt;
-      &lt;td&gt;3.308s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Carthage&lt;/td&gt;
-      &lt;td&gt;1.478s&lt;/td&gt;
-      &lt;td&gt;1.765s&lt;/td&gt;
-      &lt;td&gt;1.60725s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;vanilla&lt;/td&gt;
-      &lt;td&gt;0.932s&lt;/td&gt;
-      &lt;td&gt;1.143s&lt;/td&gt;
-      &lt;td&gt;1.04967s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
-&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
-
-&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
-そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
-この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
-
-&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
-ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
-
-&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
-CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
-&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
-ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
-
-&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
-&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
-その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
-Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
-
-&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
-&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
-そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
-「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
-Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
-その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
-
-&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
-&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
-Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
-そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
-Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
-
-&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
-
-&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
-&lt;p&gt;現時点ではどちらがいいとはいえないです。
-Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
-
-&lt;p&gt;またケースによっても変わってくると思います。
-何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
-
-&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
 
 &lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
 なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
@@ -1519,527 +1626,4 @@ Xcodeで開発中にagを使うとか「IDEなにそれ美味しいの」的な�
 
 &lt;h3 id=&quot;grepで十分&quot;&gt;grepで十分&lt;/h3&gt;
 
-&lt;p&gt;今よりもでかい環境で調べた時に重くなったら考えるとかで十分です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ag" /><summary type="html">「◯◯って使ってますか？」の返答速度を爆速にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-08-tools-ag-silver-serach/0.png" /></entry><entry><title type="html">RABLの使い方を丁寧に説明</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic" rel="alternate" type="text/html" title="RABLの使い方を丁寧に説明" /><published>2020-05-05T00:00:00+09:00</published><updated>2020-05-12T20:56:36+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-rabl-basic">&lt;p&gt;この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。&lt;/p&gt;
-
-&lt;p&gt;流れは大きく次の順番で説明していきます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;rablとは？&lt;/li&gt;
-  &lt;li&gt;rabl環境構築&lt;/li&gt;
-  &lt;li&gt;rabl DSLの書き方&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;rablとは&quot;&gt;rablとは？&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;RABL(Ruby API Builder Language)&lt;/li&gt;
-  &lt;li&gt;Rails向けRuby用テンプレートシステム&lt;/li&gt;
-  &lt;li&gt;json, bson, xml, plist, msgpackサポート&lt;/li&gt;
-  &lt;li&gt;表示データとその表現を分離させている&lt;/li&gt;
-  &lt;li&gt;GitHubは&lt;a href=&quot;https://github.com/nesquena/rabl&quot;&gt;nesquena/rabl&lt;/a&gt;&lt;/li&gt;
-  &lt;li&gt;RubyGemsは&lt;a href=&quot;https://rubygems.org/gems/rabl/versions/0.11.6&quot;&gt;rabl&lt;/a&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;rabl環境の構築&quot;&gt;rabl環境の構築&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;gem用意&lt;/li&gt;
-  &lt;li&gt;設定ファイル登録&lt;/li&gt;
-  &lt;li&gt;rablファイル用意&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h3 id=&quot;gem用意&quot;&gt;gem用意&lt;/h3&gt;
-&lt;p&gt;Gemfileにgemを追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;gem&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rabl'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;を忘れずに。&lt;/p&gt;
-
-&lt;h3 id=&quot;設定ファイル登録&quot;&gt;設定ファイル登録&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;config/initializers&lt;/code&gt;に&lt;strong&gt;rabl_init.rb&lt;/strong&gt;を追加します。&lt;/p&gt;
-
-&lt;p&gt;内容は最低限下記を記載します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;require&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'rabl'&lt;/span&gt;
-
-&lt;span class=&quot;no&quot;&gt;Rabl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;まずは設定は特になしで問題ありません。後ほど一部設定項目について説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;rablファイル用意&quot;&gt;rablファイル用意&lt;/h3&gt;
-&lt;p&gt;viewsフォルダに例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;index.rabl&lt;/code&gt;を用意します。&lt;br /&gt;
-レスポンスがJSONのControllerであれば直接&lt;code class=&quot;highlighter-rouge&quot;&gt;.rabl&lt;/code&gt;でも動きます。&lt;/p&gt;
-
-&lt;h2 id=&quot;rablに慣れる&quot;&gt;rablに慣れる&lt;/h2&gt;
-&lt;p&gt;まずは簡単なrablの書き方から入ってrablに触れて少し慣れましょう。&lt;/p&gt;
-
-&lt;h3 id=&quot;最初のrabl&quot;&gt;最初のrabl&lt;/h3&gt;
-&lt;p&gt;まずはrablで最も単純なrabl記法です。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:key&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;結果はこれになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;key&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;value&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;rubyオブジェクトの値を表示する&quot;&gt;Rubyオブジェクトの値を表示する&lt;/h3&gt;
-&lt;p&gt;次は先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;を使ってRubyオブジェクトを表示します。&lt;br /&gt;
-手元で動かす場合は、ControllerやModelは適宜用意してください。&lt;/p&gt;
-
-&lt;p&gt;Model側:&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;create_table&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;string&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;date&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;integer&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;t&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;timestamps&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Controller側：&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UsersController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationController&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;show&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;View側:&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;birth_date&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;score&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;$ http get &quot;http://localhost:3000/users/1&quot;&lt;/code&gt;のレスポンスです。※&lt;/p&gt;
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;※&lt;code class=&quot;highlighter-rouge&quot;&gt;$ http get&lt;/code&gt;はHTTPieといってcurlよりも書き方が直感的なCLIツールです。気になる方は、「&lt;span&gt;&lt;a href=&quot;/tools/httpie/recommend-httpie&quot;&gt;クライアントエンジニアにはcurlよりHTTPieがお薦め&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;rabl上でrubyコードを書く&quot;&gt;rabl上でRubyコードを書く&lt;/h3&gt;
-&lt;p&gt;rablファイル上ではRubyコードを書くことが可能です。&lt;br /&gt;
-次のコードはユーザー数が2つなら複数モデルを表示します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;UsersController&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationController&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;index&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;all&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;rablコード&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-    &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;ss&quot;&gt;name: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;ss&quot;&gt;birth_date: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-        &lt;span class=&quot;ss&quot;&gt;score: &lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;score&lt;/span&gt;
-      &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;レスポンス&lt;/p&gt;
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;のブロック内がRubyコードを評価されます。&lt;br /&gt;
-このブロック内ではrabl記法は評価されません。&lt;/p&gt;
-
-&lt;h3 id=&quot;nodeだけでは本領発揮&quot;&gt;nodeだけでは本領発揮&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;ではrablの本領を発揮していません。
-rablは通常は表示データはモデルであり、レスポンスはRuby DSLを使ってrablファイルに記述します。&lt;/p&gt;
-
-&lt;h2 id=&quot;rablのobjectを使う&quot;&gt;rablのobjectを使う&lt;/h2&gt;
-&lt;p&gt;ActiveRecordのUserを表示する場合は次のrablコードになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attribute&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'birth_day'&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:down_case_name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;downcase&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これのレスポンスです。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;upper_name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;a&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;にモデルを渡すことで表示のためのDSLがそのモデルを情報として使うようになります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;attributes&lt;/code&gt;の渡してる文字列はJSONとモデルで使われます
-    &lt;ul&gt;
-      &lt;li&gt;JSONのメンバー名になる&lt;/li&gt;
-      &lt;li&gt;モデルのカラム名として呼ばれる&lt;/li&gt;
-      &lt;li&gt;Hash構造を渡せばJSONのメンバー名とモデルのメソッド名を分けれます。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;も使えます。
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;にモデルが引数として渡されます。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;rablはモデルのメソッドを呼んでいる&quot;&gt;rablはモデルのメソッドを呼んでいる&lt;/h3&gt;
-&lt;p&gt;rablの&lt;code class=&quot;highlighter-rouge&quot;&gt;attributes&lt;/code&gt;はカラム値を取得してるのではなく、&lt;br /&gt;
-ARモデルのメソッドを呼んで結果を取得しています。&lt;br /&gt;
-なので先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;node(:down_case_name)&lt;/code&gt;はメソッド名としてARモデル側に用意すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;attributes&lt;/code&gt;として指定できます。&lt;/p&gt;
-
-&lt;p&gt;ARモデル:&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;down_case_name&lt;/span&gt;
-    &lt;span class=&quot;nb&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;downcase&lt;/span&gt;
-  &lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;rabl:&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attribute&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'birth_day'&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attribute&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:down_case_name&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ルートノードを外すまたは変える&quot;&gt;ルートノードを外すまたは変える&lt;/h3&gt;
-&lt;p&gt;objectを使ったレスポンスではルートノードに&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;という括りがされています。&lt;br /&gt;
-これを違う名前にしたかったり、外したい場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;にオプションを渡します。&lt;/p&gt;
-
-&lt;p&gt;無指定だと&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# user:&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;が入ります&lt;/p&gt;
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Hash形式でシンボル値を渡すと&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:gamer&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;渡したシンボル名になります。&lt;/p&gt;
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gamer&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;※シンボル指定です。文字列だと&lt;code class=&quot;highlighter-rouge&quot;&gt;string&lt;/code&gt;になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;を渡すと&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;ルートノードはなしになります。&lt;/p&gt;
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_day&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;rablのcollectionを使う&quot;&gt;rablのcollectionを使う&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;がモデル1つだとしたら、&lt;code class=&quot;highlighter-rouge&quot;&gt;collection&lt;/code&gt;は複数形です。&lt;/p&gt;
-
-&lt;p&gt;最初に載せたNodeを使った複数Userを表示するrablを&lt;code class=&quot;highlighter-rouge&quot;&gt;collection&lt;/code&gt;を使うとこうなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;結果はこうなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;オブジェクトルートを変更または消す&quot;&gt;オブジェクトルートを変更または消す&lt;/h3&gt;
-&lt;p&gt;モデル毎に&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;というオブジェクトルートが入っているのでこれを消すには&lt;code class=&quot;highlighter-rouge&quot;&gt;collection&lt;/code&gt;にオプションを渡します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;と同じで&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;ではなくシンボルを渡せば&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;ではなく別名に変更できます。&lt;/p&gt;
-
-&lt;h3 id=&quot;ルートノードをつける&quot;&gt;ルートノードをつける&lt;/h3&gt;
-&lt;p&gt;ルートノードをつけたい場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;root&lt;/code&gt;オプションを渡します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'gamers'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;結果はこうなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;gamers&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rablのchildを使う&quot;&gt;rablのchildを使う&lt;/h2&gt;
-&lt;p&gt;objectとcollectionはルートレベルにモデルがマッピングされている場合に使えます。&lt;br /&gt;
-しかし次のルートレベルにモデル以外のレスポンスが必要なケースがあります。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;users&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;    
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;},&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;id&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-04&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;B&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;object&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;にして&lt;code class=&quot;highlighter-rouge&quot;&gt;node&lt;/code&gt;形式と&lt;code class=&quot;highlighter-rouge&quot;&gt;child&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;node&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;count&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;object_root&lt;/code&gt;を&lt;code class=&quot;highlighter-rouge&quot;&gt;false&lt;/code&gt;にしておかないとモデル毎に&lt;code class=&quot;highlighter-rouge&quot;&gt;user&lt;/code&gt;というキーが入ります。&lt;/p&gt;
-
-&lt;h2 id=&quot;親子関係はchildを使う&quot;&gt;親子関係はchildを使う&lt;/h2&gt;
-
-&lt;p&gt;Userモデルと住所モデルがあり、Userが住所を複数個持っている関係とした場合&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;User&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;has_many&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;inverse_of: :user&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;nc&quot;&gt;Address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ApplicationRecord&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;belongs_to&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;inverse_of: :addresses&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;rablでは&lt;code class=&quot;highlighter-rouge&quot;&gt;child&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ルートレベルにオブジェクトが紐付いているため、シンボルを渡すことでそのオブジェクトのメソッドとして評価されます。　　
-次のコードと同じ意味になります。&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rablのglueを使う&quot;&gt;rablのglueを使う&lt;/h2&gt;
-&lt;p&gt;glueとはモデルとはリレーションシップのないモデルを繋ぎます。&lt;br /&gt;
-glueの和訳は「接着剤」または「接着する」するです。&lt;br /&gt;
-つまりあるデータとあるデータをくっつける場合に使います。&lt;/p&gt;
-
-&lt;p&gt;Controller側で異なるUserのアドレスを1件取っておきます。&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;def&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;show&lt;/span&gt;
-  &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
-  &lt;span class=&quot;vi&quot;&gt;@other_address&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;User&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;second&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;address&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;first&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;rabl側では&lt;code class=&quot;highlighter-rouge&quot;&gt;glue&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;@other_address&lt;/code&gt;の情報を&lt;code class=&quot;highlighter-rouge&quot;&gt;@user&lt;/code&gt;の情報と合わせて一つのレスポンスとして返します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;glue&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@other_addresses&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:other_post_code&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;レスポンスでは無関係なモデルが1つのレスポンスとしてかえってきます。&lt;/p&gt;
-
-&lt;div class=&quot;language-json highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;user&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;A&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;score&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;birth_date&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;2020-05-05&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;addresses&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-        &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;post_code&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;1680064&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-      &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-    &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;other_post_code&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt;&lt;span class=&quot;w&quot;&gt; &lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;5680068&quot;&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-  &lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;w&quot;&gt;
-&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rablのextendsを使う&quot;&gt;rablのextendsを使う&lt;/h2&gt;
-&lt;p&gt;rablで部分テンプレート(partial)を使うには&lt;code class=&quot;highlighter-rouge&quot;&gt;extends&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;p&gt;次のコードはUser単体を表示するrablです。&lt;br /&gt;
-rablの場所を&lt;code class=&quot;highlighter-rouge&quot;&gt;users/show&lt;/code&gt;とします。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;object&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:score&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:birth_date&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;次のコードはUser一覧表示を上のrablを&lt;code class=&quot;highlighter-rouge&quot;&gt;extends&lt;/code&gt;を使って表示するrablです。&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:object_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&amp;gt;&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'users/show'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;extends先のobjectやcollectionは上書きされる&quot;&gt;extends先のobjectやcollectionは上書きされる&lt;/h3&gt;
-&lt;p&gt;extends先のrablのobjectやcollectionは呼び出し元に渡されたオブジェクトになります。&lt;br /&gt;
-上記の場合は単体のUserモデルが渡されることになります。&lt;/p&gt;
-
-&lt;p&gt;child内のextendsでも同じです。&lt;/p&gt;
-
-&lt;p&gt;下記rablファイル(&lt;code class=&quot;highlighter-rouge&quot;&gt;addresses/index&lt;/code&gt;)があった場合に&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;collection&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@addresses&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:post_code&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Userモデルからextendsで呼ばれたら、collectionにはUserモデルのaddressesが入ります。&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;child&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:addresses&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object_root: &lt;/span&gt;&lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'addresses/index'&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;呼び出し元でオブジェクトを指定することもできます。&lt;/p&gt;
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;extends&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;addresses/index&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;object: &lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@other_addresses&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;rablでcacheを使う&quot;&gt;rablでcacheを使う&lt;/h2&gt;
-&lt;p&gt;rablでフラグメントキャッシュを使うには&lt;code class=&quot;highlighter-rouge&quot;&gt;cache&lt;/code&gt;を使います。&lt;br /&gt;
-デフォルトでは、Railsのキャッシュシステムを使います。&lt;br /&gt;
-利用にはキャッシュ用のキーが必要になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;キャッシュキー&quot;&gt;キャッシュキー&lt;/h3&gt;
-&lt;p&gt;キーは文字列になります。&lt;/p&gt;
-
-&lt;p&gt;文字列以外を渡す場合は、文字列へ変換されます。例えば&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;モデルを渡す場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;cache_key&lt;/code&gt;メソッドが定義されて文字列を返す必要があります。&lt;/li&gt;
-  &lt;li&gt;配列の場合は先頭から各要素を文字列変換後にスラッシュ(&lt;code class=&quot;highlighter-rouge&quot;&gt;/&lt;/code&gt;)で結合します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'lists'&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# lists&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# @user.cache_key&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'hoge'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# &quot;hoge/#{@user.cache_key}&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;キャッシュ期限&quot;&gt;キャッシュ期限&lt;/h3&gt;
-&lt;p&gt;オプションで&lt;code class=&quot;highlighter-rouge&quot;&gt;expires_in&lt;/code&gt;を渡すことでキャッシュの期限を設定できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;vi&quot;&gt;@user&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;expires_in: &lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;hour&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;extends先のキャッシュ&quot;&gt;extends先のキャッシュ&lt;/h3&gt;
-&lt;p&gt;cacheコマンドはextends先のrablでも使えます。&lt;/p&gt;
-
-&lt;p&gt;自身の呼び出し元のオブジェクトを参照したい場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;root_object&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;cache&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;list&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;root_object&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;attributes&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:id&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:name&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ルートノードの表示のデフォルト値を設定する&quot;&gt;ルートノードの表示のデフォルト値を設定する&lt;/h2&gt;
-&lt;p&gt;ルートノードはオブジェクトルートの表示をrabl毎に設定せずに一律デフォルト値を設定する場合は&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;/config/initializers/rabl_init.rb&lt;/code&gt;に次の2つを指定することでデフォルト値の変更ができます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Rabl&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;include_json_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;include_child_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;false&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;他にもrablの設定では&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;存在しない属性にRuntimeErrorを発生させる(productionはtrue非推奨)&lt;/li&gt;
-  &lt;li&gt;nilは空の文字列に変換する&lt;/li&gt;
-  &lt;li&gt;nilの場合はレスポンスから除外&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;などの変更ができます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# 存在しない属性にRuntimeErrorを発生させる(productionはtrue非推奨)&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;raise_onmissing_attribute&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# nilは空の文字列に変換する&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;replace_nil_values_with_empty_strings&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# nilの場合はレスポンスから除外&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;exclude_nil_values&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;詳しくは&lt;a href=&quot;https://github.com/nesquena/rabl#configuration&quot;&gt;GitHubのConfiguration&lt;/a&gt;にて説明されています。&lt;/p&gt;
-
-&lt;h2 id=&quot;rablは使いにくい&quot;&gt;rablは使いにくい&lt;/h2&gt;
-&lt;p&gt;個人的にはRuby on Railsでrablは採用しないほうがいいです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;DSLの書き方が独自なため流動性が低い&lt;/li&gt;
-  &lt;li&gt;repositoryが活発的とは言えない&lt;/li&gt;
-  &lt;li&gt;ARモデル表示に特化しすぎていてページネーションとかARモデル外の柔軟性が低い&lt;/li&gt;
-  &lt;li&gt;日本語記事が少ない&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;この記事を書いたのも仕事柄どうしてもrablで書かないといけないケースがあって、そのたびに忘れてしまい生産性が下がるのでまとめた次第です。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><summary type="html">この記事ではrablの書き方を毎回忘れてしまう人や初めて耳にしてrablの使い方を知りたい人向けにrablの導入からrablの書き方まで詳しく説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" /></entry></feed>
+&lt;p&gt;今よりもでかい環境で調べた時に重くなったら考えるとかで十分です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ag" /><summary type="html">「◯◯って使ってますか？」の返答速度を爆速にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-08-tools-ag-silver-serach/0.png" /></entry></feed>
