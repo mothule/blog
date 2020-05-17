@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-17T18:07:46+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-17T18:54:56+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -214,14 +214,7 @@
   <li><a href="#carthageの導入手順">Carthageの導入手順</a></li>
   <li><a href="#carthageのgit管理について">Carthageのgit管理について</a></li>
   <li><a href="#carthageのデバッグ環境について">Carthageのデバッグ環境について</a></li>
-  <li><a href="#carthage管理下ライブラリのバージョン制御について">Carthage管理下ライブラリのバージョン制御について</a>
-    <ul>
-      <li><a href="#で範囲指定する">~&gt;で範囲指定する</a></li>
-      <li><a href="#-で指定バージョン以上">&gt;= で指定バージョン以上</a></li>
-      <li><a href="#-で指定バージョンのみ">== で指定バージョンのみ</a></li>
-      <li><a href="#revisionでコミット指定">revisionでコミット指定</a></li>
-    </ul>
-  </li>
+  <li><a href="#carthage管理下ライブラリのバージョン制御について">Carthage管理下ライブラリのバージョン制御について</a></li>
   <li><a href="#carthage管理下のライブラリの個別更新">Carthage管理下のライブラリの個別更新</a></li>
   <li><a href="#carthageにテスト用ライブラリをインストールする方法">Carthageにテスト用ライブラリをインストールする方法</a></li>
   <li><a href="#新しいバージョンを確認する">新しいバージョンを確認する</a></li>
@@ -389,73 +382,15 @@ Build Configurationを指定するには、<strong>–configuration</strong> オ
 </blockquote>
 
 <h2 id="carthage管理下ライブラリのバージョン制御について">Carthage管理下ライブラリのバージョン制御について</h2>
+<p>ライブラリを導入すればバージョン制御が必要になります。<br />
+Carthageでライブラリを導入してる場合の新規登録時や更新時などのバージョン制御があります。</p>
 
-<p>Carthageでライブラリのバージョンを指定するには、<br />
-Cartfileに決まった書き方をすることでライブラリのバージョンを制御することができます。</p>
-
-<p>例えば次のようなCartfileが</p>
-
+<p>例えば次のようなCartfileでバージョンを指定することが出来ます。</p>
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "SwiftyJSON" ~&gt; 4.2.0
-github "Hoge" &gt;= 4.2.0
-github "Fuga" == 4.2.0
-github "Nuga" "develop"
-github "Moga" "ab12c3ef4"
 </code></pre></div></div>
 
-<p>それぞれ順に説明していきます。</p>
-
-<h3 id="で範囲指定する">~&gt;で範囲指定する</h3>
-<p>最も多く使われてるであろう書き方です。
-例えばバージョン履歴が下記だった場合で説明します。</p>
-
-<ul>
-  <li>4.2.0</li>
-  <li>4.2.1</li>
-  <li>4.3.0</li>
-  <li>5.0.0</li>
-</ul>
-
-<p>このときにCartfileで<code class="highlighter-rouge">github "Hoge" ~&gt; 4.2.0</code>が記入された状態で<br />
-<code class="highlighter-rouge">update</code>を実行したら<code class="highlighter-rouge">4.2.1</code>までアップデートします。<br />
-もし<code class="highlighter-rouge">github "Hoge" ~&gt; 4.2</code>が記入されてたら<code class="highlighter-rouge">4.3.0</code>までアップデートします。</p>
-
-<p>なかなか範囲が覚えにくいと思いますが、最後の数字が<code class="highlighter-rouge">x</code>に置き換えて見れば分かりやすくなります。<br />
-例えば <code class="highlighter-rouge">github "Hoge" ~&gt; 4.2.0</code>であれば<code class="highlighter-rouge">4.2.x</code>系です。<br />
-<code class="highlighter-rouge">4.2</code>なら<code class="highlighter-rouge">4.x</code>系です。つまり4系バージョンですね。</p>
-
-<h3 id="-で指定バージョン以上">&gt;= で指定バージョン以上</h3>
-
-<p>指定バージョン値以上のバージョンを指定します。<br />
-Cartfileに<code class="highlighter-rouge">github "Hoge" &gt;= 4.2.1</code>と記入された状態で<br />
-バージョン履歴が下記だった場合は、<code class="highlighter-rouge">5.0.0</code>がインストールされます。</p>
-
-<ul>
-  <li>4.2.0</li>
-  <li>4.2.1</li>
-  <li>4.3.0</li>
-  <li>5.0.0</li>
-</ul>
-
-<p>この書き方は少し破壊変更リスクが伴うため使う側としてはオススメしないです。<br />
-こっちよりも前述した範囲指定のほうが安全性をそれなりに維持できます。</p>
-
-<h3 id="-で指定バージョンのみ">== で指定バージョンのみ</h3>
-
-<p>もっとも安全なバージョン指定方法です。<br />
-Cartfileに<code class="highlighter-rouge">github "Hoge" == 4.2.1</code>と記入されていたら<br />
-他にバージョンが出ていても <code class="highlighter-rouge">4.2.1</code>しかインストールされません。</p>
-
-<p>丁寧にバージョンアップをしたいライブラリや開発運用に適した方法です。</p>
-
-<h3 id="revisionでコミット指定">revisionでコミット指定</h3>
-
-<p>GitHub上のコミットを名指しでインストールします。コミットで発行されているrevisionを使います。<br />
-またrevisionだけでなくブランチ名でも使えます。</p>
-
-<p>使っていたライブラリに不具合や脆弱性、iOS最新版が出たけどライブラリ側がバージョンを切っていない状態など<br />
-緊急時で使うことがあるので覚えておいたほうがいいです。</p>
-
-<p><a href="https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement">Carthage公式のVersion requirement</a>でも英語ですが説明セクションはあります。</p>
+<p>詳しくは「<span><a href="/ios/carthage/ios-carthage-cartfile-format">CarthageのCartfileの書き方と個別更新方法</a></span>
+」にまとめてあります。</p>
 
 <h2 id="carthage管理下のライブラリの個別更新">Carthage管理下のライブラリの個別更新</h2>
 
@@ -550,6 +485,15 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
                 
                 
                 
+                    <li><h3><a href="/ios/carthage/ios-carthage-cartfile-format">CarthageのCartfileの書き方と個別更新方法</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
                     <li><h3><a href="/ios/carthage/ios-carthage-team-collaboration">Carthage bootstrapとGit管理をチーム運用観点で整理</a></h3></li>
                     
                     
@@ -583,15 +527,6 @@ README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/maste
                 
                 
                     <li><h3><a href="/ios/carthage/ios-carthage-use-xcfilelist">CarthageでInput File Listsにxcfilelistを渡す利点と方法</a></h3></li>
-                    
-                    
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></h3></li>
                     
                     
                         

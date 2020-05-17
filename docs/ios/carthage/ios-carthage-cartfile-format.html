@@ -11,33 +11,33 @@
 
 
 
-  <title>CarthageでInput File Listsにxcfilelistを渡す利点と方法 - もちゅろぐ</title>
+  <title>CarthageのCartfileの書き方と個別更新方法 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="CarthageでInput File Listsにxcfilelistを渡す利点と方法" />
+<meta property="og:title" content="CarthageのCartfileの書き方と個別更新方法" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。" />
-<meta property="og:description" content="CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" />
-<meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" />
+<meta name="description" content="CarthageのCartfileのバージョンの書き方や個別でライブラリ更新方法やビルド済みライブラリのスキップなどCarthageでライブラリを管理する運用で必要になってくるライブラリバージョン制御についてまとめた記事です。" />
+<meta property="og:description" content="CarthageのCartfileのバージョンの書き方や個別でライブラリ更新方法やビルド済みライブラリのスキップなどCarthageでライブラリを管理する運用で必要になってくるライブラリバージョン制御についてまとめた記事です。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format" />
+<meta property="og:url" content="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-17-ios-carthage-cartfile-format/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-05-13T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-17T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist","headline":"CarthageでInput File Listsにxcfilelistを渡す利点と方法","dateModified":"2020-05-13T04:58:36+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist"},"image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png","description":"CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format","headline":"CarthageのCartfileの書き方と個別更新方法","dateModified":"2020-05-17T18:54:56+09:00","datePublished":"2020-05-17T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format"},"image":"https://blog.mothule.com/assets/images/2020-05-17-ios-carthage-cartfile-format/0.png","description":"CarthageのCartfileのバージョンの書き方や個別でライブラリ更新方法やビルド済みライブラリのスキップなどCarthageでライブラリを管理する運用で必要になってくるライブラリバージョン制御についてまとめた記事です。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="CarthageでInput File Listsにxcfilelistを渡す利点と方法">
-<meta name="twitter:description" content="CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png">
+<meta name="twitter:title" content="CarthageのCartfileの書き方と個別更新方法">
+<meta name="twitter:description" content="CarthageのCartfileのバージョンの書き方や個別でライブラリ更新方法やビルド済みライブラリのスキップなどCarthageでライブラリを管理する運用で必要になってくるライブラリバージョン制御についてまとめた記事です。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-17-ios-carthage-cartfile-format/0.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -147,7 +147,7 @@
         
         
           <li>
-            CarthageでInput File Listsにxcfilelistを渡す利点と方法
+            CarthageのCartfileの書き方と個別更新方法
           </li>
         
       
@@ -159,12 +159,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" alt="CarthageでInput File Listsにxcfilelistを渡す利点と方法">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-17-ios-carthage-cartfile-format/0.png" alt="CarthageのCartfileの書き方と個別更新方法">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>CarthageでInput File Listsにxcfilelistを渡す利点と方法</h1>
+    <h1>CarthageのCartfileの書き方と個別更新方法</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -177,7 +177,7 @@
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2020-5-13</time></span>
+        <span"><time class="post-date">2020-5-17</time></span>
       </div>
     </div>
   </header>
@@ -185,118 +185,113 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#carthage公式解説に出てくるxcfilelist">Carthage公式解説に出てくるxcfilelist</a>
+  <li><a href="#cartfileでバージョンを指定する">Cartfileでバージョンを指定する</a>
     <ul>
-      <li><a href="#xcfilelistの正体">xcfilelistの正体</a></li>
+      <li><a href="#で範囲指定する">~&gt;で範囲指定する</a></li>
+      <li><a href="#-で指定バージョン以上">&gt;= で指定バージョン以上</a></li>
+      <li><a href="#-で指定バージョンのみ">== で指定バージョンのみ</a></li>
+      <li><a href="#revisionでコミット指定">revisionでコミット指定</a></li>
     </ul>
   </li>
-  <li><a href="#xcfilelistを使う場所">xcfilelistを使う場所</a></li>
-  <li><a href="#input-file-listsを使う利点">Input File Listsを使う利点</a></li>
-  <li><a href="#xcfilelistを用意する">xcfilelistを用意する</a></li>
-  <li><a href="#xcfilelistをinput-file-listsに渡す">xcfilelistをInput File Listsに渡す</a></li>
-  <li><a href="#output-file-listsもxcfilelistを使う">Output File Listsもxcfilelistを使う</a>
-    <ul>
-      <li><a href="#output-file-listsを指定する理由">Output File Listsを指定する理由</a></li>
-    </ul>
-  </li>
-  <li><a href="#後からでも対応できる">後からでも対応できる</a></li>
+  <li><a href="#ライブラリの個別更新">ライブラリの個別更新</a></li>
+  <li><a href="#ビルド済みライブラリのスキップ">ビルド済みライブラリのスキップ</a></li>
+  <li><a href="#もっと体系的に理解する">もっと体系的に理解する</a></li>
 </ul>
   </div>
   <section>
-  <p><code class="highlighter-rouge">xcfilelist</code>で依存ライブラリを管理すると楽です</p>
+  <p>Podfileと書き方が微妙に異なるので注意です。カンマは使いません。</p>
 
-<p>この記事は<code class="highlighter-rouge">xcfilelist</code>を使って<code class="highlighter-rouge">Carthage</code>の環境を構築する方法と利点について説明します。</p>
+<p>ライブラリを導入したら新しいバージョンが公開されたら追従しなければいけません。
+この記事ではCarthageで管理してるライブラリのバージョン追従方法について説明します。</p>
 
-<p><code class="highlighter-rouge">Carghage</code>の基本や使い方の詳細は「<span><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></span>
-」にまとめてあります。</p>
+<h2 id="cartfileでバージョンを指定する">Cartfileでバージョンを指定する</h2>
 
-<h2 id="carthage公式解説に出てくるxcfilelist">Carthage公式解説に出てくるxcfilelist</h2>
+<p>例えばCartfileでは次のようにライブラリのバージョンを指定することができます。</p>
 
-<p>Carthageのインストール解説記事には、<code class="highlighter-rouge">xcfilelist</code>を使った解説は見かけません。<br />
-大抵<code class="highlighter-rouge">Input Files</code>に直接パスを指定する記事が多いです。<br />
-しかし、<a href="https://github.com/Carthage/Carthage">Carthageの公式</a>では<code class="highlighter-rouge">xcfilelist</code>を使っており、むしろそっちがメインにも見えます。</p>
-
-<h3 id="xcfilelistの正体">xcfilelistの正体</h3>
-
-<p><code class="highlighter-rouge">xcfilelist</code>はXcodeのファイル一覧を表すファイル・タイプです。<br />
-といってもただのテキストファイルです。<br />
-テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を<code class="highlighter-rouge">.xcfilelist</code>とするだけです。</p>
-
-<h2 id="xcfilelistを使う場所">xcfilelistを使う場所</h2>
-
-<p>公式では英文で<code class="highlighter-rouge">xcfilelist</code>を見かけますが、これを使う場所がパッと見では分かりません。<br />
-<code class="highlighter-rouge">xcfilelist</code>を使う場所は下の画像の<code class="highlighter-rouge">Input File Lists</code>と<code class="highlighter-rouge">Output File List</code>です。<br />
-この中に<code class="highlighter-rouge">xcfilelist</code>のパスを指定します。</p>
-
-<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png" width="100%" alt="XcodeBuildPhaseのCarthage用RunScriptPhase" /></a></p>
-
-<h2 id="input-file-listsを使う利点">Input File Listsを使う利点</h2>
-
-<p><code class="highlighter-rouge">Input Files</code>でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
-<code class="highlighter-rouge">Input File Lists</code>を使う利点がないと使う気にならないと思います。</p>
-
-<p>使う利点は、一度<code class="highlighter-rouge">xcfilelist</code>のパスを指定すれば、<code class="highlighter-rouge">Run Script</code>の使いにくいUIを使わなくて済みます。  <br />
-またフレームワークの追加や削除時に<code class="highlighter-rouge">xcodeproj</code>がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。</p>
-
-<h2 id="xcfilelistを用意する">xcfilelistを用意する</h2>
-
-<p><code class="highlighter-rouge">xcfilelist</code>はパスさえ合っていればどこに置いても問題ないですが、<br />
-他環境でも動くようにまずはgit管理下が必須だと思います。<br />
-次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら<br />
-<strong>プロジェクトディレクトリ配下に置くことが最適です。</strong></p>
-
-<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png" width="50%" alt="Xcode-Project-Navigator" /></a></p>
-
-<p>中身は次のように<code class="highlighter-rouge">Input Files</code>で指定するパスを並べるだけです。
-これを<code class="highlighter-rouge">.xcfilelist</code>として保存すれば準備は整います。
-ファイル名は何でもいいです。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
-$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
-$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
-$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
-$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
-$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
-$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "SwiftyJSON" ~&gt; 4.2.0
+github "Hoge" &gt;= 4.2.0
+github "Fuga" == 4.2.0
+github "Nuga" "develop"
+github "Moga" "ab12c3ef4"
 </code></pre></div></div>
 
-<h2 id="xcfilelistをinput-file-listsに渡す">xcfilelistをInput File Listsに渡す</h2>
+<p>それぞれ順に説明していきます。</p>
 
-<p>Xcodeの<code class="highlighter-rouge">Build Phases</code>の<code class="highlighter-rouge">Carthage</code>用スクリプトフェイズの<code class="highlighter-rouge">Input File Lists</code>に先程用意した<code class="highlighter-rouge">.xcfilelist</code>のパスを指定します。</p>
+<h3 id="で範囲指定する">~&gt;で範囲指定する</h3>
+<p>最も多く使われてるであろう書き方です。
+例えばバージョン履歴が下記だった場合で説明します。</p>
 
-<p>先程の用意した場所であれば、<code class="highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist</code>になります。</p>
+<ul>
+  <li>4.2.0</li>
+  <li>4.2.1</li>
+  <li>4.3.0</li>
+  <li>5.0.0</li>
+</ul>
 
-<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png" width="100%" alt="XcodeのInputFileLists" /></a></p>
+<p>このときにCartfileで<code class="highlighter-rouge">github "Hoge" ~&gt; 4.2.0</code>が記入された状態で<br />
+<code class="highlighter-rouge">update</code>を実行したら<code class="highlighter-rouge">4.2.1</code>までアップデートします。<br />
+もし<code class="highlighter-rouge">github "Hoge" ~&gt; 4.2</code>が記入されてたら<code class="highlighter-rouge">4.3.0</code>までアップデートします。</p>
 
-<h2 id="output-file-listsもxcfilelistを使う">Output File Listsもxcfilelistを使う</h2>
+<p>なかなか範囲が覚えにくいと思いますが、最後の数字が<code class="highlighter-rouge">x</code>に置き換えて見れば分かりやすくなります。<br />
+例えば <code class="highlighter-rouge">github "Hoge" ~&gt; 4.2.0</code>であれば<code class="highlighter-rouge">4.2.x</code>系です。<br />
+<code class="highlighter-rouge">4.2</code>なら<code class="highlighter-rouge">4.x</code>系です。つまり4系バージョンですね。</p>
 
-<p><code class="highlighter-rouge">Output File Lists</code>も同様に<code class="highlighter-rouge">xcfilelist</code>として出力パスを列挙しておけば<code class="highlighter-rouge">xcfilelist</code>のパスを指定するだけです。</p>
+<h3 id="-で指定バージョン以上">&gt;= で指定バージョン以上</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
+<p>指定バージョン値以上のバージョンを指定します。<br />
+Cartfileに<code class="highlighter-rouge">github "Hoge" &gt;= 4.2.1</code>と記入された状態で<br />
+バージョン履歴が下記だった場合は、<code class="highlighter-rouge">5.0.0</code>がインストールされます。</p>
+
+<ul>
+  <li>4.2.0</li>
+  <li>4.2.1</li>
+  <li>4.3.0</li>
+  <li>5.0.0</li>
+</ul>
+
+<p>この書き方は少し破壊変更リスクが伴うため使う側としてはオススメしないです。<br />
+こっちよりも前述した範囲指定のほうが安全性をそれなりに維持できます。</p>
+
+<h3 id="-で指定バージョンのみ">== で指定バージョンのみ</h3>
+
+<p>もっとも安全なバージョン指定方法です。<br />
+Cartfileに<code class="highlighter-rouge">github "Hoge" == 4.2.1</code>と記入されていたら<br />
+他にバージョンが出ていても <code class="highlighter-rouge">4.2.1</code>しかインストールされません。</p>
+
+<p>丁寧にバージョンアップをしたいライブラリや開発運用に適した方法です。</p>
+
+<h3 id="revisionでコミット指定">revisionでコミット指定</h3>
+
+<p>GitHub上のコミットを名指しでインストールします。コミットで発行されているrevisionを使います。<br />
+またrevisionだけでなくブランチ名でも使えます。</p>
+
+<p>使っていたライブラリに不具合や脆弱性、iOS最新版が出たけどライブラリ側がバージョンを切っていない状態など<br />
+緊急時で使うことがあるので覚えておいたほうがいいです。</p>
+
+<p><a href="https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement">Carthage公式のVersion requirement</a>でも英語ですが説明セクションはあります。</p>
+
+<h2 id="ライブラリの個別更新">ライブラリの個別更新</h2>
+<p>更新したいライブラリをCartfileに書いて<code class="highlighter-rouge">carthage update</code>を実行すると、更新不要なライブラリも更新対象となります。</p>
+
+<p><code class="highlighter-rouge">carthge update</code>ではライブラリ名を渡せばそのライブラリのみを更新してくれます。
+SwiftyJSONのみを更新する場合</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update SwiftyJSON <span class="nt">--platform</span> iOS
 </code></pre></div></div>
 
-<p>こちらも<code class="highlighter-rouge">Input File Lists</code>と同じ場所場所であれば<code class="highlighter-rouge">Output File Lists</code>で指定するパスは、<code class="highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist</code>になります。</p>
+<h2 id="ビルド済みライブラリのスキップ">ビルド済みライブラリのスキップ</h2>
+<p>先程と同じテーマですが、<code class="highlighter-rouge">--cache-builds</code>オプションを渡すことでビルド済みのライブラリの場合はスキップしてくれます。
+この場合は個別でライブラリ名を指定は必要ありません。</p>
 
-<p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png" width="50%" alt="XcodeのOutputFileLists" /></a></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS <span class="nt">--cache-builds</span>
+</code></pre></div></div>
 
-<h3 id="output-file-listsを指定する理由">Output File Listsを指定する理由</h3>
-<p><code class="highlighter-rouge">Output Files</code>や<code class="highlighter-rouge">Output File Lists</code>でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。<br />
-なぜ指定するのかは「<span><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></span>
-」に詳細をまとめてます。</p>
+<h2 id="もっと体系的に理解する">もっと体系的に理解する</h2>
 
-<h2 id="後からでも対応できる">後からでも対応できる</h2>
-<p>この対応は、プロジェクトが初期段階でも後からでも対応できます。<br />
-ライブラリが多くても手間はそこまで変わりません。</p>
+<p>この記事では、記事の読みやすいよう導入に絞ってます。
+もしチーム運用、git管理、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、<br />
+「<span><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></span>
+」からまとめて知ることができます。</p>
 
   </section>
 
@@ -325,10 +320,6 @@ $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
             
                 
                 
-                
-                    <li><h3><a href="/ios/carthage/ios-carthage-cartfile-format">CarthageのCartfileの書き方と個別更新方法</a></h3></li>
-                    
-                    
                 
 
             
@@ -366,6 +357,10 @@ $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
             
                 
                 
+                
+                    <li><h3><a href="/ios/carthage/ios-carthage-use-xcfilelist">CarthageでInput File Listsにxcfilelistを渡す利点と方法</a></h3></li>
+                    
+                    
                 
 
             
