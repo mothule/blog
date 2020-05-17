@@ -85,7 +85,7 @@ $ carthage update --platform iOS --no-use-binaries
 - Carthage
   - `carthage update`で作成されたライブラリのフレームワークが格納されたディレクトリ
 
-{% comment %} Cartfile.resolvedの説明または扱いについた言及したらリンクを貼る {% endcomment %}
+Cartfile.resolvedの詳細については「{% post_link_text 2020-05-15-ios-carthage-team-collaboration %}」でまとめてあります。
 
 ## プロジェクトにframeworkをリンク
 frameworkはプロジェクトにリンクしないと使えません。  

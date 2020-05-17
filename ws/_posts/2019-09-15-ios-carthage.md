@@ -27,10 +27,9 @@ Carthageの基礎から利用、そして運用など、
 - デバッグ環境
 - ライブラリのバージョン制御
 - ライブラリの更新
-- チーム運用
 - テスト用ライブラリ
+- 新しいバージョンを確認する
 - GitHub以外のライブラリ
-- Shell completion
 
 ### 記事の読み方
 1記事に収まらないボリュームのため、複数の記事に分けてます。  
@@ -122,16 +121,25 @@ git管理下には別PCでも環境再現ができればいいのですから、
 
 
 ## Carthageのデバッグ環境について
- <!-- \--no-use-binariesでデバッグ可能にする -->
+fromeworkをDebug Configurationでビルドする必要があります。
+
+Xcodeでは他環境で作成されたframeworkをステップ実行できません。
+またビルドConfigurationがReleaseだとコンパイラがコード最適化することでコードと実際のステップ数に違いが起きたり変数が使えなくなります。
 ライブラリによってはGitHubなどに既にビルド済みのフレームワークが用意されており、  
 Carthageは特に指定がなければそれを使ってインストールして時間短縮を行っています。
+しかし大抵はRelease Configurationでビルドされているため、ステップ実行はできません。
 
-しかし、事前に構築されたフレームワークは、フレームワークが構築されたPC以外でのステップ実行などはできません。  
-その場合は、
+手元でかつDebug Configurationでビルドすればステップ実行できるようになります。  
+Build Configurationを指定するには、**--configuration** オプションを使います。
+
 ```sh
-$ carthage update --platform iOS --no-use-binaries <library name>
+$ carthge update --platform iOS --no-use-binaries --configuration Debug
 ```
-というふうに **`--no-use-binaries`** オプションんを使うことで解決することができます。
+`update`ではなくとも`bootstrap`でも大丈夫です。
+
+またBuild ConfigirationがReleaseなどでコード最適化されている場合は、ステップ実行すると次のログがコンソールに表示されます。
+
+> SwiftyJSON was compiled with optimization - stepping may behave oddly; variables may not be available.
 
 ## Carthage管理下ライブラリのバージョン制御について
 
@@ -234,6 +242,21 @@ $ touch Cartfile.private
 中身の書き方は通常のCartfileと変わりません。  
 注意点としては、プロジェクトへのリンク設定で、ターゲットをテストに対して行うことを忘れずに。
 
+
+
+## 新しいバージョンを確認する
+開発ではライブラリを使っていると新しいバージョンがリリースされたら追従させる必要があります。
+Carthageで管理してるライブラリに新しいバージョンがリリースされているかどうかを調べる方法があります。
+`carthage outdated`コマンドを実行すると一覧で確認することができます。
+
+例えばSwiftyJSONに新しいバージョンが出てる場合です。
+```sh
+$ carthage outdated
+*** Fetching SwiftyJSON
+The following dependencies are outdated:
+SwiftyJSON "4.3.0" -> "4.3.0" (Latest: "5.0.0")
+```
+
 ## CarthageでGitHub以外のライブラリを使う方法
 
 大半のライブラリはGitHubにあるとは思いますが、全てのライブラリではありません。  
@@ -244,8 +267,6 @@ $ touch Cartfile.private
 github "https://enterprise.local/hoge/fuga/perfect-library" # GitHub Enterprise
 git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
 ```
-
-## Shell completion
 
 ## まとめ
 
