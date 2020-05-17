@@ -1,5 +1,6 @@
 ---
 title: iOSのCarthage導入手順と注意点
+description: iOSのCarthageのインストールやXcodeプロジェクトへの導入手順、Cartfileの記入などそれら手順の注意点、導入後の運用に必要な個別ライブラリ更新についてまとめた記事です。
 categories: ios carthage
 tags: ios carthage
 image:

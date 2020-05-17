@@ -1,11 +1,11 @@
 ---
 title: Carthage bootstrapとGit管理をチーム運用観点で整理
+description: Carthageのbootstrapの説明やupdateとの違い、それら違いに関係するCartfileとCartfile.resolvedや、Git管理するべきファイルやフォルダなどチーム運用観点で客観的評価と個人の運用経験観点から説明します。
 categories: ios carthage
 tags: ios carthage
 image:
   path: /assets/images/2020-05-15-ios-carthage-team-collaboration/0.png
 ---
-
 この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。
 
 ## carthage updateとbootstrapの違い
