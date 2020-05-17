@@ -142,70 +142,15 @@ $ carthge update --platform iOS --no-use-binaries --configuration Debug
 > SwiftyJSON was compiled with optimization - stepping may behave oddly; variables may not be available.
 
 ## Carthage管理下ライブラリのバージョン制御について
+ライブラリを導入すればバージョン制御が必要になります。  
+Carthageでライブラリを導入してる場合の新規登録時や更新時などのバージョン制御があります。
 
-Carthageでライブラリのバージョンを指定するには、  
-Cartfileに決まった書き方をすることでライブラリのバージョンを制御することができます。
-
-例えば次のようなCartfileが
-
+例えば次のようなCartfileでバージョンを指定することが出来ます。
 ```
 github "SwiftyJSON" ~> 4.2.0
-github "Hoge" >= 4.2.0
-github "Fuga" == 4.2.0
-github "Nuga" "develop"
-github "Moga" "ab12c3ef4"
 ```
 
-それぞれ順に説明していきます。
-
-### ~>で範囲指定する
-最も多く使われてるであろう書き方です。
-例えばバージョン履歴が下記だった場合で説明します。
-
-- 4.2.0
-- 4.2.1
-- 4.3.0
-- 5.0.0
-
-このときにCartfileで`github "Hoge" ~> 4.2.0`が記入された状態で  
-`update`を実行したら`4.2.1`までアップデートします。  
-もし`github "Hoge" ~> 4.2`が記入されてたら`4.3.0`までアップデートします。
-
-なかなか範囲が覚えにくいと思いますが、最後の数字が`x`に置き換えて見れば分かりやすくなります。  
-例えば `github "Hoge" ~> 4.2.0`であれば`4.2.x`系です。  
-`4.2`なら`4.x`系です。つまり4系バージョンですね。
-
-### >= で指定バージョン以上
-
-指定バージョン値以上のバージョンを指定します。  
-Cartfileに`github "Hoge" >= 4.2.1`と記入された状態で  
-バージョン履歴が下記だった場合は、`5.0.0`がインストールされます。
-
-- 4.2.0
-- 4.2.1
-- 4.3.0
-- 5.0.0
-
-この書き方は少し破壊変更リスクが伴うため使う側としてはオススメしないです。  
-こっちよりも前述した範囲指定のほうが安全性をそれなりに維持できます。
-
-### == で指定バージョンのみ
-
-もっとも安全なバージョン指定方法です。  
-Cartfileに`github "Hoge" == 4.2.1`と記入されていたら  
-他にバージョンが出ていても `4.2.1`しかインストールされません。
-
-丁寧にバージョンアップをしたいライブラリや開発運用に適した方法です。
-
-### revisionでコミット指定
-
-GitHub上のコミットを名指しでインストールします。コミットで発行されているrevisionを使います。  
-またrevisionだけでなくブランチ名でも使えます。
-
-使っていたライブラリに不具合や脆弱性、iOS最新版が出たけどライブラリ側がバージョンを切っていない状態など  
-緊急時で使うことがあるので覚えておいたほうがいいです。
-
-[Carthage公式のVersion requirement](https://github.com/Carthage/Carthage/blob/master/Documentation/Artifacts.md#version-requirement)でも英語ですが説明セクションはあります。
+詳しくは「{% post_link_text 2020-05-17-ios-carthage-cartfile-format %}」にまとめてあります。
 
 ## Carthage管理下のライブラリの個別更新
 

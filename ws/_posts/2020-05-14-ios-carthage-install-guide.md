@@ -57,7 +57,7 @@ $ touch Cartfile
 github "SwiftyJSON/SwiftyJSON"
 ```
 
-{% comment %} バージョン指定をしたい場合は「」に書き方をまとめてあります。 {% endcomment %}
+バージョン指定をしたい場合は「{% post_link_text 2020-05-17-ios-carthage-cartfile-format %}」に書き方をまとめてあります。
 
 ## Cartfileからframework作成
 `Cartfile`の準備ができたら`carthage update`コマンドでフレームワークを作成します。  
