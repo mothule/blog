@@ -1,4 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-18T18:36:52+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ターミナルからRubyMineを起動、比較、マージなどする</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal" rel="alternate" type="text/html" title="ターミナルからRubyMineを起動、比較、マージなどする" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T18:36:28+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal">&lt;p&gt;RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-18T20:02:26+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ln -sでシンボリックリンクを作る</title><link href="https://blog.mothule.com/tools/ln/tools-ln-guide" rel="alternate" type="text/html" title="ln -sでシンボリックリンクを作る" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T20:02:14+09:00</updated><id>https://blog.mothule.com/tools/ln/tools-ln-guide</id><content type="html" xml:base="https://blog.mothule.com/tools/ln/tools-ln-guide">&lt;p&gt;Windowsでいうショートカットに似た何か。&lt;/p&gt;
+
+&lt;h2 id=&quot;ln--sでシンボリックリンクを構築&quot;&gt;ln -sでシンボリックリンクを構築&lt;/h2&gt;
+
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;ln -s リンク対象パス リンク作成先のディレクトリパス&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;自分の中で「リンク」ってワードが邪魔して&lt;br /&gt;
+src/destどっちがどっちか分からなくなることが頻発する。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ls--lでシンボリックを確認&quot;&gt;ls -lでシンボリックを確認&lt;/h2&gt;
+
+&lt;p&gt;シンボリックリンクはファイル名とリンク先が「&lt;code class=&quot;highlighter-rouge&quot;&gt;name -&amp;gt; original path&lt;/code&gt;」形式で表示されます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; /usr/local/bin/
+凄いコマンド -&amp;gt; ~/オレの/最強の/凄いコマンド
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;unlinkでシンボリックリンクを解除&quot;&gt;unlinkでシンボリックリンクを解除&lt;/h2&gt;
+
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;unlink シンボリックのパス&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;unlink /usr/local/bin/使い物にならない自作コマンド
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;せめて&lt;code class=&quot;highlighter-rouge&quot;&gt;ln -d&lt;/code&gt;とかにしてほしかったな。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ln" /><summary type="html">Windowsでいうショートカットに似た何か。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png" /></entry><entry><title type="html">ターミナルからRubyMineを起動、比較、マージなどする</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal" rel="alternate" type="text/html" title="ターミナルからRubyMineを起動、比較、マージなどする" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T18:36:28+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal">&lt;p&gt;RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。&lt;/p&gt;
 
 &lt;h2 id=&quot;ターミナルからrubymineで開く&quot;&gt;ターミナルからRubyMineで開く&lt;/h2&gt;
 
@@ -431,7 +459,196 @@ git cloneが時間かかるとありますが、git cloneよりbootstrapの方�
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしCartfileの書き方や個別更新、インストール手順、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T22:15:34+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
+
+&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
+  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
+    &lt;ul&gt;
+      &lt;li&gt;単一障害点となる&lt;/li&gt;
+      &lt;li&gt;メンテナンス必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
+  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
+  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
+  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
+  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
+    &lt;ul&gt;
+      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
+      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
+  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
+  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
+  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
+
+&lt;h3 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h3&gt;
+
+&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
+対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
+プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
+
+&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
+Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
+その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
+
+&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
+対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
+
+&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h3&gt;
+
+&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
+プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
+
+&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
+
+&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
+CocoaPodsはとにかく楽です。&lt;/p&gt;
+
+&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
+&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
+
+&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
+あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
+&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
+
+&lt;p&gt;Carthageの勝ちです。
+CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
+以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
+framework側でコンパイルが走ることはありません。&lt;/p&gt;
+
+&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
+&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
+  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
+  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;環境&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CocoaPods&lt;/td&gt;
+      &lt;td&gt;3.208s&lt;/td&gt;
+      &lt;td&gt;3.492s&lt;/td&gt;
+      &lt;td&gt;3.308s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Carthage&lt;/td&gt;
+      &lt;td&gt;1.478s&lt;/td&gt;
+      &lt;td&gt;1.765s&lt;/td&gt;
+      &lt;td&gt;1.60725s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;vanilla&lt;/td&gt;
+      &lt;td&gt;0.932s&lt;/td&gt;
+      &lt;td&gt;1.143s&lt;/td&gt;
+      &lt;td&gt;1.04967s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
+&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
+
+&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
+そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
+この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
+
+&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
+ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
+
+&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
+CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
+&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
+ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
+
+&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
+&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
+その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
+Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
+
+&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
+&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
+そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
+「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
+Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
+その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
+&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
+Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
+そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
+Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
+
+&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
+
+&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
+&lt;p&gt;現時点ではどちらがいいとはいえないです。
+Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
+
+&lt;p&gt;またケースによっても変わってくると思います。
+何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
+
+&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
+&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
+もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
 
 &lt;p&gt;この記事は、iOSアプリにCarthage環境を導入する手順について説明します。&lt;/p&gt;
 
@@ -674,273 +891,100 @@ Ensure that the given path is appropriately entered and that your &quot;Input Fi
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしチーム運用、git管理、ライブラリのバージョン運用など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T22:15:34+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">CarthageでInput File Listsにxcfilelistを渡す利点と方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" rel="alternate" type="text/html" title="CarthageでInput File Listsにxcfilelistを渡す利点と方法" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T04:58:36+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;で依存ライブラリを管理すると楽です&lt;/p&gt;
 
-&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
+&lt;p&gt;この記事は&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;の環境を構築する方法と利点について説明します。&lt;/p&gt;
 
-&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
-  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
-    &lt;ul&gt;
-      &lt;li&gt;単一障害点となる&lt;/li&gt;
-      &lt;li&gt;メンテナンス必要&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
-  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
-  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
-  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
-  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
-    &lt;ul&gt;
-      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
-      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
-  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
-  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
-  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
-
-&lt;h3 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h3&gt;
-
-&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
-対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
-プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
-
-&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
-Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
-その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
-
-&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
-対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
-
-&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h3&gt;
-
-&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
-ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
-プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
-
-&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;の基本や使い方の詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
 」にまとめてあります。&lt;/p&gt;
 
-&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
+&lt;h2 id=&quot;carthage公式解説に出てくるxcfilelist&quot;&gt;Carthage公式解説に出てくるxcfilelist&lt;/h2&gt;
 
-&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
-CocoaPodsはとにかく楽です。&lt;/p&gt;
+&lt;p&gt;Carthageのインストール解説記事には、&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使った解説は見かけません。&lt;br /&gt;
+大抵&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;に直接パスを指定する記事が多いです。&lt;br /&gt;
+しかし、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;Carthageの公式&lt;/a&gt;では&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使っており、むしろそっちがメインにも見えます。&lt;/p&gt;
 
-&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
-&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
+&lt;h3 id=&quot;xcfilelistの正体&quot;&gt;xcfilelistの正体&lt;/h3&gt;
 
-&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
-あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はXcodeのファイル一覧を表すファイル・タイプです。&lt;br /&gt;
+といってもただのテキストファイルです。&lt;br /&gt;
+テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;とするだけです。&lt;/p&gt;
 
-&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
-&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
+&lt;h2 id=&quot;xcfilelistを使う場所&quot;&gt;xcfilelistを使う場所&lt;/h2&gt;
 
-&lt;p&gt;Carthageの勝ちです。
-CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
-以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
-framework側でコンパイルが走ることはありません。&lt;/p&gt;
+&lt;p&gt;公式では英文で&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を見かけますが、これを使う場所がパッと見では分かりません。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使う場所は下の画像の&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File List&lt;/code&gt;です。&lt;br /&gt;
+この中に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
 
-&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
-&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildPhaseのCarthage用RunScriptPhase&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
-  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
-  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
-&lt;/ul&gt;
+&lt;h2 id=&quot;input-file-listsを使う利点&quot;&gt;Input File Listsを使う利点&lt;/h2&gt;
 
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;環境&lt;/th&gt;
-      &lt;th&gt;min&lt;/th&gt;
-      &lt;th&gt;max&lt;/th&gt;
-      &lt;th&gt;avg&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;CocoaPods&lt;/td&gt;
-      &lt;td&gt;3.208s&lt;/td&gt;
-      &lt;td&gt;3.492s&lt;/td&gt;
-      &lt;td&gt;3.308s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Carthage&lt;/td&gt;
-      &lt;td&gt;1.478s&lt;/td&gt;
-      &lt;td&gt;1.765s&lt;/td&gt;
-      &lt;td&gt;1.60725s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;vanilla&lt;/td&gt;
-      &lt;td&gt;0.932s&lt;/td&gt;
-      &lt;td&gt;1.143s&lt;/td&gt;
-      &lt;td&gt;1.04967s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;を使う利点がないと使う気にならないと思います。&lt;/p&gt;
 
-&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
+&lt;p&gt;使う利点は、一度&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定すれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Script&lt;/code&gt;の使いにくいUIを使わなくて済みます。  &lt;br /&gt;
+またフレームワークの追加や削除時に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodeproj&lt;/code&gt;がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。&lt;/p&gt;
 
-&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
-&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
+&lt;h2 id=&quot;xcfilelistを用意する&quot;&gt;xcfilelistを用意する&lt;/h2&gt;
 
-&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
-そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
-この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はパスさえ合っていればどこに置いても問題ないですが、&lt;br /&gt;
+他環境でも動くようにまずはgit管理下が必須だと思います。&lt;br /&gt;
+次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら&lt;br /&gt;
+&lt;strong&gt;プロジェクトディレクトリ配下に置くことが最適です。&lt;/strong&gt;&lt;/p&gt;
 
-&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
-ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot; width=&quot;50%&quot; alt=&quot;Xcode-Project-Navigator&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
-CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
+&lt;p&gt;中身は次のように&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;で指定するパスを並べるだけです。
+これを&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;として保存すれば準備は整います。
+ファイル名は何でもいいです。&lt;/p&gt;
 
-&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
-&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
-ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
-
-&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
-&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
-その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
-Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
-
-&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
-&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
-そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
-「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
-Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
-その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
-
-&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
-&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
-Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
-そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
-Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
-
-&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
-
-&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
-&lt;p&gt;現時点ではどちらがいいとはいえないです。
-Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
-
-&lt;p&gt;またケースによっても変わってくると思います。
-何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
-
-&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
-&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
-もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
-「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
-
-&lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
-なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
-
-&lt;h2 id=&quot;macでgoogle日本語入力がおかしくなる&quot;&gt;MacでGoogle日本語入力がおかしくなる&lt;/h2&gt;
-
-&lt;p&gt;正常稼働してるGoogle日本語入力は、次の画像のようにタイプしてる文字の近くに変換候補が並んだポップアップが表示される。
-これがおかしくなると、ポップアップの位置が画面の四隅に固定されてしまう現象が発生する。&lt;/p&gt;
-
-&lt;h3 id=&quot;正常時&quot;&gt;正常時&lt;/h3&gt;
-
-&lt;p&gt;正常時は、タイプしてる文字の近くに表示される。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInput&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;異常時&quot;&gt;異常時&lt;/h3&gt;
-
-&lt;p&gt;問題がおきると、これが隅っこで表示される。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInputWithBug&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;分かってること&quot;&gt;分かってること&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;自分が立ち上げているアプリケーションを全て終了しても解決しない&lt;/li&gt;
-  &lt;li&gt;再起動すると解決する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;仮説&quot;&gt;仮説&lt;/h3&gt;
-&lt;p&gt;プロセス再起動で解決するのでは？&lt;/p&gt;
-
-&lt;h2 id=&quot;macのプロセス一覧でgoogle日本語入力を探す&quot;&gt;Macのプロセス一覧でGoogle日本語入力を探す&lt;/h2&gt;
-
-&lt;p&gt;Macでプロセス一覧を見るには&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドを使う。&lt;/p&gt;
-
-&lt;p&gt;ターミナルで&lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux | grep GoogleJapaneseInput&lt;/code&gt;を実行
-このときGoogle Chromeは閉じておく&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps x | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
-  879   ??  S      1:23.75 /Library/Input Methods/GoogleJapaneseInput.app/Contents/MacOS/GoogleJapaneseInput
- 1213   ??  S      1:40.55 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputRenderer.app/Contents/MacOS/GoogleJapaneseInputRenderer
- 2059   ??  S      1:15.08 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputConverter.app/Contents/MacOS/GoogleJapaneseInputConverter
-99614 s001  S+     0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
+$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
+$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
+$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
+$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
+$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
+$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
+$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt;のプロセスがヒットする。&lt;br /&gt;
-(最後のプロセスはgrepプロセスなので無関係)&lt;/p&gt;
+&lt;h2 id=&quot;xcfilelistをinput-file-listsに渡す&quot;&gt;xcfilelistをInput File Listsに渡す&lt;/h2&gt;
 
-&lt;p&gt;おそらく名前からしてこうだろう。&lt;/p&gt;
+&lt;p&gt;Xcodeの&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;用スクリプトフェイズの&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;に先程用意した&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
 
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt; : 設定全般 or 統括&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt; : 描画関係&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt; : 変換関係&lt;/li&gt;
-&lt;/ul&gt;
+&lt;p&gt;先程の用意した場所であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
 
-&lt;p&gt;変換自体はうまく動いているので、おかしいのは変換以外の2つだと思われる。
-もっとも怪しいのは描画を司っているであろう&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;だと予想。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeのInputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;macのプロセスをkillコマンドで終了させる&quot;&gt;Macのプロセスをkillコマンドで終了させる&lt;/h2&gt;
+&lt;h2 id=&quot;output-file-listsもxcfilelistを使う&quot;&gt;Output File Listsもxcfilelistを使う&lt;/h2&gt;
 
-&lt;p&gt;Macでプロセスを終了させるには&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドを使う。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;も同様に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;として出力パスを列挙しておけば&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定するだけです。&lt;/p&gt;
 
-&lt;h3 id=&quot;googlejapaneseinputrendererプロセスのプロセスidを探す&quot;&gt;GoogleJapaneseInputRendererプロセスのプロセスIDを探す&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドの結果は表形式でプロセスが並ぶ。
-１つ目のカラムはプロセスIDを表す。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;先程の表で&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDは&lt;code class=&quot;highlighter-rouge&quot;&gt;1213&lt;/code&gt;になる。&lt;br /&gt;
-なおこのプロセスIDはいつもこの値ではないので注意。&lt;/p&gt;
+&lt;p&gt;こちらも&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と同じ場所場所であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;で指定するパスは、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
 
-&lt;h3 id=&quot;killコマンドでgooglejapaneseinputrendererを終了させる&quot;&gt;killコマンドでGoogleJapaneseInputRendererを終了させる&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDが分かったので最終的には、&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;$ kill 1213&lt;/code&gt;をターミナル上で実行すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が終了する。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot; width=&quot;50%&quot; alt=&quot;XcodeのOutputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;macのgoogle日本語入力が直った&quot;&gt;MacのGoogle日本語入力が直った&lt;/h2&gt;
-&lt;p&gt;仮説と予想は的中し、&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;プロセスを終了し、再度テキストエディで文字入力したら&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="google-japanese-input" /><summary type="html">プロセスを再起動すれば直る。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png" /></entry><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T03:06:05+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
+&lt;h3 id=&quot;output-file-listsを指定する理由&quot;&gt;Output File Listsを指定する理由&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。&lt;br /&gt;
+なぜ指定するのかは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-measure-copy-speed-with-output-files&quot;&gt;CarthageのビルドフェイズでOutput Files指定による速度調査&lt;/a&gt;&lt;/span&gt;
+」に詳細をまとめてます。&lt;/p&gt;
+
+&lt;h2 id=&quot;後からでも対応できる&quot;&gt;後からでも対応できる&lt;/h2&gt;
+&lt;p&gt;この対応は、プロジェクトが初期段階でも後からでも対応できます。&lt;br /&gt;
+ライブラリが多くても手間はそこまで変わりません。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">xcfilelistで依存ライブラリを管理すると楽です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" /></entry><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T03:06:05+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
 
 &lt;p&gt;なおCarthageのインストールや基礎など詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
 」にまとめてあります。&lt;/p&gt;
@@ -1070,100 +1114,84 @@ github &quot;adjust/ios_sdk&quot;
 &lt;ul&gt;
   &lt;li&gt;一定のパフォーマンス効果はある&lt;/li&gt;
   &lt;li&gt;おとなしく設定したほうがいい&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" /></entry><entry><title type="html">CarthageでInput File Listsにxcfilelistを渡す利点と方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" rel="alternate" type="text/html" title="CarthageでInput File Listsにxcfilelistを渡す利点と方法" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T04:58:36+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;で依存ライブラリを管理すると楽です&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
 
-&lt;p&gt;この記事は&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;の環境を構築する方法と利点について説明します。&lt;/p&gt;
+&lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
+なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;の基本や使い方の詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
+&lt;h2 id=&quot;macでgoogle日本語入力がおかしくなる&quot;&gt;MacでGoogle日本語入力がおかしくなる&lt;/h2&gt;
 
-&lt;h2 id=&quot;carthage公式解説に出てくるxcfilelist&quot;&gt;Carthage公式解説に出てくるxcfilelist&lt;/h2&gt;
+&lt;p&gt;正常稼働してるGoogle日本語入力は、次の画像のようにタイプしてる文字の近くに変換候補が並んだポップアップが表示される。
+これがおかしくなると、ポップアップの位置が画面の四隅に固定されてしまう現象が発生する。&lt;/p&gt;
 
-&lt;p&gt;Carthageのインストール解説記事には、&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使った解説は見かけません。&lt;br /&gt;
-大抵&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;に直接パスを指定する記事が多いです。&lt;br /&gt;
-しかし、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;Carthageの公式&lt;/a&gt;では&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使っており、むしろそっちがメインにも見えます。&lt;/p&gt;
+&lt;h3 id=&quot;正常時&quot;&gt;正常時&lt;/h3&gt;
 
-&lt;h3 id=&quot;xcfilelistの正体&quot;&gt;xcfilelistの正体&lt;/h3&gt;
+&lt;p&gt;正常時は、タイプしてる文字の近くに表示される。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はXcodeのファイル一覧を表すファイル・タイプです。&lt;br /&gt;
-といってもただのテキストファイルです。&lt;br /&gt;
-テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;とするだけです。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInput&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;xcfilelistを使う場所&quot;&gt;xcfilelistを使う場所&lt;/h2&gt;
+&lt;h3 id=&quot;異常時&quot;&gt;異常時&lt;/h3&gt;
 
-&lt;p&gt;公式では英文で&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を見かけますが、これを使う場所がパッと見では分かりません。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使う場所は下の画像の&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File List&lt;/code&gt;です。&lt;br /&gt;
-この中に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+&lt;p&gt;問題がおきると、これが隅っこで表示される。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildPhaseのCarthage用RunScriptPhase&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInputWithBug&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;input-file-listsを使う利点&quot;&gt;Input File Listsを使う利点&lt;/h2&gt;
+&lt;h3 id=&quot;分かってること&quot;&gt;分かってること&lt;/h3&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;を使う利点がないと使う気にならないと思います。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;自分が立ち上げているアプリケーションを全て終了しても解決しない&lt;/li&gt;
+  &lt;li&gt;再起動すると解決する&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;使う利点は、一度&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定すれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Script&lt;/code&gt;の使いにくいUIを使わなくて済みます。  &lt;br /&gt;
-またフレームワークの追加や削除時に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodeproj&lt;/code&gt;がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。&lt;/p&gt;
+&lt;h3 id=&quot;仮説&quot;&gt;仮説&lt;/h3&gt;
+&lt;p&gt;プロセス再起動で解決するのでは？&lt;/p&gt;
 
-&lt;h2 id=&quot;xcfilelistを用意する&quot;&gt;xcfilelistを用意する&lt;/h2&gt;
+&lt;h2 id=&quot;macのプロセス一覧でgoogle日本語入力を探す&quot;&gt;Macのプロセス一覧でGoogle日本語入力を探す&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はパスさえ合っていればどこに置いても問題ないですが、&lt;br /&gt;
-他環境でも動くようにまずはgit管理下が必須だと思います。&lt;br /&gt;
-次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら&lt;br /&gt;
-&lt;strong&gt;プロジェクトディレクトリ配下に置くことが最適です。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Macでプロセス一覧を見るには&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドを使う。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot; width=&quot;50%&quot; alt=&quot;Xcode-Project-Navigator&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ターミナルで&lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux | grep GoogleJapaneseInput&lt;/code&gt;を実行
+このときGoogle Chromeは閉じておく&lt;/p&gt;
 
-&lt;p&gt;中身は次のように&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;で指定するパスを並べるだけです。
-これを&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;として保存すれば準備は整います。
-ファイル名は何でもいいです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
-$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
-$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
-$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
-$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
-$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
-$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps x | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
+  879   ??  S      1:23.75 /Library/Input Methods/GoogleJapaneseInput.app/Contents/MacOS/GoogleJapaneseInput
+ 1213   ??  S      1:40.55 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputRenderer.app/Contents/MacOS/GoogleJapaneseInputRenderer
+ 2059   ??  S      1:15.08 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputConverter.app/Contents/MacOS/GoogleJapaneseInputConverter
+99614 s001  S+     0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;xcfilelistをinput-file-listsに渡す&quot;&gt;xcfilelistをInput File Listsに渡す&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt;のプロセスがヒットする。&lt;br /&gt;
+(最後のプロセスはgrepプロセスなので無関係)&lt;/p&gt;
 
-&lt;p&gt;Xcodeの&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;用スクリプトフェイズの&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;に先程用意した&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+&lt;p&gt;おそらく名前からしてこうだろう。&lt;/p&gt;
 
-&lt;p&gt;先程の用意した場所であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt; : 設定全般 or 統括&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt; : 描画関係&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt; : 変換関係&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeのInputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;変換自体はうまく動いているので、おかしいのは変換以外の2つだと思われる。
+もっとも怪しいのは描画を司っているであろう&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;だと予想。&lt;/p&gt;
 
-&lt;h2 id=&quot;output-file-listsもxcfilelistを使う&quot;&gt;Output File Listsもxcfilelistを使う&lt;/h2&gt;
+&lt;h2 id=&quot;macのプロセスをkillコマンドで終了させる&quot;&gt;Macのプロセスをkillコマンドで終了させる&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;も同様に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;として出力パスを列挙しておけば&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定するだけです。&lt;/p&gt;
+&lt;p&gt;Macでプロセスを終了させるには&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドを使う。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;googlejapaneseinputrendererプロセスのプロセスidを探す&quot;&gt;GoogleJapaneseInputRendererプロセスのプロセスIDを探す&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドの結果は表形式でプロセスが並ぶ。
+１つ目のカラムはプロセスIDを表す。&lt;/p&gt;
 
-&lt;p&gt;こちらも&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と同じ場所場所であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;で指定するパスは、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+&lt;p&gt;先程の表で&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDは&lt;code class=&quot;highlighter-rouge&quot;&gt;1213&lt;/code&gt;になる。&lt;br /&gt;
+なおこのプロセスIDはいつもこの値ではないので注意。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot; width=&quot;50%&quot; alt=&quot;XcodeのOutputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;killコマンドでgooglejapaneseinputrendererを終了させる&quot;&gt;killコマンドでGoogleJapaneseInputRendererを終了させる&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDが分かったので最終的には、&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$ kill 1213&lt;/code&gt;をターミナル上で実行すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が終了する。&lt;/p&gt;
 
-&lt;h3 id=&quot;output-file-listsを指定する理由&quot;&gt;Output File Listsを指定する理由&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。&lt;br /&gt;
-なぜ指定するのかは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-measure-copy-speed-with-output-files&quot;&gt;CarthageのビルドフェイズでOutput Files指定による速度調査&lt;/a&gt;&lt;/span&gt;
-」に詳細をまとめてます。&lt;/p&gt;
-
-&lt;h2 id=&quot;後からでも対応できる&quot;&gt;後からでも対応できる&lt;/h2&gt;
-&lt;p&gt;この対応は、プロジェクトが初期段階でも後からでも対応できます。&lt;br /&gt;
-ライブラリが多くても手間はそこまで変わりません。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">xcfilelistで依存ライブラリを管理すると楽です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" /></entry><entry><title type="html">setNeedsLayoutやlayoutSubviewsなどの役割を整理する</title><link href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" rel="alternate" type="text/html" title="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" /><published>2020-05-12T00:00:00+09:00</published><updated>2020-05-12T05:47:47+09:00</updated><id>https://blog.mothule.com/ios/ios-ui-constraint-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-ui-constraint-layout-update">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;はビュー位置すぐ分かって便利。&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;は呼んだらいけない。&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;はパフォーマンス良し。&lt;/p&gt;
+&lt;h2 id=&quot;macのgoogle日本語入力が直った&quot;&gt;MacのGoogle日本語入力が直った&lt;/h2&gt;
+&lt;p&gt;仮説と予想は的中し、&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;プロセスを終了し、再度テキストエディで文字入力したら&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="google-japanese-input" /><summary type="html">プロセスを再起動すれば直る。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png" /></entry><entry><title type="html">setNeedsLayoutやlayoutSubviewsなどの役割を整理する</title><link href="https://blog.mothule.com/ios/ios-ui-constraint-layout-update" rel="alternate" type="text/html" title="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" /><published>2020-05-12T00:00:00+09:00</published><updated>2020-05-12T05:47:47+09:00</updated><id>https://blog.mothule.com/ios/ios-ui-constraint-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-ui-constraint-layout-update">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;はビュー位置すぐ分かって便利。&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutSubviews&lt;/code&gt;は呼んだらいけない。&lt;code class=&quot;highlighter-rouge&quot;&gt;setNeedsLayout&lt;/code&gt;はパフォーマンス良し。&lt;/p&gt;
 
 &lt;p&gt;ビュー周りをコーディング中にUIが反映されない不具合に遭遇したら、&lt;br /&gt;
 「ビューが反映されていない。とりあえず可能性を潰すために&lt;code class=&quot;highlighter-rouge&quot;&gt;Constraint&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Layout&lt;/code&gt;を更新」&lt;br /&gt;
@@ -1303,292 +1331,4 @@ UILabelは左右と上にsuperviewとConstraintを引いている。&lt;br /&gt;
 だけど呼ばなくても最近のiPhoneでは動く。&lt;br /&gt;
 そしてUIベースのアプリは、これが必要なほど凝ったUIは作るべきではないと私は思う。&lt;/p&gt;
 
-&lt;p&gt;かろうじて使うのは&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;だろうか。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png" /></entry><entry><title type="html">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</title><link href="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update" rel="alternate" type="text/html" title="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" /><published>2020-05-09T00:00:00+09:00</published><updated>2020-05-12T05:53:26+09:00</updated><id>https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update</id><content type="html" xml:base="https://blog.mothule.com/ios/uitableview/ios-uitableview-cell-layout-update">&lt;p&gt;キャッシュとLayoutConstraintとセル単体更新と&lt;code class=&quot;highlighter-rouge&quot;&gt;indexPath(for:)&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;p&gt;今回は、要件てんこ盛りなUITableViewのセル制御について説明します。
-要件について整理します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;セル内にUIImageViewがある&lt;/li&gt;
-  &lt;li&gt;画像はネットから取得する&lt;/li&gt;
-  &lt;li&gt;画像のサイズはバラバラ&lt;/li&gt;
-  &lt;li&gt;画像取得が終わったセルのみを更新&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;実際に動いてる映像&quot;&gt;実際に動いてる映像&lt;/h2&gt;
-
-&lt;p&gt;要件だけだとイメージしにくいので実際に動いてるとこを見たほうが早いです。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/1.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/1.gif&quot; width=&quot;50%&quot; alt=&quot;画像サイズ可変&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;セル表示時にhttps://placehold.jp/ からランダムな画像を取ってきて&lt;br /&gt;
-画像のアスペクトを維持して横幅をベースに表示しています。&lt;/p&gt;
-
-&lt;p&gt;今回は説明しやすいようにフェードやキャッシュ状態によるフェードやアニメなしかの表示制御といった処理は入れず一律アニメなしでセル更新を行っています。&lt;/p&gt;
-
-&lt;h2 id=&quot;セルの可変な画像非同期単体更新のポイント&quot;&gt;セルの可変な画像、非同期、単体更新のポイント&lt;/h2&gt;
-
-&lt;p&gt;セル内の可変画像の対応は、画像ダウンロード後に画像比率を調べて、動的にAutoLayoutのAspectを使って可変にします。&lt;/p&gt;
-
-&lt;p&gt;非同期に関しては、色々と試しましたが、キャッシュを用いなければ実現はできないと思います。&lt;/p&gt;
-
-&lt;p&gt;単体更新は、&lt;code class=&quot;highlighter-rouge&quot;&gt;UITableView.reloadRows(at:,with:)&lt;/code&gt;で実現できるのですが、 &lt;strong&gt;渡すパラメータを間違うとクラッシュします。&lt;/strong&gt; 今回ここが一番の穴だと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;レイアウトを構築する&quot;&gt;レイアウトを構築する&lt;/h2&gt;
-
-&lt;p&gt;今回ビューデータ側はなるべくシンプルに抑えてあります。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;ビューツリー&lt;/th&gt;
-      &lt;th&gt;画面プレビュー&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;a href=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/2.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;a href=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/3.png&quot; width=&quot;100%&quot; alt=&quot;&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;ビューツリーを単純化するとこうなります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;View
-    &lt;ul&gt;
-      &lt;li&gt;Table View
-        &lt;ul&gt;
-          &lt;li&gt;Table View Cell
-            &lt;ul&gt;
-              &lt;li&gt;Image View&lt;/li&gt;
-              &lt;li&gt;Label&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;結構単純なレイアウトになっていることがわかると思います。&lt;/p&gt;
-
-&lt;p&gt;いくつかポイントを説明します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;まずは、セル高さ幅が自動算出できるレイアウトを作ります。&lt;/li&gt;
-  &lt;li&gt;UIImageViewは親セルやラベルに密着させます。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;自動算出できるレイアウトの組み方が分からない方は「&lt;span&gt;&lt;a href=&quot;/ios/uitableview/ios-uitableview-uitableviewcell-height-customize&quot;&gt;【初心者向け】UITableViewCellの高さを可変にする&lt;/a&gt;&lt;/span&gt;
-」を見てください。&lt;/p&gt;
-
-&lt;h3 id=&quot;重要ポイント&quot;&gt;重要ポイント&lt;/h3&gt;
-&lt;p&gt;レイアウトの中で通常とは異なる設定をしている点とその理由について説明します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;UIImageViewのConstraintの四辺いずれかの優先度を1000未満にする(下画像参照)
-    &lt;ul&gt;
-      &lt;li&gt;画像ロード前でセル内の自動生成されるAutolayoutと衝突回避のため&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;UIImageViewの高さはざっくり表示したい画像の高さ幅にする
-    &lt;ul&gt;
-      &lt;li&gt;セル高さが小さくなり一度に多量にセルが表示されて通信が発生します&lt;/li&gt;
-      &lt;li&gt;高さ幅を与えておくことで表示セル数を通常時と同じにできて無駄な通信を抑えます&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;UIImageViewの高さも優先度を1000未満にしてください。(下図参照)
-    &lt;ul&gt;
-      &lt;li&gt;ここを1000のままにしてると画像がConstraintの高さ幅より長くても伸びなくなります。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;2つの優先度を下げるとこうなります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-09-ios-uitableview-cell-layout-update/4.png&quot; width=&quot;50%&quot; alt=&quot;優先度下げたConstraints&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;レイアウトの準備はこれで終わりです。&lt;/p&gt;
-
-&lt;h2 id=&quot;uiviewcontrollerを実装する&quot;&gt;UIViewControllerを実装する&lt;/h2&gt;
-
-&lt;p&gt;まずUIViewControllerから説明します。
-なぜならとても単純過ぎて説明するポイントが特にないからです。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewDataSource&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;dataSource&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;estimatedRowHeight&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;numberOfRowsInSection&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;section&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sales&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cellForRowAt&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;IndexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;cell&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dequeueReusableCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;withIdentifier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;TableViewCell&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;as!&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TableViewCell&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sales&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;row&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;owner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;tableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;cell&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;sales&lt;/code&gt;については表示用モデルとしてこのように定義してます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Sale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;imageURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sales&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;100&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;map&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;w&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;400&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;h&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;random&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;in&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;200&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;https://placehold.jp/&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;.png&quot;&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;w&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;x&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;\(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;h&lt;/span&gt;&lt;span class=&quot;se&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;imageURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;テーブルセルを実装する&quot;&gt;テーブルセルを実装する&lt;/h2&gt;
-
-&lt;p&gt;今回もっとも複雑なコードになります。&lt;/p&gt;
-
-&lt;p&gt;メソッドはそれぞれ次のときに呼ばれます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;セル参照時に&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;画像ロード後に&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;TableViewCell&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableViewCell&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;@IBOutlet&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;captionLabel&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UILabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;imageAspect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;private&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;setup&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Sale&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;owner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;s&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;captionLabel&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;text&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;name&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;url&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;URL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageURL&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;!&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;URLSession&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;shared&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;dataTask&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;url&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;weak&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;res&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;error&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;data&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-
-            &lt;span class=&quot;kt&quot;&gt;DispatchQueue&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;main&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;async&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sale&lt;/span&gt;
-                &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;onFetchedImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                     &lt;span class=&quot;nv&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;owner&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;resume&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-    &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;onFetchedImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIImage&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UITableView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;guard&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;mainImageView&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mainImageView&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;imageAspect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;nil&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;deactivate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;imageAspect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;aspect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;size&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;
-            &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;constraint&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;item&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                           &lt;span class=&quot;nv&quot;&gt;attribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;height&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                           &lt;span class=&quot;nv&quot;&gt;relatedBy&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;equal&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                           &lt;span class=&quot;nv&quot;&gt;toItem&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                           &lt;span class=&quot;nv&quot;&gt;attribute&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;width&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                           &lt;span class=&quot;nv&quot;&gt;multiplier&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;aspect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt;
-                                           &lt;span class=&quot;nv&quot;&gt;constant&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;kt&quot;&gt;NSLayoutConstraint&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;activate&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;([&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;constraint&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;imageAspect&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;constraint&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-        &lt;span class=&quot;n&quot;&gt;mainImageView&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;image&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;image&lt;/span&gt;
-
-        &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;ip&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;indexPath&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;self&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-            &lt;span class=&quot;n&quot;&gt;table&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;?&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reloadRows&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;at&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;],&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;with&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;none&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-            &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;##&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;コードを解説する&quot;&gt;コードを解説する&lt;/h3&gt;
-
-&lt;p&gt;まず親テーブルがセル参照時に&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッドが呼ばれます。&lt;br /&gt;
-ここでテーブルセルに表示モデルと親テーブルを渡します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;setup(sale:owner:)&lt;/code&gt;メソッド内では、自身がキャッシュしてる表示モデル(&lt;code class=&quot;highlighter-rouge&quot;&gt;sale&lt;/code&gt;)と同一か調べます。&lt;br /&gt;
-同一であれば表示状態は同じとみなして処理を終了します。&lt;/p&gt;
-
-&lt;p&gt;表示データが異なればURLSessionを使って画像データをダウンロードします。&lt;br /&gt;
-ダウンロードができたら、表示モデルをキャッシュした後に&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;を呼びます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;onFetchedImage(image:table:)&lt;/code&gt;ではまず登録中の画像アスペクト用Constraintを解除します。&lt;br /&gt;
-その後渡された画像のサイズ比率から新しく画像アスペクト用Constraintを登録します。&lt;/p&gt;
-
-&lt;p&gt;画像の表示設定が終わったら、最後は自身のセルを更新します。&lt;br /&gt;
-セルのIndexPathは&lt;code class=&quot;highlighter-rouge&quot;&gt;reloadRows(at:,with:)&lt;/code&gt;で取得します。&lt;/p&gt;
-
-&lt;h4 id=&quot;注意&quot;&gt;注意&lt;/h4&gt;
-&lt;p&gt;&lt;strong&gt;IndexPathをセル参照時のIndexPathをセル更新時に渡してもクラッシュを起こします。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
-
-&lt;p&gt;今記事執筆となった事の経緯は、画像サイズに依存しないテーブルセルを作りたかったためです。&lt;br /&gt;
-その上で課題となるのが、&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;可変画像の対応方法&lt;/li&gt;
-  &lt;li&gt;セル幅変更後の更新方法&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;この2点でした。&lt;/p&gt;
-
-&lt;p&gt;前者はConstraintの画像比率を使うことで実現可能なことは分かってました。&lt;br /&gt;
-後者はreloadDataを呼ぶと負荷がかかると思い、セル単体の更新方法について調べてました。&lt;br /&gt;
-結果的にできたからいいのですが、意外な問題となったのは、キャッシュの存在でした。&lt;/p&gt;
-
-&lt;h3 id=&quot;キャッシュ必須性&quot;&gt;キャッシュ必須性&lt;/h3&gt;
-
-&lt;p&gt;もともとは、セルの更新都度に非同期で画像をダウンロードしてセルを更新させるつもりでした。&lt;/p&gt;
-
-&lt;p&gt;しかし、更新の都度非同期でセル操作を行うとテーブル表示が安定せずにセルの再表示が呼ばれ続けます。&lt;br /&gt;
-その結果、レイアウトは崩れ続け、ずっと非同期処理が走るという無限ループに陥りました。&lt;br /&gt;
-実際今回のコードでもキャッシュ処理をコメントアウトするとそれが再現されると思います。&lt;/p&gt;
-
-&lt;p&gt;実際の開発ではメモリ内キャッシュなしで動的に画像ロードを行うことはないとは思います。&lt;br /&gt;
-が、自分が想定していた挙動とは異なる結果を得ることができました。&lt;/p&gt;
-
-&lt;h4 id=&quot;注意-1&quot;&gt;注意&lt;/h4&gt;
-&lt;p&gt;今回のキャッシュモデルは実務ではとても耐えられない仕組みなのでご注意ください。
-その理由は下記点となります。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;キャッシュ期限がない&lt;/li&gt;
-  &lt;li&gt;URLは同じでも画像は変更可能&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;今回キャッシュは、目的とは異なるため簡易化させています。&lt;/p&gt;
-
-&lt;h3 id=&quot;スマートuiグレイ判定&quot;&gt;スマートUIグレイ判定&lt;/h3&gt;
-&lt;p&gt;UI、つまりビューにロジカルな処理を入れ込み完結させるのは、ビュー層にロジックが入るこむため、スマートUIとしてアンチパターンと言われてます。
-今回はサンプルのためこのアンチパターンに片足突っ込んでいます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ビュー層以外の処理(インフラ層)が入ってる&lt;/li&gt;
-  &lt;li&gt;画像の非同期ダウンロードは、他UIでも同様のニーズがある&lt;/li&gt;
-  &lt;li&gt;拘ればエラーハンドリングが介入する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;このような場合は、SDWebImageのようにライブラリ化して関心事を分離とDRY違反解決などが必要となります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" /></entry></feed>
+&lt;p&gt;かろうじて使うのは&lt;code class=&quot;highlighter-rouge&quot;&gt;layoutIfNeeded&lt;/code&gt;だろうか。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png" /></entry></feed>
