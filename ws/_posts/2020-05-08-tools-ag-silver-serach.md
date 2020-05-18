@@ -82,9 +82,7 @@ MacなのでHomebrewで簡単インストールできます。
 $ brew install the_silver_searcher
 ```
 
-{% comment %}
-Homebrew記事ができたらリンクをはる
-{% endcomment %}
+Homebrewの使い方に関しては「{% post_link_text 2020-05-18-mac-homebrew-basic %}」でまとめてあります。
 
 ## ag(The Silver Searcher)を使う
 

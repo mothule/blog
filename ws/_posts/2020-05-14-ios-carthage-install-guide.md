@@ -27,7 +27,7 @@ CarthageはHomebrewでインストールできます。
 $ brew install carthage
 ```
 
-{% comment %} Homebrewインストール記事を書いたらここにリンクを貼る {% endcomment %}
+Homebrewの使い方に関しては「{% post_link_text 2020-05-18-mac-homebrew-basic %}」でまとめてあります。
 
 ## Cartfileにライブラリを記入
 

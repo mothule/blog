@@ -23,9 +23,7 @@ homebrewには管理してるformulaがどのformulaを使っているのか依�
 
 下記はその機能を使って、nginxがどのformulaに依存してるのかを調べた結果です。
 
-{% comment %}
-homebrewの機能を記事にする
-{% endcomment %}
+Homebrewに関する詳細記事は「{% post_link_text 2020-05-18-mac-homebrew-basic %}」にまとめてあります。
 
 ```sh
 $ brew deps nginx
@@ -44,9 +42,7 @@ pcre
 ネットで調べたところ、 Rubyに紐づくopensslが外れた事で読み込めなくなっているのではないか？と仮説にたどり着きました。
 Rubyはrbenvで管理しているため、rbenvで対象バージョンを再インストールすることで再紐付けされないか？と試してみることにしました。
 
-{% comment %}
-rbenvの機能を記事にする
-{% endcomment %}
+{% comment %}rbenvの機能を記事にする{% endcomment %}
 
 ```sh
 $ rbenv install <ruby version>

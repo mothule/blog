@@ -22,9 +22,7 @@ image:
 
 他にも`brew ls`に機能が備わっていますが、この記事のテーマから外れるので詳細は省きます。
 
-{% comment %}
-brew listの詳細解説記事を書いたらここからリンクを貼る
-{% endcomment %}
+{% comment %}brew listの詳細解説記事を書いたらここからリンクを貼る{% endcomment %}
 
 ```sh
 $ brew list

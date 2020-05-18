@@ -36,9 +36,7 @@ image:
 - ビルドを走らせる前に適当なソースファイルを1つ弄ってから実行する
 - ビルド時間はXcodeのPreferences(ShowBuildOperationDuration)を使う
 
-{% comment %}
-ShowBuildOperationDurationやビルド時の使用コア数の設定などの記事を書いたらここにリンクを貼る
-{% endcomment %}
+{% comment %}ShowBuildOperationDurationやビルド時の使用コア数の設定などの記事を書いたらここにリンクを貼る{% endcomment %}
 
 
 フレームワークのコピー処理の有無ということで、*Cartfile* はそれっぽい数7個用意。

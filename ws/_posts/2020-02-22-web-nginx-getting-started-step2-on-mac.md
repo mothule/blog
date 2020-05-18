@@ -402,9 +402,7 @@ http {
 }
 ```
 
-{% comment %}
-sendfile,tcp_nopushによるパフォーマンス測定の記事を書く
-{% endcomment %}
+{% comment %}sendfile,tcp_nopushによるパフォーマンス測定の記事を書く{% endcomment %}
 
 
 ### keepalive_timeoutディレクティブ
@@ -433,9 +431,7 @@ http {
 }
 ```
 
-{% comment %}
-keep-aliveによるパフォーマンスの記事を書く
-{% endcomment %}
+{% comment %}keep-aliveによるパフォーマンスの記事を書く{% endcomment %}
 
 
 
@@ -458,9 +454,7 @@ http {
 }
 ```
 
-{% comment %}
-gzipによるパフォーマンス測定の記事を書く
-{% endcomment %}
+{% comment %}gzipによるパフォーマンス測定の記事を書く{% endcomment %}
 
 ### gzip_buffersディレクティブ
 
@@ -518,9 +512,7 @@ http {
 }
 ```
 
-{% comment %}
-最小サイズのベストプラクティスを記事にする
-{% endcomment %}
+{% comment %}最小サイズのベストプラクティスを記事にする{% endcomment %}
 
 ### gzip_proxiedディレクティブ
 

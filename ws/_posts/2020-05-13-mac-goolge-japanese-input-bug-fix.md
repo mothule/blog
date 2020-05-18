@@ -40,9 +40,7 @@ image:
 
 Macでプロセス一覧を見るには`ps`コマンドを使う。
 
-{% comment %}
-psコマンドに関する記事を書いたらここにリンクを貼る
-{% endcomment %}
+{% comment %}psコマンドに関する記事を書いたらここにリンクを貼る{% endcomment %}
 
 ターミナルで`ps aux | grep GoogleJapaneseInput`を実行
 このときGoogle Chromeは閉じておく

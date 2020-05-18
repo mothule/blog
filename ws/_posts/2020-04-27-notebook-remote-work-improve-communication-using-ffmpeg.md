@@ -106,9 +106,7 @@ FFmepgをHomebrewでインストールします。
 $ brew install ffmpeg
 ```
 
-{% comment %}
-記事が出来たら「MacのHomebrewの使い方入門」のリンクを貼る
-{% endcomment %}
+Homebrewの使い方に関しては「{% post_link_text 2020-05-18-mac-homebrew-basic %}」でまとめてあります。
 
 インストールが完了したらインストールされたかを確認します。成功してたら次のような結果になるかと思います。(バージョンは時期で異なります）
 
@@ -121,10 +119,6 @@ ffmpeg version 3.3.4 Copyright (c) 2000-2017 the FFmpeg developers
 
 - インストールが失敗した
 - homebrewでインストールしたコマンドのパスが通っていない
-
-{% comment %}
-記事が出来たら「MacのHomebrewの使い方入門」のリンクを貼る
-{% endcomment %}
 
 ### シェルスクリプトを用意
 

@@ -116,9 +116,7 @@ checking for MYSQL_OPT_SSL_ENFORCE in mysql.h... no
 ld: library not found for -lssl
 ```
 
-{% comment %}
-`
-{% endcomment %}
+{% comment %}`{% endcomment %}
 
 
 `no`と言われてますし、 なにより`ld`コマンドでライブラリがないと言ってます。  
