@@ -1,4 +1,140 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-17T22:15:37+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CarthageのCartfileの書き方と個別更新方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format" rel="alternate" type="text/html" title="CarthageのCartfileの書き方と個別更新方法" /><published>2020-05-17T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format">&lt;p&gt;Podfileと書き方が微妙に異なるので注意です。カンマは使いません。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-18T18:36:52+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ターミナルからRubyMineを起動、比較、マージなどする</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal" rel="alternate" type="text/html" title="ターミナルからRubyMineを起動、比較、マージなどする" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T18:36:28+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal">&lt;p&gt;RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。&lt;/p&gt;
+
+&lt;h2 id=&quot;ターミナルからrubymineで開く&quot;&gt;ターミナルからRubyMineで開く&lt;/h2&gt;
+
+&lt;p&gt;まずターミナルからRubyMine.appwを開くには&lt;code class=&quot;highlighter-rouge&quot;&gt;open&lt;/code&gt;コマンドを使います。
+最後のドットはそのフォルダをRubyMineで開くことを意味します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;open &lt;span class=&quot;nt&quot;&gt;-na&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;RubyMine.app&quot;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;-a : アプリケーションを指定する&lt;/li&gt;
+  &lt;li&gt;-n : アプリが起動済みでも新しいインスタンスで開く&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;シェルスクリプト化する&quot;&gt;シェルスクリプト化する&lt;/h2&gt;
+
+&lt;h3 id=&quot;シェルスクリプトを用意&quot;&gt;シェルスクリプトを用意&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c&quot;&gt;#!/bin/sh&lt;/span&gt;
+open &lt;span class=&quot;nt&quot;&gt;-na&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;RubyMine.app&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--args&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$@&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これを&lt;code class=&quot;highlighter-rouge&quot;&gt;rubymine&lt;/code&gt;という名前で保存します。&lt;/p&gt;
+
+&lt;h3 id=&quot;実行権限付与&quot;&gt;実行権限付与&lt;/h3&gt;
+&lt;p&gt;さっき作ったシェルスクリプトの実行権限を変更します&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;chmod 711 rubymine
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これでターミナルからrubymineスクリプトを実行できるようになります。&lt;/p&gt;
+
+&lt;h3 id=&quot;パスが見えるようにする&quot;&gt;パスが見えるようにする&lt;/h3&gt;
+
+&lt;p&gt;このままだと配置した場所のパスが必要になるので、ターミナルが見えるようにパスが見える場所に配置します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mv rubymine /usr/local/bin/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;なおこの場所でなくとも&lt;code class=&quot;highlighter-rouge&quot;&gt;cat $PATH&lt;/code&gt;で表示されるディレクトリ上にならどこでも構いません。&lt;/p&gt;
+
+&lt;h3 id=&quot;rubymineに渡せる引数一覧&quot;&gt;RubyMineに渡せる引数一覧&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;引数なし : RubyMine起動&lt;/li&gt;
+  &lt;li&gt;ファイルまたはディレクトリのパス : RubyMineで指定パスを開きます&lt;/li&gt;
+  &lt;li&gt;diff : 渡された２つのファイルの差分を見ます&lt;/li&gt;
+  &lt;li&gt;merge : 渡されたファイル2~3つと出力パスでマージします&lt;/li&gt;
+  &lt;li&gt;format : 指定されたファイルにコードスタイルのフォーマットを適用します&lt;/li&gt;
+  &lt;li&gt;inspect : 指定プロジェクトでコード検査します&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;rubymineでファイル差分を見る&quot;&gt;RubyMineでファイル差分を見る&lt;/h2&gt;
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;rubymine diff &amp;lt;path1&amp;gt; &amp;lt;path2&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hoge&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; hoge.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Fuga&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; fuga.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rubymine diff hoge.txt fuga.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/1.png&quot; width=&quot;100%&quot; alt=&quot;RubyMine diff画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;rubymineでファイルマージする&quot;&gt;RubyMineでファイルマージする&lt;/h2&gt;
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;rubymine merge &amp;lt;path1&amp;gt; &amp;lt;path2&amp;gt; [&amp;lt;base&amp;gt;] &amp;lt;output&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Hoge&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; hoge.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;Fuga&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; fuga.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;touch base.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;touch out.txt
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rubymine diff hoge.txt fuga.txt base.txt out.txt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/2.png&quot; width=&quot;100%&quot; alt=&quot;RubyMine merge画面&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;rubymineでファイルフォーマットを適用する&quot;&gt;RubyMineでファイルフォーマットを適用する&lt;/h2&gt;
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;rubymine format [&amp;lt;options&amp;gt;] &amp;lt;path ...&amp;gt;&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;ruby.rb
+def main
+puts &lt;span class=&quot;s2&quot;&gt;&quot;hogehogehoge&quot;&lt;/span&gt;
+end
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rubymine ruby.rb
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;ruby.rb
+def main
+  puts &lt;span class=&quot;s2&quot;&gt;&quot;hogehogehoge&quot;&lt;/span&gt;
+end
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;どうやらrubocopが動くようではなく、RubyMine内の設定(Editor ｜ Code Style)に沿うようです。&lt;/p&gt;
+
+&lt;h3 id=&quot;options&quot;&gt;Options&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;-h : ヘルプ表示&lt;/li&gt;
+  &lt;li&gt;-m or -mask : コンマ区切りでマスクファイルの一覧
+    &lt;ul&gt;
+      &lt;li&gt;例 : -m &lt;em&gt;.xml,&lt;/em&gt;.html&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;-r or -R : 階層処理&lt;/li&gt;
+  &lt;li&gt;-s or -settings : ExportされたRubyMine内の設定&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;rubymineでコード検査する&quot;&gt;RubyMineでコード検査する&lt;/h2&gt;
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;rubymine inspect &amp;lt;project&amp;gt; &amp;lt;inspection-profile&amp;gt; &amp;lt;output&amp;gt; [&amp;lt;options&amp;gt;]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;RubyMineでコード書いていると警告されるアレです。&lt;br /&gt;
+ターミナル上からコード検査をして結果を外部ファイルに出力します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;~/Downloads/sandbox&lt;/code&gt;ディレクトリがあり、その中に&lt;code class=&quot;highlighter-rouge&quot;&gt;ruby.rb&lt;/code&gt;ファイルがあった場合&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;rubymine inspect ~/Downloads/sandbox/ ~/Downloads/sandbox/.idea/inspectionProfiles/Project_Default.xml ~/Downloads/sandbox/InspectionResults &lt;span class=&quot;nt&quot;&gt;-v2&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; ~/Downloads/sandbox/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;options-1&quot;&gt;Options&lt;/h3&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;-d : 検査ディレクトリの指定.&lt;/li&gt;
+  &lt;li&gt;-format : 結果フォーマットの指定(xml/json/plan). デフォはxml&lt;/li&gt;
+  &lt;li&gt;v : 検査詳細レベル
+    &lt;ul&gt;
+      &lt;li&gt;-v0 : デフォルト(最も低い)&lt;/li&gt;
+      &lt;li&gt;-v1 : ミディオム&lt;/li&gt;
+      &lt;li&gt;-v2 : 最大&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;p&gt;diffとmergeがあるのは知りませんでした。&lt;br /&gt;
+渡せる引数からしてgit mergetoolに登録できるかもしれません。&lt;br /&gt;
+もし渡せたら重いp4mergeとはオサラバです。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;https://www.jetbrains.com/help/ruby/working-with-the-ide-features-from-command-line.html&quot;&gt;RubyMine - Command-line interface&lt;/a&gt;を参考にしてあります。
+なお公式記事内では &lt;code class=&quot;highlighter-rouge&quot;&gt;inspect&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt; となっています。&lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt;では動かなかったので多分タイポです。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><summary type="html">RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png" /></entry><entry><title type="html">CarthageのCartfileの書き方と個別更新方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format" rel="alternate" type="text/html" title="CarthageのCartfileの書き方と個別更新方法" /><published>2020-05-17T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-cartfile-format">&lt;p&gt;Podfileと書き方が微妙に異なるので注意です。カンマは使いません。&lt;/p&gt;
 
 &lt;p&gt;ライブラリを導入したら新しいバージョンが公開されたら追従しなければいけません。
 この記事ではCarthageで管理してるライブラリのバージョン追従方法について説明します。&lt;/p&gt;
@@ -295,196 +431,7 @@ git cloneが時間かかるとありますが、git cloneよりbootstrapの方�
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしCartfileの書き方や個別更新、インストール手順、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T22:15:34+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
-
-&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
-  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
-    &lt;ul&gt;
-      &lt;li&gt;単一障害点となる&lt;/li&gt;
-      &lt;li&gt;メンテナンス必要&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
-  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
-  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
-  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
-  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
-    &lt;ul&gt;
-      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
-      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
-  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
-  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
-  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
-
-&lt;h3 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h3&gt;
-
-&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
-対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
-プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
-
-&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
-Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
-その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
-
-&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
-対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
-
-&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h3&gt;
-
-&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
-ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
-プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
-
-&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
-
-&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
-CocoaPodsはとにかく楽です。&lt;/p&gt;
-
-&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
-&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
-
-&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
-あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
-
-&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
-&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
-
-&lt;p&gt;Carthageの勝ちです。
-CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
-以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
-framework側でコンパイルが走ることはありません。&lt;/p&gt;
-
-&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
-&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
-  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
-  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;環境&lt;/th&gt;
-      &lt;th&gt;min&lt;/th&gt;
-      &lt;th&gt;max&lt;/th&gt;
-      &lt;th&gt;avg&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;CocoaPods&lt;/td&gt;
-      &lt;td&gt;3.208s&lt;/td&gt;
-      &lt;td&gt;3.492s&lt;/td&gt;
-      &lt;td&gt;3.308s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Carthage&lt;/td&gt;
-      &lt;td&gt;1.478s&lt;/td&gt;
-      &lt;td&gt;1.765s&lt;/td&gt;
-      &lt;td&gt;1.60725s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;vanilla&lt;/td&gt;
-      &lt;td&gt;0.932s&lt;/td&gt;
-      &lt;td&gt;1.143s&lt;/td&gt;
-      &lt;td&gt;1.04967s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
-&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
-
-&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
-そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
-この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
-
-&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
-ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
-
-&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
-CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
-&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
-ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
-
-&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
-&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
-その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
-Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
-
-&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
-&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
-そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
-「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
-Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
-その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
-
-&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
-&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
-Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
-そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
-Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
-
-&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
-
-&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
-&lt;p&gt;現時点ではどちらがいいとはいえないです。
-Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
-
-&lt;p&gt;またケースによっても変わってくると思います。
-何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
-
-&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
-&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
-もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
-「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
 
 &lt;p&gt;この記事は、iOSアプリにCarthage環境を導入する手順について説明します。&lt;/p&gt;
 
@@ -727,7 +674,196 @@ Ensure that the given path is appropriately entered and that your &quot;Input Fi
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしチーム運用、git管理、ライブラリのバージョン運用など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T22:15:34+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
+
+&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
+  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
+    &lt;ul&gt;
+      &lt;li&gt;単一障害点となる&lt;/li&gt;
+      &lt;li&gt;メンテナンス必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
+  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
+  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
+  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
+  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
+    &lt;ul&gt;
+      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
+      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
+  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
+  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
+  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
+
+&lt;h3 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h3&gt;
+
+&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
+対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
+プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
+
+&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
+Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
+その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
+
+&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
+対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
+
+&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h3&gt;
+
+&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
+プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
+
+&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
+
+&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
+CocoaPodsはとにかく楽です。&lt;/p&gt;
+
+&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
+&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
+
+&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
+あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
+&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
+
+&lt;p&gt;Carthageの勝ちです。
+CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
+以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
+framework側でコンパイルが走ることはありません。&lt;/p&gt;
+
+&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
+&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
+  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
+  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;環境&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CocoaPods&lt;/td&gt;
+      &lt;td&gt;3.208s&lt;/td&gt;
+      &lt;td&gt;3.492s&lt;/td&gt;
+      &lt;td&gt;3.308s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Carthage&lt;/td&gt;
+      &lt;td&gt;1.478s&lt;/td&gt;
+      &lt;td&gt;1.765s&lt;/td&gt;
+      &lt;td&gt;1.60725s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;vanilla&lt;/td&gt;
+      &lt;td&gt;0.932s&lt;/td&gt;
+      &lt;td&gt;1.143s&lt;/td&gt;
+      &lt;td&gt;1.04967s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
+&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
+
+&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
+そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
+この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
+
+&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
+ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
+
+&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
+CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
+&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
+ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
+
+&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
+&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
+その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
+Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
+
+&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
+&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
+そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
+「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
+Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
+その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
+&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
+Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
+そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
+Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
+
+&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
+
+&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
+&lt;p&gt;現時点ではどちらがいいとはいえないです。
+Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
+
+&lt;p&gt;またケースによっても変わってくると思います。
+何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
+
+&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
+&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
+もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T16:47:54+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
 
 &lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
 なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
@@ -1455,175 +1591,4 @@ UILabelは左右と上にsuperviewとConstraintを引いている。&lt;br /&gt;
   &lt;li&gt;拘ればエラーハンドリングが介入する&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;このような場合は、SDWebImageのようにライブラリ化して関心事を分離とDRY違反解決などが必要となります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" /></entry><entry><title type="html">質問の返答速度をagでXcode起動速度より速くする</title><link href="https://blog.mothule.com/tools/ag/tools-ag-silver-serach" rel="alternate" type="text/html" title="質問の返答速度をagでXcode起動速度より速くする" /><published>2020-05-08T00:00:00+09:00</published><updated>2020-05-12T01:27:15+09:00</updated><id>https://blog.mothule.com/tools/ag/tools-ag-silver-serach</id><content type="html" xml:base="https://blog.mothule.com/tools/ag/tools-ag-silver-serach">&lt;p&gt;&lt;strong&gt;「◯◯って使ってますか？」の返答速度を爆速にします。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;esaのドキュメント更新中や会議など「Xcodeちょっとお休み😇」と
-&lt;strong&gt;Xcode立ち上げてないときに限って&lt;/strong&gt;&lt;br /&gt;
-&lt;strong&gt;「◯◯の変更対応進めたいですが、ハードコーディングしてる箇所何個ありますか？」&lt;/strong&gt;&lt;br /&gt;
-…モニター監視でもしてるの？と疑うくらい、この2つのセット率は無駄に高いです。&lt;/p&gt;
-
-&lt;p&gt;この記事は、&lt;strong&gt;iOSエンジニアが会議中にXcodeを起動せず&lt;/strong&gt; &lt;br /&gt;
-「これ使ってますか？」攻撃に「（タカタカターンッ）使ってないですね」とその場で質問形式の調べ物タスクを解決し、&lt;strong&gt;できるiOSエンジニアを演じるためのロードマップです。&lt;/strong&gt;&lt;br /&gt;
-ag(The Silver Searcher)のインストール解説はついでです。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcode起動とロードと検索の間にシェルコマンドを叩く&quot;&gt;Xcode起動とロードと検索の間にシェルコマンドを叩く&lt;/h2&gt;
-&lt;p&gt;XcodeはGUIのなかでも起動とロードが遅いです。&lt;br /&gt;
-しかもロード後に全文検索も始めたら更に時間がかかります。&lt;/p&gt;
-
-&lt;p&gt;実は単純検索で目的である質問の返答が返せる場合は、&lt;br /&gt;
-&lt;strong&gt;シェルコマンドで高速検索したほうが短時間で目的を達成できるパターンが存在します。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h2 id=&quot;シェルコマンドを勧める理由&quot;&gt;シェルコマンドを勧める理由&lt;/h2&gt;
-&lt;p&gt;シェルコマンドは土台がCUIつまり文字です。その分余計なデータ処理は発生しないのでGUIより軽く&lt;strong&gt;大抵&lt;/strong&gt;が速いです。&lt;/p&gt;
-
-&lt;p&gt;そしてiOSエンジニアはMac使いです。&lt;br /&gt;
-ターミナルにも色気を出して丁度よい「iTerm2」あたりで「option+space氏便利〜」とミサワってます。&lt;br /&gt;
-つまりこれは、Xcodeでロード後の状態が整っていると同義です。&lt;/p&gt;
-
-&lt;h2 id=&quot;grepは遅い&quot;&gt;grepは遅い&lt;/h2&gt;
-
-&lt;p&gt;しかしシェルコマンドと言えど全文検索はCPUパワーに依存する機能です。
-検索対象ファイルが多いければ多いほど時間がかかるのも事実です。&lt;/p&gt;
-
-&lt;p&gt;純粋なgrepは止めましょう。grepと交際してはいけません。&lt;/p&gt;
-
-&lt;p&gt;大抵バトル漫画では、日の呼吸や魔人ブーなどオリジナルや現祖や純粋なキャラほど強いのが定番ですが、IT世界ではそんなことはなく後発ほど強いです。現代社会の若い人ほどIT環境や勉学に恵まれて育ち、新卒なのに中堅より戦闘力が高いのと同じです。&lt;/p&gt;
-
-&lt;h2 id=&quot;the-silver-searcherは速い&quot;&gt;The Silver Searcherは速い&lt;/h2&gt;
-&lt;p&gt;グレップ オソイ…オレ アイツ ヨリ ハヤイ&lt;/p&gt;
-
-&lt;p&gt;後発の全文検索では高速の部類に入るツールです。
-&lt;a href=&quot;https://github.com/ggreer/the_silver_searcher&quot;&gt;ggreer/the_silver_searcher&lt;/a&gt;でソースコードを公開しており、
-「あいつより速いコード検索ツール」という謳い文句で人気を得てます。&lt;/p&gt;
-
-&lt;h3 id=&quot;実際に質問に答える&quot;&gt;実際に質問に答える&lt;/h3&gt;
-&lt;p&gt;では実際にありそうな質問に対して答えて見ようと思います。&lt;br /&gt;
-執筆時点で少しトレンドな質問を用意しました。&lt;br /&gt;
-「UIWebViewが非推奨になりWKWebView移行しないとリジェクトされるようになりました。iOSプロジェクトでUIWebViewは使ってますか？」&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/2.gif&quot; width=&quot;100%&quot; alt=&quot;iTerm+ag操作&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;「AFNetworkingで使ってます（キリッ」&lt;/p&gt;
-
-&lt;p&gt;ちなみに検索ボリュームをそれっぽい規模にするため、実際に実務で使ってるレポジトリ（ファイル数約5.4万個の約2Gバイト）に対して検索してます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-08-tools-ag-silver-serach/3.png&quot; width=&quot;50%&quot; alt=&quot;2Gバイトをagで高速検索&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;the-silver-searcheragの特徴&quot;&gt;The Silver Searcher(ag)の特徴&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;並列による高速検索&lt;/li&gt;
-  &lt;li&gt;.gitフォルダを検索しない&lt;/li&gt;
-  &lt;li&gt;.gitignoreの内容も検索しない&lt;/li&gt;
-  &lt;li&gt;隠しファイルやフォルダは検索しない&lt;/li&gt;
-  &lt;li&gt;バイナリは検索しない&lt;/li&gt;
-  &lt;li&gt;検索ファイルのタイプ指定可能&lt;/li&gt;
-  &lt;li&gt;正規表現検索&lt;/li&gt;
-  &lt;li&gt;再帰検索する&lt;/li&gt;
-  &lt;li&gt;独自の検索除外ファイル&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;なぜag&quot;&gt;なぜag？&lt;/h4&gt;
-&lt;p&gt;the silver searcher→silver→銀→ag&lt;/p&gt;
-
-&lt;h3 id=&quot;the-silver-searcheragのインストール方法&quot;&gt;The Silver Searcher(ag)のインストール方法&lt;/h3&gt;
-
-&lt;p&gt;MacなのでHomebrewで簡単インストールできます。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install the_silver_searcher
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;agthe-silver-searcherを使う&quot;&gt;ag(The Silver Searcher)を使う&lt;/h2&gt;
-
-&lt;p&gt;agはデフォルト設定が既にコード検索に適しておりあまり弄ることはないですが、少し詳しく知りたくなったらここを思い出してください。&lt;/p&gt;
-
-&lt;h3 id=&quot;検索オプション&quot;&gt;検索オプション&lt;/h3&gt;
-
-&lt;h4 id=&quot;カレントディレクトリ以下を検索&quot;&gt;カレントディレクトリ以下を検索&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;指定ディレクトリ以下を検索&quot;&gt;指定ディレクトリ以下を検索&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag UIWebView Pods
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;検索ファイルを指定---filetype&quot;&gt;検索ファイルを指定: (&lt;code class=&quot;highlighter-rouge&quot;&gt;--filetype&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--cpp&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;指定可能なファイルタイプを確認&quot;&gt;指定可能なファイル・タイプを確認&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--list-file-types&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;ここにない拡張子は1つ上の&lt;code class=&quot;highlighter-rouge&quot;&gt;--filetype&lt;/code&gt;オプションは使えません。&lt;br /&gt;
-その場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;-G&lt;/code&gt;オプションで検索対象ファイル名を正規表現で指定する。&lt;/p&gt;
-
-&lt;h4 id=&quot;大文字小文字を区別する-s&quot;&gt;大文字小文字を区別する(&lt;code class=&quot;highlighter-rouge&quot;&gt;-s&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;大文字小文字を区別しないデフォルト&quot;&gt;大文字小文字を区別しない(&lt;code class=&quot;highlighter-rouge&quot;&gt;デフォルト&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt; uiwebview
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;検索文字を正規表現で指定デフォルト&quot;&gt;検索文字を正規表現で指定（&lt;code class=&quot;highlighter-rouge&quot;&gt;デフォルト&lt;/code&gt;）&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;s1&quot;&gt;'..WebView'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;検索文字で正規表現を無効化&quot;&gt;検索文字で正規表現を無効化&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-Q&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'UIWebView+'&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;ファイル名やディレクトリ名を正規表現で指定-g-pattern&quot;&gt;ファイル名やディレクトリ名を正規表現で指定（&lt;code class=&quot;highlighter-rouge&quot;&gt;-G pattern&lt;/code&gt;）&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-G&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'\.(c|h|swift)'&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;ファイルを検索-g-pattern&quot;&gt;ファイルを検索(&lt;code class=&quot;highlighter-rouge&quot;&gt;-g pattern&lt;/code&gt;)&lt;/h4&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;UIWebView&lt;/code&gt;というファイル名を検索する。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-g&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;隠しファイルも検索--hidden&quot;&gt;隠しファイルも検索(&lt;code class=&quot;highlighter-rouge&quot;&gt;--hidden&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--hidden&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;全ファイル検索-u&quot;&gt;全ファイル検索(&lt;code class=&quot;highlighter-rouge&quot;&gt;-u&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;再帰ディレクトリの深さ指定--depth-n&quot;&gt;再帰ディレクトリの深さ指定(&lt;code class=&quot;highlighter-rouge&quot;&gt;--depth n&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;--depth&lt;/span&gt; 1 UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;デフォルトは25。無制限ではないので注意。無制限は-1&lt;/p&gt;
-
-&lt;h3 id=&quot;出力オプション&quot;&gt;出力オプション&lt;/h3&gt;
-&lt;h4 id=&quot;ファイル名だけ表示-l&quot;&gt;ファイル名だけ表示(&lt;code class=&quot;highlighter-rouge&quot;&gt;-l&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;マッチしないファイル名だけ表示l&quot;&gt;マッチしないファイル名だけ表示(&lt;code class=&quot;highlighter-rouge&quot;&gt;L&lt;/code&gt;)&lt;/h4&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ag &lt;span class=&quot;nt&quot;&gt;-L&lt;/span&gt; UIWebView
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;検索除外&quot;&gt;検索除外&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;.agingnore&lt;/code&gt;ファイルをホームディレクトリに配置して、　　
-中身に検索対象から外したいパターンを列挙することで検索対象から除外されます。&lt;/p&gt;
-
-&lt;h2 id=&quot;agに拘らずxcodeを使う&quot;&gt;agに拘らずXcodeを使う&lt;/h2&gt;
-
-&lt;p&gt;agをインストールしてiTermをスタンバイさせましょう。
-これで会議で急に質問されてもカッコよくできるエンジニアっぽく返せます。&lt;/p&gt;
-
-&lt;p&gt;でもXcodeが立ち上がってるなら素直にXcodeで検索しましょう。
-Xcodeで開発中にagを使うとか「IDEなにそれ美味しいの」的な動きはせず素直に検索したほうがいいです。&lt;/p&gt;
-
-&lt;p&gt;agは検索こそ速けれど、その次のステップがないからです。&lt;br /&gt;
-つまり、検索結果から次ステップが面倒です。どのみちXcode開くと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;agより早いツール&quot;&gt;agより早いツール&lt;/h3&gt;
-
-&lt;p&gt;あります。でもまだ速度差によるアドバンテージは低いので好みの問題です。
-今よりもでかい環境で調べた時に重くなったら考えるとかで十分です。&lt;/p&gt;
-
-&lt;h3 id=&quot;grepで十分&quot;&gt;grepで十分&lt;/h3&gt;
-
-&lt;p&gt;今よりもでかい環境で調べた時に重くなったら考えるとかで十分です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ag" /><summary type="html">「◯◯って使ってますか？」の返答速度を爆速にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-08-tools-ag-silver-serach/0.png" /></entry></feed>
+&lt;p&gt;このような場合は、SDWebImageのようにライブラリ化して関心事を分離とDRY違反解決などが必要となります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="uitableview" /><summary type="html">キャッシュとLayoutConstraintとセル単体更新とindexPath(for:)を使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" /></entry></feed>
