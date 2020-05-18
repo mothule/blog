@@ -11,33 +11,33 @@
 
 
 
-  <title>Homebrewのpackage依存関係を確認する - もちゅろぐ</title>
+  <title>MacのHomebrewとは？仕組み・使い方と用語整理 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="Homebrewのpackage依存関係を確認する" />
+<meta property="og:title" content="MacのHomebrewとは？仕組み・使い方と用語整理" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。" />
-<meta property="og:description" content="MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。" />
-<link rel="canonical" href="https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed" />
-<meta property="og:url" content="https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed" />
+<meta name="description" content="MacのHomebrewとは？GitHubやFormulaやCellerなどの用語からそれらの仕組みやinstallやlist,info,outdatedやupgradeやservices関連コマンドなどの使い方やkeg-onlyやtapなど細かな部分について説明する記事です。" />
+<meta property="og:description" content="MacのHomebrewとは？GitHubやFormulaやCellerなどの用語からそれらの仕組みやinstallやlist,info,outdatedやupgradeやservices関連コマンドなどの使い方やkeg-onlyやtapなど細かな部分について説明する記事です。" />
+<link rel="canonical" href="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic" />
+<meta property="og:url" content="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-18-mac-homebrew-basic/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-07-30T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-18T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed","headline":"Homebrewのpackage依存関係を確認する","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2019-07-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed"},"image":"https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png","description":"MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-basic","headline":"MacのHomebrewとは？仕組み・使い方と用語整理","dateModified":"2020-05-19T00:46:04+09:00","datePublished":"2020-05-18T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-basic"},"image":"https://blog.mothule.com/assets/images/2020-05-18-mac-homebrew-basic/eyecatch.png","description":"MacのHomebrewとは？GitHubやFormulaやCellerなどの用語からそれらの仕組みやinstallやlist,info,outdatedやupgradeやservices関連コマンドなどの使い方やkeg-onlyやtapなど細かな部分について説明する記事です。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="Homebrewのpackage依存関係を確認する">
-<meta name="twitter:description" content="MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png">
+<meta name="twitter:title" content="MacのHomebrewとは？仕組み・使い方と用語整理">
+<meta name="twitter:description" content="MacのHomebrewとは？GitHubやFormulaやCellerなどの用語からそれらの仕組みやinstallやlist,info,outdatedやupgradeやservices関連コマンドなどの使い方やkeg-onlyやtapなど細かな部分について説明する記事です。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-18-mac-homebrew-basic/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -147,7 +147,7 @@
         
         
           <li>
-            Homebrewのpackage依存関係を確認する
+            MacのHomebrewとは？仕組み・使い方と用語整理
           </li>
         
       
@@ -159,12 +159,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-07-30-mac-homebrew-uses-installed.png" alt="Homebrewのpackage依存関係を確認する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-18-mac-homebrew-basic/eyecatch.png" alt="MacのHomebrewとは？仕組み・使い方と用語整理">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>Homebrewのpackage依存関係を確認する</h1>
+    <h1>MacのHomebrewとは？仕組み・使い方と用語整理</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -177,7 +177,7 @@
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-7-30</time></span>
+        <span"><time class="post-date">2020-5-18</time></span>
       </div>
     </div>
   </header>
@@ -185,210 +185,317 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#brew-lsでインストールしてるパッケージを確認">brew lsでインストールしてるパッケージを確認</a>
+  <li><a href="#homebrewとは">Homebrewとは？</a></li>
+  <li><a href="#homebrewのインストールと用語と仕組み">Homebrewのインストールと用語と仕組み</a>
     <ul>
-      <li><a href="#-lオプションでリスト表示にする">-lオプションでリスト表示にする</a></li>
+      <li><a href="#インストール">インストール</a></li>
+      <li><a href="#用語">用語</a></li>
+      <li><a href="#仕組み">仕組み</a></li>
     </ul>
   </li>
-  <li><a href="#brew-depsで依存してるパッケージを確認">brew depsで依存してるパッケージを確認</a>
+  <li><a href="#searchコマンド">searchコマンド</a></li>
+  <li><a href="#infoコマンド">infoコマンド</a></li>
+  <li><a href="#installコマンド">installコマンド</a></li>
+  <li><a href="#listlsコマンド">list(ls)コマンド</a></li>
+  <li><a href="#uninstallコマンド">uninstallコマンド</a></li>
+  <li><a href="#outdatedコマンド">outdatedコマンド</a></li>
+  <li><a href="#upgradeコマンド">upgradeコマンド</a></li>
+  <li><a href="#servicesコマンド群でlaunchd制御">servicesコマンド群でlaunchd制御</a>
     <ul>
-      <li><a href="#treeオプションでツリー構造で依存関係を表示">–treeオプションでツリー構造で依存関係を表示</a></li>
-      <li><a href="#full-nameオプションで具体的な名前を表示">–full-nameオプションで具体的な名前を表示</a></li>
-      <li><a href="#オプションは組み合わせ可能">オプションは組み合わせ可能</a></li>
+      <li><a href="#services-startコマンド">services startコマンド</a></li>
+      <li><a href="#services-listコマンド">services listコマンド</a></li>
+      <li><a href="#services-stopコマンド">services stopコマンド</a></li>
+      <li><a href="#services-runコマンド">services runコマンド</a></li>
     </ul>
   </li>
-  <li><a href="#brew-usesで依存されてるパッケージを確認">brew usesで依存されてるパッケージを確認</a>
-    <ul>
-      <li><a href="#パッケージ依存をインストール済みに限定する">パッケージ依存をインストール済みに限定する</a></li>
-    </ul>
-  </li>
-  <li><a href="#brewの依存関係を確認できるコマンド整理">brewの依存関係を確認できるコマンド整理</a>
-    <ul>
-      <li><a href="#最後にpackageではなくformula">最後にPackageではなくFormula</a></li>
-    </ul>
-  </li>
+  <li><a href="#homebrew-caskでguiアプリの制御">Homebrew caskでGUIアプリの制御</a></li>
+  <li><a href="#keg-onlyとは">keg-onlyとは</a></li>
+  <li><a href="#formulaが見つからない">formulaが見つからない</a></li>
+  <li><a href="#再インストール">再インストール</a></li>
+  <li><a href="#tapってコマンドが出てきた">tapってコマンドが出てきた</a></li>
+  <li><a href="#基本は簡単だけど運用は難しい">基本は簡単だけど運用は難しい</a></li>
 </ul>
   </div>
   <section>
-  <p>長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？
-<code class="highlighter-rouge">$ brew list -l</code> で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、
-「これ何で入れたんだっけ？」と思うパッケージが結構います。</p>
+  <p>便利だけど穴にハマると痛い目見て詰むパッケージ管理マネージャーです。</p>
 
-<h2 id="brew-lsでインストールしてるパッケージを確認">brew lsでインストールしてるパッケージを確認</h2>
+<p>インストールや使い方だけでなく、どのような仕組みでパッケージがインストールされているのか大まかな図式で説明します。</p>
 
-<p>まずは自分の環境にインストールされているパッケージ一覧を確認してみます。<br />
-インストール済みパッケージは、<code class="highlighter-rouge">brew list</code>コマンドで確認することができてフォーマットは次の通りです。</p>
+<h2 id="homebrewとは">Homebrewとは？</h2>
+<p>macOS用パッケージマネージャーです。<br />
+Macで使えるソフトウェア(パッケージ)の検索(search)、追加(install)、更新(update)、削除(uninstall)を司ります。
+類似アプリにMacPortsがあります。</p>
 
-<p><code class="highlighter-rouge">Usage: brew list, ls [options] [formula]</code></p>
+<p><a href="https://brew.sh/">Homebrew公式</a></p>
 
-<p><code class="highlighter-rouge">brew list</code>や<code class="highlighter-rouge">brew ls</code>でインストール済みパッケージを表示します。</p>
+<h2 id="homebrewのインストールと用語と仕組み">Homebrewのインストールと用語と仕組み</h2>
 
-<p>他にも<code class="highlighter-rouge">brew ls</code>に機能が備わっていますが、この記事のテーマから外れるので詳細は省きます。</p>
+<h3 id="インストール">インストール</h3>
+<p>ターミナルを開いて次のコマンドを実行するとHomebrewのインストールが始まります。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew list
-apr				carthage			fribidi				gobject-introspection		jpeg				libvterm			msgpack				pcre				pyenv				selenium-server-standalone	xcparse
-apr-util			chisel				fzf				graphite2			jq				libyaml				mysql@5.6			pcre2				python				sqlite				xctool
-argon2				circleci			gd				graphviz			lame				libzip				neovim				perl				python@2			the_silver_searcher		xvid
-aspell				cmake				gdbm				harfbuzz			libffi				lua				nginx				phantomjs			python@3.8			tig				xz
-autoconf			ctags				gettext				heroku				libpng				luajit				node				php				rbenv				tree				yarn
-automake			curl				git				heroku-node			libpq				lzo				nvm				pixman				rbspy				unibilium
-awscli				ffmpeg				git-flow			httpie				libsodium			mas				oniguruma			pkg-config			readline			unixodbc
-bash				firebase-cli			glib				hugo				libtermkey			mcrypt				openssl				plantuml			redis				vim
-bat				fontconfig			gmp				icu4c				libtiff				mhash				openssl@1.1			pngpaste			rsync				webp
-bitrise				freetds				gnu-getopt			imagemagick			libtool				mkcert				pango				postgresql			ruby				wget
-cairo				freetype			gnu-sed				jemalloc			libuv				mono				parallel			pstree				ruby-build			x264
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="s2">"</span><span class="k">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/master/install.sh<span class="k">)</span><span class="s2">"</span>
 </code></pre></div></div>
 
-<h3 id="-lオプションでリスト表示にする">-lオプションでリスト表示にする</h3>
+<p><a href="/assets/images/2020-05-18-mac-homebrew-basic/1.png"><img src="/assets/images/2020-05-18-mac-homebrew-basic/1.png" width="100%" alt="Homebrew インストールフロー" /></a></p>
 
-<p><code class="highlighter-rouge">-l</code>オプションでAZ順のリスト表示になります。<br />
-ブログで全部表示すると量が多いので一部となります。</p>
+<h3 id="用語">用語</h3>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew list <span class="nt">-l</span>
-total 0
-drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 apr
-drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 apr-util
-drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 argon2
-drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 aspell
-drwxr-xr-x  3 mothule  admin   96 Mar  1  2017 autoconf
-...
-drwxr-xr-x  3 mothule  staff   96 Jul 22  2019 vim
-drwxr-xr-x  4 mothule  admin  128 Jul  1  2018 webp
-drwxr-xr-x  3 mothule  admin   96 Aug 14  2017 wget
-drwxr-xr-x  3 mothule  admin   96 Sep 20  2017 x264
-drwxr-xr-x  3 mothule  admin   96 Apr 15 14:38 xcparse
-drwxr-xr-x  3 mothule  admin   96 Mar 30  2017 xctool
-drwxr-xr-x  3 mothule  admin   96 Sep 20  2017 xvid
-drwxr-xr-x  3 mothule  admin   96 Mar  5  2019 xz
-drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 yarn
+<ul>
+  <li>Homebrew: home-brew(自家製ビール)</li>
+  <li>brew: (自動)醸造する, (名)ビール</li>
+  <li>Formula: 製法</li>
+  <li>Celler: 酒貯蔵室</li>
+</ul>
+
+<h3 id="仕組み">仕組み</h3>
+<p><a href="https://github.com/Homebrew/brew">Homebrew/brew</a>からクライアントソフトをインストール
+<a href="https://github.com/Homebrew/homebrew-core/">Homebrew/homebrew-core</a>からFormulaをダウンロード
+Formulaにはインストール手順が書いてあるため、それに従ってインストールされます。</p>
+
+<p>例えばnginxだと次のような手順書になっています。<a href="https://github.com/Homebrew/homebrew-core/blob/master/Formula/nginx.rb">homebrew-core/nginx.rb</a></p>
+
+<p>インストールしたら<code class="highlighter-rouge">/usr/local/Celler</code>に配置して、<code class="highlighter-rouge">/usr/local/bin</code>にシンボリックリンクを貼ることでどこからでも呼べるようにします。</p>
+
+<p>「酒造方法が公開された様々な自家製ビールを製造して自分の酒貯蔵室に入れる」ってイメージです。</p>
+
+<p>ざっくり流れを表すとこんな感じです。</p>
+
+<p><a href="/assets/images/2020-05-18-mac-homebrew-basic/2.png"><img src="/assets/images/2020-05-18-mac-homebrew-basic/2.png" width="100%" alt="Homebrew formula install flow" /></a></p>
+
+<p>最後(6)のシンボリックリンクもHomebrewがやります。</p>
+
+<h2 id="searchコマンド">searchコマンド</h2>
+<p>Syntax: <code class="highlighter-rouge">brew search [formula]</code></p>
+
+<p>例えば<code class="highlighter-rouge">nginx</code>で調べた場合です。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew search nginx
+<span class="o">==&gt;</span> Formulae
+nginx ✔
 </code></pre></div></div>
 
-<h2 id="brew-depsで依存してるパッケージを確認">brew depsで依存してるパッケージを確認</h2>
+<h2 id="infoコマンド">infoコマンド</h2>
+<p>Syntax: <code class="highlighter-rouge">brew info [formula...]</code></p>
 
-<p><code class="highlighter-rouge">brew deps</code>コマンドで渡したパッケージが、どのパッケージを使っているのか確認することができます。
-フォーマットは次の通りです。</p>
+<p>例えば<code class="highlighter-rouge">nginx</code>の場合です。</p>
 
-<p><code class="highlighter-rouge">Usage: brew deps [options] [formula]</code></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew info nginx
+nginx: stable 1.17.10 <span class="o">(</span>bottled<span class="o">)</span>, HEAD
+HTTP<span class="o">(</span>S<span class="o">)</span> server and reverse proxy, and IMAP/POP3 proxy server
+https://nginx.org/
+/usr/local/Cellar/nginx/1.17.8 <span class="o">(</span>25 files, 2MB<span class="o">)</span> <span class="k">*</span>
+  Poured from bottle on 2020-02-20 at 03:07:40
+From: https://github.com/Homebrew/homebrew-core/blob/master/Formula/nginx.rb
+<span class="o">==&gt;</span> Dependencies
+Required: openssl@1.1 ✔, pcre ✔
+<span class="o">==&gt;</span> Options
+<span class="nt">--HEAD</span>
+	Install HEAD version
+<span class="o">==&gt;</span> Caveats
+Docroot is: /usr/local/var/www
 
-<p>例えば下記はRubyバージョン管理パッケージであるrbenvがどのパッケージを使っているのか確認した結果になります。</p>
+The default port has been <span class="nb">set </span><span class="k">in</span> /usr/local/etc/nginx/nginx.conf to 8080 so that
+nginx can run without sudo.
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps rbenv
-autoconf
-openssl
-pkg-config
-ruby-build
+nginx will load all files <span class="k">in</span> /usr/local/etc/nginx/servers/.
+
+To have launchd start nginx now and restart at login:
+  brew services start nginx
+Or,if you dont want/need a background service you can just run:
+  nginx
+  <span class="o">==&gt;</span> Analytics
+install: 33,169 <span class="o">(</span>30 days<span class="o">)</span>, 103,486 <span class="o">(</span>90 days<span class="o">)</span>, 410,718 <span class="o">(</span>365 days<span class="o">)</span>
+install-on-request: 32,184 <span class="o">(</span>30 days<span class="o">)</span>, 100,197 <span class="o">(</span>90 days<span class="o">)</span>, 394,782 <span class="o">(</span>365 days<span class="o">)</span>
+build-error: 0 <span class="o">(</span>30 days<span class="o">)</span>
 </code></pre></div></div>
 
-<h3 id="treeオプションでツリー構造で依存関係を表示">–treeオプションでツリー構造で依存関係を表示</h3>
+<p>この表示の元となる情報は<a href="https://github.com/Homebrew/homebrew-core/blob/master/Formula/nginx.rb">Formula</a>になります。</p>
 
-<p><code class="highlighter-rouge">brew deps</code>に<code class="highlighter-rouge">--tree</code>オプションを渡すことで依存パッケージをツリー形式で表示することができます。</p>
+<h2 id="installコマンド">installコマンド</h2>
+<p>Syntax: <code class="highlighter-rouge">brew install [formula...]</code></p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--tree</span> rbenv
-rbenv
-├── autoconf
-├── openssl
-├── pkg-config
-└── ruby-build
-    ├── autoconf
-    ├── pkg-config
-    └── readline
-</code></pre></div></div>
-<p>ツリー形式で表示することで<code class="highlighter-rouge">ruby-build</code>はさらに3つのパッケージに依存してることが分かります。</p>
+<p>指定されたFormulaをインストールします。</p>
 
-<h3 id="full-nameオプションで具体的な名前を表示">–full-nameオプションで具体的な名前を表示</h3>
+<p>例えば<code class="highlighter-rouge">bash-completion</code>の場合です。</p>
 
-<p><code class="highlighter-rouge">brew deps</code>に<code class="highlighter-rouge">--full-name</code>オプションを渡すことで省略表示されているパッケージを実際の名前で表示することが出来ます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install bash-completion
+Updating Homebrew...
+<span class="o">==&gt;</span> Auto-updated Homebrew!
+Updated Homebrew from 9fcaa46cd to ca5eac845.
+Updated 2 taps <span class="o">(</span>homebrew/core and homebrew/cask<span class="o">)</span><span class="nb">.</span>
+<span class="o">==&gt;</span> New Formulae
+erlang@22                                                    spotify-tui                                                  spotifyd
+<span class="o">==&gt;</span> Updated Formulae
+ffmpeg ✔            code-server         erlang              git-absorb          mariadb             opencv              pianobar            unpaper             yaws
+x264 ✔              contentful-cli      ffmpeg2theora       gst-plugins-ugly    mgba                opencv@2            pipx                vapoursynth-sub
+caffe               couchdb             ffmpeg@2.8          komposition         minidlna            opencv@3            qcli                vcs
+cgns                dungeon             ffmpegthumbnailer   libav               mpd                 openimageio         scrcpy              whistle
+chromaprint         ejabberd            ffms2               libwebsockets       mpv                 pdfsandwich         siril               wrangler
+<span class="o">==&gt;</span> Updated Casks
+cryo                                         graphicconverter                             mini-program-studio                          whalebird
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--full-name</span> rbenv
-autoconf
-openssl@1.1
-pkg-config
-ruby-build
-</code></pre></div></div>
+<span class="o">==&gt;</span> Downloading https://homebrew.bintray.com/bottles/bash-completion-1.3_3.mojave.bottle.tar.gz
+<span class="c">######################################################################## 100.0%</span>
+<span class="o">==&gt;</span> Pouring bash-completion-1.3_3.mojave.bottle.tar.gz
+<span class="o">==&gt;</span> Caveats
+Add the following line to your ~/.bash_profile:
+  <span class="o">[[</span> <span class="nt">-r</span> <span class="s2">"/usr/local/etc/profile.d/bash_completion.sh"</span> <span class="o">]]</span> <span class="o">&amp;&amp;</span> <span class="nb">.</span> <span class="s2">"/usr/local/etc/profile.d/bash_completion.sh"</span>
 
-<p>このように<code class="highlighter-rouge">openssl</code>が1.1バージョンを使っていることが分かります。</p>
-
-<h3 id="オプションは組み合わせ可能">オプションは組み合わせ可能</h3>
-
-<p>オプションは複数使うことで同時に複数効果を得られます。<br />
-次の例は<code class="highlighter-rouge">--full-name</code>と<code class="highlighter-rouge">--tree</code>を使った結果になります。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--full-name</span> <span class="nt">--tree</span> rbenv
-rbenv
-├── autoconf
-├── openssl@1.1
-├── pkg-config
-└── ruby-build
-    ├── autoconf
-    ├── pkg-config
-    └── readline
+Bash completion has been installed to:
+  /usr/local/etc/bash_completion.d
+<span class="o">==&gt;</span> Summary
+🍺  /usr/local/Cellar/bash-completion/1.3_3: 189 files, 607.8KB
 </code></pre></div></div>
 
-<h2 id="brew-usesで依存されてるパッケージを確認">brew usesで依存されてるパッケージを確認</h2>
+<p>インストールした後に追加で必要な設定や追加のインストールなど重要な情報が載っている場合があります。
+この場合は、<code class="highlighter-rouge">.bash_profile</code>に処理を追加するよう書いてます。</p>
 
-<p>先程<code class="highlighter-rouge">rbenv</code>が依存してるパッケージ一覧を確認しました。<br />
-では今度は逆にこの<code class="highlighter-rouge">rbenv</code>を使っているパッケージが存在するか調べてみましょう。
-<code class="highlighter-rouge">brew uses</code>コマンドを使うことで調べられます。フォーマットは次の通りです。</p>
+<h2 id="listlsコマンド">list(ls)コマンド</h2>
+<p>Syntax: <code class="highlighter-rouge">brew list</code> または <code class="highlighter-rouge">brew ls</code></p>
 
-<p><code class="highlighter-rouge">Usage: brew uses [options] formula</code></p>
+<p><code class="highlighter-rouge">brew list</code>または<code class="highlighter-rouge">brew ls</code>でインストール済みのパッケージを確認します。<br />
+<code class="highlighter-rouge">ls</code>コマンド同様に<code class="highlighter-rouge">-l</code>オプションを渡すことで縦に一覧化します。</p>
 
-<p>この<code class="highlighter-rouge">brew uses</code>コマンドで<code class="highlighter-rouge">rbenv</code>を使っているパッケージを調べた結果が次になります。</p>
+<h2 id="uninstallコマンド">uninstallコマンド</h2>
+<p>Syntax: <code class="highlighter-rouge">brew uninstall formula...</code></p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uses rbenv
-rbenv-aliases                     rbenv-bundler                     rbenv-communal-gems               rbenv-gemset                      rbenv-whatis
-rbenv-binstubs                    rbenv-bundler-ruby-version        rbenv-ctags                       rbenv-use
-rbenv-bundle-exec                 rbenv-chefdk                      rbenv-default-gems                rbenv-vars
+<p>Formulaをアンインストールします。</p>
+
+<h2 id="outdatedコマンド">outdatedコマンド</h2>
+<p>Syntax: <code class="highlighter-rouge">brew outdated [formula...]</code></p>
+
+<p>新バージョン差異を確認する。<br />
+バージョン差異がなければ何も表示されない。
+引数で<code class="highlighter-rouge">formula</code>無指定だとインストールしている全てのformulaを対象。</p>
+
+<h2 id="upgradeコマンド">upgradeコマンド</h2>
+<p>Syntax: <code class="highlighter-rouge">brew upgrade [formula...]</code></p>
+
+<p>formulaを新しいバージョンに更新する。
+引数で<code class="highlighter-rouge">formula</code>無指定だとインストールしている全てのformulaを対象。</p>
+
+<h2 id="servicesコマンド群でlaunchd制御">servicesコマンド群でlaunchd制御</h2>
+<p>自動起動の登録制御です。<br />
+インストールしたソフトウェアによっては自動起動をサポートするものもあります。</p>
+
+<p><code class="highlighter-rouge">services</code>コマンド群はそれらを<code class="highlighter-rouge">launchctl</code>コマンドや<code class="highlighter-rouge">~/Library/LaunchAgents</code>ディレクトリにplistファイルを配置せずに
+<code class="highlighter-rouge">services start</code>, <code class="highlighter-rouge">stop</code>, <code class="highlighter-rouge">list</code>コマンドを使って<code class="highlighter-rouge">launchd</code>デーモンを制御できるようになります。</p>
+
+<h3 id="services-startコマンド">services startコマンド</h3>
+<p>Syntax: <code class="highlighter-rouge">brew services start formula</code></p>
+
+<p>渡したコマンドを自動起動します。</p>
+
+<p>例えば<code class="highlighter-rouge">mysql@5.6</code>formulaを<code class="highlighter-rouge">brew info</code>で見ると次のように案内があります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To have launchd start mysql@5.6 now and restart at login:
+  brew services start mysql@5.6
+Or, if you don't want/need a background service you can just run:
+  /usr/local/opt/mysql@5.6/bin/mysql.server start
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">rbenv</code>のプラグインらしきものが並びますね。</p>
+<p><code class="highlighter-rouge">mysql.server start</code>コマンドでMySQLサーバーをその都度起動するか、
+もしくは、<code class="highlighter-rouge">brew services start mysql@5.6</code>コマンドで自動起動させるか方法を提示してます。</p>
 
-<h3 id="パッケージ依存をインストール済みに限定する">パッケージ依存をインストール済みに限定する</h3>
-<p><code class="highlighter-rouge">brew uses</code>コマンドはデフォルトでは<code class="highlighter-rouge">Homebrew</code>で管理されている全てのパッケージが検索対象となります。<br />
-<strong>これを<code class="highlighter-rouge">--installed</code>オプションをつけることで自分のインストール済みに制限できます。</strong><br />
-このオプションをつけてもう一度<code class="highlighter-rouge">brew uses rbenv</code>を実行してみます。</p>
+<h3 id="services-listコマンド">services listコマンド</h3>
+<p>Syntax: <code class="highlighter-rouge">brew services list</code> or <code class="highlighter-rouge">ls</code></p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uses <span class="nt">--installed</span> rbenv
+<p>現在自動起動中になっているformula一覧を確認します。</p>
 
+<p>例えば手元のPCだとこうなります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew services <span class="nb">ls
+</span>Name                       Status  User    Plist
+mysql@5.6                  stopped
+nginx                      started mothule /Users/mothule/Library/LaunchAgents/homebrew.mxcl.nginx.plist
+php                        started mothule /Users/mothule/Library/LaunchAgents/homebrew.mxcl.php.plist
+postgresql                 started mothule /Users/mothule/Library/LaunchAgents/homebrew.mxcl.postgresql.plist
+redis                      started mothule /Users/mothule/Library/LaunchAgents/homebrew.mxcl.redis.plist
+selenium-server-standalone started mothule /Users/mothule/Library/LaunchAgents/homebrew.mxcl.selenium-server-standalone.plist
 </code></pre></div></div>
 
-<p>今度は結果が空になりました。これはインストール済みパッケージには、<strong><code class="highlighter-rouge">rbenv</code>を使ったパッケージがないことを表しています。</strong></p>
+<h3 id="services-stopコマンド">services stopコマンド</h3>
+<p>Syntax: <code class="highlighter-rouge">brew services stop formula</code></p>
 
-<h2 id="brewの依存関係を確認できるコマンド整理">brewの依存関係を確認できるコマンド整理</h2>
+<p>自動起動を解除します。</p>
 
-<p>「依存してる」「依存されてる」と「brew deps」「brew uses」ちょっと混乱してしまい、実際に使う時に「どっちがどっちだっけ？」なりそうです。<br />
-なので最後に整理します。</p>
+<p>先程のnginxの自動起動を止めた場合です。</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>目的</th>
-      <th>コマンド</th>
-      <th>便利なオプション</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>何が入ってる？</td>
-      <td><code class="highlighter-rouge">brew ls</code></td>
-      <td><code class="highlighter-rouge">-l</code></td>
-    </tr>
-    <tr>
-      <td>これ誰が使ってる？</td>
-      <td><code class="highlighter-rouge">brew uses</code></td>
-      <td><code class="highlighter-rouge">--installed</code></td>
-    </tr>
-    <tr>
-      <td>これ何が必要？</td>
-      <td><code class="highlighter-rouge">brew deps</code></td>
-      <td><code class="highlighter-rouge">--tree</code></td>
-    </tr>
-  </tbody>
-</table>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew services stop nginx
+Stopping <span class="sb">`</span>nginx<span class="sb">`</span>... <span class="o">(</span>might take a <span class="k">while</span><span class="o">)</span>
+<span class="o">==&gt;</span> Successfully stopped <span class="sb">`</span>nginx<span class="sb">`</span> <span class="o">(</span>label: homebrew.mxcl.nginx<span class="o">)</span>
+</code></pre></div></div>
 
-<h3 id="最後にpackageではなくformula">最後にPackageではなくFormula</h3>
-<p>最後に、パッケージ(package)という用語で説明していますが、HomebrewではパッケージではなくFormula(フォーミュラ)といいます。製法・調合法という意味です。Homebrew(home-brew)が自家醸造酒という意味なのでビール製法って意味ですね。</p>
+<h3 id="services-runコマンド">services runコマンド</h3>
+<p>Syntax: <code class="highlighter-rouge">brew services run formula</code></p>
 
-<p>Homebrewに不慣れな方は、パッケージという用語で検索が多いのでニーズに合わせてこちらの用語を使いました。</p>
+<p>自動起動の登録せずにサービスとして起動します。</p>
+
+<h2 id="homebrew-caskでguiアプリの制御">Homebrew caskでGUIアプリの制御</h2>
+<p>紹介したコマンドに<code class="highlighter-rouge">brew</code>とコマンドの間に<code class="highlighter-rouge">cask</code>を入れるとGUIアプリケーションの制御となります。<br />
+caskとはお酒を入れる木製の大樽です。</p>
+
+<p>Syntax: <code class="highlighter-rouge">brew cask commands ...</code></p>
+
+<p>つまりこういうことです。</p>
+
+<ul>
+  <li><code class="highlighter-rouge">brew cask search formula</code></li>
+  <li><code class="highlighter-rouge">brew cask info formula</code></li>
+  <li><code class="highlighter-rouge">brew cask install formula</code></li>
+  <li><code class="highlighter-rouge">brew cask list</code> or <code class="highlighter-rouge">ls</code></li>
+  <li><code class="highlighter-rouge">brew cask uninstall</code></li>
+  <li><code class="highlighter-rouge">brew cask outdated</code></li>
+  <li><code class="highlighter-rouge">brew cask upgrade</code></li>
+</ul>
+
+<h2 id="keg-onlyとは">keg-onlyとは</h2>
+<p>時折brew infoなどで<code class="highlighter-rouge">keg-only</code>という単語を見かけます。</p>
+
+<p>例えば<code class="highlighter-rouge">brew info mysql@5.6</code>にも<code class="highlighter-rouge">key-only</code>とあります。
+これは大抵が上書きリスクのあるformulaについてます。
+例えばMacに標準インストールされているコマンドのGNU版などです。</p>
+
+<p>これはインストールして<code class="highlighter-rouge">/usr/local/Celler</code>に配置まではしたが、<br />
+<code class="highlighter-rouge">/usr/local/bin</code>へシンボリックリンクを繋いでいない状態です。</p>
+
+<p><code class="highlighter-rouge">brew link</code>することでリンクされて使えるようになります。<br />
+しかし、既存コマンドのパスが変わる可能性が高いので、慎重に行うことを推奨します。</p>
+
+<h2 id="formulaが見つからない">formulaが見つからない</h2>
+<p>手元のhomebrewが古い可能性があります。<br />
+<code class="highlighter-rouge">brew update</code>で更新することで見つかるかもしれません。</p>
+
+<p>しかし、手元の古いバージョンは破棄することがあるので、<br />
+今まで偶然残っていたお陰で動いてたコマンドがバージョンが最新のみになったことでパスが通らなくなり知らぬところでエラーが発生することもあるので注意が必要です。</p>
+
+<h2 id="再インストール">再インストール</h2>
+<p>インストール済みのソフトウェアが何かの拍子におかしくなった場合、<br />
+再インストールを促されることがあります。<br />
+Homebrewの場合は<code class="highlighter-rouge">brew reinstall</code>コマンドがあります。</p>
+
+<h2 id="tapってコマンドが出てきた">tapってコマンドが出てきた</h2>
+<p>デフォルトのformula一覧とは別の場所からformulaを取ってきたい場合に使うコマンドです。<br />
+この<code class="highlighter-rouge">tap</code>コマンドを使うことでタップした先からもformulaをインストールすることが出来ます。<br />
+<code class="highlighter-rouge">tap</code>とは蛇口です。樽に蛇口を差し込んだイメージが丁度いいです。</p>
+
+<h2 id="基本は簡単だけど運用は難しい">基本は簡単だけど運用は難しい</h2>
+<p>Homebrewの説明は以上です。ある程度網羅かつシンプルな説明にはなっていますが、
+実際に使っていくと最初はよくても後半の方で色々とformulaの依存関係が衝突を起こしたりして
+自力で解決を迫られることが多くあります。
+<strong>何気なくbrew upgrade</strong> を実行したら色々なformulaが最新化されて、<br />
+それを使ってた物が動かなくなるなんてことは普通にあります…</p>
+
+<ul>
+  <li>OpenSSLのバージョンが変わって旧バージョンのパスが消えたRubyが動かなくなる「<span><a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a></span>
+」</li>
+  <li>readlineの更新でtigが動かなくなった「<span><a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a></span>
+」</li>
+</ul>
+
+<p>など他にも記事にはしてませんが、Pythonのバージョンにより<a href="https://blog.mothule.com/tools/httpie/recommend-httpie">HTTPie</a>が動かなくなる件など。</p>
+
+<p>brewは便利なパッケージ管理マネージャーですが、扱っているパッケージ(コマンド)のインストール先や呼び出される仕組みを理解しておかないと、
+シェルコマンドはパスという糸つなぎのようなものなので、自力で追いかけられなくなります。</p>
 
   </section>
 
@@ -428,499 +535,499 @@ rbenv-bundle-exec                 rbenv-chefdk                      rbenv-defaul
                 
                 
                 
-                    <li><h3><a href="/mac/homebrew/mac-homebrew-basic">MacのHomebrewとは？仕組み・使い方と用語整理</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/mac/homebrew/mac-homebrew-uses-installed">Homebrewのpackage依存関係を確認する</a></h3></li>
                     
                     
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
                 
 
             
