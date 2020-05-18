@@ -8,38 +8,36 @@
 
 
 
-  <meta name="robots" content="noindex, follow" />
 
 
 
-
-  <title>エンジニアの勉強モチベーション上がるおすすめ映画 - もちゅろぐ</title>
+  <title>ln -sでシンボリックリンクを作る - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="エンジニアの勉強モチベーション上がるおすすめ映画" />
+<meta property="og:title" content="ln -sでシンボリックリンクを作る" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="エンジニアが仕事に疲れて息抜きする映画や、ちょっとやる気がなくて勉強のモチベーション低下してるときに見るとやる気が出てきてモチベーションを回復できるおすすめ映画や海外ドラマについて紹介しています。どれもAmazon Primeで見れて無料で見れる映画もあります。" />
-<meta property="og:description" content="エンジニアが仕事に疲れて息抜きする映画や、ちょっとやる気がなくて勉強のモチベーション低下してるときに見るとやる気が出てきてモチベーションを回復できるおすすめ映画や海外ドラマについて紹介しています。どれもAmazon Primeで見れて無料で見れる映画もあります。" />
-<link rel="canonical" href="https://blog.mothule.com/notebook/notebook-recommended-movies-for-engineers" />
-<meta property="og:url" content="https://blog.mothule.com/notebook/notebook-recommended-movies-for-engineers" />
+<meta name="description" content="lnコマンドで-sオプションを使いシンボリックリンクを作る方法と作成されたか確認する方法、不要になったシンボリックリンクをunlinkで解除する方法についてまとめた記事。" />
+<meta property="og:description" content="lnコマンドで-sオプションを使いシンボリックリンクを作る方法と作成されたか確認する方法、不要になったシンボリックリンクをunlinkで解除する方法についてまとめた記事。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/ln/tools-ln-guide" />
+<meta property="og:url" content="https://blog.mothule.com/tools/ln/tools-ln-guide" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-29-notebook-recommended-movies-for-engineers.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-09-29T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-18T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/notebook/notebook-recommended-movies-for-engineers","headline":"エンジニアの勉強モチベーション上がるおすすめ映画","dateModified":"2020-04-19T20:55:47+09:00","datePublished":"2019-09-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/notebook/notebook-recommended-movies-for-engineers"},"image":"https://blog.mothule.com/assets/images/2019-09-29-notebook-recommended-movies-for-engineers.png","description":"エンジニアが仕事に疲れて息抜きする映画や、ちょっとやる気がなくて勉強のモチベーション低下してるときに見るとやる気が出てきてモチベーションを回復できるおすすめ映画や海外ドラマについて紹介しています。どれもAmazon Primeで見れて無料で見れる映画もあります。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/ln/tools-ln-guide","headline":"ln -sでシンボリックリンクを作る","dateModified":"2020-05-18T20:02:14+09:00","datePublished":"2020-05-18T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/ln/tools-ln-guide"},"image":"https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png","description":"lnコマンドで-sオプションを使いシンボリックリンクを作る方法と作成されたか確認する方法、不要になったシンボリックリンクをunlinkで解除する方法についてまとめた記事。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="エンジニアの勉強モチベーション上がるおすすめ映画">
-<meta name="twitter:description" content="エンジニアが仕事に疲れて息抜きする映画や、ちょっとやる気がなくて勉強のモチベーション低下してるときに見るとやる気が出てきてモチベーションを回復できるおすすめ映画や海外ドラマについて紹介しています。どれもAmazon Primeで見れて無料で見れる映画もあります。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-29-notebook-recommended-movies-for-engineers.png">
+<meta name="twitter:title" content="ln -sでシンボリックリンクを作る">
+<meta name="twitter:description" content="lnコマンドで-sオプションを使いシンボリックリンクを作る方法と作成されたか確認する方法、不要になったシンボリックリンクをunlinkで解除する方法についてまとめた記事。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -129,8 +127,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#notebook" itemprop="item">
-              <span itemprop="name">雑記</span>
+            <a href="/tags#tools" itemprop="item">
+              <span itemprop="name">ツール</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -138,8 +136,18 @@
       
         
         
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ln" itemprop="item">
+              <span itemprop="name">lnコマンド</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
           <li>
-            エンジニアの勉強モチベーション上がるおすすめ映画
+            ln -sでシンボリックリンクを作る
           </li>
         
       
@@ -151,23 +159,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-29-notebook-recommended-movies-for-engineers.png" alt="エンジニアの勉強モチベーション上がるおすすめ映画">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-18-tools-ln-guide/0.png" alt="ln -sでシンボリックリンクを作る">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>エンジニアの勉強モチベーション上がるおすすめ映画</h1>
+    <h1>ln -sでシンボリックリンクを作る</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
+            <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#ln">lnコマンド</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-9-29</time></span>
+        <span"><time class="post-date">2020-5-18</time></span>
       </div>
     </div>
   </header>
@@ -175,178 +185,41 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#エンジニア息抜きやモチベ回復映画">エンジニア息抜きやモチベ回復映画</a></li>
-  <li><a href="#エンジニアなら絶対見るべき映画はシリコンバレー">エンジニアなら絶対見るべき映画はシリコンバレー</a>
-    <ul>
-      <li><a href="#見どころここが面白い">見どころ・ここが面白い</a></li>
-      <li><a href="#ストーリーとコメント">ストーリーとコメント</a></li>
-    </ul>
-  </li>
-  <li><a href="#エンジニア息抜きには丁度いいインターンシップ">エンジニア息抜きには丁度いい！インターンシップ</a>
-    <ul>
-      <li><a href="#見どころここが面白い-1">見どころ・ここが面白い</a></li>
-      <li><a href="#ストーリーとコメント-1">ストーリーとコメント</a></li>
-    </ul>
-  </li>
-  <li><a href="#かなり設定がリアルならmrrobotミスターロボット">かなり設定がリアルならMR.ROBOT(ミスター・ロボット)</a>
-    <ul>
-      <li><a href="#見どころここが面白い-2">見どころ・ここが面白い</a></li>
-      <li><a href="#ストーリーとコメント-2">ストーリーとコメント</a></li>
-    </ul>
-  </li>
-  <li><a href="#紹介した作品はamazonで見れます">紹介した作品はAmazonで見れます</a></li>
-  <li><a href="#エンジニアにはおすすめしない映画">エンジニアにはおすすめしない映画</a>
-    <ul>
-      <li><a href="#betasベータス">betas(ベータス)</a>
-        <ul>
-          <li><a href="#ここがダメ萎えた">ここがダメ・萎えた</a></li>
-        </ul>
-      </li>
-      <li><a href="#ストーリーとコメント-3">ストーリーとコメント</a></li>
-    </ul>
-  </li>
-  <li><a href="#エンジニアにも息抜きやモチベ制御は大切">エンジニアにも息抜きやモチベ制御は大切</a></li>
+  <li><a href="#ln--sでシンボリックリンクを構築">ln -sでシンボリックリンクを構築</a></li>
+  <li><a href="#ls--lでシンボリックを確認">ls -lでシンボリックを確認</a></li>
+  <li><a href="#unlinkでシンボリックリンクを解除">unlinkでシンボリックリンクを解除</a></li>
 </ul>
   </div>
   <section>
-  <p>映画やドラマ作中にPC画面を操作するシーンがあると「お」ってなりますね。私もです。</p>
+  <p>Windowsでいうショートカットに似た何か。</p>
 
-<p>ほぼ8割〜9割が「そんなわけない」「そんなグラフィカルいらんやろ」とかツッコミ満載でそれ逆に一つの一興になってたりします。
-またセリフがエンジニアのやり取りであるあるだと「ふっｗ」って鼻で笑ってしまいませんか？<br />
-おそらく本物の医者や警察官も国内のドクター系や刑事系のドラマを見て同じ気持ちでしょうね。</p>
+<h2 id="ln--sでシンボリックリンクを構築">ln -sでシンボリックリンクを構築</h2>
 
-<p>しかしそんな中でも、あるあるネタや知っているIT企業が出たりして息抜きは丁度よい映画や結構設定がしっかりして見てたら自分も勉強やアプリ開発などに取り掛かりたくなるモチベーション上がる映画もあったりします。</p>
+<p>Syntax: <code class="highlighter-rouge">ln -s リンク対象パス リンク作成先のディレクトリパス</code></p>
 
-<p>この記事では自分が見たエンジニアが関係する面白かった映画や海外ドラマを紹介します。<br />
-この記事を書いたきっかけは単純に面白くて共有したかっただけです。また自分が見た中で面白かった物のみなので数は少ないです。</p>
+<p>自分の中で「リンク」ってワードが邪魔して<br />
+src/destどっちがどっちか分からなくなることが頻発する。</p>
 
-<h2 id="エンジニア息抜きやモチベ回復映画">エンジニア息抜きやモチベ回復映画</h2>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ln <span class="nt">-s</span> ~/オレの/最強の/凄いコマンド /usr/local/bin/
+</code></pre></div></div>
 
-<ul>
-  <li>SILICON VALLEY(シリコンバレー)</li>
-  <li>MR.ROBOT(ミスター・ロボット)</li>
-  <li>インターンシップ</li>
-</ul>
+<h2 id="ls--lでシンボリックを確認">ls -lでシンボリックを確認</h2>
 
-<p>たった３つしか紹介できないですが、この３つは厳選してるため間違いなく面白いと思います。</p>
+<p>シンボリックリンクはファイル名とリンク先が「<code class="highlighter-rouge">name -&gt; original path</code>」形式で表示されます。</p>
 
-<h2 id="エンジニアなら絶対見るべき映画はシリコンバレー">エンジニアなら絶対見るべき映画はシリコンバレー</h2>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ln <span class="nt">-s</span> ~/オレの/最強の/凄いコマンド /usr/local/bin/
+<span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> /usr/local/bin/
+凄いコマンド -&gt; ~/オレの/最強の/凄いコマンド
+</code></pre></div></div>
 
-<p><a href="https://www.amazon.co.jp/%E5%AE%9F%E7%94%A8%E6%9C%80%E5%B0%8F%E9%99%90%E3%81%AE%E8%A3%BD%E5%93%81/dp/B077TK3HK9/ref=as_li_ss_il?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&amp;keywords=silicon+valley&amp;qid=1569695699&amp;s=instant-video&amp;sr=1-1&amp;linkCode=li3&amp;tag=mothule05-22&amp;linkId=8961949b3e79c7aed19fbfc37e589848&amp;language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;ASIN=B077TK3HK9&amp;Format=_SL250_&amp;ID=AsinImage&amp;MarketPlace=JP&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=mothule05-22&amp;language=ja_JP" /></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=mothule05-22&amp;language=ja_JP&amp;l=li3&amp;o=9&amp;a=B077TK3HK9" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br />
-↑画像タップすればPrime詳細ページに飛んですぐ見れます！</p>
+<h2 id="unlinkでシンボリックリンクを解除">unlinkでシンボリックリンクを解除</h2>
 
-<h3 id="見どころここが面白い">見どころ・ここが面白い</h3>
+<p>Syntax: <code class="highlighter-rouge">unlink シンボリックのパス</code></p>
 
-<ul>
-  <li>実際にスタートアップ企業でありそうな雰囲気や言葉の投げあいや資金繰り</li>
-  <li>vimとemacsの派閥争いのようなネタや専門用語の登場</li>
-  <li>個性濃いメンバーとパロディ</li>
-  <li>話が分岐して同時進行しつつ集約したときの面白さ</li>
-</ul>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>unlink /usr/local/bin/使い物にならない自作コマンド
+</code></pre></div></div>
 
-<p><strong>おすすめ度：★★★★★</strong></p>
-
-<h3 id="ストーリーとコメント">ストーリーとコメント</h3>
-<p><strong>まずはコレ！とにかくコレ！</strong></p>
-
-<p>オタクな主人公が起業しスタートアップ会社のSEOとして働きながら、VC(ベンチャーキャピタル)から資金集めしたり、コンペに参加するために奮闘するが、若さゆえの過ちを犯した結果、ドタバタになりつつもに進むコメディ・ドラマです。</p>
-
-<p>海外ドラマになっており、執筆現在シーズン1からシーズン5までAmazon Prime会員なら無料見ることができます。</p>
-
-<p>エンジニアなら絶対知ってるネタやシリコンバレーでのスタートアップってこんな感じなんだろうなーといった雰囲気を楽しめたり、個性際立つメンバー同士のやりとりがハマります。</p>
-
-<p>最初は「なんだか大変そうだなー」と見てて少し疲れるなと感じますが、気づいたらあっという間にシーズン1を見終わってます。</p>
-
-<h2 id="エンジニア息抜きには丁度いいインターンシップ">エンジニア息抜きには丁度いい！インターンシップ</h2>
-
-<p><a href="https://www.amazon.co.jp/%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%83%E3%83%97-%E5%AD%97%E5%B9%95%E7%89%88-%E3%83%B4%E3%82%A3%E3%83%B3%E3%82%B9%E3%83%BB%E3%83%9C%E3%83%BC%E3%83%B3/dp/B00UMBA7FA/ref=as_li_ss_il?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&amp;keywords=%E3%82%A4%E3%83%B3%E3%82%BF%E3%83%BC%E3%83%B3%E3%82%B7%E3%83%83%E3%83%97&amp;qid=1569696109&amp;s=instant-video&amp;sr=1-1&amp;linkCode=li3&amp;tag=mothule05-22&amp;linkId=3a9b9cef7fadf80c78f983c3945e037f&amp;language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;ASIN=B00UMBA7FA&amp;Format=_SL250_&amp;ID=AsinImage&amp;MarketPlace=JP&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=mothule05-22&amp;language=ja_JP" /></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=mothule05-22&amp;language=ja_JP&amp;l=li3&amp;o=9&amp;a=B00UMBA7FA" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br />
-↑画像タップすればPrime詳細ページに飛んですぐ見れます！</p>
-
-<h3 id="見どころここが面白い-1">見どころ・ここが面白い</h3>
-
-<ul>
-  <li>Googleのオフィスをロケーションにしてる</li>
-  <li>主役二人のコメディ全開</li>
-</ul>
-
-<p><strong>おすすめ度：★★★★</strong></p>
-
-<h3 id="ストーリーとコメント-1">ストーリーとコメント</h3>
-<p>ITリテラシー皆無の主人公二人が超大手Googleにインターンに参加して、6つの難題を解決して社員を目指す人生逆転ゲーム。
-なぜ彼らは何も分からないのにインターン面接に合格したのか？<br />
-どうやって彼らは難題に立ち向かい解決したのか？<br />
-その答えは見れば分かります！</p>
-
-<h2 id="かなり設定がリアルならmrrobotミスターロボット">かなり設定がリアルならMR.ROBOT(ミスター・ロボット)</h2>
-
-<p><a href="https://www.amazon.co.jp/%EF%BC%91%E3%81%8B%E3%82%BC%E3%83%AD%E3%81%8B/dp/B015NZFICG/ref=as_li_ss_il?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&amp;keywords=mr.robot&amp;qid=1569696313&amp;s=instant-video&amp;sr=1-1&amp;linkCode=li3&amp;tag=mothule05-22&amp;linkId=888454bd0fdf0cd1a94c71515d1505e5&amp;language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;ASIN=B015NZFICG&amp;Format=_SL250_&amp;ID=AsinImage&amp;MarketPlace=JP&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=mothule05-22&amp;language=ja_JP" /></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=mothule05-22&amp;language=ja_JP&amp;l=li3&amp;o=9&amp;a=B015NZFICG" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /><br />
-↑画像タップすればPrime詳細ページに飛んですぐ見れます！</p>
-
-<h3 id="見どころここが面白い-2">見どころ・ここが面白い</h3>
-
-<ul>
-  <li>PC画面シーンが多い</li>
-  <li>使われてるツールや言語が本物</li>
-  <li>本物のハッカーっぽい（厳密にはクラッカーですが)</li>
-  <li>セリフの専門用語がデタラメじゃない</li>
-  <li>PCスキル以外が全然ダメ故にPC触らせたときの天才ぶりにワキワキする</li>
-</ul>
-
-<p><strong>おすすめ度：★★★★★</strong></p>
-
-<h3 id="ストーリーとコメント-2">ストーリーとコメント</h3>
-
-<p>主人公がプログラマーで、喋り相手は主に脳内再生。普段はセキュリティ会社で働いているが、夜はハッカーとして他人にハッキングして不正を暴き正義を守る顔を持つ。そんな主人公がハッカー集団に誘われ大きな策略に巻き込まれていくドラマ。</p>
-
-<p>主人公が抱える闇をじっくりと明らかになりつつも、主人公を取り巻く環境もそれぞれ話が進み、絡んだり離れたり、終わったと思った話題がまた絡んだり、なんの進展もなさそうな絡みから主人公の闇が一気に明らかになったりと、本当に話の組み立てが上手です。</p>
-
-<p>そして実際にハッキングするにしても、映画でよくあるPC上で完結キーボードを「タカタカタンッ」ってグラフィカルがハッキング表示や完了表示などが出ることはなく、本当に地道に実際にやる上で現実的な問題を本当に現実的な行動で解決しています。</p>
-
-<h2 id="紹介した作品はamazonで見れます">紹介した作品はAmazonで見れます</h2>
-<p>回し者みたいな書き方ですが、まぁみんながAmazonで見てくれれば、それだけ面白い映画が増えてくれるので、回し者といえば回し者です。</p>
-
-<p>エンジニアとしてずっと仕事や勉強をしてると疲れますし、ちょっと息抜きで始めたゲームが面白くて沼にハマり勉強が進まなくなった人にはぜひおすすめの作品となっています。</p>
-
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=mothule05-22&amp;language=ja_JP&amp;o=9&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B077TK3HK9&amp;linkId=3ce21c80da61f87bc1e4ce2c4140ed69"></iframe>
-
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=mothule05-22&amp;language=ja_JP&amp;o=9&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B00UMBA7FA&amp;linkId=815eb89e13b32b7a5f48d3f51d64a71d"></iframe>
-
-<iframe style="width:120px;height:240px;" marginwidth="0" marginheight="0" scrolling="no" frameborder="0" src="//rcm-fe.amazon-adsystem.com/e/cm?lt1=_blank&amp;bc1=000000&amp;IS2=1&amp;bg1=FFFFFF&amp;fc1=000000&amp;lc1=0000FF&amp;t=mothule05-22&amp;language=ja_JP&amp;o=9&amp;p=8&amp;l=as4&amp;m=amazon&amp;f=ifr&amp;ref=as_ss_li_til&amp;asins=B015NZFICG&amp;linkId=b64efff5aa4cd8c218f7ece21351f29a"></iframe>
-
-<p>なんか「今すぐ購入」って書いてますが、インターンシップ以外はPrimeなら無料ですし、インターンシップも数百円で見れます。</p>
-
-<h2 id="エンジニアにはおすすめしない映画">エンジニアにはおすすめしない映画</h2>
-
-<p>反対にこれはつまらないな。営業や企画が考えたようなエンジニアが出る映画だなと萎える映画もありました。</p>
-
-<p>面白くなくて全部見ずにやめたのは書いていません。
-なので少ないです。</p>
-
-<ul>
-  <li>betas(ベータス)</li>
-</ul>
-
-<h3 id="betasベータス">betas(ベータス)</h3>
-
-<p><a href="https://www.amazon.co.jp/%E5%87%BA%E4%BC%9A%E3%81%84%E3%81%AF%E3%82%A2%E3%83%97%E3%83%AA%E2%80%9C%EF%BC%A2%EF%BC%B2%EF%BC%A2%E2%80%9D/dp/B00MF7DEHC/ref=as_li_ss_il?__mk_ja_JP=%E3%82%AB%E3%82%BF%E3%82%AB%E3%83%8A&amp;keywords=betas&amp;qid=1569697265&amp;s=instant-video&amp;sr=1-1&amp;linkCode=li3&amp;tag=mothule05-22&amp;linkId=03cfbdea28dcdfe75cbcec19b08d94aa&amp;language=ja_JP" target="_blank"><img border="0" src="//ws-fe.amazon-adsystem.com/widgets/q?_encoding=UTF8&amp;ASIN=B00MF7DEHC&amp;Format=_SL250_&amp;ID=AsinImage&amp;MarketPlace=JP&amp;ServiceVersion=20070822&amp;WS=1&amp;tag=mothule05-22&amp;language=ja_JP" /></a><img src="https://ir-jp.amazon-adsystem.com/e/ir?t=mothule05-22&amp;language=ja_JP&amp;l=li3&amp;o=9&amp;a=B00MF7DEHC" width="1" height="1" border="0" alt="" style="border:none !important; margin:0px !important;" /></p>
-
-<h4 id="ここがダメ萎えた">ここがダメ・萎えた</h4>
-
-<ul>
-  <li>コメディでもシリアスでもない</li>
-  <li>色恋沙汰ばかり</li>
-  <li>世界観が嘘っぱい</li>
-  <li>技術の話が出そうで出ない</li>
-  <li>週刊少年ジャンプ感満載</li>
-</ul>
-
-<h3 id="ストーリーとコメント-3">ストーリーとコメント</h3>
-
-<p>主人公たちがVCから資金融資を受けるためにパーティに参加してエンジェル投資家に事業説明をしたり、シェアオフィスでサービスローンチのために奮闘するドラマ。</p>
-
-<h2 id="エンジニアにも息抜きやモチベ制御は大切">エンジニアにも息抜きやモチベ制御は大切</h2>
-
-<p>さきほどAmazonの回し者みたいな感じで紹介しといて、Amazonオリジナルを完全否定というよく分からん感じになってしまっていますが、紹介したおすすめ映画はぜひ見て欲しいです。</p>
+<p>せめて<code class="highlighter-rouge">ln -d</code>とかにしてほしかったな。</p>
 
   </section>
 
