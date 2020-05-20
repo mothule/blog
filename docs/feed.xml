@@ -1,32 +1,72 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-19T04:51:08+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">ln -sでシンボリックリンクを作る</title><link href="https://blog.mothule.com/tools/ln/tools-ln-guide" rel="alternate" type="text/html" title="ln -sでシンボリックリンクを作る" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T20:02:14+09:00</updated><id>https://blog.mothule.com/tools/ln/tools-ln-guide</id><content type="html" xml:base="https://blog.mothule.com/tools/ln/tools-ln-guide">&lt;p&gt;Windowsでいうショートカットに似た何か。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-20T20:25:44+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">XcodeをApp Storeからダウンロードせず旧バージョンと共存させる</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-dl-old-version" rel="alternate" type="text/html" title="XcodeをApp Storeからダウンロードせず旧バージョンと共存させる" /><published>2020-05-20T00:00:00+09:00</published><updated>2020-05-20T20:25:16+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-dl-old-version</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-dl-old-version">&lt;p&gt;プログラマーにとって最新版のみを最短で追従するのはリスキーです。&lt;/p&gt;
 
-&lt;h2 id=&quot;ln--sでシンボリックリンクを構築&quot;&gt;ln -sでシンボリックリンクを構築&lt;/h2&gt;
+&lt;h2 id=&quot;旧バージョンのxcodeが必要な理由&quot;&gt;旧バージョンのXcodeが必要な理由&lt;/h2&gt;
+&lt;p&gt;Xcodeはバージョン毎にSwiftの最低バージョンやiOSの最低バージョンが決まっており、
+最新のバージョンだけだと、hotfix版のために古いSwiftバージョンなど直したいときにビルドが通らなくなるためです。&lt;/p&gt;
 
-&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;ln -s リンク対象パス リンク作成先のディレクトリパス&lt;/code&gt;&lt;/p&gt;
+&lt;h3 id=&quot;例&quot;&gt;例&lt;/h3&gt;
 
-&lt;p&gt;自分の中で「リンク」ってワードが邪魔して&lt;br /&gt;
-src/destどっちがどっちか分からなくなることが頻発する。&lt;/p&gt;
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;リリース日&lt;/th&gt;
+      &lt;th&gt;App ver&lt;/th&gt;
+      &lt;th&gt;Xcode ver&lt;/th&gt;
+      &lt;th&gt;Swift ver&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;1ヶ月前&lt;/td&gt;
+      &lt;td&gt;1.0&lt;/td&gt;
+      &lt;td&gt;10.3&lt;/td&gt;
+      &lt;td&gt;4.3&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;開発中&lt;/td&gt;
+      &lt;td&gt;1.1&lt;/td&gt;
+      &lt;td&gt;11.0&lt;/td&gt;
+      &lt;td&gt;5.0&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;アプリリース後にXcodeのバージョンを上げて、Swiftのバージョンアップ対応をしていたら、&lt;br /&gt;
+最新リリース版で緊急のクラッシュバグが発生しました。&lt;br /&gt;
+緊急のため開発中ブランチは一旦止めて、リリース版のrevisionから新しいブランチを切ってhotfix版としてリリースします。&lt;br /&gt;
+しかしリリース版は、Xcode/Swiftバージョンが今より古いバージョンでリリースしたものです。&lt;br /&gt;
+そのため、新しいバージョンではAPIが変わってたり、言語構文が変わったりしてビルドが通りません。&lt;/p&gt;
 
-&lt;h2 id=&quot;ls--lでシンボリックを確認&quot;&gt;ls -lでシンボリックを確認&lt;/h2&gt;
+&lt;p&gt;このように最新版のXcodeだけだと、開発環境を再現ができないリスクがあります。&lt;/p&gt;
 
-&lt;p&gt;シンボリックリンクはファイル名とリンク先が「&lt;code class=&quot;highlighter-rouge&quot;&gt;name -&amp;gt; original path&lt;/code&gt;」形式で表示されます。&lt;/p&gt;
+&lt;h2 id=&quot;app-storeからダウンロードしないほうがいい理由&quot;&gt;App Storeからダウンロードしないほうがいい理由&lt;/h2&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; /usr/local/bin/
-凄いコマンド -&amp;gt; ~/オレの/最強の/凄いコマンド
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;Xcode.appを一つしか使えなくなるためです。&lt;/p&gt;
 
-&lt;h2 id=&quot;unlinkでシンボリックリンクを解除&quot;&gt;unlinkでシンボリックリンクを解除&lt;/h2&gt;
+&lt;p&gt;バージョンアップは手軽ですが、古いバージョンと最新バージョンをApplicationフォルダに共存させれなくなります。&lt;/p&gt;
 
-&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;unlink シンボリックのパス&lt;/code&gt;&lt;/p&gt;
+&lt;h2 id=&quot;古いxcodeバージョンをダウンロードする&quot;&gt;古いXcodeバージョンをダウンロードする&lt;/h2&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;unlink /usr/local/bin/使い物にならない自作コマンド
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;a href=&quot;https://developer.apple.com/download/more/&quot;&gt;More Downloads for Apple Developers&lt;/a&gt;(要ログイン)から過去バージョンをダウンロードできます。
+また過去だけでなく最新バージョンやGM Seed版もダウンロードできます。&lt;/p&gt;
 
-&lt;p&gt;せめて&lt;code class=&quot;highlighter-rouge&quot;&gt;ln -d&lt;/code&gt;とかにしてほしかったな。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ln" /><summary type="html">Windowsでいうショートカットに似た何か。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png" /></entry><entry><title type="html">ターミナルからRubyMineを起動、比較、マージなどする</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal" rel="alternate" type="text/html" title="ターミナルからRubyMineを起動、比較、マージなどする" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T18:36:28+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal">&lt;p&gt;RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。&lt;/p&gt;
+&lt;p&gt;xipファイルを解凍後はXcode.appをApplicationフォルダに移動する前に、既存のXcode.appをリネームさせます。&lt;br /&gt;
+リネーム先は何でもいいですが、自分はバージョン番号をつけてます。&lt;/p&gt;
+
+&lt;p&gt;既存バージョンが11.2.1だったら &lt;code class=&quot;highlighter-rouge&quot;&gt;Xcode.app&lt;/code&gt; → &lt;code class=&quot;highlighter-rouge&quot;&gt;Xcode11.2.1.app&lt;/code&gt;にリネームする。&lt;/p&gt;
+
+&lt;p&gt;その後最新版Xcode.appをApplicationフォルダに移動させることで、最新版と旧版を共存させることができます。&lt;/p&gt;
+
+&lt;p&gt;何世代まで残しておくかは自分が取り掛かっている案件特性に応じて計画してください。&lt;br /&gt;
+私の今の環境では、1つ前のバージョンしか保持していません。&lt;br /&gt;
+前の環境では、3つほど保持していました。&lt;/p&gt;
+
+&lt;h2 id=&quot;まとめ&quot;&gt;まとめ&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;App Storeではなく&lt;a href=&quot;https://developer.apple.com/download/more/&quot;&gt;More Downloads for Apple Developers&lt;/a&gt;からダウンロードする&lt;/li&gt;
+  &lt;li&gt;古いXcode.appはリネームして何世代か持っておく&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="mac" /><summary type="html">プログラマーにとって最新版のみを最短で追従するのはリスキーです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-20-ios-xcode-dl-old-version/0.png" /></entry><entry><title type="html">ターミナルからRubyMineを起動、比較、マージなどする</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal" rel="alternate" type="text/html" title="ターミナルからRubyMineを起動、比較、マージなどする" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T18:36:28+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal">&lt;p&gt;RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。&lt;/p&gt;
 
 &lt;h2 id=&quot;ターミナルからrubymineで開く&quot;&gt;ターミナルからRubyMineで開く&lt;/h2&gt;
 
@@ -162,7 +202,35 @@ end
 もし渡せたら重いp4mergeとはオサラバです。&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://www.jetbrains.com/help/ruby/working-with-the-ide-features-from-command-line.html&quot;&gt;RubyMine - Command-line interface&lt;/a&gt;を参考にしてあります。
-なお公式記事内では &lt;code class=&quot;highlighter-rouge&quot;&gt;inspect&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt; となっています。&lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt;では動かなかったので多分タイポです。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><summary type="html">RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png" /></entry><entry><title type="html">MacのHomebrewとは？仕組み・使い方と用語整理</title><link href="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic" rel="alternate" type="text/html" title="MacのHomebrewとは？仕組み・使い方と用語整理" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-19T00:46:04+09:00</updated><id>https://blog.mothule.com/mac/homebrew/mac-homebrew-basic</id><content type="html" xml:base="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic">&lt;p&gt;便利だけど穴にハマると痛い目見て詰むパッケージ管理マネージャーです。&lt;/p&gt;
+なお公式記事内では &lt;code class=&quot;highlighter-rouge&quot;&gt;inspect&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt; となっています。&lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt;では動かなかったので多分タイポです。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><summary type="html">RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png" /></entry><entry><title type="html">ln -sでシンボリックリンクを作る</title><link href="https://blog.mothule.com/tools/ln/tools-ln-guide" rel="alternate" type="text/html" title="ln -sでシンボリックリンクを作る" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T20:02:14+09:00</updated><id>https://blog.mothule.com/tools/ln/tools-ln-guide</id><content type="html" xml:base="https://blog.mothule.com/tools/ln/tools-ln-guide">&lt;p&gt;Windowsでいうショートカットに似た何か。&lt;/p&gt;
+
+&lt;h2 id=&quot;ln--sでシンボリックリンクを構築&quot;&gt;ln -sでシンボリックリンクを構築&lt;/h2&gt;
+
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;ln -s リンク対象パス リンク作成先のディレクトリパス&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;自分の中で「リンク」ってワードが邪魔して&lt;br /&gt;
+src/destどっちがどっちか分からなくなることが頻発する。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ls--lでシンボリックを確認&quot;&gt;ls -lでシンボリックを確認&lt;/h2&gt;
+
+&lt;p&gt;シンボリックリンクはファイル名とリンク先が「&lt;code class=&quot;highlighter-rouge&quot;&gt;name -&amp;gt; original path&lt;/code&gt;」形式で表示されます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; /usr/local/bin/
+凄いコマンド -&amp;gt; ~/オレの/最強の/凄いコマンド
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;unlinkでシンボリックリンクを解除&quot;&gt;unlinkでシンボリックリンクを解除&lt;/h2&gt;
+
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;unlink シンボリックのパス&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;unlink /usr/local/bin/使い物にならない自作コマンド
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;せめて&lt;code class=&quot;highlighter-rouge&quot;&gt;ln -d&lt;/code&gt;とかにしてほしかったな。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ln" /><summary type="html">Windowsでいうショートカットに似た何か。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png" /></entry><entry><title type="html">MacのHomebrewとは？仕組み・使い方と用語整理</title><link href="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic" rel="alternate" type="text/html" title="MacのHomebrewとは？仕組み・使い方と用語整理" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-19T00:46:04+09:00</updated><id>https://blog.mothule.com/mac/homebrew/mac-homebrew-basic</id><content type="html" xml:base="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic">&lt;p&gt;便利だけど穴にハマると痛い目見て詰むパッケージ管理マネージャーです。&lt;/p&gt;
 
 &lt;p&gt;インストールや使い方だけでなく、どのような仕組みでパッケージがインストールされているのか大まかな図式で説明します。&lt;/p&gt;
 
@@ -1172,100 +1240,84 @@ Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">CarthageでInput File Listsにxcfilelistを渡す利点と方法</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist" rel="alternate" type="text/html" title="CarthageでInput File Listsにxcfilelistを渡す利点と方法" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-13T04:58:36+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist">&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;で依存ライブラリを管理すると楽です&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-19T00:52:14+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
 
-&lt;p&gt;この記事は&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;の環境を構築する方法と利点について説明します。&lt;/p&gt;
+&lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
+なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;の基本や使い方の詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
+&lt;h2 id=&quot;macでgoogle日本語入力がおかしくなる&quot;&gt;MacでGoogle日本語入力がおかしくなる&lt;/h2&gt;
 
-&lt;h2 id=&quot;carthage公式解説に出てくるxcfilelist&quot;&gt;Carthage公式解説に出てくるxcfilelist&lt;/h2&gt;
+&lt;p&gt;正常稼働してるGoogle日本語入力は、次の画像のようにタイプしてる文字の近くに変換候補が並んだポップアップが表示される。
+これがおかしくなると、ポップアップの位置が画面の四隅に固定されてしまう現象が発生する。&lt;/p&gt;
 
-&lt;p&gt;Carthageのインストール解説記事には、&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使った解説は見かけません。&lt;br /&gt;
-大抵&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;に直接パスを指定する記事が多いです。&lt;br /&gt;
-しかし、&lt;a href=&quot;https://github.com/Carthage/Carthage&quot;&gt;Carthageの公式&lt;/a&gt;では&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使っており、むしろそっちがメインにも見えます。&lt;/p&gt;
+&lt;h3 id=&quot;正常時&quot;&gt;正常時&lt;/h3&gt;
 
-&lt;h3 id=&quot;xcfilelistの正体&quot;&gt;xcfilelistの正体&lt;/h3&gt;
+&lt;p&gt;正常時は、タイプしてる文字の近くに表示される。&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はXcodeのファイル一覧を表すファイル・タイプです。&lt;br /&gt;
-といってもただのテキストファイルです。&lt;br /&gt;
-テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;とするだけです。&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInput&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;xcfilelistを使う場所&quot;&gt;xcfilelistを使う場所&lt;/h2&gt;
+&lt;h3 id=&quot;異常時&quot;&gt;異常時&lt;/h3&gt;
 
-&lt;p&gt;公式では英文で&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を見かけますが、これを使う場所がパッと見では分かりません。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;を使う場所は下の画像の&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File List&lt;/code&gt;です。&lt;br /&gt;
-この中に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+&lt;p&gt;問題がおきると、これが隅っこで表示される。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildPhaseのCarthage用RunScriptPhase&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInputWithBug&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;input-file-listsを使う利点&quot;&gt;Input File Listsを使う利点&lt;/h2&gt;
+&lt;h3 id=&quot;分かってること&quot;&gt;分かってること&lt;/h3&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;を使う利点がないと使う気にならないと思います。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;自分が立ち上げているアプリケーションを全て終了しても解決しない&lt;/li&gt;
+  &lt;li&gt;再起動すると解決する&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;使う利点は、一度&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定すれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;Run Script&lt;/code&gt;の使いにくいUIを使わなくて済みます。  &lt;br /&gt;
-またフレームワークの追加や削除時に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodeproj&lt;/code&gt;がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。&lt;/p&gt;
+&lt;h3 id=&quot;仮説&quot;&gt;仮説&lt;/h3&gt;
+&lt;p&gt;プロセス再起動で解決するのでは？&lt;/p&gt;
 
-&lt;h2 id=&quot;xcfilelistを用意する&quot;&gt;xcfilelistを用意する&lt;/h2&gt;
+&lt;h2 id=&quot;macのプロセス一覧でgoogle日本語入力を探す&quot;&gt;Macのプロセス一覧でGoogle日本語入力を探す&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;はパスさえ合っていればどこに置いても問題ないですが、&lt;br /&gt;
-他環境でも動くようにまずはgit管理下が必須だと思います。&lt;br /&gt;
-次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら&lt;br /&gt;
-&lt;strong&gt;プロジェクトディレクトリ配下に置くことが最適です。&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;Macでプロセス一覧を見るには&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドを使う。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png&quot; width=&quot;50%&quot; alt=&quot;Xcode-Project-Navigator&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;ターミナルで&lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux | grep GoogleJapaneseInput&lt;/code&gt;を実行
+このときGoogle Chromeは閉じておく&lt;/p&gt;
 
-&lt;p&gt;中身は次のように&lt;code class=&quot;highlighter-rouge&quot;&gt;Input Files&lt;/code&gt;で指定するパスを並べるだけです。
-これを&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;として保存すれば準備は整います。
-ファイル名は何でもいいです。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
-$(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
-$(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
-$(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkWebBridge.framework
-$(SRCROOT)/Carthage/Build/iOS/PAYJP.framework
-$(SRCROOT)/Carthage/Build/iOS/AdjustSdkIm.framework
-$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD.framework
-$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps x | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
+  879   ??  S      1:23.75 /Library/Input Methods/GoogleJapaneseInput.app/Contents/MacOS/GoogleJapaneseInput
+ 1213   ??  S      1:40.55 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputRenderer.app/Contents/MacOS/GoogleJapaneseInputRenderer
+ 2059   ??  S      1:15.08 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputConverter.app/Contents/MacOS/GoogleJapaneseInputConverter
+99614 s001  S+     0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;xcfilelistをinput-file-listsに渡す&quot;&gt;xcfilelistをInput File Listsに渡す&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt;のプロセスがヒットする。&lt;br /&gt;
+(最後のプロセスはgrepプロセスなので無関係)&lt;/p&gt;
 
-&lt;p&gt;Xcodeの&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Phases&lt;/code&gt;の&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;用スクリプトフェイズの&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;に先程用意した&lt;code class=&quot;highlighter-rouge&quot;&gt;.xcfilelist&lt;/code&gt;のパスを指定します。&lt;/p&gt;
+&lt;p&gt;おそらく名前からしてこうだろう。&lt;/p&gt;
 
-&lt;p&gt;先程の用意した場所であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt; : 設定全般 or 統括&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt; : 描画関係&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt; : 変換関係&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeのInputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;変換自体はうまく動いているので、おかしいのは変換以外の2つだと思われる。
+もっとも怪しいのは描画を司っているであろう&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;だと予想。&lt;/p&gt;
 
-&lt;h2 id=&quot;output-file-listsもxcfilelistを使う&quot;&gt;Output File Listsもxcfilelistを使う&lt;/h2&gt;
+&lt;h2 id=&quot;macのプロセスをkillコマンドで終了させる&quot;&gt;Macのプロセスをkillコマンドで終了させる&lt;/h2&gt;
 
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;も同様に&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;として出力パスを列挙しておけば&lt;code class=&quot;highlighter-rouge&quot;&gt;xcfilelist&lt;/code&gt;のパスを指定するだけです。&lt;/p&gt;
+&lt;p&gt;Macでプロセスを終了させるには&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドを使う。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。&lt;/p&gt;
 
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkWebBridge.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/PAYJP.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdkIm.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
-$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;googlejapaneseinputrendererプロセスのプロセスidを探す&quot;&gt;GoogleJapaneseInputRendererプロセスのプロセスIDを探す&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドの結果は表形式でプロセスが並ぶ。
+１つ目のカラムはプロセスIDを表す。&lt;/p&gt;
 
-&lt;p&gt;こちらも&lt;code class=&quot;highlighter-rouge&quot;&gt;Input File Lists&lt;/code&gt;と同じ場所場所であれば&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;で指定するパスは、&lt;code class=&quot;highlighter-rouge&quot;&gt;$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist&lt;/code&gt;になります。&lt;/p&gt;
+&lt;p&gt;先程の表で&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDは&lt;code class=&quot;highlighter-rouge&quot;&gt;1213&lt;/code&gt;になる。&lt;br /&gt;
+なおこのプロセスIDはいつもこの値ではないので注意。&lt;/p&gt;
 
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png&quot; width=&quot;50%&quot; alt=&quot;XcodeのOutputFileLists&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;h3 id=&quot;killコマンドでgooglejapaneseinputrendererを終了させる&quot;&gt;killコマンドでGoogleJapaneseInputRendererを終了させる&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDが分かったので最終的には、&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;$ kill 1213&lt;/code&gt;をターミナル上で実行すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が終了する。&lt;/p&gt;
 
-&lt;h3 id=&quot;output-file-listsを指定する理由&quot;&gt;Output File Listsを指定する理由&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Output Files&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Output File Lists&lt;/code&gt;でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。&lt;br /&gt;
-なぜ指定するのかは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-measure-copy-speed-with-output-files&quot;&gt;CarthageのビルドフェイズでOutput Files指定による速度調査&lt;/a&gt;&lt;/span&gt;
-」に詳細をまとめてます。&lt;/p&gt;
-
-&lt;h2 id=&quot;後からでも対応できる&quot;&gt;後からでも対応できる&lt;/h2&gt;
-&lt;p&gt;この対応は、プロジェクトが初期段階でも後からでも対応できます。&lt;br /&gt;
-ライブラリが多くても手間はそこまで変わりません。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">xcfilelistで依存ライブラリを管理すると楽です</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" /></entry><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-19T00:52:14+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
+&lt;h2 id=&quot;macのgoogle日本語入力が直った&quot;&gt;MacのGoogle日本語入力が直った&lt;/h2&gt;
+&lt;p&gt;仮説と予想は的中し、&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;プロセスを終了し、再度テキストエディで文字入力したら&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="google-japanese-input" /><summary type="html">プロセスを再起動すれば直る。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png" /></entry><entry><title type="html">CarthageのビルドフェイズでOutput Files指定による速度調査</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files" rel="alternate" type="text/html" title="CarthageのビルドフェイズでOutput Files指定による速度調査" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-19T00:52:14+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">&lt;p&gt;この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。&lt;/p&gt;
 
 &lt;p&gt;なおCarthageのインストールや基礎など詳細は「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
 」にまとめてあります。&lt;/p&gt;
@@ -1395,81 +1447,4 @@ github &quot;adjust/ios_sdk&quot;
 &lt;ul&gt;
   &lt;li&gt;一定のパフォーマンス効果はある&lt;/li&gt;
   &lt;li&gt;おとなしく設定したほうがいい&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-19T00:52:14+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
-
-&lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
-なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
-
-&lt;h2 id=&quot;macでgoogle日本語入力がおかしくなる&quot;&gt;MacでGoogle日本語入力がおかしくなる&lt;/h2&gt;
-
-&lt;p&gt;正常稼働してるGoogle日本語入力は、次の画像のようにタイプしてる文字の近くに変換候補が並んだポップアップが表示される。
-これがおかしくなると、ポップアップの位置が画面の四隅に固定されてしまう現象が発生する。&lt;/p&gt;
-
-&lt;h3 id=&quot;正常時&quot;&gt;正常時&lt;/h3&gt;
-
-&lt;p&gt;正常時は、タイプしてる文字の近くに表示される。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInput&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;異常時&quot;&gt;異常時&lt;/h3&gt;
-
-&lt;p&gt;問題がおきると、これが隅っこで表示される。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInputWithBug&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;分かってること&quot;&gt;分かってること&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;自分が立ち上げているアプリケーションを全て終了しても解決しない&lt;/li&gt;
-  &lt;li&gt;再起動すると解決する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;仮説&quot;&gt;仮説&lt;/h3&gt;
-&lt;p&gt;プロセス再起動で解決するのでは？&lt;/p&gt;
-
-&lt;h2 id=&quot;macのプロセス一覧でgoogle日本語入力を探す&quot;&gt;Macのプロセス一覧でGoogle日本語入力を探す&lt;/h2&gt;
-
-&lt;p&gt;Macでプロセス一覧を見るには&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドを使う。&lt;/p&gt;
-
-&lt;p&gt;ターミナルで&lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux | grep GoogleJapaneseInput&lt;/code&gt;を実行
-このときGoogle Chromeは閉じておく&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps x | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
-  879   ??  S      1:23.75 /Library/Input Methods/GoogleJapaneseInput.app/Contents/MacOS/GoogleJapaneseInput
- 1213   ??  S      1:40.55 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputRenderer.app/Contents/MacOS/GoogleJapaneseInputRenderer
- 2059   ??  S      1:15.08 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputConverter.app/Contents/MacOS/GoogleJapaneseInputConverter
-99614 s001  S+     0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt;のプロセスがヒットする。&lt;br /&gt;
-(最後のプロセスはgrepプロセスなので無関係)&lt;/p&gt;
-
-&lt;p&gt;おそらく名前からしてこうだろう。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt; : 設定全般 or 統括&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt; : 描画関係&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt; : 変換関係&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;変換自体はうまく動いているので、おかしいのは変換以外の2つだと思われる。
-もっとも怪しいのは描画を司っているであろう&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;だと予想。&lt;/p&gt;
-
-&lt;h2 id=&quot;macのプロセスをkillコマンドで終了させる&quot;&gt;Macのプロセスをkillコマンドで終了させる&lt;/h2&gt;
-
-&lt;p&gt;Macでプロセスを終了させるには&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドを使う。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。&lt;/p&gt;
-
-&lt;h3 id=&quot;googlejapaneseinputrendererプロセスのプロセスidを探す&quot;&gt;GoogleJapaneseInputRendererプロセスのプロセスIDを探す&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドの結果は表形式でプロセスが並ぶ。
-１つ目のカラムはプロセスIDを表す。&lt;/p&gt;
-
-&lt;p&gt;先程の表で&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDは&lt;code class=&quot;highlighter-rouge&quot;&gt;1213&lt;/code&gt;になる。&lt;br /&gt;
-なおこのプロセスIDはいつもこの値ではないので注意。&lt;/p&gt;
-
-&lt;h3 id=&quot;killコマンドでgooglejapaneseinputrendererを終了させる&quot;&gt;killコマンドでGoogleJapaneseInputRendererを終了させる&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDが分かったので最終的には、&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;$ kill 1213&lt;/code&gt;をターミナル上で実行すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が終了する。&lt;/p&gt;
-
-&lt;h2 id=&quot;macのgoogle日本語入力が直った&quot;&gt;MacのGoogle日本語入力が直った&lt;/h2&gt;
-&lt;p&gt;仮説と予想は的中し、&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;プロセスを終了し、再度テキストエディで文字入力したら&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="google-japanese-input" /><summary type="html">プロセスを再起動すれば直る。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png" /></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事はXcodeのビルドフェイズ時にCarthageのフレームワークコピー用スクリプトのOutput Filesの有無によるビルドパフォーマンスについて調査した記事です。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" /></entry></feed>
