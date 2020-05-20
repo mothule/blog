@@ -11,33 +11,33 @@
 
 
 
-  <title>ActiveRecordでpluckとselectしてpluckに変化はあるか？ - もちゅろぐ</title>
+  <title>コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:title" content="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。" />
-<meta property="og:description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
+<meta name="description" content="iOSで使うXcodeをターミナルなどコマンドラインからプロジェクトを開くときにxcodeprojかxcworkspaceなのか判断をいい感じにしてくれるスクリプトを作ったので紹介する記事です。" />
+<meta property="og:description" content="iOSで使うXcodeをターミナルなどコマンドラインからプロジェクトを開くときにxcodeprojかxcworkspaceなのか判断をいい感じにしてくれるスクリプトを作ったので紹介する記事です。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/tools-xcode-launcher-cli" />
+<meta property="og:url" content="https://blog.mothule.com/tools/tools-xcode-launcher-cli" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-20T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord","headline":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","dateModified":"2020-02-02T20:42:57+09:00","datePublished":"2019-08-05T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord"},"image":"https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png","description":"ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/tools-xcode-launcher-cli","headline":"コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った","dateModified":"2020-05-20T22:59:22+09:00","datePublished":"2020-05-20T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/tools-xcode-launcher-cli"},"image":"https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png","description":"iOSで使うXcodeをターミナルなどコマンドラインからプロジェクトを開くときにxcodeprojかxcworkspaceなのか判断をいい感じにしてくれるスクリプトを作ったので紹介する記事です。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
-<meta name="twitter:description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png">
+<meta name="twitter:title" content="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った">
+<meta name="twitter:description" content="iOSで使うXcodeをターミナルなどコマンドラインからプロジェクトを開くときにxcodeprojかxcworkspaceなのか判断をいい感じにしてくれるスクリプトを作ったので紹介する記事です。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -130,8 +130,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ruby" itemprop="item">
-              <span itemprop="name">Ruby</span>
+            <a href="/tags#tools" itemprop="item">
+              <span itemprop="name">ツール</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -139,28 +139,8 @@
       
         
         
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#rails" itemprop="item">
-              <span itemprop="name">Rails</span>
-            </a>
-            <meta itemprop="position" content="3">
-          </li>
-        
-      
-        
-        
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#active-record" itemprop="item">
-              <span itemprop="name">ActiveRecord</span>
-            </a>
-            <meta itemprop="position" content="4">
-          </li>
-        
-      
-        
-        
           <li>
-            ActiveRecordでpluckとselectしてpluckに変化はあるか？
+            コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った
           </li>
         
       
@@ -172,27 +152,27 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-05-ruby-rails-activerecord.png" alt="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png" alt="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>ActiveRecordでpluckとselectしてpluckに変化はあるか？</h1>
+    <h1>コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
+            <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#xcode">Xcode</a></li>
+          
             <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#active-record">ActiveRecord</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-8-5</time></span>
+        <span"><time class="post-date">2020-5-20</time></span>
       </div>
     </div>
   </header>
@@ -200,96 +180,87 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#sqlは同じ">SQLは同じ</a></li>
-  <li><a href="#速度は微妙な変化">速度は微妙な変化</a></li>
-  <li><a href="#しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</a></li>
-  <li><a href="#結論">結論</a></li>
+  <li><a href="#ターミナルからxcodeプロジェクトを開く">ターミナルからXcodeプロジェクトを開く</a></li>
+  <li><a href="#ターミナルからいい感じにxcodeプロジェクトを開くスクリプト">ターミナルからいい感じにXcodeプロジェクトを開くスクリプト</a>
+    <ul>
+      <li><a href="#xcコマンドの使い方">xcコマンドの使い方</a></li>
+      <li><a href="#xcコマンドの特徴">xcコマンドの特徴</a></li>
+      <li><a href="#インストール方法">インストール方法</a></li>
+    </ul>
+  </li>
+  <li><a href="#iosエンジニアもスクリプトを書こう">iOSエンジニアもスクリプトを書こう</a></li>
 </ul>
   </div>
   <section>
-  <p>ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</p>
+  <p>キータイプ数「open hoge.xcworkspace」を「<strong>xc</strong>」にまで減らします。<br />
+<code class="highlighter-rouge">xcodeproj</code>か<code class="highlighter-rouge">xcworkspace</code>かいちいち確認不要になります。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="ss">:name</span><span class="p">).</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<p>iOSエンジニアでもターミナルを使う頻度は非常に高いです。<br />
+そのためターミナル上からXcodeプロジェクトを開くことも多いです。</p>
+
+<h2 id="ターミナルからxcodeプロジェクトを開く">ターミナルからXcodeプロジェクトを開く</h2>
+<p>ターミナルからXcodeプロジェクトを開く場合は次のコマンドになります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>open hoge.xcodeproj
 </code></pre></div></div>
 
-<p>と</p>
+<p>しかしCocoaPodsを入れたりすると、xcodeprojではなく<code class="highlighter-rouge">xcworkspace</code>を開く必要があります。<br />
+そのためターミナルでは次のコマンドになります。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>open hoge.xcworkspace
 </code></pre></div></div>
 
-<p>に速度差や消費メモリ差はあるのか？</p>
+<p>プロジェクト毎にxcodeprojなのかxcworkspaceなのかlsコマンドで確認するのは面倒です。<br />
+それが毎日来る日も来る日も、色々なプロジェクトをターミナルで開いているとますます面倒です。</p>
 
-<h2 id="sqlは同じ">SQLは同じ</h2>
+<h2 id="ターミナルからいい感じにxcodeプロジェクトを開くスクリプト">ターミナルからいい感じにXcodeプロジェクトを開くスクリプト</h2>
+<p>ターミナルからXcodeプロジェクトを開く上でチリツモで面倒な作業なので勝手に判断して開くスクリプトを作りました。</p>
 
-<p>出力されるSQLはどちらも同じでした。</p>
+<p><a href="https://github.com/mothule/xc_launcher">mothule/xc_launcher</a></p>
 
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="nv">`users`</span><span class="p">.</span><span class="nv">`name`</span> <span class="k">FROM</span> <span class="nv">`users`</span>
+<p><a href="/assets/images/2020-05-20-tools-xcode-launcher-cli/1.gif"><img src="/assets/images/2020-05-20-tools-xcode-launcher-cli/1.gif" width="100%" alt="xcコマンドの動作" /></a></p>
+
+<h3 id="xcコマンドの使い方">xcコマンドの使い方</h3>
+<p>使い方は簡単です。<code class="highlighter-rouge">xc</code>コマンドを叩くことでカレントディレクトリからXcodeプロジェクトを見つけて起動します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd </span>your/xcode/proj/path
+<span class="nv">$ </span>xc
 </code></pre></div></div>
 
-<h2 id="速度は微妙な変化">速度は微妙な変化</h2>
+<p>ディレクトリパスを指定すれば別ディレクトリ内のXcodeプロジェクトを開こうとします。</p>
 
-<p>90万件に対して行った結果</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>xc your/xcode/proj/path
+</code></pre></div></div>
 
-<table>
-  <thead>
-    <tr>
-      <th>pluckのみ</th>
-      <th>select+pluck</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>3228</td>
-      <td>3349</td>
-    </tr>
-    <tr>
-      <td>3152</td>
-      <td>2972</td>
-    </tr>
-    <tr>
-      <td>3126</td>
-      <td>3370</td>
-    </tr>
-    <tr>
-      <td>3101</td>
-      <td>3144</td>
-    </tr>
-    <tr>
-      <td>3271</td>
-      <td>2945</td>
-    </tr>
-    <tr>
-      <td>3454</td>
-      <td>3227</td>
-    </tr>
-    <tr>
-      <td>3120</td>
-      <td>3306</td>
-    </tr>
-    <tr>
-      <td>3488</td>
-      <td>3577</td>
-    </tr>
-    <tr>
-      <td>3046</td>
-      <td>3072</td>
-    </tr>
-    <tr>
-      <td>3228</td>
-      <td>3413</td>
-    </tr>
-  </tbody>
-</table>
+<h3 id="xcコマンドの特徴">xcコマンドの特徴</h3>
+<p>このコマンドは次の特徴を持ってます。</p>
 
-<p>pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms</p>
+<ul>
+  <li>xcodeprojとxcworkspaceがあればxcworkspaceを開く</li>
+  <li>Xcodeプロジェクトが複数あればAZ順の最初のXcodeプロジェクトを開く</li>
+</ul>
 
-<h2 id="しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</h2>
+<h3 id="インストール方法">インストール方法</h3>
 
-<p>SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。</p>
+<ol>
+  <li>1ファイルになっているのでファイルをGitHubから直接ダウンロード</li>
+  <li>chmod 711で実行権限付与</li>
+  <li>PATHの通った適当な場所にシンボリックリンクを引く</li>
+</ol>
 
-<h2 id="結論">結論</h2>
+<p>詳しくはGitHubページにも書いてあります。
+<a href="https://github.com/mothule/xc_launcher">mothule/xc_launcher</a></p>
 
-<p>実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 <strong>pluckを呼ぶのであれば,selectは呼ぶ必要はない。</strong></p>
+<h2 id="iosエンジニアもスクリプトを書こう">iOSエンジニアもスクリプトを書こう</h2>
+
+<p>今回スクリプトはRubyで書きました。<br />
+iOSエンジニアにとってRubyは身近な言語です。<br />
+fastlaneやCocoaPodsはRubyで書かれています。</p>
+
+<p>あなたもiOSエンジニアならRubyを覚えて、<br />
+身近な面倒くさいをスクリプトで解決して開発体験を向上させましょう。<br />
+なおRubyでスクリプトを書く場合は「<span><a href="/ruby/ruby-script-basic">iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</a></span>
+」の記事を参考にしてみてください。</p>
 
   </section>
 
@@ -394,49 +365,49 @@
                 
                 
                 
-                    <li><h3><a href="/ruby/rails/ruby-rails-rabl-basic">RABLの使い方を丁寧に説明</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint">RubyMineで条件付きブレイクポイントを使いこなす方法</a></h3></li>
                     
                     
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
                 
 
             
@@ -472,7 +443,46 @@
                 
                 
                 
-                    <li><h3><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ruby/ruby-script-basic">iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</a></h3></li>
                     
                     
                 
@@ -566,16 +576,132 @@
                 
                 
                 
-                    <li><h3><a href="/ruby/rails/ruby-rails-rails-5_2_3-update">Railsを5.0.0から5.2.3に変更した</a></h3></li>
-                    
-                    
+
+            
+                
+                
                 
 
             
                 
                 
                 
-                    <li><h3><a href="/ruby/rails/ruby-rails-update-rails-version">rails updateでgemバージョン依存を解決してみる</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/tools/tools-training-support-tools-urcoach">実装の速度を養うトレーニングサポートツールを作った</a></h3></li>
                     
                     
                         
