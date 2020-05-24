@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/regexp/regexp-not-expression","headline":"正規表現で否定を表現する","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-08-05T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/regexp/regexp-not-expression"},"image":"https://blog.mothule.com/assets/images/2019-08-05-regexp-not-expression.png","description":"常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/regexp/regexp-not-expression","headline":"正規表現で否定を表現する","dateModified":"2020-05-25T05:26:17+09:00","datePublished":"2019-08-05T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/regexp/regexp-not-expression"},"image":"https://blog.mothule.com/assets/images/2019-08-05-regexp-not-expression.png","description":"常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -201,19 +201,19 @@
 <h2 id="書き方">書き方</h2>
 <p>結論から先に書きます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^(?!.\*\&lt;ここに検索ワード\&gt;).+$
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^(?!.*検索ワード).+$
 </code></pre></div></div>
 
 <h2 id="何が起きているのか">何が起きているのか？</h2>
 
 <ul>
-  <li>^ : 行の先頭を表す</li>
-  <li>( : グルーピング</li>
-  <li>?! : 否定の先読み. 部分式が後にマッチしないなら、真とする。</li>
-  <li>.* : 任意の文字列(0文字以上)</li>
-  <li>) : グルーピング</li>
-  <li>.+ : 任意の文字列(1文字以上)</li>
-  <li>$: 行の末尾を表す</li>
+  <li><code class="highlighter-rouge">^</code> : 行の先頭を表す</li>
+  <li><code class="highlighter-rouge">(</code> : グルーピング</li>
+  <li><code class="highlighter-rouge">?!</code> : 否定の先読み. 部分式が後にマッチしないなら、真とする。</li>
+  <li><code class="highlighter-rouge">.*</code> : 任意の文字列(0文字以上)</li>
+  <li><code class="highlighter-rouge">)</code> : グルーピング</li>
+  <li><code class="highlighter-rouge">.+</code> : 任意の文字列(1文字以上)</li>
+  <li><code class="highlighter-rouge">$</code> : 行の末尾を表す</li>
 </ul>
 
 <h2 id="試してみる">試してみる</h2>
