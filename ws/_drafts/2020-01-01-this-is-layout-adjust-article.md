@@ -1,6 +1,6 @@
 ---
 title: レイアウト調整記事
-categories: ios ruby
+categories: ios swift
 tags: TODO debug
 image:
   path: /assets/images/2020-01-01-this-is-layout-adjust-article/0.png
