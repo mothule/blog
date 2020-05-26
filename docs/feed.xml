@@ -1,4 +1,81 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-25T05:26:32+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った</title><link href="https://blog.mothule.com/tools/tools-xcode-launcher-cli" rel="alternate" type="text/html" title="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った" /><published>2020-05-20T00:00:00+09:00</published><updated>2020-05-20T22:59:22+09:00</updated><id>https://blog.mothule.com/tools/tools-xcode-launcher-cli</id><content type="html" xml:base="https://blog.mothule.com/tools/tools-xcode-launcher-cli">&lt;p&gt;キータイプ数「open hoge.xcworkspace」を「&lt;strong&gt;xc&lt;/strong&gt;」にまで減らします。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-05-27T01:28:44+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOSアプリのバリデーションについて考えてみた</title><link href="https://blog.mothule.com/ios/swift/ios-swift-validation" rel="alternate" type="text/html" title="iOSアプリのバリデーションについて考えてみた" /><published>2020-05-27T00:00:00+09:00</published><updated>2020-05-27T01:24:28+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-validation</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-validation">&lt;p&gt;アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。
+大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、
+受け取ったクライアント側は結果をユーザーに伝えます。&lt;/p&gt;
+
+&lt;p&gt;この方法だと通信処理が走ってしまうのでサーバー負荷に加えて、結果が分かるのに時間もかかります。
+そのため、クライアント側でバリデーションできたほうがUXとしては良いです。&lt;/p&gt;
+
+&lt;p&gt;しかしクライアント側のバリデーションロジックとサーバ側の検証ロジックが完全一致していなければバグの温床となるため
+クライアント側でバリデーションをするにしても最低限にとどまることが多いと思います。&lt;/p&gt;
+
+&lt;p&gt;そのためあまり使うことが少ないのですが、少し考えてみました。&lt;/p&gt;
+
+&lt;h2 id=&quot;validatorとvalidationresult-protocolの用意&quot;&gt;ValidatorとValidationResult protocolの用意&lt;/h2&gt;
+
+&lt;p&gt;まずは執行役のValidator protocolとその結果を受け取るValidationResult protocolを用意します。&lt;/p&gt;
+
+&lt;p&gt;Validatorには実行メソッドとなる&lt;code class=&quot;highlighter-rouge&quot;&gt;validate() -&amp;gt; ResultType&lt;/code&gt;を用意して、
+Validator protocolの採用クラスはこのメソッドに検証処理をまとめます。&lt;/p&gt;
+
+&lt;p&gt;そして、検証処理の結果としてValidationResult protocolを採用したクラスを返します。&lt;/p&gt;
+
+&lt;p&gt;ValidationResultにはバリデーションが合格したか分かるようにisOkプロパティを用意します。&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=Validator.swift&quot;&gt;&lt;/script&gt;
+
+&lt;h2 id=&quot;名前バリデーションを作ってみる&quot;&gt;名前バリデーションを作ってみる&lt;/h2&gt;
+
+&lt;p&gt;先程定義したValidatorとValidationResult protocolを使って名前用バリデーションを作ってみます。&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=NameValidator.swift&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;ValidationResultをネストしても動かせるので型名をシンプルにできます。&lt;br /&gt;
+ValidationResultの採用クラスをenumにしたことでバリデーションエラーの一覧が分かります&lt;/p&gt;
+
+&lt;p&gt;また&lt;code class=&quot;highlighter-rouge&quot;&gt;tooLong(Int)&lt;/code&gt;のように内部パラメータを結果に渡すことでバリデーションエラーのハンドリング時に具体的な情報を構築することもできます。&lt;/p&gt;
+
+&lt;h2 id=&quot;メールアドレスバリデーションを作ってみる&quot;&gt;メールアドレスバリデーションを作ってみる&lt;/h2&gt;
+
+&lt;p&gt;今度はメールアドレス用バリデーションを作ってみます。&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=EmailValidator.swift&quot;&gt;&lt;/script&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;errorMessage: String&lt;/code&gt;のように起きたバリデーションエラーのメッセージテキストを&lt;strong&gt;デフォルト値&lt;/strong&gt;として使うこともできます。&lt;/p&gt;
+
+&lt;h3 id=&quot;注意バリデーションのエラーメッセージをそのまま使うリスク&quot;&gt;注意：バリデーションのエラーメッセージをそのまま使うリスク&lt;/h3&gt;
+&lt;p&gt;バリデーションは画面に結びついたものではなく検証対象に結びついたロジックです。&lt;br /&gt;
+そのため1画面とは限りません。また表示する文言も1つとは限りません。&lt;br /&gt;
+例えば男性と女声で文言を変える可能性もあれば、エラーした回数におうじて文言を変える可能性もあります。&lt;/p&gt;
+
+&lt;p&gt;バリデーションのエラーメッセージを使う場合は、あくまでもデフォルト値として扱うようにしておき、&lt;br /&gt;
+呼び出し元で上書き可能にしておくことで、デフォルトで良い部分はコード量を減らし、&lt;br /&gt;
+必要に応じて上書きするコードを書けるといった仕組みにしておくことで柔軟性を維持しつつ楽できるようになります。&lt;/p&gt;
+
+&lt;h2 id=&quot;バリデーションを使う&quot;&gt;バリデーションを使う&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-27-ios-swift-validation/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-27-ios-swift-validation/1.png&quot; width=&quot;100%&quot; alt=&quot;ViewControllerWithValidation&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;次は用意した2つのバリデーションをViewController側で使うコードです。&lt;br /&gt;
+UIButtonの押下イベント内(&lt;code class=&quot;highlighter-rouge&quot;&gt;onTouchedRegister(_:)&lt;/code&gt;)で2つのUITextFieldからバリデーション処理を入れてます。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;errorMessage&lt;/code&gt;に文言が入ることで画面内にバリデーションエラーをユーザー通知します。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-27-ios-swift-validation/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-27-ios-swift-validation/2.png&quot; width=&quot;50%&quot; alt=&quot;ValidationError&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=ViewController.swift&quot;&gt;&lt;/script&gt;
+
+&lt;h2 id=&quot;rnmovaliライブラリ&quot;&gt;RNMoValiライブラリ&lt;/h2&gt;
+&lt;p&gt;実は昔モデル用バリデーションを作っています。
+&lt;a href=&quot;https://github.com/mothule/RNMoVali&quot;&gt;mothule/RNMoVali&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これは1つのプロパティに、名前と用意してあるバリデーターを登録しておくことで、&lt;br /&gt;
+バリデーション実行後に名前に紐づくバリデーション結果を受け取る仕組みです。&lt;/p&gt;
+
+&lt;p&gt;しかし、記事冒頭に書いたようにあまりニーズがありません。&lt;br /&gt;
+クライアント側で「しっかり」バリデーションを必要とするのは、サーバーのない登録系アプリぐらいで、&lt;br /&gt;
+それらは大抵が個人が練習で作るToDoアプリぐらいでしょう。&lt;/p&gt;
+
+&lt;p&gt;ちなみに作ったのが古いのでSwiftバージョンが古いですが、コンパイルエラーを直せば動くと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。 大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、 受け取ったクライアント側は結果をユーザーに伝えます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-27-ios-swift-validation/0.png" /></entry><entry><title type="html">コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った</title><link href="https://blog.mothule.com/tools/tools-xcode-launcher-cli" rel="alternate" type="text/html" title="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った" /><published>2020-05-20T00:00:00+09:00</published><updated>2020-05-20T22:59:22+09:00</updated><id>https://blog.mothule.com/tools/tools-xcode-launcher-cli</id><content type="html" xml:base="https://blog.mothule.com/tools/tools-xcode-launcher-cli">&lt;p&gt;キータイプ数「open hoge.xcworkspace」を「&lt;strong&gt;xc&lt;/strong&gt;」にまで減らします。&lt;br /&gt;
 &lt;code class=&quot;highlighter-rouge&quot;&gt;xcodeproj&lt;/code&gt;か&lt;code class=&quot;highlighter-rouge&quot;&gt;xcworkspace&lt;/code&gt;かいちいち確認不要になります。&lt;/p&gt;
 
 &lt;p&gt;iOSエンジニアでもターミナルを使う頻度は非常に高いです。&lt;br /&gt;
@@ -873,196 +950,7 @@ git cloneが時間かかるとありますが、git cloneよりbootstrapの方�
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしCartfileの書き方や個別更新、インストール手順、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T22:15:34+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
-
-&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
-  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
-    &lt;ul&gt;
-      &lt;li&gt;単一障害点となる&lt;/li&gt;
-      &lt;li&gt;メンテナンス必要&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
-  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
-  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
-  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
-  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
-  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
-    &lt;ul&gt;
-      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
-      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
-  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
-  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
-  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
-
-&lt;h3 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h3&gt;
-
-&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
-対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
-プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
-
-&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
-Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
-その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
-
-&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
-対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
-
-&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h3&gt;
-
-&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
-ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
-プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
-
-&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
-
-&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
-CocoaPodsはとにかく楽です。&lt;/p&gt;
-
-&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
-&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
-
-&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
-あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
-
-&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
-&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
-
-&lt;p&gt;Carthageの勝ちです。
-CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
-以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
-framework側でコンパイルが走ることはありません。&lt;/p&gt;
-
-&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
-&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
-  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
-  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;環境&lt;/th&gt;
-      &lt;th&gt;min&lt;/th&gt;
-      &lt;th&gt;max&lt;/th&gt;
-      &lt;th&gt;avg&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;CocoaPods&lt;/td&gt;
-      &lt;td&gt;3.208s&lt;/td&gt;
-      &lt;td&gt;3.492s&lt;/td&gt;
-      &lt;td&gt;3.308s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Carthage&lt;/td&gt;
-      &lt;td&gt;1.478s&lt;/td&gt;
-      &lt;td&gt;1.765s&lt;/td&gt;
-      &lt;td&gt;1.60725s&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;vanilla&lt;/td&gt;
-      &lt;td&gt;0.932s&lt;/td&gt;
-      &lt;td&gt;1.143s&lt;/td&gt;
-      &lt;td&gt;1.04967s&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
-&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
-
-&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
-そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
-この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
-
-&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
-ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
-
-&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
-CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
-&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
-ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
-
-&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
-
-&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
-&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
-その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
-Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
-
-&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
-&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
-そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
-「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
-Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
-その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
-
-&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
-&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
-Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
-そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
-Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
-
-&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
-
-&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
-&lt;p&gt;現時点ではどちらがいいとはいえないです。
-Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
-
-&lt;p&gt;またケースによっても変わってくると思います。
-何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
-
-&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;
-
-&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
-&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
-もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
-「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-19T00:52:14+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry><entry><title type="html">iOSのCarthage導入手順と注意点</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide" rel="alternate" type="text/html" title="iOSのCarthage導入手順と注意点" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-19T00:52:14+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-install-guide</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-install-guide">&lt;p&gt;Carthageの導入はちょっとした漏れでエラーにハマります。&lt;/p&gt;
 
 &lt;p&gt;この記事は、iOSアプリにCarthage環境を導入する手順について説明します。&lt;/p&gt;
 
@@ -1308,81 +1196,193 @@ Ensure that the given path is appropriately entered and that your &quot;Input Fi
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしチーム運用、git管理、ライブラリのバージョン運用など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される</title><link href="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix" rel="alternate" type="text/html" title="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" /><published>2020-05-13T00:00:00+09:00</published><updated>2020-05-19T00:52:14+09:00</updated><id>https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix</id><content type="html" xml:base="https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix">&lt;p&gt;プロセスを再起動すれば直る。&lt;/p&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Carthageの導入はちょっとした漏れでエラーにハマります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" /></entry><entry><title type="html">CarthageとCocoaPodsの違いを経験交えて比較する</title><link href="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods" rel="alternate" type="text/html" title="CarthageとCocoaPodsの違いを経験交えて比較する" /><published>2020-05-14T00:00:00+09:00</published><updated>2020-05-17T22:15:34+09:00</updated><id>https://blog.mothule.com/ios/ios-carthage-vs-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-carthage-vs-cocoapods">&lt;p&gt;CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。&lt;/p&gt;
 
-&lt;p&gt;この記事ではMacのGoogle日本語入力で変換候補ポップアップがおかしくなったので調査して解決方法をまとめたものです。&lt;br /&gt;
-なお解決にはシェルコマンドをいくつか叩くのでターミナル.appなどターミナルアプリが必要です。&lt;/p&gt;
+&lt;h2 id=&quot;carthageとcocoapodsそれぞれの特徴&quot;&gt;CarthageとCocoaPodsそれぞれの特徴&lt;/h2&gt;
 
-&lt;h2 id=&quot;macでgoogle日本語入力がおかしくなる&quot;&gt;MacでGoogle日本語入力がおかしくなる&lt;/h2&gt;
-
-&lt;p&gt;正常稼働してるGoogle日本語入力は、次の画像のようにタイプしてる文字の近くに変換候補が並んだポップアップが表示される。
-これがおかしくなると、ポップアップの位置が画面の四隅に固定されてしまう現象が発生する。&lt;/p&gt;
-
-&lt;h3 id=&quot;正常時&quot;&gt;正常時&lt;/h3&gt;
-
-&lt;p&gt;正常時は、タイプしてる文字の近くに表示される。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/1.png&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInput&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;異常時&quot;&gt;異常時&lt;/h3&gt;
-
-&lt;p&gt;問題がおきると、これが隅っこで表示される。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/2.gif&quot; width=&quot;50%&quot; alt=&quot;GoogleJapaneseInputWithBug&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;分かってること&quot;&gt;分かってること&lt;/h3&gt;
-
+&lt;h3 id=&quot;共通点&quot;&gt;共通点&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;自分が立ち上げているアプリケーションを全て終了しても解決しない&lt;/li&gt;
-  &lt;li&gt;再起動すると解決する&lt;/li&gt;
+  &lt;li&gt;CocoaPodsならPodfile、CarthageならCartfileと管理ファイルに書かれたライブラリ情報からframeworkを作成します。&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;h3 id=&quot;仮説&quot;&gt;仮説&lt;/h3&gt;
-&lt;p&gt;プロセス再起動で解決するのでは？&lt;/p&gt;
-
-&lt;h2 id=&quot;macのプロセス一覧でgoogle日本語入力を探す&quot;&gt;Macのプロセス一覧でGoogle日本語入力を探す&lt;/h2&gt;
-
-&lt;p&gt;Macでプロセス一覧を見るには&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドを使う。&lt;/p&gt;
-
-&lt;p&gt;ターミナルで&lt;code class=&quot;highlighter-rouge&quot;&gt;ps aux | grep GoogleJapaneseInput&lt;/code&gt;を実行
-このときGoogle Chromeは閉じておく&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps x | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
-  879   ??  S      1:23.75 /Library/Input Methods/GoogleJapaneseInput.app/Contents/MacOS/GoogleJapaneseInput
- 1213   ??  S      1:40.55 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputRenderer.app/Contents/MacOS/GoogleJapaneseInputRenderer
- 2059   ??  S      1:15.08 /Library/Input Methods/GoogleJapaneseInput.app/Contents/Resources/GoogleJapaneseInputConverter.app/Contents/MacOS/GoogleJapaneseInputConverter
-99614 s001  S+     0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;GoogleJapaneseInput
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;, &lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt;のプロセスがヒットする。&lt;br /&gt;
-(最後のプロセスはgrepプロセスなので無関係)&lt;/p&gt;
-
-&lt;p&gt;おそらく名前からしてこうだろう。&lt;/p&gt;
-
+&lt;h3 id=&quot;cocoapods&quot;&gt;CocoaPods&lt;/h3&gt;
 &lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInput&lt;/code&gt; : 設定全般 or 統括&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt; : 描画関係&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputConverter&lt;/code&gt; : 変換関係&lt;/li&gt;
+  &lt;li&gt;作成したframeworkのリンキングの自動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)を自動作成および更新&lt;/li&gt;
+  &lt;li&gt;一元管理されたエコシステムでライブラリの発見率を向上させる
+    &lt;ul&gt;
+      &lt;li&gt;単一障害点となる&lt;/li&gt;
+      &lt;li&gt;メンテナンス必要&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様に依存する&lt;/li&gt;
+  &lt;li&gt;ライブラリ側の依存関係や構築方法を指定したpodspecファイルが必要&lt;/li&gt;
+  &lt;li&gt;複雑しかし高機能&lt;/li&gt;
+  &lt;li&gt;Podsプロジェクトと呼ばれるライブラリ集約プロジェクトからframeworkを作成&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;変換自体はうまく動いているので、おかしいのは変換以外の2つだと思われる。
-もっとも怪しいのは描画を司っているであろう&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;だと予想。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;ライブラリの管理責任を一手に引き受け「使いやすい」をアプローチ&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h2 id=&quot;macのプロセスをkillコマンドで終了させる&quot;&gt;Macのプロセスをkillコマンドで終了させる&lt;/h2&gt;
+&lt;h3 id=&quot;carthage&quot;&gt;Carthage&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;作成したframeworkのリンキングは手動設定&lt;/li&gt;
+  &lt;li&gt;Xcodeワークスペース(.xcworkspace)やプロジェクト(.xcodeproj)に手を加えない&lt;/li&gt;
+  &lt;li&gt;Carthage対応ライブラリは一元管理されておらずGitHubなどのトレンドページや個人の周知活動に依存する
+    &lt;ul&gt;
+      &lt;li&gt;一元管理システムがないのでその分のメンテナンス不要&lt;/li&gt;
+      &lt;li&gt;単一障害点を回避できる※&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;Xcode構造仕様の影響受けない&lt;/li&gt;
+  &lt;li&gt;ライブラリ側はXcodeプロジェクトが必要&lt;/li&gt;
+  &lt;li&gt;手間しかしシンプル&lt;/li&gt;
+  &lt;li&gt;事前にframeworkを作成&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;Macでプロセスを終了させるには&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドを使う。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;kill&lt;/code&gt;コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;余計な影響範囲を最小限に抑え「単純かつ柔軟」をアプローチ&lt;/strong&gt;&lt;/p&gt;
 
-&lt;h3 id=&quot;googlejapaneseinputrendererプロセスのプロセスidを探す&quot;&gt;GoogleJapaneseInputRendererプロセスのプロセスIDを探す&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;ps&lt;/code&gt;コマンドの結果は表形式でプロセスが並ぶ。
-１つ目のカラムはプロセスIDを表す。&lt;/p&gt;
+&lt;p&gt;※Carthageのシステム自体は単一障害点はないですが、運用において実質スタンダードになっているGitホスティングサービスがGitHub一強となっていることから、GitHubが単一障害点になっていると思います。&lt;/p&gt;
 
-&lt;p&gt;先程の表で&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDは&lt;code class=&quot;highlighter-rouge&quot;&gt;1213&lt;/code&gt;になる。&lt;br /&gt;
-なおこのプロセスIDはいつもこの値ではないので注意。&lt;/p&gt;
+&lt;h2 id=&quot;carthageとcocoapodsの各ライブラリ管理方法&quot;&gt;CarthageとCocoaPodsの各ライブラリ管理方法&lt;/h2&gt;
 
-&lt;h3 id=&quot;killコマンドでgooglejapaneseinputrendererを終了させる&quot;&gt;killコマンドでGoogleJapaneseInputRendererを終了させる&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;のプロセスIDが分かったので最終的には、&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;$ kill 1213&lt;/code&gt;をターミナル上で実行すれば&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が終了する。&lt;/p&gt;
+&lt;h3 id=&quot;cocoapods-1&quot;&gt;CocoaPods&lt;/h3&gt;
 
-&lt;h2 id=&quot;macのgoogle日本語入力が直った&quot;&gt;MacのGoogle日本語入力が直った&lt;/h2&gt;
-&lt;p&gt;仮説と予想は的中し、&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;プロセスを終了し、再度テキストエディで文字入力したら&lt;code class=&quot;highlighter-rouge&quot;&gt;GoogleJapaneseInputRenderer&lt;/code&gt;が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。&lt;/p&gt;</content><author><name></name></author><category term="mac" /><category term="google-japanese-input" /><summary type="html">プロセスを再起動すれば直る。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png" /></entry></feed>
+&lt;p&gt;CocoaPodsは&lt;code class=&quot;highlighter-rouge&quot;&gt;$ pod install&lt;/code&gt;でライブラリをインストールすると、&lt;br /&gt;
+対象プロジェクトに対してワークスペース(.xcworkspace)を作成をしたり、&lt;br /&gt;
+プロジェクトに対してオプション更新をしたりと、導入が楽になっているかわりに高機能となっています。&lt;/p&gt;
+
+&lt;p&gt;作成されたワークスペースには、対象プロジェクトとは別に&lt;br /&gt;
+Podsプロジェクト(Pods.xcodeproj)が作成されており、&lt;br /&gt;
+その中にライブラリとなるソースコードが含まれています。&lt;/p&gt;
+
+&lt;p&gt;ビルド実行することでPodsプロジェクト内のソースコードも一緒にビルドされて、&lt;br /&gt;
+対象プロジェクトにはフレームワークとしてリンクされます。&lt;/p&gt;
+
+&lt;p&gt;リンク処理も全てCocoaPodsが自動で行ってくれます。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthage-1&quot;&gt;Carthage&lt;/h3&gt;
+
+&lt;p&gt;Carthageは最低限のライブラリからフレームワークの作成・更新のみとなります。&lt;br /&gt;
+ワークスペースを作成したり、フレームワークをプロジェクトにリンクはしません。&lt;br /&gt;
+プロジェクトへのフレームワーク追加は、自分で行う必要があります。&lt;/p&gt;
+
+&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage-install-guide&quot;&gt;iOSのCarthage導入手順と注意点&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsのメリットデメリット&quot;&gt;CarthageとCocoaPodsのメリット・デメリット&lt;/h2&gt;
+
+&lt;p&gt;Carghageのメリットはビルドが早いだけでなく、安定していることだと思います。&lt;br /&gt;
+CocoaPodsはとにかく楽です。&lt;/p&gt;
+
+&lt;h3 id=&quot;環境構築速度&quot;&gt;環境構築速度&lt;/h3&gt;
+&lt;p&gt;Carthage/CocoaPodsそれぞれの導入コストです。&lt;/p&gt;
+
+&lt;p&gt;これはずば抜けてCocoaPodsに軍配が上がります。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;pod init&lt;/code&gt;でPodfileを作成し、内部にライブラリ名を記入後、&lt;code class=&quot;highlighter-rouge&quot;&gt;pod install&lt;/code&gt;するだけで終わりです。
+あとは生成されたワークスペースを開くだけでライブラリが使える環境になっています。&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルド時間の短縮&quot;&gt;ビルド時間の短縮&lt;/h3&gt;
+&lt;p&gt;コンパイルとリンクなどビルド時間です。&lt;/p&gt;
+
+&lt;p&gt;Carthageの勝ちです。
+CocoaPodsと異なり一度frameworkを作成すれば、&lt;br /&gt;
+以降はXcodeプロジェクト上でReBuildしても、&lt;br /&gt;
+framework側でコンパイルが走ることはありません。&lt;/p&gt;
+
+&lt;h4 id=&quot;速度差を測定してみる&quot;&gt;速度差を測定してみる&lt;/h4&gt;
+&lt;p&gt;それぞれのビルド時間を測定してみました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;測定は最初の5回は慣らし、5回目から数回測定。&lt;/li&gt;
+  &lt;li&gt;測定ではRebuild(Clean+Build)で測定する。&lt;/li&gt;
+  &lt;li&gt;インストールライブラリはSwiftJSON。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;環境&lt;/th&gt;
+      &lt;th&gt;min&lt;/th&gt;
+      &lt;th&gt;max&lt;/th&gt;
+      &lt;th&gt;avg&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;CocoaPods&lt;/td&gt;
+      &lt;td&gt;3.208s&lt;/td&gt;
+      &lt;td&gt;3.492s&lt;/td&gt;
+      &lt;td&gt;3.308s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Carthage&lt;/td&gt;
+      &lt;td&gt;1.478s&lt;/td&gt;
+      &lt;td&gt;1.765s&lt;/td&gt;
+      &lt;td&gt;1.60725s&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;vanilla&lt;/td&gt;
+      &lt;td&gt;0.932s&lt;/td&gt;
+      &lt;td&gt;1.143s&lt;/td&gt;
+      &lt;td&gt;1.04967s&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;効果としては期待どおりで、ビルド時間短縮を目的とするには、十分効果があると見てよいと思います。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcodeの内部仕様の変更&quot;&gt;Xcodeの内部仕様の変更&lt;/h3&gt;
+&lt;p&gt;Xcodeはバージョンが上がると、プロジェクトやワークスペースを表すxmlの構造が変わるケースがあります。&lt;/p&gt;
+
+&lt;p&gt;そしてCocoaPodsはワークスペースやPodsプロジェクトの生成、リンクなど広範囲のXcodeの内部仕様を利用してます。&lt;br /&gt;
+そのためXcodeバージョンアップ時に仕様と挙動が噛み合わず動かなくなることもあります。&lt;br /&gt;
+この場合、CocoaPodsが対応してくれるまで待ったあとにバージョンを上げる必要があります。&lt;/p&gt;
+
+&lt;p&gt;その点Carthageはフレームワークを作成するだけなので、Xcodeの内部仕様の影響は受けません。&lt;br /&gt;
+ライブラリ側はXcodeプロジェクトを必要としますが、これはXcodeアプリから弄るもののため、内部仕様が変わってもXcodeアプリも変わるので影響を受けないです。&lt;/p&gt;
+
+&lt;p&gt;そのため開発安定性はCocoaPodsより勝っているとも言えます。&lt;br /&gt;
+CocoaPodsは毎年Xcodeのメジャーバージョンアップで心配になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;対応ライブラリ数&quot;&gt;対応ライブラリ数&lt;/h3&gt;
+&lt;p&gt;これは具体的な数値を確かめる方法がCarthage側にはないのですが、体感としてはCocoaPodsの方が多く感じます。
+ライブラリを使いたい時にCocoaPodsしか対応していない場面にいくつか出くわしているためです。&lt;/p&gt;
+
+&lt;h2 id=&quot;cocoapodsの昔の話&quot;&gt;CocoaPodsの昔の話&lt;/h2&gt;
+
+&lt;h3 id=&quot;今よりも酷いバグだらけのxcode&quot;&gt;今よりも酷いバグだらけのXcode&lt;/h3&gt;
+&lt;p&gt;私はiOSとは2012年から関わっております。&lt;br /&gt;
+その頃のXcodeは非常に不安定でバグも多く同じ操作でも正しく動かないとか普通でした。&lt;br /&gt;
+Subversion登録ウィザードとか横ページングでステップ表現をしていたが、一度戻ってまた進むと、UIが消えるバグがあったり。&lt;/p&gt;
+
+&lt;h3 id=&quot;cocoapodsが不安定で肝を冷やした話&quot;&gt;CocoaPodsが不安定で肝を冷やした話&lt;/h3&gt;
+&lt;p&gt;CocoaPodsも再構築が失敗するのでソースコードだけでは復元が不可能なケースが稀にあり、&lt;br /&gt;
+そのため実務ではリリース毎にPodsファイル含めたワークスペース内全てを圧縮したzipファイルを別途バックアップ管理せざる得ない状況でした。&lt;br /&gt;
+「そんなことはない。大げさだ」と思う方は運が良かっただけだと思います。&lt;br /&gt;
+Xcodeのバージョン、Rubyバージョン、CocoaPodsバージョン、クラッシュによる過去アプリプロジェクトの復元など色々な条件が重なって私のところでは発生し肝を冷やしました。
+その時は昔からメンバーの一人が昔からMacを触ってる人がいて、その人はリリース毎のバージョンをzipでローカルでbackupしていたので助かったのですが。&lt;/p&gt;
+
+&lt;h3 id=&quot;carthageの登場&quot;&gt;Carthageの登場&lt;/h3&gt;
+&lt;p&gt;Carthageがよく目にするようになったのはiOS7あたりだったと思います。  &lt;br /&gt;
+Xcodeのバージョンを上げたらCocoaPodsのpod installが失敗するようになり、開発が止まってしまうことがありました。&lt;br /&gt;
+そのときにCarthageはフレームワークを事前に用意しておき、Xcodeに追加するだけで動くので、&lt;br /&gt;
+Xcodeの仕様変更に影響をうけることがなく開発ができることが魅力的でした。&lt;/p&gt;
+
+&lt;p&gt;当時、私はビルド時間短縮よりも、Xcodeに引きづられるCocoaPodsの不安定から開放されことが、メリットだと感じていました。（全てのライブラリがCarthage対応してないので開放はされないのですが…w）&lt;/p&gt;
+
+&lt;p&gt;昔からXcodeやCocoaPodsを使っている人は、過去の経験からXcodeのバージョンアップやCocoaPodsのバージョンアップには慎重な方が多そうな気がします。&lt;/p&gt;
+
+&lt;h2 id=&quot;carthageとcocoapodsどちらがいいか&quot;&gt;CarthageとCocoaPodsどちらがいいか&lt;/h2&gt;
+&lt;p&gt;現時点ではどちらがいいとはいえないです。
+Carthage一択でいきたい人がいたとしても、CocoaPodsでしか対応してないライブラリがあるのが事実です。&lt;/p&gt;
+
+&lt;p&gt;またケースによっても変わってくると思います。
+何かライブラリの調査をしたい場合に新しく調査用プロジェクトを作る場合とかであれば、CocoaPodsのほうが楽だと思います。&lt;/p&gt;
+
+&lt;p&gt;現実解は、共存だと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
+&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
+もしCartfileの書き方や個別更新、チーム運用、git管理など使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
+「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><category term="cocoapods" /><summary type="html">CarthageとCocoaPodsの違いは「手軽」か「柔軟」かです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" /></entry></feed>

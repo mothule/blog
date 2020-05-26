@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files","headline":"CarthageのビルドフェイズでOutput Files指定による速度調査","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files"},"image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png","description":"Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files","headline":"CarthageのビルドフェイズでOutput Files指定による速度調査","dateModified":"2020-05-27T01:28:37+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files"},"image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png","description":"Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -237,6 +237,28 @@ github "payjp/payjp-ios"
 github "adjust/ios_sdk"
 </code></pre></div></div>
 
+<p>この場合はInput Filesはこうなります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(SRCROOT)/Carthage/Build/iOS/AFNetworking/AFNetworking.framework
+$(SRCROOT)/Carthage/Build/iOS/suzuki-0000/SKPhotoBrowser.framework
+$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD/SVProgressHUD.framework
+$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON/SwiftyJSON.framework
+$(SRCROOT)/Carthage/Build/iOS/SDWebImage/SDWebImage.framework
+$(SRCROOT)/Carthage/Build/iOS/payjp/payjp-ios.framework
+$(SRCROOT)/Carthage/Build/iOS/adjust/ios_sdk.framework
+</code></pre></div></div>
+
+<p>そして、<strong>Output Files</strong> はこうなります。</p>
+
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking/AFNetworking.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/suzuki-0000/SKPhotoBrowser.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD/SVProgressHUD.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON/SwiftyJSON.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage/SDWebImage.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/payjp/payjp-ios.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/adjust/ios_sdk.framework
+</code></pre></div></div>
+
 <h2 id="測定結果">測定結果</h2>
 
 <p>次の表は調査方法に基づいた調査結果です。</p>
@@ -351,6 +373,11 @@ github "adjust/ios_sdk"
             
             
             
+
+            
+                
+                
+                
 
             
                 
