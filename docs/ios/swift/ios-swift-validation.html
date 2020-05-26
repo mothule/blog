@@ -11,33 +11,33 @@
 
 
 
-  <title>UITableViewのセル間の境界線を変更する - もちゅろぐ</title>
+  <title>iOSアプリのバリデーションについて考えてみた - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="UITableViewのセル間の境界線を変更する" />
+<meta property="og:title" content="iOSアプリのバリデーションについて考えてみた" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="セル間の境界線のスタイルと色と開始位置／終了位置を変更する方法です。 凝ったことはせずデフォルトの機能だけで実現することができます。" />
-<meta property="og:description" content="セル間の境界線のスタイルと色と開始位置／終了位置を変更する方法です。 凝ったことはせずデフォルトの機能だけで実現することができます。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-change-cell-separate" />
-<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-change-cell-separate" />
+<meta name="description" content="アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。 大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、 受け取ったクライアント側は結果をユーザーに伝えます。" />
+<meta property="og:description" content="アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。 大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、 受け取ったクライアント側は結果をユーザーに伝えます。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/swift/ios-swift-validation" />
+<meta property="og:url" content="https://blog.mothule.com/ios/swift/ios-swift-validation" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2017-12-24-ios-uitableview-change-cell-separate.jpg" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-05-27-ios-swift-validation/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2017-12-24T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-05-27T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-change-cell-separate","headline":"UITableViewのセル間の境界線を変更する","dateModified":"2020-04-08T04:40:50+09:00","datePublished":"2017-12-24T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-change-cell-separate"},"image":"https://blog.mothule.com/assets/images/2017-12-24-ios-uitableview-change-cell-separate.jpg","description":"セル間の境界線のスタイルと色と開始位置／終了位置を変更する方法です。 凝ったことはせずデフォルトの機能だけで実現することができます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/swift/ios-swift-validation","headline":"iOSアプリのバリデーションについて考えてみた","dateModified":"2020-05-27T01:24:28+09:00","datePublished":"2020-05-27T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-validation"},"image":"https://blog.mothule.com/assets/images/2020-05-27-ios-swift-validation/0.png","description":"アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。 大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、 受け取ったクライアント側は結果をユーザーに伝えます。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="UITableViewのセル間の境界線を変更する">
-<meta name="twitter:description" content="セル間の境界線のスタイルと色と開始位置／終了位置を変更する方法です。凝ったことはせずデフォルトの機能だけで実現することができます。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2017-12-24-ios-uitableview-change-cell-separate.jpg">
+<meta name="twitter:title" content="iOSアプリのバリデーションについて考えてみた">
+<meta name="twitter:description" content="アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、受け取ったクライアント側は結果をユーザーに伝えます。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-05-27-ios-swift-validation/0.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -140,8 +140,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#uitableview" itemprop="item">
-              <span itemprop="name">UITableView</span>
+            <a href="/tags#swift" itemprop="item">
+              <span itemprop="name">Swift</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -150,7 +150,7 @@
         
         
           <li>
-            UITableViewのセル間の境界線を変更する
+            iOSアプリのバリデーションについて考えてみた
           </li>
         
       
@@ -162,12 +162,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2017-12-24-ios-uitableview-change-cell-separate.jpg" alt="UITableViewのセル間の境界線を変更する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-05-27-ios-swift-validation/0.png" alt="iOSアプリのバリデーションについて考えてみた">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>UITableViewのセル間の境界線を変更する</h1>
+    <h1>iOSアプリのバリデーションについて考えてみた</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -175,12 +175,12 @@
           
             <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
           
-            <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
+            <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2017-12-24</time></span>
+        <span"><time class="post-date">2020-5-27</time></span>
       </div>
     </div>
   </header>
@@ -188,60 +188,96 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#線の種類を変更する">線の種類を変更する</a></li>
-  <li><a href="#線の開始位置と終了位置を調整する">線の開始位置と終了位置を調整する</a></li>
+  <li><a href="#validatorとvalidationresult-protocolの用意">ValidatorとValidationResult protocolの用意</a></li>
+  <li><a href="#名前バリデーションを作ってみる">名前バリデーションを作ってみる</a></li>
+  <li><a href="#メールアドレスバリデーションを作ってみる">メールアドレスバリデーションを作ってみる</a>
+    <ul>
+      <li><a href="#注意バリデーションのエラーメッセージをそのまま使うリスク">注意：バリデーションのエラーメッセージをそのまま使うリスク</a></li>
+    </ul>
+  </li>
+  <li><a href="#バリデーションを使う">バリデーションを使う</a></li>
+  <li><a href="#rnmovaliライブラリ">RNMoValiライブラリ</a></li>
 </ul>
   </div>
   <section>
-  <p>セル間の境界線のスタイルと色と開始位置／終了位置を変更する方法です。
-凝ったことはせずデフォルトの機能だけで実現することができます。</p>
+  <p>アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。
+大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、
+受け取ったクライアント側は結果をユーザーに伝えます。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
-    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
+<p>この方法だと通信処理が走ってしまうのでサーバー負荷に加えて、結果が分かるのに時間もかかります。
+そのため、クライアント側でバリデーションできたほうがUXとしては良いです。</p>
 
-    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
-        <span class="c1">// 線の種類</span>
-        <span class="n">tableView</span><span class="o">.</span><span class="n">separatorStyle</span> <span class="o">=</span> <span class="o">.</span><span class="n">singleLine</span>
-        <span class="c1">// 線の色</span>
-        <span class="n">tableView</span><span class="o">.</span><span class="n">separatorColor</span> <span class="o">=</span> <span class="kt">UIColor</span><span class="o">.</span><span class="n">red</span>
-        <span class="c1">// 先のインセット</span>
-        <span class="n">tableView</span><span class="o">.</span><span class="n">separatorInset</span> <span class="o">=</span> <span class="kt">UIEdgeInsets</span><span class="p">(</span><span class="nv">top</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">left</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">bottom</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="nv">right</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-</code></pre></div></div>
+<p>しかしクライアント側のバリデーションロジックとサーバ側の検証ロジックが完全一致していなければバグの温床となるため
+クライアント側でバリデーションをするにしても最低限にとどまることが多いと思います。</p>
 
-<h2 id="線の種類を変更する">線の種類を変更する</h2>
+<p>そのためあまり使うことが少ないのですが、少し考えてみました。</p>
 
-<p><code class="highlighter-rouge">UITableViewCellSeparatorStyle</code> を使います。</p>
+<h2 id="validatorとvalidationresult-protocolの用意">ValidatorとValidationResult protocolの用意</h2>
 
-<table>
-  <thead>
-    <tr>
-      <th>値</th>
-      <th>意味</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>.none</td>
-      <td>境界線なし</td>
-    </tr>
-    <tr>
-      <td>.singleLine</td>
-      <td>境界線あり</td>
-    </tr>
-  </tbody>
-</table>
+<p>まずは執行役のValidator protocolとその結果を受け取るValidationResult protocolを用意します。</p>
 
-<h2 id="線の開始位置と終了位置を調整する">線の開始位置と終了位置を調整する</h2>
+<p>Validatorには実行メソッドとなる<code class="highlighter-rouge">validate() -&gt; ResultType</code>を用意して、
+Validator protocolの採用クラスはこのメソッドに検証処理をまとめます。</p>
 
-<p>separatorInsetを変更することで線の開始位置（左端）と終了位置（右端）を移動できます。
-topとbottomの値は使われません。</p>
+<p>そして、検証処理の結果としてValidationResult protocolを採用したクラスを返します。</p>
 
-<p>デフォルトは UIEdgeInsetsMake(0, 3, 0, 11) です。</p>
+<p>ValidationResultにはバリデーションが合格したか分かるようにisOkプロパティを用意します。</p>
 
-<p><a href="https://developer.apple.com/documentation/uikit/uitableview/1614851-separatorinset">separatorInset - Apple Developer Documentation</a></p>
+<script src="https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=Validator.swift"></script>
+
+<h2 id="名前バリデーションを作ってみる">名前バリデーションを作ってみる</h2>
+
+<p>先程定義したValidatorとValidationResult protocolを使って名前用バリデーションを作ってみます。</p>
+
+<script src="https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=NameValidator.swift"></script>
+
+<p>ValidationResultをネストしても動かせるので型名をシンプルにできます。<br />
+ValidationResultの採用クラスをenumにしたことでバリデーションエラーの一覧が分かります</p>
+
+<p>また<code class="highlighter-rouge">tooLong(Int)</code>のように内部パラメータを結果に渡すことでバリデーションエラーのハンドリング時に具体的な情報を構築することもできます。</p>
+
+<h2 id="メールアドレスバリデーションを作ってみる">メールアドレスバリデーションを作ってみる</h2>
+
+<p>今度はメールアドレス用バリデーションを作ってみます。</p>
+
+<script src="https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=EmailValidator.swift"></script>
+
+<p><code class="highlighter-rouge">errorMessage: String</code>のように起きたバリデーションエラーのメッセージテキストを<strong>デフォルト値</strong>として使うこともできます。</p>
+
+<h3 id="注意バリデーションのエラーメッセージをそのまま使うリスク">注意：バリデーションのエラーメッセージをそのまま使うリスク</h3>
+<p>バリデーションは画面に結びついたものではなく検証対象に結びついたロジックです。<br />
+そのため1画面とは限りません。また表示する文言も1つとは限りません。<br />
+例えば男性と女声で文言を変える可能性もあれば、エラーした回数におうじて文言を変える可能性もあります。</p>
+
+<p>バリデーションのエラーメッセージを使う場合は、あくまでもデフォルト値として扱うようにしておき、<br />
+呼び出し元で上書き可能にしておくことで、デフォルトで良い部分はコード量を減らし、<br />
+必要に応じて上書きするコードを書けるといった仕組みにしておくことで柔軟性を維持しつつ楽できるようになります。</p>
+
+<h2 id="バリデーションを使う">バリデーションを使う</h2>
+
+<p><a href="/assets/images/2020-05-27-ios-swift-validation/1.png"><img src="/assets/images/2020-05-27-ios-swift-validation/1.png" width="100%" alt="ViewControllerWithValidation" /></a></p>
+
+<p>次は用意した2つのバリデーションをViewController側で使うコードです。<br />
+UIButtonの押下イベント内(<code class="highlighter-rouge">onTouchedRegister(_:)</code>)で2つのUITextFieldからバリデーション処理を入れてます。</p>
+
+<p><code class="highlighter-rouge">errorMessage</code>に文言が入ることで画面内にバリデーションエラーをユーザー通知します。</p>
+
+<p><a href="/assets/images/2020-05-27-ios-swift-validation/2.png"><img src="/assets/images/2020-05-27-ios-swift-validation/2.png" width="50%" alt="ValidationError" /></a></p>
+
+<script src="https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=ViewController.swift"></script>
+
+<h2 id="rnmovaliライブラリ">RNMoValiライブラリ</h2>
+<p>実は昔モデル用バリデーションを作っています。
+<a href="https://github.com/mothule/RNMoVali">mothule/RNMoVali</a></p>
+
+<p>これは1つのプロパティに、名前と用意してあるバリデーターを登録しておくことで、<br />
+バリデーション実行後に名前に紐づくバリデーション結果を受け取る仕組みです。</p>
+
+<p>しかし、記事冒頭に書いたようにあまりニーズがありません。<br />
+クライアント側で「しっかり」バリデーションを必要とするのは、サーバーのない登録系アプリぐらいで、<br />
+それらは大抵が個人が練習で作るToDoアプリぐらいでしょう。</p>
+
+<p>ちなみに作ったのが古いのでSwiftバージョンが古いですが、コンパイルエラーを直せば動くと思います。</p>
 
   </section>
 
@@ -341,7 +377,40 @@ topとbottomの値は使われません。</p>
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-cell-layout-update">UITableViewのサイズ可変なセル内画像を非同期で単体更新する</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-create-perf-script">簡易なSwiftパフォーマンス測定クラスを作った</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-array-forward-op-slow">SwiftのArrayの前方挿入は遅い</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-collection-idiom">iOS開発で便利なSwiftのArrayとDictionaryのイディオム</a></h3></li>
                     
                     
                 
@@ -535,7 +604,117 @@ topとbottomの値は使われません。</p>
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-actual-practice">【初心者必見】UITableViewの実践デザイン分析</a></h3></li>
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/rxswift/ios-swift-rxswfit-basic">RxSwiftの基本を動かして理解する</a></h3></li>
                     
                     
                 
@@ -554,25 +733,27 @@ topとbottomの値は使われません。</p>
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableviewcontroller-basic">【初心者向け】UITableViewControllerの使い方</a></h3></li>
-                    
-                    
+
+            
+                
+                
                 
 
             
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-separator-basic">【初心者向け】UITableView separator(区切り線)を色々試す</a></h3></li>
-                    
-                    
+
+            
+                
+                
                 
 
             
                 
                 
                 
-                    <li><h3><a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a></h3></li>
+                    <li><h3><a href="/ios/scene-kit/ios-scene-kit-abc">360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話</a></h3></li>
                     
                     
                         
