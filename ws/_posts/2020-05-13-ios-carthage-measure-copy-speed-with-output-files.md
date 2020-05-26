@@ -50,6 +50,30 @@ github "payjp/payjp-ios"
 github "adjust/ios_sdk"
 ```
 
+この場合はInput Filesはこうなります。
+
+```
+$(SRCROOT)/Carthage/Build/iOS/AFNetworking/AFNetworking.framework
+$(SRCROOT)/Carthage/Build/iOS/suzuki-0000/SKPhotoBrowser.framework
+$(SRCROOT)/Carthage/Build/iOS/SVProgressHUD/SVProgressHUD.framework
+$(SRCROOT)/Carthage/Build/iOS/SwiftyJSON/SwiftyJSON.framework
+$(SRCROOT)/Carthage/Build/iOS/SDWebImage/SDWebImage.framework
+$(SRCROOT)/Carthage/Build/iOS/payjp/payjp-ios.framework
+$(SRCROOT)/Carthage/Build/iOS/adjust/ios_sdk.framework
+```
+
+そして、**Output Files** はこうなります。
+
+```
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking/AFNetworking.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/suzuki-0000/SKPhotoBrowser.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD/SVProgressHUD.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON/SwiftyJSON.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage/SDWebImage.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/payjp/payjp-ios.framework
+$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/adjust/ios_sdk.framework
+```
+
 ## 測定結果
 
 次の表は調査方法に基づいた調査結果です。
