@@ -205,64 +205,6 @@ class Hoge: NSObject, NSCoding {
 }
 ```
 
-### Validation
-```swift
-protocol ValidationResult {
-    var isOk: Bool { get }
-}
-extension ValidationResult {
-    var isNg: Bool { return !isOk }
-}
-
-extension Array where Element == ValidationResult {
-    var isValidAll: Bool {
-        if contains(where: { $0.isNg }) { return false }
-        return true
-    }
-    var isInvalidAny: Bool {
-        return !isValidAll
-    }
-}
-
-struct EmailAddress {
-    let address: String
-
-    func isValid() -> Bool {
-        return validate().isOk
-    }
-
-    func validate() -> EmailAddressValidateResult {
-        // 厳密にやってもAPI側と完全同期しないといけなくて、面倒なので最低限のみにする。
-        if address.isEmpty {
-            return .required("メールアドレスが入力されていません")
-        }
-
-        if let last = address.last {
-            if last == " " {
-                return .invalidFormat("末尾に空白が含まれてます")
-            }
-        }
-
-        return .none
-    }
-}
-
-enum EmailAddressValidateResult: ValidationResult {
-    case none
-    case required(String)
-    case invalidFormat(String)
-
-    var isOk: Bool { if case .none = self { return true } else { return false } }
-    var errorMessage: String? {
-        switch self {
-        case .none: return nil
-        case let .required(msg): return msg
-        case let .invalidFormat(msg): return msg
-        }
-    }
-}
-```
-
 ### User Preferences
 
 ```swift
