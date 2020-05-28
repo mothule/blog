@@ -18,8 +18,8 @@
 <meta name="generator" content="Jekyll v3.8.5" />
 <meta property="og:title" content="【初心者向け】UITableView(テーブル)の更新方法の基本と注意点" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。" />
-<meta property="og:description" content="UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。" />
+<meta name="description" content="UITableViewは主にシステム側が制御してますが、一部制御をdelegate(=お願い)することで柔軟な制御をしています。 表示データをセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて表示データを更新しても反映されません。" />
+<meta property="og:description" content="UITableViewは主にシステム側が制御してますが、一部制御をdelegate(=お願い)することで柔軟な制御をしています。 表示データをセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて表示データを更新しても反映されません。" />
 <link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic" />
 <meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -29,14 +29,14 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic","headline":"【初心者向け】UITableView(テーブル)の更新方法の基本と注意点","dateModified":"2020-04-17T14:04:52+09:00","datePublished":"2019-10-08T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic"},"image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png","description":"UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。 参照データがセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて参照データを更新しても反映されません。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic","headline":"【初心者向け】UITableView(テーブル)の更新方法の基本と注意点","dateModified":"2020-05-29T01:51:48+09:00","datePublished":"2019-10-08T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-reload-basic"},"image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png","description":"UITableViewは主にシステム側が制御してますが、一部制御をdelegate(=お願い)することで柔軟な制御をしています。 表示データをセルに表示するタイミングもその一つです。 このシステムの更新ルールから外れて表示データを更新しても反映されません。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
 <meta name="twitter:title" content="【初心者向け】UITableView(テーブル)の更新方法の基本と注意点">
-<meta name="twitter:description" content="UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。参照データがセルに表示するタイミングもその一つです。このシステムの更新ルールから外れて参照データを更新しても反映されません。">
+<meta name="twitter:description" content="UITableViewは主にシステム側が制御してますが、一部制御をdelegate(=お願い)することで柔軟な制御をしています。表示データをセルに表示するタイミングもその一つです。このシステムの更新ルールから外れて表示データを更新しても反映されません。">
 <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -190,6 +190,7 @@
     <ul>
   <li><a href="#データが反映されないコード">データが反映されないコード</a>
     <ul>
+      <li><a href="#反映されない原因">反映されない原因</a></li>
       <li><a href="#もっとも手軽な解決方法">もっとも手軽な解決方法</a></li>
     </ul>
   </li>
@@ -200,21 +201,30 @@
       <li><a href="#セクション単位とセル単位の更新と注意点">セクション単位とセル単位の更新と注意点</a></li>
     </ul>
   </li>
-  <li><a href="#更新は奥が深い">更新は奥が深い</a></li>
+  <li><a href="#テーブル更新は奥が深い">テーブル更新は奥が深い</a>
+    <ul>
+      <li><a href="#データ可変対応のリスク">データ可変対応のリスク</a></li>
+      <li><a href="#部分更新のリスク">部分更新のリスク</a></li>
+    </ul>
+  </li>
 </ul>
   </div>
   <section>
-  <p>UITableViewはシステム側が制御しており、一部制御をdelegateすることで制御しています。<br />
-参照データがセルに表示するタイミングもその一つです。<br />
-このシステムの更新ルールから外れて参照データを更新しても反映されません。</p>
+  <p>UITableViewは主にシステム側が制御してますが、一部制御をdelegate(=お願い)することで柔軟な制御をしています。<br />
+表示データをセルに表示するタイミングもその一つです。<br />
+このシステムの更新ルールから外れて表示データを更新しても反映されません。</p>
 
-<p>今回は動的なテーブルの更新方法について説明します。<br />
+<p>この記事では動的なテーブルの更新方法について説明します。<br />
 またいくつか更新方法があるのでそれぞれの説明と注意点についても説明します。</p>
 
 <h2 id="データが反映されないコード">データが反映されないコード</h2>
-<p>次のようにテーブルの参照データを後から更新すると、テーブルには反映されません。<br />
-なぜならテーブルと参照データは特に紐付いていないためです。<br />
-何らかの方法で参照データの変化をテーブル更新に繋げる必要があります。</p>
+
+<p>ここでは、テーブルにデータが反映されないコードとその理由について説明します。</p>
+
+<p><a href="/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png"><img src="/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png" width="100%" alt="" /></a></p>
+
+<p>次のコードは、テーブル更新時に<code class="highlighter-rouge">users</code>を表示データとして参照しています。<br />
+そしてその表示データを<code class="highlighter-rouge">viewDidLoad()</code>メソッド呼び出し後の1.0秒後に更新しています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span>
@@ -239,7 +249,7 @@
 
 <span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UITableViewDataSource</span> <span class="p">{</span>
     <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">numberOfRowsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
-        <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
+        <span class="nf">print</span><span class="p">(</span><span class="s">"</span><span class="se">\(</span><span class="kd">#function</span><span class="se">)</span><span class="s">: users.count: </span><span class="se">\(</span><span class="n">users</span><span class="o">.</span><span class="n">count</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">users</span><span class="o">.</span><span class="n">count</span>
     <span class="p">}</span>
 
@@ -254,49 +264,37 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><a href="/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png"><img src="/assets/images/2019-10-08-ios-uitableview-reload-basic/1.png" width="100%" alt="" /></a></p>
-
-<p>このときのコンソールは下記を出力してます。</p>
+<p>このコードを実行したときコンソールでは下記を出力してます。</p>
 
 <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>viewDidLoad()
-tableView(_:numberOfRowsInSection:)
-tableView(_:numberOfRowsInSection:)
-tableView(_:numberOfRowsInSection:)
-tableView(_:numberOfRowsInSection:)
+tableView(_:numberOfRowsInSection:): users.count: 0
+tableView(_:numberOfRowsInSection:): users.count: 0
 Changed users
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">tableView(_:cellForRowAt:)</code>が呼ばれていないためセルの生成がされません。<br />
-呼ばれない理由は、<code class="highlighter-rouge">users</code>に<code class="highlighter-rouge">User</code>が追加される前にテーブル更新が完結してるためです。</p>
+<p><code class="highlighter-rouge">tableView(_:numberOfRowsInSection:)</code>で0を返したため、<br />
+<code class="highlighter-rouge">tableView(_:cellForRowAt:)</code>が呼ばれておらずセルの生成がされていません。</p>
 
-<p>そのため何らかの方法でテーブルを再更新する必要があります。</p>
+<p>そして、表示データ(<code class="highlighter-rouge">users</code>)を更新してもテーブルが更新されません。<br />
+このように<strong>表示データを後から更新してもテーブルには反映されてません。</strong></p>
 
-<p>ちなみにテーブルの基本的な使い方に関してはこちらの記事をどうぞ</p>
+<h3 id="反映されない原因">反映されない原因</h3>
 
-<div class="link-container">
-  <a href="/ios/uitableview/ios-uitableview-basic">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>初心者向けにiOSのUITableViewの基本的な使い方について説明します。
-この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。
+<p>なぜなら「テーブル更新」と「表示データ」は紐付いていません。<br />
+<code class="highlighter-rouge">users</code>にデータが追加される前にテーブル更新が完了してしまってます。</p>
 
-</span>
-      </div>
-    </div>
-  </a>
-</div>
+<p>きちんと<strong>表示データの変化をテーブル更新に繋げる</strong>必要があります。<br />
+表示データの更新とテーブル更新を紐付けるキーは「<strong>テーブルの再更新</strong>」になります。</p>
+
+<p>もしUITableViewの使い方が曖昧でしたら、<br />
+「<span><a href="/ios/uitableview/ios-uitableview-basic">【初心者向け】UITableViewの基本的な使い方を極める【入門】</a></span>
+」記事をおすすめします。</p>
 
 <h3 id="もっとも手軽な解決方法">もっとも手軽な解決方法</h3>
 
 <p>テーブルの更新方法はいくつかありますが、もっとも手軽なのが <code class="highlighter-rouge">UITableView.reloadData()</code> になります。</p>
 
-<p>例えば次のコードは参照データが変化したらテーブル全体を更新します。</p>
+<p>例えば次のコードは表示データが変化したらテーブル全体を更新します。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">private</span> <span class="k">var</span> <span class="nv">users</span><span class="p">:</span> <span class="p">[</span><span class="kt">User</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span> <span class="p">{</span>
     <span class="k">didSet</span> <span class="p">{</span>
@@ -310,26 +308,26 @@ Changed users
 <p><code class="highlighter-rouge">UITableView</code>の次の３つのメソッドで更新します。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">reloadData</code>: 全てのセルとセクションを更新します。</li>
+  <li><code class="highlighter-rouge">reloadData</code>: テーブルに関する全データを更新します。</li>
   <li><code class="highlighter-rouge">reloadSections(_:with:)</code>: 指定セクションと付随するセルを更新します。</li>
   <li><code class="highlighter-rouge">reloadRows(at:with:)</code>: 指定セルをアニメ付きで更新します。</li>
 </ul>
 
-<p>今回のケースでは <code class="highlighter-rouge">reloadData</code> か <code class="highlighter-rouge">reloadSections(_:with:)</code> で更新ができます。<br />
+<p>今回のケースでは <code class="highlighter-rouge">reloadData</code>か <code class="highlighter-rouge">reloadSections(_:with:)</code> で更新ができます。<br />
 <code class="highlighter-rouge">reloadRows(at:with:)</code> は更新前と更新後のセクション内のセル数が同じでないとランタイムエラーになります。</p>
 
 <h3 id="reloaddataは全体更新しかし">reloadData()は全体更新しかし…</h3>
 
-<p><code class="highlighter-rouge">reloadData</code>はテーブル全体の更新を行います。
-セルのレイアウトがシンプルなら<code class="highlighter-rouge">reloadData()</code>を特に何も考えずに呼んでも問題は起こりにくいです。
-テーブル全体更新ですが、効率のために表示中のセルのみが再表示されます。
+<p><code class="highlighter-rouge">reloadData</code>はテーブル全体の更新を行います。<br />
+しかし、効率のために表示中のセルのみが再表示されます。<br />
 またセル可変してもオフセットを調整する仕組みになっています。</p>
 
 <h3 id="セル参照cellforrowatは注意が必要">セル参照(cellForRowAt)は注意が必要</h3>
-<p>セルの表示には<code class="highlighter-rouge">tableView(_:cellForRowAt:) -&gt; UITableViewCell</code>が呼ばれ内部でセル構築してセルを返します。</p>
+<p>セルの表示直前に<code class="highlighter-rouge">tableView(_:cellForRowAt:) -&gt; UITableViewCell</code>が呼ばれます。<br />
+このメソッドで返したセルが表示されます。</p>
 
-<p>これの注意する点は、スクロールという軽快な動作を求められる場所でセル表示のたびに呼ばれることです。
-そのため1セルが複雑だとそれだけ負荷がかかるため、スクロールにカクつきが起きるようになります。
+<p>これの注意点は、スクロールという軽快な動作を求められる場所でセル表示のたびに呼ばれることです。<br />
+そのため1セルが複雑だとそれだけ負荷がかかるため、スクロールにカクつきが起きるようになります。<br />
 場合によってはスパイクといって数ミリ秒固まります。</p>
 
 <p>例えばセル内にUICollectionViewを入れて横スクロールなどを可能にするカルーセルなどは複雑だと思っていいです。</p>
@@ -338,23 +336,31 @@ Changed users
 
 <p>セル単位とセクション単位の更新は、<code class="highlighter-rouge">reloadSections(_:with:)</code> と <code class="highlighter-rouge">reloadRows(at:with:)</code> があります。</p>
 
-<p><code class="highlighter-rouge">reloadRows(at:with:)</code>は、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。
-また<code class="highlighter-rouge">reloadSections(_:with:)</code>もセクションAとBのセル数と紐づくデータが変化した場合に、セクションAだけを<code class="highlighter-rouge">reloadSections</code>で更新するとランタイムエラーが発生します。
-これは<code class="highlighter-rouge">reloadSections</code>は他のセクションのセル数を求める処理が走っているためです。何故このような処理が走っているのかは公式ドキュメントを見ましたが特に記載がありませんでした。</p>
+<p><code class="highlighter-rouge">reloadRows(at:with:)</code>は、更新前と更新後のセクション内のセル数が一致してる条件が必要なのでケースによっては使えません。</p>
 
-<p>これらは公式ドキュメントを読む感じだとセルの増減に対する制御処理だと思ったほうが良さそうです。</p>
+<p>また<code class="highlighter-rouge">reloadSections(_:with:)</code>もセクションAとBのセル数と紐づくデータが変化した場合に、セクションAだけを<code class="highlighter-rouge">reloadSections</code>で更新するとランタイムエラーが発生します。<br />
+これは<code class="highlighter-rouge">reloadSections</code>は他のセクションのセル数を求める処理が走っているためです。<br />
+何故このような処理が走っているのかは公式ドキュメントを見ましたが特に記載がありませんでした。</p>
 
-<h2 id="更新は奥が深い">更新は奥が深い</h2>
-<p>ほとんどのテーブルでは更新はあまり意識せず簡単なものですが、<br />
-更新を呼びすぎるとシステムは愚直にテーブルを更新してしまいます。</p>
+<p>これらは公式ドキュメントを読むかぎり、セルの増減に対する制御処理だと思ったほうが良さそうです。</p>
 
-<p>しかも1~2回無駄に増えたと程度ではあまり目立ちません。<br />
-しかしスペックの低いiPhoneや高負荷状態では、非常に目立ちます。つまりデータ依存で再現しにくいケースがあります。</p>
+<h2 id="テーブル更新は奥が深い">テーブル更新は奥が深い</h2>
+<p>ほとんどのテーブルにおいて、更新はあまり意識せず簡単なものです。</p>
 
-<p>そして部分更新でもっともリスクな不具合として、更新場所が適切ではなくテーブルが更新されないバグです。<br />
+<h3 id="データ可変対応のリスク">データ可変対応のリスク</h3>
+<p>しかし、更新を呼んだ数だけシステムはテーブルを更新します。
+これが1~2回無駄に更新が増えた程度では問題になりません。
+しかし、スペックの低いiPhoneや高負荷状態では、非常に目立ちます。
+つまりデータ依存で再現しにくい不具合を発生するリスクがあります。<br />
+特に開発環境と本番環境で表示データ量に差が広がりすぎていると、本番環境でしか気づけない不具合などもあり肝を冷やします。</p>
+
+<h3 id="部分更新のリスク">部分更新のリスク</h3>
+<p>部分更新で気をつける不具合は、更新場所が適切ではなくテーブルが更新されないバグです。<br />
 開発中に見つけられればそれは良しとして、データ依存による不具合であれば本番しか起きていない不具合で<br />
 それはアプリとして非常に使いにくい動作として現れます。<br />
 しかも残念ながらクラッシュはほぼしないでしょう。</p>
+
+<p>また反対にクラッシュするケースとしてセル数やセクション数が変わっているにも関わらず更新範囲の不一致があります。</p>
 
   </section>
 
