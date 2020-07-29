@@ -1,0 +1,798 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+
+
+  <title>XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。" />
+<meta property="og:description" content="XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods" />
+<meta property="og:url" content="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-28T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods","headline":"XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する","dateModified":"2020-07-29T22:26:25+09:00","datePublished":"2020-07-28T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods"},"image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png","description":"XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:title" content="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する">
+<meta name="twitter:description" content="XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script data-ad-client="ca-pub-5156339577835247" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <main class="row" style="margin-bottom: 32px;">
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<div class="post-content">
+  <div class="breadcrumbs">
+    <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ios" itemprop="item">
+              <span itemprop="name">iOS</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#xcodegen" itemprop="item">
+              <span itemprop="name">XcodeGen</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+  </div>
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png" alt="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する">
+    </div>
+  
+
+  <header class="post-content-title border-bottom mb-4">
+    <h1>XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する</h1>
+
+    <div class="row">
+      <div class="col-sm-10 post-content-tags">
+        <ul class="list-inline">
+          
+            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#xcodegen">XcodeGen</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#carthage">Carthage</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#cocoapods">CocoaPods</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-sm-2 text-right">
+        <span"><time class="post-date">2020-7-28</time></span>
+      </div>
+    </div>
+  </header>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#xcodegenで通常のiosプロジェクトを用意する">XcodeGenで通常のiOSプロジェクトを用意する</a></li>
+  <li><a href="#プロジェクトにcarthage管理のライブラリを追加する">プロジェクトにCarthage管理のライブラリを追加する</a>
+    <ul>
+      <li><a href="#注意事項">注意事項</a></li>
+      <li><a href="#carthageの実行パスを変更する">Carthageの実行パスを変更する</a></li>
+      <li><a href="#carthageのビルド結果のパスを変更する">Carthageのビルド結果のパスを変更する</a></li>
+    </ul>
+  </li>
+  <li><a href="#プロジェクトにcocoapods管理のライブラリを追加する">プロジェクトにCocoaPods管理のライブラリを追加する</a>
+    <ul>
+      <li><a href="#疑問点">疑問点</a></li>
+    </ul>
+  </li>
+  <li><a href="#findcarthageframeworksというオプション">findCarthageFrameworksというオプション</a></li>
+  <li><a href="#xcodegenでbuild-configurationの設定をする">XcodeGenでBuild Configurationの設定をする</a></li>
+</ul>
+  </div>
+  <section>
+  <p>Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。<br />
+この記事ではXcodeGenを使ってCarthageやCocoaPodsによるライブラリ管理されたXcodeプロジェクトを生成する方法を説明します。</p>
+
+<p>もしXcodeGenの特徴やメリットを把握していない場合は、「<span><a href="/ios/xcodegen/ios-xcodegen-basic">XcodeGenを基本から理解する</a></span>
+」に詳細をまとめてあります。<br />
+また基本的な使い方について理解したい場合は「<span><a href="/ios/xcodegen/ios-xcodegen-basic-usage">XcodeGenで最低限のXcodeプロジェクトを生成する</a></span>
+」に詳細をまとめてあります。<br />
+もしCarthageについて分からない部分があれば、「<span><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></span>
+」に詳細をまとめてあります。</p>
+
+<h2 id="xcodegenで通常のiosプロジェクトを用意する">XcodeGenで通常のiOSプロジェクトを用意する</h2>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">name</span><span class="pi">:</span> <span class="s">iOSWithCarthageProj</span>
+<span class="na">options</span><span class="pi">:</span>
+  <span class="na">bundleIdPrefix</span><span class="pi">:</span> <span class="s">com.mothule</span>
+
+<span class="na">targets</span><span class="pi">:</span>
+  <span class="na">iOSWithCarthageProj</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">application</span>
+    <span class="na">platform</span><span class="pi">:</span> <span class="s">iOS</span>
+    <span class="na">sources</span><span class="pi">:</span> <span class="s">iOSWithCarthageProj</span>
+  <span class="na">iOSWithUTProjTests</span><span class="pi">:</span>
+    <span class="na">type</span><span class="pi">:</span> <span class="s">bundle.unit-test</span>
+    <span class="na">platform</span><span class="pi">:</span> <span class="s">iOS</span>
+    <span class="na">sources</span><span class="pi">:</span> <span class="s">iOSWithCarthageProjTests</span>
+    <span class="na">dependencies</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">target</span><span class="pi">:</span> <span class="s">iOSWithCarthageProj</span>
+</code></pre></div></div>
+
+<p>sourcesの<code class="highlighter-rouge">iOSWithCarthageProj</code>と<code class="highlighter-rouge">iOSWithCarthageProjTests</code>はターゲット追加時にXcodeによって自動生成されるファイル群です。<br />
+このyamlを<code class="highlighter-rouge">project.yml</code>として保存して<code class="highlighter-rouge">xcodegen generate</code>コマンドを実行するとUnitTest付きのiOSアプリのXcodeプロジェクトが生成されます。</p>
+
+<h2 id="プロジェクトにcarthage管理のライブラリを追加する">プロジェクトにCarthage管理のライブラリを追加する</h2>
+
+<p>例えばCarthageで<code class="highlighter-rouge">Alamofire</code>と<code class="highlighter-rouge">AlamofireImage</code>をビルドして、それらをプロダクトターゲットに追加する場合は次のように書きます。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">iOSWithCarthageProj</span><span class="pi">:</span>
+  <span class="c1"># ~ 略 ~</span>
+  <span class="na">dependencies</span><span class="pi">:</span>
+    <span class="pi">-</span> <span class="na">carthage</span><span class="pi">:</span> <span class="s">Alamofire</span>
+    <span class="pi">-</span> <span class="na">carthage</span><span class="pi">:</span> <span class="s">AlamofireImage</span>
+</code></pre></div></div>
+
+<p>これらを追記して実行すると、フレームワークのリンクとビルドフェイズにcarthage copy-frameworksのスクリプトフェイズを自動生成してくれます。<br />
+これは便利ですね。Carthageの面倒な点をキレイにカバーできています。</p>
+
+<h3 id="注意事項">注意事項</h3>
+<p>XcodeGenはあくまでもXcodeプロジェクトをプロジェクト仕様に基づいて生成するだけです。<br />
+そのためCarthageによるフレームワークビルド自体は、事前に行っておく必要があります。<br />
+Carthageでフレームワークビルドをせず先に<code class="highlighter-rouge">xcodegen generate</code>を実行すると次のように形はあるけど存在しないリンク情報がセットされてしまいます。</p>
+
+<p><a href="/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/1.png"><img src="/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/1.png" width="50%" alt="MissedFrameworks" /></a></p>
+
+<p>CartfileやフレームワークビルドはXcodeGenの責任範囲外なので自分で用意します。</p>
+
+<h3 id="carthageの実行パスを変更する">Carthageの実行パスを変更する</h3>
+
+<p>Carthageにパスが通っていれば特に問題は起きません。
+しかし、MintでCarthageを管理している場合、実行パスを指定する必要があります。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
+  <span class="na">carthageExecutablePath</span><span class="pi">:</span> <span class="s">mint run Carthage/Carthage</span>
+</code></pre></div></div>
+
+<h3 id="carthageのビルド結果のパスを変更する">Carthageのビルド結果のパスを変更する</h3>
+
+<p>デフォルトでは<code class="highlighter-rouge">Carthage/Build</code>です。
+もしこれを別のパスに変更したい場合は、<code class="highlighter-rouge">options.carthageBuildPath</code>で指定します。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
+  <span class="na">carthageBuildPath</span><span class="pi">:</span> <span class="s">../../Carthage/Build</span> <span class="c1"># 例</span>
+</code></pre></div></div>
+
+<h2 id="プロジェクトにcocoapods管理のライブラリを追加する">プロジェクトにCocoaPods管理のライブラリを追加する</h2>
+
+<p>XcodeGenで管理されたXcodeプロジェクトにCocoaPods管理のライブラリを追加する場合について説明します。</p>
+
+<p>実は非常に単純です。</p>
+
+<p>というのもXcodeGenはワークスペースではなくプロジェクトを生成しているだけなので、
+プロジェクト仕様ファイルでPodfileなどを参照する必要ありません。
+XcodeGenでプロジェクト生成後に、<code class="highlighter-rouge">pod install</code>を実行するだけです。</p>
+
+<p>そして実はプロジェクト仕様ファイルには、生成コマンド実行後フックが用意されているのでプロジェクト仕様ファイル内で<code class="highlighter-rouge">pod install</code>を呼び出すことを設定できます。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
+  <span class="na">postGenCommand</span><span class="pi">:</span> <span class="s">pod install</span>
+</code></pre></div></div>
+
+<p>このオプションを追加することで<code class="highlighter-rouge">xcodegen generate</code>を実行するとそのまま<code class="highlighter-rouge">pod install</code>も実行されます。</p>
+
+<h3 id="疑問点">疑問点</h3>
+<p>公式では<code class="highlighter-rouge">--use-cache</code>と<code class="highlighter-rouge">postGenCommand</code>オプションを組み合わせを推奨しています。
+しかし、<code class="highlighter-rouge">Podfile</code>を変更して<code class="highlighter-rouge">xcodegen generate</code>を実行してもスキップされてしまいます。
+Podfileだけの更新であれば<code class="highlighter-rouge">pod install</code>を実行すれば良いという話ではありますが…</p>
+
+<h2 id="findcarthageframeworksというオプション">findCarthageFrameworksというオプション</h2>
+
+<p>Carthageのオプションに<code class="highlighter-rouge">findCarthageFrameworks</code>というものがあります。
+これは例えば<code class="highlighter-rouge">ReactiveMapKit</code>を使う場合通常であれば依存してるフレームワーク全部を記載します。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">targets</span><span class="pi">:</span>
+  <span class="na">App</span><span class="pi">:</span>
+    <span class="na">dependencies</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">carthage</span><span class="pi">:</span> <span class="s">ReactiveCocoa</span>
+      <span class="pi">-</span> <span class="na">carthage</span><span class="pi">:</span> <span class="s">ReactiveMapKit</span>
+</code></pre></div></div>
+
+<p>しかし<code class="highlighter-rouge">findCarthageFrameworks</code>オプションを使うことで<code class="highlighter-rouge">ReactiveCocoa</code>の時点で<code class="highlighter-rouge">ReactiveMapKit</code>も一緒に依存解決してくれるオプションです。</p>
+
+<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
+  <span class="na">findCarthageFrameworks</span><span class="pi">:</span> <span class="no">true</span>
+<span class="na">targets</span><span class="pi">:</span>
+  <span class="na">App</span><span class="pi">:</span>
+    <span class="na">dependencies</span><span class="pi">:</span>
+      <span class="pi">-</span> <span class="na">carthage</span><span class="pi">:</span> <span class="s">ReactiveCocoa</span> <span class="c1"># ReactiveMapKitも見つける</span>
+      <span class="pi">-</span> <span class="na">carthage</span><span class="pi">:</span> <span class="s">OtherCarthageDependency</span>
+        <span class="na">findFrameworks</span><span class="pi">:</span> <span class="no">false</span> <span class="c1"># 個別にグローバルオプションを無効化することもできる</span>
+</code></pre></div></div>
+
+<h2 id="xcodegenでbuild-configurationの設定をする">XcodeGenでBuild Configurationの設定をする</h2>
+<p>XcodeGenを使って、Carthage＋CocoaPods＋UnitTestのXcodeプロジェクトを生成することができました。
+次はDebugやReleaseなどBuild Configurationの設定を「<span><a href="/ios/xcodegen/ios-xcodegen-build-configuration-scheme">XcodeGenでBuild ConfigurationとSchemeの設定をする</a></span>
+」で説明します。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+
+    <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-embedded-framework">XcodeGenでEmbedded Frameworkを設定する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-build-configuration-scheme">XcodeGenでBuild ConfigurationとSchemeの設定をする</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-basic">XcodeGenを基本から理解する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-basic-usage">XcodeGenで最低限のXcodeプロジェクトを生成する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-validation">iOSアプリのバリデーションについて考えてみた</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+<script src="/assets/js/shared/post.js" defer></script>
+
+  </article>
+
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-xcassets-basic">【初心者向け】Assets.xcassetsを理解して使う</a>
+            </li>
+            
+            <li>
+                <a href="/db/mysql/mysql-find-mycnf">MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</a>
+            </li>
+            
+            <li>
+                <a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">【初心者向け】UITableViewCellをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+        
+        <a href="/tags#google-japanese-input">Google日本語入力</a>
+      
+        
+        <a href="/tags#ln">lnコマンド</a>
+      
+        
+        <a href="/tags#xcode">Xcode</a>
+      
+        
+        <a href="/tags#xcodegen">XcodeGen</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-sticky">
+    <!-- TOC -->
+    <div class="side-toc" id="side-toc-id">
+    </div>
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
+      
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li><a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+</li>
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+  </aside>
+</main>
+
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+  </body>
+</html>
