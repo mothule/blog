@@ -1,5 +1,6 @@
 ---
 title: XcodeGenでEmbedded Frameworkを設定する
+description: XcodeGenはXcodeによるアプリ開発において非常に有能なパッケージです。そんなXcodeGenでEmbedded Frameworkを設定する方法について説明します。
 categories: ios xcodegen
 tags: ios xcodegen
 image:

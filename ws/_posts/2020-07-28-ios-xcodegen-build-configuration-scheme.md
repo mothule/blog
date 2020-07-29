@@ -1,5 +1,6 @@
 ---
 title: XcodeGenでBuild ConfigurationとSchemeの設定をする
+description: XcodeGenを使う実務で上で必ず必要になってくるBuild Configurationの設定や各ビルドパラメータの調整方法やCIで使えるための設定に関して説明します。
 categories: ios xcodegen
 tags: ios swift xcodegen
 image:
