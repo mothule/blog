@@ -1,0 +1,58 @@
+# Combine メモ
+
+- Publishers: イベント発行者
+  - Future: 非同期で値を返せる
+    - 値を1つ発行してfinish or エラーを発行
+    - 成功したら .success
+    - 失敗したら .failure
+    - インスタンスを生成した時点で中のクロージャを実行する = subscribe(購読)してなくても処理が走る
+  - Just: 非同期ではなく値をすぐに発行してfinish
+    - エラーは発行できない
+  - NotificationCenter.Publisher
+    - publisher(for:object:)
+  - Timer.Publisher
+  - URLSession.Publisher
+  - Subjects
+    - PassthroughSubject
+      - Never
+  - Combining Operator
+    - Publishers.Zip: 複数Publisherを一つにする
+    - prepend
+    - append
+    - merge(with:) 他のPublisherをつなげる(最大8)
+    - switchToLatest: 複数Publisherを1つに結合
+    - combineLatest: 複数Publisherを1つに結合するが↓
+      - 出力値はそれぞれのPublisherの最新値をまとめたTuple
+      - 結合したPublisher全部から値が出力されていないと出力されない
+      - 結合したPublisherいずれから値が出力されたら、出力される
+      - 使用例: 複数入力フォームで全部入力されていないと登録ボタンが押せないようにするなど。
+    - zip: combineLatestに似てる。が↓
+      - 結合したPublisher全部から値が出力されたら出力される.出力数が一致したときに出力される。
+      - 使用例: 非同期APIの待機
+
+).
+  - URLSession.dataTaskPublisher
+  - その他(https://developer.apple.com/documentation/combine)
+    - Deferred: Subscribe(購読)されたとき、渡したPublisherのクロージャを実行する
+    - Empty: 何もせず完了する. 伝達を止めたい場合など
+    - Fail: 何もせず失敗する. 無効なパラメータが渡された場合など
+    - Record: 一連の値と完了を後で再生できる
+      - 使用例: 単体テスト
+  - 購読方法
+    - sink: 2種類ある
+      - エラーあり: sink(receiveCompletion:receiveValue)
+      - エラーなし: sink(receiveValue)
+    - assign: エラーなし時ならオブジェクトのプロパティに直接値を代入できる
+      - assign(to: on:): toに渡すパス先の型とFutureの値型は一致してること
+- Subscribers: イベント購読者
+- Operators: パイプライン処理
+  - map(val)
+  - catch(error)
+  - eraseToAnyPublisher(): 型を簡単に書けるようにするため
+  - tryMap
+  - decode(type:decoder:)
+  - replaceError(with:)
+  - receive(on:)
+    - RunLoop.main
+  - flatMap
+  - store(in:): 複数の cancellableを格納する
