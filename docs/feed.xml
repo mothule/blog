@@ -1,4 +1,31 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-07-08T16:16:46+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Apple Developer ProgramのAccount Holderを譲渡する方法</title><link href="https://blog.mothule.com/ios/ios-how-to-transfer-account-holder-role" rel="alternate" type="text/html" title="Apple Developer ProgramのAccount Holderを譲渡する方法" /><published>2020-07-08T00:00:00+09:00</published><updated>2020-07-08T16:16:39+09:00</updated><id>https://blog.mothule.com/ios/ios-how-to-transfer-account-holder-role</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-how-to-transfer-account-holder-role">&lt;p&gt;Account Holderを譲渡する珍しい機会があったので簡単ですがまとめました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-07-29T12:13:55+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">たまに必要なGitの操作tips</title><link href="https://blog.mothule.com/tools/git/tools-git-tips" rel="alternate" type="text/html" title="たまに必要なGitの操作tips" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T12:13:43+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-tips</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-tips">&lt;p&gt;普段遣いでは使うことはない操作だけどたまに必要になる操作集を集めてます。
+順次増やしていきます。&lt;/p&gt;
+
+&lt;h2 id=&quot;リモートのみファイル削除&quot;&gt;リモートのみファイル削除&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git rm &lt;span class=&quot;nt&quot;&gt;--cached&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ファイル名]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;フォルダ削除&quot;&gt;フォルダ削除&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git rm &lt;span class=&quot;nt&quot;&gt;--cached&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ディレクトリ名]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;最新のみcloneシャロークローン&quot;&gt;最新のみclone(シャロークローン)&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone &lt;span class=&quot;nt&quot;&gt;--depth&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Git URL]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;指定ワードを含むコミットを検索&quot;&gt;指定ワードを含むコミットを検索&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;検索ワード] &lt;span class=&quot;nt&quot;&gt;--patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--patch&lt;/code&gt;をつけない場合はログ一覧が並びます。&lt;/p&gt;
+
+&lt;h2 id=&quot;コミットした人で検索&quot;&gt;コミットした人で検索&lt;/h2&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;--author&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;コミットした人の名前]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="tools" /><category term="git" /><summary type="html">普段遣いでは使うことはない操作だけどたまに必要になる操作集を集めてます。 順次増やしていきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-tools-git-tips/0.png" /></entry><entry><title type="html">Apple Developer ProgramのAccount Holderを譲渡する方法</title><link href="https://blog.mothule.com/ios/ios-how-to-transfer-account-holder-role" rel="alternate" type="text/html" title="Apple Developer ProgramのAccount Holderを譲渡する方法" /><published>2020-07-08T00:00:00+09:00</published><updated>2020-07-08T16:16:39+09:00</updated><id>https://blog.mothule.com/ios/ios-how-to-transfer-account-holder-role</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-how-to-transfer-account-holder-role">&lt;p&gt;Account Holderを譲渡する珍しい機会があったので簡単ですがまとめました。&lt;/p&gt;
 
 &lt;h2 id=&quot;前提&quot;&gt;前提&lt;/h2&gt;
 
@@ -339,35 +366,7 @@ fastlaneやCocoaPodsはRubyで書かれています。&lt;/p&gt;
 &lt;p&gt;あなたもiOSエンジニアならRubyを覚えて、&lt;br /&gt;
 身近な面倒くさいをスクリプトで解決して開発体験を向上させましょう。&lt;br /&gt;
 なおRubyでスクリプトを書く場合は「&lt;span&gt;&lt;a href=&quot;/ruby/ruby-script-basic&quot;&gt;iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業&lt;/a&gt;&lt;/span&gt;
-」の記事を参考にしてみてください。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="xcode" /><category term="ruby" /><summary type="html">キータイプ数「open hoge.xcworkspace」を「xc」にまで減らします。 xcodeprojかxcworkspaceかいちいち確認不要になります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png" /></entry><entry><title type="html">ln -sでシンボリックリンクを作る</title><link href="https://blog.mothule.com/tools/ln/tools-ln-guide" rel="alternate" type="text/html" title="ln -sでシンボリックリンクを作る" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T20:02:14+09:00</updated><id>https://blog.mothule.com/tools/ln/tools-ln-guide</id><content type="html" xml:base="https://blog.mothule.com/tools/ln/tools-ln-guide">&lt;p&gt;Windowsでいうショートカットに似た何か。&lt;/p&gt;
-
-&lt;h2 id=&quot;ln--sでシンボリックリンクを構築&quot;&gt;ln -sでシンボリックリンクを構築&lt;/h2&gt;
-
-&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;ln -s リンク対象パス リンク作成先のディレクトリパス&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;自分の中で「リンク」ってワードが邪魔して&lt;br /&gt;
-src/destどっちがどっちか分からなくなることが頻発する。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ls--lでシンボリックを確認&quot;&gt;ls -lでシンボリックを確認&lt;/h2&gt;
-
-&lt;p&gt;シンボリックリンクはファイル名とリンク先が「&lt;code class=&quot;highlighter-rouge&quot;&gt;name -&amp;gt; original path&lt;/code&gt;」形式で表示されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; /usr/local/bin/
-凄いコマンド -&amp;gt; ~/オレの/最強の/凄いコマンド
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;unlinkでシンボリックリンクを解除&quot;&gt;unlinkでシンボリックリンクを解除&lt;/h2&gt;
-
-&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;unlink シンボリックのパス&lt;/code&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;unlink /usr/local/bin/使い物にならない自作コマンド
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;せめて&lt;code class=&quot;highlighter-rouge&quot;&gt;ln -d&lt;/code&gt;とかにしてほしかったな。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ln" /><summary type="html">Windowsでいうショートカットに似た何か。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png" /></entry><entry><title type="html">ターミナルからRubyMineを起動、比較、マージなどする</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal" rel="alternate" type="text/html" title="ターミナルからRubyMineを起動、比較、マージなどする" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T18:36:28+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal">&lt;p&gt;RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。&lt;/p&gt;
+」の記事を参考にしてみてください。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="xcode" /><category term="ruby" /><summary type="html">キータイプ数「open hoge.xcworkspace」を「xc」にまで減らします。 xcodeprojかxcworkspaceかいちいち確認不要になります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png" /></entry><entry><title type="html">ターミナルからRubyMineを起動、比較、マージなどする</title><link href="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal" rel="alternate" type="text/html" title="ターミナルからRubyMineを起動、比較、マージなどする" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T18:36:28+09:00</updated><id>https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal</id><content type="html" xml:base="https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal">&lt;p&gt;RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。&lt;/p&gt;
 
 &lt;h2 id=&quot;ターミナルからrubymineで開く&quot;&gt;ターミナルからRubyMineで開く&lt;/h2&gt;
 
@@ -503,7 +502,35 @@ end
 もし渡せたら重いp4mergeとはオサラバです。&lt;/p&gt;
 
 &lt;p&gt;&lt;a href=&quot;https://www.jetbrains.com/help/ruby/working-with-the-ide-features-from-command-line.html&quot;&gt;RubyMine - Command-line interface&lt;/a&gt;を参考にしてあります。
-なお公式記事内では &lt;code class=&quot;highlighter-rouge&quot;&gt;inspect&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt; となっています。&lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt;では動かなかったので多分タイポです。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><summary type="html">RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png" /></entry><entry><title type="html">MacのHomebrewとは？仕組み・使い方と用語整理</title><link href="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic" rel="alternate" type="text/html" title="MacのHomebrewとは？仕組み・使い方と用語整理" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-19T00:46:04+09:00</updated><id>https://blog.mothule.com/mac/homebrew/mac-homebrew-basic</id><content type="html" xml:base="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic">&lt;p&gt;便利だけど穴にハマると痛い目見て詰むパッケージ管理マネージャーです。&lt;/p&gt;
+なお公式記事内では &lt;code class=&quot;highlighter-rouge&quot;&gt;inspect&lt;/code&gt; が &lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt; となっています。&lt;code class=&quot;highlighter-rouge&quot;&gt;rinspect&lt;/code&gt;では動かなかったので多分タイポです。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="rubymine" /><summary type="html">RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png" /></entry><entry><title type="html">ln -sでシンボリックリンクを作る</title><link href="https://blog.mothule.com/tools/ln/tools-ln-guide" rel="alternate" type="text/html" title="ln -sでシンボリックリンクを作る" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-18T20:02:14+09:00</updated><id>https://blog.mothule.com/tools/ln/tools-ln-guide</id><content type="html" xml:base="https://blog.mothule.com/tools/ln/tools-ln-guide">&lt;p&gt;Windowsでいうショートカットに似た何か。&lt;/p&gt;
+
+&lt;h2 id=&quot;ln--sでシンボリックリンクを構築&quot;&gt;ln -sでシンボリックリンクを構築&lt;/h2&gt;
+
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;ln -s リンク対象パス リンク作成先のディレクトリパス&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;自分の中で「リンク」ってワードが邪魔して&lt;br /&gt;
+src/destどっちがどっちか分からなくなることが頻発する。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;ls--lでシンボリックを確認&quot;&gt;ls -lでシンボリックを確認&lt;/h2&gt;
+
+&lt;p&gt;シンボリックリンクはファイル名とリンク先が「&lt;code class=&quot;highlighter-rouge&quot;&gt;name -&amp;gt; original path&lt;/code&gt;」形式で表示されます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ln &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; ~/オレの/最強の/凄いコマンド /usr/local/bin/
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;ls&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; /usr/local/bin/
+凄いコマンド -&amp;gt; ~/オレの/最強の/凄いコマンド
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;unlinkでシンボリックリンクを解除&quot;&gt;unlinkでシンボリックリンクを解除&lt;/h2&gt;
+
+&lt;p&gt;Syntax: &lt;code class=&quot;highlighter-rouge&quot;&gt;unlink シンボリックのパス&lt;/code&gt;&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;unlink /usr/local/bin/使い物にならない自作コマンド
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;せめて&lt;code class=&quot;highlighter-rouge&quot;&gt;ln -d&lt;/code&gt;とかにしてほしかったな。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ln" /><summary type="html">Windowsでいうショートカットに似た何か。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png" /></entry><entry><title type="html">MacのHomebrewとは？仕組み・使い方と用語整理</title><link href="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic" rel="alternate" type="text/html" title="MacのHomebrewとは？仕組み・使い方と用語整理" /><published>2020-05-18T00:00:00+09:00</published><updated>2020-05-19T00:46:04+09:00</updated><id>https://blog.mothule.com/mac/homebrew/mac-homebrew-basic</id><content type="html" xml:base="https://blog.mothule.com/mac/homebrew/mac-homebrew-basic">&lt;p&gt;便利だけど穴にハマると痛い目見て詰むパッケージ管理マネージャーです。&lt;/p&gt;
 
 &lt;p&gt;インストールや使い方だけでなく、どのような仕組みでパッケージがインストールされているのか大まかな図式で説明します。&lt;/p&gt;
 
@@ -873,209 +900,4 @@ SwiftyJSONのみを更新する場合&lt;/p&gt;
 &lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
 もしチーム運用、git管理、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
 「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Podfileと書き方が微妙に異なるので注意です。カンマは使いません。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-17-ios-carthage-cartfile-format/0.png" /></entry><entry><title type="html">Carthage bootstrapとGit管理をチーム運用観点で整理</title><link href="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration" rel="alternate" type="text/html" title="Carthage bootstrapとGit管理をチーム運用観点で整理" /><published>2020-05-15T00:00:00+09:00</published><updated>2020-05-17T18:54:56+09:00</updated><id>https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration</id><content type="html" xml:base="https://blog.mothule.com/ios/carthage/ios-carthage-team-collaboration">&lt;p&gt;この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthage-updateとbootstrapの違い&quot;&gt;carthage updateとbootstrapの違い&lt;/h2&gt;
-&lt;p&gt;carthage bootstrapについて説明します。&lt;/p&gt;
-
-&lt;p&gt;説明には、carthage bootstrapと比較するコマンドや関係するファイルを用いて説明します。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;carthage updateは&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;を見てframeworkと&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;を作成する&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;は実際に作成したframeworkの&lt;code class=&quot;highlighter-rouge&quot;&gt;ライブラリ&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;バージョン&lt;/code&gt;が記載されてる&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage bootstrap&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;を見てframeworkを作成する&lt;/li&gt;
-  &lt;li&gt;carthage updateは&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile&lt;/code&gt;を見て&lt;strong&gt;なるべく最新&lt;/strong&gt;のライブラリバージョンを選ぶ&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;1、2、3をイメージで説明します。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/1.png&quot; width=&quot;100%&quot; alt=&quot;Carthageのupdateとbootstrapの違い&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;carthage updateはCartfileを使ってCartfile.resolvedとフレームワークを更新します。&lt;/li&gt;
-  &lt;li&gt;carthage bootstrapはCartfile.resolvedを使ってフレームワークを更新します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;そして最も大きな違いは、&lt;strong&gt;carthage updateには冪等性がなく、carthage bootstrapには冪等性がある点です。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage-updateの動き&quot;&gt;carthage updateの動き&lt;/h3&gt;
-&lt;p&gt;例えば、carthage updateを5月1日に実行して、SwiftyJSON ver4のframeworkが作成されます。&lt;br /&gt;
-半月後にSwiftyJSONが新しいバージョンver5をリリースします。&lt;br /&gt;
-更に&lt;strong&gt;半月後にもう一度carthage updateを実行すると、SwiftyJSON ver5のframeworkが作成されます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/2.png&quot; width=&quot;100%&quot; alt=&quot;Carthage updateの動き&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;つまり、&lt;strong&gt;carthage updateはライブラリ更新をします。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage-bootstrapの動き&quot;&gt;carthage bootstrapの動き&lt;/h3&gt;
-&lt;p&gt;updateではなくbootstrapですると、&lt;br /&gt;
-1ヶ月後でもframeworkのバージョンは変わりません。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-15-ios-carthage-team-collaboration/3.png&quot; width=&quot;100%&quot; alt=&quot;Carthage updateの動き&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;つまり、&lt;strong&gt;carthage updateは環境を再現します。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;carthage-updateとbootstrapの使い分け&quot;&gt;carthage updateとbootstrapの使い分け&lt;/h3&gt;
-
-&lt;p&gt;ライブラリの新規・更新はupdate、環境構築はbootstrapとして使います。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;updateを使うケース
-    &lt;ul&gt;
-      &lt;li&gt;ライブラリを追加する&lt;/li&gt;
-      &lt;li&gt;ライブラリのバージョンを上げる&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;bootstrapを使うケース
-    &lt;ul&gt;
-      &lt;li&gt;新しくチームメンバーが入ってきて、開発環境を構築する&lt;/li&gt;
-      &lt;li&gt;別メンバーがライブラリのバージョンを更新した&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;carthageとgit管理&quot;&gt;CarthageとGit管理&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage update&lt;/code&gt;で&lt;code class=&quot;highlighter-rouge&quot;&gt;Carghage&lt;/code&gt;ディレクトリと&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage.resolved&lt;/code&gt;ファイルが生成されますが、&lt;br /&gt;
-これらはGit管理下に加えるべきでしょうか？除外すべきでしょうか？&lt;/p&gt;
-
-&lt;p&gt;方法は2つあります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;だけをGit管理下において、&lt;code class=&quot;highlighter-rouge&quot;&gt;carthage bootstrap&lt;/code&gt;で&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリを再現する方法と、&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリの両方をGit管理下においてgit cloneだけで再現環境を実現する方法です。&lt;/p&gt;
-
-&lt;h3 id=&quot;cartfileresolvedのみをgit管理下にする&quot;&gt;Cartfile.resolvedのみをGit管理下にする&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;はライブラリ名とそれらのバージョンが記載されたファイルであることは説明しました。&lt;br /&gt;
-しかし&lt;code class=&quot;highlighter-rouge&quot;&gt;framework&lt;/code&gt;はないので、&lt;code class=&quot;highlighter-rouge&quot;&gt;carthge bootstrap&lt;/code&gt;コマンドを使って必要なframeworkを構築します。&lt;/p&gt;
-
-&lt;h3 id=&quot;cartfileresolvedとcarthageディレクトリ&quot;&gt;Cartfile.resolvedとCarthageディレクトリ&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Cartfile.resolved&lt;/code&gt;は他環境で再現をする上で必要です。&lt;br /&gt;
-そこに加えて、&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリがあることで、frameworkの生成が不要になります。&lt;/p&gt;
-
-&lt;h4 id=&quot;buildのみにする&quot;&gt;Buildのみにする&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage&lt;/code&gt;ディレクトリ全てをGit管理下不要です。&lt;br /&gt;
-必要なのは生成済みframeworkなのため、&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage/Build&lt;/code&gt;ディレクトリのみで問題ありません。&lt;/p&gt;
-
-&lt;p&gt;そのため&lt;code class=&quot;highlighter-rouge&quot;&gt;.gitignore&lt;/code&gt;に追記が必要です。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Carthage/Checkouts
-!Carthage/Build
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;どちらがいいのか&quot;&gt;どちらがいいのか？&lt;/h3&gt;
-&lt;p&gt;これは議論されているので、どちらがいいのか確定的なものはありません。&lt;br /&gt;
-答えとしては案件によります。&lt;br /&gt;
-なのでネットで「こちらがいい」と書いてあっても鵜呑みは危険です。&lt;br /&gt;
-理由を見てそれが自分が適用しようとしてる条件に一致しているか判断することを進めます。&lt;/p&gt;
-
-&lt;p&gt;ここではそれぞれのメリット・デメリットを部分的に抜粋します。&lt;br /&gt;
-公平にするため、私情は入れず事実のみを載せます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Cartfile.resolvedのみ
-    &lt;ul&gt;
-      &lt;li&gt;CIで毎回bootstrapでframework作成が必要&lt;/li&gt;
-      &lt;li&gt;bootstrapが失敗するリスクがある&lt;/li&gt;
-      &lt;li&gt;ライブラリ更新済みと未更新ブランチをまたぐとbootstrapが必要&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Cartfile.resolvedとCarthage
-    &lt;ul&gt;
-      &lt;li&gt;Swift versionを変更すると再生成が必要&lt;/li&gt;
-      &lt;li&gt;Pull Requestでdiffが増える&lt;/li&gt;
-      &lt;li&gt;git cloneが遅くなる&lt;/li&gt;
-      &lt;li&gt;1ファイル100MBがあるとプッシュできない&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;swift-versionを変更すると再生成が必要&quot;&gt;Swift versionを変更すると再生成が必要&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Module Stability&lt;/code&gt;の有効になっていないライブラリでは、Swiftのバージョンを上げるたびにframeworkの再生成が必要です。&lt;/p&gt;
-
-&lt;h3 id=&quot;ライブラリ更新後はbootstrapが必要&quot;&gt;ライブラリ更新後はbootstrapが必要&lt;/h3&gt;
-&lt;p&gt;別メンバーがライブラリを更新したブランチをマージさせたら、&lt;br /&gt;
-bootstrapでframework再生成が必要です。&lt;/p&gt;
-
-&lt;h4 id=&quot;pull-requestでdiffが増える&quot;&gt;Pull Requestでdiffが増える&lt;/h4&gt;
-&lt;p&gt;frameworkは1つのファイルではなくディレクトリになっており、中にファイルやディレクトリがあります。&lt;br /&gt;
-そのファイル数だけGit管理となるため、frameworkを追加や変更したときのdiffは量が増えます。&lt;/p&gt;
-
-&lt;h4 id=&quot;ciで毎回bootstrapでframework作成が必要&quot;&gt;CIで毎回bootstrapでframework作成が必要&lt;/h4&gt;
-&lt;p&gt;CIなど新規環境下で環境構築をする場合は、bootstrapを実行してframeworkを生成する必要があります。&lt;br /&gt;
-当然ですが、その分CI時間はかかります。&lt;/p&gt;
-
-&lt;h4 id=&quot;bootstrapが失敗するリスクがある&quot;&gt;bootstrapが失敗するリスクがある&lt;/h4&gt;
-&lt;p&gt;Carthageはxcodebuildでframeworkを生成しています。&lt;br /&gt;
-可能性は低いのですが、私の環境でも何度か起きており、xcodebuildのバージョン差異や他要因で失敗することがあります。&lt;/p&gt;
-
-&lt;p&gt;つまりそれは最悪Git管理下の情報だけでは環境再現が不可能となります。&lt;/p&gt;
-
-&lt;h4 id=&quot;git-cloneが遅くなる&quot;&gt;git cloneが遅くなる&lt;/h4&gt;
-&lt;p&gt;frameworkに関するファイル数が増える分、ファイル数やデータ数は増えるのでそれだけclone時やpull/fecthでのダウンロード時間は増えます。&lt;/p&gt;
-
-&lt;h4 id=&quot;1ファイル100mbがあるとプッシュできない&quot;&gt;1ファイル100MBがあるとプッシュできない&lt;/h4&gt;
-&lt;p&gt;GitHubでは1ファイル100MB以上のファイルコミットはできない制限が設けられており、LFSの設定が必要になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;私のチーム運用観点&quot;&gt;私のチーム運用観点&lt;/h2&gt;
-
-&lt;p&gt;私が過去に経験してきたチームでのCarthage運用は次の通りです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Carthage/Build&lt;/code&gt;ディレクトリはコミットしない&lt;/li&gt;
-  &lt;li&gt;Swiftバージョン更新時は、別ブランチからPull Request通す&lt;/li&gt;
-  &lt;li&gt;Cartfileではバージョン指定してる&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;そして下記はそれぞれのメリット・デメリットに対する考えです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Swift versionを変更すると再生成が必要
-    &lt;ul&gt;
-      &lt;li&gt;バージョン上がる度毎回変更してます&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;ライブラリ更新後はbootstrapが必要
-    &lt;ul&gt;
-      &lt;li&gt;不要です。しかしGitからの取得量は増えます。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;Pull Requestでdiffが増える
-    &lt;ul&gt;
-      &lt;li&gt;バージョンを上げるだけのブランチなのでそもそもそのdiffを殆ど見ないです&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;CIで毎回bootstrapでframework作成が必要
-    &lt;ul&gt;
-      &lt;li&gt;これはコミットしてるので不要です&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;bootstrapが失敗するリスクがある
-    &lt;ul&gt;
-      &lt;li&gt;バージョン固定してるので&lt;code class=&quot;highlighter-rouge&quot;&gt;bootstrap&lt;/code&gt;を使ってないです&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;git cloneが遅くなる
-    &lt;ul&gt;
-      &lt;li&gt;使っているfrmaeworkは10個ですが、それぞれのサイズは大きくはないので気になるほどになってないです&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;1ファイル100MBがあると運用不可能
-    &lt;ul&gt;
-      &lt;li&gt;使ってるframeworkに1ファイル100MBを超えるものはありません。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;バージョン上がるたびに全てのframework生成は時間がかかります。&lt;br /&gt;
-それ以上に回数的にCIにかかる時間が増えます。&lt;br /&gt;
-CIにキャッシュ仕込むのもありますが、CIが限定されますし、そのために開発環境が多少複雑にはなります。&lt;br /&gt;
-git cloneが時間かかるとありますが、git cloneよりbootstrapの方が遥かに時間がかかります。&lt;br /&gt;
-そして昔のCocoaPodsのように再現性がなくなることのリスクも気になります。&lt;/p&gt;
-
-&lt;p&gt;なおこれは私の経験した案件にフィットした運用ですので鵜呑みにせず参考にしてください。&lt;/p&gt;
-
-&lt;h2 id=&quot;もっと体系的に理解する&quot;&gt;もっと体系的に理解する&lt;/h2&gt;
-&lt;p&gt;この記事では、記事の読みやすいよう導入に絞ってます。
-もしCartfileの書き方や個別更新、インストール手順、CocoaPodsとの違いなど使い続けたら必要になる部分は別記事に分けており、&lt;br /&gt;
-「&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;
-」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">この記事ではcarthage bootstrapとは何か？Git管理はどうするか？をチーム運用観点でこれら関係性を整理します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-15-ios-carthage-team-collaboration/0.png" /></entry></feed>
+」からまとめて知ることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="carthage" /><summary type="html">Podfileと書き方が微妙に異なるので注意です。カンマは使いません。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-17-ios-carthage-cartfile-format/0.png" /></entry></feed>
