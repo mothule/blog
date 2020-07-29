@@ -3,6 +3,8 @@ title: XcodeGenを基本から理解する
 description: Xcodeプロジェクト(.xcodeproj)はファイル追加や削除したPullRequestでコンフリクト発生すると解消にストレスが溜まる。これをXcodeGenを使ってXcodeプロジェクトを作成することでGit管理せず解決することができる。
 categories: ios xcodegen
 tags: ios swift xcodegen
+image:
+  path: /assets/images/2020-07-28-ios-xcodegen-basic/0.png
 ---
 Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。  
 でもXcodeGenでXcodeプロジェクトを生成することで、このストレスから解消できます。

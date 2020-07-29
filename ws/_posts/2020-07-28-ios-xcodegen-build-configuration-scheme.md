@@ -2,6 +2,8 @@
 title: XcodeGenでBuild ConfigurationとSchemeの設定をする
 categories: ios xcodegen
 tags: ios swift xcodegen
+image:
+  path: /assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/0.png
 ---
 XcodeGenでDebugやReleaseなどBuild Configuration自体を追加したり、Build Configuration毎にビルドパラメータを変えたりする方法について説明します。
 

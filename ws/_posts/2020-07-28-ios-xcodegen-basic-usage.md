@@ -3,6 +3,8 @@ title: XcodeGenで最低限のXcodeプロジェクトを生成する
 description: XcodeGenを実際に使って最小プロジェクトを作りながら少しずつ付け足して単体テスト付きのiOSアプリプロジェクトを作るまでの流れを説明します。
 categories: ios xcodegen
 tags: ios swift xcodegen
+image:
+  path: /assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png
 ---
 Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。  
 この記事ではXcodeGenを実際に使って最小プロジェクトを作って使い方を説明します。

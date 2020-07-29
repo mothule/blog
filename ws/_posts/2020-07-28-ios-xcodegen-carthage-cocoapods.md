@@ -3,6 +3,8 @@ title: XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成�
 description: XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。
 categories: ios xcodegen
 tags: ios swift xcodegen carthage cocoapods
+image:
+  path: /assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png
 ---
 Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。  
 この記事ではXcodeGenを使ってCarthageやCocoaPodsによるライブラリ管理されたXcodeプロジェクトを生成する方法を説明します。
