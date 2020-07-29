@@ -133,4 +133,4 @@ targets:
 
 ## XcodeGenでBuild Configurationの設定をする
 XcodeGenを使って、Carthage＋CocoaPods＋UnitTestのXcodeプロジェクトを生成することができました。
-次はDebugやReleaseなどBuild Configurationの設定を「{% post_link_text 2020-07-28-ios-xcodegen-build-configuration %}」で説明します。
+次はDebugやReleaseなどBuild Configurationの設定を「{% post_link_text 2020-07-28-ios-xcodegen-build-configuration-scheme %}」で説明します。
