@@ -1,4 +1,389 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-07-29T23:34:23+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">たまに必要なGitの操作tips</title><link href="https://blog.mothule.com/tools/git/tools-git-tips" rel="alternate" type="text/html" title="たまに必要なGitの操作tips" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-tips</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-tips">&lt;p&gt;普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-07-30T19:44:31+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Xcodeのxcconfigの理解と使い方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use" rel="alternate" type="text/html" title="Xcodeのxcconfigの理解と使い方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:41:30+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use">&lt;h2 id=&quot;xcconfigとは&quot;&gt;xcconfigとは？&lt;/h2&gt;
+&lt;p&gt;Xcodeのビルド構成ファイルです。略称からして&lt;strong&gt;XC&lt;/strong&gt;ode&lt;strong&gt;CONFIG&lt;/strong&gt;urationといったところだと思います。&lt;/p&gt;
+
+&lt;p&gt;Xcodeではビルドパラメータ等を「プロジェクト」や「ターゲット」単位で設定ができます。&lt;br /&gt;
+これらは通常XcodeのBuild Settingsから閲覧・編集することができますが、以下の不便があります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;やり直し(アンドゥ)が効かない&lt;/li&gt;
+  &lt;li&gt;クリック操作が多く編集効率が悪い&lt;/li&gt;
+  &lt;li&gt;カスタマイズしたプロパティが把握しにくい&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;xcconfigはこれら&lt;strong&gt;設定情報をテキスト形式の外部ファイルとして扱えるようにしたファイル&lt;/strong&gt;です。&lt;br /&gt;
+xcconfigを使うことでプロジェクトやターゲットのビルドパラメータを定義・上書きできます。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcconfigの利点&quot;&gt;xcconfigの利点&lt;/h3&gt;
+
+&lt;p&gt;xcconfigによる利点は元の編集状況が抱える課題を解決する利点を持ちます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;テキストとして扱える&lt;/li&gt;
+  &lt;li&gt;カスタマイズした設定だけが並ぶ&lt;/li&gt;
+  &lt;li&gt;Gitとの相性が良い(コンフリクト解消難易度が低い)&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;xcconfigの書き方&quot;&gt;xcconfigの書き方&lt;/h2&gt;
+
+&lt;p&gt;下記の項目について説明します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ファイル作成&lt;/li&gt;
+  &lt;li&gt;ビルドパラメータの設定&lt;/li&gt;
+  &lt;li&gt;パラメータの型&lt;/li&gt;
+  &lt;li&gt;変数展開&lt;/li&gt;
+  &lt;li&gt;ビルドパラメータにプラットフォーム条件の追加&lt;/li&gt;
+  &lt;li&gt;他ビルド構成ファイルの読み込み&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;構成設定ファイルのフォーマット説明はAppleの&lt;a href=&quot;https://help.apple.com/xcode/mac/11.4/#/dev745c5c974&quot;&gt;Configuration Settings File (xcconfig) format&lt;/a&gt;を参考してます。&lt;/p&gt;
+
+&lt;h3 id=&quot;ファイル作成&quot;&gt;ファイル作成&lt;/h3&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/1.png&quot; width=&quot;50%&quot; alt=&quot;xcconfig&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;テキスト形式の外部ファイルなので拡張子さえあっていれば追加方法は何でもいいです。&lt;br /&gt;
+もしXcode上から追加する場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;Configuration Settings File&lt;/code&gt;を選んでください。↓&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/2.png&quot; width=&quot;75%&quot; alt=&quot;NewFileOnXcode&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルドパラメータの設定&quot;&gt;ビルドパラメータの設定&lt;/h3&gt;
+
+&lt;p&gt;設定フォーマットは&lt;code class=&quot;highlighter-rouge&quot;&gt;ParameterName = ParameterValue&lt;/code&gt;となります。&lt;br /&gt;
+1ビルドパラメータ1行で表現します。&lt;br /&gt;
+例えば下記はアプリアイコンで使うAppIcon名を設定する例です。&lt;/p&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// アプリアイコンとして使うAppIconの名前&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AppIcon&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;また利点にも記載しましたが、全てのビルドパラメータを記載する必要はありません。&lt;br /&gt;
+カスタマイズしたパラメータだけを列挙します。&lt;br /&gt;
+未記載のビルドパラメータはXcode側が持つデフォルト値が使われます。&lt;/p&gt;
+
+&lt;h4 id=&quot;上書き&quot;&gt;上書き&lt;/h4&gt;
+&lt;p&gt;ビルドパラメータは上書きが可能です。
+後から書いた同一パラメータが使われます。&lt;/p&gt;
+
+&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AppIcon&lt;/span&gt;
+&lt;span class=&quot;nx&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AppIcon2&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ← これが使われる&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この上書きルールは同一ファイルだけでなくファイルを横断して適用されます。&lt;br /&gt;
+つまりプロジェクトで&lt;code class=&quot;highlighter-rouge&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon&lt;/code&gt;と設定しても&lt;br /&gt;
+ターゲットで&lt;code class=&quot;highlighter-rouge&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon2&lt;/code&gt;と設定してれば、&lt;br /&gt;
+そのターゲットでは&lt;code class=&quot;highlighter-rouge&quot;&gt;AppIcon2&lt;/code&gt;になります。&lt;/p&gt;
+
+&lt;h3 id=&quot;パラメータの型&quot;&gt;パラメータの型&lt;/h3&gt;
+
+&lt;p&gt;パラメータの値には多様な型をサポートしています。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;型&lt;/th&gt;
+      &lt;th&gt;説明&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;Boolean&lt;/td&gt;
+      &lt;td&gt;YES or NO&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;string&lt;/td&gt;
+      &lt;td&gt;テキスト&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;enumeration(string)&lt;/td&gt;
+      &lt;td&gt;定義済みテキスト&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;string list&lt;/td&gt;
+      &lt;td&gt;空白区切りのテキスト一覧。もしテキスト内に空白があるなら引用符(“)で囲みます。&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;path&lt;/td&gt;
+      &lt;td&gt;ファイルまたはディレクトリのパス(形式はPOSIXに準拠)&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;path list&lt;/td&gt;
+      &lt;td&gt;string listのpath版&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;h3 id=&quot;変数展開&quot;&gt;変数展開&lt;/h3&gt;
+
+&lt;p&gt;パラメータ値では変数展開ができます。形式は&lt;code class=&quot;highlighter-rouge&quot;&gt;$(variable_name)&lt;/code&gt;になります。
+例えば下記は、既存パラメータを上書きせず追加する例です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OTHER_SWIFT_FLAGS = $(inherited) -v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;下記のように他のビルドパラメータも参照可能です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OBJROOT = $(SYMROOT)
+
+DSTROOT = /tmp/$(PROJECT_NAME).dst
+
+CONFIGURATION_BUILD_DIR = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ビルドパラメータにプラットフォーム条件の追加&quot;&gt;ビルドパラメータにプラットフォーム条件の追加&lt;/h3&gt;
+
+&lt;p&gt;ビルドパラメータには簡易ですが、条件をつけれます。&lt;br /&gt;
+条件はSDKとArchitectureの2種類です。&lt;/p&gt;
+
+&lt;p&gt;SDKとはmacOSやiOSなどで、Architectureはx86_64やarm64などです。&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;条件名&lt;/th&gt;
+      &lt;th&gt;値(例)&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;sdk&lt;/td&gt;
+      &lt;td&gt;macos10.12, iphoneos10.2, iphoneos*&lt;/td&gt;
+    &lt;/tr&gt;
+    &lt;tr&gt;
+      &lt;td&gt;arch&lt;/td&gt;
+      &lt;td&gt;x86_64, arm64&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;設定フォーマットは&lt;code class=&quot;highlighter-rouge&quot;&gt;ParameterName[Conditional=ConditionalValue] = ParameterValue&lt;/code&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;例えば下記はiOSの場合のみ&lt;code class=&quot;highlighter-rouge&quot;&gt;OTHER_SWIFT_FLAGS&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;-v&lt;/code&gt;を追加する例です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OTHER_SWIFT_FLAGS[sdk=iphoneos*] = $(inherited) -v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;組み合わせ可能&quot;&gt;組み合わせ可能&lt;/h4&gt;
+&lt;p&gt;条件sdkとarchは組み合わせ可能です。&lt;/p&gt;
+
+&lt;p&gt;下記はx86_64系iOSの場合のみ&lt;code class=&quot;highlighter-rouge&quot;&gt;OTHER_SWIFT_FLAGS&lt;/code&gt;に&lt;code class=&quot;highlighter-rouge&quot;&gt;-v&lt;/code&gt;を追加する例です。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OTHER_SWIFT_FLAGS[sdk=iphoneos*][arch=x86_64] = $(inherited) -v
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;他ビルド構成ファイルの読み込み&quot;&gt;他ビルド構成ファイルの読み込み&lt;/h3&gt;
+&lt;p&gt;xcconfigは他のxcconfigを読み込み展開できます。
+他xcconfigを読み込むには&lt;code class=&quot;highlighter-rouge&quot;&gt;#include &quot;other file path&quot;&lt;/code&gt;を使います。&lt;br /&gt;
+パスは「ファイル名」「相対パス」「絶対パス」を利用できます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ファイル名: 同一ディレクトリ上から一致するファイルを探します。&lt;/li&gt;
+  &lt;li&gt;相対パス: 同一ディレクトリ上を基点として一致するファイルを探します。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;他xcconfigへのパス解決は、ビルド設定を処理する前に実施されます。&lt;/p&gt;
+
+&lt;h4 id=&quot;指定ファイル見つからない場合&quot;&gt;指定ファイル見つからない場合&lt;/h4&gt;
+&lt;p&gt;ビルド時に指定のファイルが見つからない場合は、ビルド警告が表示されます。&lt;br /&gt;
+もしこの警告を抑制したい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;#include? &quot;other file path&quot;&lt;/code&gt;と、&lt;code class=&quot;highlighter-rouge&quot;&gt;?&lt;/code&gt;をつけます。&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルドパラメータ名が分からない場合&quot;&gt;ビルドパラメータ名が分からない場合&lt;/h3&gt;
+
+&lt;p&gt;もしビルドパラメータ名が分からない場合は「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config&quot;&gt;xcconfigで使うパラメータ名の見つけ方&lt;/a&gt;&lt;/span&gt;
+」に探し方をまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcconfigの実践活用&quot;&gt;xcconfigの実践活用&lt;/h2&gt;
+
+&lt;p&gt;実際のアプリ開発ではどういった運用にすればよいか考えてみます。&lt;/p&gt;
+
+&lt;p&gt;ターゲットの数ですが、最近の動向から考えて次の観点で考えてみます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;4層構造&lt;/li&gt;
+  &lt;li&gt;AppExtension N個&lt;/li&gt;
+  &lt;li&gt;各ターゲットにUT&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これを元にプロジェクトとターゲットの構図で表すと次のツリー構造です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Project
+    &lt;ul&gt;
+      &lt;li&gt;App&lt;/li&gt;
+      &lt;li&gt;AppTests&lt;/li&gt;
+      &lt;li&gt;AppUITests&lt;/li&gt;
+      &lt;li&gt;AppCore&lt;/li&gt;
+      &lt;li&gt;AppCoreTests&lt;/li&gt;
+      &lt;li&gt;Infrastructure&lt;/li&gt;
+      &lt;li&gt;InfrastructureTests&lt;/li&gt;
+      &lt;li&gt;Library&lt;/li&gt;
+      &lt;li&gt;LibraryTests&lt;/li&gt;
+      &lt;li&gt;AppExtensionA&lt;/li&gt;
+      &lt;li&gt;AppExtensionB&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;11個のターゲットに分かれました。
+分類としては、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;レイヤー別&lt;/li&gt;
+  &lt;li&gt;テスト or プロダクト&lt;/li&gt;
+  &lt;li&gt;AppExtension&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;の3カテゴリに分けられるかと思います。&lt;/p&gt;
+
+&lt;p&gt;これを11個それぞれにビルドパラメータを設定するのは多量の重複が発生するので、&lt;code class=&quot;highlighter-rouge&quot;&gt;include&lt;/code&gt;を利用したxcconfigの階層化が必要かと思います。
+階層の分け方としては先程分けた分類に加えてBuild Configurationを考慮した形が良さそうです。&lt;/p&gt;
+
+&lt;p&gt;つまり整理すると、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;プロジェクトのビルド構成を用意&lt;/li&gt;
+  &lt;li&gt;テスト共通ビルド構成を用意&lt;/li&gt;
+  &lt;li&gt;プロダクト共通ビルド構成を用意&lt;/li&gt;
+  &lt;li&gt;ターゲット毎にビルド構成を用意&lt;/li&gt;
+  &lt;li&gt;Build Configuration共通ビルド構成を用意&lt;/li&gt;
+  &lt;li&gt;Build Configuration毎にビルド構成を用意&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;になります。&lt;/p&gt;
+
+&lt;p&gt;Xcode上で見るとこうなります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/3.png&quot; width=&quot;50%&quot; alt=&quot;LayeredTargets&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これを今回はxcconfigを次のように分けました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/4.png&quot; width=&quot;100%&quot; alt=&quot;xcconfigMapping&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;xcconfigファイル自体はターゲットフォルダと1:1ではないので、別フォルダとして集約しました。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/5.png&quot; width=&quot;50%&quot; alt=&quot;xcconfigFiles&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;これら親子関係をツリー表現すると次のようになります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Project.base.xcconfig
+    &lt;ul&gt;
+      &lt;li&gt;Project.debug.xcconfig
+        &lt;ul&gt;
+          &lt;li&gt;App.base.xcconfig
+            &lt;ul&gt;
+              &lt;li&gt;App.debug.xcconfig&lt;/li&gt;
+            &lt;/ul&gt;
+          &lt;/li&gt;
+          &lt;li&gt;UnitTest.xcconfig&lt;/li&gt;
+          &lt;li&gt;UITest.xcconfig&lt;/li&gt;
+          &lt;li&gt;Extension.base.xcconfig&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;releaseはdebugと同じなので省略してあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;今回この構成にした理由&quot;&gt;今回この構成にした理由&lt;/h3&gt;
+
+&lt;p&gt;テスト系xcconfigはReleaseで実施するケースは考えにくいためBuild Configurationによる分割はしていません。&lt;br /&gt;
+AppExtension系xconfigは今の所この2つのターゲットではDebugでもReleaseでも差異はなかったのですが、開発を進めるにあたって分岐しやすいと予想し、
+そのときの半分準備としてbaseを使うようにしています。今後DebugとReleaseで分岐が生まれたら、他同様になります。&lt;/p&gt;
+
+&lt;p&gt;当然ですが、この構成が絶対正解ではありません。プロダクトの特性や状況に応じその時点でのベストは異なります。&lt;br /&gt;
+エンジニアはこれを考えるのが重要な仕事です。&lt;/p&gt;
+
+&lt;h3 id=&quot;xcconfigの中身&quot;&gt;xcconfigの中身&lt;/h3&gt;
+
+&lt;p&gt;中身は予定通り&lt;code class=&quot;highlighter-rouge&quot;&gt;#include&lt;/code&gt;プレフィックスを使って共通xcconfigを読み込んでから、それぞれ特別値を個別設定してあります。&lt;/p&gt;
+
+&lt;p&gt;例えば下記は&lt;code class=&quot;highlighter-rouge&quot;&gt;Project.debug.xcconfig&lt;/code&gt;の全容です。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &quot;Project.base.xcconfig&quot;
+
+//:configuration = Debug
+ONLY_ACTIVE_ARCH = YES
+DEBUG_INFORMATION_FORMAT = dwarf
+ENABLE_TESTABILITY = YES
+GCC_DYNAMIC_NO_PIC = NO
+GCC_OPTIMIZATION_LEVEL = 0
+GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 $(inherited)
+SWIFT_OPTIMIZATION_LEVEL = -Onone
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG
+MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;xcconfigは少なく抑えたほうが良い&quot;&gt;xcconfigは少なく抑えたほうが良い&lt;/h3&gt;
+
+&lt;p&gt;なるべくxcconfigのファイル数は少なくなるような構成にしてたほうがいいです。&lt;br /&gt;
+なぜならxcconfigの分岐ポイントが「Build Configuration」「Platform」「Testing」と分岐要素が多いことでファイル数が増えやすいためです。&lt;br /&gt;
+例えば、今回はBuild Configurationはデフォルト値となるDebugとReleaseの2つでした。&lt;br /&gt;
+しかしこれがDebug,Staging,AppStore,CIと4つに増えた場合にその分増えてしまいます。&lt;/p&gt;
+
+&lt;p&gt;もしBuild Configurationも増えるようであれば、組み合わせ爆発を起こさないためにも工夫が必要です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigとは？ Xcodeのビルド構成ファイルです。略称からしてXCodeCONFIGurationといったところだと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" /></entry><entry><title type="html">xcconfigで使うパラメータ名の見つけ方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" rel="alternate" type="text/html" title="xcconfigで使うパラメータ名の見つけ方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:41:17+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config">&lt;p&gt;TODO: リード文&lt;/p&gt;
+
+&lt;p&gt;xcconfigについて分からない方は「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-use&quot;&gt;Xcodeのxcconfigの理解と使い方&lt;/a&gt;&lt;/span&gt;
+」に詳細を説明してます。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcconfigへの変換はxcodeがサポートしてる&quot;&gt;xcconfigへの変換はXcodeがサポートしてる&lt;/h2&gt;
+&lt;p&gt;xcconfigの書き方が分かって実際に使おうにも、ビルドパラメータ名が分からないと設定しようがありません。&lt;br /&gt;
+XcodeのBuild Settingsでカスタマイズされた項目をxcconfigだとどうやって書けばいいか分からないと思います。&lt;br /&gt;
+実は&lt;strong&gt;XcodeのBuild Settingsからxcconfigへのフォーマット変換はXcodeがサポートしてます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;確認する方法は2つあります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更する&lt;/li&gt;
+  &lt;li&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピーする&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;xcodeのbuild-settingsの表示方法をパラメータ名に変更&quot;&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;を開いた後に&lt;code class=&quot;highlighter-rouge&quot;&gt;Editor &amp;gt; Show Setting Names&lt;/code&gt;を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。&lt;/p&gt;
+
+&lt;video playsinline=&quot;&quot; muted=&quot;&quot; autoplay=&quot;&quot; loop=&quot;&quot; width=&quot;100%&quot; height=&quot;400px&quot;&gt;
+    &lt;source type=&quot;video/mp4&quot; src=&quot;/assets/videos/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.mp4&quot; /&gt;
+&lt;/video&gt;
+
+&lt;p&gt;例えば、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Architectures &amp;gt; Build Active Architecture Only&lt;/code&gt;であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH&lt;/code&gt;になります。&lt;br /&gt;
+これをxcconfigで使うなら&lt;code class=&quot;highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH = YES&lt;/code&gt;となります。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー&quot;&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー&lt;/h2&gt;
+
+&lt;p&gt;パラメータ名を確認するだけなら&lt;code class=&quot;highlighter-rouge&quot;&gt;Show Setting Names&lt;/code&gt;で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。&lt;br /&gt;
+実は&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildSettings&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Active Architecture Only&lt;/code&gt;の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
+ONLY_ACTIVE_ARCH = YES
+
+//:configuration = Release
+
+//:completeSettings = some
+ONLY_ACTIVE_ARCH
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;//:configuration = Debug&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Release&lt;/code&gt;とはBuild Configuration毎に分けられてます。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Release&lt;/code&gt;に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;some&lt;/code&gt;はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。&lt;/p&gt;
+
+&lt;p&gt;もう一つ例として&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Options &amp;gt; Debug Information Format&lt;/code&gt;を見るとこうなります。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
+DEBUG_INFORMATION_FORMAT = dwarf
+
+//:configuration = Release
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+//:completeSettings = some
+DEBUG_INFORMATION_FORMAT
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これを使えばXcodeからxcconfigを作りたい場合に&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">TODO: リード文</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" /></entry><entry><title type="html">たまに必要なGitの操作tips</title><link href="https://blog.mothule.com/tools/git/tools-git-tips" rel="alternate" type="text/html" title="たまに必要なGitの操作tips" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-tips</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-tips">&lt;p&gt;普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。
 順次増やしていきます。&lt;/p&gt;
 
 &lt;h2 id=&quot;リモートのみファイル削除&quot;&gt;リモートのみファイル削除&lt;/h2&gt;
@@ -636,7 +1021,7 @@ Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒
 &lt;p&gt;XcodeGenを使って最小プロジェクトからUnitTest付きiOSアプリの最小プロジェクトを作りました。&lt;/p&gt;
 
 &lt;p&gt;次はCarthageやCocoaPodsを使ったライブラリ追加を「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-carthage-cocoapods&quot;&gt;XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;
-」で説明します。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。 この記事ではXcodeGenを実際に使って最小プロジェクトを作って使い方を説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png" /></entry><entry><title type="html">XcodeGenでBuild ConfigurationとSchemeの設定をする</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme" rel="alternate" type="text/html" title="XcodeGenでBuild ConfigurationとSchemeの設定をする" /><published>2020-07-28T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme">&lt;p&gt;XcodeGenでDebugやReleaseなどBuild Configuration自体を追加したり、Build Configuration毎にビルドパラメータを変えたりする方法について説明します。&lt;/p&gt;
+」で説明します。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。 この記事ではXcodeGenを実際に使って最小プロジェクトを作って使い方を説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png" /></entry><entry><title type="html">XcodeGenでBuild ConfigurationとSchemeの設定をする</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme" rel="alternate" type="text/html" title="XcodeGenでBuild ConfigurationとSchemeの設定をする" /><published>2020-07-28T00:00:00+09:00</published><updated>2020-07-30T16:35:11+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme">&lt;p&gt;XcodeGenでDebugやReleaseなどBuild Configuration自体を追加したり、Build Configuration毎にビルドパラメータを変えたりする方法について説明します。&lt;/p&gt;
 
 &lt;h2 id=&quot;新しいbuild-configurationの登録&quot;&gt;新しいBuild Configurationの登録&lt;/h2&gt;
 &lt;p&gt;デフォルトはDebugとReleaseですが、新しく追加する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;configs&lt;/code&gt;プロパティで追加します。&lt;/p&gt;
@@ -696,38 +1081,8 @@ Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒
 &lt;p&gt;ではどうやってXcodeのBuild Settingsとプロジェクト仕様のプロパティを一致させてるのか？&lt;br /&gt;
 それはxcconfigと同じ値を使っています。&lt;/p&gt;
 
-&lt;p&gt;実はxcconfigで使う値は、XcodeのBuild Settingsの各項目を選択してコピーするとxcconfigの値が取れます。
-しかも下記のように設定がされている項目とBuild Configuration毎に分けてくれます。
-未設定(デフォルト値)の部分は「//:completeSettings = some」以降になります。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
-SDKROOT = iphoneos
-TARGETED_DEVICE_FAMILY = 1,2
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
-INFOPLIST_FILE = iOSWithCarthageProj/Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = com.mothule.iOSWithCarthageProj
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
-CODE_SIGN_IDENTITY = iPhone Developer
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
-
-
-//:configuration = Release
-SDKROOT = iphoneos
-TARGETED_DEVICE_FAMILY = 1,2
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
-INFOPLIST_FILE = iOSWithCarthageProj/Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = com.mothule.iOSWithCarthageProj
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
-CODE_SIGN_IDENTITY = iPhone Developer
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
-
-
-//:completeSettings = some
-ADDITIONAL_SDKS
-ARCHS
-SDKROOT
-// 〜 略 〜
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config&quot;&gt;xcconfigで使うパラメータ名の見つけ方&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
 
 &lt;h2 id=&quot;xcodegenでテスト時のbuild-configurationをciにする&quot;&gt;XcodeGenでテスト時のBuild ConfigurationをCIにする&lt;/h2&gt;
 
@@ -833,158 +1188,4 @@ SDKROOT
 再送信する場合は Resend Request
 のボタンになります。&lt;/p&gt;
 
-&lt;p&gt;以上です。とても単純ではありますが、滅多にすることはないので記事にしました。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">Account Holderを譲渡する珍しい機会があったので簡単ですがまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-08-ios-how-to-transfer-account-holder-role/eyecatch.png" /></entry><entry><title type="html">お前らはPO業務を舐めすぎている</title><link href="https://blog.mothule.com/notebook/service-design/notebook-service-design-wrong-po-works" rel="alternate" type="text/html" title="お前らはPO業務を舐めすぎている" /><published>2020-06-02T00:00:00+09:00</published><updated>2020-06-02T12:54:06+09:00</updated><id>https://blog.mothule.com/notebook/service-design/notebook-service-design-wrong-po-works</id><content type="html" xml:base="https://blog.mothule.com/notebook/service-design/notebook-service-design-wrong-po-works">&lt;p&gt;PO(Product Owner)はアジャイルのスクラムで定義された用語です。&lt;br /&gt;
-チーム内では、施策や機能の策定、取捨選択によるプロダクト成長に責任を持ちます。&lt;br /&gt;
-もしPOがいなくなったら、市場におけるライバルとの差別化や対象ユーザーの理解、利用者の体験最大化が全部停滞します。&lt;/p&gt;
-
-&lt;h2 id=&quot;poをチームマネージャー勘違いするな&quot;&gt;POをチームマネージャー勘違いするな&lt;/h2&gt;
-&lt;p&gt;POをチームメンバーの管理をする業務とか、企画の裁量権持った人だと盛大な勘違いする人がいます。&lt;br /&gt;
-ましてやPOを掛け持ちさせる上長がいたりします。&lt;br /&gt;
-そんな適当な考えでプロダクトが成長するなら誰も苦労しないです。&lt;br /&gt;
-もう少しPOという役割の重要性を理解し、健全なスクラムチームが増えることを願います。&lt;/p&gt;
-
-&lt;h2 id=&quot;poの本業はプロダクト成長&quot;&gt;POの本業はプロダクト成長&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;担当サービスおいて誰よりも詳しい&lt;/li&gt;
-  &lt;li&gt;指標をいつもに見てる(売上だけでなくUXやCXの指標定義や分析を行う)&lt;/li&gt;
-  &lt;li&gt;その上で次の施策について導き出す&lt;/li&gt;
-  &lt;li&gt;施策の優先度を↑の観点から決めれる&lt;/li&gt;
-  &lt;li&gt;プロモ／協力会社／会社戦略などの要望とユーザー目線のすり合わせができる&lt;/li&gt;
-  &lt;li&gt;slackの担当領域chに食いついており、担当領域の議論や疑問が発生したら即解決して他メンバーに無駄な時間を費やせない&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;こんなpoはpoではない&quot;&gt;こんなPOはPOではない&lt;/h2&gt;
-&lt;ul&gt;
-  &lt;li&gt;問題が起きてから動く&lt;/li&gt;
-  &lt;li&gt;聞かれた優先順位を並べるだけ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;それだとユーザー目線は育たないし、UX向上しないし、成長速度は鈍牛、プロダクトは偏って成長する。&lt;/p&gt;
-
-&lt;p&gt;&lt;strong&gt;↑これはもうただのメンテナンス。調整屋。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;これでユーザーファーストとか言ってたらアイス両手に持ったデブが「私ダイエットする！」って言ってるのと同義です。&lt;/p&gt;
-
-&lt;h2 id=&quot;エンジニアが技術でux提供するとしたらpoは&quot;&gt;エンジニアが技術でUX提供するとしたらPOは&lt;/h2&gt;
-&lt;p&gt;POはプロダクトを通してUXを提供することが責務です。&lt;br /&gt;
-規模によってはCX観点です。&lt;/p&gt;
-
-&lt;p&gt;CXを簡単に言うなら「ユーザーがニーズを感じたその日からプロダクトを通して実際にニーズを達成して人生に良い体験をするまで」のプロダクトだけでなくそれを取り巻く環境も巻き込んだ視野の広い観点です。&lt;/p&gt;
-
-&lt;p&gt;話を戻します。&lt;br /&gt;
-POにとってプロダクト成長、つまり「プロダクトを開発する」とは、&lt;br /&gt;
-人と多数の機能をつなぎ合わせること、いわばプログラミングです。&lt;/p&gt;
-
-&lt;p&gt;置かれた状況下(時間、予算、市場)でツールやプラクティスを駆使して情報を獲得し&lt;br /&gt;
-それらをプロダクトのミッション達成するにはどう繋げて実現するかに全力を注ぐことです。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;iOSエンジニアはiOSアプリ開発に責任を持つ人&lt;/li&gt;
-  &lt;li&gt;AndroidエンジニアはAndroidアプリ開発に責任を持つ人&lt;/li&gt;
-  &lt;li&gt;WebエンジニアはWebアプリ開発に責任を持つ人&lt;/li&gt;
-  &lt;li&gt;BackendエンジニアはBackend開発に責任を持つ人&lt;/li&gt;
-  &lt;li&gt;POはプロダクト開発に責任を持つ人&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;poとはプロダクト開発に必要不可欠な戦力&quot;&gt;POとはプロダクト開発に必要不可欠な戦力&lt;/h2&gt;
-
-&lt;p&gt;立たされた市場(ユーザー特性やライバル)を把握し&lt;br /&gt;
-プロダクト全体つまりCX目線で強み弱み、不足を把握して&lt;br /&gt;
-プロダクトの分析や成長をメインとするポジションです。&lt;/p&gt;
-
-&lt;h3 id=&quot;例えばpoがいないと&quot;&gt;例えばPOがいないと&lt;/h3&gt;
-&lt;ul&gt;
-  &lt;li&gt;上層部より出された方針／戦略においてプロダクトの弱みや不足に気づく人がいない。&lt;/li&gt;
-  &lt;li&gt;方針／戦略からプロダクトの施策で何をやるべきか話を進められる人がいない&lt;/li&gt;
-  &lt;li&gt;プロダクト成長におけるKPIツリーを作れる人がいない&lt;/li&gt;
-  &lt;li&gt;プロダクトの体調管理をできてる人がいない
-    &lt;ul&gt;
-      &lt;li&gt;調子が悪いとき、どこが問題か分析する人がいない&lt;/li&gt;
-      &lt;li&gt;業界トレンドやライバル、プロダクトの市場、プロダクトが提供するサービスの知識から有効な解決策を出せる人がいない&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;慢性なユーザー理解してる人がいない&lt;/li&gt;
-  &lt;li&gt;↑上記を仕方なく他メンバーが片手間でやっている&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;新人にpoをやらせるな&quot;&gt;新人にPOをやらせるな&lt;/h2&gt;
-
-&lt;p&gt;上記で説明したPOが持つ責任を新人など経験浅い人材がこなせるわけないです。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="service-design" /><summary type="html">PO(Product Owner)はアジャイルのスクラムで定義された用語です。 チーム内では、施策や機能の策定、取捨選択によるプロダクト成長に責任を持ちます。 もしPOがいなくなったら、市場におけるライバルとの差別化や対象ユーザーの理解、利用者の体験最大化が全部停滞します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-06-02-notebook-service-design-wrong-po-works/eyecatch.png" /></entry><entry><title type="html">iOSアプリのバリデーションについて考えてみた</title><link href="https://blog.mothule.com/ios/swift/ios-swift-validation" rel="alternate" type="text/html" title="iOSアプリのバリデーションについて考えてみた" /><published>2020-05-27T00:00:00+09:00</published><updated>2020-05-27T01:24:28+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-validation</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-validation">&lt;p&gt;アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。
-大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、
-受け取ったクライアント側は結果をユーザーに伝えます。&lt;/p&gt;
-
-&lt;p&gt;この方法だと通信処理が走ってしまうのでサーバー負荷に加えて、結果が分かるのに時間もかかります。
-そのため、クライアント側でバリデーションできたほうがUXとしては良いです。&lt;/p&gt;
-
-&lt;p&gt;しかしクライアント側のバリデーションロジックとサーバ側の検証ロジックが完全一致していなければバグの温床となるため
-クライアント側でバリデーションをするにしても最低限にとどまることが多いと思います。&lt;/p&gt;
-
-&lt;p&gt;そのためあまり使うことが少ないのですが、少し考えてみました。&lt;/p&gt;
-
-&lt;h2 id=&quot;validatorとvalidationresult-protocolの用意&quot;&gt;ValidatorとValidationResult protocolの用意&lt;/h2&gt;
-
-&lt;p&gt;まずは執行役のValidator protocolとその結果を受け取るValidationResult protocolを用意します。&lt;/p&gt;
-
-&lt;p&gt;Validatorには実行メソッドとなる&lt;code class=&quot;highlighter-rouge&quot;&gt;validate() -&amp;gt; ResultType&lt;/code&gt;を用意して、
-Validator protocolの採用クラスはこのメソッドに検証処理をまとめます。&lt;/p&gt;
-
-&lt;p&gt;そして、検証処理の結果としてValidationResult protocolを採用したクラスを返します。&lt;/p&gt;
-
-&lt;p&gt;ValidationResultにはバリデーションが合格したか分かるようにisOkプロパティを用意します。&lt;/p&gt;
-
-&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=Validator.swift&quot;&gt;&lt;/script&gt;
-
-&lt;h2 id=&quot;名前バリデーションを作ってみる&quot;&gt;名前バリデーションを作ってみる&lt;/h2&gt;
-
-&lt;p&gt;先程定義したValidatorとValidationResult protocolを使って名前用バリデーションを作ってみます。&lt;/p&gt;
-
-&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=NameValidator.swift&quot;&gt;&lt;/script&gt;
-
-&lt;p&gt;ValidationResultをネストしても動かせるので型名をシンプルにできます。&lt;br /&gt;
-ValidationResultの採用クラスをenumにしたことでバリデーションエラーの一覧が分かります&lt;/p&gt;
-
-&lt;p&gt;また&lt;code class=&quot;highlighter-rouge&quot;&gt;tooLong(Int)&lt;/code&gt;のように内部パラメータを結果に渡すことでバリデーションエラーのハンドリング時に具体的な情報を構築することもできます。&lt;/p&gt;
-
-&lt;h2 id=&quot;メールアドレスバリデーションを作ってみる&quot;&gt;メールアドレスバリデーションを作ってみる&lt;/h2&gt;
-
-&lt;p&gt;今度はメールアドレス用バリデーションを作ってみます。&lt;/p&gt;
-
-&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=EmailValidator.swift&quot;&gt;&lt;/script&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;errorMessage: String&lt;/code&gt;のように起きたバリデーションエラーのメッセージテキストを&lt;strong&gt;デフォルト値&lt;/strong&gt;として使うこともできます。&lt;/p&gt;
-
-&lt;h3 id=&quot;注意バリデーションのエラーメッセージをそのまま使うリスク&quot;&gt;注意：バリデーションのエラーメッセージをそのまま使うリスク&lt;/h3&gt;
-&lt;p&gt;バリデーションは画面に結びついたものではなく検証対象に結びついたロジックです。&lt;br /&gt;
-そのため1画面とは限りません。また表示する文言も1つとは限りません。&lt;br /&gt;
-例えば男性と女声で文言を変える可能性もあれば、エラーした回数におうじて文言を変える可能性もあります。&lt;/p&gt;
-
-&lt;p&gt;バリデーションのエラーメッセージを使う場合は、あくまでもデフォルト値として扱うようにしておき、&lt;br /&gt;
-呼び出し元で上書き可能にしておくことで、デフォルトで良い部分はコード量を減らし、&lt;br /&gt;
-必要に応じて上書きするコードを書けるといった仕組みにしておくことで柔軟性を維持しつつ楽できるようになります。&lt;/p&gt;
-
-&lt;h2 id=&quot;バリデーションを使う&quot;&gt;バリデーションを使う&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-27-ios-swift-validation/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-27-ios-swift-validation/1.png&quot; width=&quot;100%&quot; alt=&quot;ViewControllerWithValidation&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;次は用意した2つのバリデーションをViewController側で使うコードです。&lt;br /&gt;
-UIButtonの押下イベント内(&lt;code class=&quot;highlighter-rouge&quot;&gt;onTouchedRegister(_:)&lt;/code&gt;)で2つのUITextFieldからバリデーション処理を入れてます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;errorMessage&lt;/code&gt;に文言が入ることで画面内にバリデーションエラーをユーザー通知します。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-05-27-ios-swift-validation/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-05-27-ios-swift-validation/2.png&quot; width=&quot;50%&quot; alt=&quot;ValidationError&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;script src=&quot;https://gist.github.com/mothule/498c37e2f78bc9a527d25df8c0dc615d.js?file=ViewController.swift&quot;&gt;&lt;/script&gt;
-
-&lt;h2 id=&quot;rnmovaliライブラリ&quot;&gt;RNMoValiライブラリ&lt;/h2&gt;
-&lt;p&gt;実は昔モデル用バリデーションを作っています。
-&lt;a href=&quot;https://github.com/mothule/RNMoVali&quot;&gt;mothule/RNMoVali&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;これは1つのプロパティに、名前と用意してあるバリデーターを登録しておくことで、&lt;br /&gt;
-バリデーション実行後に名前に紐づくバリデーション結果を受け取る仕組みです。&lt;/p&gt;
-
-&lt;p&gt;しかし、記事冒頭に書いたようにあまりニーズがありません。&lt;br /&gt;
-クライアント側で「しっかり」バリデーションを必要とするのは、サーバーのない登録系アプリぐらいで、&lt;br /&gt;
-それらは大抵が個人が練習で作るToDoアプリぐらいでしょう。&lt;/p&gt;
-
-&lt;p&gt;ちなみに作ったのが古いのでSwiftバージョンが古いですが、コンパイルエラーを直せば動くと思います。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">アプリの入力フォームで無効なデータを登録しないようバリデーションを挟むことがあります。 大抵はAPI側で検証して問題があればバリデーションエラーとしてレスポンスを返し、 受け取ったクライアント側は結果をユーザーに伝えます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-05-27-ios-swift-validation/0.png" /></entry></feed>
+&lt;p&gt;以上です。とても単純ではありますが、滅多にすることはないので記事にしました。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">Account Holderを譲渡する珍しい機会があったので簡単ですがまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-08-ios-how-to-transfer-account-holder-role/eyecatch.png" /></entry></feed>
