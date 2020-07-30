@@ -1,5 +1,6 @@
 ---
 title: xcconfigで使うパラメータ名の見つけ方
+description: xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。
 categories: ios xcode
 tags: ios xcode xcconfig
 image:
