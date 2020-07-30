@@ -1,22 +1,21 @@
 ---
 title: XcodeGenのSettings周りを整理する
+description: XcodeGenは便利ですが、settingsやconfigsやbase,settingGroupsや重複時の未指定時の挙動など不透明な部分が多い点を整理して説明した記事です。
 categories: ios xcodegen
 tags: ios xcodegen xcode xcconfig
+image:
+  path: /assets/images/2020-07-29-ios-xcodegen-settings/0.png
 ---
 XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。
-
-
-- プロジェクト仕様(project.yml)内ではXcode同様に変数展開される
-
 
 ## Settingsとは？
 XcodeGenのプロジェクト仕様ファイル内で使えるビルド設定を定義するプロパティと総称。
 
 - `settings`はプロジェクトとターゲットの2箇所で使える
 - ビルド設定の値の解決はレベル順となっている
-- `settings`内で`configs`別にビルドパラメータを設定できる
-- `settings`内でどのBuild Configurationにも適用される`base`プロパティがある
-- `settingGroups`でビルド設定をグルーピングできて共通化できる
+- Build Configuration(DebugやReleaseなど)別でビルドパラメータを設定できる
+- Build Configurationにも適用される`base`プロパティがある
+- `settingGroups`でビルド設定を共通化できる
 - Xcode同様に自動で適用されるプリセットビルド設定がある
 - ビルド設定群を別ファイル(xcconfig)として抜き出せる
 
@@ -71,9 +70,9 @@ targets:
 この挙動に関しては理解は容易と言える。
 
 
-## `settings`内で`configs`別にビルドパラメータを設定できる
+## Build Configuration別でビルドパラメータを設定できる
 
-Build Configuration別でビルド設定を変えることができます。  
+DebugやReleaseなどBuild Configuration別でビルド設定を変えることができます。  
 例えば下記はDebug時は`DEBUG`が定義され、Release時は`RELEASE`が定義されます。
 
 ```yml
@@ -88,7 +87,7 @@ targets:
 ```
 
 
-## `settings`内でどのBuild Configurationにも適用される`base`プロパティがある
+## Build Configurationにも適用される`base`プロパティがある
 Build Configurationに依存せず設定したビルドパラメータを入れたい場合は、`base`を使います。
 
 ```yml
@@ -111,7 +110,7 @@ settings:
 この場合はどのBuild Configurationであっても`DEVELOPMENT_TEAM`は`HogeHoge`となります。
 
 
-## `settingGroups`でビルド設定をグルーピングできて共通化できる
+## `settingGroups`でビルド設定を共通化できる
 
 例えばターゲットが5個あって、そのうち3つには同じビルド設定群がある場合、`settingGroups`を使うことで設定箇所を1箇所にまとめることができます。
 
@@ -136,7 +135,7 @@ targets:
       DEBUG_MODE: NO
 ```
 
-これだと1箇所ずつ更新する必要があり、更新し忘れなどが置きます。  
+これだと1箇所ずつ更新する必要があり、更新し忘れなどが発生します。  
 下記のように`settingGroups`を使うことで情報を1箇所に集約することができます。
 
 ```yml
@@ -163,18 +162,17 @@ target:
 ```
 
 ## Xcode同様に自動で適用されるプリセットビルド設定がある
-Xcodeがプロジェクトやターゲット追加時に自動で設定が適用されるのと同様に、XcodeGenがプロジェクトやターゲット作成するときは、プロジェクトとターゲットにデフォルト設定を適用する。
+Xcodeがプロジェクトやターゲット追加時に自動で設定が設定されるのと同様に、XcodeGenにもプロジェクトとターゲットにデフォルト設定を設定する。  
 プロジェクトにはDebugとReleaseの設定が、ターゲットにはプラットフォームとプロダクトタイプに応じた設定が適用される。
 
 これらのプリセットを変更・無効するには`options.settingPresets`プロパティを使います。  
 デフォルトでは`all`となっておりプロジェクトとターゲット両方に対して適用されています。  
-もしターゲットだけ、プロジェクトだけとしたい場合は、`options.settingPresets: project`や`targets`とすることで部分適用されます。
+もしターゲットだけ、プロジェクトだけとしたい場合は、`options.settingPresets: project`や`targets`とすることで部分適用されます。  
 もし両方とも自動適用を無効にする場合は`none`になります。
 
 ## ビルド設定群を別ファイル(xcconfig)として抜き出せる
-Build Configurationの種類数が多かったり、ターゲット毎の設定が多かったり、ビルド設定の種類数が多かったりなどで、ビルド設定のボリュームが大きくなると、プロジェクト仕様全体として見通しの悪いファイルとなってしまいます。
-
-その場合は`configFiles`を使ってビルド設定の集合体を別ファイルとして用意し、それをインポートする形で設定することができます。  
+ビルド設定のボリュームが大きくなると、プロジェクト仕様全体として見通しの悪いファイルとなってしまいます。  
+その場合は`configFiles`を使って`xcconfig`ファイルをインポートしてビルド構成を別ファイルに抽出できます。
 
 ```yml
 configFiles:
@@ -187,4 +185,9 @@ targets:
       Release: MyApp/release.xcconfig
 ```
 
-`configFiles`でもプロジェクト単位とターゲット単位で設定できます。
+`configFiles`でもプロジェクト単位とターゲット単位で設定できます。  
+`xcconfig`について分からない方は「{% post_link_text 2020-07-30-ios-xcode-xcconfig-how-to-use %}」にまとめた記事をお読みください。
+
+## 結論
+この記事を書くにあたって、xcconfigの仕様を調べましたが、settings周りの仕様はxcconfigの仕様を把握すると理解が一気に深まりました。  
+xcconfigについては「{% post_link_text 2020-07-30-ios-xcode-xcconfig-how-to-use %}」にまとめてあります。
