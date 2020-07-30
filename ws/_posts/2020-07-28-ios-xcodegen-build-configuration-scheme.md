@@ -127,6 +127,7 @@ schemes:
 
 ## XcodeGenでEmbedded frameworkを登録する
 
-XcodeGenでBuild Configuration別のビルドチューニングについて説明しました。
+XcodeGenでBuild Configuration別のビルドチューニングについて説明しました。  
+もしまだSettings周りで不明点がある場合は、「{% post_link_text 2020-07-29-ios-xcodegen-settings %}」をおすすめします。
 
-次はEmbedded frameworkを
+次はEmbedded frameworkを「{% post_link_text 2020-07-29-ios-embedded-framework %}」で説明します。
