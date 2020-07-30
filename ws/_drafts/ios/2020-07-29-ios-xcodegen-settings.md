@@ -1,7 +1,7 @@
 ---
 title: XcodeGenのSettings周りを整理する
-categories: TODO
-tags: TODO
+categories: ios xcodegen
+tags: ios xcodegen xcode xcconfig
 ---
 XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。
 
