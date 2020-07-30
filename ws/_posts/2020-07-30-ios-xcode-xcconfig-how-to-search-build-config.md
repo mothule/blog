@@ -6,7 +6,8 @@ tags: ios xcode xcconfig
 image:
   path: /assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png
 ---
-TODO: リード文
+xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。  
+この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。
 
 xcconfigについて分からない方は「{% post_link_text 2020-07-30-ios-xcode-xcconfig-how-to-use %}」に詳細を説明してます。
 
