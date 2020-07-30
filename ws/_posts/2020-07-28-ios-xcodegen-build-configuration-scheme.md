@@ -71,46 +71,7 @@ settings:
 ではどうやってXcodeのBuild Settingsとプロジェクト仕様のプロパティを一致させてるのか？  
 それはxcconfigと同じ値を使っています。
 
-### 見つけ方その1
-
-実はxcconfigで使う値は、XcodeのBuild Settingsの各項目を選択してコピーするとxcconfigの値が取れます。
-しかも下記のように設定がされている項目とBuild Configuration毎に分けてくれます。
-未設定(デフォルト値)の部分は「//:completeSettings = some」以降になります。
-
-```
-//:configuration = Debug
-SDKROOT = iphoneos
-TARGETED_DEVICE_FAMILY = 1,2
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
-INFOPLIST_FILE = iOSWithCarthageProj/Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = com.mothule.iOSWithCarthageProj
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
-CODE_SIGN_IDENTITY = iPhone Developer
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
-
-
-//:configuration = Release
-SDKROOT = iphoneos
-TARGETED_DEVICE_FAMILY = 1,2
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
-INFOPLIST_FILE = iOSWithCarthageProj/Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = com.mothule.iOSWithCarthageProj
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
-CODE_SIGN_IDENTITY = iPhone Developer
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
-
-
-//:completeSettings = some
-ADDITIONAL_SDKS
-ARCHS
-SDKROOT
-// 〜 略 〜
-```
-
-### 見つけ方その2
-
-`Build Settings`を開いた状態で、`Editor > Show Setting Names`を選択すると、表示が変数名に変わります。  
-この変数名がプロジェクト仕様ファイルでプロパティとして設定することができます。
+詳しくは「{% post_link_text 2020-07-30-ios-xcode-xcconfig-how-to-search-build-config %}」にまとめてあります。
 
 ## XcodeGenでテスト時のBuild ConfigurationをCIにする
 
