@@ -29,7 +29,7 @@
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme","headline":"XcodeGenでBuild ConfigurationとSchemeの設定をする","dateModified":"2020-07-29T23:34:17+09:00","datePublished":"2020-07-28T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme"},"image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/0.png","description":"XcodeGenを使う実務で上で必ず必要になってくるBuild Configurationの設定や各ビルドパラメータの調整方法やCIで使えるための設定に関して説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme","headline":"XcodeGenでBuild ConfigurationとSchemeの設定をする","dateModified":"2020-07-30T16:35:11+09:00","datePublished":"2020-07-28T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme"},"image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/0.png","description":"XcodeGenを使う実務で上で必ず必要になってくるBuild Configurationの設定や各ビルドパラメータの調整方法やCIで使えるための設定に関して説明します。","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -266,38 +266,8 @@
 <p>ではどうやってXcodeのBuild Settingsとプロジェクト仕様のプロパティを一致させてるのか？<br />
 それはxcconfigと同じ値を使っています。</p>
 
-<p>実はxcconfigで使う値は、XcodeのBuild Settingsの各項目を選択してコピーするとxcconfigの値が取れます。
-しかも下記のように設定がされている項目とBuild Configuration毎に分けてくれます。
-未設定(デフォルト値)の部分は「//:completeSettings = some」以降になります。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
-SDKROOT = iphoneos
-TARGETED_DEVICE_FAMILY = 1,2
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
-INFOPLIST_FILE = iOSWithCarthageProj/Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = com.mothule.iOSWithCarthageProj
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
-CODE_SIGN_IDENTITY = iPhone Developer
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
-
-
-//:configuration = Release
-SDKROOT = iphoneos
-TARGETED_DEVICE_FAMILY = 1,2
-LD_RUNPATH_SEARCH_PATHS = $(inherited) @executable_path/Frameworks
-INFOPLIST_FILE = iOSWithCarthageProj/Info.plist
-PRODUCT_BUNDLE_IDENTIFIER = com.mothule.iOSWithCarthageProj
-FRAMEWORK_SEARCH_PATHS = $(inherited) $(PROJECT_DIR)/Carthage/Build/iOS
-CODE_SIGN_IDENTITY = iPhone Developer
-ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon
-
-
-//:completeSettings = some
-ADDITIONAL_SDKS
-ARCHS
-SDKROOT
-// 〜 略 〜
-</code></pre></div></div>
+<p>詳しくは「<span><a href="/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config">xcconfigで使うパラメータ名の見つけ方</a></span>
+」にまとめてあります。</p>
 
 <h2 id="xcodegenでテスト時のbuild-configurationをciにする">XcodeGenでテスト時のBuild ConfigurationをCIにする</h2>
 
@@ -377,6 +347,16 @@ SDKROOT
             
             
             
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -750,6 +730,9 @@ SDKROOT
       
         
         <a href="/tags#xcodegen">XcodeGen</a>
+      
+        
+        <a href="/tags#xcconfig">xcconfig</a>
       
   </div>
 </div>
