@@ -9,6 +9,7 @@ class Article
   attr_reader :url_path
   attr_reader :basename
   attr_reader :basename_without_ext
+  attr_reader :basename_wihtout_date
   attr_reader :extname
   attr_reader :content
   attr_reader :html
@@ -25,6 +26,7 @@ class Article
     @extname = document.extname
     @basename = document.basename
     @basename_without_ext = document.basename_without_ext
+    @basename_wihtout_date = @basename_without_ext[11..-1]
     @content = document.content
     @html = document.output
     @relative_path = document.relative_path
