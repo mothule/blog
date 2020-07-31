@@ -1,4 +1,251 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-07-31T00:47:52+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Xcodeのxcconfigの理解と使い方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use" rel="alternate" type="text/html" title="Xcodeのxcconfigの理解と使い方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:41:30+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use">&lt;h2 id=&quot;xcconfigとは&quot;&gt;xcconfigとは？&lt;/h2&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-07-31T17:43:32+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOS開発環境には重要エコシステムとなるMintの理解と利用</title><link href="https://blog.mothule.com/ios/mint/ios-mint-basic-usage" rel="alternate" type="text/html" title="iOS開発環境には重要エコシステムとなるMintの理解と利用" /><published>2020-07-31T00:00:00+09:00</published><updated>2020-07-31T17:41:29+09:00</updated><id>https://blog.mothule.com/ios/mint/ios-mint-basic-usage</id><content type="html" xml:base="https://blog.mothule.com/ios/mint/ios-mint-basic-usage">&lt;p&gt;HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。&lt;/p&gt;
+
+&lt;h2 id=&quot;mintとは&quot;&gt;Mintとは？&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/yonaskolb/Mint&quot;&gt;Mint&lt;/a&gt;は、&lt;strong&gt;Swift製コマンドラインツールのパッケージマネージャーです。&lt;/strong&gt;
+ツールのインストールと実行ができます。&lt;/p&gt;
+
+&lt;p&gt;同じパッケージマネージャーにHomebrewがあり、そちらのほうが遥かにメジャーです。&lt;br /&gt;
+Swift製ツールもHomebrewからインストールできますし、&lt;br /&gt;
+パッケージマネージャーとして使いやすく安定しています。&lt;/p&gt;
+
+&lt;p&gt;では「何故Mintがいいのか？Homebrewじゃ駄目なのか？」について説明します。&lt;/p&gt;
+
+&lt;h2 id=&quot;ios開発におけるhomebrewが抱える課題&quot;&gt;iOS開発におけるHomebrewが抱える課題&lt;/h2&gt;
+&lt;p&gt;通常はMac1台に複数のiOSアプリやSwiftアプリを開発するはずです。&lt;br /&gt;
+各プロジェクトでは開発環境に差異あれど、同じツールを使うことは当然ありえます。&lt;br /&gt;
+同様にそれぞれ使ってるバージョンが異なることも起きます。&lt;/p&gt;
+
+&lt;p&gt;しかし、&lt;strong&gt;Homebrewは異なるバージョンのツールをバージョン別管理ができません。&lt;/strong&gt;&lt;br /&gt;
+そのためツールをバージョンアップすると、各プロジェクトに影響を与え動作しなくなるリスクがあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;mintが解決する課題&quot;&gt;Mintが解決する課題&lt;/h2&gt;
+&lt;p&gt;Mintは、バージョン別管理を可能とし、管轄外のバージョン変更課題を解決します。&lt;/p&gt;
+
+&lt;p&gt;Mintでは、&lt;code class=&quot;highlighter-rouge&quot;&gt;Mintfile&lt;/code&gt;によりプロジェクト毎にバージョンを管理できます。&lt;br /&gt;
+これにより&lt;strong&gt;PC内の複数プロジェクト間のSwiftツールの疎結合を実現します。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;mintのパッケージ管理方法について&quot;&gt;Mintのパッケージ管理方法について&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;バージョン別でパッケージを管理します&lt;/li&gt;
+  &lt;li&gt;バージョン指定でパッケージを実行できます&lt;/li&gt;
+  &lt;li&gt;パッケージはシンボリックリンクでパスを通してどこからでも実行できます&lt;/li&gt;
+  &lt;li&gt;パッケージとバージョンの一覧をMintfileというプレーンテキストで管理できます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;mintのインストール方法&quot;&gt;Mintのインストール方法&lt;/h2&gt;
+
+&lt;p&gt;Homebrewでインストールできます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew install mint
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;他にも&lt;a href=&quot;https://github.com/yonaskolb/Mint#make&quot;&gt;Make&lt;/a&gt;, &lt;a href=&quot;https://github.com/yonaskolb/Mint#using-mint-itself&quot;&gt;Mintコード&lt;/a&gt;, &lt;a href=&quot;https://github.com/yonaskolb/Mint#swift-package-manager&quot;&gt;Swift Package Manager&lt;/a&gt;からもインストールできます。&lt;/p&gt;
+
+&lt;h2 id=&quot;mintでパッケージをインストールする方法&quot;&gt;Mintでパッケージをインストールする方法&lt;/h2&gt;
+
+&lt;p&gt;Mintでパッケージをインストールするには&lt;code class=&quot;highlighter-rouge&quot;&gt;mint install&lt;/code&gt;コマンドを使います。&lt;br /&gt;
+例えば&lt;a href=&quot;https://github.com/yonaskolb/XcodeGen&quot;&gt;XcodeGen&lt;/a&gt;の最新版をインストールするなら下記になります。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint install yonaskolb/XcodeGen
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;バージョン指定でインストール&quot;&gt;バージョン指定でインストール&lt;/h3&gt;
+&lt;p&gt;バージョンを指定してインストールするならパッケージ情報の末尾に&lt;code class=&quot;highlighter-rouge&quot;&gt;@x.x.x&lt;/code&gt;形式でバージョン情報を渡します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint install yonaskolb/XcodeGen@1.2.4
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;パスを通さずインストール&quot;&gt;パスを通さずインストール&lt;/h3&gt;
+&lt;p&gt;デフォルトではインストールすると&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/bin&lt;/code&gt;にシンボリックリンクを作成します。&lt;br /&gt;
+これによりどこからでもアクセスできるようになります。&lt;br /&gt;
+もしインストールするパッケージをリンクしたくない場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;--no-link&lt;/code&gt;をつけます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint install yonaskolb/XcodeGen@1.2.4 &lt;span class=&quot;nt&quot;&gt;--no-link&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;再インストール&quot;&gt;再インストール&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--force&lt;/code&gt;オプションをつけることで再インストールできます。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint install yonaskolb/XcodeGen@1.2.4 &lt;span class=&quot;nt&quot;&gt;--force&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;mintでパッケージを実行する方法&quot;&gt;Mintでパッケージを実行する方法&lt;/h2&gt;
+&lt;p&gt;Mintでインストールしたパッケージを実行するには、&lt;code class=&quot;highlighter-rouge&quot;&gt;mint run&lt;/code&gt;コマンドを使います。&lt;br /&gt;
+例えば最新版の&lt;code class=&quot;highlighter-rouge&quot;&gt;XcodeGen&lt;/code&gt;で&lt;code class=&quot;highlighter-rouge&quot;&gt;generate&lt;/code&gt;を実行したい場合は下記になります。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint run XcodeGen generate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ちなみに小文字でも動きます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint run xcodegen generate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;バージョン指定で実行&quot;&gt;バージョン指定で実行&lt;/h3&gt;
+&lt;p&gt;Mintにインストールしてるパッケージが複数バージョンある中で、&lt;br /&gt;
+リンクしてない古いバージョンを実行する場合は、&lt;br /&gt;
+バージョン情報をつけることで指定実行できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint run xcodegen@1.2.4 generate
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;mintfileでパッケージ管理する方法&quot;&gt;Mintfileでパッケージ管理する方法&lt;/h2&gt;
+&lt;p&gt;Mintでは指定のパッケージとバージョンを列挙して一度にインストールしたりアップデートできます。&lt;br /&gt;
+例えばiOSアプリ開発のGit管理下にMintfileを置くことで、そのレポジトリで使うツールやバージョンを制御することができます。&lt;/p&gt;
+
+&lt;p&gt;このMintfileを利用することでプロジェクト間のバージョン差異における干渉を解決します。&lt;/p&gt;
+
+&lt;h3 id=&quot;mintfileの書き方&quot;&gt;Mintfileの書き方&lt;/h3&gt;
+&lt;p&gt;至って簡単です。コマンドラインでインストールや実行するときに指定してる方法と同じです。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;Mintfile&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;yonaskolb/XcodeGen@2.16.0
+realm/SwiftLint@0.39.2
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;mintfile内のパッケージを使う&quot;&gt;Mintfile内のパッケージを使う&lt;/h2&gt;
+&lt;p&gt;そのまま&lt;code class=&quot;highlighter-rouge&quot;&gt;mint run xcodegen&lt;/code&gt;と実行すれば、インストールされてなければインストールして実行してくれます。
+まとめて指定バージョンを予め全部インストールしておきたい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;mint bootstrap&lt;/code&gt;コマンドを実行します。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;mint bootstrap&lt;/code&gt;ではデフォルトはリンク処理を行いません。&lt;br /&gt;
+もしリンク処理したい場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;mint bootstrap --link&lt;/code&gt;で実行してください。&lt;/p&gt;
+
+&lt;h3 id=&quot;注意-mintfileの有効範囲について&quot;&gt;注意: Mintfileの有効範囲について&lt;/h3&gt;
+&lt;p&gt;rbenvや.gitignoreなどと異なり、カレントディレクトリ上にMintfileが見つからない場合はバージョン解決はMintfileで行いません。
+例えば次のツリー構造のとき、Bディレクトリで&lt;code class=&quot;highlighter-rouge&quot;&gt;mint run xcodege&lt;/code&gt;を実行すると&lt;code class=&quot;highlighter-rouge&quot;&gt;Mintfile&lt;/code&gt;内のバージョンではなくMintがインストールしてる最新で実行します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Aディレクトリ
+    &lt;ul&gt;
+      &lt;li&gt;Mintfile&lt;/li&gt;
+      &lt;li&gt;Bディレクトリ&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Mintfileのないディレクトリ上でmintコマンドを実行する場合は注意してください。&lt;/p&gt;
+
+&lt;h2 id=&quot;その他オプション&quot;&gt;その他オプション&lt;/h2&gt;
+
+&lt;h3 id=&quot;mintからの出力を止める&quot;&gt;mintからの出力を止める&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--silent&lt;/code&gt;オプションを使います。&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;–silentなし&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint run xcodegen version
+🌱 Finding latest version of XcodeGen
+🌱 Running xcodegen 2.16.0...
+Version: 2.16.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;em&gt;–silentあり&lt;/em&gt;&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mint run &lt;span class=&quot;nt&quot;&gt;--silent&lt;/span&gt; xcodegen version
+Version: 2.16.0
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;mintのキャッシュパスとリンク先を変える&quot;&gt;mintのキャッシュパスとリンク先を変える&lt;/h3&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;MINT_PATH&lt;/code&gt;を変更することでインストールしたパッケージの保存場所を変更できます。&lt;br /&gt;
+デフォルトは&lt;code class=&quot;highlighter-rouge&quot;&gt;/user/local/lib/mint&lt;/code&gt;です。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;MINT_LINK_PATH&lt;/code&gt;を変更するとシンボリックリンクの作成場所を変更できます。&lt;br /&gt;
+デフォルトは&lt;code class=&quot;highlighter-rouge&quot;&gt;/usr/local/bin&lt;/code&gt;です。&lt;/p&gt;
+
+&lt;h2 id=&quot;実際にxcodeプロジェクトに組み込む&quot;&gt;実際にXcodeプロジェクトに組み込む&lt;/h2&gt;
+
+&lt;p&gt;SwiftLintを実際に組み込んでみます。&lt;br /&gt;
+小さいですが一応&lt;a href=&quot;https://github.com/mothule/research_mint&quot;&gt;GitHub&lt;/a&gt;にも上げてあります。&lt;br /&gt;
+git cloneして&lt;code class=&quot;highlighter-rouge&quot;&gt;mint bootstrap&lt;/code&gt;を試してみるのもいいかもしれないです。&lt;/p&gt;
+
+&lt;p&gt;HomebrewではBuild Scriptでは&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;which swiftlint &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;swiftlint
+&lt;span class=&quot;k&quot;&gt;else
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;ですが、&lt;/p&gt;
+
+&lt;p&gt;Mint経由でインストールした場合は、&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; ./Mintfile &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;mint run swiftlint
+&lt;span class=&quot;k&quot;&gt;else
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;と、実行条件とシェルコマンドを変える必要があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;実行条件はmintfileを見たほうがいい&quot;&gt;実行条件はMintfileを見たほうがいい&lt;/h3&gt;
+&lt;p&gt;ネットで見かけた記事では↓のようにmintコマンドの有無でシェルコマンドを実行していましたが、&lt;br /&gt;
+MintはMintfileがなくても、&lt;code class=&quot;highlighter-rouge&quot;&gt;mint run swiftlint&lt;/code&gt;と実行すれば勝手に最新版を取ってきて実行するので、&lt;br /&gt;
+mintコマンドの有無ではなく、Mintfileの有無のほうが「知らぬ間に最新版で実行してた」を防げると思います。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if &lt;/span&gt;which mint &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;/dev/null&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;mint run swiftlint
+&lt;span class=&quot;k&quot;&gt;else
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint&quot;&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ios" /><category term="mint" /><category term="swift" /><summary type="html">HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" /></entry><entry><title type="html">xcconfigで使うパラメータ名の見つけ方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" rel="alternate" type="text/html" title="xcconfigで使うパラメータ名の見つけ方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:49:43+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config">&lt;p&gt;xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。&lt;br /&gt;
+この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。&lt;/p&gt;
+
+&lt;p&gt;xcconfigについて分からない方は「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-use&quot;&gt;Xcodeのxcconfigの理解と使い方&lt;/a&gt;&lt;/span&gt;
+」に詳細を説明してます。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcconfigへの変換はxcodeがサポートしてる&quot;&gt;xcconfigへの変換はXcodeがサポートしてる&lt;/h2&gt;
+&lt;p&gt;xcconfigの書き方が分かって実際に使おうにも、ビルドパラメータ名が分からないと設定しようがありません。&lt;br /&gt;
+XcodeのBuild Settingsでカスタマイズされた項目をxcconfigだとどうやって書けばいいか分からないと思います。&lt;br /&gt;
+実は&lt;strong&gt;XcodeのBuild Settingsからxcconfigへのフォーマット変換はXcodeがサポートしてます。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;確認する方法は2つあります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更する&lt;/li&gt;
+  &lt;li&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピーする&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;xcodeのbuild-settingsの表示方法をパラメータ名に変更&quot;&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;を開いた後に&lt;code class=&quot;highlighter-rouge&quot;&gt;Editor &amp;gt; Show Setting Names&lt;/code&gt;を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。&lt;/p&gt;
+
+&lt;video playsinline=&quot;&quot; muted=&quot;&quot; autoplay=&quot;&quot; loop=&quot;&quot; width=&quot;100%&quot; height=&quot;400px&quot;&gt;
+    &lt;source type=&quot;video/mp4&quot; src=&quot;/assets/videos/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.mp4&quot; /&gt;
+&lt;/video&gt;
+
+&lt;p&gt;例えば、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Architectures &amp;gt; Build Active Architecture Only&lt;/code&gt;であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH&lt;/code&gt;になります。&lt;br /&gt;
+これをxcconfigで使うなら&lt;code class=&quot;highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH = YES&lt;/code&gt;となります。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー&quot;&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー&lt;/h2&gt;
+
+&lt;p&gt;パラメータ名を確認するだけなら&lt;code class=&quot;highlighter-rouge&quot;&gt;Show Setting Names&lt;/code&gt;で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。&lt;br /&gt;
+実は&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildSettings&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Active Architecture Only&lt;/code&gt;の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。&lt;/p&gt;
+
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
+ONLY_ACTIVE_ARCH = YES
+
+//:configuration = Release
+
+//:completeSettings = some
+ONLY_ACTIVE_ARCH
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;//:configuration = Debug&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Release&lt;/code&gt;とはBuild Configuration毎に分けられてます。
+&lt;code class=&quot;highlighter-rouge&quot;&gt;Release&lt;/code&gt;に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;some&lt;/code&gt;はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。&lt;/p&gt;
+
+&lt;p&gt;もう一つ例として&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Options &amp;gt; Debug Information Format&lt;/code&gt;を見るとこうなります。&lt;/p&gt;
+&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
+DEBUG_INFORMATION_FORMAT = dwarf
+
+//:configuration = Release
+DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
+
+//:completeSettings = some
+DEBUG_INFORMATION_FORMAT
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これを使えばXcodeからxcconfigを作りたい場合に&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。 この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" /></entry><entry><title type="html">Xcodeのxcconfigの理解と使い方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use" rel="alternate" type="text/html" title="Xcodeのxcconfigの理解と使い方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:41:30+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use">&lt;h2 id=&quot;xcconfigとは&quot;&gt;xcconfigとは？&lt;/h2&gt;
 &lt;p&gt;Xcodeのビルド構成ファイルです。略称からして&lt;strong&gt;XC&lt;/strong&gt;ode&lt;strong&gt;CONFIG&lt;/strong&gt;urationといったところだと思います。&lt;/p&gt;
 
 &lt;p&gt;Xcodeではビルドパラメータ等を「プロジェクト」や「ターゲット」単位で設定ができます。&lt;br /&gt;
@@ -321,70 +568,7 @@ MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
 例えば、今回はBuild Configurationはデフォルト値となるDebugとReleaseの2つでした。&lt;br /&gt;
 しかしこれがDebug,Staging,AppStore,CIと4つに増えた場合にその分増えてしまいます。&lt;/p&gt;
 
-&lt;p&gt;もしBuild Configurationも増えるようであれば、組み合わせ爆発を起こさないためにも工夫が必要です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigとは？ Xcodeのビルド構成ファイルです。略称からしてXCodeCONFIGurationといったところだと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" /></entry><entry><title type="html">xcconfigで使うパラメータ名の見つけ方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" rel="alternate" type="text/html" title="xcconfigで使うパラメータ名の見つけ方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:49:43+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config">&lt;p&gt;xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。&lt;br /&gt;
-この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。&lt;/p&gt;
-
-&lt;p&gt;xcconfigについて分からない方は「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-use&quot;&gt;Xcodeのxcconfigの理解と使い方&lt;/a&gt;&lt;/span&gt;
-」に詳細を説明してます。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcconfigへの変換はxcodeがサポートしてる&quot;&gt;xcconfigへの変換はXcodeがサポートしてる&lt;/h2&gt;
-&lt;p&gt;xcconfigの書き方が分かって実際に使おうにも、ビルドパラメータ名が分からないと設定しようがありません。&lt;br /&gt;
-XcodeのBuild Settingsでカスタマイズされた項目をxcconfigだとどうやって書けばいいか分からないと思います。&lt;br /&gt;
-実は&lt;strong&gt;XcodeのBuild Settingsからxcconfigへのフォーマット変換はXcodeがサポートしてます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;確認する方法は2つあります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更する&lt;/li&gt;
-  &lt;li&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピーする&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;xcodeのbuild-settingsの表示方法をパラメータ名に変更&quot;&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;を開いた後に&lt;code class=&quot;highlighter-rouge&quot;&gt;Editor &amp;gt; Show Setting Names&lt;/code&gt;を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。&lt;/p&gt;
-
-&lt;video playsinline=&quot;&quot; muted=&quot;&quot; autoplay=&quot;&quot; loop=&quot;&quot; width=&quot;100%&quot; height=&quot;400px&quot;&gt;
-    &lt;source type=&quot;video/mp4&quot; src=&quot;/assets/videos/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.mp4&quot; /&gt;
-&lt;/video&gt;
-
-&lt;p&gt;例えば、 &lt;code class=&quot;highlighter-rouge&quot;&gt;Architectures &amp;gt; Build Active Architecture Only&lt;/code&gt;であれば、&lt;code class=&quot;highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH&lt;/code&gt;になります。&lt;br /&gt;
-これをxcconfigで使うなら&lt;code class=&quot;highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH = YES&lt;/code&gt;となります。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー&quot;&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー&lt;/h2&gt;
-
-&lt;p&gt;パラメータ名を確認するだけなら&lt;code class=&quot;highlighter-rouge&quot;&gt;Show Setting Names&lt;/code&gt;で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。&lt;br /&gt;
-実は&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildSettings&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;例えば&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Active Architecture Only&lt;/code&gt;の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。&lt;/p&gt;
-
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
-ONLY_ACTIVE_ARCH = YES
-
-//:configuration = Release
-
-//:completeSettings = some
-ONLY_ACTIVE_ARCH
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;//:configuration = Debug&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;Release&lt;/code&gt;とはBuild Configuration毎に分けられてます。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;Release&lt;/code&gt;に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;some&lt;/code&gt;はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。&lt;/p&gt;
-
-&lt;p&gt;もう一つ例として&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Options &amp;gt; Debug Information Format&lt;/code&gt;を見るとこうなります。&lt;/p&gt;
-&lt;div class=&quot;highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
-DEBUG_INFORMATION_FORMAT = dwarf
-
-//:configuration = Release
-DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
-
-//:completeSettings = some
-DEBUG_INFORMATION_FORMAT
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これを使えばXcodeからxcconfigを作りたい場合に&lt;code class=&quot;highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。 この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" /></entry><entry><title type="html">たまに必要なGitの操作tips</title><link href="https://blog.mothule.com/tools/git/tools-git-tips" rel="alternate" type="text/html" title="たまに必要なGitの操作tips" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-tips</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-tips">&lt;p&gt;普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。
+&lt;p&gt;もしBuild Configurationも増えるようであれば、組み合わせ爆発を起こさないためにも工夫が必要です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigとは？ Xcodeのビルド構成ファイルです。略称からしてXCodeCONFIGurationといったところだと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" /></entry><entry><title type="html">たまに必要なGitの操作tips</title><link href="https://blog.mothule.com/tools/git/tools-git-tips" rel="alternate" type="text/html" title="たまに必要なGitの操作tips" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-tips</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-tips">&lt;p&gt;普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。
 順次増やしていきます。&lt;/p&gt;
 
 &lt;h2 id=&quot;リモートのみファイル削除&quot;&gt;リモートのみファイル削除&lt;/h2&gt;
@@ -1202,123 +1386,4 @@ Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒
 &lt;p&gt;XcodeGenを使って最小プロジェクトからUnitTest付きiOSアプリの最小プロジェクトを作りました。&lt;/p&gt;
 
 &lt;p&gt;次はCarthageやCocoaPodsを使ったライブラリ追加を「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-carthage-cocoapods&quot;&gt;XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;
-」で説明します。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。 この記事ではXcodeGenを実際に使って最小プロジェクトを作って使い方を説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png" /></entry><entry><title type="html">XcodeGenでBuild ConfigurationとSchemeの設定をする</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme" rel="alternate" type="text/html" title="XcodeGenでBuild ConfigurationとSchemeの設定をする" /><published>2020-07-28T00:00:00+09:00</published><updated>2020-07-31T00:47:49+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme">&lt;p&gt;XcodeGenでDebugやReleaseなどBuild Configuration自体を追加したり、Build Configuration毎にビルドパラメータを変えたりする方法について説明します。&lt;/p&gt;
-
-&lt;h2 id=&quot;新しいbuild-configurationの登録&quot;&gt;新しいBuild Configurationの登録&lt;/h2&gt;
-&lt;p&gt;デフォルトはDebugとReleaseですが、新しく追加する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;configs&lt;/code&gt;プロパティで追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;configs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;debug&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Beta&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;release&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;AppStore&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;release&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;CI&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;debug&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;例えば &lt;code class=&quot;highlighter-rouge&quot;&gt;Beta: release&lt;/code&gt;とは、Build Configuration名を&lt;code class=&quot;highlighter-rouge&quot;&gt;Beta&lt;/code&gt;と名付け、ベースをReleaseにしてあります。&lt;br /&gt;
-値の部分がdebugまたはrelease以外だとデフォルト値が適用されなくなります。&lt;/p&gt;
-
-&lt;h2 id=&quot;build-configuration毎にビルドパラメータを変更&quot;&gt;Build Configuration毎にビルドパラメータを変更&lt;/h2&gt;
-&lt;p&gt;デフォルトのDebugとReleaseとは違いをつけたいから新しくBuild Configurationを追加したのに&lt;br /&gt;
-そのままでは意味がありません。Build Configuration毎にビルドパラメータを変更します。&lt;/p&gt;
-
-&lt;h3 id=&quot;ciではassertionを無効にしてみる&quot;&gt;CIではAssertionを無効にしてみる&lt;/h3&gt;
-&lt;p&gt;例えばCI時のみ動かないassertを作ろうと思います。
-&lt;code class=&quot;highlighter-rouge&quot;&gt;assert(_:)&lt;/code&gt;メソッド自体は適当です。何でもいいので説明省きます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;cp&quot;&gt;#if DISABLE_ASSERTION&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{}&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#else&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;assert&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;_&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kt&quot;&gt;Swift&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;assertionFailure&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;string&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;cp&quot;&gt;#endif&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;コード側で重要なのはプリプロセッサの条件式に入ってる&lt;code class=&quot;highlighter-rouge&quot;&gt;DISABLE_ASSERTION&lt;/code&gt;です。&lt;br /&gt;
-これをXcodeGenで定義するには、&lt;code class=&quot;highlighter-rouge&quot;&gt;settings.configs.CI.SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/code&gt;に値を追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;CustomBuildConfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ← ターゲット名&lt;/span&gt;
-    &lt;span class=&quot;c1&quot;&gt;# 〜 略 〜&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;configs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;CI&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;DISABLE_ASSERTION&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これを実行するとXcodeに反映されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/2.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildConfiguration&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;settings&lt;/code&gt;はプロジェクト仕様のルートに置くことでターゲット毎でなく全体適用させることもできます。&lt;/p&gt;
-
-&lt;h2 id=&quot;プロパティ名の見つけ方&quot;&gt;プロパティ名の見つけ方&lt;/h2&gt;
-&lt;p&gt;例えばXcodeのBuild Settings &amp;gt; Development Teamを用意する場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;DEVELOPMENT_TEAM&lt;/code&gt;プロパティをセットします。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/1.png&quot; width=&quot;50%&quot; alt=&quot;XcodeBuildSettingsDevelopmentTeam&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;DEVELOPMENT_TEAM&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;hogehoge&lt;/span&gt;    
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ではどうやってXcodeのBuild Settingsとプロジェクト仕様のプロパティを一致させてるのか？&lt;br /&gt;
-それはxcconfigと同じ値を使っています。&lt;/p&gt;
-
-&lt;p&gt;詳しくは「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config&quot;&gt;xcconfigで使うパラメータ名の見つけ方&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcodegenでテスト時のbuild-configurationをciにする&quot;&gt;XcodeGenでテスト時のBuild ConfigurationをCIにする&lt;/h2&gt;
-
-&lt;p&gt;前述した方法を実施することでCI用のBuild Configurationとビルドパラメータを定義することができます。&lt;br /&gt;
-しかし生成したXcodeではBuild ConfigurationがDebugのままです。&lt;br /&gt;
-これだとCIでXcode生成して実行する場合では意図したBuild Configurationになりません。&lt;br /&gt;
-デフォルトをDebugではなくCIにする必要があります。&lt;/p&gt;
-
-&lt;p&gt;デフォルトにするには&lt;code class=&quot;highlighter-rouge&quot;&gt;Scheme&lt;/code&gt;を使うことで定義できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;schemes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;CustomBuildConfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ← スキーム名&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;CustomBuildConfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;all&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ← ビルド対象ターゲットと対応Actionの設定&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;CustomBuildConfigTests&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;CI&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;こうすることで下図のようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeSchemes&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;これを追加することで生成されたXcodeプロジェクトを開くと初めからTestのBuild ConfigurationはCIになります。&lt;/p&gt;
-
-&lt;h3 id=&quot;テストターゲットやカバレッジ指定をする&quot;&gt;テストターゲットやカバレッジ指定をする&lt;/h3&gt;
-&lt;p&gt;前述した設定でTest時のデフォルトBuild ConfigurationをCIにすることができました。&lt;br /&gt;
-しかし、いざテストを実行しても動きません。&lt;br /&gt;
-それはテストターゲットが設定されていないためです。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;schemes&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;CustomBuildConfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;build&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;CustomBuildConfig&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;all&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;CustomBuildConfigTests&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;test&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;CustomBuildConfigTests&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ← テストターゲット名&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;config&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;CI&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;gatherCoverageData&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;先程のymlのtestプロパティを変更しました。こうすることでテストターゲットが選ばれた状態でXcodeプロジェクトが作成されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/4.png&quot; width=&quot;100%&quot; alt=&quot;XcodeSchemes&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;今回の使ったコードは&lt;a href=&quot;https://github.com/mothule/research_xcodegen/tree/master/custom_build_config&quot;&gt;GitHub&lt;/a&gt;にアップしてありますので、全体像を掴みたい場合はご確認ください。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcodegenでembedded-frameworkを登録する&quot;&gt;XcodeGenでEmbedded frameworkを登録する&lt;/h2&gt;
-
-&lt;p&gt;XcodeGenでBuild Configuration別のビルドチューニングについて説明しました。&lt;br /&gt;
-もしまだSettings周りで不明点がある場合は、「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-settings&quot;&gt;XcodeGenのSettings周りを整理する&lt;/a&gt;&lt;/span&gt;
-」をおすすめします。&lt;/p&gt;
-
-&lt;p&gt;次はEmbedded frameworkを「&lt;span&gt;&lt;a href=&quot;/ios/ios-embedded-framework&quot;&gt;Embedded frameworkの理解と作成方法&lt;/a&gt;&lt;/span&gt;
-」で説明します。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">XcodeGenでDebugやReleaseなどBuild Configuration自体を追加したり、Build Configuration毎にビルドパラメータを変えたりする方法について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/0.png" /></entry></feed>
+」で説明します。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。 この記事ではXcodeGenを実際に使って最小プロジェクトを作って使い方を説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png" /></entry></feed>
