@@ -20,7 +20,7 @@ date=`date "+%Y-%m-%d"`
 file_path="./ws/_drafts/$date-$title.md"
 
 if [[ -e $file_path ]] ; then
-  echo "Error: $file is already exists."
+  echo "Error: $file is already exist."
   exit 1
 fi
 
@@ -34,3 +34,12 @@ echo "categories: TODO" >> $file_path
 echo "tags: TODO" >> $file_path
 echo "---" >> $file_path
 echo "TODO: リード文" >> $file_path
+
+image_folder_path="./ws/assets/images/$date-$title"
+if [[ -e $image_folder_path ]] ; then
+  echo "Error: $image_folder_path is already exist."
+fi
+
+if mkdir $image_folder_path ; then
+  echo "Created $image_folder_path"
+fi
