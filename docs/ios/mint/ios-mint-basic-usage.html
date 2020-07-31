@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+
+
+  <title>iOS開発環境には重要エコシステムとなるMintの理解と利用 - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.5.0 -->
+<meta name="generator" content="Jekyll v3.8.5" />
+<meta property="og:title" content="iOS開発環境には重要エコシステムとなるMintの理解と利用" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="iOS開発ではXcodeだけでなくSwiftLintやXcodeGenなどエコシステムが開発体験を向上させます。Mintではそれらツールのバージョン管理を可能にするパッケージマネージャーであり従来のHomebrewの課題を解決する重要なツールです。この記事ではMintの理解と利用について説明します。" />
+<meta property="og:description" content="iOS開発ではXcodeだけでなくSwiftLintやXcodeGenなどエコシステムが開発体験を向上させます。Mintではそれらツールのバージョン管理を可能にするパッケージマネージャーであり従来のHomebrewの課題を解決する重要なツールです。この記事ではMintの理解と利用について説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/mint/ios-mint-basic-usage" />
+<meta property="og:url" content="https://blog.mothule.com/ios/mint/ios-mint-basic-usage" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2020-07-31T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"url":"https://blog.mothule.com/ios/mint/ios-mint-basic-usage","headline":"iOS開発環境には重要エコシステムとなるMintの理解と利用","dateModified":"2020-07-31T17:41:29+09:00","datePublished":"2020-07-31T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png","description":"iOS開発ではXcodeだけでなくSwiftLintやXcodeGenなどエコシステムが開発体験を向上させます。Mintではそれらツールのバージョン管理を可能にするパッケージマネージャーであり従来のHomebrewの課題を解決する重要なツールです。この記事ではMintの理解と利用について説明します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/mint/ios-mint-basic-usage"},"@type":"BlogPosting","@context":"http://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:title" content="iOS開発環境には重要エコシステムとなるMintの理解と利用">
+<meta name="twitter:description" content="iOS開発ではXcodeだけでなくSwiftLintやXcodeGenなどエコシステムが開発体験を向上させます。Mintではそれらツールのバージョン管理を可能にするパッケージマネージャーであり従来のHomebrewの課題を解決する重要なツールです。この記事ではMintの理解と利用について説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script data-ad-client="ca-pub-5156339577835247" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <main class="row" style="margin-bottom: 32px;">
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<div class="post-content">
+  <div class="breadcrumbs">
+    <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ios" itemprop="item">
+              <span itemprop="name">iOS</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#mint" itemprop="item">
+              <span itemprop="name">Mint</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            iOS開発環境には重要エコシステムとなるMintの理解と利用
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+  </div>
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-07-31-ios-mint-basic-usage/0.png" alt="iOS開発環境には重要エコシステムとなるMintの理解と利用">
+    </div>
+  
+
+  <header class="post-content-title border-bottom mb-4">
+    <h1>iOS開発環境には重要エコシステムとなるMintの理解と利用</h1>
+
+    <div class="row">
+      <div class="col-sm-10 post-content-tags">
+        <ul class="list-inline">
+          
+            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#mint">Mint</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-sm-2 text-right">
+        <span"><time class="post-date">2020-7-31</time></span>
+      </div>
+    </div>
+  </header>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#mintとは">Mintとは？</a></li>
+  <li><a href="#ios開発におけるhomebrewが抱える課題">iOS開発におけるHomebrewが抱える課題</a></li>
+  <li><a href="#mintが解決する課題">Mintが解決する課題</a></li>
+  <li><a href="#mintのパッケージ管理方法について">Mintのパッケージ管理方法について</a></li>
+  <li><a href="#mintのインストール方法">Mintのインストール方法</a></li>
+  <li><a href="#mintでパッケージをインストールする方法">Mintでパッケージをインストールする方法</a>
+    <ul>
+      <li><a href="#バージョン指定でインストール">バージョン指定でインストール</a></li>
+      <li><a href="#パスを通さずインストール">パスを通さずインストール</a></li>
+      <li><a href="#再インストール">再インストール</a></li>
+    </ul>
+  </li>
+  <li><a href="#mintでパッケージを実行する方法">Mintでパッケージを実行する方法</a>
+    <ul>
+      <li><a href="#バージョン指定で実行">バージョン指定で実行</a></li>
+    </ul>
+  </li>
+  <li><a href="#mintfileでパッケージ管理する方法">Mintfileでパッケージ管理する方法</a>
+    <ul>
+      <li><a href="#mintfileの書き方">Mintfileの書き方</a></li>
+    </ul>
+  </li>
+  <li><a href="#mintfile内のパッケージを使う">Mintfile内のパッケージを使う</a>
+    <ul>
+      <li><a href="#注意-mintfileの有効範囲について">注意: Mintfileの有効範囲について</a></li>
+    </ul>
+  </li>
+  <li><a href="#その他オプション">その他オプション</a>
+    <ul>
+      <li><a href="#mintからの出力を止める">mintからの出力を止める</a></li>
+      <li><a href="#mintのキャッシュパスとリンク先を変える">mintのキャッシュパスとリンク先を変える</a></li>
+    </ul>
+  </li>
+  <li><a href="#実際にxcodeプロジェクトに組み込む">実際にXcodeプロジェクトに組み込む</a>
+    <ul>
+      <li><a href="#実行条件はmintfileを見たほうがいい">実行条件はMintfileを見たほうがいい</a></li>
+    </ul>
+  </li>
+</ul>
+  </div>
+  <section>
+  <p>HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。</p>
+
+<h2 id="mintとは">Mintとは？</h2>
+<p><a href="https://github.com/yonaskolb/Mint">Mint</a>は、<strong>Swift製コマンドラインツールのパッケージマネージャーです。</strong>
+ツールのインストールと実行ができます。</p>
+
+<p>同じパッケージマネージャーにHomebrewがあり、そちらのほうが遥かにメジャーです。<br />
+Swift製ツールもHomebrewからインストールできますし、<br />
+パッケージマネージャーとして使いやすく安定しています。</p>
+
+<p>では「何故Mintがいいのか？Homebrewじゃ駄目なのか？」について説明します。</p>
+
+<h2 id="ios開発におけるhomebrewが抱える課題">iOS開発におけるHomebrewが抱える課題</h2>
+<p>通常はMac1台に複数のiOSアプリやSwiftアプリを開発するはずです。<br />
+各プロジェクトでは開発環境に差異あれど、同じツールを使うことは当然ありえます。<br />
+同様にそれぞれ使ってるバージョンが異なることも起きます。</p>
+
+<p>しかし、<strong>Homebrewは異なるバージョンのツールをバージョン別管理ができません。</strong><br />
+そのためツールをバージョンアップすると、各プロジェクトに影響を与え動作しなくなるリスクがあります。</p>
+
+<h2 id="mintが解決する課題">Mintが解決する課題</h2>
+<p>Mintは、バージョン別管理を可能とし、管轄外のバージョン変更課題を解決します。</p>
+
+<p>Mintでは、<code class="highlighter-rouge">Mintfile</code>によりプロジェクト毎にバージョンを管理できます。<br />
+これにより<strong>PC内の複数プロジェクト間のSwiftツールの疎結合を実現します。</strong></p>
+
+<h2 id="mintのパッケージ管理方法について">Mintのパッケージ管理方法について</h2>
+
+<ul>
+  <li>バージョン別でパッケージを管理します</li>
+  <li>バージョン指定でパッケージを実行できます</li>
+  <li>パッケージはシンボリックリンクでパスを通してどこからでも実行できます</li>
+  <li>パッケージとバージョンの一覧をMintfileというプレーンテキストで管理できます。</li>
+</ul>
+
+<h2 id="mintのインストール方法">Mintのインストール方法</h2>
+
+<p>Homebrewでインストールできます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install mint
+</code></pre></div></div>
+
+<p>他にも<a href="https://github.com/yonaskolb/Mint#make">Make</a>, <a href="https://github.com/yonaskolb/Mint#using-mint-itself">Mintコード</a>, <a href="https://github.com/yonaskolb/Mint#swift-package-manager">Swift Package Manager</a>からもインストールできます。</p>
+
+<h2 id="mintでパッケージをインストールする方法">Mintでパッケージをインストールする方法</h2>
+
+<p>Mintでパッケージをインストールするには<code class="highlighter-rouge">mint install</code>コマンドを使います。<br />
+例えば<a href="https://github.com/yonaskolb/XcodeGen">XcodeGen</a>の最新版をインストールするなら下記になります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen
+</code></pre></div></div>
+
+<h3 id="バージョン指定でインストール">バージョン指定でインストール</h3>
+<p>バージョンを指定してインストールするならパッケージ情報の末尾に<code class="highlighter-rouge">@x.x.x</code>形式でバージョン情報を渡します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen@1.2.4
+</code></pre></div></div>
+
+<h3 id="パスを通さずインストール">パスを通さずインストール</h3>
+<p>デフォルトではインストールすると<code class="highlighter-rouge">/usr/local/bin</code>にシンボリックリンクを作成します。<br />
+これによりどこからでもアクセスできるようになります。<br />
+もしインストールするパッケージをリンクしたくない場合は<code class="highlighter-rouge">--no-link</code>をつけます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen@1.2.4 <span class="nt">--no-link</span>
+</code></pre></div></div>
+
+<h3 id="再インストール">再インストール</h3>
+<p><code class="highlighter-rouge">--force</code>オプションをつけることで再インストールできます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen@1.2.4 <span class="nt">--force</span>
+</code></pre></div></div>
+
+<h2 id="mintでパッケージを実行する方法">Mintでパッケージを実行する方法</h2>
+<p>Mintでインストールしたパッケージを実行するには、<code class="highlighter-rouge">mint run</code>コマンドを使います。<br />
+例えば最新版の<code class="highlighter-rouge">XcodeGen</code>で<code class="highlighter-rouge">generate</code>を実行したい場合は下記になります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint run XcodeGen generate
+</code></pre></div></div>
+
+<p>ちなみに小文字でも動きます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint run xcodegen generate
+</code></pre></div></div>
+
+<h3 id="バージョン指定で実行">バージョン指定で実行</h3>
+<p>Mintにインストールしてるパッケージが複数バージョンある中で、<br />
+リンクしてない古いバージョンを実行する場合は、<br />
+バージョン情報をつけることで指定実行できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint run xcodegen@1.2.4 generate
+</code></pre></div></div>
+
+<h2 id="mintfileでパッケージ管理する方法">Mintfileでパッケージ管理する方法</h2>
+<p>Mintでは指定のパッケージとバージョンを列挙して一度にインストールしたりアップデートできます。<br />
+例えばiOSアプリ開発のGit管理下にMintfileを置くことで、そのレポジトリで使うツールやバージョンを制御することができます。</p>
+
+<p>このMintfileを利用することでプロジェクト間のバージョン差異における干渉を解決します。</p>
+
+<h3 id="mintfileの書き方">Mintfileの書き方</h3>
+<p>至って簡単です。コマンドラインでインストールや実行するときに指定してる方法と同じです。</p>
+
+<p><em>Mintfile</em></p>
+<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yonaskolb/XcodeGen@2.16.0
+realm/SwiftLint@0.39.2
+</code></pre></div></div>
+
+<h2 id="mintfile内のパッケージを使う">Mintfile内のパッケージを使う</h2>
+<p>そのまま<code class="highlighter-rouge">mint run xcodegen</code>と実行すれば、インストールされてなければインストールして実行してくれます。
+まとめて指定バージョンを予め全部インストールしておきたい場合は、<code class="highlighter-rouge">mint bootstrap</code>コマンドを実行します。
+<code class="highlighter-rouge">mint bootstrap</code>ではデフォルトはリンク処理を行いません。<br />
+もしリンク処理したい場合は<code class="highlighter-rouge">mint bootstrap --link</code>で実行してください。</p>
+
+<h3 id="注意-mintfileの有効範囲について">注意: Mintfileの有効範囲について</h3>
+<p>rbenvや.gitignoreなどと異なり、カレントディレクトリ上にMintfileが見つからない場合はバージョン解決はMintfileで行いません。
+例えば次のツリー構造のとき、Bディレクトリで<code class="highlighter-rouge">mint run xcodege</code>を実行すると<code class="highlighter-rouge">Mintfile</code>内のバージョンではなくMintがインストールしてる最新で実行します。</p>
+
+<ul>
+  <li>Aディレクトリ
+    <ul>
+      <li>Mintfile</li>
+      <li>Bディレクトリ</li>
+    </ul>
+  </li>
+</ul>
+
+<p>Mintfileのないディレクトリ上でmintコマンドを実行する場合は注意してください。</p>
+
+<h2 id="その他オプション">その他オプション</h2>
+
+<h3 id="mintからの出力を止める">mintからの出力を止める</h3>
+
+<p><code class="highlighter-rouge">--silent</code>オプションを使います。</p>
+
+<p><em>–silentなし</em></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint run xcodegen version
+🌱 Finding latest version of XcodeGen
+🌱 Running xcodegen 2.16.0...
+Version: 2.16.0
+</code></pre></div></div>
+
+<p><em>–silentあり</em></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint run <span class="nt">--silent</span> xcodegen version
+Version: 2.16.0
+</code></pre></div></div>
+
+<h3 id="mintのキャッシュパスとリンク先を変える">mintのキャッシュパスとリンク先を変える</h3>
+
+<p><code class="highlighter-rouge">MINT_PATH</code>を変更することでインストールしたパッケージの保存場所を変更できます。<br />
+デフォルトは<code class="highlighter-rouge">/user/local/lib/mint</code>です。</p>
+
+<p><code class="highlighter-rouge">MINT_LINK_PATH</code>を変更するとシンボリックリンクの作成場所を変更できます。<br />
+デフォルトは<code class="highlighter-rouge">/usr/local/bin</code>です。</p>
+
+<h2 id="実際にxcodeプロジェクトに組み込む">実際にXcodeプロジェクトに組み込む</h2>
+
+<p>SwiftLintを実際に組み込んでみます。<br />
+小さいですが一応<a href="https://github.com/mothule/research_mint">GitHub</a>にも上げてあります。<br />
+git cloneして<code class="highlighter-rouge">mint bootstrap</code>を試してみるのもいいかもしれないです。</p>
+
+<p>HomebrewではBuild Scriptでは</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>which swiftlint <span class="o">&gt;</span>/dev/null<span class="p">;</span> <span class="k">then
+  </span>swiftlint
+<span class="k">else
+  </span><span class="nb">echo</span> <span class="s2">"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+<p>ですが、</p>
+
+<p>Mint経由でインストールした場合は、</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[[</span> <span class="nt">-f</span> ./Mintfile <span class="o">]]</span> <span class="p">;</span> <span class="k">then
+  </span>mint run swiftlint
+<span class="k">else
+  </span><span class="nb">echo</span> <span class="s2">"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+<p>と、実行条件とシェルコマンドを変える必要があります。</p>
+
+<h3 id="実行条件はmintfileを見たほうがいい">実行条件はMintfileを見たほうがいい</h3>
+<p>ネットで見かけた記事では↓のようにmintコマンドの有無でシェルコマンドを実行していましたが、<br />
+MintはMintfileがなくても、<code class="highlighter-rouge">mint run swiftlint</code>と実行すれば勝手に最新版を取ってきて実行するので、<br />
+mintコマンドの有無ではなく、Mintfileの有無のほうが「知らぬ間に最新版で実行してた」を防げると思います。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>which mint <span class="o">&gt;</span>/dev/null<span class="p">;</span> <span class="k">then
+  </span>mint run swiftlint
+<span class="k">else
+  </span><span class="nb">echo</span> <span class="s2">"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint"</span>
+<span class="k">fi</span>
+</code></pre></div></div>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+
+    <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-carthage-cocoapods">XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-build-configuration-scheme">XcodeGenでBuild ConfigurationとSchemeの設定をする</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-basic">XcodeGenを基本から理解する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-basic-usage">XcodeGenで最低限のXcodeプロジェクトを生成する</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+                    <li><h3><a href="/ios/swift/ios-swift-validation">iOSアプリのバリデーションについて考えてみた</a></h3></li>
+                    
+                    
+                        
+        </div>
+    </ul>
+</div>
+
+
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+<script src="/assets/js/shared/post.js" defer></script>
+
+  </article>
+
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-xcassets-basic">【初心者向け】Assets.xcassetsを理解して使う</a>
+            </li>
+            
+            <li>
+                <a href="/db/mysql/mysql-find-mycnf">MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</a>
+            </li>
+            
+            <li>
+                <a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">【初心者向け】UITableViewCellをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+        
+        <a href="/tags#google-japanese-input">Google日本語入力</a>
+      
+        
+        <a href="/tags#ln">lnコマンド</a>
+      
+        
+        <a href="/tags#xcode">Xcode</a>
+      
+        
+        <a href="/tags#xcodegen">XcodeGen</a>
+      
+        
+        <a href="/tags#xcconfig">xcconfig</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-sticky">
+    <!-- TOC -->
+    <div class="side-toc" id="side-toc-id">
+    </div>
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
+      
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li><a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+</li>
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+  </aside>
+</main>
+
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+  </body>
+</html>
