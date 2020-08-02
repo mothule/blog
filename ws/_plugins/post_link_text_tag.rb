@@ -19,7 +19,7 @@ module Jekyll
 
       article = Article.find_by(basename_without_date: post_name)
       article = Article.find_by(basename_without_ext: post_name) if article.nil?
-      raise StandardError, '指定パスにファイルなし' if article.nil?
+      raise StandardError, "指定パスにファイルなし. post_name: #{post_name}" if article.nil?
 
       path = article.url_path
       title = article.title
