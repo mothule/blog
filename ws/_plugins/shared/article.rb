@@ -26,7 +26,7 @@ class Article
     @extname = document.extname
     @basename = document.basename
     @basename_without_ext = document.basename_without_ext
-    @basename_wihtout_date = @basename_without_ext[11..-1]
+    @basename_without_date = @basename_without_ext[11..-1]
     @content = document.content
     @html = document.output
     @relative_path = document.relative_path
