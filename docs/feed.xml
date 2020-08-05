@@ -1,4 +1,130 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-07-31T17:43:32+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOS開発環境には重要エコシステムとなるMintの理解と利用</title><link href="https://blog.mothule.com/ios/mint/ios-mint-basic-usage" rel="alternate" type="text/html" title="iOS開発環境には重要エコシステムとなるMintの理解と利用" /><published>2020-07-31T00:00:00+09:00</published><updated>2020-07-31T17:41:29+09:00</updated><id>https://blog.mothule.com/ios/mint/ios-mint-basic-usage</id><content type="html" xml:base="https://blog.mothule.com/ios/mint/ios-mint-basic-usage">&lt;p&gt;HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-08-06T03:45:35+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOSアプリ開発のエコシステムを考えてみた</title><link href="https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design" rel="alternate" type="text/html" title="iOSアプリ開発のエコシステムを考えてみた" /><published>2020-08-02T00:00:00+09:00</published><updated>2020-08-06T03:45:17+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design">&lt;p&gt;iOSアプリ開発で開発の周辺環境いわゆるエコシステムについて、現状どうなってるか整理も踏まえて考えて見ました。&lt;/p&gt;
+
+&lt;h2 id=&quot;この記事では説明しない部分&quot;&gt;この記事では説明しない部分&lt;/h2&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;アーキテクチャパターンやログ機能などアプリの骨組みデザイン&lt;/li&gt;
+  &lt;li&gt;ニッチ過ぎるサービスやツール&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;エコシステムをなすツールやサービス一覧&quot;&gt;エコシステムをなすツールやサービス一覧&lt;/h2&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-08-02-ios-swift-ecosystem-design/ecosystem-design.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-08-02-ios-swift-ecosystem-design/ecosystem-design.png&quot; width=&quot;100%&quot; alt=&quot;ios-ecosystem-design&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;上図は今回構築に使ったツールとその関係を階層構造で表した図です。&lt;/p&gt;
+
+&lt;h3 id=&quot;framework管理&quot;&gt;Framework管理&lt;/h3&gt;
+
+&lt;p&gt;frameworkの作成や管理をするツール群です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;CocoaPods&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;span&gt;&lt;a href=&quot;/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler&quot;&gt;CocoaPodsをrbenv+bundlerで管理する&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Carthage&lt;/strong&gt;
+    &lt;ul&gt;
+      &lt;li&gt;&lt;span&gt;&lt;a href=&quot;/ios/carthage/ios-carthage&quot;&gt;Carthageの使い方を体系的に理解する&lt;/a&gt;&lt;/span&gt;&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;説明は省きます。詳細は各リンク先を見てください。&lt;/p&gt;
+
+&lt;h3 id=&quot;タスク管理&quot;&gt;タスク管理&lt;/h3&gt;
+
+&lt;p&gt;ビルド、テスト、アーカイブなど開発における処理の作成・管理として&lt;strong&gt;Fastlane&lt;/strong&gt;を使います。&lt;/p&gt;
+
+&lt;p&gt;Fastlaneでタスク管理することで、細かな手続きを一塊にして呼び出しを簡略化します。&lt;br /&gt;
+またコマンドラインで呼び出せることでCIに乗せれたりもできます。&lt;br /&gt;
+そして、CIサービスの中でFastlaneのタスクを呼ぶことでCIの種類に依存せず処理を管理できます。&lt;/p&gt;
+
+&lt;h3 id=&quot;プロジェクト管理&quot;&gt;プロジェクト管理&lt;/h3&gt;
+
+&lt;p&gt;Xcodeプロジェクトの管理として&lt;strong&gt;XcodeGen&lt;/strong&gt;を使います。&lt;br /&gt;
+XcodeGenのメリットや使い方に関しては「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic&quot;&gt;XcodeGenを基本から理解する&lt;/a&gt;&lt;/span&gt;
+」で説明してます。&lt;/p&gt;
+
+&lt;h3 id=&quot;静的解析ツール&quot;&gt;静的解析ツール&lt;/h3&gt;
+&lt;p&gt;機械的にコード品質チェックを行うツールとして&lt;strong&gt;SwiftLint&lt;/strong&gt;を使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;管理ツール管理&quot;&gt;管理ツール管理&lt;/h3&gt;
+&lt;p&gt;FastlaneやCocoaPodsなどを管理ツールのバージョンを管理するツール群です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;rbenv&lt;/strong&gt;&lt;br /&gt;
+Rubyのバージョン管理ツール。&lt;br /&gt;
+FastlaneやCocoaPods, bundlerなどRuby製ツールの言語バージョンを制御する。&lt;br /&gt;
+これがないとグルーバルのRubyバージョンを使うことになり、もし別都合でバージョンアップして、そのバージョンが下位互換だった場合に動かなくなる。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;bundler&lt;/strong&gt;&lt;br /&gt;
+gemの一元管理gem。&lt;br /&gt;
+FastlaneやCocoaPodsなどのRuby製ツールのツールバージョンを制御する。&lt;br /&gt;
+これがないとグローバルのFastlaneやCocoaPodsを使うことになり、他プロジェクト都合のバージョンアップに影響受ける。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;パッケージ管理&quot;&gt;パッケージ管理&lt;/h3&gt;
+&lt;p&gt;SwiftLintやCarthageなどのバージョンを管理するツール類です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Homebrew&lt;/strong&gt;&lt;br /&gt;
+&lt;span&gt;&lt;a href=&quot;/mac/homebrew/mac-homebrew-basic&quot;&gt;MacのHomebrewとは？仕組み・使い方と用語整理&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;strong&gt;Mint&lt;/strong&gt;
+Mintを使うことでプロジェクト間のツールバージョンを疎結合にできます。&lt;br /&gt;
+&lt;span&gt;&lt;a href=&quot;/ios/mint/ios-mint-basic-usage&quot;&gt;iOS開発環境には重要エコシステムとなるMintの理解と利用&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h4 id=&quot;mintバージョンで問題が起きる場合&quot;&gt;Mintバージョンで問題が起きる場合&lt;/h4&gt;
+&lt;p&gt;今回MintはHomebrewからインストールする構成です。&lt;br /&gt;
+もし、プロジェクト毎にMintのバージョンを持つ必要がある場合は、インストールを&lt;a href=&quot;https://github.com/yonaskolb/Mint#install&quot;&gt;自身でインストールする方法&lt;/a&gt;にすることで、Mintのバージョンを制御することが可能になります。&lt;/p&gt;
+
+&lt;p&gt;またSwiftバージョンにズレが起きてる場合は,&lt;a href=&quot;https://github.com/kylef/swiftenv&quot;&gt;SwiftEnv&lt;/a&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;.swift-version&lt;/code&gt;ファイルでSwiftバージョンを固定することもできます。&lt;/p&gt;
+
+&lt;h3 id=&quot;テスト環境&quot;&gt;テスト環境&lt;/h3&gt;
+&lt;p&gt;テストプロジェクトで使うテストフレームワーク・ツール群です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;Quick&lt;/strong&gt;
+BDDフレームワークです。通常のXCTestを使うよりテストケース管理がしやすくなります。&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Nimble&lt;/strong&gt;
+Matcherです。XCTAssertを直接使うよりコードが読みやすく書きやすくなります。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;ciサービス&quot;&gt;CIサービス&lt;/h3&gt;
+&lt;p&gt;モバイルに特化した&lt;strong&gt;Bitrise&lt;/strong&gt;を使います。&lt;br /&gt;
+ここに関してはCircleCIなど他領域(backend, frontend)などの費用関係もあるのである程度ゆらぎはあると思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;組み合わせてみる&quot;&gt;組み合わせてみる&lt;/h2&gt;
+&lt;p&gt;実際に組み合わせたiOSプロジェクト雛形を&lt;a href=&quot;https://github.com/mothule/ios_project_template&quot;&gt;GitHub&lt;/a&gt;に用意しました。&lt;br /&gt;
+Homebrewなど一部はGitHubにアップしないので反映されないものもあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;ビルド構成が複雑なら設定を外部ファイル化する&quot;&gt;ビルド構成が複雑なら設定を外部ファイル化する&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;project.yml&lt;/code&gt;の中身が複雑になるのは主にSettings周りなので、そうなってきた場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;settingGroups&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;configFiles&lt;/code&gt;を使って&lt;br /&gt;
+外部ファイルに抽出する必要が出てくると思います。&lt;br /&gt;
+ここらへんは&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-settings&quot;&gt;XcodeGenのSettings周りを整理する&lt;/a&gt;&lt;/span&gt;
+にやり方を書いてあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;レイヤードアーキテクチャデザインによってembedded-frameworkを増やす&quot;&gt;レイヤードアーキテクチャデザインによってEmbedded frameworkを増やす&lt;/h3&gt;
+&lt;p&gt;レイヤードアーキテクチャはサンプルなので2層に留めてます。&lt;br /&gt;
+実際のアプリ開発時ではアーキテクチャデザインに合わせます。&lt;/p&gt;
+
+&lt;h2 id=&quot;マーケティング領域&quot;&gt;マーケティング領域&lt;/h2&gt;
+
+&lt;p&gt;アプリ開発のエコシステムの遠い位置にはマーケティング領域が出てくると思います。&lt;br /&gt;
+これらはビジネスサイドの領域ではありますが、データ集計フローは開発サイドの役割になります。&lt;br /&gt;
+ただ、今回は本筋から離れてしまうので説明しません。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Firebase Analytics&lt;/li&gt;
+  &lt;li&gt;BigQuery&lt;/li&gt;
+  &lt;li&gt;Redash&lt;/li&gt;
+  &lt;li&gt;Slack&lt;/li&gt;
+  &lt;li&gt;Google Data Studio&lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="program-design" /><category term="cocoapods" /><category term="carthage" /><category term="xcodegen" /><category term="mint" /><category term="quick" /><category term="nimble" /><category term="rbenv" /><category term="bundler" /><category term="homebrew" /><category term="swiftlint" /><category term="bitrise" /><category term="fastlane" /><summary type="html">iOSアプリ開発で開発の周辺環境いわゆるエコシステムについて、現状どうなってるか整理も踏まえて考えて見ました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-02-ios-swift-ecosystem-design/0.png" /></entry><entry><title type="html">iOS開発環境には重要エコシステムとなるMintの理解と利用</title><link href="https://blog.mothule.com/ios/mint/ios-mint-basic-usage" rel="alternate" type="text/html" title="iOS開発環境には重要エコシステムとなるMintの理解と利用" /><published>2020-07-31T00:00:00+09:00</published><updated>2020-07-31T17:41:29+09:00</updated><id>https://blog.mothule.com/ios/mint/ios-mint-basic-usage</id><content type="html" xml:base="https://blog.mothule.com/ios/mint/ios-mint-basic-usage">&lt;p&gt;HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。&lt;/p&gt;
 
 &lt;h2 id=&quot;mintとは&quot;&gt;Mintとは？&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&quot;https://github.com/yonaskolb/Mint&quot;&gt;Mint&lt;/a&gt;は、&lt;strong&gt;Swift製コマンドラインツールのパッケージマネージャーです。&lt;/strong&gt;
@@ -568,210 +694,7 @@ MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
 例えば、今回はBuild Configurationはデフォルト値となるDebugとReleaseの2つでした。&lt;br /&gt;
 しかしこれがDebug,Staging,AppStore,CIと4つに増えた場合にその分増えてしまいます。&lt;/p&gt;
 
-&lt;p&gt;もしBuild Configurationも増えるようであれば、組み合わせ爆発を起こさないためにも工夫が必要です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigとは？ Xcodeのビルド構成ファイルです。略称からしてXCodeCONFIGurationといったところだと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" /></entry><entry><title type="html">たまに必要なGitの操作tips</title><link href="https://blog.mothule.com/tools/git/tools-git-tips" rel="alternate" type="text/html" title="たまに必要なGitの操作tips" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-tips</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-tips">&lt;p&gt;普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。
-順次増やしていきます。&lt;/p&gt;
-
-&lt;h2 id=&quot;リモートのみファイル削除&quot;&gt;リモートのみファイル削除&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git rm &lt;span class=&quot;nt&quot;&gt;--cached&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ファイル名]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;フォルダ削除&quot;&gt;フォルダ削除&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git rm &lt;span class=&quot;nt&quot;&gt;--cached&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ディレクトリ名]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;最新のみcloneシャロークローン&quot;&gt;最新のみclone(シャロークローン)&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone &lt;span class=&quot;nt&quot;&gt;--depth&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Git URL]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;指定ワードを含むコミットを検索&quot;&gt;指定ワードを含むコミットを検索&lt;/h2&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;検索ワード] &lt;span class=&quot;nt&quot;&gt;--patch&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--patch&lt;/code&gt;をつけない場合はログ一覧が並びます。&lt;/p&gt;
-
-&lt;h2 id=&quot;コミットした人で検索&quot;&gt;コミットした人で検索&lt;/h2&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;--author&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;コミットした人の名前]
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="tools" /><category term="git" /><summary type="html">普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。 順次増やしていきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-tools-git-tips/0.png" /></entry><entry><title type="html">XcodeGenでEmbedded Frameworkを設定する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-embedded-framework" rel="alternate" type="text/html" title="XcodeGenでEmbedded Frameworkを設定する" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-embedded-framework</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-embedded-framework">&lt;p&gt;XcodeGenを使ってEmbedded frameworkを設定する方法について説明します。&lt;/p&gt;
-
-&lt;p&gt;XcodeGenの基本的な使い方を理解していたら非常に簡単です。&lt;br /&gt;
-基本的な使い方が知りたい場合は下記記事をご覧ください。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic&quot;&gt;XcodeGenを基本から理解する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic-usage&quot;&gt;XcodeGenで最低限のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-  &lt;/li&gt;
-  &lt;li&gt;
-    &lt;p&gt;&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-carthage-cocoapods&quot;&gt;XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;embedded-frameworkとは&quot;&gt;Embedded Frameworkとは？&lt;/h2&gt;
-
-&lt;p&gt;Embedded Frameworkについて詳細を知りたい場合は、「&lt;span&gt;&lt;a href=&quot;/ios/ios-embedded-framework&quot;&gt;Embedded frameworkの理解と作成方法&lt;/a&gt;&lt;/span&gt;
-」をご覧ください。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcodegenでembedded-frameworkを作成する&quot;&gt;XcodeGenでEmbedded Frameworkを作成する&lt;/h2&gt;
-
-&lt;p&gt;まずは単純なiOSアプリターゲットを持つXcodeプロジェクトを用意します。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;bundleIdPrefix&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;com.mothule&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;EmbeddedFramework&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;application&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ここからframeworkターゲットを追加し、アプリターゲットにリンクするまでが大まかな流れです。&lt;br /&gt;
-これをXcodeGenで表現すると、下記のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;bundleIdPrefix&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;com.mothule&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;EmbeddedFramework&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;application&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Logic&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Logic&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;framework&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Logic&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;実は&lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies.target&lt;/code&gt;で対象ターゲットを選ぶだけです。これだけでframeworkがリンクされます。&lt;/p&gt;
-
-&lt;h3 id=&quot;事前にフォルダ用意は必要&quot;&gt;事前にフォルダ用意は必要&lt;/h3&gt;
-&lt;p&gt;他ターゲットと変わらず、ターゲット追加時にはデフォルトでフォルダやファイルを作成してくれるので、
-まずはXcode上でターゲットを追加してフォルダ作成後にプロジェクト仕様を追記する流れをおすすめします。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcodegen" /><summary type="html">XcodeGenを使ってEmbedded frameworkを設定する方法について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-embedded-framework/0.png" /></entry><entry><title type="html">Embedded frameworkの理解と作成方法</title><link href="https://blog.mothule.com/ios/ios-embedded-framework" rel="alternate" type="text/html" title="Embedded frameworkの理解と作成方法" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T21:40:05+09:00</updated><id>https://blog.mothule.com/ios/ios-embedded-framework</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-embedded-framework">&lt;p&gt;開発中のビルド時間の短縮やレイヤードアーキテクチャをより疎結合にする設計や、Extensionや他Platformなどでコード共有したい場合は、Embedded frameworkで解決できます。&lt;/p&gt;
-
-&lt;h2 id=&quot;embedded-frameworkとは&quot;&gt;Embedded Frameworkとは？&lt;/h2&gt;
-&lt;p&gt;事前に組み込まれたフレームワークです。static libraryみたいな扱いです。&lt;/p&gt;
-
-&lt;h3 id=&quot;例を使って説明&quot;&gt;例を使って説明&lt;/h3&gt;
-&lt;p&gt;例えばiOSアプリターゲットにA,B,Cというソースコードが含まれてたとします。&lt;br /&gt;
-このうちCファイルを別のframeworkターゲットとして抜き出して、&lt;br /&gt;
-それを元のiOSアプリターゲットのフレームワークとして組み込む方法です。&lt;/p&gt;
-
-&lt;h2 id=&quot;embedded-frameworkのメリット&quot;&gt;Embedded Frameworkのメリット&lt;/h2&gt;
-
-&lt;p&gt;一見助長に感じる制御フローですが、次のケースでその恩恵を得られます。&lt;/p&gt;
-
-&lt;h3 id=&quot;ケース1-他プラットフォームのコード共有&quot;&gt;ケース1: 他プラットフォームのコード共有&lt;/h3&gt;
-&lt;p&gt;最近のアプリケーションではiPhone(iOS)に留まらず、watchOSやtvOSなど複数端末で一つのサービスを横断して使うことでサービス体験を向上させてます。&lt;br /&gt;
-またAPIのバージョンアップによりアプリ外のサービスにも機能拡張できるApp Extensionによりアプリ外にもサービスロジックが必要になるなど、&lt;strong&gt;現状のアプリは、複数プラットフォーム展開によるコード流用のニーズが高いです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;watchOS&lt;/th&gt;
-      &lt;th&gt;AppExtension&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/1.png&quot; width=&quot;100%&quot; alt=&quot;watchOSTempl&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
-      &lt;td&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/2.png&quot; width=&quot;100%&quot; alt=&quot;AppExtension&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;Embedded frameworkは、iOSアプリターゲットからコードを抽出し別ターゲットで管理することでiOSアプリターゲット以外でもframeworkとして使うことができることで、コード共有を実現しています。&lt;/p&gt;
-
-&lt;h3 id=&quot;ケース2-ビルド時間の短縮&quot;&gt;ケース2: ビルド時間の短縮&lt;/h3&gt;
-&lt;p&gt;Xcodeで使われているビルダーではインクリメンタルビルドをサポートしており、開発中では主にこのビルド方式が多く使われます。
-このインクリメンタルビルドは変更があった箇所と変更に影響ある箇所だけをビルドすることでビルド時間短縮します。&lt;/p&gt;
-
-&lt;p&gt;これをコードをframeworkで分離することでコード改修した箇所でframework先まではビルドされることはないので、より少ない時間でビルドが終わります。&lt;/p&gt;
-
-&lt;p&gt;同じ理論でビルド時間短縮してるのがCocoaPodsからのCarthageになります。&lt;/p&gt;
-
-&lt;h3 id=&quot;ケース3-レイヤードアーキテクチャの疎結合を強化&quot;&gt;ケース3: レイヤードアーキテクチャの疎結合を強化&lt;/h3&gt;
-&lt;p&gt;Embedded frameworkといってもframeworkと同じ扱いになり、framework内の機能を使うには&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;しないとコンパイルエラーとなります。&lt;br /&gt;
-つまり言語レベルでレイヤー間のアクセス違反を検知してくれるようになります。&lt;br /&gt;
-（検知といっても検知した後はエンジニアが気づく必要があるので完璧とはいえないですが）&lt;/p&gt;
-
-&lt;h2 id=&quot;embedded-frameworkを作る&quot;&gt;Embedded Frameworkを作る&lt;/h2&gt;
-
-&lt;p&gt;仕組みがシンプルですが、実装方法もシンプルです。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Frameworkターゲット追加&lt;/li&gt;
-  &lt;li&gt;作成されたフォルダ内にコード実装&lt;/li&gt;
-  &lt;li&gt;アプリターゲット &amp;gt; Generalからフレームワークを追加&lt;/li&gt;
-  &lt;li&gt;アプリ側コードからimportして呼び出し&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;では実際にLogicというEmbedded frameworkを用意し、中にはCalculatorという構造体を用意してみます。&lt;/p&gt;
-
-&lt;h3 id=&quot;frameworkターゲット追加&quot;&gt;Frameworkターゲット追加&lt;/h3&gt;
-
-&lt;p&gt;プロジェクトのGeneralからターゲット追加します。↓&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeTargetGeneral&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;Frameworkを選択します。↓&lt;br /&gt;
-注意点としてXcodeは定期的にUIを変更するため、時期によってはこの画面や名称とは違うケースがあります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/4.png&quot; width=&quot;100%&quot; alt=&quot;XcodeAddTarget&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;作成されたフォルダ内にコード実装&quot;&gt;作成されたフォルダ内にコード実装&lt;/h3&gt;
-
-&lt;p&gt;Frameworkターゲットを追加するとターゲットと一緒にフォルダも作成されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/5.png&quot; width=&quot;50%&quot; alt=&quot;XcodeAddedFrameworkTarget&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;コードは何でもいいですが、今回は下記コードをFrameworkの管理するフォルダに追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Calculator&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;plus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;n&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reduce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;アクセススコープに注意&quot;&gt;アクセススコープに注意&lt;/h4&gt;
-&lt;p&gt;framework全般の常識として外部から使われることを想定しているクラスやメソッドのスコープをpublicにして呼び出し元から見えるようにします。&lt;br /&gt;
-スコープ未指定だとframework外だと見えないので注意です。&lt;/p&gt;
-
-&lt;h3 id=&quot;アプリターゲット--generalからフレームワークを追加&quot;&gt;アプリターゲット &amp;gt; Generalからフレームワークを追加&lt;/h3&gt;
-&lt;p&gt;作成したframeworkをiOSアプリターゲットから使えるようにするために関連付けする必要があります。&lt;br /&gt;
-アプリターゲットのGeneralからframework追加を行います。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/6.png&quot; width=&quot;100%&quot; alt=&quot;XcodeAddFramework&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;＋&lt;/code&gt;を選ぶことで選択ダイアログが出てきますが、内部ターゲットになるのですぐ見つけれます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/7.png&quot; width=&quot;80%&quot; alt=&quot;XcodeAddFrameworkDialog&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;アプリ側コードからimportして呼び出し&quot;&gt;アプリ側コードからimportして呼び出し&lt;/h3&gt;
-
-&lt;p&gt;あとは使いたい場所でimportして呼び出すだけです。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIKit&lt;/span&gt;
-&lt;span class=&quot;kd&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logic&lt;/span&gt;
-
-&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Calculator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;plus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;今回のコードは&lt;a href=&quot;https://github.com/mothule/research_embedded_framework&quot;&gt;GitHub&lt;/a&gt;にあげてあります。実際にXcode立ち上げて確認したい方はどうぞ。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">開発中のビルド時間の短縮やレイヤードアーキテクチャをより疎結合にする設計や、Extensionや他Platformなどでコード共有したい場合は、Embedded frameworkで解決できます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-embedded-framework/0.png" /></entry><entry><title type="html">XcodeGenのSettings周りを整理する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings" rel="alternate" type="text/html" title="XcodeGenのSettings周りを整理する" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-31T00:45:04+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings">&lt;p&gt;XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。&lt;/p&gt;
+&lt;p&gt;もしBuild Configurationも増えるようであれば、組み合わせ爆発を起こさないためにも工夫が必要です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigとは？ Xcodeのビルド構成ファイルです。略称からしてXCodeCONFIGurationといったところだと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" /></entry><entry><title type="html">XcodeGenのSettings周りを整理する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings" rel="alternate" type="text/html" title="XcodeGenのSettings周りを整理する" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-31T00:45:04+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings">&lt;p&gt;XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。&lt;/p&gt;
 
 &lt;h2 id=&quot;settingsとは&quot;&gt;Settingsとは？&lt;/h2&gt;
 &lt;p&gt;XcodeGenのプロジェクト仕様ファイル内で使えるビルド設定を定義するプロパティと総称。&lt;/p&gt;
@@ -951,7 +874,210 @@ MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
 &lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
 &lt;p&gt;この記事を書くにあたって、xcconfigの仕様を調べましたが、settings周りの仕様はxcconfigの仕様を把握すると理解が一気に深まりました。&lt;br /&gt;
 xcconfigについては「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-use&quot;&gt;Xcodeのxcconfigの理解と使い方&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcodegen" /><category term="xcode" /><category term="xcconfig" /><summary type="html">XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-settings/0.png" /></entry><entry><title type="html">XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods" rel="alternate" type="text/html" title="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する" /><published>2020-07-28T00:00:00+09:00</published><updated>2020-07-29T22:26:25+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods">&lt;p&gt;Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。&lt;br /&gt;
+」にまとめてあります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcodegen" /><category term="xcode" /><category term="xcconfig" /><summary type="html">XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-settings/0.png" /></entry><entry><title type="html">XcodeGenでEmbedded Frameworkを設定する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-embedded-framework" rel="alternate" type="text/html" title="XcodeGenでEmbedded Frameworkを設定する" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-embedded-framework</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-embedded-framework">&lt;p&gt;XcodeGenを使ってEmbedded frameworkを設定する方法について説明します。&lt;/p&gt;
+
+&lt;p&gt;XcodeGenの基本的な使い方を理解していたら非常に簡単です。&lt;br /&gt;
+基本的な使い方が知りたい場合は下記記事をご覧ください。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic&quot;&gt;XcodeGenを基本から理解する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic-usage&quot;&gt;XcodeGenで最低限のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+  &lt;/li&gt;
+  &lt;li&gt;
+    &lt;p&gt;&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-carthage-cocoapods&quot;&gt;XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;&lt;/p&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;embedded-frameworkとは&quot;&gt;Embedded Frameworkとは？&lt;/h2&gt;
+
+&lt;p&gt;Embedded Frameworkについて詳細を知りたい場合は、「&lt;span&gt;&lt;a href=&quot;/ios/ios-embedded-framework&quot;&gt;Embedded frameworkの理解と作成方法&lt;/a&gt;&lt;/span&gt;
+」をご覧ください。&lt;/p&gt;
+
+&lt;h2 id=&quot;xcodegenでembedded-frameworkを作成する&quot;&gt;XcodeGenでEmbedded Frameworkを作成する&lt;/h2&gt;
+
+&lt;p&gt;まずは単純なiOSアプリターゲットを持つXcodeプロジェクトを用意します。&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;bundleIdPrefix&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;com.mothule&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;EmbeddedFramework&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;application&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ここからframeworkターゲットを追加し、アプリターゲットにリンクするまでが大まかな流れです。&lt;br /&gt;
+これをXcodeGenで表現すると、下記のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;bundleIdPrefix&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;com.mothule&lt;/span&gt;
+&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;EmbeddedFramework&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;application&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;EmbeddedFramework&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Logic&lt;/span&gt;
+  &lt;span class=&quot;na&quot;&gt;Logic&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;framework&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
+    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
+      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;path&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Logic&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;実は&lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies.target&lt;/code&gt;で対象ターゲットを選ぶだけです。これだけでframeworkがリンクされます。&lt;/p&gt;
+
+&lt;h3 id=&quot;事前にフォルダ用意は必要&quot;&gt;事前にフォルダ用意は必要&lt;/h3&gt;
+&lt;p&gt;他ターゲットと変わらず、ターゲット追加時にはデフォルトでフォルダやファイルを作成してくれるので、
+まずはXcode上でターゲットを追加してフォルダ作成後にプロジェクト仕様を追記する流れをおすすめします。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcodegen" /><summary type="html">XcodeGenを使ってEmbedded frameworkを設定する方法について説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-embedded-framework/0.png" /></entry><entry><title type="html">Embedded frameworkの理解と作成方法</title><link href="https://blog.mothule.com/ios/ios-embedded-framework" rel="alternate" type="text/html" title="Embedded frameworkの理解と作成方法" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T21:40:05+09:00</updated><id>https://blog.mothule.com/ios/ios-embedded-framework</id><content type="html" xml:base="https://blog.mothule.com/ios/ios-embedded-framework">&lt;p&gt;開発中のビルド時間の短縮やレイヤードアーキテクチャをより疎結合にする設計や、Extensionや他Platformなどでコード共有したい場合は、Embedded frameworkで解決できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;embedded-frameworkとは&quot;&gt;Embedded Frameworkとは？&lt;/h2&gt;
+&lt;p&gt;事前に組み込まれたフレームワークです。static libraryみたいな扱いです。&lt;/p&gt;
+
+&lt;h3 id=&quot;例を使って説明&quot;&gt;例を使って説明&lt;/h3&gt;
+&lt;p&gt;例えばiOSアプリターゲットにA,B,Cというソースコードが含まれてたとします。&lt;br /&gt;
+このうちCファイルを別のframeworkターゲットとして抜き出して、&lt;br /&gt;
+それを元のiOSアプリターゲットのフレームワークとして組み込む方法です。&lt;/p&gt;
+
+&lt;h2 id=&quot;embedded-frameworkのメリット&quot;&gt;Embedded Frameworkのメリット&lt;/h2&gt;
+
+&lt;p&gt;一見助長に感じる制御フローですが、次のケースでその恩恵を得られます。&lt;/p&gt;
+
+&lt;h3 id=&quot;ケース1-他プラットフォームのコード共有&quot;&gt;ケース1: 他プラットフォームのコード共有&lt;/h3&gt;
+&lt;p&gt;最近のアプリケーションではiPhone(iOS)に留まらず、watchOSやtvOSなど複数端末で一つのサービスを横断して使うことでサービス体験を向上させてます。&lt;br /&gt;
+またAPIのバージョンアップによりアプリ外のサービスにも機能拡張できるApp Extensionによりアプリ外にもサービスロジックが必要になるなど、&lt;strong&gt;現状のアプリは、複数プラットフォーム展開によるコード流用のニーズが高いです。&lt;/strong&gt;&lt;/p&gt;
+
+&lt;table&gt;
+  &lt;thead&gt;
+    &lt;tr&gt;
+      &lt;th&gt;watchOS&lt;/th&gt;
+      &lt;th&gt;AppExtension&lt;/th&gt;
+    &lt;/tr&gt;
+  &lt;/thead&gt;
+  &lt;tbody&gt;
+    &lt;tr&gt;
+      &lt;td&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/1.png&quot; width=&quot;100%&quot; alt=&quot;watchOSTempl&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
+      &lt;td&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/2.png&quot; width=&quot;100%&quot; alt=&quot;AppExtension&quot; /&gt;&lt;/a&gt;&lt;/td&gt;
+    &lt;/tr&gt;
+  &lt;/tbody&gt;
+&lt;/table&gt;
+
+&lt;p&gt;Embedded frameworkは、iOSアプリターゲットからコードを抽出し別ターゲットで管理することでiOSアプリターゲット以外でもframeworkとして使うことができることで、コード共有を実現しています。&lt;/p&gt;
+
+&lt;h3 id=&quot;ケース2-ビルド時間の短縮&quot;&gt;ケース2: ビルド時間の短縮&lt;/h3&gt;
+&lt;p&gt;Xcodeで使われているビルダーではインクリメンタルビルドをサポートしており、開発中では主にこのビルド方式が多く使われます。
+このインクリメンタルビルドは変更があった箇所と変更に影響ある箇所だけをビルドすることでビルド時間短縮します。&lt;/p&gt;
+
+&lt;p&gt;これをコードをframeworkで分離することでコード改修した箇所でframework先まではビルドされることはないので、より少ない時間でビルドが終わります。&lt;/p&gt;
+
+&lt;p&gt;同じ理論でビルド時間短縮してるのがCocoaPodsからのCarthageになります。&lt;/p&gt;
+
+&lt;h3 id=&quot;ケース3-レイヤードアーキテクチャの疎結合を強化&quot;&gt;ケース3: レイヤードアーキテクチャの疎結合を強化&lt;/h3&gt;
+&lt;p&gt;Embedded frameworkといってもframeworkと同じ扱いになり、framework内の機能を使うには&lt;code class=&quot;highlighter-rouge&quot;&gt;import&lt;/code&gt;しないとコンパイルエラーとなります。&lt;br /&gt;
+つまり言語レベルでレイヤー間のアクセス違反を検知してくれるようになります。&lt;br /&gt;
+（検知といっても検知した後はエンジニアが気づく必要があるので完璧とはいえないですが）&lt;/p&gt;
+
+&lt;h2 id=&quot;embedded-frameworkを作る&quot;&gt;Embedded Frameworkを作る&lt;/h2&gt;
+
+&lt;p&gt;仕組みがシンプルですが、実装方法もシンプルです。&lt;/p&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Frameworkターゲット追加&lt;/li&gt;
+  &lt;li&gt;作成されたフォルダ内にコード実装&lt;/li&gt;
+  &lt;li&gt;アプリターゲット &amp;gt; Generalからフレームワークを追加&lt;/li&gt;
+  &lt;li&gt;アプリ側コードからimportして呼び出し&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;では実際にLogicというEmbedded frameworkを用意し、中にはCalculatorという構造体を用意してみます。&lt;/p&gt;
+
+&lt;h3 id=&quot;frameworkターゲット追加&quot;&gt;Frameworkターゲット追加&lt;/h3&gt;
+
+&lt;p&gt;プロジェクトのGeneralからターゲット追加します。↓&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/3.png&quot; width=&quot;100%&quot; alt=&quot;XcodeTargetGeneral&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;Frameworkを選択します。↓&lt;br /&gt;
+注意点としてXcodeは定期的にUIを変更するため、時期によってはこの画面や名称とは違うケースがあります。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/4.png&quot; width=&quot;100%&quot; alt=&quot;XcodeAddTarget&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;作成されたフォルダ内にコード実装&quot;&gt;作成されたフォルダ内にコード実装&lt;/h3&gt;
+
+&lt;p&gt;Frameworkターゲットを追加するとターゲットと一緒にフォルダも作成されます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/5.png&quot; width=&quot;50%&quot; alt=&quot;XcodeAddedFrameworkTarget&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;コードは何でもいいですが、今回は下記コードをFrameworkの管理するフォルダに追加します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;struct&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Calculator&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;kd&quot;&gt;public&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;static&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;plus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;n&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;reduce&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;+&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;アクセススコープに注意&quot;&gt;アクセススコープに注意&lt;/h4&gt;
+&lt;p&gt;framework全般の常識として外部から使われることを想定しているクラスやメソッドのスコープをpublicにして呼び出し元から見えるようにします。&lt;br /&gt;
+スコープ未指定だとframework外だと見えないので注意です。&lt;/p&gt;
+
+&lt;h3 id=&quot;アプリターゲット--generalからフレームワークを追加&quot;&gt;アプリターゲット &amp;gt; Generalからフレームワークを追加&lt;/h3&gt;
+&lt;p&gt;作成したframeworkをiOSアプリターゲットから使えるようにするために関連付けする必要があります。&lt;br /&gt;
+アプリターゲットのGeneralからframework追加を行います。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/6.png&quot; width=&quot;100%&quot; alt=&quot;XcodeAddFramework&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;＋&lt;/code&gt;を選ぶことで選択ダイアログが出てきますが、内部ターゲットになるのですぐ見つけれます。&lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-embedded-framework/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-embedded-framework/7.png&quot; width=&quot;80%&quot; alt=&quot;XcodeAddFrameworkDialog&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
+
+&lt;h3 id=&quot;アプリ側コードからimportして呼び出し&quot;&gt;アプリ側コードからimportして呼び出し&lt;/h3&gt;
+
+&lt;p&gt;あとは使いたい場所でimportして呼び出すだけです。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIKit&lt;/span&gt;
+&lt;span class=&quot;kd&quot;&gt;import&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;logic&lt;/span&gt;
+
+&lt;span class=&quot;kd&quot;&gt;class&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;ViewController&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;UIViewController&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;k&quot;&gt;override&lt;/span&gt; &lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+        &lt;span class=&quot;k&quot;&gt;super&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;viewDidLoad&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;()&lt;/span&gt;
+        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Calculator&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;plus&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;vals&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;今回のコードは&lt;a href=&quot;https://github.com/mothule/research_embedded_framework&quot;&gt;GitHub&lt;/a&gt;にあげてあります。実際にXcode立ち上げて確認したい方はどうぞ。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">開発中のビルド時間の短縮やレイヤードアーキテクチャをより疎結合にする設計や、Extensionや他Platformなどでコード共有したい場合は、Embedded frameworkで解決できます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-embedded-framework/0.png" /></entry><entry><title type="html">たまに必要なGitの操作tips</title><link href="https://blog.mothule.com/tools/git/tools-git-tips" rel="alternate" type="text/html" title="たまに必要なGitの操作tips" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-29T23:34:17+09:00</updated><id>https://blog.mothule.com/tools/git/tools-git-tips</id><content type="html" xml:base="https://blog.mothule.com/tools/git/tools-git-tips">&lt;p&gt;普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。
+順次増やしていきます。&lt;/p&gt;
+
+&lt;h2 id=&quot;リモートのみファイル削除&quot;&gt;リモートのみファイル削除&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git rm &lt;span class=&quot;nt&quot;&gt;--cached&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ファイル名]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;フォルダ削除&quot;&gt;フォルダ削除&lt;/h3&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git rm &lt;span class=&quot;nt&quot;&gt;--cached&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-r&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;ディレクトリ名]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;最新のみcloneシャロークローン&quot;&gt;最新のみclone(シャロークローン)&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone &lt;span class=&quot;nt&quot;&gt;--depth&lt;/span&gt; 1 &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;Git URL]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;指定ワードを含むコミットを検索&quot;&gt;指定ワードを含むコミットを検索&lt;/h2&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;-S&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;検索ワード] &lt;span class=&quot;nt&quot;&gt;--patch&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;--patch&lt;/code&gt;をつけない場合はログ一覧が並びます。&lt;/p&gt;
+
+&lt;h2 id=&quot;コミットした人で検索&quot;&gt;コミットした人で検索&lt;/h2&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git log &lt;span class=&quot;nt&quot;&gt;--author&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;コミットした人の名前]
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="tools" /><category term="git" /><summary type="html">普段使いでは使うことはない操作だけどたまに必要になる操作集を集めてます。 順次増やしていきます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-tools-git-tips/0.png" /></entry><entry><title type="html">XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods" rel="alternate" type="text/html" title="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する" /><published>2020-07-28T00:00:00+09:00</published><updated>2020-07-29T22:26:25+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods">&lt;p&gt;Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。&lt;br /&gt;
 この記事ではXcodeGenを使ってCarthageやCocoaPodsによるライブラリ管理されたXcodeプロジェクトを生成する方法を説明します。&lt;/p&gt;
 
 &lt;p&gt;もしXcodeGenの特徴やメリットを把握していない場合は、「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic&quot;&gt;XcodeGenを基本から理解する&lt;/a&gt;&lt;/span&gt;
@@ -1193,197 +1319,4 @@ Podfileだけの更新であれば&lt;code class=&quot;highlighter-rouge&quot;&g
 
 &lt;p&gt;XcodeGenの概要からインストールまでを説明しました。&lt;br /&gt;
 実際にXcodeプロジェクト生成は、「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic-usage&quot;&gt;XcodeGenで最低限のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;
-」で説明してます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。 でもXcodeGenでXcodeプロジェクトを生成することで、このストレスから解消できます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic/0.png" /></entry><entry><title type="html">XcodeGenで最低限のXcodeプロジェクトを生成する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-basic-usage" rel="alternate" type="text/html" title="XcodeGenで最低限のXcodeプロジェクトを生成する" /><published>2020-07-28T00:00:00+09:00</published><updated>2020-07-29T22:26:25+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-basic-usage</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-basic-usage">&lt;p&gt;Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。&lt;br /&gt;
-この記事ではXcodeGenを実際に使って最小プロジェクトを作って使い方を説明します。&lt;/p&gt;
-
-&lt;p&gt;もしXcodeGenの特徴やメリットを把握していない場合は、「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-basic&quot;&gt;XcodeGenを基本から理解する&lt;/a&gt;&lt;/span&gt;
-」に詳細をまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;最小仕様でxcodeプロジェクトを生成する&quot;&gt;最小仕様でXcodeプロジェクトを生成する&lt;/h2&gt;
-
-&lt;p&gt;XcodeGenの特徴の一つとしてデフォルト値が用意されているので指定がない場合はデフォルト値を使ってXcodeプロジェクトを生成するようです。&lt;/p&gt;
-
-&lt;h3 id=&quot;空フォルダ上で実行&quot;&gt;空フォルダ上で実行&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;xcodegen generate
-No project spec found at /your/workspace/project.yml
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;プロジェクト仕様ファイルがないと怒られます。ファイルは必要なようです。&lt;/p&gt;
-
-&lt;h3 id=&quot;空のプロジェクト仕様ファイルで実行&quot;&gt;空のプロジェクト仕様ファイルで実行&lt;/h3&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;xcodegen generate
-Parsing project spec failed: Decoding failed at &lt;span class=&quot;s2&quot;&gt;&quot;name&quot;&lt;/span&gt;: Nothing found
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt;のデコードに失敗しました。どうやら&lt;code class=&quot;highlighter-rouge&quot;&gt;name&lt;/code&gt;を探しているようです。&lt;/p&gt;
-
-&lt;h3 id=&quot;nameを入れたプロジェクト仕様ファイルで実行&quot;&gt;nameを入れたプロジェクト仕様ファイルで実行&lt;/h3&gt;
-
-&lt;p&gt;次のようにproject.ymlにnameを追加して実行してみます。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat &lt;/span&gt;project.yml
-name: MinimumProject
-
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;xcodegen generate
-⚙️  Generating plists...
-⚙️  Generating project...
-⚙️  Writing project...
-Created project at /your/workspace/MinimumProject.xcodeproj
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;どうやら作成に成功したようです。下記スクショのようにファイルもフォルダ設計もターゲットも何もない状態です。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/1.png&quot; width=&quot;100%&quot; alt=&quot;MinimumProjectXcode&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;なお今回のファイルは&lt;a href=&quot;https://github.com/mothule/research_xcodegen/tree/master/minimum_proj&quot;&gt;GitHub&lt;/a&gt;に上げてますので全体像が分からない場合はこちらを見てください。&lt;/p&gt;
-
-&lt;h2 id=&quot;iosプロジェクトを生成する&quot;&gt;iOSプロジェクトを生成する&lt;/h2&gt;
-&lt;p&gt;ではiOSをプラットフォームとした空プロジェクトを目指して見ます。&lt;/p&gt;
-
-&lt;p&gt;その前に簡単にXcodeがデフォルトで用意してるテンプレートで目指すゴールを用意します。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/2.png&quot; width=&quot;100%&quot; alt=&quot;iOSMinimumProjectXcode&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;ざっと見て追加する点は&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ターゲット
-    &lt;ul&gt;
-      &lt;li&gt;表示名&lt;/li&gt;
-      &lt;li&gt;バンドルID&lt;/li&gt;
-      &lt;li&gt;バージョン&lt;/li&gt;
-      &lt;li&gt;ビルド番号&lt;/li&gt;
-      &lt;li&gt;端末制限(iOSとiPad)&lt;/li&gt;
-      &lt;li&gt;初期表示storyboard&lt;/li&gt;
-      &lt;li&gt;画面横向きサポート&lt;/li&gt;
-      &lt;li&gt;ステータスバー&lt;/li&gt;
-      &lt;li&gt;アイコンと起動画面&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;フォルダとファイルがある&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;あたりが必要そうです。&lt;/p&gt;
-
-&lt;h3 id=&quot;ターゲットを追加する&quot;&gt;ターゲットを追加する&lt;/h3&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;iOSMinimumProject&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;application&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;targets&lt;/code&gt;の子にはプロジェクト名が入ります。&lt;br /&gt;
-今回は&lt;code class=&quot;highlighter-rouge&quot;&gt;iOSMinimumProject&lt;/code&gt;というターゲット名にしてます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;type&lt;/code&gt;には&lt;a href=&quot;https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#product-type&quot;&gt;Product Type&lt;/a&gt;の何れかをセットします。
-今回は単純なアプリケーションなので&lt;code class=&quot;highlighter-rouge&quot;&gt;application&lt;/code&gt;になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;platform&lt;/code&gt;には&lt;a href=&quot;https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#platform&quot;&gt;Platform&lt;/a&gt;の何れかをセットします。
-今回はiOSなので&lt;code class=&quot;highlighter-rouge&quot;&gt;iOS&lt;/code&gt;になります。&lt;/p&gt;
-
-&lt;p&gt;これで&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodegen generate&lt;/code&gt;を実行した結果が下図になります。
-&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/3.png&quot; width=&quot;100%&quot; alt=&quot;iOSMinimumProjectXcode&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;プロジェクトは追加されています。
-しかしIdentityやDevice Orientationなど中身がスカスカです。今度はこれを埋めていきます。&lt;/p&gt;
-
-&lt;h4 id=&quot;マルチプラットフォームはで囲む&quot;&gt;マルチプラットフォームは[]で囲む&lt;/h4&gt;
-&lt;p&gt;もし複数プラットフォーム対応の場合は
-&lt;code class=&quot;highlighter-rouge&quot;&gt;platform: [iOS, tvOS]&lt;/code&gt;のように&lt;code class=&quot;highlighter-rouge&quot;&gt;[]&lt;/code&gt;で囲みます。&lt;/p&gt;
-
-&lt;h3 id=&quot;infoplistが必要&quot;&gt;Info.plistが必要&lt;/h3&gt;
-&lt;p&gt;IdentityやDevice Orientationなどは元データはXcodeプロジェクトに登録されているのではなく、Info.plistに登録されてます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/4.png&quot; width=&quot;100%&quot; alt=&quot;Info.plist&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;なので次はInfo.plistやソースファイルなどが入ったフォルダを用意します。&lt;br /&gt;
-フォルダ名は任意ですが、&lt;code class=&quot;highlighter-rouge&quot;&gt;iOSMinimumProject&lt;/code&gt;という名前にしときます。&lt;br /&gt;
-そしてtargetのルートディレクトリとして&lt;code class=&quot;highlighter-rouge&quot;&gt;sources&lt;/code&gt;プロパティでパスを渡します。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOSMinimumProject&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これで&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodegen generate&lt;/code&gt;を実行すると無事不足してた部分が追加されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/5.png&quot; width=&quot;100%&quot; alt=&quot;iOSMinimumProjectXcode&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;初期ファイル群は自分で用意が必要&quot;&gt;初期ファイル群は自分で用意が必要&lt;/h4&gt;
-&lt;p&gt;AppDelegate.swiftやInfo.plistなどは自身が追加したファイル同様外部ファイルなため、自分で用意する必要があります。&lt;br /&gt;
-しかしXcodeGenには特別初期ファイル群を用意する機能は備わっていないようなので、&lt;br /&gt;
-Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒に作成される初期ファイル群を使う手間があります。&lt;/p&gt;
-
-&lt;p&gt;このことからターゲット追加における最適フローは、&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;一度Xcodeプロジェクトでターゲット作成する&lt;/li&gt;
-  &lt;li&gt;作成されたフォルダとファイル類をプロジェクト仕様に使う&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;という流れが手軽です。&lt;/p&gt;
-
-&lt;p&gt;もし違和感覚える方は、&lt;strong&gt;「大事なのはXcodeプロジェクト管理を脱却することであり、Xcodeからの脱却ではない」&lt;/strong&gt; ことを改めて思い出すと腹落ちするのではないかと思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;バンドルidを設定する&quot;&gt;バンドルIDを設定する&lt;/h3&gt;
-
-&lt;p&gt;キャプチャ見ると分かりますが、Bundle Identifierが空のままです。&lt;br /&gt;
-これは&lt;code class=&quot;highlighter-rouge&quot;&gt;bundleIdPrefix&lt;/code&gt;プロパティをセットすることでいい感じにセットしてくれます。&lt;br /&gt;
-このプロパティは&lt;code class=&quot;highlighter-rouge&quot;&gt;targets&lt;/code&gt;ではなくルートに&lt;code class=&quot;highlighter-rouge&quot;&gt;options&lt;/code&gt;を用意してその中でセットとなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;bundleIdPrefix&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;com.mothule&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これで&lt;code class=&quot;highlighter-rouge&quot;&gt;xcodegen generate&lt;/code&gt;を実行すると無事bundle Identifierがセットされます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/6.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/6.png&quot; width=&quot;100%&quot; alt=&quot;iOSMinimumProjectXcode&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;こちらも&lt;a href=&quot;https://github.com/mothule/research_xcodegen/tree/master/ios_minimum_proj&quot;&gt;GitHub&lt;/a&gt;に上げてますので全体像が分からない場合はこちらを見てください。&lt;/p&gt;
-
-&lt;h2 id=&quot;カテゴリ毎の必須プロパティの確認方法&quot;&gt;カテゴリ毎の必須プロパティの確認方法&lt;/h2&gt;
-
-&lt;p&gt;&lt;a href=&quot;https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md&quot;&gt;公式のプロジェクト仕様ページ&lt;/a&gt;には各カテゴリ毎に定義されているプロパティと説明が列挙されています。&lt;/p&gt;
-
-&lt;p&gt;そして各プロパティ横のチェックボックスがマークされたものが必須プロパティとなります。&lt;/p&gt;
-
-&lt;h2 id=&quot;テストターゲットを追加する&quot;&gt;テストターゲットを追加する&lt;/h2&gt;
-&lt;p&gt;実務ではプロダクトターゲットだけでなく単体テストとしてテストターゲットも必要になります。&lt;br /&gt;
-先程の&lt;code class=&quot;highlighter-rouge&quot;&gt;iOSMinimumProject&lt;/code&gt;にテストターゲットを追加してみます。&lt;/p&gt;
-
-&lt;h3 id=&quot;xcodeでテストフォルダを生成する&quot;&gt;Xcodeでテストフォルダを生成する&lt;/h3&gt;
-&lt;p&gt;まず最初にXcodeから&lt;code class=&quot;highlighter-rouge&quot;&gt;Unit Testing Bundle&lt;/code&gt;を選択して追加します。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/7.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-28-ios-xcodegen-basic-usage/7.png&quot; width=&quot;200px&quot; alt=&quot;UnitTestingBundle&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;するとターゲットとそれに紐づくフォルダが追加されるので、ターゲット名をコピーします。&lt;/p&gt;
-
-&lt;h3 id=&quot;プロジェクト仕様にテストターゲット追加する&quot;&gt;プロジェクト仕様にテストターゲット追加する&lt;/h3&gt;
-&lt;p&gt;そして新しくプロジェクト仕様にターゲットを次のように追加します。　　
-例えばテストターゲット名が&lt;code class=&quot;highlighter-rouge&quot;&gt;iOSWithUTProjTests&lt;/code&gt;だとしたら次のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;iOSWithUTProjTests&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;bundle.unit-test&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOSWithUTProjTests&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;dependencies&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;pi&quot;&gt;-&lt;/span&gt; &lt;span class=&quot;na&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOSWithUTProj&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;新しいプロパティとして&lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies&lt;/code&gt;と&lt;code class=&quot;highlighter-rouge&quot;&gt;target&lt;/code&gt;プロパティがあります。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies&lt;/code&gt;はこのターゲットに依存するライブラリなどを列挙します。&lt;br /&gt;
-今回はターゲットなので&lt;code class=&quot;highlighter-rouge&quot;&gt;target&lt;/code&gt;プロパティを使い、テスト対象のターゲット名(&lt;code class=&quot;highlighter-rouge&quot;&gt;iOSWithUTProj&lt;/code&gt;)をセットします。&lt;/p&gt;
-
-&lt;p&gt;こちらも&lt;a href=&quot;https://github.com/mothule/research_xcodegen/tree/master/ios_with_ut_proj&quot;&gt;GitHub&lt;/a&gt;に上げてます。&lt;/p&gt;
-
-&lt;h4 id=&quot;dependencies--targetなくともテストターゲットは追加されるが&quot;&gt;dependencies &amp;gt; targetなくともテストターゲットは追加されるが&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies &amp;gt; target&lt;/code&gt;を入れずともXcodeプロジェクトにUTターゲットは生成されます。&lt;br /&gt;
-が、実行できません。&lt;br /&gt;
-なぜなら、&lt;code class=&quot;highlighter-rouge&quot;&gt;Testing &amp;gt; Host Application&lt;/code&gt; がNoneになっているためです。&lt;br /&gt;
-この部分をセットするために、&lt;code class=&quot;highlighter-rouge&quot;&gt;dependencies&lt;/code&gt;を追加してます。&lt;/p&gt;
-
-&lt;h2 id=&quot;carthageやcocoapods環境を構築する&quot;&gt;CarthageやCocoaPods環境を構築する&lt;/h2&gt;
-&lt;p&gt;XcodeGenを使って最小プロジェクトからUnitTest付きiOSアプリの最小プロジェクトを作りました。&lt;/p&gt;
-
-&lt;p&gt;次はCarthageやCocoaPodsを使ったライブラリ追加を「&lt;span&gt;&lt;a href=&quot;/ios/xcodegen/ios-xcodegen-carthage-cocoapods&quot;&gt;XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する&lt;/a&gt;&lt;/span&gt;
-」で説明します。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。 この記事ではXcodeGenを実際に使って最小プロジェクトを作って使い方を説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png" /></entry></feed>
+」で説明してます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><category term="xcodegen" /><summary type="html">Xcodeプロジェクト(.xcodeproj)のコンフリクトはストレスです。 でもXcodeGenでXcodeプロジェクトを生成することで、このストレスから解消できます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic/0.png" /></entry></feed>
