@@ -1,9 +1,13 @@
 ---
-title: SwiftのCollectionのサポート機能に触れてみる
+title: SwiftのCollectionとRangeを組み合わせて使いこなし術
+description: SwiftのCollectionを使いこなすことでSetやArray、DictionaryをよりSwiftyに使えるようになる。今回はRangeを使った使いこなし術を説明する。
 categories: ios swift
 tags: ios swift
+image:
+  path: /assets/images/2020-08-07-ios-swift-collection-range-tips/0.png
 ---
-[Supporting Types - Apple Developer Documentation](https://developer.apple.com/documentation/swift/swift_standard_library/collections/supporting_types)
+SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。  
+今回は[Supporting Types - Apple Developer Documentation](https://developer.apple.com/documentation/swift/swift_standard_library/collections/supporting_types)にあるサポート機能について使えそうなものがないかを調べてまとめました。
 
 
 ## CollectionとRangeの組み合わせ
@@ -45,6 +49,12 @@ print(upToFive.contains(-0.1)) // true
 ```swift
 let numbers = [4, 2, 3, 4, 5]
 print(numbers[..<3]) // [4, 2, 3]
+```
+
+ちなみにパターンマッチング演算子(`~=`)が用意されているので下記2つは同じ意味です。
+```swift
+print(..<3 ~= 2) // true
+print((..<3).contains(2)) // true
 ```
 
 ### PartialRangeThrough: 上限のみ(上限以下)
@@ -94,29 +104,21 @@ let numbers = [4, 2, 3, 4, 5]
 print(numbers[...]) // [4, 2, 3, 4, 5]
 ```
 
-## LazySequenceやLazyCollectionによる遅延評価で効率化
+## Collection+Rangeまとめ
 
-Collectionの高階関数(filter, map, reduceなど)は関数が呼ばれたその場で渡したクロージャが評価されます。
+出てきた書き方を下記にまとめます。
 
 ```swift
-func toString(from val: Int) -> String {
-    print(#function)
-    return String(val)
+let numbers = [4, 2, 3, 4, 5]
+print(numbers[..<3])
+print(numbers[...3])
+print(numbers[3...])
+print(numbers[...])
+zip(numbers, 999...).forEach { (v1, v2) in
+    print(v1, v2)
 }
-
-let sequence = stride(from: 0, to: 10, by: 1)
-    .filter({ $0 % 2 == 0 })
-    .map({ $0 * 2 })
-    .filter({ $0 > 0 && $0 < 5 })
-    .map(toString)
-print("Will call count")
-print(sequence.count)
+print(..<3 ~= 2)
 ```
 
-例えば上記コードを実行すると、コンソールには下記が出力されます。
-
-```
-toString(from:)
-Will call count
-1
-```
+Collectionの範囲取得で 0..<3 のような書き方をショートハンドのように省略できるようになります。  
+使い所は広くはありませんが、知っておくとライブラリコードで突然出てきても落ち着いて読み進めることができます。
