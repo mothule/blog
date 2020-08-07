@@ -11,33 +11,33 @@
 
 
 
-  <title>xcconfigで使うパラメータ名の見つけ方 - もちゅろぐ</title>
+  <title>SwiftのCollectionとRangeを組み合わせて使いこなし術 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="xcconfigで使うパラメータ名の見つけ方" />
+<meta property="og:title" content="SwiftのCollectionとRangeを組み合わせて使いこなし術" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。" />
-<meta property="og:description" content="xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" />
-<meta property="og:url" content="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" />
+<meta name="description" content="SwiftのCollectionを使いこなすことでSetやArray、DictionaryをよりSwiftyに使えるようになる。今回はRangeを使った使いこなし術を説明する。" />
+<meta property="og:description" content="SwiftのCollectionを使いこなすことでSetやArray、DictionaryをよりSwiftyに使えるようになる。今回はRangeを使った使いこなし術を説明する。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips" />
+<meta property="og:url" content="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-07-30T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-08-07T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config","headline":"xcconfigで使うパラメータ名の見つけ方","dateModified":"2020-07-30T19:49:43+09:00","datePublished":"2020-07-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config"},"description":"xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。","image":"https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips","headline":"SwiftのCollectionとRangeを組み合わせて使いこなし術","dateModified":"2020-08-07T19:34:01+09:00","datePublished":"2020-08-07T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips"},"description":"SwiftのCollectionを使いこなすことでSetやArray、DictionaryをよりSwiftyに使えるようになる。今回はRangeを使った使いこなし術を説明する。","image":"https://blog.mothule.com/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="xcconfigで使うパラメータ名の見つけ方">
-<meta name="twitter:description" content="xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png">
+<meta name="twitter:title" content="SwiftのCollectionとRangeを組み合わせて使いこなし術">
+<meta name="twitter:description" content="SwiftのCollectionを使いこなすことでSetやArray、DictionaryをよりSwiftyに使えるようになる。今回はRangeを使った使いこなし術を説明する。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -140,8 +140,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#xcode" itemprop="item">
-              <span itemprop="name">Xcode</span>
+            <a href="/tags#swift" itemprop="item">
+              <span itemprop="name">Swift</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -150,7 +150,7 @@
         
         
           <li>
-            xcconfigで使うパラメータ名の見つけ方
+            SwiftのCollectionとRangeを組み合わせて使いこなし術
           </li>
         
       
@@ -162,12 +162,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" alt="xcconfigで使うパラメータ名の見つけ方">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png" alt="SwiftのCollectionとRangeを組み合わせて使いこなし術">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>xcconfigで使うパラメータ名の見つけ方</h1>
+    <h1>SwiftのCollectionとRangeを組み合わせて使いこなし術</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -175,14 +175,12 @@
           
             <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
           
-            <li class="list-inline-item"><a href="/tags#xcode">Xcode</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#xcconfig">xcconfig</a></li>
+            <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2020-7-30</time></span>
+        <span"><time class="post-date">2020-8-7</time></span>
       </div>
     </div>
   </header>
@@ -190,76 +188,125 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#xcconfigへの変換はxcodeがサポートしてる">xcconfigへの変換はXcodeがサポートしてる</a></li>
-  <li><a href="#xcodeのbuild-settingsの表示方法をパラメータ名に変更">XcodeのBuild Settingsの表示方法をパラメータ名に変更</a></li>
-  <li><a href="#xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー">XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー</a></li>
+  <li><a href="#collectionとrangeの組み合わせ">CollectionとRangeの組み合わせ</a>
+    <ul>
+      <li><a href="#partialrangeupto-上限のみ上限未満">PartialRangeUpTo: 上限のみ(上限未満)</a></li>
+      <li><a href="#partialrangethrough-上限のみ上限以下">PartialRangeThrough: 上限のみ(上限以下)</a></li>
+      <li><a href="#partialrangefrom-下限のみ">PartialRangeFrom: 下限のみ</a></li>
+      <li><a href="#unboundedrange_-上限下限なし">UnboundedRange_: 上限下限なし</a></li>
+    </ul>
+  </li>
+  <li><a href="#collectionrangeまとめ">Collection+Rangeまとめ</a></li>
 </ul>
   </div>
   <section>
-  <p>xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。<br />
-この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。</p>
+  <p>SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。<br />
+今回は<a href="https://developer.apple.com/documentation/swift/swift_standard_library/collections/supporting_types">Supporting Types - Apple Developer Documentation</a>にあるサポート機能について使えそうなものがないかを調べてまとめました。</p>
 
-<p>xcconfigについて分からない方は「<span><a href="/ios/xcode/ios-xcode-xcconfig-how-to-use">Xcodeのxcconfigの理解と使い方</a></span>
-」に詳細を説明してます。</p>
+<h2 id="collectionとrangeの組み合わせ">CollectionとRangeの組み合わせ</h2>
 
-<h2 id="xcconfigへの変換はxcodeがサポートしてる">xcconfigへの変換はXcodeがサポートしてる</h2>
-<p>xcconfigの書き方が分かって実際に使おうにも、ビルドパラメータ名が分からないと設定しようがありません。<br />
-XcodeのBuild Settingsでカスタマイズされた項目をxcconfigだとどうやって書けばいいか分からないと思います。<br />
-実は<strong>XcodeのBuild Settingsからxcconfigへのフォーマット変換はXcodeがサポートしてます。</strong></p>
+<p>Collectionには範囲取得する機能があります。<br />
+範囲を表す型は、Rangeを使います。<br />
+例えば、下のコードを見かけた人は多いと思います。</p>
 
-<p>確認する方法は2つあります。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">values</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">]</span>
+<span class="k">let</span> <span class="nv">partial</span> <span class="o">=</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="o">...</span><span class="mi">2</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">partial</span><span class="p">)</span> <span class="c1">// [2, 3]</span>
+</code></pre></div></div>
+
+<p>実はこれ以外の範囲指定方法がCollectionには用意されています。</p>
 
 <ul>
-  <li>XcodeのBuild Settingsの表示方法をパラメータ名に変更する</li>
-  <li>XcodeのBuild Settingsの各パラメータをxcconfig形式でコピーする</li>
+  <li>PartialRangeUpTo: 上限のみ(上限未満)</li>
+  <li>PartialRangeThrough: 上限のみ(上限以下)</li>
+  <li>PartialRangeFrom: 下限のみ</li>
+  <li>UnboundedRange_: 上限下限なし</li>
 </ul>
 
-<h2 id="xcodeのbuild-settingsの表示方法をパラメータ名に変更">XcodeのBuild Settingsの表示方法をパラメータ名に変更</h2>
+<h3 id="partialrangeupto-上限のみ上限未満">PartialRangeUpTo: 上限のみ(上限未満)</h3>
 
-<p><code class="highlighter-rouge">Build Settings</code>を開いた後に<code class="highlighter-rouge">Editor &gt; Show Setting Names</code>を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。</p>
+<p>上限値のみが指定された範囲型です。<br />
+下限は無制限となります。<br />
+そのため<code class="highlighter-rouge">contains</code>メソッドで範囲内判定を確認するとマイナスでも<code class="highlighter-rouge">true</code>を返します。</p>
 
-<video playsinline="" muted="" autoplay="" loop="" width="100%" height="400px">
-    <source type="video/mp4" src="/assets/videos/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.mp4" />
-</video>
-
-<p>例えば、 <code class="highlighter-rouge">Architectures &gt; Build Active Architecture Only</code>であれば、<code class="highlighter-rouge">ONLY_ACTIVE_ARCH</code>になります。<br />
-これをxcconfigで使うなら<code class="highlighter-rouge">ONLY_ACTIVE_ARCH = YES</code>となります。</p>
-
-<h2 id="xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー">XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー</h2>
-
-<p>パラメータ名を確認するだけなら<code class="highlighter-rouge">Show Setting Names</code>で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。<br />
-実は<code class="highlighter-rouge">Build Settings</code>はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。</p>
-
-<p><a href="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png"><img src="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png" width="100%" alt="XcodeBuildSettings" /></a></p>
-
-<p>例えば<code class="highlighter-rouge">Build Active Architecture Only</code>の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。</p>
-
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
-ONLY_ACTIVE_ARCH = YES
-
-//:configuration = Release
-
-//:completeSettings = some
-ONLY_ACTIVE_ARCH
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">upToFive</span> <span class="o">=</span> <span class="o">..&lt;</span><span class="mf">5.0</span>
+<span class="nf">print</span><span class="p">(</span><span class="nf">type</span><span class="p">(</span><span class="nv">of</span><span class="p">:</span> <span class="n">upToFive</span><span class="p">))</span> <span class="c1">// PartialRangeUpTo&lt;Double&gt;</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">upToFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mf">3.14</span><span class="p">))</span> <span class="c1">// true</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">upToFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mf">5.0</span><span class="p">))</span> <span class="c1">// false</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">upToFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mf">5.1</span><span class="p">))</span> <span class="c1">// false</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">upToFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">))</span> <span class="c1">// true</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">//:configuration = Debug</code>や<code class="highlighter-rouge">Release</code>とはBuild Configuration毎に分けられてます。
-<code class="highlighter-rouge">Release</code>に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。</p>
+<p>これをCollectionの範囲指定として使えます。</p>
 
-<p><code class="highlighter-rouge">some</code>はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。</p>
-
-<p>もう一つ例として<code class="highlighter-rouge">Build Options &gt; Debug Information Format</code>を見るとこうなります。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
-DEBUG_INFORMATION_FORMAT = dwarf
-
-//:configuration = Release
-DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
-
-//:completeSettings = some
-DEBUG_INFORMATION_FORMAT
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="o">..&lt;</span><span class="mi">3</span><span class="p">])</span> <span class="c1">// [4, 2, 3]</span>
 </code></pre></div></div>
 
-<p>これを使えばXcodeからxcconfigを作りたい場合に<code class="highlighter-rouge">Build Settings</code>の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。</p>
+<p>ちなみにパターンマッチング演算子(<code class="highlighter-rouge">~=</code>)が用意されているので下記2つは同じ意味です。</p>
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nf">print</span><span class="p">(</span><span class="o">..&lt;</span><span class="mi">3</span> <span class="o">~=</span> <span class="mi">2</span><span class="p">)</span> <span class="c1">// true</span>
+<span class="nf">print</span><span class="p">((</span><span class="o">..&lt;</span><span class="mi">3</span><span class="p">)</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span> <span class="c1">// true</span>
+</code></pre></div></div>
+
+<h3 id="partialrangethrough-上限のみ上限以下">PartialRangeThrough: 上限のみ(上限以下)</h3>
+
+<p>PartialRangeUpToと同じですが、こちらは上限値も範囲に含めます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">throughFive</span> <span class="o">=</span> <span class="o">...</span><span class="mf">5.0</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">throughFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mf">3.14</span><span class="p">))</span> <span class="c1">// true</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">throughFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mf">5.0</span><span class="p">))</span> <span class="c1">// true</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">throughFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mf">5.1</span><span class="p">))</span> <span class="c1">// false</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">throughFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1</span><span class="p">))</span> <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>これをCollectionの範囲指定として使えます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="o">...</span><span class="mi">3</span><span class="p">])</span> <span class="c1">// [4, 2, 3, 4]</span>
+</code></pre></div></div>
+<h3 id="partialrangefrom-下限のみ">PartialRangeFrom: 下限のみ</h3>
+
+<p>下限値のみが指定された範囲型です。<br />
+上限は無制限となります。<br />
+<code class="highlighter-rouge">contains</code>メソッドで確認すると下記のようになります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">atLeastFive</span> <span class="o">=</span> <span class="mi">5</span><span class="o">...</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">atLeastFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mi">4</span><span class="p">))</span> <span class="c1">// false</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">atLeastFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="mi">5</span><span class="p">))</span> <span class="c1">// true</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">atLeastFive</span><span class="o">.</span><span class="nf">contains</span><span class="p">(</span><span class="kt">Int</span><span class="o">.</span><span class="n">max</span><span class="p">))</span> <span class="c1">// true</span>
+</code></pre></div></div>
+
+<p>これをCollectionの範囲指定として使えます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">3</span><span class="o">...</span><span class="p">])</span> <span class="c1">// [4, 5]</span>
+</code></pre></div></div>
+
+<h3 id="unboundedrange_-上限下限なし">UnboundedRange_: 上限下限なし</h3>
+
+<p>これはレアケースな気がしますが、上限も下限も無制限の指定方法があります。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="o">...</span><span class="p">])</span> <span class="c1">// [4, 2, 3, 4, 5]</span>
+</code></pre></div></div>
+
+<h2 id="collectionrangeまとめ">Collection+Rangeまとめ</h2>
+
+<p>出てきた書き方を下記にまとめます。</p>
+
+<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">numbers</span> <span class="o">=</span> <span class="p">[</span><span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="o">..&lt;</span><span class="mi">3</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="o">...</span><span class="mi">3</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="mi">3</span><span class="o">...</span><span class="p">])</span>
+<span class="nf">print</span><span class="p">(</span><span class="n">numbers</span><span class="p">[</span><span class="o">...</span><span class="p">])</span>
+<span class="nf">zip</span><span class="p">(</span><span class="n">numbers</span><span class="p">,</span> <span class="mi">999</span><span class="o">...</span><span class="p">)</span><span class="o">.</span><span class="n">forEach</span> <span class="p">{</span> <span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span> <span class="k">in</span>
+    <span class="nf">print</span><span class="p">(</span><span class="n">v1</span><span class="p">,</span> <span class="n">v2</span><span class="p">)</span>
+<span class="p">}</span>
+<span class="nf">print</span><span class="p">(</span><span class="o">..&lt;</span><span class="mi">3</span> <span class="o">~=</span> <span class="mi">2</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>Collectionの範囲取得で 0..&lt;3 のような書き方をショートハンドのように省略できるようになります。<br />
+使い所は広くはありませんが、知っておくとライブラリコードで突然出てきても落ち着いて読み進めることができます。</p>
 
   </section>
 
@@ -289,27 +336,7 @@ DEBUG_INFORMATION_FORMAT
                 
                 
                 
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/xcode/ios-xcode-xcconfig-how-to-use">Xcodeのxcconfigの理解と使い方</a></h3></li>
+                    <li><h3><a href="/ios/swift/ios-swift-lazy-sequence-and-collection">Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する</a></h3></li>
                     
                     
                 
@@ -323,12 +350,7 @@ DEBUG_INFORMATION_FORMAT
                 
                 
                 
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-settings">XcodeGenのSettings周りを整理する</a></h3></li>
+                    <li><h3><a href="/ios/swift/ios-swift-ecosystem-design">iOSアプリ開発のエコシステムを考えてみた</a></h3></li>
                     
                     
                 
@@ -337,57 +359,7 @@ DEBUG_INFORMATION_FORMAT
                 
                 
                 
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/xcode/ios-xcode-dl-old-version">XcodeをApp Storeからダウンロードせず旧バージョンと共存させる</a></h3></li>
+                    <li><h3><a href="/ios/mint/ios-mint-basic-usage">iOS開発環境には重要エコシステムとなるMintの理解と利用</a></h3></li>
                     
                     
                 
@@ -426,608 +398,19 @@ DEBUG_INFORMATION_FORMAT
                 
                 
                 
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-carthage-cocoapods">XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する</a></h3></li>
+                    
+                    
                 
 
             
                 
                 
                 
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
+                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-build-configuration-scheme">XcodeGenでBuild ConfigurationとSchemeの設定をする</a></h3></li>
+                    
+                    
+                        
         </div>
     </ul>
 </div>
