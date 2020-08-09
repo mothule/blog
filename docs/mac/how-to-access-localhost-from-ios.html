@@ -14,8 +14,8 @@
   <title>iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。 今回はその方法についてまとました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-08-02T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-08-02-how-to-access-localhost-from-ios.png" />
+<meta property="twitter:title" content="iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/mac/how-to-access-localhost-from-ios","headline":"iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-08-02T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/how-to-access-localhost-from-ios"},"description":"MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。 今回はその方法についてまとました。","image":"https://blog.mothule.com/assets/images/2019-08-02-how-to-access-localhost-from-ios.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/mac/how-to-access-localhost-from-ios","headline":"iPhoneからMac上のRailsアプリにlocalhostでアクセスする方法","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-08-02T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-08-02-how-to-access-localhost-from-ios.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/how-to-access-localhost-from-ios"},"description":"MacでサーバーサイドとiPhoneやAndroidなどのクライアントサイドを同時に開発していると、デバッグをしながらフットワーク軽く開発をしたいですよね。 わざわざテストサーバーにデプロイして動作確認するよりも前に、開発中にMac上に立ち上げてるRailsアプリに対して、iPhoneから接続できたほうが楽ですよね。 今回はその方法についてまとました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -191,7 +193,7 @@
   </li>
   <li><a href="#railsアプリを適当に用意する">Railsアプリを適当に用意する</a>
     <ul>
-      <li><a href="#-b-0000-の意味"><code class="highlighter-rouge">-b 0.0.0.0</code> の意味</a></li>
+      <li><a href="#-b-0000-の意味"><code class="language-plaintext highlighter-rouge">-b 0.0.0.0</code> の意味</a></li>
     </ul>
   </li>
   <li><a href="#ローカルネットワークのipアドレス直でもアクセスできる">ローカルネットワークのIPアドレス直でもアクセスできる</a></li>
@@ -228,10 +230,10 @@
 <p><a href="/assets/images/2019-08-02-how-to-access-localhost-from-ios/-3.png"><img src="/assets/images/2019-08-02-how-to-access-localhost-from-ios/-3.png" width="100%" alt="" /></a></p>
 
 <p>例えば上図のようになっていた場合、<strong>ローカルホスト名とは「mothule-mbp.local」</strong>のことを言います。
-これが実際のアドレス代わりとなり、<code class="highlighter-rouge">http://mothule-mbp.local:3000</code> のようにアクセスするとポート3000に対して <code class="highlighter-rouge">GET /</code> リクエストを投げます。</p>
+これが実際のアドレス代わりとなり、<code class="language-plaintext highlighter-rouge">http://mothule-mbp.local:3000</code> のようにアクセスするとポート3000に対して <code class="language-plaintext highlighter-rouge">GET /</code> リクエストを投げます。</p>
 
 <p><strong>しかし注意事項があります。</strong><br />
-上記のようにハイフン(<code class="highlighter-rouge">-</code>)が入ってると動かないので取り除く必要があります。</p>
+上記のようにハイフン(<code class="language-plaintext highlighter-rouge">-</code>)が入ってると動かないので取り除く必要があります。</p>
 
 <p>画面右の「編集…」ボタンからローカルホスト名を変更することができるので、ハイフンを除去した名前にしてください。</p>
 
@@ -243,8 +245,8 @@
 
 <p>今回の目的はlocalhostへのアクセスなので、ここは適当なアプリを用意していいです。</p>
 
-<p>ただし立ち上げ時のオプションに <code class="highlighter-rouge">-b</code> つまりバインディングを次のように指定してください。
-<code class="highlighter-rouge">-b 0.0.0.0</code></p>
+<p>ただし立ち上げ時のオプションに <code class="language-plaintext highlighter-rouge">-b</code> つまりバインディングを次のように指定してください。
+<code class="language-plaintext highlighter-rouge">-b 0.0.0.0</code></p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bin/rails s <span class="nt">-b</span> 0.0.0.0
 <span class="o">=&gt;</span> Booting Puma
@@ -258,17 +260,17 @@ Puma starting <span class="k">in </span>single mode...
 Use Ctrl-C to stop
 </code></pre></div></div>
 
-<p>アプリを起動すると <code class="highlighter-rouge">localhost:3000</code>ではなく<code class="highlighter-rouge">0.0.0.0:3000</code> でリッスンしました。
+<p>アプリを起動すると <code class="language-plaintext highlighter-rouge">localhost:3000</code>ではなく<code class="language-plaintext highlighter-rouge">0.0.0.0:3000</code> でリッスンしました。
 ここで先程設定した<strong>ローカルホスト名</strong>を使います。
-仮にローカルホスト名が「mothule.local」だとして、<code class="highlighter-rouge">http://mothule.local:3000/</code> にアクセスしてみます。</p>
+仮にローカルホスト名が「mothule.local」だとして、<code class="language-plaintext highlighter-rouge">http://mothule.local:3000/</code> にアクセスしてみます。</p>
 
 <p><a href="/assets/images/2019-08-02-how-to-access-localhost-from-ios/-4.jpg"><img src="/assets/images/2019-08-02-how-to-access-localhost-from-ios/-4.jpg" width="50%" alt="" /></a></p>
 
 <p>無事アクセスできました。</p>
 
-<h3 id="-b-0000-の意味"><code class="highlighter-rouge">-b 0.0.0.0</code> の意味</h3>
+<h3 id="-b-0000-の意味"><code class="language-plaintext highlighter-rouge">-b 0.0.0.0</code> の意味</h3>
 
-<p>これはデフォルトでは <code class="highlighter-rouge">localhost</code> になっており、localhost経路以外でのアクセスはできません。
+<p>これはデフォルトでは <code class="language-plaintext highlighter-rouge">localhost</code> になっており、localhost経路以外でのアクセスはできません。
 しかし 0.0.0.0 を指定することでこれを全公開することになり、同一ネットーワークでかつIPが分かれば、どの端末でも誰でもアクセスできます。
 そのため注意事項としては、公共のWi-Fi環境下ではやらないほうがいいです。</p>
 

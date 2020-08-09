@@ -14,8 +14,8 @@
   <title>【初心者必見】UITableViewの実践デザイン分析 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者必見】UITableViewの実践デザイン分析" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-10-14T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png" />
+<meta property="twitter:title" content="【初心者必見】UITableViewの実践デザイン分析" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice","headline":"【初心者必見】UITableViewの実践デザイン分析","dateModified":"2020-02-25T23:35:05+09:00","datePublished":"2019-10-14T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice"},"description":"UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。","image":"https://blog.mothule.com/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice","headline":"【初心者必見】UITableViewの実践デザイン分析","dateModified":"2020-02-25T23:35:05+09:00","datePublished":"2019-10-14T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-actual-practice"},"description":"UIKitの基本的な使い方を理解したが、App Storeにあるアプリを実際にどうやって作られているのか分析できない向けの記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -318,7 +320,7 @@
 <p>UITableViewのセクション定義になります。Rowの定義は用意していません。Rowの並び順が変わるなど、Section内がより複雑になるのであればあったほうがいいです。</p>
 
 <h3 id="datasourceswift">DataSource.swift</h3>
-<p><code class="highlighter-rouge">UITableViewDataSource</code> と <code class="highlighter-rouge">UITableViewDelegate</code> を採用したクラスです。</p>
+<p><code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> と <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> を採用したクラスです。</p>
 
 <p>▼こちらに関しては次の記事で説明しています。<br />
 <span><a href="/ios/uitableview/ios-uitableview-uitableviewdatasource-separate">【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット</a></span></p>
@@ -357,16 +359,16 @@
 <h3 id="viewcontroller">ViewController</h3>
 
 <p>おなじみ画面制御クラスです。
-このクラスが <code class="highlighter-rouge">ViewModel</code> と <code class="highlighter-rouge">DataSource</code> のスコープ管理をしています。</p>
+このクラスが <code class="language-plaintext highlighter-rouge">ViewModel</code> と <code class="language-plaintext highlighter-rouge">DataSource</code> のスコープ管理をしています。</p>
 
 <h3 id="datasource">DataSource</h3>
-<p><code class="highlighter-rouge">ViewController</code> によってスコープ管理されています。<br />
-<code class="highlighter-rouge">ViewModel</code>は参照用で、スコープ管理はしていません。<br />
-しかし<code class="highlighter-rouge">ViewModel</code>のスコープは<code class="highlighter-rouge">DataSource</code>と同じである保証が<code class="highlighter-rouge">ViewController</code>によってスコープ保証されているので、弱参照にはしていません。</p>
+<p><code class="language-plaintext highlighter-rouge">ViewController</code> によってスコープ管理されています。<br />
+<code class="language-plaintext highlighter-rouge">ViewModel</code>は参照用で、スコープ管理はしていません。<br />
+しかし<code class="language-plaintext highlighter-rouge">ViewModel</code>のスコープは<code class="language-plaintext highlighter-rouge">DataSource</code>と同じである保証が<code class="language-plaintext highlighter-rouge">ViewController</code>によってスコープ保証されているので、弱参照にはしていません。</p>
 
 <h3 id="viewmodel">ViewModel</h3>
-<p>アクション処理とそれに関連するイベント発行をしています。 イベント発行は <code class="highlighter-rouge">ViewModelDelegate</code>を介して受け取ることができます。<br />
-<code class="highlighter-rouge">ViewController</code>が<code class="highlighter-rouge">ViewModelDelegate</code>を採用して、イベントを受け取るようにしています。</p>
+<p>アクション処理とそれに関連するイベント発行をしています。 イベント発行は <code class="language-plaintext highlighter-rouge">ViewModelDelegate</code>を介して受け取ることができます。<br />
+<code class="language-plaintext highlighter-rouge">ViewController</code>が<code class="language-plaintext highlighter-rouge">ViewModelDelegate</code>を採用して、イベントを受け取るようにしています。</p>
 
 <h2 id="クラス間のメッセージ通信方法">クラス間のメッセージ通信方法</h2>
 
@@ -374,8 +376,8 @@
 
 <h3 id="viewcontroller---viewmodel">ViewController &lt;-&gt; ViewModel</h3>
 
-<p><em>ViewController -&gt; ViewModel</em> は <code class="highlighter-rouge">ViewModel</code>のメソッド<br />
-<em>ViewController &lt;- ViewModel</em> は前述したように <code class="highlighter-rouge">ViewModelDelegate</code> でメッセージやりとりしています。</p>
+<p><em>ViewController -&gt; ViewModel</em> は <code class="language-plaintext highlighter-rouge">ViewModel</code>のメソッド<br />
+<em>ViewController &lt;- ViewModel</em> は前述したように <code class="language-plaintext highlighter-rouge">ViewModelDelegate</code> でメッセージやりとりしています。</p>
 
 <h3 id="datasource---各views">DataSource &lt;-&gt; 各Views</h3>
 
@@ -383,13 +385,13 @@
 <em>DataSource &lt;- Views</em> は 各Viewsが持つクロージャによるコールバックでメッセージやりとりしています。</p>
 
 <h3 id="viewcontroller---datasource">ViewController &lt;-&gt; DataSource</h3>
-<p><em>ViewController -&gt; DataSource</em> は <code class="highlighter-rouge">DataSource</code>のメソッド<br />
-<em>ViewController &lt;- DataSource</em> は <code class="highlighter-rouge">ViewModel</code>を介しています。</p>
+<p><em>ViewController -&gt; DataSource</em> は <code class="language-plaintext highlighter-rouge">DataSource</code>のメソッド<br />
+<em>ViewController &lt;- DataSource</em> は <code class="language-plaintext highlighter-rouge">ViewModel</code>を介しています。</p>
 
 <h3 id="datasource---viewmodel">DataSource &lt;-&gt; ViewModel</h3>
-<p><em>DataSource -&gt; ViewModel</em> は <code class="highlighter-rouge">ViewModel</code>のメソッド<br />
-<em>DataSource &lt;- ViewModel</em> はありません。 <code class="highlighter-rouge">ViewController</code> 側に集約させています。<br />
-こうした理由は <code class="highlighter-rouge">DataSource</code>はUITableViewの制御であって、イベント制御ではないためです。<br />
+<p><em>DataSource -&gt; ViewModel</em> は <code class="language-plaintext highlighter-rouge">ViewModel</code>のメソッド<br />
+<em>DataSource &lt;- ViewModel</em> はありません。 <code class="language-plaintext highlighter-rouge">ViewController</code> 側に集約させています。<br />
+こうした理由は <code class="language-plaintext highlighter-rouge">DataSource</code>はUITableViewの制御であって、イベント制御ではないためです。<br />
 「セルがタップされた」などユーザー発火イベントはViewControllerの責務になるので、こっちに集めるようにしています。</p>
 
 <h2 id="実は基本の組み合わせ">実は基本の組み合わせ</h2>

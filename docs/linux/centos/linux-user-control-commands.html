@@ -14,8 +14,8 @@
   <title>LinuxのCentOSでユーザー操作 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="LinuxのCentOSでユーザー操作" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="ユーザーの追加や削除、グループ追加やsudo付与などユーザー操作に関するコマンドを忘れては調べ忘れては調べるを繰り返しているので、いい加減自分用に用意しました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-03T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-03-linux-user-control-commands.png" />
+<meta property="twitter:title" content="LinuxのCentOSでユーザー操作" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/linux/centos/linux-user-control-commands","headline":"LinuxのCentOSでユーザー操作","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-09-03T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/centos/linux-user-control-commands"},"description":"ユーザーの追加や削除、グループ追加やsudo付与などユーザー操作に関するコマンドを忘れては調べ忘れては調べるを繰り返しているので、いい加減自分用に用意しました。","image":"https://blog.mothule.com/assets/images/2019-09-03-linux-user-control-commands.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/linux/centos/linux-user-control-commands","headline":"LinuxのCentOSでユーザー操作","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-09-03T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-03-linux-user-control-commands.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/centos/linux-user-control-commands"},"description":"ユーザーの追加や削除、グループ追加やsudo付与などユーザー操作に関するコマンドを忘れては調べ忘れては調べるを繰り返しているので、いい加減自分用に用意しました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -207,46 +209,46 @@
 
 <p>idコマンドで確認できます。</p>
 
-<p><code class="highlighter-rouge">id [user name]</code></p>
+<p><code class="language-plaintext highlighter-rouge">id [user name]</code></p>
 
 <p>rootを調べた場合はこうなります。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>id root
-<span class="nv">uid</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span> <span class="nv">groups</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">id </span>root
+<span class="nv">uid</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span> <span class="nb">groups</span><span class="o">=</span>0<span class="o">(</span>root<span class="o">)</span>
 </code></pre></div></div>
 
 <p>ユーザーを指定しない場合は、カレントユーザーになります。
-例えばユーザー<code class="highlighter-rouge">hoge</code>でログインしてる場合は次のようになります。</p>
+例えばユーザー<code class="language-plaintext highlighter-rouge">hoge</code>でログインしてる場合は次のようになります。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>id
-<span class="nv">uid</span><span class="o">=</span>1000<span class="o">(</span>hoge<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>1000<span class="o">(</span>hoge<span class="o">)</span> <span class="nv">groups</span><span class="o">=</span>1000<span class="o">(</span>hoge<span class="o">)</span> <span class="nv">context</span><span class="o">=</span>unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">id
+</span><span class="nv">uid</span><span class="o">=</span>1000<span class="o">(</span>hoge<span class="o">)</span> <span class="nv">gid</span><span class="o">=</span>1000<span class="o">(</span>hoge<span class="o">)</span> <span class="nb">groups</span><span class="o">=</span>1000<span class="o">(</span>hoge<span class="o">)</span> <span class="nv">context</span><span class="o">=</span>unconfined_u:unconfined_r:unconfined_t:s0-s0:c0.c1023
 </code></pre></div></div>
 
 <h2 id="ユーザーを作成する">ユーザーを作成する</h2>
 
-<p><code class="highlighter-rouge">useradd [user name]</code> でユーザーを作成し、
-<code class="highlighter-rouge">passwd [user name]</code> で指定ユーザーのパスワード設定ができます。
-<code class="highlighter-rouge">usermod -G wheel [user name]</code>で指定ユーザーにsudo権限を付与します。</p>
+<p><code class="language-plaintext highlighter-rouge">useradd [user name]</code> でユーザーを作成し、
+<code class="language-plaintext highlighter-rouge">passwd [user name]</code> で指定ユーザーのパスワード設定ができます。
+<code class="language-plaintext highlighter-rouge">usermod -G wheel [user name]</code>で指定ユーザーにsudo権限を付与します。</p>
 
-<p><code class="highlighter-rouge">wheel</code>という予め用意されているグループには、sudoが使えるグループになっており、
+<p><code class="language-plaintext highlighter-rouge">wheel</code>という予め用意されているグループには、sudoが使えるグループになっており、
 このグループにユーザー追加することで,ユーザーがsudoが使えるようになります。</p>
 
 <h3 id="ユーザー情報はファイルになっている">ユーザー情報はファイルになっている</h3>
 
 <p>作成したユーザーはどこで管理されているのかと言うと、ファイルとして一覧管理されています。</p>
 
-<p>先程作ったユーザー<code class="highlighter-rouge">hoge</code>を確認します。</p>
+<p>先程作ったユーザー<code class="language-plaintext highlighter-rouge">hoge</code>を確認します。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /etc/passwd | tail <span class="nt">-n</span> 1
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /etc/passwd | <span class="nb">tail</span> <span class="nt">-n</span> 1
 hoge:x:1000:1000::/home/hoge:/bin/bash
 </code></pre></div></div>
 <p>passwdというファイルにユーザー情報が保存されています。
 passwdという名前ですが、パスワードは別ファイルになります。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo cat</span> /etc/shadow | tail <span class="nt">-n</span> 1
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo cat</span> /etc/shadow | <span class="nb">tail</span> <span class="nt">-n</span> 1
 hoge:<span class="nv">$6$q0cLZgb4$dqS356Q4qNWcvDGxqqUhEOW32cXpma8uErO9ioiAZly3V3iQ</span>.x1F3.zqzE.96yWFTl3klPNWJ61.9ahXvVPkj0:18141:0:99999:7:::
 </code></pre></div></div>
-<p><code class="highlighter-rouge">shadow</code>ファイルになります。こちらは<code class="highlighter-rouge">sudo</code>権限がないと見れないので、先の <code class="highlighter-rouge">wheel</code>グループにユーザーを追加する必要があります。</p>
+<p><code class="language-plaintext highlighter-rouge">shadow</code>ファイルになります。こちらは<code class="language-plaintext highlighter-rouge">sudo</code>権限がないと見れないので、先の <code class="language-plaintext highlighter-rouge">wheel</code>グループにユーザーを追加する必要があります。</p>
 
 <p>また加入したグループもファイルになっています。</p>
 
@@ -256,27 +258,27 @@ wheel:x:10:hoge
 
 <h2 id="ユーザーを削除する">ユーザーを削除する</h2>
 
-<p><code class="highlighter-rouge">userdel -r [user name]</code>でユーザーとユーザーディレクトリを削除します。
-<code class="highlighter-rouge">-r</code> が未指定だとユーザーのみが削除され、ユーザーディレクトリは残ります。</p>
+<p><code class="language-plaintext highlighter-rouge">userdel -r [user name]</code>でユーザーとユーザーディレクトリを削除します。
+<code class="language-plaintext highlighter-rouge">-r</code> が未指定だとユーザーのみが削除され、ユーザーディレクトリは残ります。</p>
 
 <h2 id="グループを削除する">グループを削除する</h2>
 
-<p><code class="highlighter-rouge">groupdel [group name]</code>で指定グループを削除することができますが、
+<p><code class="language-plaintext highlighter-rouge">groupdel [group name]</code>で指定グループを削除することができますが、
 グループをプライマリとするユーザーがいる場合は削除できません。</p>
 
 <p>Linuxではユーザーを作成時に同時にグループも作成し、作成されたユーザーの最初のグループとなります。
-ユーザー<code class="highlighter-rouge">hoge</code>であればグループ<code class="highlighter-rouge">hoge</code>が作成されます。</p>
+ユーザー<code class="language-plaintext highlighter-rouge">hoge</code>であればグループ<code class="language-plaintext highlighter-rouge">hoge</code>が作成されます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /etc/group | tail <span class="nt">-n</span> 1
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /etc/group | <span class="nb">tail</span> <span class="nt">-n</span> 1
 hoge:x:1000:
 </code></pre></div></div>
 
 <h2 id="所有者を変更する">所有者を変更する</h2>
 
-<p><code class="highlighter-rouge">chown [user name] [file or directory]</code>で変更ができます。</p>
+<p><code class="language-plaintext highlighter-rouge">chown [user name] [file or directory]</code>で変更ができます。</p>
 
 <h2 id="グループを変更する">グループを変更する</h2>
-<p><code class="highlighter-rouge">chgrp [group name] [file or directory]</code>で変更ができます。</p>
+<p><code class="language-plaintext highlighter-rouge">chgrp [group name] [file or directory]</code>で変更ができます。</p>
 
   </section>
 

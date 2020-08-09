@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableViewCellをカスタマイズする - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableViewCellをカスタマイズする" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="簡単なユーザー情報を表示するテーブルを題材に話を進めます。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-26T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png" />
+<meta property="twitter:title" content="【初心者向け】UITableViewCellをカスタマイズする" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize","headline":"【初心者向け】UITableViewCellをカスタマイズする","dateModified":"2020-05-10T22:54:26+09:00","datePublished":"2019-09-26T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize"},"description":"簡単なユーザー情報を表示するテーブルを題材に話を進めます。","image":"https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize","headline":"【初心者向け】UITableViewCellをカスタマイズする","dateModified":"2020-05-10T22:54:26+09:00","datePublished":"2019-09-26T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-customize"},"description":"簡単なユーザー情報を表示するテーブルを題材に話を進めます。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -192,8 +194,8 @@
     <ul>
   <li><a href="#uitableviewcellを継承したセルクラスを用意する">UITableViewCellを継承したセルクラスを用意する</a>
     <ul>
-      <li><a href="#func-awakefromnib-storyboardまたはnibファイルからロードされた直後に呼ばれる"><code class="highlighter-rouge">func awakeFromNib()</code>: Storyboardまたはnibファイルからロードされた直後に呼ばれる</a></li>
-      <li><a href="#func-setselected-animated-選択状態と通常状態の状態アニメーション処理"><code class="highlighter-rouge">func setSelected(, animated:)</code>: 選択状態と通常状態の状態アニメーション処理</a></li>
+      <li><a href="#func-awakefromnib-storyboardまたはnibファイルからロードされた直後に呼ばれる"><code class="language-plaintext highlighter-rouge">func awakeFromNib()</code>: Storyboardまたはnibファイルからロードされた直後に呼ばれる</a></li>
+      <li><a href="#func-setselected-animated-選択状態と通常状態の状態アニメーション処理"><code class="language-plaintext highlighter-rouge">func setSelected(, animated:)</code>: 選択状態と通常状態の状態アニメーション処理</a></li>
     </ul>
   </li>
   <li><a href="#storyboardのuitableviewに直接uitableviewcellを追加する">StoryboardのUITableViewに直接UITableViewCellを追加する</a></li>
@@ -207,7 +209,7 @@
   <li><a href="#identifierを定義する">Identifierを定義する</a></li>
   <li><a href="#カスタムセルを使う">カスタムセルを使う</a>
     <ul>
-      <li><a href="#struc-user-テーブル表示したいデータ構造"><code class="highlighter-rouge">struc User</code>: テーブル表示したいデータ構造</a></li>
+      <li><a href="#struc-user-テーブル表示したいデータ構造"><code class="language-plaintext highlighter-rouge">struc User</code>: テーブル表示したいデータ構造</a></li>
       <li><a href="#セル参照の実装">セル参照の実装</a></li>
     </ul>
   </li>
@@ -244,10 +246,10 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<h3 id="func-awakefromnib-storyboardまたはnibファイルからロードされた直後に呼ばれる"><code class="highlighter-rouge">func awakeFromNib()</code>: Storyboardまたはnibファイルからロードされた直後に呼ばれる</h3>
+<h3 id="func-awakefromnib-storyboardまたはnibファイルからロードされた直後に呼ばれる"><code class="language-plaintext highlighter-rouge">func awakeFromNib()</code>: Storyboardまたはnibファイルからロードされた直後に呼ばれる</h3>
 <p>初期化などUserTableViewCellがロードされた直後に１度だけ実行したい処理をここに実装します。</p>
 
-<h3 id="func-setselected-animated-選択状態と通常状態の状態アニメーション処理"><code class="highlighter-rouge">func setSelected(, animated:)</code>: 選択状態と通常状態の状態アニメーション処理</h3>
+<h3 id="func-setselected-animated-選択状態と通常状態の状態アニメーション処理"><code class="language-plaintext highlighter-rouge">func setSelected(, animated:)</code>: 選択状態と通常状態の状態アニメーション処理</h3>
 <p>セルがタップにより選択状態/通常状態の切り替わり処理をするときに呼ばれる処理です。
 特になくても状態アニメーションは行われます。</p>
 
@@ -282,9 +284,9 @@
 
 <h2 id="セルと制御クラスを紐付ける">セルと制御クラスを紐付ける</h2>
 
-<p>動画のようにStoryboard上のセルを選択して<code class="highlighter-rouge">Identity Inspectorタブ &gt; CustomClass &gt; Class</code>に制御クラスを入力します。<br />
+<p>動画のようにStoryboard上のセルを選択して<code class="language-plaintext highlighter-rouge">Identity Inspectorタブ &gt; CustomClass &gt; Class</code>に制御クラスを入力します。<br />
 今回は UserTableViewCell と入力します。動画のようにサジェストで入力補完されるのであっていればエンターを押してください。<br />
-このとき下の<code class="highlighter-rouge">Module</code>が変わることを確認してください。ここも正しいModuleじゃないと見つけられずランタイムエラーになります。</p>
+このとき下の<code class="language-plaintext highlighter-rouge">Module</code>が変わることを確認してください。ここも正しいModuleじゃないと見つけられずランタイムエラーになります。</p>
 
 <video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2019-09-26-ios-uitableview-uitableviewcell-customize-1.mp4" width="100%" height="400px"></video>
 
@@ -321,27 +323,27 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>と名付けて前述した<code class="highlighter-rouge">UserTableViewCell</code>に追記します。</p>
+<p>と名付けて前述した<code class="language-plaintext highlighter-rouge">UserTableViewCell</code>に追記します。</p>
 
-<p><code class="highlighter-rouge">setup(icon:name:age:)</code>メソッドは、決められたものではなく自分で用意したものです。
+<p><code class="language-plaintext highlighter-rouge">setup(icon:name:age:)</code>メソッドは、決められたものではなく自分で用意したものです。
 制御クラスからビュープロパティを出さずに目的を提供することで、使い手側の内部依存をなくすことが目的です。<br />
 セルのカスタマイズには不要で、public化して直接外からビュー設定をすることも出来ますが、<br />
 だからといって逸脱しすぎた実装をするのは好きではないので、このようなメソッドを用意しています。</p>
 
 <h3 id="注意uitableviewcellが定義した名前は使えない">注意：UITableViewCellが定義した名前は使えない</h3>
 
-<p>単純に <code class="highlighter-rouge">imageView: UIImageView</code> と名付けたくなりますが、
+<p>単純に <code class="language-plaintext highlighter-rouge">imageView: UIImageView</code> と名付けたくなりますが、
 <strong>UITableViewCellには予め定義されているため使うことができません。</strong></p>
 
 <p><em>UItableViewCell抜粋</em></p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// Content.  These properties provide direct access to the internal label and image views used by the table view cell.  These should be used instead of the content properties below.</span>
-<span class="kd">@available(iOS 3.0, *)</span>
+<span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">3.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
 <span class="kd">open</span> <span class="k">var</span> <span class="nv">imageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span> <span class="c1">// default is nil.  image view will be created if necessary.</span>
 
-<span class="kd">@available(iOS 3.0, *)</span>
+<span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">3.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
 <span class="kd">open</span> <span class="k">var</span> <span class="nv">textLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span> <span class="c1">// default is nil.  label will be created if necessary.</span>
 
-<span class="kd">@available(iOS 3.0, *)</span>
+<span class="kd">@available</span><span class="p">(</span><span class="n">iOS</span> <span class="mf">3.0</span><span class="p">,</span> <span class="o">*</span><span class="p">)</span>
 <span class="kd">open</span> <span class="k">var</span> <span class="nv">detailTextLabel</span><span class="p">:</span> <span class="kt">UILabel</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span> <span class="c1">// default is nil.  label will be created if necessary (and the current style supports a detail label).</span>
 </code></pre></div></div>
 
@@ -354,17 +356,17 @@
 <p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-4.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-4.png" width="518px" alt="" /></a></p>
 
 <p>ユニークであれば何でもいいのですが、制御クラス名にするのが慣習です。<br />
-今回も<code class="highlighter-rouge">UserTableViewCell</code>にしてます。</p>
+今回も<code class="language-plaintext highlighter-rouge">UserTableViewCell</code>にしてます。</p>
 
 <p>ここのIDとコード側の指定が間違うと次のようなランタイムエラーが発生します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'unable to dequeue a cell with identifier UserTableViewCell - must register a nib or a class for the identifier or connect a prototype cell in a storyboard'
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>*** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'unable to dequeue a cell with identifier UserTableViewCell - must register a nib or a class for the identifier or connect a prototype cell in a storyboard'
 </code></pre></div></div>
 
 <h2 id="カスタムセルを使う">カスタムセルを使う</h2>
 
-<p>カスタムセルのビューを用意し、制御クラス(<code class="highlighter-rouge">UserTableViewCell</code>)も用意しそれらの紐付けも行いました。<br />
-次は、それを実際に使います。主に見るべき場所は <code class="highlighter-rouge">func tableView(tableView:cellForRowAt:) -&gt; UITableViewCell</code>内になります。</p>
+<p>カスタムセルのビューを用意し、制御クラス(<code class="language-plaintext highlighter-rouge">UserTableViewCell</code>)も用意しそれらの紐付けも行いました。<br />
+次は、それを実際に使います。主に見るべき場所は <code class="language-plaintext highlighter-rouge">func tableView(tableView:cellForRowAt:) -&gt; UITableViewCell</code>内になります。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">User</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">icon</span><span class="p">:</span> <span class="kt">UIImage</span><span class="p">?</span>
@@ -426,18 +428,18 @@
   </a>
 </div>
 
-<h3 id="struc-user-テーブル表示したいデータ構造"><code class="highlighter-rouge">struc User</code>: テーブル表示したいデータ構造</h3>
+<h3 id="struc-user-テーブル表示したいデータ構造"><code class="language-plaintext highlighter-rouge">struc User</code>: テーブル表示したいデータ構造</h3>
 
 <p>今回はユーザー情報を表示するので、それを表すモデルとして用意しました。<br />
 本来の開発であれば、データモデルにUIKitデータとなるUIImageをオリジナルとして直接持つことはないのですが、<br />
 今回の記事はそこを正すとコード量が増えて、目的を正しく伝えれずブレてしまうので、このような形にしてあります。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">ViewController.users</code>にデータ元を用意してます。</li>
-  <li><code class="highlighter-rouge">#imageLiteral(resourceName: "icon")</code> は、<code class="highlighter-rouge">Assets.xcassets</code> 内のリソースを指定してあります。</li>
+  <li><code class="language-plaintext highlighter-rouge">ViewController.users</code>にデータ元を用意してます。</li>
+  <li><code class="language-plaintext highlighter-rouge">#imageLiteral(resourceName: "icon")</code> は、<code class="language-plaintext highlighter-rouge">Assets.xcassets</code> 内のリソースを指定してあります。</li>
 </ul>
 
-<p><code class="highlighter-rouge">xcassets</code>については詳しくはこちらの記事をどうぞ。</p>
+<p><code class="language-plaintext highlighter-rouge">xcassets</code>については詳しくはこちらの記事をどうぞ。</p>
 
 <div class="link-container">
   <a href="/ios/ios-xcassets-basic">
@@ -470,17 +472,17 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">cell.setup</code>は前述で説明した自前コードです。 このメソッドは<code class="highlighter-rouge">UserTableViewCell</code>で定義されています。このメソッドを使うために
+<p><code class="language-plaintext highlighter-rouge">cell.setup</code>は前述で説明した自前コードです。 このメソッドは<code class="language-plaintext highlighter-rouge">UserTableViewCell</code>で定義されています。このメソッドを使うために
 その前のセル取得でキャストしてます。</p>
 
-<p>Identifierに<code class="highlighter-rouge">UserTableViewCell</code>を指定してるのは、前述の <code class="highlighter-rouge">Identifier</code>を定義したときの値です。
+<p>Identifierに<code class="language-plaintext highlighter-rouge">UserTableViewCell</code>を指定してるのは、前述の <code class="language-plaintext highlighter-rouge">Identifier</code>を定義したときの値です。
 これは一致している必要があります。</p>
 
 <p>これを実行すると次の画像のようになります。</p>
 
 <p><a href="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png"><img src="/assets/images/2019-09-26-ios-uitableview-uitableviewcell-customize/2019-09-26-ios-uitableview-uitableviewcell-customize-5.png" width="100%" alt="" /></a></p>
 
-<p><code class="highlighter-rouge">Angel</code> の <code class="highlighter-rouge">g</code> が切れてます。これはセル内のUILabelの高さを調整するか, UILabelのStringではなくUIAttributedStringを使い、<code class="highlighter-rouge">baseline</code>を上げることで解決します。前者が楽です。</p>
+<p><code class="language-plaintext highlighter-rouge">Angel</code> の <code class="language-plaintext highlighter-rouge">g</code> が切れてます。これはセル内のUILabelの高さを調整するか, UILabelのStringではなくUIAttributedStringを使い、<code class="language-plaintext highlighter-rouge">baseline</code>を上げることで解決します。前者が楽です。</p>
 
 <h2 id="応用編">応用編</h2>
 

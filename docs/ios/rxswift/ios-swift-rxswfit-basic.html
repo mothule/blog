@@ -14,8 +14,8 @@
   <title>RxSwiftの基本を動かして理解する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="RxSwiftの基本を動かして理解する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？ 私もその一人でした。ネットで見かける記事を読み解いても" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-18T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-18-ios-swift-rxswfit-basic.png" />
+<meta property="twitter:title" content="RxSwiftの基本を動かして理解する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/rxswift/ios-swift-rxswfit-basic","headline":"RxSwiftの基本を動かして理解する","dateModified":"2020-04-24T00:39:33+09:00","datePublished":"2019-09-18T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/rxswift/ios-swift-rxswfit-basic"},"description":"RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？ 私もその一人でした。ネットで見かける記事を読み解いても","image":"https://blog.mothule.com/assets/images/2019-09-18-ios-swift-rxswfit-basic.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/rxswift/ios-swift-rxswfit-basic","headline":"RxSwiftの基本を動かして理解する","dateModified":"2020-04-24T00:39:33+09:00","datePublished":"2019-09-18T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-18-ios-swift-rxswfit-basic.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/rxswift/ios-swift-rxswfit-basic"},"description":"RxSwiftの理解ハードルが高くて苦労してる人やネットにある記事では理解できない人っていませんか？ 私もその一人でした。ネットで見かける記事を読み解いても","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -313,7 +315,7 @@ RxSwiftのコード自体もあるとなお良いと思います。</p>
 
 <h2 id="rxswiftはオブザーバーパターンとパイプライン">RxSwiftはオブザーバーパターンとパイプライン</h2>
 
-<p>デザインパターンの１つであるオブザーバーパターンと、シェルでよく使うパイプ(<code class="highlighter-rouge">|</code>)を使って、<br />
+<p>デザインパターンの１つであるオブザーバーパターンと、シェルでよく使うパイプ(<code class="language-plaintext highlighter-rouge">|</code>)を使って、<br />
 <strong>イベントにリアクションを連結するイメージです。</strong></p>
 
 <p>他のサイトなどでRxSwiftについてざっくり概要を知った人たちが考えるRxSwiftとは<br />
@@ -326,51 +328,51 @@ RxSwiftのコード自体もあるとなお良いと思います。</p>
 <p>しかしそれが返って邪魔となり道に迷っているのではないかと私は思います。</p>
 
 <h2 id="イベントを報告する者とイベントを受け取る者">イベントを報告する者とイベントを受け取る者</h2>
-<p>たくさんあるクラスのなかでまず覚えるべきは<code class="highlighter-rouge">Observable</code>です。<br />
-そして採用している<code class="highlighter-rouge">ObservableType</code> プロトコルです。</p>
+<p>たくさんあるクラスのなかでまず覚えるべきは<code class="language-plaintext highlighter-rouge">Observable</code>です。<br />
+そして採用している<code class="language-plaintext highlighter-rouge">ObservableType</code> プロトコルです。</p>
 
-<p><code class="highlighter-rouge">ObservableType.subscribe</code> がイベントを受け取るための講読手続きになります。<br />
-なので <code class="highlighter-rouge">ObservableType</code> を採用しているクラスは全て、 <strong>イベントを受け取る者</strong> となります。<br />
-つまり<code class="highlighter-rouge">Observable</code>は <strong>イベントを受け取る者</strong> です。</p>
+<p><code class="language-plaintext highlighter-rouge">ObservableType.subscribe</code> がイベントを受け取るための講読手続きになります。<br />
+なので <code class="language-plaintext highlighter-rouge">ObservableType</code> を採用しているクラスは全て、 <strong>イベントを受け取る者</strong> となります。<br />
+つまり<code class="language-plaintext highlighter-rouge">Observable</code>は <strong>イベントを受け取る者</strong> です。</p>
 
 <p>では、<strong>イベントを報告する者</strong> は誰でしょうか。</p>
 
-<p>それは <code class="highlighter-rouge">ObservableType.subscribe</code>の引数が採用している<code class="highlighter-rouge">ObserverType</code>です。<br />
-<code class="highlighter-rouge">ObservableType</code>と<code class="highlighter-rouge">ObserverType</code>かなり似てるので、注意して読んでください。</p>
+<p>それは <code class="language-plaintext highlighter-rouge">ObservableType.subscribe</code>の引数が採用している<code class="language-plaintext highlighter-rouge">ObserverType</code>です。<br />
+<code class="language-plaintext highlighter-rouge">ObservableType</code>と<code class="language-plaintext highlighter-rouge">ObserverType</code>かなり似てるので、注意して読んでください。</p>
 
-<p><code class="highlighter-rouge">ObserverType</code>プロトコルは <code class="highlighter-rouge">on</code> メソッドを持っており、これを使って報告をしています。<br />
-つまり <code class="highlighter-rouge">ObserverType</code>を採用しているクラスは全て、 <strong>イベントを報告する者</strong> となります。</p>
+<p><code class="language-plaintext highlighter-rouge">ObserverType</code>プロトコルは <code class="language-plaintext highlighter-rouge">on</code> メソッドを持っており、これを使って報告をしています。<br />
+つまり <code class="language-plaintext highlighter-rouge">ObserverType</code>を採用しているクラスは全て、 <strong>イベントを報告する者</strong> となります。</p>
 
 <h3 id="整理">整理</h3>
 
 <ul>
-  <li><code class="highlighter-rouge">ObservableType</code> が <strong>イベントを受け取る者</strong></li>
-  <li><code class="highlighter-rouge">ObserverType</code> が <strong>イベントを報告する者</strong></li>
-  <li>つまり <code class="highlighter-rouge">Observable</code>は <strong>イベントを受け取る者</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">ObservableType</code> が <strong>イベントを受け取る者</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">ObserverType</code> が <strong>イベントを報告する者</strong></li>
+  <li>つまり <code class="language-plaintext highlighter-rouge">Observable</code>は <strong>イベントを受け取る者</strong></li>
 </ul>
 
 <h2 id="イベントを報告してイベントを受け取る">イベントを報告してイベントを受け取る</h2>
 
 <p>イベントを報告する者と受け取る者の２つがあることは分かりました。<br />
-イベントを受け取る者のクラスは<code class="highlighter-rouge">Observable</code>でした。<br />
+イベントを受け取る者のクラスは<code class="language-plaintext highlighter-rouge">Observable</code>でした。<br />
 ではイベントを報告する者のクラスは何でしょう？</p>
 
-<p><code class="highlighter-rouge">ObserverType</code>を採用しているクラスを探すと出てきます。</p>
+<p><code class="language-plaintext highlighter-rouge">ObserverType</code>を採用しているクラスを探すと出てきます。</p>
 
-<p>今回はその中からよく使う <code class="highlighter-rouge">PublishSubject</code> を使います。</p>
+<p>今回はその中からよく使う <code class="language-plaintext highlighter-rouge">PublishSubject</code> を使います。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">subject</span> <span class="o">=</span> <span class="kt">PublishSubject</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
 <span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
 <span class="n">subject</span><span class="o">.</span><span class="nf">onCompleted</span><span class="p">()</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">onNext</code>と<code class="highlighter-rouge">onCompleted</code>は <code class="highlighter-rouge">on</code> メソッドに <code class="highlighter-rouge">next</code>状態と<code class="highlighter-rouge">completed</code>状態をそれぞれ報告しています。
+<p><code class="language-plaintext highlighter-rouge">onNext</code>と<code class="language-plaintext highlighter-rouge">onCompleted</code>は <code class="language-plaintext highlighter-rouge">on</code> メソッドに <code class="language-plaintext highlighter-rouge">next</code>状態と<code class="language-plaintext highlighter-rouge">completed</code>状態をそれぞれ報告しています。
 ただのラッパーメソッドです。</p>
 
 <p>これだけでは <strong>イベントを報告する者</strong> だけで <strong>イベントを受け取る者</strong> がいません。<br />
 しかも、イベントを受け取る者が報告する者に対し、講読する手続きも必要になります。</p>
 
-<p><code class="highlighter-rouge">PublishSubject</code>の定義へジャンプすると次のような定義になっています。</p>
+<p><code class="language-plaintext highlighter-rouge">PublishSubject</code>の定義へジャンプすると次のような定義になっています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="kd">final</span> <span class="kd">class</span> <span class="kt">PublishSubject</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span>
     <span class="p">:</span> <span class="kt">Observable</span><span class="o">&lt;</span><span class="kt">Element</span><span class="o">&gt;</span>
@@ -380,12 +382,12 @@ RxSwiftのコード自体もあるとなお良いと思います。</p>
     <span class="p">,</span> <span class="kt">SynchronizedUnsubscribeType</span> <span class="p">{</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>なんと、<code class="highlighter-rouge">PublishSubject</code>は、 <code class="highlighter-rouge">Observable</code> を採用しています。
+<p>なんと、<code class="language-plaintext highlighter-rouge">PublishSubject</code>は、 <code class="language-plaintext highlighter-rouge">Observable</code> を採用しています。
 つまり <strong>イベントを受け取る者</strong> でもあったのです。</p>
 
-<p>そのため<code class="highlighter-rouge">PublishSubject</code>1つで、次のような <strong>報告</strong> と <strong>受け取り</strong> ができます。</p>
+<p>そのため<code class="language-plaintext highlighter-rouge">PublishSubject</code>1つで、次のような <strong>報告</strong> と <strong>受け取り</strong> ができます。</p>
 
-<p>次のコードは、<code class="highlighter-rouge">next</code> <code class="highlighter-rouge">completed</code> <code class="highlighter-rouge">disposed</code> それぞれの状態に対してハンドリングしています。</p>
+<p>次のコードは、<code class="language-plaintext highlighter-rouge">next</code> <code class="language-plaintext highlighter-rouge">completed</code> <code class="language-plaintext highlighter-rouge">disposed</code> それぞれの状態に対してハンドリングしています。</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">subject</span><span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">in</span>
     <span class="nf">print</span><span class="p">(</span><span class="s">"onNext:  </span><span class="se">\(</span><span class="n">text</span><span class="se">)</span><span class="s">"</span><span class="p">)</span>
 <span class="p">},</span> <span class="nv">onError</span><span class="p">:</span> <span class="p">{</span>
@@ -403,7 +405,7 @@ RxSwiftのコード自体もあるとなお良いと思います。</p>
 </code></pre></div></div>
 
 <p><em>Output</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
 onNext:  B
 onNext:  C
 onCompleted
@@ -411,7 +413,7 @@ onDisposed
 </code></pre></div></div>
 
 <p>ちなみに途中でエラーイベントを報告した場合、講読は終了します。
-例えば先程のコードの一部を次のように <code class="highlighter-rouge">onError</code> を挟むと結果が変わります。</p>
+例えば先程のコードの一部を次のように <code class="language-plaintext highlighter-rouge">onError</code> を挟むと結果が変わります。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"A"</span><span class="p">)</span>
 <span class="n">subject</span><span class="o">.</span><span class="nf">onNext</span><span class="p">(</span><span class="s">"B"</span><span class="p">)</span>
@@ -421,31 +423,31 @@ onDisposed
 </code></pre></div></div>
 
 <p><em>Output</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
 onNext:  B
 onError:  The operation couldn’t be completed. (domain error -1.)
 onDisposed
 </code></pre></div></div>
 
-<p>このように<code class="highlighter-rouge">C</code>イベントは報告されず、<code class="highlighter-rouge">completed</code>も報告されません。<br />
-そして<code class="highlighter-rouge">disposed</code>が報告され講読終了となります。</p>
+<p>このように<code class="language-plaintext highlighter-rouge">C</code>イベントは報告されず、<code class="language-plaintext highlighter-rouge">completed</code>も報告されません。<br />
+そして<code class="language-plaintext highlighter-rouge">disposed</code>が報告され講読終了となります。</p>
 
 <h3 id="整理-1">整理</h3>
 
 <ul>
-  <li><code class="highlighter-rouge">PublishSubject</code> は <strong>報告する者</strong> でもあり <strong>受け取る者</strong></li>
+  <li><code class="language-plaintext highlighter-rouge">PublishSubject</code> は <strong>報告する者</strong> でもあり <strong>受け取る者</strong></li>
   <li>エラーが起きたら講読は終了する</li>
 </ul>
 
 <h2 id="他のobservertypeの採用クラス">他のObserverTypeの採用クラス</h2>
 
-<p>PublishSubject以外に<code class="highlighter-rouge">ObserverType</code>を採用してるクラスについて簡単に説明します。</p>
+<p>PublishSubject以外に<code class="language-plaintext highlighter-rouge">ObserverType</code>を採用してるクラスについて簡単に説明します。</p>
 
 <h3 id="publishrelay">PublishRelay</h3>
 
 <p>PublishSubjectのラッパーです。
-PublishSubjectの<code class="highlighter-rouge">onNext</code>, <code class="highlighter-rouge">onCompleted</code>, <code class="highlighter-rouge">onError</code>はなく、<code class="highlighter-rouge">accept</code>のみになります。
-この<code class="highlighter-rouge">accept</code>の中身は<code class="highlighter-rouge">onNext</code>となります。
+PublishSubjectの<code class="language-plaintext highlighter-rouge">onNext</code>, <code class="language-plaintext highlighter-rouge">onCompleted</code>, <code class="language-plaintext highlighter-rouge">onError</code>はなく、<code class="language-plaintext highlighter-rouge">accept</code>のみになります。
+この<code class="language-plaintext highlighter-rouge">accept</code>の中身は<code class="language-plaintext highlighter-rouge">onNext</code>となります。
 結果的にエラーや完了のイベントを流せないので、実質エラーや完了で終了できなくなります。</p>
 
 <h3 id="behaviorsubject">BehaviorSubject</h3>
@@ -473,7 +475,7 @@ BehaviorSubjectは最後に報告した値を保持しています。
 </code></pre></div></div>
 
 <p><em>Output</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  ABC
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  ABC
 onNext:  D
 D
 onNext:  E
@@ -487,7 +489,7 @@ onDisposed
 
 <h3 id="filter-条件満たすイベントのみ連絡する">filter: 条件満たすイベントのみ連絡する</h3>
 
-<p><code class="highlighter-rouge">filter</code>を通すことで、イベントを受け取る者への連絡を制限することができます。<br />
+<p><code class="language-plaintext highlighter-rouge">filter</code>を通すことで、イベントを受け取る者への連絡を制限することができます。<br />
 次のコードは、3文字以下のみを連絡しています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">source</span> <span class="o">=</span> <span class="kt">PublishRelay</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
@@ -507,7 +509,7 @@ onDisposed
 </code></pre></div></div>
 
 <p><em>Output</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
 onNext:  12
 onNext:  !$#
 onNext:  ABC
@@ -515,7 +517,7 @@ onNext:  ABC
 
 <h3 id="map-イベント情報を変換して連絡する">map: イベント情報を変換して連絡する</h3>
 
-<p><code class="highlighter-rouge">map</code>を通すことで、イベントを連絡する者が持つデータを加工して、受け取る者へ通知できます。
+<p><code class="language-plaintext highlighter-rouge">map</code>を通すことで、イベントを連絡する者が持つデータを加工して、受け取る者へ通知できます。
 次のコードは整数から文字列に変換して連絡しています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">source</span> <span class="o">=</span> <span class="kt">PublishRelay</span><span class="o">&lt;</span><span class="kt">Int</span><span class="o">&gt;</span><span class="p">()</span>
@@ -531,7 +533,7 @@ onNext:  ABC
 </code></pre></div></div>
 
 <p><em>Output</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  1
 onNext:  2
 onNext:  3
 </code></pre></div></div>
@@ -539,7 +541,7 @@ onNext:  3
 <h2 id="講読を解除する">講読を解除する</h2>
 <p>受け取る者が報告する者から、データを受け取る講読手続きがあるように、反対に講読を解除する処理もあります。</p>
 
-<p>次のコードでは、途中で<code class="highlighter-rouge">dispose</code>を読んだことで、それ以降のイベントが届いていません。</p>
+<p>次のコードでは、途中で<code class="language-plaintext highlighter-rouge">dispose</code>を読んだことで、それ以降のイベントが届いていません。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">subject</span> <span class="o">=</span> <span class="kt">PublishSubject</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
 <span class="n">subject</span><span class="o">.</span><span class="nf">subscribe</span><span class="p">(</span><span class="nv">onNext</span><span class="p">:</span> <span class="p">{</span> <span class="p">(</span><span class="nv">text</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="k">in</span>
@@ -558,7 +560,7 @@ onNext:  3
 </code></pre></div></div>
 
 <p><em>Output</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
 onNext:  B
 </code></pre></div></div>
 
@@ -569,7 +571,7 @@ onNext:  B
 <p>他の購読解除のタイミングとして、データの連絡する者が開放されるケースがあります。
 このようなケースで自身の開放タイミングで保持するdisposableをまとめて解除してくれるのがこのクラスです。</p>
 
-<p>次のコードでは、<code class="highlighter-rouge">DisposeBag</code>に講読先のdisposableを入れておき、講読途中でnilを渡してメモリ解放をすることで<br />
+<p>次のコードでは、<code class="language-plaintext highlighter-rouge">DisposeBag</code>に講読先のdisposableを入れておき、講読途中でnilを渡してメモリ解放をすることで<br />
 「DisposeBagの開放タイミングでバッグ内のdisposableを全て開放する」特性を再現しています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">source</span> <span class="o">=</span> <span class="kt">PublishRelay</span><span class="o">&lt;</span><span class="kt">String</span><span class="o">&gt;</span><span class="p">()</span>
@@ -593,18 +595,18 @@ onNext:  B
 </code></pre></div></div>
 
 <p><em>Output</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>onNext:  A
 onDisposed
 </code></pre></div></div>
 
-<p>通常であれば、上記コードのようにnilを渡すといった意識した開放はせずとも、<code class="highlighter-rouge">DisposeBag</code>インスタンスのスコープアウトや親クラスの開放で、意識をせずとも開放をしてくれます。</p>
+<p>通常であれば、上記コードのようにnilを渡すといった意識した開放はせずとも、<code class="language-plaintext highlighter-rouge">DisposeBag</code>インスタンスのスコープアウトや親クラスの開放で、意識をせずとも開放をしてくれます。</p>
 
 <h2 id="まとめ">まとめ</h2>
 <p>以上がRxSwiftの基礎を動かして理解する説明です。</p>
 
 <p>記事の内容に加え、手を動かしながらやったことで、RxSwiftに抱くオブサーバーのイメージを崩さずRxSwiftの基礎中の基礎を理解できたのではないかと思います。</p>
 
-<p>まだ <code class="highlighter-rouge">Driver</code>, <code class="highlighter-rouge">Scheduler</code>, <code class="highlighter-rouge">Cold/Hot</code> など山程あるのですが、それは別記事として投稿したら、ここにリンクを貼ろうと思います。</p>
+<p>まだ <code class="language-plaintext highlighter-rouge">Driver</code>, <code class="language-plaintext highlighter-rouge">Scheduler</code>, <code class="language-plaintext highlighter-rouge">Cold/Hot</code> など山程あるのですが、それは別記事として投稿したら、ここにリンクを貼ろうと思います。</p>
 
   </section>
 

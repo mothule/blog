@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableViewDelegateで出来ること - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableViewDelegateで出来ること" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="UITableViewDelegateとはUITableViewの操作イベントをハンドリングするプロトコルです。 単純なセルのタップイベントをはじめ、 今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-27T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png" />
+<meta property="twitter:title" content="【初心者向け】UITableViewDelegateで出来ること" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic","headline":"【初心者向け】UITableViewDelegateで出来ること","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-27T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic"},"description":"UITableViewDelegateとはUITableViewの操作イベントをハンドリングするプロトコルです。 単純なセルのタップイベントをはじめ、 今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。","image":"https://blog.mothule.com/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic","headline":"【初心者向け】UITableViewDelegateで出来ること","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-27T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdelegate-basic"},"description":"UITableViewDelegateとはUITableViewの操作イベントをハンドリングするプロトコルです。 単純なセルのタップイベントをはじめ、 今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -205,11 +207,11 @@
 </ul>
   </div>
   <section>
-  <p><code class="highlighter-rouge">UITableViewDelegate</code>とは<code class="highlighter-rouge">UITableView</code>の操作イベントをハンドリングするプロトコルです。
+  <p><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code>とは<code class="language-plaintext highlighter-rouge">UITableView</code>の操作イベントをハンドリングするプロトコルです。
 単純なセルのタップイベントをはじめ、
 今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。</p>
 
-<p>この記事では <code class="highlighter-rouge">UITableViewDelegate</code>には何が用意されているのか？<br />
+<p>この記事では <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code>には何が用意されているのか？<br />
 このprotocolを使ってどのようなことが出来るのか？についてとっかかりを掴むページを想定してます。</p>
 
 <p>実際の詳細に関しては記事内の随所に詳細ページへの紹介をしているので、気になるページがあれば閲覧してください。</p>
@@ -221,34 +223,34 @@
 <p>利用ケースはそこまで高くはありませんが、例えばユーザーの視界に入ったセル数を集計したいときなどにイベントマーキングなどが考えられます。</p>
 
 <ul>
-  <li>セル表示直前: <code class="highlighter-rouge">func tableView(_:willDisplay:forRowAt:)</code></li>
-  <li>セクションヘッダー表示直前: <code class="highlighter-rouge">func tableView(_:willDisplayHeaderView:forSection:)</code></li>
-  <li>セクションフッター表示直前: <code class="highlighter-rouge">func tableView(_:willDisplayFooterView:forSection:)</code></li>
-  <li>セル非表示直後: <code class="highlighter-rouge">func tableView(_:didEndDisplaying:forRowAt:)</code></li>
-  <li>セクションヘッダー非表示直後: <code class="highlighter-rouge">func tableView(_:didEndDisplayingHeaderView:forSection:)</code></li>
-  <li>セクションフッター非表示直後: <code class="highlighter-rouge">func tableView(_:didEndDisplayingFooterView:forSection:)</code></li>
+  <li>セル表示直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willDisplay:forRowAt:)</code></li>
+  <li>セクションヘッダー表示直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willDisplayHeaderView:forSection:)</code></li>
+  <li>セクションフッター表示直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willDisplayFooterView:forSection:)</code></li>
+  <li>セル非表示直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didEndDisplaying:forRowAt:)</code></li>
+  <li>セクションヘッダー非表示直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didEndDisplayingHeaderView:forSection:)</code></li>
+  <li>セクションフッター非表示直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didEndDisplayingFooterView:forSection:)</code></li>
 </ul>
 
 <h2 id="セルやセクションの高さ制御">セルやセクションの高さ制御</h2>
 
 <ul>
-  <li>セルの高さを返す: <code class="highlighter-rouge">func tableView(_:heightForRowAt:) -&gt; CGFloat</code></li>
-  <li>セクションヘッダーの高さを返す: <code class="highlighter-rouge">func tableView(_:heightForHeaderInSection:) -&gt; CGFloat</code></li>
-  <li>セクションフッターの高さを返す: <code class="highlighter-rouge">func tableView(_:heightForFooterInSection:) -&gt; CGFloat</code></li>
-  <li>セルの推定高さを返す: <code class="highlighter-rouge">func tableView(_:estimatedHeightForRowAt:) -&gt; CGFloat</code></li>
-  <li>セクションヘッダーの推定高さを返す: <code class="highlighter-rouge">func tableView(_:estimatedHeightForHeaderInSection:) -&gt; CGFloat</code></li>
-  <li>セクションフッターの推定高さを返す: <code class="highlighter-rouge">func tableView(_:estimatedHeightForFooterInSection:) -&gt; CGFloat</code></li>
+  <li>セルの高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:heightForRowAt:) -&gt; CGFloat</code></li>
+  <li>セクションヘッダーの高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:heightForHeaderInSection:) -&gt; CGFloat</code></li>
+  <li>セクションフッターの高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:heightForFooterInSection:) -&gt; CGFloat</code></li>
+  <li>セルの推定高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:estimatedHeightForRowAt:) -&gt; CGFloat</code></li>
+  <li>セクションヘッダーの推定高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:estimatedHeightForHeaderInSection:) -&gt; CGFloat</code></li>
+  <li>セクションフッターの推定高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:estimatedHeightForFooterInSection:) -&gt; CGFloat</code></li>
 </ul>
 
 <p>セルやセクションヘッダー、セクションフッターの高さを調整するためのイベントになります。<br />
 このイベントを使うことで、個別に高さ制御が可能になります。</p>
 
 <h3 id="estimated-は推定値">estimated は推定値</h3>
-<p>なお <code class="highlighter-rouge">estimated</code> とつくメソッドは推測値を返すイベントです。<br />
+<p>なお <code class="language-plaintext highlighter-rouge">estimated</code> とつくメソッドは推測値を返すイベントです。<br />
 この値をなるべくなるであろう高さに返しておくことで、セル高さ調整差が狭まり表示完了までの速度が早まります。<br />
-デフォルトは <code class="highlighter-rouge">automaticDimension</code> であり、これは自動で高さを推定します。<br />
-<code class="highlighter-rouge">0</code>にすると推定が無効となり、セル毎の実際の高さを要求されます。<br />
-Xcode9以降は<code class="highlighter-rouge">Self-Sizing</code>がデフォルトとなるため、<code class="highlighter-rouge">0</code>にすると正常に動きません。</p>
+デフォルトは <code class="language-plaintext highlighter-rouge">automaticDimension</code> であり、これは自動で高さを推定します。<br />
+<code class="language-plaintext highlighter-rouge">0</code>にすると推定が無効となり、セル毎の実際の高さを要求されます。<br />
+Xcode9以降は<code class="language-plaintext highlighter-rouge">Self-Sizing</code>がデフォルトとなるため、<code class="language-plaintext highlighter-rouge">0</code>にすると正常に動きません。</p>
 
 <h3 id="セル高さ可変制御する">セル高さ可変制御する</h3>
 <p>なおセルの高さをAuto-Layoutによる算出で可変にする方法はこちらの記事をどうぞ。</p>
@@ -278,12 +280,12 @@ Xcode9以降は<code class="highlighter-rouge">Self-Sizing</code>がデフォル
 <p>なお、これとは反対に全体で一律制御は次のプロパティでできます。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">UITableView.rowHeight</code></li>
-  <li><code class="highlighter-rouge">UITableView.estimatedRowHeight</code></li>
-  <li><code class="highlighter-rouge">UITableView.sectionFooterHeight</code></li>
-  <li><code class="highlighter-rouge">UITableView.estimatedSectionFooterHeight</code></li>
-  <li><code class="highlighter-rouge">UITableView.sectionHeaderHeight</code></li>
-  <li><code class="highlighter-rouge">UITableView.estimatedSectionFooterHeight</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableView.rowHeight</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableView.estimatedRowHeight</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableView.sectionFooterHeight</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableView.estimatedSectionFooterHeight</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableView.sectionHeaderHeight</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableView.estimatedSectionFooterHeight</code></li>
 </ul>
 
 <h2 id="セクションヘッダーとセクションフッターのカスタマイズ">セクションヘッダーとセクションフッターのカスタマイズ</h2>
@@ -291,8 +293,8 @@ Xcode9以降は<code class="highlighter-rouge">Self-Sizing</code>がデフォル
 <p>セクションヘッダーとフッターのカスタマイズに関するイベントメソッドです。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">func tableView(_:viewForHeaderInSection:) -&gt; UIView?</code></li>
-  <li><code class="highlighter-rouge">func tableView(_:viewForFooterInSection:) -&gt; UIView?</code></li>
+  <li><code class="language-plaintext highlighter-rouge">func tableView(_:viewForHeaderInSection:) -&gt; UIView?</code></li>
+  <li><code class="language-plaintext highlighter-rouge">func tableView(_:viewForFooterInSection:) -&gt; UIView?</code></li>
 </ul>
 
 <p>カスタマイズする方法についてはこちらの記事をどうぞ。</p>
@@ -318,7 +320,7 @@ Xcode9以降は<code class="highlighter-rouge">Self-Sizing</code>がデフォル
 <h2 id="アクセサリーボタンのタップ検知">アクセサリーボタンのタップ検知</h2>
 
 <ul>
-  <li><code class="highlighter-rouge">func tableView(_:accessoryButtonTappedForRowWith:)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">func tableView(_:accessoryButtonTappedForRowWith:)</code></li>
 </ul>
 
 <p>セル毎のアクセサリーボタンがタップされたときに呼ばれます。<br />
@@ -347,22 +349,22 @@ Xcode9以降は<code class="highlighter-rouge">Self-Sizing</code>がデフォル
 <h2 id="セルの選択イベント">セルの選択イベント</h2>
 
 <ul>
-  <li>セルタップ制御: <code class="highlighter-rouge">func tableView(_:shouldHighlightRowAt:) -&gt; Bool</code></li>
-  <li>セルハイライト直後: <code class="highlighter-rouge">func tableView(_:didHighlightRowAt:)</code></li>
-  <li>セルハイライト解除直後: <code class="highlighter-rouge">func tableView(_:didUnhighlightRowAt:)</code></li>
-  <li>セル選択直前: <code class="highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
-  <li>セル選択解除直前: <code class="highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
-  <li>セル選択直後: <code class="highlighter-rouge">func tableView(_:didSelectRowAt:)</code></li>
-  <li>セル選択解除直後: <code class="highlighter-rouge">func tableView(_:didDeselectRowAt:)</code></li>
+  <li>セルタップ制御: <code class="language-plaintext highlighter-rouge">func tableView(_:shouldHighlightRowAt:) -&gt; Bool</code></li>
+  <li>セルハイライト直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didHighlightRowAt:)</code></li>
+  <li>セルハイライト解除直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didUnhighlightRowAt:)</code></li>
+  <li>セル選択直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択解除直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didSelectRowAt:)</code></li>
+  <li>セル選択解除直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didDeselectRowAt:)</code></li>
 </ul>
 
-<p><code class="highlighter-rouge">セルタップ制御</code>では、falseを返したセルはタップしてもハイライトにもタップイベントも呼ばれません。<br />
+<p><code class="language-plaintext highlighter-rouge">セルタップ制御</code>では、falseを返したセルはタップしてもハイライトにもタップイベントも呼ばれません。<br />
 ラベルセルとして実装する場合にここをfalseにしてタップできないようにします。</p>
 
-<p><code class="highlighter-rouge">セル選択直前</code>と<code class="highlighter-rouge">セル選択解除直前</code>の戻り値は返したセル位置が実際に選択状態を変更します。<br />
+<p><code class="language-plaintext highlighter-rouge">セル選択直前</code>と<code class="language-plaintext highlighter-rouge">セル選択解除直前</code>の戻り値は返したセル位置が実際に選択状態を変更します。<br />
 正直使うケースに出くわしたことはありません。</p>
 
-<p><code class="highlighter-rouge">セル選択直後</code>はセルがタップされたときにここにセルごとの処理を記述することで、セルのタップハンドリングができます。</p>
+<p><code class="language-plaintext highlighter-rouge">セル選択直後</code>はセルがタップされたときにここにセルごとの処理を記述することで、セルのタップハンドリングができます。</p>
 
 <p>詳細はこちらの記事をどうぞ。</p>
 

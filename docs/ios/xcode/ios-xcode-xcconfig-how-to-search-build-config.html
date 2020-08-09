@@ -14,8 +14,8 @@
   <title>xcconfigで使うパラメータ名の見つけ方 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="xcconfigで使うパラメータ名の見つけ方" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-30T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" />
+<meta property="twitter:title" content="xcconfigで使うパラメータ名の見つけ方" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config","headline":"xcconfigで使うパラメータ名の見つけ方","dateModified":"2020-07-30T19:49:43+09:00","datePublished":"2020-07-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config"},"description":"xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。","image":"https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config","headline":"xcconfigで使うパラメータ名の見つけ方","dateModified":"2020-07-30T19:49:43+09:00","datePublished":"2020-07-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config"},"description":"xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -216,25 +218,25 @@ XcodeのBuild Settingsでカスタマイズされた項目をxcconfigだとど�
 
 <h2 id="xcodeのbuild-settingsの表示方法をパラメータ名に変更">XcodeのBuild Settingsの表示方法をパラメータ名に変更</h2>
 
-<p><code class="highlighter-rouge">Build Settings</code>を開いた後に<code class="highlighter-rouge">Editor &gt; Show Setting Names</code>を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。</p>
+<p><code class="language-plaintext highlighter-rouge">Build Settings</code>を開いた後に<code class="language-plaintext highlighter-rouge">Editor &gt; Show Setting Names</code>を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。</p>
 
 <video playsinline="" muted="" autoplay="" loop="" width="100%" height="400px">
     <source type="video/mp4" src="/assets/videos/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.mp4" />
 </video>
 
-<p>例えば、 <code class="highlighter-rouge">Architectures &gt; Build Active Architecture Only</code>であれば、<code class="highlighter-rouge">ONLY_ACTIVE_ARCH</code>になります。<br />
-これをxcconfigで使うなら<code class="highlighter-rouge">ONLY_ACTIVE_ARCH = YES</code>となります。</p>
+<p>例えば、 <code class="language-plaintext highlighter-rouge">Architectures &gt; Build Active Architecture Only</code>であれば、<code class="language-plaintext highlighter-rouge">ONLY_ACTIVE_ARCH</code>になります。<br />
+これをxcconfigで使うなら<code class="language-plaintext highlighter-rouge">ONLY_ACTIVE_ARCH = YES</code>となります。</p>
 
 <h2 id="xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー">XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー</h2>
 
-<p>パラメータ名を確認するだけなら<code class="highlighter-rouge">Show Setting Names</code>で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。<br />
-実は<code class="highlighter-rouge">Build Settings</code>はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。</p>
+<p>パラメータ名を確認するだけなら<code class="language-plaintext highlighter-rouge">Show Setting Names</code>で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。<br />
+実は<code class="language-plaintext highlighter-rouge">Build Settings</code>はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。</p>
 
 <p><a href="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png"><img src="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png" width="100%" alt="XcodeBuildSettings" /></a></p>
 
-<p>例えば<code class="highlighter-rouge">Build Active Architecture Only</code>の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。</p>
+<p>例えば<code class="language-plaintext highlighter-rouge">Build Active Architecture Only</code>の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
 ONLY_ACTIVE_ARCH = YES
 
 //:configuration = Release
@@ -243,13 +245,13 @@ ONLY_ACTIVE_ARCH = YES
 ONLY_ACTIVE_ARCH
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">//:configuration = Debug</code>や<code class="highlighter-rouge">Release</code>とはBuild Configuration毎に分けられてます。
-<code class="highlighter-rouge">Release</code>に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。</p>
+<p><code class="language-plaintext highlighter-rouge">//:configuration = Debug</code>や<code class="language-plaintext highlighter-rouge">Release</code>とはBuild Configuration毎に分けられてます。
+<code class="language-plaintext highlighter-rouge">Release</code>に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。</p>
 
-<p><code class="highlighter-rouge">some</code>はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。</p>
+<p><code class="language-plaintext highlighter-rouge">some</code>はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。</p>
 
-<p>もう一つ例として<code class="highlighter-rouge">Build Options &gt; Debug Information Format</code>を見るとこうなります。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
+<p>もう一つ例として<code class="language-plaintext highlighter-rouge">Build Options &gt; Debug Information Format</code>を見るとこうなります。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
 DEBUG_INFORMATION_FORMAT = dwarf
 
 //:configuration = Release
@@ -259,7 +261,7 @@ DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
 DEBUG_INFORMATION_FORMAT
 </code></pre></div></div>
 
-<p>これを使えばXcodeからxcconfigを作りたい場合に<code class="highlighter-rouge">Build Settings</code>の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。</p>
+<p>これを使えばXcodeからxcconfigを作りたい場合に<code class="language-plaintext highlighter-rouge">Build Settings</code>の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。</p>
 
   </section>
 

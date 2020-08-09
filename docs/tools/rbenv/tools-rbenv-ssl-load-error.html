@@ -14,8 +14,8 @@
   <title>OpenSSL Library not loadedが出たら疑う場所 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="OpenSSL Library not loadedが出たら疑う場所" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-20T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png" />
+<meta property="twitter:title" content="OpenSSL Library not loadedが出たら疑う場所" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error","headline":"OpenSSL Library not loadedが出たら疑う場所","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-02-20T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error"},"description":"今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。","image":"https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error","headline":"OpenSSL Library not loadedが出たら疑う場所","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-02-20T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error"},"description":"今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -212,12 +214,12 @@
   <p>今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。
 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
   dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
 </code></pre></div></div>
 
 <h2 id="何をしたのか">何をしたのか？</h2>
-<p>homebrew管理下のnginxを更新(<code class="highlighter-rouge">$ brew upgrade nginx</code>)しました。</p>
+<p>homebrew管理下のnginxを更新(<code class="language-plaintext highlighter-rouge">$ brew upgrade nginx</code>)しました。</p>
 
 <h3 id="homebrewでnginxの依存関係を調べる">homebrewでnginxの依存関係を調べる</h3>
 
@@ -244,14 +246,14 @@ pcre
 <p>ネットで調べたところ、 Rubyに紐づくopensslが外れた事で読み込めなくなっているのではないか？と仮説にたどり着きました。
 Rubyはrbenvで管理しているため、rbenvで対象バージョンを再インストールすることで再紐付けされないか？と試してみることにしました。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv install &lt;ruby version&gt;
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv <span class="nb">install</span> &lt;ruby version&gt;
 </code></pre></div></div>
 
 <p>しかし解決はしませんでした。</p>
 
 <h3 id="シンボリックリンクを用意解決せず">シンボリックリンクを用意(解決せず)</h3>
 
-<p>OpenSSLのライブラリ置き場を確認したら次のように<code class="highlighter-rouge">1.0.0</code>版なくなってました。</p>
+<p>OpenSSLのライブラリ置き場を確認したら次のように<code class="language-plaintext highlighter-rouge">1.0.0</code>版なくなってました。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-lkh</span> /usr/local/opt/openssl/lib/
 total 7236
@@ -270,8 +272,8 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
 <p>強引ですが、試しにシンボリックリンクで1.1版に向けてみたら動かないか試してみました。<br />
 <strong>と思ったのも、セマンティック バージョニングなら1.0.0から1.1はマイナーバージョンアップになるので、運が良ければ破壊変更はないからです。（それでも将来的に考えたらこの方法はNGです）</strong></p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ln <span class="nt">-s</span> libssl.1.1.dylib libssl.1.0.0.dylib
-<span class="nv">$ </span>ln <span class="nt">-s</span> libcrypto.1.1.dylib libcrypto.1.0.0.dylib
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> libssl.1.1.dylib libssl.1.0.0.dylib
+<span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> libcrypto.1.1.dylib libcrypto.1.0.0.dylib
 </code></pre></div></div>
 
 <p>こちらで試しましたが、MySQLの起動が失敗するようになりました。</p>
@@ -281,11 +283,11 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
 
 <p>エラーログを確認すると、opensslはmysql2 gemがopensslを使おうとしてエラーを起こしています。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
   dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
 </code></pre></div></div>
 
-<p>まず問題を特定するために、そもそもMySQLが起動するかを確認しましたが、MySQLが起動(<code class="highlighter-rouge">$ mysql.server start</code>)しなくなっていました。</p>
+<p>まず問題を特定するために、そもそもMySQLが起動するかを確認しましたが、MySQLが起動(<code class="language-plaintext highlighter-rouge">$ mysql.server start</code>)しなくなっていました。</p>
 
 <p>MySQLは都合上最新ではなく MySQL5.6を使っており、homebrewで管理しています。
 なので再インストールをしてみることにしました。</p>
@@ -297,12 +299,12 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
 
 <h3 id="mysql2-gem-を再インストール">mysql2 gem を再インストール</h3>
 
-<p>前述したようにエラーはmysql2で起きてます。 MySQLが動くようになったので、今度はRubyとMySQLのアダプターとなる<code class="highlighter-rouge">mysql2</code>を再インストールしました。</p>
+<p>前述したようにエラーはmysql2で起きてます。 MySQLが動くようになったので、今度はRubyとMySQLのアダプターとなる<code class="language-plaintext highlighter-rouge">mysql2</code>を再インストールしました。</p>
 
 <p>gem直接ではなくbunlder管理なのでbundlerから経由で指示します。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">exec </span>gem uninstall mysql2
-<span class="nv">$ </span>bundle install
+<span class="nv">$ </span>bundle <span class="nb">install</span>
 </code></pre></div></div>
 
 <p>結果は変わらず起動していませんが、エラー内容が少し変わりました。</p>
@@ -326,12 +328,12 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
 <p>今回自分が行った対処一覧となります。</p>
 
 <ol>
-  <li><code class="highlighter-rouge">$ brew reinstall mysql@5.6</code></li>
-  <li><code class="highlighter-rouge">$ rbenv install 2.5.7 &amp;&amp; gem install bundler -v "2.0.2"</code></li>
-  <li><code class="highlighter-rouge">$ bundle</code></li>
-  <li><code class="highlighter-rouge">$ bundle exec gem uninstall mysql2</code></li>
-  <li><code class="highlighter-rouge">$ bundle</code></li>
-  <li><code class="highlighter-rouge">$ bin/rake db:migrate:reset db:seed RAILS_ENV=test</code></li>
+  <li><code class="language-plaintext highlighter-rouge">$ brew reinstall mysql@5.6</code></li>
+  <li><code class="language-plaintext highlighter-rouge">$ rbenv install 2.5.7 &amp;&amp; gem install bundler -v "2.0.2"</code></li>
+  <li><code class="language-plaintext highlighter-rouge">$ bundle</code></li>
+  <li><code class="language-plaintext highlighter-rouge">$ bundle exec gem uninstall mysql2</code></li>
+  <li><code class="language-plaintext highlighter-rouge">$ bundle</code></li>
+  <li><code class="language-plaintext highlighter-rouge">$ bin/rake db:migrate:reset db:seed RAILS_ENV=test</code></li>
 </ol>
 
 <p>全ての環境で解決はしないと思いますが、その場合は自分のように原因領域の特定と仮説、試行の繰り返しが重要です。</p>

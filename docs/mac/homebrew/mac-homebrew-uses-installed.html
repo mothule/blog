@@ -14,8 +14,8 @@
   <title>Homebrewのpackage依存関係を確認する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Homebrewのpackage依存関係を確認する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-07-30T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png" />
+<meta property="twitter:title" content="Homebrewのpackage依存関係を確認する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed","headline":"Homebrewのpackage依存関係を確認する","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2019-07-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed"},"description":"MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。","image":"https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed","headline":"Homebrewのpackage依存関係を確認する","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2019-07-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-07-30-mac-homebrew-uses-installed.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-uses-installed"},"description":"MacのHomebrewでインストール済みパッケージを確認したり、不要なパッケージ削除前にパッケージがどのパッケージで使われているのか、パッケージを使うにはどのパッケージが必要なのか、Homebrew上のパッケージ依存関係を確認する方法について説明する記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -214,19 +216,19 @@
   </div>
   <section>
   <p>長いことHomebrewに色々とインストールしてると、たまにもう使っていないフォーミュラ（パッケージ）を削除したいなと思いませんか？
-<code class="highlighter-rouge">$ brew list -l</code> で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、
+<code class="language-plaintext highlighter-rouge">$ brew list -l</code> で一覧出して眺めて、「もうこれは使っていないな」と分かるパッケージは消していきますが、
 「これ何で入れたんだっけ？」と思うパッケージが結構います。</p>
 
 <h2 id="brew-lsでインストールしてるパッケージを確認">brew lsでインストールしてるパッケージを確認</h2>
 
 <p>まずは自分の環境にインストールされているパッケージ一覧を確認してみます。<br />
-インストール済みパッケージは、<code class="highlighter-rouge">brew list</code>コマンドで確認することができてフォーマットは次の通りです。</p>
+インストール済みパッケージは、<code class="language-plaintext highlighter-rouge">brew list</code>コマンドで確認することができてフォーマットは次の通りです。</p>
 
-<p><code class="highlighter-rouge">Usage: brew list, ls [options] [formula]</code></p>
+<p><code class="language-plaintext highlighter-rouge">Usage: brew list, ls [options] [formula]</code></p>
 
-<p><code class="highlighter-rouge">brew list</code>や<code class="highlighter-rouge">brew ls</code>でインストール済みパッケージを表示します。</p>
+<p><code class="language-plaintext highlighter-rouge">brew list</code>や<code class="language-plaintext highlighter-rouge">brew ls</code>でインストール済みパッケージを表示します。</p>
 
-<p>他にも<code class="highlighter-rouge">brew ls</code>に機能が備わっていますが、この記事のテーマから外れるので詳細は省きます。</p>
+<p>他にも<code class="language-plaintext highlighter-rouge">brew ls</code>に機能が備わっていますが、この記事のテーマから外れるので詳細は省きます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew list
 apr				carthage			fribidi				gobject-introspection		jpeg				libvterm			msgpack				pcre				pyenv				selenium-server-standalone	xcparse
@@ -244,7 +246,7 @@ cairo				freetype			gnu-sed				jemalloc			libuv				mono				parallel			pstree				
 
 <h3 id="-lオプションでリスト表示にする">-lオプションでリスト表示にする</h3>
 
-<p><code class="highlighter-rouge">-l</code>オプションでAZ順のリスト表示になります。<br />
+<p><code class="language-plaintext highlighter-rouge">-l</code>オプションでAZ順のリスト表示になります。<br />
 ブログで全部表示すると量が多いので一部となります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew list <span class="nt">-l</span>
@@ -268,10 +270,10 @@ drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 yarn
 
 <h2 id="brew-depsで依存してるパッケージを確認">brew depsで依存してるパッケージを確認</h2>
 
-<p><code class="highlighter-rouge">brew deps</code>コマンドで渡したパッケージが、どのパッケージを使っているのか確認することができます。
+<p><code class="language-plaintext highlighter-rouge">brew deps</code>コマンドで渡したパッケージが、どのパッケージを使っているのか確認することができます。
 フォーマットは次の通りです。</p>
 
-<p><code class="highlighter-rouge">Usage: brew deps [options] [formula]</code></p>
+<p><code class="language-plaintext highlighter-rouge">Usage: brew deps [options] [formula]</code></p>
 
 <p>例えば下記はRubyバージョン管理パッケージであるrbenvがどのパッケージを使っているのか確認した結果になります。</p>
 
@@ -284,7 +286,7 @@ ruby-build
 
 <h3 id="treeオプションでツリー構造で依存関係を表示">–treeオプションでツリー構造で依存関係を表示</h3>
 
-<p><code class="highlighter-rouge">brew deps</code>に<code class="highlighter-rouge">--tree</code>オプションを渡すことで依存パッケージをツリー形式で表示することができます。</p>
+<p><code class="language-plaintext highlighter-rouge">brew deps</code>に<code class="language-plaintext highlighter-rouge">--tree</code>オプションを渡すことで依存パッケージをツリー形式で表示することができます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--tree</span> rbenv
 rbenv
@@ -296,11 +298,11 @@ rbenv
     ├── pkg-config
     └── readline
 </code></pre></div></div>
-<p>ツリー形式で表示することで<code class="highlighter-rouge">ruby-build</code>はさらに3つのパッケージに依存してることが分かります。</p>
+<p>ツリー形式で表示することで<code class="language-plaintext highlighter-rouge">ruby-build</code>はさらに3つのパッケージに依存してることが分かります。</p>
 
 <h3 id="full-nameオプションで具体的な名前を表示">–full-nameオプションで具体的な名前を表示</h3>
 
-<p><code class="highlighter-rouge">brew deps</code>に<code class="highlighter-rouge">--full-name</code>オプションを渡すことで省略表示されているパッケージを実際の名前で表示することが出来ます。</p>
+<p><code class="language-plaintext highlighter-rouge">brew deps</code>に<code class="language-plaintext highlighter-rouge">--full-name</code>オプションを渡すことで省略表示されているパッケージを実際の名前で表示することが出来ます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--full-name</span> rbenv
 autoconf
@@ -309,12 +311,12 @@ pkg-config
 ruby-build
 </code></pre></div></div>
 
-<p>このように<code class="highlighter-rouge">openssl</code>が1.1バージョンを使っていることが分かります。</p>
+<p>このように<code class="language-plaintext highlighter-rouge">openssl</code>が1.1バージョンを使っていることが分かります。</p>
 
 <h3 id="オプションは組み合わせ可能">オプションは組み合わせ可能</h3>
 
 <p>オプションは複数使うことで同時に複数効果を得られます。<br />
-次の例は<code class="highlighter-rouge">--full-name</code>と<code class="highlighter-rouge">--tree</code>を使った結果になります。</p>
+次の例は<code class="language-plaintext highlighter-rouge">--full-name</code>と<code class="language-plaintext highlighter-rouge">--tree</code>を使った結果になります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps <span class="nt">--full-name</span> <span class="nt">--tree</span> rbenv
 rbenv
@@ -329,13 +331,13 @@ rbenv
 
 <h2 id="brew-usesで依存されてるパッケージを確認">brew usesで依存されてるパッケージを確認</h2>
 
-<p>先程<code class="highlighter-rouge">rbenv</code>が依存してるパッケージ一覧を確認しました。<br />
-では今度は逆にこの<code class="highlighter-rouge">rbenv</code>を使っているパッケージが存在するか調べてみましょう。
-<code class="highlighter-rouge">brew uses</code>コマンドを使うことで調べられます。フォーマットは次の通りです。</p>
+<p>先程<code class="language-plaintext highlighter-rouge">rbenv</code>が依存してるパッケージ一覧を確認しました。<br />
+では今度は逆にこの<code class="language-plaintext highlighter-rouge">rbenv</code>を使っているパッケージが存在するか調べてみましょう。
+<code class="language-plaintext highlighter-rouge">brew uses</code>コマンドを使うことで調べられます。フォーマットは次の通りです。</p>
 
-<p><code class="highlighter-rouge">Usage: brew uses [options] formula</code></p>
+<p><code class="language-plaintext highlighter-rouge">Usage: brew uses [options] formula</code></p>
 
-<p>この<code class="highlighter-rouge">brew uses</code>コマンドで<code class="highlighter-rouge">rbenv</code>を使っているパッケージを調べた結果が次になります。</p>
+<p>この<code class="language-plaintext highlighter-rouge">brew uses</code>コマンドで<code class="language-plaintext highlighter-rouge">rbenv</code>を使っているパッケージを調べた結果が次になります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uses rbenv
 rbenv-aliases                     rbenv-bundler                     rbenv-communal-gems               rbenv-gemset                      rbenv-whatis
@@ -343,18 +345,18 @@ rbenv-binstubs                    rbenv-bundler-ruby-version        rbenv-ctags 
 rbenv-bundle-exec                 rbenv-chefdk                      rbenv-default-gems                rbenv-vars
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">rbenv</code>のプラグインらしきものが並びますね。</p>
+<p><code class="language-plaintext highlighter-rouge">rbenv</code>のプラグインらしきものが並びますね。</p>
 
 <h3 id="パッケージ依存をインストール済みに限定する">パッケージ依存をインストール済みに限定する</h3>
-<p><code class="highlighter-rouge">brew uses</code>コマンドはデフォルトでは<code class="highlighter-rouge">Homebrew</code>で管理されている全てのパッケージが検索対象となります。<br />
-<strong>これを<code class="highlighter-rouge">--installed</code>オプションをつけることで自分のインストール済みに制限できます。</strong><br />
-このオプションをつけてもう一度<code class="highlighter-rouge">brew uses rbenv</code>を実行してみます。</p>
+<p><code class="language-plaintext highlighter-rouge">brew uses</code>コマンドはデフォルトでは<code class="language-plaintext highlighter-rouge">Homebrew</code>で管理されている全てのパッケージが検索対象となります。<br />
+<strong>これを<code class="language-plaintext highlighter-rouge">--installed</code>オプションをつけることで自分のインストール済みに制限できます。</strong><br />
+このオプションをつけてもう一度<code class="language-plaintext highlighter-rouge">brew uses rbenv</code>を実行してみます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew uses <span class="nt">--installed</span> rbenv
 
 </code></pre></div></div>
 
-<p>今度は結果が空になりました。これはインストール済みパッケージには、<strong><code class="highlighter-rouge">rbenv</code>を使ったパッケージがないことを表しています。</strong></p>
+<p>今度は結果が空になりました。これはインストール済みパッケージには、<strong><code class="language-plaintext highlighter-rouge">rbenv</code>を使ったパッケージがないことを表しています。</strong></p>
 
 <h2 id="brewの依存関係を確認できるコマンド整理">brewの依存関係を確認できるコマンド整理</h2>
 
@@ -372,18 +374,18 @@ rbenv-bundle-exec                 rbenv-chefdk                      rbenv-defaul
   <tbody>
     <tr>
       <td>何が入ってる？</td>
-      <td><code class="highlighter-rouge">brew ls</code></td>
-      <td><code class="highlighter-rouge">-l</code></td>
+      <td><code class="language-plaintext highlighter-rouge">brew ls</code></td>
+      <td><code class="language-plaintext highlighter-rouge">-l</code></td>
     </tr>
     <tr>
       <td>これ誰が使ってる？</td>
-      <td><code class="highlighter-rouge">brew uses</code></td>
-      <td><code class="highlighter-rouge">--installed</code></td>
+      <td><code class="language-plaintext highlighter-rouge">brew uses</code></td>
+      <td><code class="language-plaintext highlighter-rouge">--installed</code></td>
     </tr>
     <tr>
       <td>これ何が必要？</td>
-      <td><code class="highlighter-rouge">brew deps</code></td>
-      <td><code class="highlighter-rouge">--tree</code></td>
+      <td><code class="language-plaintext highlighter-rouge">brew deps</code></td>
+      <td><code class="language-plaintext highlighter-rouge">--tree</code></td>
     </tr>
   </tbody>
 </table>

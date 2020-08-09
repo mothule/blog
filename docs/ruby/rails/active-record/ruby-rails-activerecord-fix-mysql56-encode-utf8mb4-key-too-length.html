@@ -14,8 +14,8 @@
   <title>MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-08-02T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-08-02-ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length.png" />
+<meta property="twitter:title" content="MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length","headline":"MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応","dateModified":"2020-02-02T20:33:06+09:00","datePublished":"2019-08-02T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length"},"description":"charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。","image":"https://blog.mothule.com/assets/images/2019-08-02-ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length","headline":"MySQL5.6でActiveRecordのencodingがutf8mb4だとKey長すぎ問題の対応","dateModified":"2020-02-02T20:33:06+09:00","datePublished":"2019-08-02T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-08-02-ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord-fix-mysql56-encode-utf8mb4-key-too-length"},"description":"charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -211,9 +213,9 @@
   <li><a href="#カラムのcharsetをutf8に戻す">カラムのcharsetをutf8に戻す</a></li>
   <li><a href="#mysqlのキー最大長を伸ばす">MySQLのキー最大長を伸ばす</a>
     <ul>
-      <li><a href="#innodb_large_prefix-で-3072バイトに伸ばす"><code class="highlighter-rouge">innodb_large_prefix</code> で <code class="highlighter-rouge">3072</code>バイトに伸ばす</a></li>
-      <li><a href="#innodb_file_formatをbarracudaにする"><code class="highlighter-rouge">innodb_file_format</code>を<code class="highlighter-rouge">Barracuda</code>にする</a></li>
-      <li><a href="#innodb_file_per_tableを有効にする"><code class="highlighter-rouge">innodb_file_per_table</code>を有効にする</a></li>
+      <li><a href="#innodb_large_prefix-で-3072バイトに伸ばす"><code class="language-plaintext highlighter-rouge">innodb_large_prefix</code> で <code class="language-plaintext highlighter-rouge">3072</code>バイトに伸ばす</a></li>
+      <li><a href="#innodb_file_formatをbarracudaにする"><code class="language-plaintext highlighter-rouge">innodb_file_format</code>を<code class="language-plaintext highlighter-rouge">Barracuda</code>にする</a></li>
+      <li><a href="#innodb_file_per_tableを有効にする"><code class="language-plaintext highlighter-rouge">innodb_file_per_table</code>を有効にする</a></li>
       <li><a href="#つまりまとめると">つまりまとめると</a></li>
     </ul>
   </li>
@@ -224,8 +226,8 @@
   <section>
   <p>charsetをutf8からutf8mb4に変更したことでindexのキーが長過ぎると言われるようになりました。</p>
 
-<p>ちなみに環境はRails5系 + MySQL5.6系環境で、<code class="highlighter-rouge">databases.yml</code>の<code class="highlighter-rouge">encoding</code>を<code class="highlighter-rouge">utf8mb4</code>にすると <code class="highlighter-rouge">db:migrate</code>でエラーが出ます。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mysql2::Error: Index column size too large. The maximum column size is 767 bytes.
+<p>ちなみに環境はRails5系 + MySQL5.6系環境で、<code class="language-plaintext highlighter-rouge">databases.yml</code>の<code class="language-plaintext highlighter-rouge">encoding</code>を<code class="language-plaintext highlighter-rouge">utf8mb4</code>にすると <code class="language-plaintext highlighter-rouge">db:migrate</code>でエラーが出ます。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Mysql2::Error: Index column size too large. The maximum column size is 767 bytes.
 </code></pre></div></div>
 
 <p>新しいアプリを用意するたびに忘れ対応方法だけを調べて対応するといった、行きあたりばったりの対応ばかりしてたので、今回メモ兼調査をしてみることにしました。</p>
@@ -238,7 +240,7 @@
 しかし、これがutf8mb4だと1文字4バイトになるため、 255 * 4 = 1020バイトとなり、767バイトをオーバーしてしまいます。</p>
 
 <p>では、255という数字はどこから来てるかというと、
-ActiveRecordのテーブル定義で使う <code class="highlighter-rouge">t.string</code> は MySQLだと <code class="highlighter-rouge">VARCHAR(255)</code> に変換されます。ここの最大数から来てます。</p>
+ActiveRecordのテーブル定義で使う <code class="language-plaintext highlighter-rouge">t.string</code> は MySQLだと <code class="language-plaintext highlighter-rouge">VARCHAR(255)</code> に変換されます。ここの最大数から来てます。</p>
 
 <p>じゃぁなぜ255なのか？というと
 MySQL(InnoDB)では最大値が767バイト制限がそもそも敷かれています。
@@ -254,9 +256,9 @@ MySQL(InnoDB)では最大値が767バイト制限がそもそも敷かれてい�
   <p>たとえば、UTF-8 文字セットと文字ごとに最大 3 バイトを使用すると仮定すれば、TEXT または VARCHAR カラム上で 255 文字よりも長いカラムプリフィクスインデックスを使用すると、この制限に達する可能性があります。</p>
 </blockquote>
 
-<p>つまり ActiveRecordが <code class="highlighter-rouge">VARCHAR(255)</code> にしているのは、この制限を超えないためですね。
-しかし<code class="highlighter-rouge">databases.yml</code> の <code class="highlighter-rouge">encoding</code> が <code class="highlighter-rouge">t.string</code> に反映されないのは少し不便かと思いますね。
-MySQL(InnoDB) + utf8mb4 で <code class="highlighter-rouge">db:migrate</code> が呼ばれたら、 <code class="highlighter-rouge">VARCHCAR(191)</code>にするかもしくは、警告してくれると便利なのになぁと思いました。</p>
+<p>つまり ActiveRecordが <code class="language-plaintext highlighter-rouge">VARCHAR(255)</code> にしているのは、この制限を超えないためですね。
+しかし<code class="language-plaintext highlighter-rouge">databases.yml</code> の <code class="language-plaintext highlighter-rouge">encoding</code> が <code class="language-plaintext highlighter-rouge">t.string</code> に反映されないのは少し不便かと思いますね。
+MySQL(InnoDB) + utf8mb4 で <code class="language-plaintext highlighter-rouge">db:migrate</code> が呼ばれたら、 <code class="language-plaintext highlighter-rouge">VARCHCAR(191)</code>にするかもしくは、警告してくれると便利なのになぁと思いました。</p>
 
 <h3 id="原因から見えてくる対処法2つ">原因から見えてくる対処法2つ</h3>
 
@@ -270,10 +272,10 @@ MySQL(InnoDB) + utf8mb4 で <code class="highlighter-rouge">db:migrate</code> �
 
 <h2 id="対象カラムの文字最大数を制限する">対象カラムの文字最大数を制限する</h2>
 <p>1つは目は対象となるカラムに対して文字数を制限することで1020バイトを超えないようにする方法です。
-指定しなければ <code class="highlighter-rouge">VARCHAR(255)</code> なら指定すればいいって考えですね。</p>
+指定しなければ <code class="language-plaintext highlighter-rouge">VARCHAR(255)</code> なら指定すればいいって考えですね。</p>
 
 <p>この場合の最大文字数は767 / 4 = 191.75なので、 191文字にすることでエラーを回避できます。
-例えばテーブル<code class="highlighter-rouge">users</code>の<code class="highlighter-rouge">name</code>カラムに対して制限かけたい場合は、コードにするとこんな感じですね。</p>
+例えばテーブル<code class="language-plaintext highlighter-rouge">users</code>の<code class="language-plaintext highlighter-rouge">name</code>カラムに対して制限かけたい場合は、コードにするとこんな感じですね。</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
   <span class="k">def</span> <span class="nf">change</span>
@@ -289,7 +291,7 @@ MySQL(InnoDB) + utf8mb4 で <code class="highlighter-rouge">db:migrate</code> �
 
 <h2 id="カラムのcharsetをutf8に戻す">カラムのcharsetをutf8に戻す</h2>
 
-<p><code class="highlighter-rouge">encoding</code> で <code class="highlighter-rouge">utf8mb4</code> にすると全部のテーブル対象になるので、一部カラムだけを <code class="highlighter-rouge">utf8</code> にしようって話です。</p>
+<p><code class="language-plaintext highlighter-rouge">encoding</code> で <code class="language-plaintext highlighter-rouge">utf8mb4</code> にすると全部のテーブル対象になるので、一部カラムだけを <code class="language-plaintext highlighter-rouge">utf8</code> にしようって話です。</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
   <span class="k">def</span> <span class="nf">change</span>
@@ -307,9 +309,9 @@ MySQL(InnoDB) + utf8mb4 で <code class="highlighter-rouge">db:migrate</code> �
 
 <p>MySQLにはキーの最大長を拡張する機能があります。その機能を使うことでキー最大長を<strong>3072</strong>バイトまで伸ばすことができます。(つまりutf8mb4だと3072 / 4 = 768文字ですね)</p>
 
-<h3 id="innodb_large_prefix-で-3072バイトに伸ばす"><code class="highlighter-rouge">innodb_large_prefix</code> で <code class="highlighter-rouge">3072</code>バイトに伸ばす</h3>
+<h3 id="innodb_large_prefix-で-3072バイトに伸ばす"><code class="language-plaintext highlighter-rouge">innodb_large_prefix</code> で <code class="language-plaintext highlighter-rouge">3072</code>バイトに伸ばす</h3>
 
-<p><code class="highlighter-rouge">innodb_large_prefix</code>オプションを指定することで、長さの制限が3072バイトに伸ばせます。
+<p><code class="language-plaintext highlighter-rouge">innodb_large_prefix</code>オプションを指定することで、長さの制限が3072バイトに伸ばせます。
 以下<a href="https://dev.mysql.com/doc/refman/5.6/ja/innodb-restrictions.html">公式</a>より</p>
 <blockquote>
   <p>innodb_large_prefix 構成オプションを有効にすると、DYNAMIC および COMPRESSED 行フォーマットを使用する InnoDB テーブルで、この長さ制限が 3072 バイトに上昇します。</p>
@@ -319,24 +321,24 @@ MySQL(InnoDB) + utf8mb4 で <code class="highlighter-rouge">db:migrate</code> �
 
 <ul>
   <li>ストレージエンジンが InnoDB であること</li>
-  <li>行フォーマットが <code class="highlighter-rouge">DYNAMIC</code> か <code class="highlighter-rouge">COMPRESSED</code> であること</li>
+  <li>行フォーマットが <code class="language-plaintext highlighter-rouge">DYNAMIC</code> か <code class="language-plaintext highlighter-rouge">COMPRESSED</code> であること</li>
 </ul>
 
 <p>まずストレージエンジンについてですが、MySQLのデフォルトストレージエンジンは、</p>
 
 <ul>
-  <li><code class="highlighter-rouge">MySQL5.5</code>以前は<code class="highlighter-rouge">MyISAM</code></li>
-  <li><code class="highlighter-rouge">MySQL5.5</code>以上は<code class="highlighter-rouge">InnoDB</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MySQL5.5</code>以前は<code class="language-plaintext highlighter-rouge">MyISAM</code></li>
+  <li><code class="language-plaintext highlighter-rouge">MySQL5.5</code>以上は<code class="language-plaintext highlighter-rouge">InnoDB</code></li>
 </ul>
 
 <p>になります。<a href="https://dev.mysql.com/doc/refman/5.6/ja/innodb-default-se.html">公式</a>
 ストレージエンジンの変更方法は今回は省略します。(自分が使うのは5.6だったので)</p>
 
-<h3 id="innodb_file_formatをbarracudaにする"><code class="highlighter-rouge">innodb_file_format</code>を<code class="highlighter-rouge">Barracuda</code>にする</h3>
+<h3 id="innodb_file_formatをbarracudaにする"><code class="language-plaintext highlighter-rouge">innodb_file_format</code>を<code class="language-plaintext highlighter-rouge">Barracuda</code>にする</h3>
 
-<p>行フォーマットはMySQL5.0.3以降(InnoDB)のデフォルトは <code class="highlighter-rouge">COMPACT</code>になっているので、これを<code class="highlighter-rouge">DYNAMIC</code>か<code class="highlighter-rouge">COMPRESSED</code>へ変える必要があります。
-そして<code class="highlighter-rouge">DYNAMIC</code>か<code class="highlighter-rouge">COMPRESSED</code> に変更するには、ファイルフォーマット(<code class="highlighter-rouge">innodb_file_format</code>)が<code class="highlighter-rouge">Barracuda</code>である必要があります。
-なぜなら<code class="highlighter-rouge">Antelope</code>では対応しておらず<code class="highlighter-rouge">Barracuda</code>が対応しているフォーマットだからです。</p>
+<p>行フォーマットはMySQL5.0.3以降(InnoDB)のデフォルトは <code class="language-plaintext highlighter-rouge">COMPACT</code>になっているので、これを<code class="language-plaintext highlighter-rouge">DYNAMIC</code>か<code class="language-plaintext highlighter-rouge">COMPRESSED</code>へ変える必要があります。
+そして<code class="language-plaintext highlighter-rouge">DYNAMIC</code>か<code class="language-plaintext highlighter-rouge">COMPRESSED</code> に変更するには、ファイルフォーマット(<code class="language-plaintext highlighter-rouge">innodb_file_format</code>)が<code class="language-plaintext highlighter-rouge">Barracuda</code>である必要があります。
+なぜなら<code class="language-plaintext highlighter-rouge">Antelope</code>では対応しておらず<code class="language-plaintext highlighter-rouge">Barracuda</code>が対応しているフォーマットだからです。</p>
 
 <p>これは<a href="https://dev.mysql.com/doc/refman/5.6/ja/innodb-file-format-enabling.html">公式</a>に書いてあります。</p>
 
@@ -344,31 +346,31 @@ MySQL(InnoDB) + utf8mb4 で <code class="highlighter-rouge">db:migrate</code> �
   <p>innodb_file_format パラメータは現在、Antelope および Barracuda ファイル形式をサポートしています。テーブル圧縮や新しい DYNAMIC 行フォーマットなどの、Barracuda ファイル形式によってサポートされる機能を利用する新しいテーブルを作成するには、innodb_file_format を BARRACUDA に設定します。</p>
 </blockquote>
 
-<p>またデフォルトが <code class="highlighter-rouge">Antelope</code>だということも続けて記載されてあります。</p>
+<p>またデフォルトが <code class="language-plaintext highlighter-rouge">Antelope</code>だということも続けて記載されてあります。</p>
 <blockquote>
   <p>可能な場合、新しいテーブルには Barracuda 形式を使用することをお勧めしますが、MySQL 5.5 では、異なる MySQL リリースを含むレプリケーション構成との最大限の互換性のために、デフォルトのファイル形式は引き続き Antelope です。</p>
 </blockquote>
 
-<p>ちなみに <code class="highlighter-rouge">MySQL5.7</code>以降は <code class="highlighter-rouge">innodb_file_format</code>のデフォルトは<code class="highlighter-rouge">Barracuda</code> になるのでこの変更は不要になります。</p>
+<p>ちなみに <code class="language-plaintext highlighter-rouge">MySQL5.7</code>以降は <code class="language-plaintext highlighter-rouge">innodb_file_format</code>のデフォルトは<code class="language-plaintext highlighter-rouge">Barracuda</code> になるのでこの変更は不要になります。</p>
 
-<h3 id="innodb_file_per_tableを有効にする"><code class="highlighter-rouge">innodb_file_per_table</code>を有効にする</h3>
+<h3 id="innodb_file_per_tableを有効にする"><code class="language-plaintext highlighter-rouge">innodb_file_per_table</code>を有効にする</h3>
 
-<p>また <code class="highlighter-rouge">innodb_file_per_table</code>オプションがOFFだと <code class="highlighter-rouge">Baraccuda</code>が適用されず <code class="highlighter-rouge">Antelope</code>になるので、このオプションもONにします。
-<code class="highlighter-rouge">MySQL5.6.6</code>以上ならデフォルトONなのでこの記述は不要ですが、パッチバージョンによる変更で気づいてる方は少ないかと思うので、明示的に記述しておいてもいいかと思います。</p>
+<p>また <code class="language-plaintext highlighter-rouge">innodb_file_per_table</code>オプションがOFFだと <code class="language-plaintext highlighter-rouge">Baraccuda</code>が適用されず <code class="language-plaintext highlighter-rouge">Antelope</code>になるので、このオプションもONにします。
+<code class="language-plaintext highlighter-rouge">MySQL5.6.6</code>以上ならデフォルトONなのでこの記述は不要ですが、パッチバージョンによる変更で気づいてる方は少ないかと思うので、明示的に記述しておいてもいいかと思います。</p>
 
 <h3 id="つまりまとめると">つまりまとめると</h3>
 
 <ul>
   <li>MySQL 5.6
     <ul>
-      <li><code class="highlighter-rouge">innodb_file_per_table</code> を有効化して <code class="highlighter-rouge">Barracuda</code>が使える準備</li>
-      <li><code class="highlighter-rouge">innodb_file_format</code> を <code class="highlighter-rouge">Barracuda</code> に変更して <code class="highlighter-rouge">innodb_large_prefix</code>が使える準備</li>
-      <li><code class="highlighter-rouge">innodb_large_prefix</code> を有効化</li>
+      <li><code class="language-plaintext highlighter-rouge">innodb_file_per_table</code> を有効化して <code class="language-plaintext highlighter-rouge">Barracuda</code>が使える準備</li>
+      <li><code class="language-plaintext highlighter-rouge">innodb_file_format</code> を <code class="language-plaintext highlighter-rouge">Barracuda</code> に変更して <code class="language-plaintext highlighter-rouge">innodb_large_prefix</code>が使える準備</li>
+      <li><code class="language-plaintext highlighter-rouge">innodb_large_prefix</code> を有効化</li>
     </ul>
   </li>
   <li>MySQL 5.7
     <ul>
-      <li><code class="highlighter-rouge">innodb_large_prefix</code> を有効化</li>
+      <li><code class="language-plaintext highlighter-rouge">innodb_large_prefix</code> を有効化</li>
     </ul>
   </li>
 </ul>
@@ -377,15 +379,15 @@ MySQL(InnoDB) + utf8mb4 で <code class="highlighter-rouge">db:migrate</code> �
 
 <h2 id="オプションをmycnf-で指定する">オプションをmy.cnf で指定する</h2>
 
-<p>コマンドラインでMySQL起動時にオプション指定でも可能ですが、<code class="highlighter-rouge">my.cnf</code>の方が楽なのでそっちで指定します。</p>
+<p>コマンドラインでMySQL起動時にオプション指定でも可能ですが、<code class="language-plaintext highlighter-rouge">my.cnf</code>の方が楽なのでそっちで指定します。</p>
 
 <p><strong>my.cnf</strong></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>innodb_file_per_table = 1
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>innodb_file_per_table = 1
 innodb_file_format = Barracuda
 innodb_large_prefix
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">my.cnf</code>の場所が分からない場合は <code class="highlighter-rouge">$ mysql --help | grep my.cnf</code> でパスが並ぶので好きな場所の <code class="highlighter-rouge">my.cnf</code> に追記してください。</p>
+<p><code class="language-plaintext highlighter-rouge">my.cnf</code>の場所が分からない場合は <code class="language-plaintext highlighter-rouge">$ mysql --help | grep my.cnf</code> でパスが並ぶので好きな場所の <code class="language-plaintext highlighter-rouge">my.cnf</code> に追記してください。</p>
 
 <p>保存したら MySQLを再起動します。</p>
 
@@ -395,7 +397,7 @@ innodb_large_prefix
 
 <p>と言ってもテーブルが1つ2つであれば単純です。</p>
 
-<p><code class="highlighter-rouge">create_table</code>メソッドに <code class="highlighter-rouge">options</code>で指定するだけです。</p>
+<p><code class="language-plaintext highlighter-rouge">create_table</code>メソッドに <code class="language-plaintext highlighter-rouge">options</code>で指定するだけです。</p>
 
 <div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">class</span> <span class="nc">CreateUsers</span> <span class="o">&lt;</span> <span class="no">ActiveRecord</span><span class="o">::</span><span class="no">Migration</span>
   <span class="k">def</span> <span class="nf">change</span>
@@ -412,7 +414,7 @@ innodb_large_prefix
 
 <p>ここまで来てテーブルを作成すると、無事エラーは出なくなりutf8mb4として動きます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show create table users;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show create table users;
 +-------+-----------------------------------------------------------+
 | Table | Create Table                                                                                                                                                                                                                                                                                    |
 +-------+-----------------------------------------------------------+

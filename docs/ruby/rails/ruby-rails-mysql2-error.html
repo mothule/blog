@@ -14,8 +14,8 @@
   <title>Ruby on Railsのmysql2エラーはOpenSSLを疑え(Mac) - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Ruby on Railsのmysql2エラーはOpenSSLを疑え(Mac)" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="Mac上でRuby on Railsのrails newでDatabaseはMySQL使ったらmysql2でインストールエラー起きたので調査してOpenSSLの問題特定とbundle configを使ったビルドにOpenSSLパスを渡して解決する手順などをまとめました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-03-22T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-03-22-ruby-rails-mysql2-error.png" />
+<meta property="twitter:title" content="Ruby on Railsのmysql2エラーはOpenSSLを疑え(Mac)" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error","headline":"Ruby on Railsのmysql2エラーはOpenSSLを疑え(Mac)","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2019-03-22T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error"},"description":"Mac上でRuby on Railsのrails newでDatabaseはMySQL使ったらmysql2でインストールエラー起きたので調査してOpenSSLの問題特定とbundle configを使ったビルドにOpenSSLパスを渡して解決する手順などをまとめました。","image":"https://blog.mothule.com/assets/images/2019-03-22-ruby-rails-mysql2-error.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error","headline":"Ruby on Railsのmysql2エラーはOpenSSLを疑え(Mac)","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2019-03-22T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-03-22-ruby-rails-mysql2-error.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-mysql2-error"},"description":"Mac上でRuby on Railsのrails newでDatabaseはMySQL使ったらmysql2でインストールエラー起きたので調査してOpenSSLの問題特定とbundle configを使ったビルドにOpenSSLパスを渡して解決する手順などをまとめました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -248,12 +250,12 @@
 <p>MySQLのバージョンが5.6系と非常に古いバージョンになります。</p>
 
 <h3 id="rails-newのときにmysqlを指定">rails newのときにMySQLを指定</h3>
-<p>データベースはデフォルトだとSQLiteになってdatabase.ymlを書き直さないといけないので初めからdatabaseをmysqlに指定したい場合は、<code class="highlighter-rouge">-d</code> または <code class="highlighter-rouge">--database</code> オプションで<code class="highlighter-rouge">mysql</code>を指定します。</p>
+<p>データベースはデフォルトだとSQLiteになってdatabase.ymlを書き直さないといけないので初めからdatabaseをmysqlに指定したい場合は、<code class="language-plaintext highlighter-rouge">-d</code> または <code class="language-plaintext highlighter-rouge">--database</code> オプションで<code class="language-plaintext highlighter-rouge">mysql</code>を指定します。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails new &lt;app name&gt; <span class="nt">-d</span> mysql
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">&lt;app name&gt;</code>は適当にアプリ名を入れてください。
+<p><code class="language-plaintext highlighter-rouge">&lt;app name&gt;</code>は適当にアプリ名を入れてください。
 このコマンドを実行します。</p>
 
 <h3 id="mysql2-gemのインストールに失敗する">mysql2 gemのインストールに失敗する</h3>
@@ -266,25 +268,25 @@ Fetching mysql2 0.5.2
 Installing mysql2 0.5.2 with native extensions
 Gem::Ext::BuildError: ERROR: Failed to build gem native extension.
 ...
-checking <span class="k">for </span>rb_absint_size<span class="o">()</span>... yes
-checking <span class="k">for </span>rb_absint_singlebit_p<span class="o">()</span>... yes
-checking <span class="k">for </span>rb_wait_for_single_fd<span class="o">()</span>... yes
+checking <span class="k">for </span>rb_absint_size<span class="o">()</span>... <span class="nb">yes
+</span>checking <span class="k">for </span>rb_absint_singlebit_p<span class="o">()</span>... <span class="nb">yes
+</span>checking <span class="k">for </span>rb_wait_for_single_fd<span class="o">()</span>... <span class="nb">yes</span>
 <span class="nt">-----</span>
 Using mysql_config at /usr/local/opt/mysql@5.6/bin/mysql_config
 <span class="nt">-----</span>
-checking <span class="k">for </span>mysql.h... yes
-checking <span class="k">for </span>errmsg.h... yes
-checking <span class="k">for </span>SSL_MODE_DISABLED <span class="k">in </span>mysql.h... no
+checking <span class="k">for </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>errmsg.h... <span class="nb">yes
+</span>checking <span class="k">for </span>SSL_MODE_DISABLED <span class="k">in </span>mysql.h... no
 checking <span class="k">for </span>MYSQL_OPT_SSL_ENFORCE <span class="k">in </span>mysql.h... no
-checking <span class="k">for </span>MYSQL.net.vio <span class="k">in </span>mysql.h... yes
-checking <span class="k">for </span>MYSQL.net.pvio <span class="k">in </span>mysql.h... no
-checking <span class="k">for </span>MYSQL_ENABLE_CLEARTEXT_PLUGIN <span class="k">in </span>mysql.h... yes
-checking <span class="k">for </span>SERVER_QUERY_NO_GOOD_INDEX_USED <span class="k">in </span>mysql.h... yes
-checking <span class="k">for </span>SERVER_QUERY_NO_INDEX_USED <span class="k">in </span>mysql.h... yes
-checking <span class="k">for </span>SERVER_QUERY_WAS_SLOW <span class="k">in </span>mysql.h... yes
-checking <span class="k">for </span>MYSQL_OPTION_MULTI_STATEMENTS_ON <span class="k">in </span>mysql.h... yes
-checking <span class="k">for </span>MYSQL_OPTION_MULTI_STATEMENTS_OFF <span class="k">in </span>mysql.h... yes
-checking <span class="k">for </span>my_bool <span class="k">in </span>mysql.h... yes
+checking <span class="k">for </span>MYSQL.net.vio <span class="k">in </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>MYSQL.net.pvio <span class="k">in </span>mysql.h... no
+checking <span class="k">for </span>MYSQL_ENABLE_CLEARTEXT_PLUGIN <span class="k">in </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>SERVER_QUERY_NO_GOOD_INDEX_USED <span class="k">in </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>SERVER_QUERY_NO_INDEX_USED <span class="k">in </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>SERVER_QUERY_WAS_SLOW <span class="k">in </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>MYSQL_OPTION_MULTI_STATEMENTS_ON <span class="k">in </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>MYSQL_OPTION_MULTI_STATEMENTS_OFF <span class="k">in </span>mysql.h... <span class="nb">yes
+</span>checking <span class="k">for </span>my_bool <span class="k">in </span>mysql.h... <span class="nb">yes</span>
 <span class="nt">-----</span>
 Do not know how to <span class="nb">set </span>rpath on your system, <span class="k">if </span>MySQL libraries are not <span class="k">in </span>path mysql2 may not load
 <span class="nt">-----</span>
@@ -318,7 +320,7 @@ Gem files will remain installed <span class="k">in</span> /Users/mothule/.rbenv/
 Results logged to /Users/mothule/.rbenv/versions/2.3.7/lib/ruby/gems/2.3.0/extensions/x86_64-darwin-18/2.3.0-static/mysql2-0.5.2/gem_make.out
 
 An error occurred <span class="k">while </span>installing mysql2 <span class="o">(</span>0.5.2<span class="o">)</span>, and Bundler cannot <span class="k">continue</span><span class="nb">.</span>
-Make sure that <span class="sb">`</span>gem install mysql2 <span class="nt">-v</span> <span class="s1">'0.5.2'</span> <span class="nt">--source</span> <span class="s1">'https://rubygems.org/'</span><span class="sb">`</span> succeeds before bundling.
+Make sure that <span class="sb">`</span>gem <span class="nb">install </span>mysql2 <span class="nt">-v</span> <span class="s1">'0.5.2'</span> <span class="nt">--source</span> <span class="s1">'https://rubygems.org/'</span><span class="sb">`</span> succeeds before bundling.
 
 In Gemfile:
   mysql2
@@ -328,15 +330,15 @@ Could not find gem <span class="s1">'mysql2 (&lt; 0.6.0, &gt;= 0.3.18)'</span> <
 
 <p>このログを見ると、どうやら失敗してそうなのはOpenSSL周りが怪しそうです。以下は怪しそうな箇所をログ抜粋したもの</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>checking for SSL_MODE_DISABLED in mysql.h... no
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>checking for SSL_MODE_DISABLED in mysql.h... no
 checking for MYSQL_OPT_SSL_ENFORCE in mysql.h... no
 ...
 ld: library not found for -lssl
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">no</code>と言われてますし、 なにより<code class="highlighter-rouge">ld</code>コマンドでライブラリがないと言ってます。<br />
-ちなみにldコマンドの<code class="highlighter-rouge">-l</code>オプションでは<code class="highlighter-rouge">ssh</code>が指定された場合は<code class="highlighter-rouge">libssl.a</code>というファイルを検索します。<br />
-そのためここでは<code class="highlighter-rouge">libssl.a</code>ファイルが見つからないということになります。</p>
+<p><code class="language-plaintext highlighter-rouge">no</code>と言われてますし、 なにより<code class="language-plaintext highlighter-rouge">ld</code>コマンドでライブラリがないと言ってます。<br />
+ちなみにldコマンドの<code class="language-plaintext highlighter-rouge">-l</code>オプションでは<code class="language-plaintext highlighter-rouge">ssh</code>が指定された場合は<code class="language-plaintext highlighter-rouge">libssl.a</code>というファイルを検索します。<br />
+そのためここでは<code class="language-plaintext highlighter-rouge">libssl.a</code>ファイルが見つからないということになります。</p>
 
 <h2 id="mysql2のsslエラー原因を調査する">mysql2のsslエラー原因を調査する</h2>
 
@@ -347,7 +349,7 @@ ld: library not found for -lssl
 
 <p>Macで使われるSSLライブラリはOpenSSLとなります。<br />
 このライブラリがインストールされているかを確認します。<br />
-確認方法は<code class="highlighter-rouge">openssl version</code>でバージョン返せばインストールされてることを確認できます。<br />
+確認方法は<code class="language-plaintext highlighter-rouge">openssl version</code>でバージョン返せばインストールされてることを確認できます。<br />
 私の環境では次のバージョンです。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>openssl version
@@ -358,16 +360,16 @@ LibreSSL 2.6.5
 <p>OpenSSLとは、TLS/SSLツールキットであり汎用暗号ライブラリです。<br />
 様々ながプラットフォームで利用可能なため一般的に広く認知されています。</p>
 
-<p><code class="highlighter-rouge">LibreSSL</code>とは過去のハートブリード問題をうけてOpenSSLからフォークされたライブラリです。</p>
+<p><code class="language-plaintext highlighter-rouge">LibreSSL</code>とは過去のハートブリード問題をうけてOpenSSLからフォークされたライブラリです。</p>
 
 <h3 id="brewでopensslをインストールする">brewでOpenSSLをインストールする</h3>
 
 <p>もしOpenSSLが未インストールであるならHomebrewを使って、次のコマンドで簡単にインストールできます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install openssl
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>openssl
 </code></pre></div></div>
 
-<p>インストールが終わったらきちんと動くか<code class="highlighter-rouge">openssl version</code>で確認してみてください。</p>
+<p>インストールが終わったらきちんと動くか<code class="language-plaintext highlighter-rouge">openssl version</code>で確認してみてください。</p>
 
 <h3 id="mysql2インストールのリンクで見つけられるようにする">mysql2インストールのリンクで見つけられるようにする</h3>
 <p>OpenSSLをインストールしただけではmysql2のインストール時にどこにあるのか分からないままなので失敗してしまいます。<br />
@@ -381,13 +383,13 @@ LibreSSL 2.6.5
 
 <h3 id="bundle-configでopensslパス情報を渡す">bundle configでOpenSSLパス情報を渡す</h3>
 
-<p>bundleを通してパス情報を渡すには、<code class="highlighter-rouge">bundle config</code>を使い次のように渡します。</p>
+<p>bundleを通してパス情報を渡すには、<code class="language-plaintext highlighter-rouge">bundle config</code>を使い次のように渡します。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nt">--local</span> build.mysql2 <span class="s2">"--with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include"</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">build.mysql2</code> とすることでmysql2のビルド時に後ろの文字列を引数として渡すことができます。
-<code class="highlighter-rouge">--local</code>とすることでこのディレクトリだけの設定となります。</p>
+<p><code class="language-plaintext highlighter-rouge">build.mysql2</code> とすることでmysql2のビルド時に後ろの文字列を引数として渡すことができます。
+<code class="language-plaintext highlighter-rouge">--local</code>とすることでこのディレクトリだけの設定となります。</p>
 
 <p><strong>▼もしこの引数の渡し方でダメな場合は、新しい方法で試してみてください。mysql2が新しくなったことで渡すオプションも変わっています。</strong></p>
 <div class="link-container">
@@ -411,22 +413,22 @@ LibreSSL 2.6.5
 
 <h3 id="rails-newでのbundle-installをしないようにする">rails newでのbundle installをしないようにする</h3>
 
-<p>既に<code class="highlighter-rouge">rails new</code>を実行済みであれば前述した<code class="highlighter-rouge">bundle config</code>は使えます。<br />
+<p>既に<code class="language-plaintext highlighter-rouge">rails new</code>を実行済みであれば前述した<code class="language-plaintext highlighter-rouge">bundle config</code>は使えます。<br />
 <strong>しかしbundleはおろかrails newも未実行なのでbundle configはできないです。</strong></p>
 
-<p><code class="highlighter-rouge">rails new</code>すると<code class="highlighter-rouge">mysql2</code>が失敗する。しかし<code class="highlighter-rouge">mysql2</code>にビルドコンフィグを渡すには<code class="highlighter-rouge">rails new</code>が必要…というデッドロック状態です。<br />
-<strong>これを回避するには、<code class="highlighter-rouge">rails new</code>のときに<code class="highlighter-rouge">bundle install</code>をスキップさせます。</strong><br />
-これはオプションで<code class="highlighter-rouge">--skip-bundle</code>を追加するだけで<code class="highlighter-rouge">bundle install</code>がスキップされます。</p>
+<p><code class="language-plaintext highlighter-rouge">rails new</code>すると<code class="language-plaintext highlighter-rouge">mysql2</code>が失敗する。しかし<code class="language-plaintext highlighter-rouge">mysql2</code>にビルドコンフィグを渡すには<code class="language-plaintext highlighter-rouge">rails new</code>が必要…というデッドロック状態です。<br />
+<strong>これを回避するには、<code class="language-plaintext highlighter-rouge">rails new</code>のときに<code class="language-plaintext highlighter-rouge">bundle install</code>をスキップさせます。</strong><br />
+これはオプションで<code class="language-plaintext highlighter-rouge">--skip-bundle</code>を追加するだけで<code class="language-plaintext highlighter-rouge">bundle install</code>がスキップされます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rails new &lt;app name&gt; <span class="nt">--skip-bundle</span>
 </code></pre></div></div>
 
-<p>これで<code class="highlighter-rouge">rails new</code>実行完了後に改めて<code class="highlighter-rouge">bundle config</code>でパス情報を渡します。</p>
+<p>これで<code class="language-plaintext highlighter-rouge">rails new</code>実行完了後に改めて<code class="language-plaintext highlighter-rouge">bundle config</code>でパス情報を渡します。</p>
 
 <h2 id="mysql2にsslパスを通してbundle-installを実行">mysql2にSSLパスを通してbundle installを実行</h2>
-<p>OpenSSLをインストール済みの状態で、<code class="highlighter-rouge">rails new</code>を<code class="highlighter-rouge">--skip-bundle</code>で実行、<code class="highlighter-rouge">bundle config</code>でOpenSSLライブラリのパス情報を渡す設定をした状態で、もう一度<code class="highlighter-rouge">bundle install</code>で<code class="highlighter-rouge">mysql2</code>のインストールをトライとなります。</p>
+<p>OpenSSLをインストール済みの状態で、<code class="language-plaintext highlighter-rouge">rails new</code>を<code class="language-plaintext highlighter-rouge">--skip-bundle</code>で実行、<code class="language-plaintext highlighter-rouge">bundle config</code>でOpenSSLライブラリのパス情報を渡す設定をした状態で、もう一度<code class="language-plaintext highlighter-rouge">bundle install</code>で<code class="language-plaintext highlighter-rouge">mysql2</code>のインストールをトライとなります。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle install <span class="nt">-j4</span> <span class="nt">--path</span><span class="o">=</span>vendor/bundle
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">install</span> <span class="nt">-j4</span> <span class="nt">--path</span><span class="o">=</span>vendor/bundle
 </code></pre></div></div>
 
 <p>これで初期状態からMySQLをDatabaseにしたRailsアプリが出来上がると思います。</p>
@@ -437,9 +439,9 @@ LibreSSL 2.6.5
 
 <ol>
   <li>OpenSSLをインストール</li>
-  <li><code class="highlighter-rouge">rails new</code>を<code class="highlighter-rouge">--skip-bundle</code>で実行</li>
-  <li><code class="highlighter-rouge">bundle config</code>で<code class="highlighter-rouge">mysql2</code>のビルド設定にOpenSSLライブラリのパスを渡す</li>
-  <li><code class="highlighter-rouge">bundle install</code>実行</li>
+  <li><code class="language-plaintext highlighter-rouge">rails new</code>を<code class="language-plaintext highlighter-rouge">--skip-bundle</code>で実行</li>
+  <li><code class="language-plaintext highlighter-rouge">bundle config</code>で<code class="language-plaintext highlighter-rouge">mysql2</code>のビルド設定にOpenSSLライブラリのパスを渡す</li>
+  <li><code class="language-plaintext highlighter-rouge">bundle install</code>実行</li>
 </ol>
 
 <p>うまくいかない場合は別の要因かもしれません。</p>

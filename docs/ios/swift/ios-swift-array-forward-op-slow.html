@@ -14,8 +14,8 @@
   <title>SwiftのArrayの前方挿入は遅い - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="SwiftのArrayの前方挿入は遅い" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-04T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png" />
+<meta property="twitter:title" content="SwiftのArrayの前方挿入は遅い" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow","headline":"SwiftのArrayの前方挿入は遅い","dateModified":"2020-05-12T22:51:26+09:00","datePublished":"2020-05-04T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow"},"description":"Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。","image":"https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow","headline":"SwiftのArrayの前方挿入は遅い","dateModified":"2020-05-12T22:51:26+09:00","datePublished":"2020-05-04T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-04-ios-swift-array-forward-op-slow/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-array-forward-op-slow"},"description":"Swiftでは非常に使用頻度の高いArrayですが、挙動を把握しておかないと誤った使い方で処理の重いコードを書いてしまいます。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -264,9 +266,9 @@ Arrayのインターフェイスは、<a href="https://github.com/apple/swift/bl
 <span class="n">array</span><span class="o">.</span><span class="nf">remove</span><span class="p">(</span><span class="nv">at</span><span class="p">:</span> <span class="mi">0</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>この<code class="highlighter-rouge">array.remove(at: 0)</code>の処理をトレースするとざっくり下記になります。</p>
+<p>この<code class="language-plaintext highlighter-rouge">array.remove(at: 0)</code>の処理をトレースするとざっくり下記になります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- remove(at:)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>- remove(at:)
   - _makeMutableAndUnique()
     - _createNewBuffer(bufferIsUnique:minimumCapacity:growForAppend)
       - ContiguousArrayBuffer._copyContents(subRange:,initializing:)
@@ -277,7 +279,7 @@ Arrayのインターフェイスは、<a href="https://github.com/apple/swift/bl
       - swift_arrayInitWithTakeFrontToBack(OpaqueValue*,OpaqueValue*,size_t,const Metadata*)
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">remove(at:) -&gt; Element</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1292-L1306">/stdlib/public/core/Array.swift#L1292-L1306</a>で実装されています。</p>
+<p><code class="language-plaintext highlighter-rouge">remove(at:) -&gt; Element</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1292-L1306">/stdlib/public/core/Array.swift#L1292-L1306</a>で実装されています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">public</span> <span class="k">mutating</span> <span class="kd">func</span> <span class="nf">remove</span><span class="p">(</span><span class="n">at</span> <span class="nv">index</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Element</span> <span class="p">{</span>
   <span class="nf">_makeMutableAndUnique</span><span class="p">()</span> <span class="c1">// ①</span>
@@ -293,21 +295,21 @@ Arrayのインターフェイスは、<a href="https://github.com/apple/swift/bl
 
 <h4 id="_makemutableandunique-">_makeMutableAndUnique ①</h4>
 
-<p><code class="highlighter-rouge">_makeMutableAndUnique</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L345-L352">/stdlib/public/core/Array.swift#L345-L352</a>で実装されており、
-内部では<code class="highlighter-rouge">_createNewBuffer</code>が呼ばれています。</p>
+<p><code class="language-plaintext highlighter-rouge">_makeMutableAndUnique</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L345-L352">/stdlib/public/core/Array.swift#L345-L352</a>で実装されており、
+内部では<code class="language-plaintext highlighter-rouge">_createNewBuffer</code>が呼ばれています。</p>
 
-<p>この<code class="highlighter-rouge">_createNewBuffer</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1051-L1080">/stdlib/public/core/Array.swift#L1051-L1080</a>で実装されており、
-内部では新しいキャパシティサイズの<code class="highlighter-rouge">_ContiguousArrayBuffer</code>をしたのちに<code class="highlighter-rouge">_buffer._copyContents</code>を呼んでいます。</p>
+<p>この<code class="language-plaintext highlighter-rouge">_createNewBuffer</code>は<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/core/Array.swift#L1051-L1080">/stdlib/public/core/Array.swift#L1051-L1080</a>で実装されており、
+内部では新しいキャパシティサイズの<code class="language-plaintext highlighter-rouge">_ContiguousArrayBuffer</code>をしたのちに<code class="language-plaintext highlighter-rouge">_buffer._copyContents</code>を呼んでいます。</p>
 
 <p>これは内部でArray.cppの<a href="https://github.com/apple/swift/blob/31af116df62d40779b0f43ffc61c2806469a53cc/stdlib/public/runtime/Array.cpp#L137-L142">swift_arrayInitWithCopy</a>を呼んでいます。</p>
 
 <h4 id="pointermoveinitialize-">pointer.moveInitialize ②</h4>
 
-<p><code class="highlighter-rouge">pointer.moveInitialize</code>とは<a href="https://github.com/apple/swift/blob/d7b5de95f3fdfe281dee9dfec66b220e27675ca3/stdlib/public/core/UnsafePointer.swift#L786-L812">/stdlib/public/core/UnsafePointer.swift#L786-L812</a>で実装されています。</p>
+<p><code class="language-plaintext highlighter-rouge">pointer.moveInitialize</code>とは<a href="https://github.com/apple/swift/blob/d7b5de95f3fdfe281dee9dfec66b220e27675ca3/stdlib/public/core/UnsafePointer.swift#L786-L812">/stdlib/public/core/UnsafePointer.swift#L786-L812</a>で実装されています。</p>
 
 <p>この関数内でArray.cppの<a href="/stdlib/public/runtime/Array.cpp#L151-L156">swift_arrayInitWithTakeFrontToBack</a>か<a href="https://github.com/apple/swift/blob/55782b2f73cd887ffd8d136d29d5cd3fa612e41a/stdlib/public/runtime/Array.cpp#L158-L163">swift_arrayInitWithTakeBackToFront</a>が呼ばれていると思われます。</p>
 
-<p><code class="highlighter-rouge">remove(at:)</code>で引数indexに0を渡すと、<code class="highlighter-rouge">pointer.moveInitialize</code>を介してデータサイズ*データ数のメモリ移動が発生します。</p>
+<p><code class="language-plaintext highlighter-rouge">remove(at:)</code>で引数indexに0を渡すと、<code class="language-plaintext highlighter-rouge">pointer.moveInitialize</code>を介してデータサイズ*データ数のメモリ移動が発生します。</p>
 
 <h2 id="仮説">仮説</h2>
 
@@ -435,7 +437,7 @@ Arrayのインターフェイスは、<a href="https://github.com/apple/swift/bl
 <p>下図は検証コードから得た結果を整理してものです。<br />
 X軸が配列数で、Y軸が処理時間(秒)になります。</p>
 
-<p>要素サイズの32バイトの<code class="highlighter-rouge">insert(:at:)</code>が群を抜いて負荷がかかっています。</p>
+<p>要素サイズの32バイトの<code class="language-plaintext highlighter-rouge">insert(:at:)</code>が群を抜いて負荷がかかっています。</p>
 
 <p><a href="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/1.png"><img src="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/1.png" width="100%" alt="SwiftArrayパフォーマンス全体図" /></a></p>
 
@@ -468,7 +470,7 @@ X軸が配列数で、Y軸が処理時間(秒)になります。</p>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>上記のような80バイトで最も重い<code class="highlighter-rouge">insert(:at:0)</code>で試してみます。
+<p>上記のような80バイトで最も重い<code class="language-plaintext highlighter-rouge">insert(:at:0)</code>で試してみます。
 先程郡を抜いていた32バイトより更に重くなっています。</p>
 
 <p><a href="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/3.png"><img src="/assets/images/2020-05-04-ios-swift-array-forward-op-slow/3.png" width="100%" alt="SwiftArrayパフォーマンスサイズ大" /></a></p>

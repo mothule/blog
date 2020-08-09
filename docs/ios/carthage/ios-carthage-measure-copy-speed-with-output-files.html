@@ -14,8 +14,8 @@
   <title>CarthageのビルドフェイズでOutput Files指定による速度調査 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="CarthageのビルドフェイズでOutput Files指定による速度調査" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-13T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png" />
+<meta property="twitter:title" content="CarthageのビルドフェイズでOutput Files指定による速度調査" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files","headline":"CarthageのビルドフェイズでOutput Files指定による速度調査","dateModified":"2020-05-27T01:28:37+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files"},"description":"Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。","image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files","headline":"CarthageのビルドフェイズでOutput Files指定による速度調査","dateModified":"2020-05-27T01:28:37+09:00","datePublished":"2020-05-13T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-measure-copy-speed-with-output-files/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-measure-copy-speed-with-output-files"},"description":"Carthageはビルドフェイズでcarthge copy-frameworksでフレームワークをコピーしているが、これを差異があればコピースクリプトを走らせる方法があり高速化に繋がる。その方法と効果について調査した記事。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -203,15 +205,15 @@
 
 <h2 id="調査のきっかけ">調査のきっかけ</h2>
 
-<p><a href="https://github.com/Carthage/Carthage#quick-start">Carthage Quick Start</a>や<a href="https://github.com/Carthage/Carthage#adding-frameworks-to-an-application">Carghage Adding frameworks to an application</a>には、<code class="highlighter-rouge">Output Files</code>や<code class="highlighter-rouge">Output File Lists</code>を設定しろと書かれています。</p>
+<p><a href="https://github.com/Carthage/Carthage#quick-start">Carthage Quick Start</a>や<a href="https://github.com/Carthage/Carthage#adding-frameworks-to-an-application">Carghage Adding frameworks to an application</a>には、<code class="language-plaintext highlighter-rouge">Output Files</code>や<code class="language-plaintext highlighter-rouge">Output File Lists</code>を設定しろと書かれています。</p>
 
 <p>しかし、<a href="https://github.com/Carthage/Carthage/blob/master/Source/carthage/CopyFrameworks.swift">carthage copy-frameworksのコード</a>では使われていません。</p>
 
 <p>最初はただの更新漏れかと思ったが、調べたら<a href="https://github.com/Carthage/Carthage/pull/2025">Pull Request</a>を見つけました。</p>
 
-<p>どうやらWWDCの発表によると、<code class="highlighter-rouge">Output Files</code>が設定されていると、<code class="highlighter-rouge">Input Files</code>の変更がなければスクリプトの実行をスキップするらしいです。</p>
+<p>どうやらWWDCの発表によると、<code class="language-plaintext highlighter-rouge">Output Files</code>が設定されていると、<code class="language-plaintext highlighter-rouge">Input Files</code>の変更がなければスクリプトの実行をスキップするらしいです。</p>
 
-<p>つまり<strong><code class="highlighter-rouge">Output Files</code>は未設定でも動作上問題はないですが、設定はすることでビルド時間の短縮に繋がる</strong>ようです。</p>
+<p>つまり<strong><code class="language-plaintext highlighter-rouge">Output Files</code>は未設定でも動作上問題はないですが、設定はすることでビルド時間の短縮に繋がる</strong>ようです。</p>
 
 <p>では「どれぐらい違うのか？」を調べようと思いました。</p>
 
@@ -222,13 +224,13 @@
 
 <ul>
   <li>プロジェクトは新規プロジェクトの初期状態＋Carthage</li>
-  <li><code class="highlighter-rouge">Output Files</code>の「あり」「なし」それぞれのビルド時間を10回ずつ測定</li>
+  <li><code class="language-plaintext highlighter-rouge">Output Files</code>の「あり」「なし」それぞれのビルド時間を10回ずつ測定</li>
   <li>ビルドを走らせる前に適当なソースファイルを1つ弄ってから実行する</li>
   <li>ビルド時間はXcodeのPreferences(ShowBuildOperationDuration)を使う</li>
 </ul>
 
 <p>フレームワークのコピー処理の有無ということで、<em>Cartfile</em> はそれっぽい数7個用意。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "AFNetworking/AFNetworking"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "AFNetworking/AFNetworking"
 github "suzuki-0000/SKPhotoBrowser"
 github "SVProgressHUD/SVProgressHUD"
 github "SwiftyJSON/SwiftyJSON"
@@ -239,7 +241,7 @@ github "adjust/ios_sdk"
 
 <p>この場合はInput Filesはこうなります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(SRCROOT)/Carthage/Build/iOS/AFNetworking/AFNetworking.framework
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(SRCROOT)/Carthage/Build/iOS/AFNetworking/AFNetworking.framework
 $(SRCROOT)/Carthage/Build/iOS/suzuki-0000/SKPhotoBrowser.framework
 $(SRCROOT)/Carthage/Build/iOS/SVProgressHUD/SVProgressHUD.framework
 $(SRCROOT)/Carthage/Build/iOS/SwiftyJSON/SwiftyJSON.framework
@@ -250,7 +252,7 @@ $(SRCROOT)/Carthage/Build/iOS/adjust/ios_sdk.framework
 
 <p>そして、<strong>Output Files</strong> はこうなります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking/AFNetworking.framework
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking/AFNetworking.framework
 $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/suzuki-0000/SKPhotoBrowser.framework
 $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD/SVProgressHUD.framework
 $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON/SwiftyJSON.framework
@@ -267,8 +269,8 @@ $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/adjust/ios_sdk.framework
   <tbody>
     <tr>
       <td>#</td>
-      <td><code class="highlighter-rouge">Output Files</code>なし</td>
-      <td><code class="highlighter-rouge">Output Files</code>あり</td>
+      <td><code class="language-plaintext highlighter-rouge">Output Files</code>なし</td>
+      <td><code class="language-plaintext highlighter-rouge">Output Files</code>あり</td>
     </tr>
     <tr>
       <td>1</td>

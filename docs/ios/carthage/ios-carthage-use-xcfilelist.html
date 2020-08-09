@@ -14,8 +14,8 @@
   <title>CarthageでInput File Listsにxcfilelistを渡す利点と方法 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="CarthageでInput File Listsにxcfilelistを渡す利点と方法" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-13T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png" />
+<meta property="twitter:title" content="CarthageでInput File Listsにxcfilelistを渡す利点と方法" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist","headline":"CarthageでInput File Listsにxcfilelistを渡す利点と方法","dateModified":"2020-05-13T04:58:36+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist"},"description":"CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。","image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist","headline":"CarthageでInput File Listsにxcfilelistを渡す利点と方法","dateModified":"2020-05-13T04:58:36+09:00","datePublished":"2020-05-13T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-13-ios-carthage-use-xcfilelist/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-use-xcfilelist"},"description":"CarthageをXcodeで使うには環境構築が必要でcarthage copy-frameworksコマンドにパラメータを渡すのにInput FilesではなくInput File Listsにxcfilelistを渡す利点と方法について説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -206,55 +208,55 @@
 </ul>
   </div>
   <section>
-  <p><code class="highlighter-rouge">xcfilelist</code>で依存ライブラリを管理すると楽です</p>
+  <p><code class="language-plaintext highlighter-rouge">xcfilelist</code>で依存ライブラリを管理すると楽です</p>
 
-<p>この記事は<code class="highlighter-rouge">xcfilelist</code>を使って<code class="highlighter-rouge">Carthage</code>の環境を構築する方法と利点について説明します。</p>
+<p>この記事は<code class="language-plaintext highlighter-rouge">xcfilelist</code>を使って<code class="language-plaintext highlighter-rouge">Carthage</code>の環境を構築する方法と利点について説明します。</p>
 
-<p><code class="highlighter-rouge">Carghage</code>の基本や使い方の詳細は「<span><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></span>
+<p><code class="language-plaintext highlighter-rouge">Carghage</code>の基本や使い方の詳細は「<span><a href="/ios/carthage/ios-carthage">Carthageの使い方を体系的に理解する</a></span>
 」にまとめてあります。</p>
 
 <h2 id="carthage公式解説に出てくるxcfilelist">Carthage公式解説に出てくるxcfilelist</h2>
 
-<p>Carthageのインストール解説記事には、<code class="highlighter-rouge">xcfilelist</code>を使った解説は見かけません。<br />
-大抵<code class="highlighter-rouge">Input Files</code>に直接パスを指定する記事が多いです。<br />
-しかし、<a href="https://github.com/Carthage/Carthage">Carthageの公式</a>では<code class="highlighter-rouge">xcfilelist</code>を使っており、むしろそっちがメインにも見えます。</p>
+<p>Carthageのインストール解説記事には、<code class="language-plaintext highlighter-rouge">xcfilelist</code>を使った解説は見かけません。<br />
+大抵<code class="language-plaintext highlighter-rouge">Input Files</code>に直接パスを指定する記事が多いです。<br />
+しかし、<a href="https://github.com/Carthage/Carthage">Carthageの公式</a>では<code class="language-plaintext highlighter-rouge">xcfilelist</code>を使っており、むしろそっちがメインにも見えます。</p>
 
 <h3 id="xcfilelistの正体">xcfilelistの正体</h3>
 
-<p><code class="highlighter-rouge">xcfilelist</code>はXcodeのファイル一覧を表すファイル・タイプです。<br />
+<p><code class="language-plaintext highlighter-rouge">xcfilelist</code>はXcodeのファイル一覧を表すファイル・タイプです。<br />
 といってもただのテキストファイルです。<br />
-テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を<code class="highlighter-rouge">.xcfilelist</code>とするだけです。</p>
+テキストエディタでファイルパスを列挙して、ファイル保存時に拡張子を<code class="language-plaintext highlighter-rouge">.xcfilelist</code>とするだけです。</p>
 
 <h2 id="xcfilelistを使う場所">xcfilelistを使う場所</h2>
 
-<p>公式では英文で<code class="highlighter-rouge">xcfilelist</code>を見かけますが、これを使う場所がパッと見では分かりません。<br />
-<code class="highlighter-rouge">xcfilelist</code>を使う場所は下の画像の<code class="highlighter-rouge">Input File Lists</code>と<code class="highlighter-rouge">Output File List</code>です。<br />
-この中に<code class="highlighter-rouge">xcfilelist</code>のパスを指定します。</p>
+<p>公式では英文で<code class="language-plaintext highlighter-rouge">xcfilelist</code>を見かけますが、これを使う場所がパッと見では分かりません。<br />
+<code class="language-plaintext highlighter-rouge">xcfilelist</code>を使う場所は下の画像の<code class="language-plaintext highlighter-rouge">Input File Lists</code>と<code class="language-plaintext highlighter-rouge">Output File List</code>です。<br />
+この中に<code class="language-plaintext highlighter-rouge">xcfilelist</code>のパスを指定します。</p>
 
 <p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/1.png" width="100%" alt="XcodeBuildPhaseのCarthage用RunScriptPhase" /></a></p>
 
 <h2 id="input-file-listsを使う利点">Input File Listsを使う利点</h2>
 
-<p><code class="highlighter-rouge">Input Files</code>でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
-<code class="highlighter-rouge">Input File Lists</code>を使う利点がないと使う気にならないと思います。</p>
+<p><code class="language-plaintext highlighter-rouge">Input Files</code>でframeworkのパスを指定するほうが仕組み理解という点では分かりやすいです。
+<code class="language-plaintext highlighter-rouge">Input File Lists</code>を使う利点がないと使う気にならないと思います。</p>
 
-<p>使う利点は、一度<code class="highlighter-rouge">xcfilelist</code>のパスを指定すれば、<code class="highlighter-rouge">Run Script</code>の使いにくいUIを使わなくて済みます。  <br />
-またフレームワークの追加や削除時に<code class="highlighter-rouge">xcodeproj</code>がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。</p>
+<p>使う利点は、一度<code class="language-plaintext highlighter-rouge">xcfilelist</code>のパスを指定すれば、<code class="language-plaintext highlighter-rouge">Run Script</code>の使いにくいUIを使わなくて済みます。  <br />
+またフレームワークの追加や削除時に<code class="language-plaintext highlighter-rouge">xcodeproj</code>がフレームワークのリンク設定のみなので衝突時の範囲が狭くなります。</p>
 
 <h2 id="xcfilelistを用意する">xcfilelistを用意する</h2>
 
-<p><code class="highlighter-rouge">xcfilelist</code>はパスさえ合っていればどこに置いても問題ないですが、<br />
+<p><code class="language-plaintext highlighter-rouge">xcfilelist</code>はパスさえ合っていればどこに置いても問題ないですが、<br />
 他環境でも動くようにまずはgit管理下が必須だと思います。<br />
 次に編集しやすさ、環境パスが使える、Xcodeで使うファイルと考えたら<br />
 <strong>プロジェクトディレクトリ配下に置くことが最適です。</strong></p>
 
 <p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/2.png" width="50%" alt="Xcode-Project-Navigator" /></a></p>
 
-<p>中身は次のように<code class="highlighter-rouge">Input Files</code>で指定するパスを並べるだけです。
-これを<code class="highlighter-rouge">.xcfilelist</code>として保存すれば準備は整います。
+<p>中身は次のように<code class="language-plaintext highlighter-rouge">Input Files</code>で指定するパスを並べるだけです。
+これを<code class="language-plaintext highlighter-rouge">.xcfilelist</code>として保存すれば準備は整います。
 ファイル名は何でもいいです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(SRCROOT)/Carthage/Build/iOS/AdjustSdk.framework
 $(SRCROOT)/Carthage/Build/iOS/SKPhotoBrowser.framework
 $(SRCROOT)/Carthage/Build/iOS/SDWebImage.framework
 $(SRCROOT)/Carthage/Build/iOS/AFNetworking.framework
@@ -267,17 +269,17 @@ $(SRCROOT)/Carthage/Build/iOS/SwiftyJSON.framework
 
 <h2 id="xcfilelistをinput-file-listsに渡す">xcfilelistをInput File Listsに渡す</h2>
 
-<p>Xcodeの<code class="highlighter-rouge">Build Phases</code>の<code class="highlighter-rouge">Carthage</code>用スクリプトフェイズの<code class="highlighter-rouge">Input File Lists</code>に先程用意した<code class="highlighter-rouge">.xcfilelist</code>のパスを指定します。</p>
+<p>Xcodeの<code class="language-plaintext highlighter-rouge">Build Phases</code>の<code class="language-plaintext highlighter-rouge">Carthage</code>用スクリプトフェイズの<code class="language-plaintext highlighter-rouge">Input File Lists</code>に先程用意した<code class="language-plaintext highlighter-rouge">.xcfilelist</code>のパスを指定します。</p>
 
-<p>先程の用意した場所であれば、<code class="highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist</code>になります。</p>
+<p>先程の用意した場所であれば、<code class="language-plaintext highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-input-file-list.xcfilelist</code>になります。</p>
 
 <p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/3.png" width="100%" alt="XcodeのInputFileLists" /></a></p>
 
 <h2 id="output-file-listsもxcfilelistを使う">Output File Listsもxcfilelistを使う</h2>
 
-<p><code class="highlighter-rouge">Output File Lists</code>も同様に<code class="highlighter-rouge">xcfilelist</code>として出力パスを列挙しておけば<code class="highlighter-rouge">xcfilelist</code>のパスを指定するだけです。</p>
+<p><code class="language-plaintext highlighter-rouge">Output File Lists</code>も同様に<code class="language-plaintext highlighter-rouge">xcfilelist</code>として出力パスを列挙しておけば<code class="language-plaintext highlighter-rouge">xcfilelist</code>のパスを指定するだけです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AdjustSdk.framework
 $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SKPhotoBrowser.framework
 $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SDWebImage.framework
 $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/AFNetworking.framework
@@ -288,12 +290,12 @@ $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SVProgressHUD.framework
 $(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/SwiftyJSON.framework
 </code></pre></div></div>
 
-<p>こちらも<code class="highlighter-rouge">Input File Lists</code>と同じ場所場所であれば<code class="highlighter-rouge">Output File Lists</code>で指定するパスは、<code class="highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist</code>になります。</p>
+<p>こちらも<code class="language-plaintext highlighter-rouge">Input File Lists</code>と同じ場所場所であれば<code class="language-plaintext highlighter-rouge">Output File Lists</code>で指定するパスは、<code class="language-plaintext highlighter-rouge">$(SRCROOT)/$(PROJECT_NAME)/carthage-output-file-list.xcfilelist</code>になります。</p>
 
 <p><a href="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png"><img src="/assets/images/2020-05-13-ios-carthage-use-xcfilelist/4.png" width="50%" alt="XcodeのOutputFileLists" /></a></p>
 
 <h3 id="output-file-listsを指定する理由">Output File Listsを指定する理由</h3>
-<p><code class="highlighter-rouge">Output Files</code>や<code class="highlighter-rouge">Output File Lists</code>でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。<br />
+<p><code class="language-plaintext highlighter-rouge">Output Files</code>や<code class="language-plaintext highlighter-rouge">Output File Lists</code>でコピー先のパスを指定しますが、実は指定しなくてもコピー処理は成功し、動作も問題ありません。<br />
 なぜ指定するのかは「<span><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></span>
 」に詳細をまとめてます。</p>
 

@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableView separator(区切り線)を色々試す - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableView separator(区切り線)を色々試す" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="UITableViewのseparator(区切り線)は" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-10-08T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-separator-basic/5.png" />
+<meta property="twitter:title" content="【初心者向け】UITableView separator(区切り線)を色々試す" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-separator-basic","headline":"【初心者向け】UITableView separator(区切り線)を色々試す","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-08T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-separator-basic"},"description":"UITableViewのseparator(区切り線)は","image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-separator-basic/5.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-separator-basic","headline":"【初心者向け】UITableView separator(区切り線)を色々試す","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-08T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableview-separator-basic/5.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-separator-basic"},"description":"UITableViewのseparator(区切り線)は","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -230,7 +232,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 <p>右側のインセットを画面を超えるような大きな数字にすることで線を画面外に飛ばし実質消しています。<br />
-注意点として <code class="highlighter-rouge">left</code> にすると文字のインデントまでずれるので <code class="highlighter-rouge">right</code> になります。</p>
+注意点として <code class="language-plaintext highlighter-rouge">left</code> にすると文字のインデントまでずれるので <code class="language-plaintext highlighter-rouge">right</code> になります。</p>
 
 <p>もしテーブルの使い方が分からない場合は、こちらの記事をどうぞ。</p>
 
@@ -260,17 +262,17 @@
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="n">separatorInset</span> <span class="o">=</span> <span class="o">.</span><span class="n">zero</span>
 </code></pre></div></div>
 
-<p>前述した区切り線を消す要領と同じです。デフォルトでは <code class="highlighter-rouge">left</code>が15になっています。</p>
+<p>前述した区切り線を消す要領と同じです。デフォルトでは <code class="language-plaintext highlighter-rouge">left</code>が15になっています。</p>
 
 <p>またInterface builder上で消す場合は次のプロパティで操作できます。</p>
 
 <p><a href="/assets/images/2019-10-08-ios-uitableview-separator-basic/4.png"><img src="/assets/images/2019-10-08-ios-uitableview-separator-basic/4.png" width="50%" alt="" /></a></p>
 
-<p>デフォルトでは <code class="highlighter-rouge">Separator Inset</code>が<code class="highlighter-rouge">Automatic</code>になっているので<code class="highlighter-rouge">Custom</code>にすると項目が表示されます。</p>
+<p>デフォルトでは <code class="language-plaintext highlighter-rouge">Separator Inset</code>が<code class="language-plaintext highlighter-rouge">Automatic</code>になっているので<code class="language-plaintext highlighter-rouge">Custom</code>にすると項目が表示されます。</p>
 
 <h3 id="指定セルの左余白をなくす">指定セルの左余白をなくす</h3>
 
-<p>前述した区切り線を消すと同じ要領です。<code class="highlighter-rouge">left</code>を0にするだけです。</p>
+<p>前述した区切り線を消すと同じ要領です。<code class="language-plaintext highlighter-rouge">left</code>を0にするだけです。</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">cellForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
   <span class="c1">// ...</span>
   <span class="k">if</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">==</span> <span class="mi">0</span> <span class="p">{</span>

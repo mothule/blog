@@ -14,8 +14,8 @@
   <title>XcodeGenでBuild ConfigurationとSchemeの設定をする - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="XcodeGenでBuild ConfigurationとSchemeの設定をする" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="XcodeGenを使う実務で上で必ず必要になってくるBuild Configurationの設定や各ビルドパラメータの調整方法やCIで使えるための設定に関して説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-28T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/0.png" />
+<meta property="twitter:title" content="XcodeGenでBuild ConfigurationとSchemeの設定をする" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme","headline":"XcodeGenでBuild ConfigurationとSchemeの設定をする","dateModified":"2020-07-31T00:47:49+09:00","datePublished":"2020-07-28T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme"},"description":"XcodeGenを使う実務で上で必ず必要になってくるBuild Configurationの設定や各ビルドパラメータの調整方法やCIで使えるための設定に関して説明します。","image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme","headline":"XcodeGenでBuild ConfigurationとSchemeの設定をする","dateModified":"2020-07-31T00:47:49+09:00","datePublished":"2020-07-28T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-build-configuration-scheme"},"description":"XcodeGenを使う実務で上で必ず必要になってくるBuild Configurationの設定や各ビルドパラメータの調整方法やCIで使えるための設定に関して説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -209,7 +211,7 @@
   <p>XcodeGenでDebugやReleaseなどBuild Configuration自体を追加したり、Build Configuration毎にビルドパラメータを変えたりする方法について説明します。</p>
 
 <h2 id="新しいbuild-configurationの登録">新しいBuild Configurationの登録</h2>
-<p>デフォルトはDebugとReleaseですが、新しく追加する場合は<code class="highlighter-rouge">configs</code>プロパティで追加します。</p>
+<p>デフォルトはDebugとReleaseですが、新しく追加する場合は<code class="language-plaintext highlighter-rouge">configs</code>プロパティで追加します。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">configs</span><span class="pi">:</span>
   <span class="na">Debug</span><span class="pi">:</span> <span class="s">debug</span>
@@ -217,7 +219,7 @@
   <span class="na">AppStore</span><span class="pi">:</span> <span class="s">release</span>
   <span class="na">CI</span><span class="pi">:</span> <span class="s">debug</span>
 </code></pre></div></div>
-<p>例えば <code class="highlighter-rouge">Beta: release</code>とは、Build Configuration名を<code class="highlighter-rouge">Beta</code>と名付け、ベースをReleaseにしてあります。<br />
+<p>例えば <code class="language-plaintext highlighter-rouge">Beta: release</code>とは、Build Configuration名を<code class="language-plaintext highlighter-rouge">Beta</code>と名付け、ベースをReleaseにしてあります。<br />
 値の部分がdebugまたはrelease以外だとデフォルト値が適用されなくなります。</p>
 
 <h2 id="build-configuration毎にビルドパラメータを変更">Build Configuration毎にビルドパラメータを変更</h2>
@@ -226,7 +228,7 @@
 
 <h3 id="ciではassertionを無効にしてみる">CIではAssertionを無効にしてみる</h3>
 <p>例えばCI時のみ動かないassertを作ろうと思います。
-<code class="highlighter-rouge">assert(_:)</code>メソッド自体は適当です。何でもいいので説明省きます。</p>
+<code class="language-plaintext highlighter-rouge">assert(_:)</code>メソッド自体は適当です。何でもいいので説明省きます。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">#if DISABLE_ASSERTION</span>
 <span class="kd">func</span> <span class="nf">assert</span><span class="p">(</span><span class="n">_</span> <span class="nv">string</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="p">{}</span>
@@ -236,8 +238,8 @@
 <span class="p">}</span>
 <span class="cp">#endif</span>
 </code></pre></div></div>
-<p>コード側で重要なのはプリプロセッサの条件式に入ってる<code class="highlighter-rouge">DISABLE_ASSERTION</code>です。<br />
-これをXcodeGenで定義するには、<code class="highlighter-rouge">settings.configs.CI.SWIFT_ACTIVE_COMPILATION_CONDITIONS</code>に値を追加します。</p>
+<p>コード側で重要なのはプリプロセッサの条件式に入ってる<code class="language-plaintext highlighter-rouge">DISABLE_ASSERTION</code>です。<br />
+これをXcodeGenで定義するには、<code class="language-plaintext highlighter-rouge">settings.configs.CI.SWIFT_ACTIVE_COMPILATION_CONDITIONS</code>に値を追加します。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">targets</span><span class="pi">:</span>
   <span class="na">CustomBuildConfig</span><span class="pi">:</span> <span class="c1"># ← ターゲット名</span>
@@ -252,10 +254,10 @@
 
 <p><a href="/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/2.png"><img src="/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/2.png" width="100%" alt="XcodeBuildConfiguration" /></a></p>
 
-<p><code class="highlighter-rouge">settings</code>はプロジェクト仕様のルートに置くことでターゲット毎でなく全体適用させることもできます。</p>
+<p><code class="language-plaintext highlighter-rouge">settings</code>はプロジェクト仕様のルートに置くことでターゲット毎でなく全体適用させることもできます。</p>
 
 <h2 id="プロパティ名の見つけ方">プロパティ名の見つけ方</h2>
-<p>例えばXcodeのBuild Settings &gt; Development Teamを用意する場合は<code class="highlighter-rouge">DEVELOPMENT_TEAM</code>プロパティをセットします。</p>
+<p>例えばXcodeのBuild Settings &gt; Development Teamを用意する場合は<code class="language-plaintext highlighter-rouge">DEVELOPMENT_TEAM</code>プロパティをセットします。</p>
 
 <p><a href="/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/1.png"><img src="/assets/images/2020-07-28-ios-xcodegen-build-configuration-scheme/1.png" width="50%" alt="XcodeBuildSettingsDevelopmentTeam" /></a></p>
 
@@ -276,7 +278,7 @@
 これだとCIでXcode生成して実行する場合では意図したBuild Configurationになりません。<br />
 デフォルトをDebugではなくCIにする必要があります。</p>
 
-<p>デフォルトにするには<code class="highlighter-rouge">Scheme</code>を使うことで定義できます。</p>
+<p>デフォルトにするには<code class="language-plaintext highlighter-rouge">Scheme</code>を使うことで定義できます。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">schemes</span><span class="pi">:</span>
   <span class="na">CustomBuildConfig</span><span class="pi">:</span> <span class="c1"># ← スキーム名</span>

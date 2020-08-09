@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="UITableView(テーブル)の構築に必須のUITableViewDataSourceですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-10-06T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-10-06-ios-uitableview-uitableviewdatasource-separate.png" />
+<meta property="twitter:title" content="【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate","headline":"【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-06T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate"},"description":"UITableView(テーブル)の構築に必須のUITableViewDataSourceですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。","image":"https://blog.mothule.com/assets/images/2019-10-06-ios-uitableview-uitableviewdatasource-separate.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate","headline":"【初心者向け】UITableViewDataSourceを別クラス化する方法とメリット","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-06T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-06-ios-uitableview-uitableviewdatasource-separate.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewdatasource-separate"},"description":"UITableView(テーブル)の構築に必須のUITableViewDataSourceですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -209,11 +211,11 @@
 </ul>
   </div>
   <section>
-  <p>UITableView(テーブル)の構築に必須の<code class="highlighter-rouge">UITableViewDataSource</code>ですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。</p>
+  <p>UITableView(テーブル)の構築に必須の<code class="language-plaintext highlighter-rouge">UITableViewDataSource</code>ですが、ネットで見かける記事のサンプルなどでは、記事の都合上ほぼ必ずUIViewControllerにプロトコルを採用しています。</p>
 
 <p>しかし実際のアプリ開発では、必ずしもそうとは限らず ViewController が複雑になればリファクタリングとして DataSource を別クラスに分離させることもあります。</p>
 
-<p>今回は別クラスで<code class="highlighter-rouge">UITableViewDataSource</code>プロトコルを実装する方法とそうすることのメリットについて説明します。</p>
+<p>今回は別クラスで<code class="language-plaintext highlighter-rouge">UITableViewDataSource</code>プロトコルを実装する方法とそうすることのメリットについて説明します。</p>
 
 <h2 id="データソースの前提">データソースの前提</h2>
 <p>実装の前に、データソースについて理解する必要があります。この理解が設計に関係するためです。</p>
@@ -264,7 +266,7 @@
 
 <h2 id="uitableviewdatasourceを分離する">UITableViewDataSourceを分離する</h2>
 
-<p>次コードは <code class="highlighter-rouge">DataSource</code> クラスを用意し <code class="highlighter-rouge">User</code> をデータ連携して <code class="highlighter-rouge">UITableViewDataSource</code> を ViewControllerから分離しています。</p>
+<p>次コードは <code class="language-plaintext highlighter-rouge">DataSource</code> クラスを用意し <code class="language-plaintext highlighter-rouge">User</code> をデータ連携して <code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> を ViewControllerから分離しています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
     <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="o">!</span>
@@ -312,25 +314,25 @@
 </code></pre></div></div>
 
 <ul>
-  <li><code class="highlighter-rouge">UITableViewDataSource</code> は <code class="highlighter-rouge">NSObjectProtocol</code> を採用しているため、 <code class="highlighter-rouge">NSObject</code>を継承する必要があります。</li>
-  <li><code class="highlighter-rouge">UITableView.dataSource</code> は <strong>弱参照</strong> のためインスタンスのオーナーを別で保つ必要があるため <code class="highlighter-rouge">ViewController</code> にもたせています。</li>
+  <li><code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> は <code class="language-plaintext highlighter-rouge">NSObjectProtocol</code> を採用しているため、 <code class="language-plaintext highlighter-rouge">NSObject</code>を継承する必要があります。</li>
+  <li><code class="language-plaintext highlighter-rouge">UITableView.dataSource</code> は <strong>弱参照</strong> のためインスタンスのオーナーを別で保つ必要があるため <code class="language-plaintext highlighter-rouge">ViewController</code> にもたせています。</li>
   <li>これは前提でも説明したようにデータソースとViewControllerのスコープは同じなので理にかなっています。</li>
 </ul>
 
 <h2 id="よりdatasourceを疎結合にする">よりDataSourceを疎結合にする</h2>
 
 <p>前述した実装でも大抵は問題ないのですが、「テーブルのレイアウトは同じがデータのみが異なる」というケースには対応ができません。<br />
-なぜなら、<code class="highlighter-rouge">DataSource</code>内部で<code class="highlighter-rouge">User</code>を持っているためです。</p>
+なぜなら、<code class="language-plaintext highlighter-rouge">DataSource</code>内部で<code class="language-plaintext highlighter-rouge">User</code>を持っているためです。</p>
 
-<p><code class="highlighter-rouge">DataSource</code>が<code class="highlighter-rouge">User</code>を知りすぎているのも気になります。 <br />
-本来なら<code class="highlighter-rouge">DataSource</code>は<code class="highlighter-rouge">User</code>は知る必要はなく、テーブルに表示したいデータが欲しいだけだからです。</p>
+<p><code class="language-plaintext highlighter-rouge">DataSource</code>が<code class="language-plaintext highlighter-rouge">User</code>を知りすぎているのも気になります。 <br />
+本来なら<code class="language-plaintext highlighter-rouge">DataSource</code>は<code class="language-plaintext highlighter-rouge">User</code>は知る必要はなく、テーブルに表示したいデータが欲しいだけだからです。</p>
 
-<p>これを<code class="highlighter-rouge">DataSource</code>のために専用のデータモデルを用意して<code class="highlighter-rouge">User</code>を<code class="highlighter-rouge">DataSource</code>から追い出します。<br />
+<p>これを<code class="language-plaintext highlighter-rouge">DataSource</code>のために専用のデータモデルを用意して<code class="language-plaintext highlighter-rouge">User</code>を<code class="language-plaintext highlighter-rouge">DataSource</code>から追い出します。<br />
 そして他モデルでも使える使えるようにデータモデルを抽象化します。</p>
 
 <h3 id="データモデルを用意する">データモデルを用意する</h3>
 
-<p><code class="highlighter-rouge">DataSource</code>ではデータ数と<code class="highlighter-rouge">name</code>属性を必要としているので、これを抽象化します。</p>
+<p><code class="language-plaintext highlighter-rouge">DataSource</code>ではデータ数と<code class="language-plaintext highlighter-rouge">name</code>属性を必要としているので、これを抽象化します。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">DataSourceModel</span> <span class="p">{</span>
   <span class="k">var</span> <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
@@ -362,22 +364,22 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>これでデータへのアクセスはすべて<code class="highlighter-rouge">DataSourceModel</code>を介することで <code class="highlighter-rouge">DataSource</code> に他ドメインなクラスがいなくなりました。</p>
+<p>これでデータへのアクセスはすべて<code class="language-plaintext highlighter-rouge">DataSourceModel</code>を介することで <code class="language-plaintext highlighter-rouge">DataSource</code> に他ドメインなクラスがいなくなりました。</p>
 
 <h3 id="データソースにデータを渡す">データソースにデータを渡す</h3>
 
-<p>次にデータソース(<code class="highlighter-rouge">DataSource</code>)にデータ(<code class="highlighter-rouge">User</code>)を渡す方法についてです。</p>
+<p>次にデータソース(<code class="language-plaintext highlighter-rouge">DataSource</code>)にデータ(<code class="language-plaintext highlighter-rouge">User</code>)を渡す方法についてです。</p>
 
-<p>これは渡すデータ(<code class="highlighter-rouge">User</code>)が<code class="highlighter-rouge">DataSourceModel</code>プロトコルに準拠していれば渡すことができるようになります。</p>
+<p>これは渡すデータ(<code class="language-plaintext highlighter-rouge">User</code>)が<code class="language-plaintext highlighter-rouge">DataSourceModel</code>プロトコルに準拠していれば渡すことができるようになります。</p>
 
 <p>これは次のコードで実現できます。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">User</span><span class="p">:</span> <span class="kt">DataSourceModel</span> <span class="p">{</span> <span class="p">}</span>
 </code></pre></div></div>
 
-<p>これは <code class="highlighter-rouge">DataSourceModel.name</code> を <code class="highlighter-rouge">User.name</code> が満たしているためこのような実装になります。</p>
+<p>これは <code class="language-plaintext highlighter-rouge">DataSourceModel.name</code> を <code class="language-plaintext highlighter-rouge">User.name</code> が満たしているためこのような実装になります。</p>
 
-<p>あとは<code class="highlighter-rouge">DataSource</code>のオーナーであるViewControllerからデータを渡せば完了です。</p>
+<p>あとは<code class="language-plaintext highlighter-rouge">DataSource</code>のオーナーであるViewControllerからデータを渡せば完了です。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
   <span class="c1">// ...</span>
@@ -401,7 +403,7 @@
 
 <p><strong>レイアウト同じだがデータが異なる場合に対応できる</strong><br />
 ここまで読んだ人ならこのメリットを理解できると思います。
-<code class="highlighter-rouge">UITableViewDataSource</code> はViewControllerではなく<code class="highlighter-rouge">UITableView</code>と共存してるので<br />
+<code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> はViewControllerではなく<code class="language-plaintext highlighter-rouge">UITableView</code>と共存してるので<br />
 別のViewControllerで同じUITableViewを使う場合に流用できるためDRY違反になりません。</p>
 
 <p><strong>ViewControllerからテーブル処理を分離できる</strong><br />

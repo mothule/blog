@@ -14,8 +14,8 @@
   <title>XcodeGenで最低限のXcodeプロジェクトを生成する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="XcodeGenで最低限のXcodeプロジェクトを生成する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="XcodeGenを実際に使って最小プロジェクトを作りながら少しずつ付け足して単体テスト付きのiOSアプリプロジェクトを作るまでの流れを説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-28T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png" />
+<meta property="twitter:title" content="XcodeGenで最低限のXcodeプロジェクトを生成する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-basic-usage","headline":"XcodeGenで最低限のXcodeプロジェクトを生成する","dateModified":"2020-07-29T22:26:25+09:00","datePublished":"2020-07-28T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-basic-usage"},"description":"XcodeGenを実際に使って最小プロジェクトを作りながら少しずつ付け足して単体テスト付きのiOSアプリプロジェクトを作るまでの流れを説明します。","image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-basic-usage","headline":"XcodeGenで最低限のXcodeプロジェクトを生成する","dateModified":"2020-07-29T22:26:25+09:00","datePublished":"2020-07-28T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-basic-usage/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-basic-usage"},"description":"XcodeGenを実際に使って最小プロジェクトを作りながら少しずつ付け足して単体テスト付きのiOSアプリプロジェクトを作るまでの流れを説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -250,7 +252,7 @@ No project spec found at /your/workspace/project.yml
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>xcodegen generate
 Parsing project spec failed: Decoding failed at <span class="s2">"name"</span>: Nothing found
 </code></pre></div></div>
-<p><code class="highlighter-rouge">name</code>のデコードに失敗しました。どうやら<code class="highlighter-rouge">name</code>を探しているようです。</p>
+<p><code class="language-plaintext highlighter-rouge">name</code>のデコードに失敗しました。どうやら<code class="language-plaintext highlighter-rouge">name</code>を探しているようです。</p>
 
 <h3 id="nameを入れたプロジェクト仕様ファイルで実行">nameを入れたプロジェクト仕様ファイルで実行</h3>
 
@@ -307,16 +309,16 @@ Created project at /your/workspace/MinimumProject.xcodeproj
     <span class="na">platform</span><span class="pi">:</span> <span class="s">iOS</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">targets</code>の子にはプロジェクト名が入ります。<br />
-今回は<code class="highlighter-rouge">iOSMinimumProject</code>というターゲット名にしてます。</p>
+<p><code class="language-plaintext highlighter-rouge">targets</code>の子にはプロジェクト名が入ります。<br />
+今回は<code class="language-plaintext highlighter-rouge">iOSMinimumProject</code>というターゲット名にしてます。</p>
 
-<p><code class="highlighter-rouge">type</code>には<a href="https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#product-type">Product Type</a>の何れかをセットします。
-今回は単純なアプリケーションなので<code class="highlighter-rouge">application</code>になります。</p>
+<p><code class="language-plaintext highlighter-rouge">type</code>には<a href="https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#product-type">Product Type</a>の何れかをセットします。
+今回は単純なアプリケーションなので<code class="language-plaintext highlighter-rouge">application</code>になります。</p>
 
-<p><code class="highlighter-rouge">platform</code>には<a href="https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#platform">Platform</a>の何れかをセットします。
-今回はiOSなので<code class="highlighter-rouge">iOS</code>になります。</p>
+<p><code class="language-plaintext highlighter-rouge">platform</code>には<a href="https://github.com/yonaskolb/XcodeGen/blob/master/Docs/ProjectSpec.md#platform">Platform</a>の何れかをセットします。
+今回はiOSなので<code class="language-plaintext highlighter-rouge">iOS</code>になります。</p>
 
-<p>これで<code class="highlighter-rouge">xcodegen generate</code>を実行した結果が下図になります。
+<p>これで<code class="language-plaintext highlighter-rouge">xcodegen generate</code>を実行した結果が下図になります。
 <a href="/assets/images/2020-07-28-ios-xcodegen-basic-usage/3.png"><img src="/assets/images/2020-07-28-ios-xcodegen-basic-usage/3.png" width="100%" alt="iOSMinimumProjectXcode" /></a></p>
 
 <p>プロジェクトは追加されています。
@@ -324,7 +326,7 @@ Created project at /your/workspace/MinimumProject.xcodeproj
 
 <h4 id="マルチプラットフォームはで囲む">マルチプラットフォームは[]で囲む</h4>
 <p>もし複数プラットフォーム対応の場合は
-<code class="highlighter-rouge">platform: [iOS, tvOS]</code>のように<code class="highlighter-rouge">[]</code>で囲みます。</p>
+<code class="language-plaintext highlighter-rouge">platform: [iOS, tvOS]</code>のように<code class="language-plaintext highlighter-rouge">[]</code>で囲みます。</p>
 
 <h3 id="infoplistが必要">Info.plistが必要</h3>
 <p>IdentityやDevice Orientationなどは元データはXcodeプロジェクトに登録されているのではなく、Info.plistに登録されてます。</p>
@@ -332,13 +334,13 @@ Created project at /your/workspace/MinimumProject.xcodeproj
 <p><a href="/assets/images/2020-07-28-ios-xcodegen-basic-usage/4.png"><img src="/assets/images/2020-07-28-ios-xcodegen-basic-usage/4.png" width="100%" alt="Info.plist" /></a></p>
 
 <p>なので次はInfo.plistやソースファイルなどが入ったフォルダを用意します。<br />
-フォルダ名は任意ですが、<code class="highlighter-rouge">iOSMinimumProject</code>という名前にしときます。<br />
-そしてtargetのルートディレクトリとして<code class="highlighter-rouge">sources</code>プロパティでパスを渡します。</p>
+フォルダ名は任意ですが、<code class="language-plaintext highlighter-rouge">iOSMinimumProject</code>という名前にしときます。<br />
+そしてtargetのルートディレクトリとして<code class="language-plaintext highlighter-rouge">sources</code>プロパティでパスを渡します。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">sources</span><span class="pi">:</span> <span class="s">iOSMinimumProject</span>
 </code></pre></div></div>
 
-<p>これで<code class="highlighter-rouge">xcodegen generate</code>を実行すると無事不足してた部分が追加されます。</p>
+<p>これで<code class="language-plaintext highlighter-rouge">xcodegen generate</code>を実行すると無事不足してた部分が追加されます。</p>
 
 <p><a href="/assets/images/2020-07-28-ios-xcodegen-basic-usage/5.png"><img src="/assets/images/2020-07-28-ios-xcodegen-basic-usage/5.png" width="100%" alt="iOSMinimumProjectXcode" /></a></p>
 
@@ -361,14 +363,14 @@ Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒
 <h3 id="バンドルidを設定する">バンドルIDを設定する</h3>
 
 <p>キャプチャ見ると分かりますが、Bundle Identifierが空のままです。<br />
-これは<code class="highlighter-rouge">bundleIdPrefix</code>プロパティをセットすることでいい感じにセットしてくれます。<br />
-このプロパティは<code class="highlighter-rouge">targets</code>ではなくルートに<code class="highlighter-rouge">options</code>を用意してその中でセットとなります。</p>
+これは<code class="language-plaintext highlighter-rouge">bundleIdPrefix</code>プロパティをセットすることでいい感じにセットしてくれます。<br />
+このプロパティは<code class="language-plaintext highlighter-rouge">targets</code>ではなくルートに<code class="language-plaintext highlighter-rouge">options</code>を用意してその中でセットとなります。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
   <span class="na">bundleIdPrefix</span><span class="pi">:</span> <span class="s">com.mothule</span>
 </code></pre></div></div>
 
-<p>これで<code class="highlighter-rouge">xcodegen generate</code>を実行すると無事bundle Identifierがセットされます。</p>
+<p>これで<code class="language-plaintext highlighter-rouge">xcodegen generate</code>を実行すると無事bundle Identifierがセットされます。</p>
 
 <p><a href="/assets/images/2020-07-28-ios-xcodegen-basic-usage/6.png"><img src="/assets/images/2020-07-28-ios-xcodegen-basic-usage/6.png" width="100%" alt="iOSMinimumProjectXcode" /></a></p>
 
@@ -382,10 +384,10 @@ Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒
 
 <h2 id="テストターゲットを追加する">テストターゲットを追加する</h2>
 <p>実務ではプロダクトターゲットだけでなく単体テストとしてテストターゲットも必要になります。<br />
-先程の<code class="highlighter-rouge">iOSMinimumProject</code>にテストターゲットを追加してみます。</p>
+先程の<code class="language-plaintext highlighter-rouge">iOSMinimumProject</code>にテストターゲットを追加してみます。</p>
 
 <h3 id="xcodeでテストフォルダを生成する">Xcodeでテストフォルダを生成する</h3>
-<p>まず最初にXcodeから<code class="highlighter-rouge">Unit Testing Bundle</code>を選択して追加します。</p>
+<p>まず最初にXcodeから<code class="language-plaintext highlighter-rouge">Unit Testing Bundle</code>を選択して追加します。</p>
 
 <p><a href="/assets/images/2020-07-28-ios-xcodegen-basic-usage/7.png"><img src="/assets/images/2020-07-28-ios-xcodegen-basic-usage/7.png" width="200px" alt="UnitTestingBundle" /></a></p>
 
@@ -393,7 +395,7 @@ Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒
 
 <h3 id="プロジェクト仕様にテストターゲット追加する">プロジェクト仕様にテストターゲット追加する</h3>
 <p>そして新しくプロジェクト仕様にターゲットを次のように追加します。　　
-例えばテストターゲット名が<code class="highlighter-rouge">iOSWithUTProjTests</code>だとしたら次のようになります。</p>
+例えばテストターゲット名が<code class="language-plaintext highlighter-rouge">iOSWithUTProjTests</code>だとしたら次のようになります。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">targets</span><span class="pi">:</span>
   <span class="na">iOSWithUTProjTests</span><span class="pi">:</span>
@@ -404,17 +406,17 @@ Xcodeを立ち上げて適当にプロジェクトを生成した後に、一緒
       <span class="pi">-</span> <span class="na">target</span><span class="pi">:</span> <span class="s">iOSWithUTProj</span>
 </code></pre></div></div>
 
-<p>新しいプロパティとして<code class="highlighter-rouge">dependencies</code>と<code class="highlighter-rouge">target</code>プロパティがあります。<br />
-<code class="highlighter-rouge">dependencies</code>はこのターゲットに依存するライブラリなどを列挙します。<br />
-今回はターゲットなので<code class="highlighter-rouge">target</code>プロパティを使い、テスト対象のターゲット名(<code class="highlighter-rouge">iOSWithUTProj</code>)をセットします。</p>
+<p>新しいプロパティとして<code class="language-plaintext highlighter-rouge">dependencies</code>と<code class="language-plaintext highlighter-rouge">target</code>プロパティがあります。<br />
+<code class="language-plaintext highlighter-rouge">dependencies</code>はこのターゲットに依存するライブラリなどを列挙します。<br />
+今回はターゲットなので<code class="language-plaintext highlighter-rouge">target</code>プロパティを使い、テスト対象のターゲット名(<code class="language-plaintext highlighter-rouge">iOSWithUTProj</code>)をセットします。</p>
 
 <p>こちらも<a href="https://github.com/mothule/research_xcodegen/tree/master/ios_with_ut_proj">GitHub</a>に上げてます。</p>
 
 <h4 id="dependencies--targetなくともテストターゲットは追加されるが">dependencies &gt; targetなくともテストターゲットは追加されるが</h4>
-<p><code class="highlighter-rouge">dependencies &gt; target</code>を入れずともXcodeプロジェクトにUTターゲットは生成されます。<br />
+<p><code class="language-plaintext highlighter-rouge">dependencies &gt; target</code>を入れずともXcodeプロジェクトにUTターゲットは生成されます。<br />
 が、実行できません。<br />
-なぜなら、<code class="highlighter-rouge">Testing &gt; Host Application</code> がNoneになっているためです。<br />
-この部分をセットするために、<code class="highlighter-rouge">dependencies</code>を追加してます。</p>
+なぜなら、<code class="language-plaintext highlighter-rouge">Testing &gt; Host Application</code> がNoneになっているためです。<br />
+この部分をセットするために、<code class="language-plaintext highlighter-rouge">dependencies</code>を追加してます。</p>
 
 <h2 id="carthageやcocoapods環境を構築する">CarthageやCocoaPods環境を構築する</h2>
 <p>XcodeGenを使って最小プロジェクトからUnitTest付きiOSアプリの最小プロジェクトを作りました。</p>

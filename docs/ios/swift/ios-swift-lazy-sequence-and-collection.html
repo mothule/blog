@@ -14,8 +14,8 @@
   <title>Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="Swiftで提供されてる高階関数に遅延評価を取り入れることでそのままでは非効率な処理フローを効率よくする方法について説明する。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-08-07T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-lazy-sequence-and-collection/0.png" />
+<meta property="twitter:title" content="Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection","headline":"Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する","dateModified":"2020-08-07T03:55:23+09:00","datePublished":"2020-08-07T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection"},"description":"Swiftで提供されてる高階関数に遅延評価を取り入れることでそのままでは非効率な処理フローを効率よくする方法について説明する。","image":"https://blog.mothule.com/assets/images/2020-08-07-ios-swift-lazy-sequence-and-collection/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection","headline":"Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する","dateModified":"2020-08-07T03:55:23+09:00","datePublished":"2020-08-07T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-08-07-ios-swift-lazy-sequence-and-collection/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection"},"description":"Swiftで提供されてる高階関数に遅延評価を取り入れることでそのままでは非効率な処理フローを効率よくする方法について説明する。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -226,7 +228,7 @@
 
 <p>例えば上記コードを実行すると、コンソールには下記が出力されます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>toString(from:)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>toString(from:)
 Will call count
 1
 </code></pre></div></div>
@@ -270,11 +272,11 @@ Will call count
 <h2 id="lazy遅延評価を使う">lazy(遅延評価)を使う</h2>
 <p>SwiftのSequenceやCollectionにはlazy機能があります。<br />
 これは実際の値が必要になるまで高階関数内クロージャを実行しません。<br />
-実際の値とは<code class="highlighter-rouge">isEmpty</code>や<code class="highlighter-rouge">count</code>、<code class="highlighter-rouge">first</code>などです。</p>
+実際の値とは<code class="language-plaintext highlighter-rouge">isEmpty</code>や<code class="language-plaintext highlighter-rouge">count</code>、<code class="language-plaintext highlighter-rouge">first</code>などです。</p>
 
 <h3 id="遅延を確認する">遅延を確認する</h3>
 
-<p>lazyを使うには、高階関数を呼ぶ前に<code class="highlighter-rouge">lazy</code>メソッドを呼びます。<br />
+<p>lazyを使うには、高階関数を呼ぶ前に<code class="language-plaintext highlighter-rouge">lazy</code>メソッドを呼びます。<br />
 冒頭に説明したコードを使ってlazy化します。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">toString</span><span class="p">(</span><span class="n">from</span> <span class="nv">val</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">String</span> <span class="p">{</span>
@@ -294,12 +296,12 @@ Will call count
 
 <p>これを実行するとコンソールには下記が出力されます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Will call count
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Will call count
 toString(from:)
 1
 </code></pre></div></div>
 
-<p>高階関数内で呼ばれている<code class="highlighter-rouge">toString(from:)</code>が<code class="highlighter-rouge">Will call count</code>より後に来ています。</p>
+<p>高階関数内で呼ばれている<code class="language-plaintext highlighter-rouge">toString(from:)</code>が<code class="language-plaintext highlighter-rouge">Will call count</code>より後に来ています。</p>
 
 <h3 id="効率化を確認する">効率化を確認する</h3>
 
@@ -319,17 +321,17 @@ toString(from:)
 
 <p>これを実行するとコンソールは下記を出力します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in filter
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>in filter
 false
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">in filter</code>が1回しか呼ばれていないです。
-これは1回目のループで<code class="highlighter-rouge">true</code>になったことで<code class="highlighter-rouge">isEmpty</code>の判断ができるようになったので処理を中断してます。</p>
+<p><code class="language-plaintext highlighter-rouge">in filter</code>が1回しか呼ばれていないです。
+これは1回目のループで<code class="language-plaintext highlighter-rouge">true</code>になったことで<code class="language-plaintext highlighter-rouge">isEmpty</code>の判断ができるようになったので処理を中断してます。</p>
 
-<p>ちなみに<code class="highlighter-rouge">isEmpty</code>を<code class="highlighter-rouge">count</code>にすると、lazyしてないコード同様に全てのループを実行します。<br />
-これは<code class="highlighter-rouge">count</code>の結果を判断するには全部の処理を通さないと結果が分からないためです。</p>
+<p>ちなみに<code class="language-plaintext highlighter-rouge">isEmpty</code>を<code class="language-plaintext highlighter-rouge">count</code>にすると、lazyしてないコード同様に全てのループを実行します。<br />
+これは<code class="language-plaintext highlighter-rouge">count</code>の結果を判断するには全部の処理を通さないと結果が分からないためです。</p>
 
-<p>つまり<code class="highlighter-rouge">lazy</code>を使うことで途中で結果が得られたら中断し得られない場合は継続します。</p>
+<p>つまり<code class="language-plaintext highlighter-rouge">lazy</code>を使うことで途中で結果が得られたら中断し得られない場合は継続します。</p>
 
 <h2 id="全部lazyというわけではない">全部lazyというわけではない</h2>
 <p>とりあえず全部lazyにしとけば良いというものではありません。<br />

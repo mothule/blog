@@ -14,8 +14,8 @@
   <title>Mac上のnginx設定ファイルをドメイン毎に分ける - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Mac上のnginx設定ファイルをドメイン毎に分ける" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-26T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png" />
+<meta property="twitter:title" content="Mac上のnginx設定ファイルをドメイン毎に分ける" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac","headline":"Mac上のnginx設定ファイルをドメイン毎に分ける","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-26T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。","image":"https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac","headline":"Mac上のnginx設定ファイルをドメイン毎に分ける","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-26T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-customize-on-mac/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-customize-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。 今回はnginx.confの設定内容をドメイン毎、つまりアプリ毎に分けます。 分かれてることで複数のアプリ開発を1つのnginx.cnfに集約されなくなり管理しやすくなります。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -194,17 +196,17 @@
     <ul>
       <li><a href="#macのnginxは開発用途がメイン">Macのnginxは開発用途がメイン</a></li>
       <li><a href="#1macに複数ドメインを立ち上げることはよくある">1Macに複数ドメインを立ち上げることはよくある</a></li>
-      <li><a href="#nginxconfに全ドメイン設定を記述できる"><code class="highlighter-rouge">nginx.conf</code>に全ドメイン設定を記述できる</a></li>
+      <li><a href="#nginxconfに全ドメイン設定を記述できる"><code class="language-plaintext highlighter-rouge">nginx.conf</code>に全ドメイン設定を記述できる</a></li>
       <li><a href="#長い設定ファイルはメンテナンスしにくい">長い設定ファイルはメンテナンスしにくい</a></li>
       <li><a href="#開発不要になればそのドメイン設定は不要になる">開発不要になればそのドメイン設定は不要になる</a></li>
-      <li><a href="#macのnginxconfは本番サーバと異なり変更頻度が高い">Macの<code class="highlighter-rouge">nginx.conf</code>は本番サーバと異なり変更頻度が高い</a></li>
+      <li><a href="#macのnginxconfは本番サーバと異なり変更頻度が高い">Macの<code class="language-plaintext highlighter-rouge">nginx.conf</code>は本番サーバと異なり変更頻度が高い</a></li>
       <li><a href="#ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる">ドメイン毎に設定ファイルが分かれていれば他のドメイン設定を消すリスクを回避できる</a></li>
     </ul>
   </li>
   <li><a href="#includeディレクティブでアプリ別設定ファイル構築する">includeディレクティブでアプリ別設定ファイル構築する</a>
     <ul>
       <li><a href="#ドメイン別設定ファイル置き場を用意する">ドメイン別設定ファイル置き場を用意する</a></li>
-      <li><a href="#nginxconfにincludeでドメイン別設定ファイルをロードする"><code class="highlighter-rouge">nginx.conf</code>に<code class="highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</a></li>
+      <li><a href="#nginxconfにincludeでドメイン別設定ファイルをロードする"><code class="language-plaintext highlighter-rouge">nginx.conf</code>に<code class="language-plaintext highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</a></li>
       <li><a href="#ドメイン別設定ファイルを用意する">ドメイン別設定ファイルを用意する</a></li>
     </ul>
   </li>
@@ -214,15 +216,15 @@
   </div>
   <section>
   <p>MacでWebサーバnginxを立ち上げるための入門記事シリーズ4回目です。
-今回は<code class="highlighter-rouge">nginx.conf</code>の設定内容をドメイン毎、つまりアプリ毎に分けます。
-分かれてることで複数のアプリ開発を1つの<code class="highlighter-rouge">nginx.cnf</code>に集約されなくなり管理しやすくなります。</p>
+今回は<code class="language-plaintext highlighter-rouge">nginx.conf</code>の設定内容をドメイン毎、つまりアプリ毎に分けます。
+分かれてることで複数のアプリ開発を1つの<code class="language-plaintext highlighter-rouge">nginx.cnf</code>に集約されなくなり管理しやすくなります。</p>
 
 <p>▼前回記事はこちらになります。<br />
 <span><a href="/web/nginx/web-nginx-getting-started-step3-on-mac">Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</a></span></p>
 
 <h2 id="ドメイン毎に設定を分ける理由">ドメイン毎に設定を分ける理由</h2>
 
-<p><code class="highlighter-rouge">nginx.cnf</code>に直接記述せず、ドメイン毎に設定ファイルを用意する理由とは何でしょうか？
+<p><code class="language-plaintext highlighter-rouge">nginx.cnf</code>に直接記述せず、ドメイン毎に設定ファイルを用意する理由とは何でしょうか？
 Macでnginxを使うケースは分けたほうが恩恵をえられます。
 その理由について簡単に説明します。</p>
 
@@ -241,27 +243,27 @@ Macでnginxを使うケースは分けたほうが恩恵をえられます。
 </ul>
 
 <p>しかもアプリBだと、WebとBackend両方を立ち上げが必要なケースもあると思います。
-これら各nginx設定は、特に工夫しなければすべて<code class="highlighter-rouge">nginx.conf</code>に書かれるかと思います。</p>
+これら各nginx設定は、特に工夫しなければすべて<code class="language-plaintext highlighter-rouge">nginx.conf</code>に書かれるかと思います。</p>
 
-<h3 id="nginxconfに全ドメイン設定を記述できる"><code class="highlighter-rouge">nginx.conf</code>に全ドメイン設定を記述できる</h3>
-<p>実は<code class="highlighter-rouge">nginx.conf</code>は複数ドメインの設定を<code class="highlighter-rouge">nginx.conf</code>にまとめて全部記述することは可能です。
+<h3 id="nginxconfに全ドメイン設定を記述できる"><code class="language-plaintext highlighter-rouge">nginx.conf</code>に全ドメイン設定を記述できる</h3>
+<p>実は<code class="language-plaintext highlighter-rouge">nginx.conf</code>は複数ドメインの設定を<code class="language-plaintext highlighter-rouge">nginx.conf</code>にまとめて全部記述することは可能です。
 しかしそれによりなにかと長期的に面倒なことが続きます。
 それは可読性と他ドメイン影響範囲に悪影響することです。</p>
 
 <h3 id="長い設定ファイルはメンテナンスしにくい">長い設定ファイルはメンテナンスしにくい</h3>
 <p>前述はドメイン3つですが、人によっては5~10個ドメインが入っているかと思います。
-そうなってくると、<code class="highlighter-rouge">nginx.conf</code>には10個の設定が全部記述されるためファイルがとても長くなります。
+そうなってくると、<code class="language-plaintext highlighter-rouge">nginx.conf</code>には10個の設定が全部記述されるためファイルがとても長くなります。
 その長くて読みにくい設定ファイルから不要な項目を削除する必要があります。</p>
 
 <h3 id="開発不要になればそのドメイン設定は不要になる">開発不要になればそのドメイン設定は不要になる</h3>
 <p>ドメイン開発が終了すればそのドメインの設定は不要となるため、削除すると思います。
-それも放置すると<code class="highlighter-rouge">nginx.conf</code>がとんでも長い行となるためです。</p>
+それも放置すると<code class="language-plaintext highlighter-rouge">nginx.conf</code>がとんでも長い行となるためです。</p>
 
 <p>削除するときにどの項目を削除するべきなのか一つ一つ読み解いて行く必要があります。
 これは変更により他ドメインへの影響範囲内になりますし、誤って消してしまうと動かなくなります。
 本番サーバはチューリング用途ですが、Macだと開発環境つど変更必要です。</p>
 
-<h3 id="macのnginxconfは本番サーバと異なり変更頻度が高い">Macの<code class="highlighter-rouge">nginx.conf</code>は本番サーバと異なり変更頻度が高い</h3>
+<h3 id="macのnginxconfは本番サーバと異なり変更頻度が高い">Macの<code class="language-plaintext highlighter-rouge">nginx.conf</code>は本番サーバと異なり変更頻度が高い</h3>
 
 <p>本番サーバのnginx.confは一度組み込んでしまえばパフォーマンス・チューニング用途以外で変えることは少ないです。
 しかしMac上のnginxは開発用途がメインで、開発不要になれば削除作業が起きますし、新しくアプリ開発すれば追加作業が起きます。
@@ -279,31 +281,31 @@ Macでnginxを使うケースは分けたほうが恩恵をえられます。
 <h2 id="includeディレクティブでアプリ別設定ファイル構築する">includeディレクティブでアプリ別設定ファイル構築する</h2>
 <p>では実際の構築方法について説明します。</p>
 
-<p>仕組みは単純で、ドメイン別の設定ファイルを<code class="highlighter-rouge">include</code>ディレクティブでロードしているだけです。
-<code class="highlighter-rouge">include</code>ディレクティブには<code class="highlighter-rouge">*</code>でまとめてファイル指定もできるので、これを使います。</p>
+<p>仕組みは単純で、ドメイン別の設定ファイルを<code class="language-plaintext highlighter-rouge">include</code>ディレクティブでロードしているだけです。
+<code class="language-plaintext highlighter-rouge">include</code>ディレクティブには<code class="language-plaintext highlighter-rouge">*</code>でまとめてファイル指定もできるので、これを使います。</p>
 
 <p>流れは次の通りです。</p>
 
 <ol>
   <li>ドメイン別設定ファイル置き場を用意する</li>
-  <li><code class="highlighter-rouge">nginx.conf</code>に<code class="highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</li>
+  <li><code class="language-plaintext highlighter-rouge">nginx.conf</code>に<code class="language-plaintext highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</li>
   <li>ドメイン別設定ファイルを用意する</li>
 </ol>
 
 <h3 id="ドメイン別設定ファイル置き場を用意する">ドメイン別設定ファイル置き場を用意する</h3>
 <p>まずは設定ファイルを置く場所を用意します。場所といってもフォルダです。
-フォルダの中に入れておくことで<code class="highlighter-rouge">include</code>と<code class="highlighter-rouge">*</code>でまとめてロードできて便利だからです。</p>
+フォルダの中に入れておくことで<code class="language-plaintext highlighter-rouge">include</code>と<code class="language-plaintext highlighter-rouge">*</code>でまとめてロードできて便利だからです。</p>
 
-<p>置き場となるフォルダ名は<code class="highlighter-rouge">servers</code>とします。これは<code class="highlighter-rouge">nginx.conf.default</code>で既にそういう記述があるためです。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mkdir /usr/local/etc/nginx/servers
+<p>置き場となるフォルダ名は<code class="language-plaintext highlighter-rouge">servers</code>とします。これは<code class="language-plaintext highlighter-rouge">nginx.conf.default</code>で既にそういう記述があるためです。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> /usr/local/etc/nginx/servers
 </code></pre></div></div>
 
-<h3 id="nginxconfにincludeでドメイン別設定ファイルをロードする"><code class="highlighter-rouge">nginx.conf</code>に<code class="highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</h3>
+<h3 id="nginxconfにincludeでドメイン別設定ファイルをロードする"><code class="language-plaintext highlighter-rouge">nginx.conf</code>に<code class="language-plaintext highlighter-rouge">include</code>でドメイン別設定ファイルをロードする</h3>
 
-<p>次は<code class="highlighter-rouge">nginx.conf</code>に先程用意したフォルダ内の設定ファイルを全てロードする処理を記述します。</p>
+<p>次は<code class="language-plaintext highlighter-rouge">nginx.conf</code>に先程用意したフォルダ内の設定ファイルを全てロードする処理を記述します。</p>
 
 <p><em>nginx.conf</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   # 全サーバ共通設定はここ
 
   # 各個別設定はここ
@@ -311,16 +313,16 @@ Macでnginxを使うケースは分けたほうが恩恵をえられます。
 }
 </code></pre></div></div>
 
-<p>これにより<code class="highlighter-rouge">servers</code>フォルダ内のファイルを全てロードするようになります。</p>
+<p>これにより<code class="language-plaintext highlighter-rouge">servers</code>フォルダ内のファイルを全てロードするようになります。</p>
 
 <h3 id="ドメイン別設定ファイルを用意する">ドメイン別設定ファイルを用意する</h3>
 
 <p>最後はそれぞれドメイン毎の設定ファイルを用意します。
 ファイル名はドメイン名と同じ方がわかりやすいです。
-今回はローカルなので<code class="highlighter-rouge">api.localhost</code>というファイル名を用意します。</p>
+今回はローカルなので<code class="language-plaintext highlighter-rouge">api.localhost</code>というファイル名を用意します。</p>
 
 <p>内容は動作確認できればいいので適当に用意しました。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   listen 80;
   server_name api.localhost;
   root /usr/local/var/www;
@@ -328,7 +330,7 @@ Macでnginxを使うケースは分けたほうが恩恵をえられます。
 </code></pre></div></div>
 
 <p>以上で設定は完了です、nginxを再起動するば反映されます。
- この設定ファイルであれば、<code class="highlighter-rouge">http://api.localhost</code> にアクセスすると、<code class="highlighter-rouge">/usr/local/var/www</code>フォルダの<code class="highlighter-rouge">index.html</code>のレスポンスを返すようになります。</p>
+ この設定ファイルであれば、<code class="language-plaintext highlighter-rouge">http://api.localhost</code> にアクセスすると、<code class="language-plaintext highlighter-rouge">/usr/local/var/www</code>フォルダの<code class="language-plaintext highlighter-rouge">index.html</code>のレスポンスを返すようになります。</p>
 
 <h2 id="慣習に倣ったバーチャルホスト構築">慣習に倣ったバーチャルホスト構築</h2>
 <p>今回紹介したドメイン毎に設定ファイルを分ける方法はnginxではバーチャルホスト構築時は少し慣習から外れた方法なので、Apacheなどからしたら少し分かりにくいかもしれません。目的はローカル上で複数ドメインをMacなど開発用とで立ち上げることなので、問題はないのですが、これが本番サーバの場合はこの方法ではなく次の方法で構築をしてください。</p>
@@ -337,21 +339,21 @@ Macでnginxを使うケースは分けたほうが恩恵をえられます。
 
 <ol>
   <li>sites-available フォルダ作成と個別設定ファイル配置</li>
-  <li>sites-enabled フォルダの作成と<code class="highlighter-rouge">sites-available</code>フォルダ内の個別設定ファイルへのシンボリックリンク作成</li>
+  <li>sites-enabled フォルダの作成と<code class="language-plaintext highlighter-rouge">sites-available</code>フォルダ内の個別設定ファイルへのシンボリックリンク作成</li>
   <li>nginx.conf に include ディレクティブで sites-enabled内ファイルをロード</li>
   <li>nginx 再起動</li>
 </ol>
 
-<p><code class="highlighter-rouge">sites-available</code>フォルダが、先程の<code class="highlighter-rouge">servers</code>フォルダとなります。
-<code class="highlighter-rouge">nginx.conf</code>で読み込む先は<code class="highlighter-rouge">sites-available</code>ではなく<code class="highlighter-rouge">sites-enabled</code>フォルダにしてください。
-直接実ファイルをロードするのではなく、<code class="highlighter-rouge">sites-enabled</code>に用意されたシンボリックリンクをロードします。</p>
+<p><code class="language-plaintext highlighter-rouge">sites-available</code>フォルダが、先程の<code class="language-plaintext highlighter-rouge">servers</code>フォルダとなります。
+<code class="language-plaintext highlighter-rouge">nginx.conf</code>で読み込む先は<code class="language-plaintext highlighter-rouge">sites-available</code>ではなく<code class="language-plaintext highlighter-rouge">sites-enabled</code>フォルダにしてください。
+直接実ファイルをロードするのではなく、<code class="language-plaintext highlighter-rouge">sites-enabled</code>に用意されたシンボリックリンクをロードします。</p>
 
-<p><code class="highlighter-rouge">sites-enabled</code>が間に一つ入る形になっています。
-これは<code class="highlighter-rouge">unlink</code>すること簡単にバーチャルホストを閉じることが可能となっています。
+<p><code class="language-plaintext highlighter-rouge">sites-enabled</code>が間に一つ入る形になっています。
+これは<code class="language-plaintext highlighter-rouge">unlink</code>すること簡単にバーチャルホストを閉じることが可能となっています。
 設定ファイルの削除や移動などは必要ありません。</p>
 
 <h2 id="mac上のnginx設定ファイルをドメイン毎に分ける">Mac上のnginx設定ファイルをドメイン毎に分ける</h2>
-<p>今回は設定ファイルを別ファイルからロードすることで<code class="highlighter-rouge">nginx.conf</code>をボリュームを抑え、変更影響を受けにくい仕組みの紹介でした。
+<p>今回は設定ファイルを別ファイルからロードすることで<code class="language-plaintext highlighter-rouge">nginx.conf</code>をボリュームを抑え、変更影響を受けにくい仕組みの紹介でした。
 直接書くより少し手間だったり慣れていないと確認が面倒だったりはしますが、目の前の手間から逃げ続けると将来一気に避けられない手間を対応するはめに会います。
 可読性やメンテナンス性はエンジニアには重要指標なので、目の前の面倒から逃げずに将来のもっと大きな面倒をなくしていくことは大事ですね。</p>
 

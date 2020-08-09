@@ -14,8 +14,8 @@
   <title>Mac上でnginxのセキュリティ最低限を確認する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Mac上でnginxのセキュリティ最低限を確認する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-26T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png" />
+<meta property="twitter:title" content="Mac上でnginxのセキュリティ最低限を確認する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac","headline":"Mac上でnginxのセキュリティ最低限を確認する","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-26T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。","image":"https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac","headline":"Mac上でnginxのセキュリティ最低限を確認する","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-26T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-26-web-nginx-getting-started-security-on-mac/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-security-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ5回目です。 今回を入門シリーズ最後とします。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -227,7 +229,7 @@
 今回を入門シリーズ最後とします。</p>
 
 <p>最後はMac上にnginxで立てたWebサーバを対象に最低限のセキュリティ項目について確認を行います。
-また<code class="highlighter-rouge">nginx.conf</code>内の設定で分からないディレクティブが出たらそれの確認も行っていきます。</p>
+また<code class="language-plaintext highlighter-rouge">nginx.conf</code>内の設定で分からないディレクティブが出たらそれの確認も行っていきます。</p>
 
 <p>▼前回は設定ファイルをドメイン別に分ける方法について説明しました。<br />
 <span><a href="/web/nginx/web-nginx-getting-started-customize-on-mac">Mac上のnginx設定ファイルをドメイン毎に分ける</a></span></p>
@@ -241,7 +243,7 @@
 一つずつ調べてみます。</p>
 
 <p><em>nginx.conf</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server_tokens off;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server_tokens off;
 
 add_header X-XSS-Protection "1; mode=block";
 add_header Content-Security-Policy "default-src 'self'";
@@ -275,11 +277,11 @@ location = /xmlrpc.php {
 
 <h2 id="httpヘッダー">HTTPヘッダー</h2>
 
-<p>nginxには<code class="highlighter-rouge">add_header</code>ディレクティブを使うことでHeaderを追加することが出来ます。</p>
+<p>nginxには<code class="language-plaintext highlighter-rouge">add_header</code>ディレクティブを使うことでHeaderを追加することが出来ます。</p>
 
 <h3 id="nginxのバージョン情報を隠す">nginxのバージョン情報を隠す</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server_tokens off;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server_tokens off;
 </code></pre></div></div>
 
 <p>nginxで発見された脆弱性をついたゼロデイ攻撃から少しでも身を守る</p>
@@ -291,61 +293,61 @@ location = /xmlrpc.php {
 
 <h3 id="クロスサイトスクリプティングxssフィルタリングを有効化する">クロスサイトスクリプティング(XSS)フィルタリングを有効化する</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-XSS-Protection "1; mode=block";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-XSS-Protection "1; mode=block";
 </code></pre></div></div>
-<p><code class="highlighter-rouge">1</code>は有効化で<code class="highlighter-rouge">0</code>は無効化です。有効化したときの挙動として<code class="highlighter-rouge">mode=block</code>を指定します。
+<p><code class="language-plaintext highlighter-rouge">1</code>は有効化で<code class="language-plaintext highlighter-rouge">0</code>は無効化です。有効化したときの挙動として<code class="language-plaintext highlighter-rouge">mode=block</code>を指定します。
 有効化することでXSSフィルタリングを有効化します。これはデフォルト値となります。
 XSS攻撃を検出したら、ブラウザはページをサニタイズ、安全でない部分を除去します。</p>
 
-<p><code class="highlighter-rouge">mode=block</code>がついてるとページ描画を止めます。</p>
+<p><code class="language-plaintext highlighter-rouge">mode=block</code>がついてるとページ描画を止めます。</p>
 
 <h3 id="コンテンツセキュリティポリシーcspでセキュリティ層を追加する">コンテンツセキュリティポリシー(CSP)でセキュリティ層を追加する</h3>
 <p>CSPはXSS攻撃やデータインジェクション攻撃など一部攻撃を検知、軽減するセキュリティレイヤーです。
 CSPを利用すると、サーバから許可されたドメインのスクリプトのみを実行します。
 これによりXSSの発生箇所を抑えることができます。
-<code class="highlighter-rouge">Content-Security-Policy</code>ではユーザーエージェントに読み込ませたいリソース情報と範囲を<code class="highlighter-rouge">;</code>セミコロン分割の列挙で指定します。</p>
+<code class="language-plaintext highlighter-rouge">Content-Security-Policy</code>ではユーザーエージェントに読み込ませたいリソース情報と範囲を<code class="language-plaintext highlighter-rouge">;</code>セミコロン分割の列挙で指定します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header Content-Security-Policy "default-src 'self'";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header Content-Security-Policy "default-src 'self'";
 </code></pre></div></div>
 
 <p>この場合は全コンテンツをサイト自身のドメインから取得を許可します。ただしサブドメインは許可されません。
-デフォルトでは無制限なのでこれを指定することで<code class="highlighter-rouge">-src</code>で終わるもののデフォルトは全部この値になります。</p>
+デフォルトでは無制限なのでこれを指定することで<code class="language-plaintext highlighter-rouge">-src</code>で終わるもののデフォルトは全部この値になります。</p>
 
 <h3 id="strict-transport-securityhstsでhttps通信を強制する">Strict-Transport-Security(HSTS)でHTTPS通信を強制する</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header Strict-Transport-Security "max-age=31536000; includeSubdomains";
 </code></pre></div></div>
-<p><code class="highlighter-rouge">max-age</code>でサイトにHTTPS接続をすることをブラウザに記憶させます。
-<code class="highlighter-rouge">includeSubdomains</code>で他のサブドメインにも適用させます。</p>
+<p><code class="language-plaintext highlighter-rouge">max-age</code>でサイトにHTTPS接続をすることをブラウザに記憶させます。
+<code class="language-plaintext highlighter-rouge">includeSubdomains</code>で他のサブドメインにも適用させます。</p>
 
 <h3 id="x-download-optionsで直接ファイル開くを禁止する">X-Download-Optionsで直接ファイル開くを禁止する</h3>
 <p>IEがダウロードしたファイル直接開けないようにさせます。
 ローカルにファイル化せずブラウザから直接URLを開くと、サイトのコンテキストで実行されるため
 悪意あるスクリプトをこの方法で開くとインジェクション攻撃の脅威となります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-Download-Options "noopen";
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-Download-Options "noopen";
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">noopen</code>とすることでそもそも「開く」ことができなくなります。</p>
+<p><code class="language-plaintext highlighter-rouge">noopen</code>とすることでそもそも「開く」ことができなくなります。</p>
 
 <h3 id="x-frame-optionsで埋め込み表示を同ドメインに絞る">X-Frame-Optionsで埋め込み表示を同ドメインに絞る</h3>
 
-<p><code class="highlighter-rouge">&lt;iframe&gt;</code>タグなどの中で表示許可を制限します。
+<p><code class="language-plaintext highlighter-rouge">&lt;iframe&gt;</code>タグなどの中で表示許可を制限します。
 他サイトで埋め込み表示させないことでクリックジャッキング攻撃を防止します。</p>
 
 <p>クリックジャッキングとはタップ可能なUIを隠しておいてユーザに意図せず押させる手法です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-Frame-Options sameorigin;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-Frame-Options sameorigin;
 </code></pre></div></div>
-<p><code class="highlighter-rouge">sameorigin</code>は表示許可を同じドメイン内にしぼります。</p>
+<p><code class="language-plaintext highlighter-rouge">sameorigin</code>は表示許可を同じドメイン内にしぼります。</p>
 
 <h3 id="x-content-type-optionsでcontent-type見るように強制する">X-Content-Type-OptionsでContent-Type見るように強制する</h3>
 
 <p>MIMEタイプのスニッフィングの有効無効を指定します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-Content-Type-Options nosniff;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>add_header X-Content-Type-Options nosniff;
 </code></pre></div></div>
-<p><code class="highlighter-rouge">nosniff</code>でファイルの種類を内容ではなく<code class="highlighter-rouge">Content-Type</code>から判断させます。
+<p><code class="language-plaintext highlighter-rouge">nosniff</code>でファイルの種類を内容ではなく<code class="language-plaintext highlighter-rouge">Content-Type</code>から判断させます。
 無許可のファイル・タイプを処理させないようにします。</p>
 
 <h3 id="mac上でのadd_header注意点">mac上でのadd_header注意点</h3>
@@ -353,7 +355,7 @@ CSPを利用すると、サーバから許可されたドメインのスクリ�
 <p>MacではHomebrewを使ってビルド済みバイナリーをダウンロードして使ってるかと思います。</p>
 
 <p>しかしデフォルトのnginxではheaderを上書きする方法がありません。
-<code class="highlighter-rouge">add_header</code>は文字通り追加であって上書きではありません。
+<code class="language-plaintext highlighter-rouge">add_header</code>は文字通り追加であって上書きではありません。
 そのためデフォルトで設定されているヘッダーを追加すると二つ並びどちらを実行するのかクライアントに依存する形となります。
 拡張モジュールを使えば上書きが可能なので、Linuxなどであればソースからビルド時にモジュールを追加指定することでヘッダー上書きを可能にしています。</p>
 
@@ -368,9 +370,9 @@ CSPを利用すると、サーバから許可されたドメインのスクリ�
 
 <h3 id="ssl_protocolsでssltlsプロトコルを指定する">ssl_protocolsでSSL/TLSプロトコルを指定する</h3>
 
-<p><code class="highlighter-rouge">ssl_protocols</code>で使う暗号方式を指名できます。</p>
+<p><code class="language-plaintext highlighter-rouge">ssl_protocols</code>で使う暗号方式を指名できます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
 </code></pre></div></div>
 <p>デフォルトでは 古くて非推奨なプロトコルも入っているので指定する。</p>
 
@@ -379,23 +381,23 @@ CSPを利用すると、サーバから許可されたドメインのスクリ�
 <p>サーバ側でセキュアな暗号化スイートを指定します。
 無指定だとクライアント側が指定した方法で暗号化することになります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
 </code></pre></div></div>
-<p>セミコロン(<code class="highlighter-rouge">;</code>)をデリミタに優先順位順に記載します。</p>
+<p>セミコロン(<code class="language-plaintext highlighter-rouge">;</code>)をデリミタに優先順位順に記載します。</p>
 
 <h3 id="ssl_prefer_server_ciphersで優先利用させる">ssl_prefer_server_ciphersで優先利用させる</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_prefer_server_ciphers on;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_prefer_server_ciphers on;
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">on</code>とすることでサーバ側で指定した暗号を優先して使うように指示します。</p>
+<p><code class="language-plaintext highlighter-rouge">on</code>とすることでサーバ側で指定した暗号を優先して使うように指示します。</p>
 
 <h3 id="ssl_dhparamで鍵長を強化する">ssl_dhparamで鍵長を強化する</h3>
 
 <p>デフォルトでは512bits, 1024bits以下になっておりDH鍵交換方式の脆弱性をついたLogjam攻撃リスクがあるため。
 Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領域に下げ盗聴や改ざんのリスクを高める攻撃です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_dhparam /usr/local/etc/ssl/certs/dhparam.pem;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssl_dhparam /usr/local/etc/ssl/certs/dhparam.pem;
 </code></pre></div></div>
 
 <p>自前で2048や4096のpemを作り設定します。</p>
@@ -413,7 +415,7 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
 <p>しかし、ドメイン名は分からずともIPアドレスは数字なのでデタラメにアクセスするボットでもいつかは有効なアドレスにヒットします。
 これで望んでいない悪意あるユーザーにサイトの存在がバレてしまうリスクがあります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   listen 80 default_server;
   server_name _;
   return 403;
@@ -421,9 +423,9 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
 </code></pre></div></div>
 <p>ドメインなしのアクセスがあればデフォルトでここがヒットするようにします。</p>
 
-<p><code class="highlighter-rouge">https</code>接続も同じようにします。</p>
+<p><code class="language-plaintext highlighter-rouge">https</code>接続も同じようにします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   listen 443 ssl default_server;
   server_name _;
   ssl_certificate /usr/local/etc/crypt/site.crt;
@@ -433,11 +435,11 @@ Logjam攻撃とはTLS接続の暗号強度を低下させ、計算可能な領�
 
 <h3 id="一部デフォルトパスを無効化する">一部デフォルトパスを無効化する</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = /xmlrpc.php {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = /xmlrpc.php {
   return 403;
 }
 </code></pre></div></div>
-<p>例えばwordpressでは外部からwpを操作する仕組みで<code class="highlighter-rouge">XML-RPC</code>があり、それを使った脆弱性攻撃があります。
+<p>例えばwordpressでは外部からwpを操作する仕組みで<code class="language-plaintext highlighter-rouge">XML-RPC</code>があり、それを使った脆弱性攻撃があります。
 こういった有名フレームワークやライブラリを入れることで導入利便性を高めるためにデフォルトで用意されているページが脆弱性の対象となるので、こういったページは名称を変えるかそもそもアクセスを禁止させます。
 今回はアクセスがあったら拒否します。</p>
 

@@ -14,8 +14,8 @@
   <title>正規表現で否定を表現する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="正規表現で否定を表現する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-08-05-regexp-not-expression.png" />
+<meta property="twitter:title" content="正規表現で否定を表現する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/regexp/regexp-not-expression","headline":"正規表現で否定を表現する","dateModified":"2020-05-25T05:26:17+09:00","datePublished":"2019-08-05T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/regexp/regexp-not-expression"},"description":"常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。","image":"https://blog.mothule.com/assets/images/2019-08-05-regexp-not-expression.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/regexp/regexp-not-expression","headline":"正規表現で否定を表現する","dateModified":"2020-05-25T05:26:17+09:00","datePublished":"2019-08-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-08-05-regexp-not-expression.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/regexp/regexp-not-expression"},"description":"常時必要ではないけれど、忘れた頃にやってきて、覚えようにも複雑な正規表現の否定表現。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -201,26 +203,26 @@
 <h2 id="書き方">書き方</h2>
 <p>結論から先に書きます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^(?!.*検索ワード).+$
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>^(?!.*検索ワード).+$
 </code></pre></div></div>
 
 <h2 id="何が起きているのか">何が起きているのか？</h2>
 
 <ul>
-  <li><code class="highlighter-rouge">^</code> : 行の先頭を表す</li>
-  <li><code class="highlighter-rouge">(</code> : グルーピング</li>
-  <li><code class="highlighter-rouge">?!</code> : 否定の先読み. 部分式が後にマッチしないなら、真とする。</li>
-  <li><code class="highlighter-rouge">.*</code> : 任意の文字列(0文字以上)</li>
-  <li><code class="highlighter-rouge">)</code> : グルーピング</li>
-  <li><code class="highlighter-rouge">.+</code> : 任意の文字列(1文字以上)</li>
-  <li><code class="highlighter-rouge">$</code> : 行の末尾を表す</li>
+  <li><code class="language-plaintext highlighter-rouge">^</code> : 行の先頭を表す</li>
+  <li><code class="language-plaintext highlighter-rouge">(</code> : グルーピング</li>
+  <li><code class="language-plaintext highlighter-rouge">?!</code> : 否定の先読み. 部分式が後にマッチしないなら、真とする。</li>
+  <li><code class="language-plaintext highlighter-rouge">.*</code> : 任意の文字列(0文字以上)</li>
+  <li><code class="language-plaintext highlighter-rouge">)</code> : グルーピング</li>
+  <li><code class="language-plaintext highlighter-rouge">.+</code> : 任意の文字列(1文字以上)</li>
+  <li><code class="language-plaintext highlighter-rouge">$</code> : 行の末尾を表す</li>
 </ul>
 
 <h2 id="試してみる">試してみる</h2>
 
 <p>色々と削って動きを見てみることしました。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>あいうえお
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>あいうえお
 かきくけこ
 あい
 あ
@@ -241,31 +243,31 @@
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">^(?!あ)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">^(?!あ)</code></td>
       <td>「あ」の入っていない文字列と空改行がヒットする</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">^(?!あ)$</code></td>
+      <td><code class="language-plaintext highlighter-rouge">^(?!あ)$</code></td>
       <td>空改行のみヒットする</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">^(?!あい).</code></td>
+      <td><code class="language-plaintext highlighter-rouge">^(?!あい).</code></td>
       <td>「あい」の入っていない行の1文字目と空改行がヒットする</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">^(?!いう).*</code></td>
+      <td><code class="language-plaintext highlighter-rouge">^(?!いう).*</code></td>
       <td>行の先頭に「いう」の入っていない行と空改行がヒットする</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">^(?!.*いう).*</code></td>
+      <td><code class="language-plaintext highlighter-rouge">^(?!.*いう).*</code></td>
       <td>行に「いう」の入っていない行と空改行がヒットする</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">^(?!.*いう).+</code></td>
+      <td><code class="language-plaintext highlighter-rouge">^(?!.*いう).+</code></td>
       <td>行に「いう」の入っていない行がヒットする</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">^(?!.*いう)</code></td>
+      <td><code class="language-plaintext highlighter-rouge">^(?!.*いう)</code></td>
       <td>行に「いう」の入っていない行の先頭がヒットする</td>
     </tr>
   </tbody>
@@ -277,7 +279,7 @@
   <li>(?!.*いう)とは「いう」がないなら真となる、いわば「いう否定セット」みたいなもの</li>
 </ul>
 
-<p>つまり<strong><code class="highlighter-rouge">^(?!.*いう).+$</code>とは「いう否定セット」の入っていない１文字以上を検索となる</strong></p>
+<p>つまり<strong><code class="language-plaintext highlighter-rouge">^(?!.*いう).+$</code>とは「いう否定セット」の入っていない１文字以上を検索となる</strong></p>
 
   </section>
 

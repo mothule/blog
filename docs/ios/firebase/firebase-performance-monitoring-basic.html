@@ -14,8 +14,8 @@
   <title>Firebase Performance Monitoringの基本の概念と実装について整理した - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Firebase Performance Monitoringの基本の概念と実装について整理した" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。 なお本記事はiOSを重点に調査しています。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-10-23T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-10-23-firebase-performance-monitoring-basic/0.png" />
+<meta property="twitter:title" content="Firebase Performance Monitoringの基本の概念と実装について整理した" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic","headline":"Firebase Performance Monitoringの基本の概念と実装について整理した","dateModified":"2020-04-26T23:07:13+09:00","datePublished":"2019-10-23T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic"},"description":"アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。 なお本記事はiOSを重点に調査しています。","image":"https://blog.mothule.com/assets/images/2019-10-23-firebase-performance-monitoring-basic/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic","headline":"Firebase Performance Monitoringの基本の概念と実装について整理した","dateModified":"2020-04-26T23:07:13+09:00","datePublished":"2019-10-23T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-23-firebase-performance-monitoring-basic/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/firebase/firebase-performance-monitoring-basic"},"description":"アプリを使用するユーザーの利用環境を明確に把握したニーズが強くなったので、前々から気になっていたFirebase Performance Monitoringについて調べることにしました。 なお本記事はiOSを重点に調査しています。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -305,25 +307,25 @@ SDKをアプリに統合するだけで、プロファイルコード不要で�
   <li>アプリ起動トレース
     <ul>
       <li>ユーザーがアプリを起動してから、アプリが応答するまでの時間を測定</li>
-      <li>コンソールでは <code class="highlighter-rouge">_app_start</code> 報告指標は<code class="highlighter-rouge">期間</code></li>
+      <li>コンソールでは <code class="language-plaintext highlighter-rouge">_app_start</code> 報告指標は<code class="language-plaintext highlighter-rouge">期間</code></li>
       <li>開始タイミングは、アプリが最初のObjectをロードすると開始します</li>
-      <li>終了タイミングは、 <code class="highlighter-rouge">UIApplicationDidBecomeActiveNotification</code>通知受信後の最初の正常な実行ループ後に停止します。</li>
+      <li>終了タイミングは、 <code class="language-plaintext highlighter-rouge">UIApplicationDidBecomeActiveNotification</code>通知受信後の最初の正常な実行ループ後に停止します。</li>
     </ul>
   </li>
   <li>フォアグラウンドアプリのトレース
     <ul>
       <li>アプリがフォアグラウンドで実行されていてユーザーが利用できる時間を測定</li>
-      <li>コンソールでは <code class="highlighter-rouge">_app_in_foreground</code> 報告指標は<code class="highlighter-rouge">期間</code></li>
-      <li>開始タイミングは、<code class="highlighter-rouge">UIApplicationDidBecomeActiveNotification</code>を受け取ると開始</li>
-      <li>終了タイミングは、<code class="highlighter-rouge">UIApplicationWillResignActiveNotification</code>を受け取ると停止</li>
+      <li>コンソールでは <code class="language-plaintext highlighter-rouge">_app_in_foreground</code> 報告指標は<code class="language-plaintext highlighter-rouge">期間</code></li>
+      <li>開始タイミングは、<code class="language-plaintext highlighter-rouge">UIApplicationDidBecomeActiveNotification</code>を受け取ると開始</li>
+      <li>終了タイミングは、<code class="language-plaintext highlighter-rouge">UIApplicationWillResignActiveNotification</code>を受け取ると停止</li>
     </ul>
   </li>
   <li>バックグラウンドアプリのトレース
     <ul>
       <li>アプリがバックグラウンドで実行されている時間を測定</li>
-      <li>コンソールでは <code class="highlighter-rouge">_app_in_background</code> 報告指標は<code class="highlighter-rouge">期間</code></li>
-      <li>開始タイミングは、アプリが<code class="highlighter-rouge">UIApplicationWillResignActiveNotification</code>を受け取ると開始</li>
-      <li>終了タイミングは、<code class="highlighter-rouge">UIApplicationDidBecomeActiveNotification</code>を受け取ると停止</li>
+      <li>コンソールでは <code class="language-plaintext highlighter-rouge">_app_in_background</code> 報告指標は<code class="language-plaintext highlighter-rouge">期間</code></li>
+      <li>開始タイミングは、アプリが<code class="language-plaintext highlighter-rouge">UIApplicationWillResignActiveNotification</code>を受け取ると開始</li>
+      <li>終了タイミングは、<code class="language-plaintext highlighter-rouge">UIApplicationDidBecomeActiveNotification</code>を受け取ると停止</li>
     </ul>
   </li>
   <li>画面トレース
@@ -331,8 +333,8 @@ SDKをアプリに統合するだけで、プロファイルコード不要で�
       <li>画面の存続期間を通じて低速なフレームとフリーズしたフレームを測定</li>
       <li>指標はレンダリングが遅いフレームとフリーズしたフレームのみ報告されます。</li>
       <li>コンソールでは他トレースとは別テーブルに表示されます。</li>
-      <li>開始タイミングは、 <code class="highlighter-rouge">viewDidAppear:</code>を呼び出すと <code class="highlighter-rouge">keyWindow</code>内のすべての<code class="highlighter-rouge">UIViewController</code>について開始</li>
-      <li>終了タイミングは、<code class="highlighter-rouge">viewDidDisappear:</code>を呼び出すと停止</li>
+      <li>開始タイミングは、 <code class="language-plaintext highlighter-rouge">viewDidAppear:</code>を呼び出すと <code class="language-plaintext highlighter-rouge">keyWindow</code>内のすべての<code class="language-plaintext highlighter-rouge">UIViewController</code>について開始</li>
+      <li>終了タイミングは、<code class="language-plaintext highlighter-rouge">viewDidDisappear:</code>を呼び出すと停止</li>
       <li>正規のコンテナビューコントローラはキャプチャされません。(UINavigationViewControllerなど)</li>
     </ul>
   </li>
@@ -443,14 +445,14 @@ UIが一定期間反応しなかった回数などカスタム指標を作成で
 <span class="n">pod</span> <span class="s1">'Firebase/Performance'</span>
 </code></pre></div></div>
 
-<p>後は <code class="highlighter-rouge">$ pod install</code> するだけです。</p>
+<p>後は <code class="language-plaintext highlighter-rouge">$ pod install</code> するだけです。</p>
 
-<p><code class="highlighter-rouge">UIApplicationDelegate</code>の<code class="highlighter-rouge">application:didFinishLaunchingWithOptions:</code>に <code class="highlighter-rouge">FirebaseApp.configure()</code> を追加する必要がありますが、<br />
+<p><code class="language-plaintext highlighter-rouge">UIApplicationDelegate</code>の<code class="language-plaintext highlighter-rouge">application:didFinishLaunchingWithOptions:</code>に <code class="language-plaintext highlighter-rouge">FirebaseApp.configure()</code> を追加する必要がありますが、<br />
 すでにFirebaseを使っている場合はこのコードは既に組み込まれているかと思います。</p>
 
-<p>これで <code class="highlighter-rouge">自動トレース</code> と <code class="highlighter-rouge">HTTP/Sネットワークリクエスト</code>を監視するようになります。</p>
+<p>これで <code class="language-plaintext highlighter-rouge">自動トレース</code> と <code class="language-plaintext highlighter-rouge">HTTP/Sネットワークリクエスト</code>を監視するようになります。</p>
 
-<p>※ なお <code class="highlighter-rouge">Firebase/Performance</code> を追加すると依存関係として <code class="highlighter-rouge">Remote Config</code> が組み込まれます。</p>
+<p>※ なお <code class="language-plaintext highlighter-rouge">Firebase/Performance</code> を追加すると依存関係として <code class="language-plaintext highlighter-rouge">Remote Config</code> が組み込まれます。</p>
 
 <p>もし pod install で UUID重複警告が出た場合は、Firebase関連podを最新にupdateすることで回避できました。</p>
 
@@ -470,7 +472,7 @@ UIが一定期間反応しなかった回数などカスタム指標を作成で
 
 <ul>
   <li>先頭と末尾が空白ではないこと</li>
-  <li>先頭がアンダースコア<code class="highlighter-rouge">_</code>でないこと</li>
+  <li>先頭がアンダースコア<code class="language-plaintext highlighter-rouge">_</code>でないこと</li>
   <li>32文字以下であること</li>
 </ul>
 
@@ -503,7 +505,7 @@ UIが一定期間反応しなかった回数などカスタム指標を作成で
   <span class="n">metric</span><span class="o">.</span><span class="nf">stop</span><span class="p">()</span>
 <span class="p">})</span>
 </code></pre></div></div>
-<p>リクエストの発行前とレスポンスの受信完了直後に <code class="highlighter-rouge">start()</code> と <code class="highlighter-rouge">stop()</code> を呼んでください。</p>
+<p>リクエストの発行前とレスポンスの受信完了直後に <code class="language-plaintext highlighter-rouge">start()</code> と <code class="language-plaintext highlighter-rouge">stop()</code> を呼んでください。</p>
 
 <h2 id="カスタム属性の追加">カスタム属性の追加</h2>
 
@@ -515,7 +517,7 @@ UIが一定期間反応しなかった回数などカスタム指標を作成で
 <ul>
   <li>カスタム属性の数は、1トレース最大5個に制限</li>
   <li>名前は、先頭と末尾に空白がない</li>
-  <li>先頭にアンダースコア<code class="highlighter-rouge">_</code>がない</li>
+  <li>先頭にアンダースコア<code class="language-plaintext highlighter-rouge">_</code>がない</li>
   <li>32文字以下</li>
 </ul>
 
@@ -543,41 +545,41 @@ UIが一定期間反応しなかった回数などカスタム指標を作成で
 
 <ul>
   <li>GTMSQLiteを使ってる場合は、互換性がないため、Performance Monitoringを使用しないほうがいいです。</li>
-  <li><code class="highlighter-rouge">FirebaseApp.configure()</code>の呼び出し後のメソッド入れ替えは影響する可能性があります。</li>
+  <li><code class="language-plaintext highlighter-rouge">FirebaseApp.configure()</code>の呼び出し後のメソッド入れ替えは影響する可能性があります。</li>
   <li>iOS8.0~8.2シミュレータでは正常に動作する保証がありません</li>
   <li>NSURLSessionのbackgroundSessionConfigurationは接続時間が予想より長くなります。</li>
 </ul>
 
 <h2 id="firebase-performance-monitoring-を無効にする方法は3つある">Firebase Performance Monitoring を無効にする方法は3つある</h2>
 
-<p>大きく分けて<code class="highlighter-rouge">Info.plist</code>を設定する方法とコード上で設定する方法に分かれます。</p>
+<p>大きく分けて<code class="language-plaintext highlighter-rouge">Info.plist</code>を設定する方法とコード上で設定する方法に分かれます。</p>
 
 <p>またコード上での設定では自動とカスタムそれぞれの制御ができます。</p>
 
 <h3 id="infoplist-を設定する方法">Info.plist を設定する方法</h3>
 
 <ul>
-  <li>ビルド時に無効にしておき、ランタイムで有効／無効を制御できる方法（<code class="highlighter-rouge">通常無効</code>）</li>
-  <li>ビルド時に完全無効にしておき、ランタイムで有効に変更できない方法（<code class="highlighter-rouge">完全無効</code>）</li>
+  <li>ビルド時に無効にしておき、ランタイムで有効／無効を制御できる方法（<code class="language-plaintext highlighter-rouge">通常無効</code>）</li>
+  <li>ビルド時に完全無効にしておき、ランタイムで有効に変更できない方法（<code class="language-plaintext highlighter-rouge">完全無効</code>）</li>
 </ul>
 
 <h4 id="通常無効">通常無効</h4>
-<p><code class="highlighter-rouge">Info.plist</code> で <code class="highlighter-rouge">firebase_performance_collection_enabled</code> を <code class="highlighter-rouge">false</code> にすることで、無効にできます。</p>
+<p><code class="language-plaintext highlighter-rouge">Info.plist</code> で <code class="language-plaintext highlighter-rouge">firebase_performance_collection_enabled</code> を <code class="language-plaintext highlighter-rouge">false</code> にすることで、無効にできます。</p>
 
 <h4 id="完全無効">完全無効</h4>
-<p><code class="highlighter-rouge">Info.plist</code> で <code class="highlighter-rouge">firebase_performance_collection_deactivated</code> を <code class="highlighter-rouge">true</code> にすることで、完全無効にできます。</p>
+<p><code class="language-plaintext highlighter-rouge">Info.plist</code> で <code class="language-plaintext highlighter-rouge">firebase_performance_collection_deactivated</code> を <code class="language-plaintext highlighter-rouge">true</code> にすることで、完全無効にできます。</p>
 
-<p>これは <code class="highlighter-rouge">通常無効</code>(<code class="highlighter-rouge">firebase_performance_collection_enabled</code>) の設定をオーバーライドします。</p>
+<p>これは <code class="language-plaintext highlighter-rouge">通常無効</code>(<code class="language-plaintext highlighter-rouge">firebase_performance_collection_enabled</code>) の設定をオーバーライドします。</p>
 
 <p>前者はつまりコード上で制御できて、後者は制御が不可能になります。</p>
 
 <h3 id="コード上で設定する方法">コード上で設定する方法</h3>
 
-<p><code class="highlighter-rouge">Performance.sharedInstance().isInstrumentationEnabled</code> で自動トレースとHTTP/Sネットワークリクエストを有効／無効制御できます。</p>
+<p><code class="language-plaintext highlighter-rouge">Performance.sharedInstance().isInstrumentationEnabled</code> で自動トレースとHTTP/Sネットワークリクエストを有効／無効制御できます。</p>
 
-<p><code class="highlighter-rouge">Performance.sharedInstance().isDataCollectionEnabled</code> でカスタムトレースを有効／無効制御できます。</p>
+<p><code class="language-plaintext highlighter-rouge">Performance.sharedInstance().isDataCollectionEnabled</code> でカスタムトレースを有効／無効制御できます。</p>
 
-<p>コード上の変更では前述した<code class="highlighter-rouge">完全無効</code>では効果ありません。</p>
+<p>コード上の変更では前述した<code class="language-plaintext highlighter-rouge">完全無効</code>では効果ありません。</p>
 
 <h3 id="デバッグ版は無効にする">デバッグ版は無効にする</h3>
 <p>開発中ではパフォーマンス測定しないために無効にしておき、本番ではコード上で有効にする例があります。</p>

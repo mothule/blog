@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableViewCellの高さを可変にする - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableViewCellの高さを可変にする" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="次のUITableViewDelegateのメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。 なぜならUITableView.rowHeightに UITableView.automaticDimension を渡し、各セルをAuto-Layoutが効くような実装にすれば 自動でセルの高さを計算してくれるためです。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-uitableviewcell-height-customize/2019-09-29-ios-uitableview-uitableviewcell-height-customize-1.png" />
+<meta property="twitter:title" content="【初心者向け】UITableViewCellの高さを可変にする" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-height-customize","headline":"【初心者向け】UITableViewCellの高さを可変にする","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-height-customize"},"description":"次のUITableViewDelegateのメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。 なぜならUITableView.rowHeightに UITableView.automaticDimension を渡し、各セルをAuto-Layoutが効くような実装にすれば 自動でセルの高さを計算してくれるためです。","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-uitableviewcell-height-customize/2019-09-29-ios-uitableview-uitableviewcell-height-customize-1.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-height-customize","headline":"【初心者向け】UITableViewCellの高さを可変にする","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-uitableviewcell-height-customize/2019-09-29-ios-uitableview-uitableviewcell-height-customize-1.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-height-customize"},"description":"次のUITableViewDelegateのメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。 なぜならUITableView.rowHeightに UITableView.automaticDimension を渡し、各セルをAuto-Layoutが効くような実装にすれば 自動でセルの高さを計算してくれるためです。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -197,21 +199,21 @@
 </ul>
   </div>
   <section>
-  <p>次の<code class="highlighter-rouge">UITableViewDelegate</code>のメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。
-なぜなら<code class="highlighter-rouge">UITableView.rowHeight</code>に <code class="highlighter-rouge">UITableView.automaticDimension</code> を渡し、各セルをAuto-Layoutが効くような実装にすれば<br />
+  <p>次の<code class="language-plaintext highlighter-rouge">UITableViewDelegate</code>のメソッドを使うことでセル毎やセクション毎の高さ設定ができますが、まず大抵のケースでは使いません。
+なぜなら<code class="language-plaintext highlighter-rouge">UITableView.rowHeight</code>に <code class="language-plaintext highlighter-rouge">UITableView.automaticDimension</code> を渡し、各セルをAuto-Layoutが効くような実装にすれば<br />
 自動でセルの高さを計算してくれるためです。</p>
 
-<p>あるとすればセルごとの推測値<code class="highlighter-rouge">estimated</code>の値を返す。または状態によって一部セルを非表示にするために高さを0.0にしたいときでしょうか。</p>
+<p>あるとすればセルごとの推測値<code class="language-plaintext highlighter-rouge">estimated</code>の値を返す。または状態によって一部セルを非表示にするために高さを0.0にしたいときでしょうか。</p>
 
 <p>今回はAutoLayoutで可変に対応したセルの実装方法についてまとめてます。</p>
 
 <ul>
-  <li>セルの高さを返す: <code class="highlighter-rouge">func tableView(_:heightForRowAt:) -&gt; CGFloat</code></li>
-  <li>セクションヘッダーの高さを返す: <code class="highlighter-rouge">func tableView(_:heightForHeaderInSection:) -&gt; CGFloat</code></li>
-  <li>セクションフッターの高さを返す: <code class="highlighter-rouge">func tableView(_:heightForFooterInSection:) -&gt; CGFloat</code></li>
-  <li>セルの推定高さを返す: <code class="highlighter-rouge">func tableView(_:estimatedHeightForRowAt:) -&gt; CGFloat</code></li>
-  <li>セクションヘッダーの推定高さを返す: <code class="highlighter-rouge">func tableView(_:estimatedHeightForHeaderInSection:) -&gt; CGFloat</code></li>
-  <li>セクションフッターの推定高さを返す: <code class="highlighter-rouge">func tableView(_:estimatedHeightForFooterInSection:) -&gt; CGFloat</code></li>
+  <li>セルの高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:heightForRowAt:) -&gt; CGFloat</code></li>
+  <li>セクションヘッダーの高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:heightForHeaderInSection:) -&gt; CGFloat</code></li>
+  <li>セクションフッターの高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:heightForFooterInSection:) -&gt; CGFloat</code></li>
+  <li>セルの推定高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:estimatedHeightForRowAt:) -&gt; CGFloat</code></li>
+  <li>セクションヘッダーの推定高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:estimatedHeightForHeaderInSection:) -&gt; CGFloat</code></li>
+  <li>セクションフッターの推定高さを返す: <code class="language-plaintext highlighter-rouge">func tableView(_:estimatedHeightForFooterInSection:) -&gt; CGFloat</code></li>
 </ul>
 
 <h2 id="前提">前提</h2>
@@ -283,11 +285,11 @@ AutoLayoutが効いていることで自動計算ができるためです。</p>
 <p>以前のXcodeバージョンであれば</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="n">rowHeight</span> <span class="o">=</span> <span class="kt">UITableView</span><span class="o">.</span><span class="n">automaticDimension</span>
 </code></pre></div></div>
-<p>のように<code class="highlighter-rouge">automaticDimension</code>をセットする必要がありましたが、今はデフォルトなので設定不要です。
+<p>のように<code class="language-plaintext highlighter-rouge">automaticDimension</code>をセットする必要がありましたが、今はデフォルトなので設定不要です。
 また高さ自動計算のパフォーマンスにおいては</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="n">estimatedRowHeight</span> <span class="o">=</span> <span class="mi">81</span>
 </code></pre></div></div>
-<p>のように<code class="highlighter-rouge">estimatedRowHeight</code>で想定値が入っているといいですが、なくても動きます。</p>
+<p>のように<code class="language-plaintext highlighter-rouge">estimatedRowHeight</code>で想定値が入っているといいですが、なくても動きます。</p>
 
 <p>もしUITableViewの使い方が分からなければこちらの記事をどうぞ。</p>
 

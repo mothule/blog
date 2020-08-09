@@ -14,8 +14,8 @@
   <title>iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="この記事はiOSでUITableViewとUITableViewCellでSlackみたいな 「可変テキストがアイコン高さ幅より下回ってもアイコンよりは小さくならず」「可変テキストがアイコン高さ幅より上回っていたらセルの高さ幅が可変テキストに追従する」 セルをプログラムは特別な実装は不要でUITableViewCellの AutoLayout設計 で Constraintsを2つ制約つけるテクニック で実装する方法について説明します。Twitterみたいなセルでもイメージは同じです。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-10-01T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png" />
+<meta property="twitter:title" content="iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell","headline":"iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方","dateModified":"2020-04-12T17:43:52+09:00","datePublished":"2019-10-01T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell"},"description":"この記事はiOSでUITableViewとUITableViewCellでSlackみたいな 「可変テキストがアイコン高さ幅より下回ってもアイコンよりは小さくならず」「可変テキストがアイコン高さ幅より上回っていたらセルの高さ幅が可変テキストに追従する」 セルをプログラムは特別な実装は不要でUITableViewCellの AutoLayout設計 で Constraintsを2つ制約つけるテクニック で実装する方法について説明します。Twitterみたいなセルでもイメージは同じです。","image":"https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell","headline":"iOSでSlackアプリみたいなアイコンと可変文字のセルの作り方","dateModified":"2020-04-12T17:43:52+09:00","datePublished":"2019-10-01T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-slack-like-cell"},"description":"この記事はiOSでUITableViewとUITableViewCellでSlackみたいな 「可変テキストがアイコン高さ幅より下回ってもアイコンよりは小さくならず」「可変テキストがアイコン高さ幅より上回っていたらセルの高さ幅が可変テキストに追従する」 セルをプログラムは特別な実装は不要でUITableViewCellの AutoLayout設計 で Constraintsを2つ制約つけるテクニック で実装する方法について説明します。Twitterみたいなセルでもイメージは同じです。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -274,9 +276,9 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 </code></pre></div></div>
 
 <p>今回はサンプルなので構造をシンプルにするためセル数は固定で400にしてあります。<br />
-<code class="highlighter-rouge">estimatedRowHeight</code>の数字は<code class="highlighter-rouge">Interface Builder</code>の高さ幅を適当に参照します。
+<code class="language-plaintext highlighter-rouge">estimatedRowHeight</code>の数字は<code class="language-plaintext highlighter-rouge">Interface Builder</code>の高さ幅を適当に参照します。
 この値は工夫したところでslackのようなコミュニケーションツールは発言量に差があるので全ての発言量をカバーする推測値は不可能です。<br />
-セル参照では<code class="highlighter-rouge">TableCell</code>という名前のセルを使っています。これは<code class="highlighter-rouge">Table View Cell</code>の<code class="highlighter-rouge">Identifier</code>で設定された文字列を指定してます。</p>
+セル参照では<code class="language-plaintext highlighter-rouge">TableCell</code>という名前のセルを使っています。これは<code class="language-plaintext highlighter-rouge">Table View Cell</code>の<code class="language-plaintext highlighter-rouge">Identifier</code>で設定された文字列を指定してます。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">comment</span> <span class="o">=</span> <span class="kt">String</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">repeating</span><span class="p">:</span> <span class="n">text</span><span class="p">,</span> <span class="nv">count</span><span class="p">:</span> <span class="n">indexPath</span><span class="o">.</span><span class="n">row</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
 </code></pre></div></div>
@@ -286,9 +288,9 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">c</span><span class="o">.</span><span class="nf">setup</span><span class="p">(</span><span class="nv">image</span><span class="p">:</span> <span class="err">#</span><span class="nf">imageLiteral</span><span class="p">(</span><span class="nv">resourceName</span><span class="p">:</span> <span class="s">"icon"</span><span class="p">),</span> <span class="nv">name</span><span class="p">:</span> <span class="s">"mothule"</span><span class="p">,</span> <span class="nv">comment</span><span class="p">:</span> <span class="n">comment</span><span class="p">)</span>
 </code></pre></div></div>
 
-<p>こちらはカスタムセルの制御クラス(<code class="highlighter-rouge">TableCell</code>)で用意したセットアップメソッドで、アイコン情報と発言者名、発言内容の情報をセルに渡しています。</p>
+<p>こちらはカスタムセルの制御クラス(<code class="language-plaintext highlighter-rouge">TableCell</code>)で用意したセットアップメソッドで、アイコン情報と発言者名、発言内容の情報をセルに渡しています。</p>
 
-<p>次にカスタムセルの制御クラス(<code class="highlighter-rouge">TableCell</code>)について説明します。</p>
+<p>次にカスタムセルの制御クラス(<code class="language-plaintext highlighter-rouge">TableCell</code>)について説明します。</p>
 
 <p><em>TableView.swift</em></p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span> <span class="p">{</span>
@@ -308,7 +310,7 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 
 <h2 id="uitableviewcellのconstraints設計が重要">UITableViewCellのConstraints設計が重要</h2>
 
-<p>下の画像はセル(<code class="highlighter-rouge">TableCell</code>)の<code class="highlighter-rouge">Interface Builder</code>上でのデザインです。<br />
+<p>下の画像はセル(<code class="language-plaintext highlighter-rouge">TableCell</code>)の<code class="language-plaintext highlighter-rouge">Interface Builder</code>上でのデザインです。<br />
 画像とラベル２つのシンプルな構成です。</p>
 
 <p><a href="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-1.png"><img src="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-1.png" width="100%" alt="" /></a></p>
@@ -327,7 +329,7 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 
 <p><a href="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-2.png"><img src="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-2.png" width="50%" alt="" /></a></p>
 
-<p><strong><code class="highlighter-rouge">8以上</code> つまり8より小さくなってはならない。</strong></p>
+<p><strong><code class="language-plaintext highlighter-rouge">8以上</code> つまり8より小さくなってはならない。</strong></p>
 
 <p>次にコメント用UILabelの下部から伸びている制約です。<br />
 <strong>制約は2つあります。</strong></p>
@@ -336,7 +338,7 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 
 <p><a href="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-3.png"><img src="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-3.png" width="50%" alt="" /></a></p>
 
-<p><strong><code class="highlighter-rouge">52以下</code> つまり52より大きくなってはいけない。</strong><br />
+<p><strong><code class="language-plaintext highlighter-rouge">52以下</code> つまり52より大きくなってはいけない。</strong><br />
 52とはUILabelからセルの下部までの距離です。<br />
 これはセルは文字列がアイコンより小さい時のセルのサイズ時の文字列からセル下部までの距離です。<br />
 つまりこれ以上距離が短くなってしまうと、セルの高さは狭まりアイコンが切れてしまいます。</p>
@@ -345,7 +347,7 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 
 <p><a href="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-4.png"><img src="/assets/images/2019-10-01-ios-uitableview-slack-like-cell/2019-10-01-ios-uitableview-slack-like-cell-4.png" width="50%" alt="" /></a></p>
 
-<p><strong><code class="highlighter-rouge">8以上</code> つまり8より小さくなってはならない。</strong><br />
+<p><strong><code class="language-plaintext highlighter-rouge">8以上</code> つまり8より小さくなってはならない。</strong><br />
 これは文字列がアイコンより大きくなった場合に、文字列とセル下部の距離が8より短くならないための制約です。</p>
 
 <p>この3つの制約で成り立ってます。<br />
@@ -354,7 +356,7 @@ Slackみたいなセル。文字列の高さがアイコンより小さい場合
 <h2 id="iosのconstraintsで2つ制約をつけるテクニックは覚えよう">iOSのConstraintsで2つ制約をつけるテクニックは覚えよう</h2>
 
 <p>N以上X未満みたいな表現をしたい場合、制約を2つ用意することで実現可能です。<br />
-この時 <code class="highlighter-rouge">=</code> だと制約衝突してしまいます。</p>
+この時 <code class="language-plaintext highlighter-rouge">=</code> だと制約衝突してしまいます。</p>
 
 <p>iOSのデザインはあまり凝ったことすると、管理が複雑になって破綻しなけません。
 しかし今回のようにConstraintsを2つ使うなどちょっとした工夫で、大きくデザイン表現の枠を広げることも可能となります。
