@@ -14,8 +14,8 @@
   <title>XcodeGenのSettings周りを整理する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="XcodeGenのSettings周りを整理する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="XcodeGenは便利ですが、settingsやconfigsやbase,settingGroupsや重複時の未指定時の挙動など不透明な部分が多い点を整理して説明した記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-settings/0.png" />
+<meta property="twitter:title" content="XcodeGenのSettings周りを整理する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings","headline":"XcodeGenのSettings周りを整理する","dateModified":"2020-07-31T00:45:04+09:00","datePublished":"2020-07-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings"},"description":"XcodeGenは便利ですが、settingsやconfigsやbase,settingGroupsや重複時の未指定時の挙動など不透明な部分が多い点を整理して説明した記事です。","image":"https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-settings/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings","headline":"XcodeGenのSettings周りを整理する","dateModified":"2020-07-31T00:45:04+09:00","datePublished":"2020-07-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-settings/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings"},"description":"XcodeGenは便利ですが、settingsやconfigsやbase,settingGroupsや重複時の未指定時の挙動など不透明な部分が多い点を整理して説明した記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -196,8 +198,8 @@
   <li><a href="#ビルド設定はプロジェクトとターゲットで出来る">ビルド設定はプロジェクトとターゲットで出来る</a></li>
   <li><a href="#ビルド設定の値の解決方法">ビルド設定の値の解決方法</a></li>
   <li><a href="#build-configuration別でビルドパラメータを設定できる">Build Configuration別でビルドパラメータを設定できる</a></li>
-  <li><a href="#build-configurationにも適用されるbaseプロパティがある">Build Configurationにも適用される<code class="highlighter-rouge">base</code>プロパティがある</a></li>
-  <li><a href="#settinggroupsでビルド設定を共通化できる"><code class="highlighter-rouge">settingGroups</code>でビルド設定を共通化できる</a></li>
+  <li><a href="#build-configurationにも適用されるbaseプロパティがある">Build Configurationにも適用される<code class="language-plaintext highlighter-rouge">base</code>プロパティがある</a></li>
+  <li><a href="#settinggroupsでビルド設定を共通化できる"><code class="language-plaintext highlighter-rouge">settingGroups</code>でビルド設定を共通化できる</a></li>
   <li><a href="#xcode同様に自動で適用されるプリセットビルド設定がある">Xcode同様に自動で適用されるプリセットビルド設定がある</a></li>
   <li><a href="#ビルド設定群を別ファイルxcconfigとして抜き出せる">ビルド設定群を別ファイル(xcconfig)として抜き出せる</a></li>
   <li><a href="#結論">結論</a></li>
@@ -210,11 +212,11 @@
 <p>XcodeGenのプロジェクト仕様ファイル内で使えるビルド設定を定義するプロパティと総称。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">settings</code>はプロジェクトとターゲットの2箇所で使える</li>
+  <li><code class="language-plaintext highlighter-rouge">settings</code>はプロジェクトとターゲットの2箇所で使える</li>
   <li>ビルド設定の値の解決はレベル順となっている</li>
   <li>Build Configuration(DebugやReleaseなど)別でビルドパラメータを設定できる</li>
-  <li>Build Configurationにも適用される<code class="highlighter-rouge">base</code>プロパティがある</li>
-  <li><code class="highlighter-rouge">settingGroups</code>でビルド設定を共通化できる</li>
+  <li>Build Configurationにも適用される<code class="language-plaintext highlighter-rouge">base</code>プロパティがある</li>
+  <li><code class="language-plaintext highlighter-rouge">settingGroups</code>でビルド設定を共通化できる</li>
   <li>Xcode同様に自動で適用されるプリセットビルド設定がある</li>
   <li>ビルド設定群を別ファイル(xcconfig)として抜き出せる</li>
 </ul>
@@ -266,13 +268,13 @@
 
 <p><a href="/assets/images/2020-07-29-ios-xcodegen-settings/1.png"><img src="/assets/images/2020-07-29-ios-xcodegen-settings/1.png" width="100%" alt="XcodeBuildSettings" /></a></p>
 
-<p>想定通り、<code class="highlighter-rouge">Settings</code>ターゲットでは値は<code class="highlighter-rouge">target_value</code>で解決されてる。<br />
+<p>想定通り、<code class="language-plaintext highlighter-rouge">Settings</code>ターゲットでは値は<code class="language-plaintext highlighter-rouge">target_value</code>で解決されてる。<br />
 この挙動に関しては理解は容易と言える。</p>
 
 <h2 id="build-configuration別でビルドパラメータを設定できる">Build Configuration別でビルドパラメータを設定できる</h2>
 
 <p>DebugやReleaseなどBuild Configuration別でビルド設定を変えることができます。<br />
-例えば下記はDebug時は<code class="highlighter-rouge">DEBUG</code>が定義され、Release時は<code class="highlighter-rouge">RELEASE</code>が定義されます。</p>
+例えば下記はDebug時は<code class="language-plaintext highlighter-rouge">DEBUG</code>が定義され、Release時は<code class="language-plaintext highlighter-rouge">RELEASE</code>が定義されます。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">targets</span><span class="pi">:</span>
   <span class="na">MyApp</span><span class="pi">:</span>
@@ -284,8 +286,8 @@
           <span class="na">SWIFT_ACTIVE_COMPILATION_CONDITIONS</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">RELEASE</span><span class="pi">]</span>
 </code></pre></div></div>
 
-<h2 id="build-configurationにも適用されるbaseプロパティがある">Build Configurationにも適用される<code class="highlighter-rouge">base</code>プロパティがある</h2>
-<p>Build Configurationに依存せず設定したビルドパラメータを入れたい場合は、<code class="highlighter-rouge">base</code>を使います。</p>
+<h2 id="build-configurationにも適用されるbaseプロパティがある">Build Configurationにも適用される<code class="language-plaintext highlighter-rouge">base</code>プロパティがある</h2>
+<p>Build Configurationに依存せず設定したビルドパラメータを入れたい場合は、<code class="language-plaintext highlighter-rouge">base</code>を使います。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">configs</span><span class="pi">:</span>
   <span class="na">Debug</span><span class="pi">:</span> <span class="s">debug</span>
@@ -303,13 +305,13 @@
       <span class="na">SWIFT_ACTIVE_COMPILATION_CONDITIONS</span><span class="pi">:</span> <span class="pi">[</span><span class="nv">RELEASE</span><span class="pi">]</span>
 </code></pre></div></div>
 
-<p>この場合はどのBuild Configurationであっても<code class="highlighter-rouge">DEVELOPMENT_TEAM</code>は<code class="highlighter-rouge">HogeHoge</code>となります。</p>
+<p>この場合はどのBuild Configurationであっても<code class="language-plaintext highlighter-rouge">DEVELOPMENT_TEAM</code>は<code class="language-plaintext highlighter-rouge">HogeHoge</code>となります。</p>
 
-<h2 id="settinggroupsでビルド設定を共通化できる"><code class="highlighter-rouge">settingGroups</code>でビルド設定を共通化できる</h2>
+<h2 id="settinggroupsでビルド設定を共通化できる"><code class="language-plaintext highlighter-rouge">settingGroups</code>でビルド設定を共通化できる</h2>
 
-<p>例えばターゲットが5個あって、そのうち3つには同じビルド設定群がある場合、<code class="highlighter-rouge">settingGroups</code>を使うことで設定箇所を1箇所にまとめることができます。</p>
+<p>例えばターゲットが5個あって、そのうち3つには同じビルド設定群がある場合、<code class="language-plaintext highlighter-rouge">settingGroups</code>を使うことで設定箇所を1箇所にまとめることができます。</p>
 
-<p>下記は<code class="highlighter-rouge">settingGroups</code>を使わなかったケースです。</p>
+<p>下記は<code class="language-plaintext highlighter-rouge">settingGroups</code>を使わなかったケースです。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">targets</span><span class="pi">:</span>
   <span class="na">App1</span><span class="pi">:</span>
@@ -330,7 +332,7 @@
 </code></pre></div></div>
 
 <p>これだと1箇所ずつ更新する必要があり、更新し忘れなどが発生します。<br />
-下記のように<code class="highlighter-rouge">settingGroups</code>を使うことで情報を1箇所に集約することができます。</p>
+下記のように<code class="language-plaintext highlighter-rouge">settingGroups</code>を使うことで情報を1箇所に集約することができます。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">settingGroups</span><span class="pi">:</span>
   <span class="na">app</span><span class="pi">:</span> <span class="c1"># ← 任意のグループ名</span>
@@ -358,14 +360,14 @@
 <p>Xcodeがプロジェクトやターゲット追加時に自動で設定が設定されるのと同様に、XcodeGenにもプロジェクトとターゲットにデフォルト設定を設定する。<br />
 プロジェクトにはDebugとReleaseの設定が、ターゲットにはプラットフォームとプロダクトタイプに応じた設定が適用される。</p>
 
-<p>これらのプリセットを変更・無効するには<code class="highlighter-rouge">options.settingPresets</code>プロパティを使います。<br />
-デフォルトでは<code class="highlighter-rouge">all</code>となっておりプロジェクトとターゲット両方に対して適用されています。<br />
-もしターゲットだけ、プロジェクトだけとしたい場合は、<code class="highlighter-rouge">options.settingPresets: project</code>や<code class="highlighter-rouge">targets</code>とすることで部分適用されます。<br />
-もし両方とも自動適用を無効にする場合は<code class="highlighter-rouge">none</code>になります。</p>
+<p>これらのプリセットを変更・無効するには<code class="language-plaintext highlighter-rouge">options.settingPresets</code>プロパティを使います。<br />
+デフォルトでは<code class="language-plaintext highlighter-rouge">all</code>となっておりプロジェクトとターゲット両方に対して適用されています。<br />
+もしターゲットだけ、プロジェクトだけとしたい場合は、<code class="language-plaintext highlighter-rouge">options.settingPresets: project</code>や<code class="language-plaintext highlighter-rouge">targets</code>とすることで部分適用されます。<br />
+もし両方とも自動適用を無効にする場合は<code class="language-plaintext highlighter-rouge">none</code>になります。</p>
 
 <h2 id="ビルド設定群を別ファイルxcconfigとして抜き出せる">ビルド設定群を別ファイル(xcconfig)として抜き出せる</h2>
 <p>ビルド設定のボリュームが大きくなると、プロジェクト仕様全体として見通しの悪いファイルとなってしまいます。<br />
-その場合は<code class="highlighter-rouge">configFiles</code>を使って<code class="highlighter-rouge">xcconfig</code>ファイルをインポートしてビルド構成を別ファイルに抽出できます。</p>
+その場合は<code class="language-plaintext highlighter-rouge">configFiles</code>を使って<code class="language-plaintext highlighter-rouge">xcconfig</code>ファイルをインポートしてビルド構成を別ファイルに抽出できます。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">configFiles</span><span class="pi">:</span>
   <span class="na">Debug</span><span class="pi">:</span> <span class="s">debug.xcconfig</span>
@@ -377,8 +379,8 @@
       <span class="na">Release</span><span class="pi">:</span> <span class="s">MyApp/release.xcconfig</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">configFiles</code>でもプロジェクト単位とターゲット単位で設定できます。<br />
-<code class="highlighter-rouge">xcconfig</code>について分からない方は「<span><a href="/ios/xcode/ios-xcode-xcconfig-how-to-use">Xcodeのxcconfigの理解と使い方</a></span>
+<p><code class="language-plaintext highlighter-rouge">configFiles</code>でもプロジェクト単位とターゲット単位で設定できます。<br />
+<code class="language-plaintext highlighter-rouge">xcconfig</code>について分からない方は「<span><a href="/ios/xcode/ios-xcode-xcconfig-how-to-use">Xcodeのxcconfigの理解と使い方</a></span>
 」にまとめた記事をお読みください。</p>
 
 <h2 id="結論">結論</h2>

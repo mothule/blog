@@ -14,8 +14,8 @@
   <title>MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される不具合バグが発生したのでプロセス探して終了させる解決方法をまとめた記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-13T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png" />
+<meta property="twitter:title" content="MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix","headline":"MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-05-13T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix"},"description":"MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される不具合バグが発生したのでプロセス探して終了させる解決方法をまとめた記事です。","image":"https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix","headline":"MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-05-13T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-13-mac-goolge-japanese-input-bug-fix/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/google-japanese-input/mac-goolge-japanese-input-bug-fix"},"description":"MacのGoogle日本語入力で変換候補ポップアップが左下とか左上など隅っこに表示される不具合バグが発生したのでプロセス探して終了させる解決方法をまとめた記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -241,9 +243,9 @@
 
 <h2 id="macのプロセス一覧でgoogle日本語入力を探す">Macのプロセス一覧でGoogle日本語入力を探す</h2>
 
-<p>Macでプロセス一覧を見るには<code class="highlighter-rouge">ps</code>コマンドを使う。</p>
+<p>Macでプロセス一覧を見るには<code class="language-plaintext highlighter-rouge">ps</code>コマンドを使う。</p>
 
-<p>ターミナルで<code class="highlighter-rouge">ps aux | grep GoogleJapaneseInput</code>を実行
+<p>ターミナルで<code class="language-plaintext highlighter-rouge">ps aux | grep GoogleJapaneseInput</code>を実行
 このときGoogle Chromeは閉じておく</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps x | <span class="nb">grep </span>GoogleJapaneseInput
@@ -253,38 +255,38 @@
 99614 s001  S+     0:00.00 <span class="nb">grep </span>GoogleJapaneseInput
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">GoogleJapaneseInput</code>, <code class="highlighter-rouge">GoogleJapaneseInputRenderer</code>, <code class="highlighter-rouge">GoogleJapaneseInputConverter</code>のプロセスがヒットする。<br />
+<p><code class="language-plaintext highlighter-rouge">GoogleJapaneseInput</code>, <code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code>, <code class="language-plaintext highlighter-rouge">GoogleJapaneseInputConverter</code>のプロセスがヒットする。<br />
 (最後のプロセスはgrepプロセスなので無関係)</p>
 
 <p>おそらく名前からしてこうだろう。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">GoogleJapaneseInput</code> : 設定全般 or 統括</li>
-  <li><code class="highlighter-rouge">GoogleJapaneseInputRenderer</code> : 描画関係</li>
-  <li><code class="highlighter-rouge">GoogleJapaneseInputConverter</code> : 変換関係</li>
+  <li><code class="language-plaintext highlighter-rouge">GoogleJapaneseInput</code> : 設定全般 or 統括</li>
+  <li><code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code> : 描画関係</li>
+  <li><code class="language-plaintext highlighter-rouge">GoogleJapaneseInputConverter</code> : 変換関係</li>
 </ul>
 
 <p>変換自体はうまく動いているので、おかしいのは変換以外の2つだと思われる。
-もっとも怪しいのは描画を司っているであろう<code class="highlighter-rouge">GoogleJapaneseInputRenderer</code>だと予想。</p>
+もっとも怪しいのは描画を司っているであろう<code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code>だと予想。</p>
 
 <h2 id="macのプロセスをkillコマンドで終了させる">Macのプロセスをkillコマンドで終了させる</h2>
 
-<p>Macでプロセスを終了させるには<code class="highlighter-rouge">kill</code>コマンドを使う。<br />
-<code class="highlighter-rouge">kill</code>コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。</p>
+<p>Macでプロセスを終了させるには<code class="language-plaintext highlighter-rouge">kill</code>コマンドを使う。<br />
+<code class="language-plaintext highlighter-rouge">kill</code>コマンドにプロセスIDを渡すとIDに紐づくプロセスにシグナルが送信され終了する。</p>
 
 <h3 id="googlejapaneseinputrendererプロセスのプロセスidを探す">GoogleJapaneseInputRendererプロセスのプロセスIDを探す</h3>
-<p><code class="highlighter-rouge">ps</code>コマンドの結果は表形式でプロセスが並ぶ。
+<p><code class="language-plaintext highlighter-rouge">ps</code>コマンドの結果は表形式でプロセスが並ぶ。
 １つ目のカラムはプロセスIDを表す。</p>
 
-<p>先程の表で<code class="highlighter-rouge">GoogleJapaneseInputRenderer</code>のプロセスIDは<code class="highlighter-rouge">1213</code>になる。<br />
+<p>先程の表で<code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code>のプロセスIDは<code class="language-plaintext highlighter-rouge">1213</code>になる。<br />
 なおこのプロセスIDはいつもこの値ではないので注意。</p>
 
 <h3 id="killコマンドでgooglejapaneseinputrendererを終了させる">killコマンドでGoogleJapaneseInputRendererを終了させる</h3>
-<p><code class="highlighter-rouge">GoogleJapaneseInputRenderer</code>のプロセスIDが分かったので最終的には、<br />
-<code class="highlighter-rouge">$ kill 1213</code>をターミナル上で実行すれば<code class="highlighter-rouge">GoogleJapaneseInputRenderer</code>が終了する。</p>
+<p><code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code>のプロセスIDが分かったので最終的には、<br />
+<code class="language-plaintext highlighter-rouge">$ kill 1213</code>をターミナル上で実行すれば<code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code>が終了する。</p>
 
 <h2 id="macのgoogle日本語入力が直った">MacのGoogle日本語入力が直った</h2>
-<p>仮説と予想は的中し、<code class="highlighter-rouge">GoogleJapaneseInputRenderer</code>プロセスを終了し、再度テキストエディで文字入力したら<code class="highlighter-rouge">GoogleJapaneseInputRenderer</code>が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。</p>
+<p>仮説と予想は的中し、<code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code>プロセスを終了し、再度テキストエディで文字入力したら<code class="language-plaintext highlighter-rouge">GoogleJapaneseInputRenderer</code>が立ち上がり変換候補ポップアップが文字の近くに戻ってきた。</p>
 
   </section>
 

@@ -14,8 +14,8 @@
   <title>iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-27T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png" />
+<meta property="twitter:title" content="iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg","headline":"iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-04-27T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg"},"description":"iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。","image":"https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg","headline":"iOSエンジニアは動画を無料で簡単にSlackやGitHubに上げれる環境を構築しよう","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-04-27T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/notebook/remote-work/notebook-remote-work-improve-communication-using-ffmpeg"},"description":"iOSエンジニアは作成した画面をiPhone画面で動いた動画の方がデザイナーやGitHubのPRなどで効率よく情報を共有できます。この記事ではiOSエンジニアが最低限整えるべき開発環境の一つである動画環境の構築方法について説明した記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -360,7 +362,7 @@ PC画面の場合はこの作業は不要です。</p>
 <h3 id="ffmepgをインストール">FFmepgをインストール</h3>
 <p>FFmepgをHomebrewでインストールします。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install ffmpeg
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>ffmpeg
 </code></pre></div></div>
 
 <p>Homebrewの使い方に関しては「<span><a href="/mac/homebrew/mac-homebrew-basic">MacのHomebrewとは？仕組み・使い方と用語整理</a></span>
@@ -385,7 +387,7 @@ ffmpeg version 3.3.4 Copyright <span class="o">(</span>c<span class="o">)</span>
 
 <ul>
   <li>QuickTime Playerは録画の保存を選ぶと、開かれる保存先は前回保存先になります。</li>
-  <li>保存のデフォルトファイル名は<code class="highlighter-rouge">名称未設定.mov</code>です。</li>
+  <li>保存のデフォルトファイル名は<code class="language-plaintext highlighter-rouge">名称未設定.mov</code>です。</li>
 </ul>
 
 <p>このシェルスクリプトは次の動きをします。</p>
@@ -406,51 +408,51 @@ ffmpeg version 3.3.4 Copyright <span class="o">(</span>c<span class="o">)</span>
 これをファイルとして適当な場所に保存してください。</p>
 
 <p>ここでは説明便宜上、下記パスに保存します。<br />
-「<code class="highlighter-rouge">~/sh/encode_movie.sh</code>」</p>
+「<code class="language-plaintext highlighter-rouge">~/sh/encode_movie.sh</code>」</p>
 
-<p><code class="highlighter-rouge">sh</code>フォルダが無い方は作っておいてください。</p>
+<p><code class="language-plaintext highlighter-rouge">sh</code>フォルダが無い方は作っておいてください。</p>
 
 <h4 id="chmodで実行可能にする">chmodで実行可能にする</h4>
 <p>次に保存したシェルスクリプトを誰でも実行可能にするためにchmodで実行権限を編集します。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>chmod 711 ~/sh/encode_movie.sh
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">chmod </span>711 ~/sh/encode_movie.sh
 </code></pre></div></div>
 
-<p>これで<code class="highlighter-rouge">sh</code>コマンドを使わず実行できます。これをしておかないとやはりスムーズとは言えません。</p>
+<p>これで<code class="language-plaintext highlighter-rouge">sh</code>コマンドを使わず実行できます。これをしておかないとやはりスムーズとは言えません。</p>
 
 <h4 id="分からない方向け-全部をまとめて用意するシェルコマンド">分からない方向け: 全部をまとめて用意するシェルコマンド</h4>
 
 <p>次のシェルコマンドをターミナルにコピペして実行すれば先程説明した内容をまとめてやってくれます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mkdir <span class="nt">-p</span> ~/sh
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">mkdir</span> <span class="nt">-p</span> ~/sh
 <span class="nb">echo</span> <span class="nt">-n</span> <span class="nt">-e</span> <span class="s2">"#!/bin/bash</span><span class="se">\n</span><span class="s2">cd ~/Downloads</span><span class="se">\n\`</span><span class="s2">ffmpeg -i 名称未設定.mov dest.mp4 -y</span><span class="se">\`</span><span class="s2">"</span> <span class="o">&gt;</span> ~/sh/encode_movie.sh
-chmod 711 ~/sh/encode_movie.sh
+<span class="nb">chmod </span>711 ~/sh/encode_movie.sh
 </code></pre></div></div>
 
 <p>このシェルコマンドらは</p>
 
 <ul>
   <li>自分のホームディレクトリにshディレクトリを作成</li>
-  <li><code class="highlighter-rouge">~/sh</code>に<code class="highlighter-rouge">encode_movie.sh</code>ファイルを作成</li>
-  <li><code class="highlighter-rouge">encode_movie.sh</code>の実行権限を変更</li>
+  <li><code class="language-plaintext highlighter-rouge">~/sh</code>に<code class="language-plaintext highlighter-rouge">encode_movie.sh</code>ファイルを作成</li>
+  <li><code class="language-plaintext highlighter-rouge">encode_movie.sh</code>の実行権限を変更</li>
 </ul>
 
 <p>をやってくれます。</p>
 
 <h3 id="シェルのパスを通す">シェルのパスを通す</h3>
-<p>用意したシェルスクリプトは、同じ名前と場所で保存していれば「<code class="highlighter-rouge">~/sh/encode_movie.sh</code>」にあると思います。</p>
+<p>用意したシェルスクリプトは、同じ名前と場所で保存していれば「<code class="language-plaintext highlighter-rouge">~/sh/encode_movie.sh</code>」にあると思います。</p>
 
 <p><strong>しかし、このままでは動画を作成後に、スクリプトを呼ぶためにわざわざパスを指定しなければいけません。</strong><br />
 それだと面倒なのでどこのディレクトリからでも呼べるようにパスを通します。</p>
 
-<p>PATH環境変数に<code class="highlighter-rouge">~/sh</code>のパスを通すことで、ターミナル上からどこでも呼べるようになります。
-ターミナルのデフォルトシェルがbashであれば、<code class="highlighter-rouge">.bash_profile</code>にPATH環境変数にパスを追加する処理を書きます。</p>
+<p>PATH環境変数に<code class="language-plaintext highlighter-rouge">~/sh</code>のパスを通すことで、ターミナル上からどこでも呼べるようになります。
+ターミナルのデフォルトシェルがbashであれば、<code class="language-plaintext highlighter-rouge">.bash_profile</code>にPATH環境変数にパスを追加する処理を書きます。</p>
 
-<p><code class="highlighter-rouge">$ vim ~/.bash_profile</code>で次の処理を追加します。</p>
+<p><code class="language-plaintext highlighter-rouge">$ vim ~/.bash_profile</code>で次の処理を追加します。</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">export </span><span class="nv">PATH</span><span class="o">=</span><span class="nv">$PATH</span>:~/sh
 </code></pre></div></div>
 
-<p>保存終わったら<code class="highlighter-rouge">$ source ~/.bash_profile</code>でリロードしておきましょう。</p>
+<p>保存終わったら<code class="language-plaintext highlighter-rouge">$ source ~/.bash_profile</code>でリロードしておきましょう。</p>
 
 <h2 id="実際に動画を撮る">実際に動画を撮る</h2>
 <p>動画環境は整いました。それでは実際にiPhone画面の録画とMac画面の録画をしてみます。</p>
@@ -466,7 +468,7 @@ chmod 711 ~/sh/encode_movie.sh
 
 <h3 id="quicktime-playerappを立ち上げる">QuickTime Player.appを立ち上げる</h3>
 
-<p><code class="highlighter-rouge">Spotlight検索</code>で「QuickTime」と入力すれば見つけられます。<br />
+<p><code class="language-plaintext highlighter-rouge">Spotlight検索</code>で「QuickTime」と入力すれば見つけられます。<br />
 起動したらメニューバーからファイル&gt;新規ムービー収録を選びます。</p>
 
 <p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/3.png" width="50%" alt="QuickTimePlayer新規ムービー収録" /></a></p>
@@ -485,7 +487,7 @@ chmod 711 ~/sh/encode_movie.sh
 
 <p><a href="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png"><img src="/assets/images/2020-04-27-notebook-remote-work-improve-communication-using-ffmpeg/5.png" width="50%" alt="QuickTimePlayer新規ムービ収録編集画面" /></a></p>
 
-<p>この画面で保存(<code class="highlighter-rouge">cmd+s</code>)を押すと保存先の選択が出ます。</p>
+<p>この画面で保存(<code class="language-plaintext highlighter-rouge">cmd+s</code>)を押すと保存先の選択が出ます。</p>
 
 <p>ここでファイル名はそのままの「<strong>名称未設定.mov</strong>」にしてください。<br />
 <strong>ファイル名を変更してしまうと、次工程のシェルスクリプトが動きません。</strong></p>
@@ -505,7 +507,7 @@ chmod 711 ~/sh/encode_movie.sh
 </code></pre></div></div>
 
 <p>パスが通っているので、シェルスクリプトファイル名を指定するだけでいいです。<br />
-実行すると<code class="highlighter-rouge">~/Downloads/dest.mp4</code>にファイルが作成されます。</p>
+実行すると<code class="language-plaintext highlighter-rouge">~/Downloads/dest.mp4</code>にファイルが作成されます。</p>
 
 <h2 id="なぜffmpegが必要なのか">なぜFFmpegが必要なのか？</h2>
 <p>FFmpegやそれを実行するシェルスクリプトが必要な理由は、ファイルサイズにあります。</p>
@@ -579,7 +581,7 @@ QuickTime Playerで「<strong>新規画面収録</strong>」を選ぶだけで�
 30FPSのサイズ320でgifファイルを作成します。</p>
 
 <p>このファイルには一度mp4に変換してからgifに変換しています。　　
-そしてそのmp4に変換する処理は前述で説明したmp4に変換するシェルスクリプト「<code class="highlighter-rouge">encode_movie.sh</code>」を呼んで変換しています。</p>
+そしてそのmp4に変換する処理は前述で説明したmp4に変換するシェルスクリプト「<code class="language-plaintext highlighter-rouge">encode_movie.sh</code>」を呼んで変換しています。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c">#!/bin/bash</span>
 

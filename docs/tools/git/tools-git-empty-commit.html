@@ -14,8 +14,8 @@
   <title>Gitで先にPRやリモートブランチを用意する方法 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Gitで先にPRやリモートブランチを用意する方法" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="Gitで事前にPRやリモートブランチを用意する方法についてメモしました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-03T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-03-tools-git-empty-commit.png" />
+<meta property="twitter:title" content="Gitで先にPRやリモートブランチを用意する方法" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/git/tools-git-empty-commit","headline":"Gitで先にPRやリモートブランチを用意する方法","dateModified":"2020-02-03T13:52:57+09:00","datePublished":"2020-02-03T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/git/tools-git-empty-commit"},"description":"Gitで事前にPRやリモートブランチを用意する方法についてメモしました。","image":"https://blog.mothule.com/assets/images/2020-02-03-tools-git-empty-commit.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/git/tools-git-empty-commit","headline":"Gitで先にPRやリモートブランチを用意する方法","dateModified":"2020-02-03T13:52:57+09:00","datePublished":"2020-02-03T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-03-tools-git-empty-commit.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/git/tools-git-empty-commit"},"description":"Gitで事前にPRやリモートブランチを用意する方法についてメモしました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -200,7 +202,7 @@
 <p>ニーズは少ないと感じる人もいるかもしれませんが、少し規模が大きかったり、チームメンバーが多かったりすると使う機会は増えてきます。</p>
 
 <h2 id="どんなときに役立つか">どんなときに役立つか</h2>
-<p><code class="highlighter-rouge">develop</code>ブランチや<code class="highlighter-rouge">master</code>ブランチをリリースのため凍結中は、それらにマージできませんよね。
+<p><code class="language-plaintext highlighter-rouge">develop</code>ブランチや<code class="language-plaintext highlighter-rouge">master</code>ブランチをリリースのため凍結中は、それらにマージできませんよね。
 その状態だと次バージョン対応で、Aさん対応済みAブランチ待ちのBさん対応中Bブランチがあったら作業を進められません。Bさんは作業を進められません。
 その場合は事前に集約ブランチを用意しておき、ここを作業ブランチとして扱えば、AブランチとBブランチをマージできるので、Bさんは作業を進められます。</p>
 
@@ -214,7 +216,7 @@ PRも作成することができます。</p>
 
 <h2 id="やり方">やり方</h2>
 
-<p>コミットコマンドに <code class="highlighter-rouge">--allo-empty</code> オプションをつけるだけです。</p>
+<p>コミットコマンドに <code class="language-plaintext highlighter-rouge">--allo-empty</code> オプションをつけるだけです。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>git commit <span class="nt">--allow-empty</span> <span class="nt">-m</span> <span class="s2">"コメント"</span>
 </code></pre></div></div>

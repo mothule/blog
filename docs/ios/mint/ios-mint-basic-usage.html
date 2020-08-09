@@ -14,8 +14,8 @@
   <title>iOS開発環境には重要エコシステムとなるMintの理解と利用 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="iOS開発環境には重要エコシステムとなるMintの理解と利用" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOS開発ではXcodeだけでなくSwiftLintやXcodeGenなどエコシステムが開発体験を向上させます。Mintではそれらツールのバージョン管理を可能にするパッケージマネージャーであり従来のHomebrewの課題を解決する重要なツールです。この記事ではMintの理解と利用について説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-31T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" />
+<meta property="twitter:title" content="iOS開発環境には重要エコシステムとなるMintの理解と利用" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/mint/ios-mint-basic-usage","headline":"iOS開発環境には重要エコシステムとなるMintの理解と利用","dateModified":"2020-07-31T17:41:29+09:00","datePublished":"2020-07-31T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/mint/ios-mint-basic-usage"},"description":"iOS開発ではXcodeだけでなくSwiftLintやXcodeGenなどエコシステムが開発体験を向上させます。Mintではそれらツールのバージョン管理を可能にするパッケージマネージャーであり従来のHomebrewの課題を解決する重要なツールです。この記事ではMintの理解と利用について説明します。","image":"https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/mint/ios-mint-basic-usage","headline":"iOS開発環境には重要エコシステムとなるMintの理解と利用","dateModified":"2020-07-31T17:41:29+09:00","datePublished":"2020-07-31T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/mint/ios-mint-basic-usage"},"description":"iOS開発ではXcodeだけでなくSwiftLintやXcodeGenなどエコシステムが開発体験を向上させます。Mintではそれらツールのバージョン管理を可能にするパッケージマネージャーであり従来のHomebrewの課題を解決する重要なツールです。この記事ではMintの理解と利用について説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -254,7 +256,7 @@ Swift製ツールもHomebrewからインストールできますし、<br />
 <h2 id="mintが解決する課題">Mintが解決する課題</h2>
 <p>Mintは、バージョン別管理を可能とし、管轄外のバージョン変更課題を解決します。</p>
 
-<p>Mintでは、<code class="highlighter-rouge">Mintfile</code>によりプロジェクト毎にバージョンを管理できます。<br />
+<p>Mintでは、<code class="language-plaintext highlighter-rouge">Mintfile</code>によりプロジェクト毎にバージョンを管理できます。<br />
 これにより<strong>PC内の複数プロジェクト間のSwiftツールの疎結合を実現します。</strong></p>
 
 <h2 id="mintのパッケージ管理方法について">Mintのパッケージ管理方法について</h2>
@@ -269,40 +271,40 @@ Swift製ツールもHomebrewからインストールできますし、<br />
 <h2 id="mintのインストール方法">Mintのインストール方法</h2>
 
 <p>Homebrewでインストールできます。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install mint
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>mint
 </code></pre></div></div>
 
 <p>他にも<a href="https://github.com/yonaskolb/Mint#make">Make</a>, <a href="https://github.com/yonaskolb/Mint#using-mint-itself">Mintコード</a>, <a href="https://github.com/yonaskolb/Mint#swift-package-manager">Swift Package Manager</a>からもインストールできます。</p>
 
 <h2 id="mintでパッケージをインストールする方法">Mintでパッケージをインストールする方法</h2>
 
-<p>Mintでパッケージをインストールするには<code class="highlighter-rouge">mint install</code>コマンドを使います。<br />
+<p>Mintでパッケージをインストールするには<code class="language-plaintext highlighter-rouge">mint install</code>コマンドを使います。<br />
 例えば<a href="https://github.com/yonaskolb/XcodeGen">XcodeGen</a>の最新版をインストールするなら下記になります。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint <span class="nb">install </span>yonaskolb/XcodeGen
 </code></pre></div></div>
 
 <h3 id="バージョン指定でインストール">バージョン指定でインストール</h3>
-<p>バージョンを指定してインストールするならパッケージ情報の末尾に<code class="highlighter-rouge">@x.x.x</code>形式でバージョン情報を渡します。</p>
+<p>バージョンを指定してインストールするならパッケージ情報の末尾に<code class="language-plaintext highlighter-rouge">@x.x.x</code>形式でバージョン情報を渡します。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen@1.2.4
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint <span class="nb">install </span>yonaskolb/XcodeGen@1.2.4
 </code></pre></div></div>
 
 <h3 id="パスを通さずインストール">パスを通さずインストール</h3>
-<p>デフォルトではインストールすると<code class="highlighter-rouge">/usr/local/bin</code>にシンボリックリンクを作成します。<br />
+<p>デフォルトではインストールすると<code class="language-plaintext highlighter-rouge">/usr/local/bin</code>にシンボリックリンクを作成します。<br />
 これによりどこからでもアクセスできるようになります。<br />
-もしインストールするパッケージをリンクしたくない場合は<code class="highlighter-rouge">--no-link</code>をつけます。</p>
+もしインストールするパッケージをリンクしたくない場合は<code class="language-plaintext highlighter-rouge">--no-link</code>をつけます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen@1.2.4 <span class="nt">--no-link</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint <span class="nb">install </span>yonaskolb/XcodeGen@1.2.4 <span class="nt">--no-link</span>
 </code></pre></div></div>
 
 <h3 id="再インストール">再インストール</h3>
-<p><code class="highlighter-rouge">--force</code>オプションをつけることで再インストールできます。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint install yonaskolb/XcodeGen@1.2.4 <span class="nt">--force</span>
+<p><code class="language-plaintext highlighter-rouge">--force</code>オプションをつけることで再インストールできます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint <span class="nb">install </span>yonaskolb/XcodeGen@1.2.4 <span class="nt">--force</span>
 </code></pre></div></div>
 
 <h2 id="mintでパッケージを実行する方法">Mintでパッケージを実行する方法</h2>
-<p>Mintでインストールしたパッケージを実行するには、<code class="highlighter-rouge">mint run</code>コマンドを使います。<br />
-例えば最新版の<code class="highlighter-rouge">XcodeGen</code>で<code class="highlighter-rouge">generate</code>を実行したい場合は下記になります。</p>
+<p>Mintでインストールしたパッケージを実行するには、<code class="language-plaintext highlighter-rouge">mint run</code>コマンドを使います。<br />
+例えば最新版の<code class="language-plaintext highlighter-rouge">XcodeGen</code>で<code class="language-plaintext highlighter-rouge">generate</code>を実行したい場合は下記になります。</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint run XcodeGen generate
 </code></pre></div></div>
 
@@ -329,19 +331,19 @@ Swift製ツールもHomebrewからインストールできますし、<br />
 <p>至って簡単です。コマンドラインでインストールや実行するときに指定してる方法と同じです。</p>
 
 <p><em>Mintfile</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yonaskolb/XcodeGen@2.16.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>yonaskolb/XcodeGen@2.16.0
 realm/SwiftLint@0.39.2
 </code></pre></div></div>
 
 <h2 id="mintfile内のパッケージを使う">Mintfile内のパッケージを使う</h2>
-<p>そのまま<code class="highlighter-rouge">mint run xcodegen</code>と実行すれば、インストールされてなければインストールして実行してくれます。
-まとめて指定バージョンを予め全部インストールしておきたい場合は、<code class="highlighter-rouge">mint bootstrap</code>コマンドを実行します。
-<code class="highlighter-rouge">mint bootstrap</code>ではデフォルトはリンク処理を行いません。<br />
-もしリンク処理したい場合は<code class="highlighter-rouge">mint bootstrap --link</code>で実行してください。</p>
+<p>そのまま<code class="language-plaintext highlighter-rouge">mint run xcodegen</code>と実行すれば、インストールされてなければインストールして実行してくれます。
+まとめて指定バージョンを予め全部インストールしておきたい場合は、<code class="language-plaintext highlighter-rouge">mint bootstrap</code>コマンドを実行します。
+<code class="language-plaintext highlighter-rouge">mint bootstrap</code>ではデフォルトはリンク処理を行いません。<br />
+もしリンク処理したい場合は<code class="language-plaintext highlighter-rouge">mint bootstrap --link</code>で実行してください。</p>
 
 <h3 id="注意-mintfileの有効範囲について">注意: Mintfileの有効範囲について</h3>
 <p>rbenvや.gitignoreなどと異なり、カレントディレクトリ上にMintfileが見つからない場合はバージョン解決はMintfileで行いません。
-例えば次のツリー構造のとき、Bディレクトリで<code class="highlighter-rouge">mint run xcodege</code>を実行すると<code class="highlighter-rouge">Mintfile</code>内のバージョンではなくMintがインストールしてる最新で実行します。</p>
+例えば次のツリー構造のとき、Bディレクトリで<code class="language-plaintext highlighter-rouge">mint run xcodege</code>を実行すると<code class="language-plaintext highlighter-rouge">Mintfile</code>内のバージョンではなくMintがインストールしてる最新で実行します。</p>
 
 <ul>
   <li>Aディレクトリ
@@ -358,7 +360,7 @@ realm/SwiftLint@0.39.2
 
 <h3 id="mintからの出力を止める">mintからの出力を止める</h3>
 
-<p><code class="highlighter-rouge">--silent</code>オプションを使います。</p>
+<p><code class="language-plaintext highlighter-rouge">--silent</code>オプションを使います。</p>
 
 <p><em>–silentなし</em></p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mint run xcodegen version
@@ -374,17 +376,17 @@ Version: 2.16.0
 
 <h3 id="mintのキャッシュパスとリンク先を変える">mintのキャッシュパスとリンク先を変える</h3>
 
-<p><code class="highlighter-rouge">MINT_PATH</code>を変更することでインストールしたパッケージの保存場所を変更できます。<br />
-デフォルトは<code class="highlighter-rouge">/user/local/lib/mint</code>です。</p>
+<p><code class="language-plaintext highlighter-rouge">MINT_PATH</code>を変更することでインストールしたパッケージの保存場所を変更できます。<br />
+デフォルトは<code class="language-plaintext highlighter-rouge">/user/local/lib/mint</code>です。</p>
 
-<p><code class="highlighter-rouge">MINT_LINK_PATH</code>を変更するとシンボリックリンクの作成場所を変更できます。<br />
-デフォルトは<code class="highlighter-rouge">/usr/local/bin</code>です。</p>
+<p><code class="language-plaintext highlighter-rouge">MINT_LINK_PATH</code>を変更するとシンボリックリンクの作成場所を変更できます。<br />
+デフォルトは<code class="language-plaintext highlighter-rouge">/usr/local/bin</code>です。</p>
 
 <h2 id="実際にxcodeプロジェクトに組み込む">実際にXcodeプロジェクトに組み込む</h2>
 
 <p>SwiftLintを実際に組み込んでみます。<br />
 小さいですが一応<a href="https://github.com/mothule/research_mint">GitHub</a>にも上げてあります。<br />
-git cloneして<code class="highlighter-rouge">mint bootstrap</code>を試してみるのもいいかもしれないです。</p>
+git cloneして<code class="language-plaintext highlighter-rouge">mint bootstrap</code>を試してみるのもいいかもしれないです。</p>
 
 <p>HomebrewではBuild Scriptでは</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>which swiftlint <span class="o">&gt;</span>/dev/null<span class="p">;</span> <span class="k">then
@@ -407,7 +409,7 @@ git cloneして<code class="highlighter-rouge">mint bootstrap</code>を試して
 
 <h3 id="実行条件はmintfileを見たほうがいい">実行条件はMintfileを見たほうがいい</h3>
 <p>ネットで見かけた記事では↓のようにmintコマンドの有無でシェルコマンドを実行していましたが、<br />
-MintはMintfileがなくても、<code class="highlighter-rouge">mint run swiftlint</code>と実行すれば勝手に最新版を取ってきて実行するので、<br />
+MintはMintfileがなくても、<code class="language-plaintext highlighter-rouge">mint run swiftlint</code>と実行すれば勝手に最新版を取ってきて実行するので、<br />
 mintコマンドの有無ではなく、Mintfileの有無のほうが「知らぬ間に最新版で実行してた」を防げると思います。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if </span>which mint <span class="o">&gt;</span>/dev/null<span class="p">;</span> <span class="k">then

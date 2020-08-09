@@ -14,8 +14,8 @@
   <title>Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。 [so_keepalive=on off [keepidle]:[keepintvl]:[keepcnt]];" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-22T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png" />
+<meta property="twitter:title" content="Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac","headline":"Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-02-22T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。 [so_keepalive=on off [keepidle]:[keepintvl]:[keepcnt]];","image":"https://blog.mothule.com/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac","headline":"Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-02-22T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-22-web-nginx-getting-started-step2-on-mac/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step2-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。 [so_keepalive=on off [keepidle]:[keepintvl]:[keepcnt]];","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -190,7 +192,7 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#ゼロからnginxconfを書いてhttpサーバを構築します">ゼロから<code class="highlighter-rouge">nginx.conf</code>を書いてHTTPサーバを構築します</a>
+  <li><a href="#ゼロからnginxconfを書いてhttpサーバを構築します">ゼロから<code class="language-plaintext highlighter-rouge">nginx.conf</code>を書いてHTTPサーバを構築します</a>
     <ul>
       <li><a href="#インストールや起動方法などが分からない方は過去記事を">インストールや起動方法などが分からない方は過去記事を</a></li>
     </ul>
@@ -301,13 +303,13 @@
   <section>
   <p>MacでWebサーバnginxを立ち上げるための入門記事シリーズ2回目です。</p>
 
-<h2 id="ゼロからnginxconfを書いてhttpサーバを構築します">ゼロから<code class="highlighter-rouge">nginx.conf</code>を書いてHTTPサーバを構築します</h2>
+<h2 id="ゼロからnginxconfを書いてhttpサーバを構築します">ゼロから<code class="language-plaintext highlighter-rouge">nginx.conf</code>を書いてHTTPサーバを構築します</h2>
 
-<p><code class="highlighter-rouge">nginx.conf.default</code>を一行ずつ読み解いて有無を決めながら簡易な<strong>静的ブログ向け設定ファイルを作り上げていきます。</strong><br />
-また、<code class="highlighter-rouge">nginx.conf.default</code>にはないけど関連するものも取り上げます。</p>
+<p><code class="language-plaintext highlighter-rouge">nginx.conf.default</code>を一行ずつ読み解いて有無を決めながら簡易な<strong>静的ブログ向け設定ファイルを作り上げていきます。</strong><br />
+また、<code class="language-plaintext highlighter-rouge">nginx.conf.default</code>にはないけど関連するものも取り上げます。</p>
 
 <p>上から一つずつ設定しており、それぞれの段階で実行が出来る状態になってありますが、<strong>もし途中で躓いた場合は</strong>
-最後に<code class="highlighter-rouge">nginx.conf</code>の全容を載せてます。確認してみてください。</p>
+最後に<code class="language-plaintext highlighter-rouge">nginx.conf</code>の全容を載せてます。確認してみてください。</p>
 
 <h3 id="インストールや起動方法などが分からない方は過去記事を">インストールや起動方法などが分からない方は過去記事を</h3>
 <p>前回はWebサーバの簡単な基礎とnginxのインストールから立ち上げるまでを説明しました。<br />
@@ -316,7 +318,7 @@
 
 <h2 id="最小設定でnginxのhttpサーバを構築する">最小設定でnginxのHTTPサーバを構築する</h2>
 
-<p>デフォルトで用意された<code class="highlighter-rouge">nginx.conf</code>には色々と書かれてて、やる気が萎えるのし分かりにくいです。<br />
+<p>デフォルトで用意された<code class="language-plaintext highlighter-rouge">nginx.conf</code>には色々と書かれてて、やる気が萎えるのし分かりにくいです。<br />
 なので、まずはこの雛形を削りながら最少設定でHTTPサーバを構築します。</p>
 
 <p>削りきった最少でHTTPサーバを構築する設定ファイルは下記になります。</p>
@@ -330,7 +332,7 @@ http <span class="o">{</span>
   <span class="o">}</span>
 <span class="o">}</span>
 </code></pre></div></div>
-<p><code class="highlighter-rouge">events</code> <code class="highlighter-rouge">http</code> <code class="highlighter-rouge">server</code> の３つのブロックディレクティブだけでいけました。<br />
+<p><code class="language-plaintext highlighter-rouge">events</code> <code class="language-plaintext highlighter-rouge">http</code> <code class="language-plaintext highlighter-rouge">server</code> の３つのブロックディレクティブだけでいけました。<br />
 それ以外はデフォルト値として動いているようです。<br />
 当然何も機能を設定していないので、ほぼ何もできないHTTPサーバです。<br />
 ここまで削れればとっかかりやすいですね。</p>
@@ -338,14 +340,14 @@ http <span class="o">{</span>
 <p>なおこれらブロックディレクティブのことはコンテキストと呼ぶようです。
 <strong>これらブロックディレクティブに1つも囲まれていない部分(インデントなし部分)をmainコンテキストと呼ぶようです。</strong></p>
 
-<p>次は、デフォルト設定ファイル(<code class="highlighter-rouge">nginx.conf.default</code>)から一つずつ確認しながら先程の最少設定ファイルを埋めていきます。</p>
+<p>次は、デフォルト設定ファイル(<code class="language-plaintext highlighter-rouge">nginx.conf.default</code>)から一つずつ確認しながら先程の最少設定ファイルを埋めていきます。</p>
 
 <h2 id="mainコンテキスト">mainコンテキスト</h2>
 
 <p>前述したどのブロックディレクティブにも囲まれていない部分から見ていきます。<br />
-<code class="highlighter-rouge">nginx.conf.default</code>ファイルの冒頭部分です。</p>
+<code class="language-plaintext highlighter-rouge">nginx.conf.default</code>ファイルの冒頭部分です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#user  nobody;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#user  nobody;
 worker_processes  1;
 
 #error_log  logs/error.log;
@@ -358,55 +360,55 @@ worker_processes  1;
 <h3 id="userディレクティブ">userディレクティブ</h3>
 <p>workerプロセスを実行するユーザーとグループを設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">user user [group];</code><br />
-デフォルト: <code class="highlighter-rouge">nobody nobody</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">user user [group];</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">nobody nobody</code></p>
 
 <p>デフォルトでもコメントアウトされてるように必須項目ではありません。</p>
 
 <h3 id="worker_processesディレクティブ">worker_processesディレクティブ</h3>
 <p>workerのプロセス数を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">worker_processes *number*|auto;</code><br />
-デフォルト: <code class="highlighter-rouge">worker_processes 1;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">worker_processes *number*|auto;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">worker_processes 1;</code></p>
 
 <p>最適値はCPUコア数、ストレージ数、負荷パターンなど多岐に渡ります。<br />
 悩ましい場合はCPUコア数を推奨します。<br />
-<code class="highlighter-rouge">auto</code>はそれを自動検出します。</p>
+<code class="language-plaintext highlighter-rouge">auto</code>はそれを自動検出します。</p>
 
 <p>今回はCPUコア数と同じ値にします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_processes 4;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_processes 4;
 </code></pre></div></div>
 
 <p>手元のMacのコア数はシステムレポートのハードウェア概要で確認できます。　　
-システムレポートは <code class="highlighter-rouge">Spotlight検索</code> &gt; <code class="highlighter-rouge">このMacについて.app</code> &gt; <code class="highlighter-rouge">システムレポート</code> でたどり着けます。</p>
+システムレポートは <code class="language-plaintext highlighter-rouge">Spotlight検索</code> &gt; <code class="language-plaintext highlighter-rouge">このMacについて.app</code> &gt; <code class="language-plaintext highlighter-rouge">システムレポート</code> でたどり着けます。</p>
 
 <h3 id="error_logディレクティブ">error_logディレクティブ</h3>
 <p>エラーログ出力先の設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">error_log file [level];</code><br />
-デフォルト: <code class="highlighter-rouge">error_log logs/error.log error;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">error_log file [level];</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">error_log logs/error.log error;</code></p>
 
 <p>出力パスとログレベルを設定します。<br />
-ログレベルは<code class="highlighter-rouge">debug, info, notice, warn, error, crit, alert, emerg</code>の8個です。<br />
-例えばログレベルを<code class="highlighter-rouge">error</code>にすると<code class="highlighter-rouge">error, crit, alert, emerg</code>のレベルのログが出力されます。</p>
+ログレベルは<code class="language-plaintext highlighter-rouge">debug, info, notice, warn, error, crit, alert, emerg</code>の8個です。<br />
+例えばログレベルを<code class="language-plaintext highlighter-rouge">error</code>にすると<code class="language-plaintext highlighter-rouge">error, crit, alert, emerg</code>のレベルのログが出力されます。</p>
 
 <p>エラーログは欲しいのでログレベルerrorでログを取ろうと思います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error_log /usr/local/var/log/nginx/error.log error;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error_log /usr/local/var/log/nginx/error.log error;
 </code></pre></div></div>
 
 <h3 id="pidディレクティブ">pidディレクティブ</h3>
 <p>メインプロセスのプロセスIDの保存先を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">pid file;</code><br />
-デフォルト: <code class="highlighter-rouge">pid logs/nginx.pid;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">pid file;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">pid logs/nginx.pid;</code></p>
 
-<p>公式のデフォルト値は↑ですが、Macだと <code class="highlighter-rouge">/usr/local/var/run/nginx.pid</code> にあります。<br />
+<p>公式のデフォルト値は↑ですが、Macだと <code class="language-plaintext highlighter-rouge">/usr/local/var/run/nginx.pid</code> にあります。<br />
 デフォルト値でも問題ない場所にあるので特に指定はしないでいきます。</p>
 
 <h2 id="eventsコンテキスト">eventsコンテキスト</h2>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events {
     worker_connections  10;
 }
 </code></pre></div></div>
@@ -416,45 +418,45 @@ worker_processes  1;
 
 <p>ワーカープロセスで開くことができる同時接続の最大数を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">worker_connections number;</code><br />
-デフォルト: <code class="highlighter-rouge">worker_connections 512;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">worker_connections number;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">worker_connections 512;</code></p>
 
 <p>この接続とは、クライアントだけでなくすべての接続（プロキシサーバとの接続など）も含まれます。<br />
-また、同時接続の実際の数が、<code class="highlighter-rouge">worker_rlimit_nofile</code> に依存します。<br />
-せっかくなので <code class="highlighter-rouge">worker_rlimit_nofile</code> についても取り上げます。</p>
+また、同時接続の実際の数が、<code class="language-plaintext highlighter-rouge">worker_rlimit_nofile</code> に依存します。<br />
+せっかくなので <code class="language-plaintext highlighter-rouge">worker_rlimit_nofile</code> についても取り上げます。</p>
 
 <h3 id="worker_rlimit_nofileディレクティブ">worker_rlimit_nofileディレクティブ</h3>
-<p>ワーカープロセスが開けるファイルの最大数(<code class="highlighter-rouge">RLIMIT_NOFILE</code>)の制限を設定します。<br />
+<p>ワーカープロセスが開けるファイルの最大数(<code class="language-plaintext highlighter-rouge">RLIMIT_NOFILE</code>)の制限を設定します。<br />
 メインプロセスを再起動せずに制限を増やすために使います。</p>
 
-<p>通常1プロセスは<code class="highlighter-rouge">RLIMIT_NOFILE</code>の数以上のファイルは開けませんが、<br />
+<p>通常1プロセスは<code class="language-plaintext highlighter-rouge">RLIMIT_NOFILE</code>の数以上のファイルは開けませんが、<br />
 この値を設定することでその上限を超えたファイル数を処理できるようになります。</p>
 
 <p><strong>なおworker_rlimit_nofileディレクティブはmainコンテキスト</strong>で使えるディレクティブです。**</p>
 
 <h4 id="rlimit_nofileとは">RLIMIT_NOFILEとは？</h4>
 <p>1プロセスが開けるファイルの上限です。<br />
-確認するには<code class="highlighter-rouge">ulimit -n</code> で取れます。Macだとデフォルトは<code class="highlighter-rouge">256</code>しかないようです。</p>
+確認するには<code class="language-plaintext highlighter-rouge">ulimit -n</code> で取れます。Macだとデフォルトは<code class="language-plaintext highlighter-rouge">256</code>しかないようです。</p>
 
 <h2 id="同時接続に関するパラメータを整理する">同時接続に関するパラメータを整理する</h2>
 
 <ul>
-  <li><code class="highlighter-rouge">worker_rlimit_nofile</code>はworkerプロセスが扱えるファイル上限数(<code class="highlighter-rouge">RLIMIT_NOFILE</code>)を設定する</li>
-  <li><code class="highlighter-rouge">RLIMIT_NOFILE</code>は1プロセスが開けるファイル上限で<code class="highlighter-rouge">ulimit -n</code>で確認できる。デフォルトでは<strong>256</strong>しかないようです。</li>
-  <li>OS全体で扱えるファイル数は<code class="highlighter-rouge">launchctl limit maxfiles</code>で確認できる。デフォルトでは<strong>256</strong>しかないようです。</li>
+  <li><code class="language-plaintext highlighter-rouge">worker_rlimit_nofile</code>はworkerプロセスが扱えるファイル上限数(<code class="language-plaintext highlighter-rouge">RLIMIT_NOFILE</code>)を設定する</li>
+  <li><code class="language-plaintext highlighter-rouge">RLIMIT_NOFILE</code>は1プロセスが開けるファイル上限で<code class="language-plaintext highlighter-rouge">ulimit -n</code>で確認できる。デフォルトでは<strong>256</strong>しかないようです。</li>
+  <li>OS全体で扱えるファイル数は<code class="language-plaintext highlighter-rouge">launchctl limit maxfiles</code>で確認できる。デフォルトでは<strong>256</strong>しかないようです。</li>
 </ul>
 
-<p><code class="highlighter-rouge">launchctl limit maxfiles</code>を変更は可能ですが、今回は目的ではないのでデフォルトのままにします。
+<p><code class="language-plaintext highlighter-rouge">launchctl limit maxfiles</code>を変更は可能ですが、今回は目的ではないのでデフォルトのままにします。
 ちなみに変えたい場合は「launchctl limit maxfiles」で検索するとたくさん出てくるのでそちらを参考にしてください。</p>
 
 <h3 id="worker_rlimit_nofileの算出式">worker_rlimit_nofileの算出式</h3>
 <p>OS全体ファイル上限、プロセスファイル上限、workerプロセス数の３つからworkerプロセスの同時接続数を算出できそうです。</p>
 
-<p><code class="highlighter-rouge">workerプロセス数(worker_processes) * プロセスファイル上限(worker_rlimit_nofile) &lt; OS全体ファイル上限(maxfiles)</code></p>
+<p><code class="language-plaintext highlighter-rouge">workerプロセス数(worker_processes) * プロセスファイル上限(worker_rlimit_nofile) &lt; OS全体ファイル上限(maxfiles)</code></p>
 
 <p>この式からプロセスファイル上限(worker_rlimit_nofile)を求めます。</p>
 
-<p><strong>プロセスファイル上限(<code class="highlighter-rouge">worker_rlimit_nofile</code>) = OS全体ファイル上限(<code class="highlighter-rouge">maxfiles</code>) / workerプロセス数(<code class="highlighter-rouge">worker_processes</code>)</strong></p>
+<p><strong>プロセスファイル上限(<code class="language-plaintext highlighter-rouge">worker_rlimit_nofile</code>) = OS全体ファイル上限(<code class="language-plaintext highlighter-rouge">maxfiles</code>) / workerプロセス数(<code class="language-plaintext highlighter-rouge">worker_processes</code>)</strong></p>
 
 <p>この式に実際の値を当てはめます。</p>
 
@@ -465,18 +467,18 @@ worker_processes  1;
 
 <p><strong>64 * 0.5 = 32</strong></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_rlimit_nofile 32;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_rlimit_nofile 32;
 </code></pre></div></div>
 
 <p>ということですね。</p>
 
-<p>次に<code class="highlighter-rouge">worker_connections</code>ですが、1接続1ファイルオープンではなく少なくとも2つは消耗するようです。<a href="https://qiita.com/mikene_koko/items/85fbe6a342f89bf53e89#%E4%BD%95%E6%95%85-worker_connections-%E3%81%AE2%E5%80%8D%E3%81%AE%E5%80%A4%E3%81%8C-worker_rlimit_nofile-%E4%BB%A5%E4%B8%8B%E3%81%A7%E3%81%82%E3%82%8C%E3%81%B0ok">参考</a></p>
+<p>次に<code class="language-plaintext highlighter-rouge">worker_connections</code>ですが、1接続1ファイルオープンではなく少なくとも2つは消耗するようです。<a href="https://qiita.com/mikene_koko/items/85fbe6a342f89bf53e89#%E4%BD%95%E6%95%85-worker_connections-%E3%81%AE2%E5%80%8D%E3%81%AE%E5%80%A4%E3%81%8C-worker_rlimit_nofile-%E4%BB%A5%E4%B8%8B%E3%81%A7%E3%81%82%E3%82%8C%E3%81%B0ok">参考</a></p>
 
-<p>上記記事からして <code class="highlighter-rouge">worker_connections</code> は <code class="highlighter-rouge">worker_rlimit_nofile</code> の 1/3 にしておけば余裕だと思います。</p>
+<p>上記記事からして <code class="language-plaintext highlighter-rouge">worker_connections</code> は <code class="language-plaintext highlighter-rouge">worker_rlimit_nofile</code> の 1/3 にしておけば余裕だと思います。</p>
 
 <p>32 の 1/3 は10.6 きりよく10にします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>events {
   worker_connections 10;
 }
 </code></pre></div></div>
@@ -487,7 +489,7 @@ worker_processes  1;
 
 <h2 id="httpコンテキスト">httpコンテキスト</h2>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   include       mime.types;
   default_type  application/octet-stream;
 
@@ -514,25 +516,25 @@ worker_processes  1;
 
 <h3 id="includeディレクティブ">includeディレクティブ</h3>
 
-<p>構文: <code class="highlighter-rouge">include file|mask;</code><br />
-デフォルト: <code class="highlighter-rouge">なし</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">include file|mask;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">なし</code></p>
 
 <p>別ファイルや一致するファイル群を設定として読み込みます。<br />
 取り込むファイルは、構文やディレクティブなども見てくれます。</p>
 
-<p>デフォルトnginx.confの <code class="highlighter-rouge">include mime.types;</code> は <code class="highlighter-rouge">minem.types</code> という別ファイルをロードしているようです。</p>
+<p>デフォルトnginx.confの <code class="language-plaintext highlighter-rouge">include mime.types;</code> は <code class="language-plaintext highlighter-rouge">minem.types</code> という別ファイルをロードしているようです。</p>
 
-<p>このファイルは<code class="highlighter-rouge">/usr/local/etc/nginx/</code>ディレクトリにあります。</p>
+<p>このファイルは<code class="language-plaintext highlighter-rouge">/usr/local/etc/nginx/</code>ディレクトリにあります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> | <span class="nb">grep </span>mime.types
 <span class="nt">-rw-r--r--</span>  1 mothule  admin  5170  7  1  2018 mime.types
 <span class="nt">-rw-r--r--</span>  1 mothule  admin  5231  2 20 03:07 mime.types.default
 </code></pre></div></div>
 
-<p>中身は <code class="highlighter-rouge">types</code> コンテキスト１つにたくさんのファイル・タイプの列挙がされてます。</p>
+<p>中身は <code class="language-plaintext highlighter-rouge">types</code> コンテキスト１つにたくさんのファイル・タイプの列挙がされてます。</p>
 
-<p><code class="highlighter-rouge">nginx.conf.default</code>の行末付近にも<code class="highlighter-rouge">include</code>は使われています。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include servers/*;
+<p><code class="language-plaintext highlighter-rouge">nginx.conf.default</code>の行末付近にも<code class="language-plaintext highlighter-rouge">include</code>は使われています。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include servers/*;
 </code></pre></div></div>
 <p>これは、サーバー毎の設定ファイルを外部ファイル化し、それをロードする場合に使います。</p>
 
@@ -546,7 +548,7 @@ worker_processes  1;
 
 <p>デフォルトでほとんどのMIMEタイプをカバーできているのでこれはロードしたほうが良いです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   include mime.types;
 }
 </code></pre></div></div>
@@ -555,12 +557,12 @@ worker_processes  1;
 
 <p>レスポンスのデフォルトMIMEタイプを設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">default_types mime-type;</code><br />
-デフォルト: <code class="highlighter-rouge">default_types text/plain;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">default_types mime-type;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">default_types text/plain;</code></p>
 
-<p><code class="highlighter-rouge">types</code>コンテキストで設定したMIMEタイプに当てはまらない場合は <code class="highlighter-rouge">text/plain</code> になり、レスポンスによってはやばいものもあると思うので、デフォルトenginx.conf同様<code class="highlighter-rouge">application/octet-stream</code> にしておきます。</p>
+<p><code class="language-plaintext highlighter-rouge">types</code>コンテキストで設定したMIMEタイプに当てはまらない場合は <code class="language-plaintext highlighter-rouge">text/plain</code> になり、レスポンスによってはやばいものもあると思うので、デフォルトenginx.conf同様<code class="language-plaintext highlighter-rouge">application/octet-stream</code> にしておきます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   default_type  application/octet-stream;
 }
 </code></pre></div></div>
@@ -568,12 +570,12 @@ worker_processes  1;
 <h3 id="access_logディレクティブ">access_logディレクティブ</h3>
 <p>アクセスログ出力先の設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">access_log file [format [buffer=size][gzip[=level]][flush=time][if=condition]]</code><br />
-デフォルト: <code class="highlighter-rouge">access_log logs/access.log combined;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">access_log file [format [buffer=size][gzip[=level]][flush=time][if=condition]]</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">access_log logs/access.log combined;</code></p>
 
 <p>構文内の[]について説明すると、[]内の文字列や値は任意を表します。<br />
-例えば<code class="highlighter-rouge">[buffer=size]</code> は無指定でも問題ありません。<br />
-<code class="highlighter-rouge">[gzip[=level]]</code>だと無指定, gzip, gzip=level の3つとなります。</p>
+例えば<code class="language-plaintext highlighter-rouge">[buffer=size]</code> は無指定でも問題ありません。<br />
+<code class="language-plaintext highlighter-rouge">[gzip[=level]]</code>だと無指定, gzip, gzip=level の3つとなります。</p>
 
 <table>
   <thead>
@@ -597,7 +599,7 @@ worker_processes  1;
     </tr>
     <tr>
       <td>gzip[=level]</td>
-      <td>圧縮して書き込む.levelは1~9で最大は9,デフォルトは1,ログは<code class="highlighter-rouge">zcat</code>で圧縮解除や読み取り可能です</td>
+      <td>圧縮して書き込む.levelは1~9で最大は9,デフォルトは1,ログは<code class="language-plaintext highlighter-rouge">zcat</code>で圧縮解除や読み取り可能です</td>
     </tr>
     <tr>
       <td>flush=time</td>
@@ -612,7 +614,7 @@ worker_processes  1;
 
 <h4 id="ifcondition例">if=condition例</h4>
 <p>次の例は$statusつまりHTTPコードが200番台,300番台ならログに書き込まない。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map $status $loggable {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>map $status $loggable {
     ~^[23]  0;
     default 1;
 }
@@ -623,11 +625,11 @@ access_log /path/to/access.log combined if=$loggable;
 <h3 id="log_formatディレクティブ">log_formatディレクティブ</h3>
 <p>ログのフォーマットを設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">log_fomat name [escape=deafult|json|none] string ...;</code><br />
-デフォルト: <code class="highlighter-rouge">log_format combined "...";</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">log_fomat name [escape=deafult|json|none] string ...;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">log_format combined "...";</code></p>
 
 <p>構文内の|について説明すると、|で区切られた値のみを設定できることを表します。<br />
-例えば<code class="highlighter-rouge">escape=default</code> <code class="highlighter-rouge">escape=json</code> <code class="highlighter-rouge">escape=none</code> の3パターンのみとなります。</p>
+例えば<code class="language-plaintext highlighter-rouge">escape=default</code> <code class="language-plaintext highlighter-rouge">escape=json</code> <code class="language-plaintext highlighter-rouge">escape=none</code> の3パターンのみとなります。</p>
 
 <p>string には通常変数とログ書き込み時のみ存在する変数を含めたフォーマットを設定できます。</p>
 
@@ -657,7 +659,7 @@ access_log /path/to/access.log combined if=$loggable;
     </tr>
     <tr>
       <td>$pipe</td>
-      <td>リクエストがパイプライン化されたら<code class="highlighter-rouge">p</code>が書き込まれ、それ以外は<code class="highlighter-rouge">.</code>が書き込まれます。</td>
+      <td>リクエストがパイプライン化されたら<code class="language-plaintext highlighter-rouge">p</code>が書き込まれ、それ以外は<code class="language-plaintext highlighter-rouge">.</code>が書き込まれます。</td>
     </tr>
     <tr>
       <td>$request_length</td>
@@ -682,14 +684,14 @@ access_log /path/to/access.log combined if=$loggable;
   </tbody>
 </table>
 
-<p>ログのデフォルトは <code class="highlighter-rouge">$combined</code> が指定されており、これは次の形式になっています。</p>
+<p>ログのデフォルトは <code class="language-plaintext highlighter-rouge">$combined</code> が指定されており、これは次の形式になっています。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>log_format combined '$remote_addr - $remote_user [$time_local] '
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>log_format combined '$remote_addr - $remote_user [$time_local] '
                     '"$request" $status $body_bytes_sent '
                     '"$http_referer" "$http_user_agent"';
 </code></pre></div></div>
-<p>実際にnginxサーバにアクセスして<code class="highlighter-rouge">access.log</code>を覗いてみると下記形式でログが書き込まれます。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1 - - [21/Feb/2020:18:43:21 +0900] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
+<p>実際にnginxサーバにアクセスして<code class="language-plaintext highlighter-rouge">access.log</code>を覗いてみると下記形式でログが書き込まれます。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>127.0.0.1 - - [21/Feb/2020:18:43:21 +0900] "GET / HTTP/1.1" 200 612 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.130 Safari/537.36"
 </code></pre></div></div>
 
 <h3 id="デフォルト設定はテストすると落ちる">デフォルト設定はテストすると落ちる</h3>
@@ -698,16 +700,16 @@ access_log /path/to/access.log combined if=$loggable;
 また場所もhomebrewの管理下になり、一般的なログ場所とは異なります。<br />
 ログのパスは下記のように絶対パスで指定します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   access_log  /usr/local/var/log/access.log  main;
 }
 </code></pre></div></div>
 
 <h3 id="sendfileディレクティブ">sendfileディレクティブ</h3>
-<p><code class="highlighter-rouge">sendfile()</code> の仕様有無を設定します。</p>
+<p><code class="language-plaintext highlighter-rouge">sendfile()</code> の仕様有無を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">sendfile on|off;</code><br />
-デフォルト: <code class="highlighter-rouge">sendfile off;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">sendfile on|off;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">sendfile off;</code></p>
 
 <h4 id="sendfileとは">sendfileとは？</h4>
 <p>ファイルディスクリプター間のデータ転送関数。read/write組み合わせより効率が良い。<br />
@@ -715,24 +717,24 @@ access_log /path/to/access.log combined if=$loggable;
 
 <p>とりあえず使ってみて動作不安定な気があればここを無効化します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   sendfile on;
 }
 </code></pre></div></div>
 
 <h3 id="tcp_nopushディレクティブ">tcp_nopushディレクティブ</h3>
-<p><code class="highlighter-rouge">TCP_NOPUSH</code>ソケットオプション または <code class="highlighter-rouge">TCP_CORK</code>オプションの使用有無を設定します。<br />
-FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<code class="highlighter-rouge">TCP_CORK</code>を使います。<br />
-このディレクティブは<code class="highlighter-rouge">sendfile</code>が有効時のみ働きます。</p>
+<p><code class="language-plaintext highlighter-rouge">TCP_NOPUSH</code>ソケットオプション または <code class="language-plaintext highlighter-rouge">TCP_CORK</code>オプションの使用有無を設定します。<br />
+FreeBSDでは<code class="language-plaintext highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<code class="language-plaintext highlighter-rouge">TCP_CORK</code>を使います。<br />
+このディレクティブは<code class="language-plaintext highlighter-rouge">sendfile</code>が有効時のみ働きます。</p>
 
-<p>構文: <code class="highlighter-rouge">tcp_nopush on|off;</code><br />
-デフォルト: <code class="highlighter-rouge">tcp_nopush off;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">tcp_nopush on|off;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">tcp_nopush off;</code></p>
 
 <p>これが有効だと、レスポンスヘッダーとファイルをまとめて送信するため、パケット数を抑え効率よくなります。</p>
 
-<p>今回は<code class="highlighter-rouge">sendfile</code>を有効化しており、<code class="highlighter-rouge">tcp_nopush</code>により高速化が見込めるので、ここも有効化します。</p>
+<p>今回は<code class="language-plaintext highlighter-rouge">sendfile</code>を有効化しており、<code class="language-plaintext highlighter-rouge">tcp_nopush</code>により高速化が見込めるので、ここも有効化します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   tcp_nopush on;
 }
 </code></pre></div></div>
@@ -740,10 +742,10 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 <h3 id="keepalive_timeoutディレクティブ">keepalive_timeoutディレクティブ</h3>
 <p>keep-aliveによる接続時間を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">keepalive_timeout timeout [header_timeout];</code><br />
-デフォルト: <code class="highlighter-rouge">keepalive_timeout 75s;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">keepalive_timeout timeout [header_timeout];</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">keepalive_timeout 75s;</code></p>
 
-<p><code class="highlighter-rouge">[header_timeout]</code>は任意オプションです。<br />
+<p><code class="language-plaintext highlighter-rouge">[header_timeout]</code>は任意オプションです。<br />
 これはMozillaおよびKonquerorによって認識されます。 MSIEは約60秒でキープアライブ接続を自動的に閉じます。</p>
 
 <h4 id="keep-aliveとは">keep-aliveとは？</h4>
@@ -756,17 +758,17 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 
 <p>keep-aliveはタイムアウト値が適切であれば通信処理を効率良く出来るため、入れておきます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   keepalive_timeout: 60s;
 }
 </code></pre></div></div>
 
 <h3 id="gzipディレクティブ">gzipディレクティブ</h3>
 
-<p><code class="highlighter-rouge">gzip</code>コマンドで圧縮の使用有無を設定します。</p>
+<p><code class="language-plaintext highlighter-rouge">gzip</code>コマンドで圧縮の使用有無を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip on|off;</code><br />
-デフォルト: <code class="highlighter-rouge">gzip off;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip on|off;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip off;</code></p>
 
 <p>圧縮することで通信量を減らせます。しかしトレードオフとして圧縮に必要なCPUリソースを消費します。また解凍(=展開)が必要になり解凍はクライアント側が行います。つまりクライアント側にも解凍に必要なCPUリソースを消費します。</p>
 
@@ -774,7 +776,7 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 ただし、gzipはon/offの二択ではなく、onの場合に細かいパラメータ設定が可能となっています。<br />
 せっかくなのでgzipのパラメータ設定用ディレクティブもまとめます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   gzip on;
 }
 </code></pre></div></div>
@@ -783,8 +785,8 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 
 <p>レスポンス圧縮に使うバッファサイズと数を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_buffers number size;</code><br />
-デフォルト: <code class="highlighter-rouge">gzip_buffers 32 4k|16 8k;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_buffers number size;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip_buffers 32 4k|16 8k;</code></p>
 
 <p>デフォルトは1メモリページと同等になってます。そのためプラットフォームに応じて <strong>32個 4kBytes</strong> か <strong>16個 8kBytes</strong> のいずれかです。</p>
 
@@ -793,8 +795,8 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 <h3 id="gzip_comp_levelディレクティブ">gzip_comp_levelディレクティブ</h3>
 <p>圧縮レベル(1~9)を設定します。小さいほど圧縮率は下がります。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_comp_level level;</code><br />
-デフォルト: <code class="highlighter-rouge">gzip_comp_level 1;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_comp_level level;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip_comp_level 1;</code></p>
 
 <p>圧縮は線形比例ではありません。なので<strong>9が1より9倍圧縮率が高くなることはありません。</strong><br />
 圧縮レベル別のパフォーマンスは<a href="https://qiita.com/nmatayoshi/items/9884eea9b0633c1c1f6c">こちらの記事</a>が参考になります。</p>
@@ -803,9 +805,9 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 
 <h3 id="gzip_disableディレクティブ">gzip_disableディレクティブ</h3>
 
-<p>いずれかの正規表現に一致する<code class="highlighter-rouge">User-Agent</code>には<code class="highlighter-rouge">gzip</code>圧縮を無効に設定します。</p>
+<p>いずれかの正規表現に一致する<code class="language-plaintext highlighter-rouge">User-Agent</code>には<code class="language-plaintext highlighter-rouge">gzip</code>圧縮を無効に設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_disable regex ...;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_disable regex ...;</code></p>
 
 <p>今回は特に除外はしないので、未設定にします。</p>
 
@@ -813,23 +815,23 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 
 <p>レスポンス圧縮に必要な最小HTTPバージョンを設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_http_version 1.0 | 1.1;</code>
-デフォルト: <code class="highlighter-rouge">gzip_http_version 1.1;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_http_version 1.0 | 1.1;</code>
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip_http_version 1.1;</code></p>
 
 <p>最近は1.1は当たり前なので、これはデフォルトのままにします。</p>
 
 <h3 id="gzip_min_lengthディレクティブ">gzip_min_lengthディレクティブ</h3>
 
-<p>レスポンスを圧縮する最小サイズを設定します。この最小サイズは<code class="highlighter-rouge">Content-Length</code>が使われます。</p>
+<p>レスポンスを圧縮する最小サイズを設定します。この最小サイズは<code class="language-plaintext highlighter-rouge">Content-Length</code>が使われます。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_min_length length;</code>
-デフォルト: <code class="highlighter-rouge">gzip_min_length 20;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_min_length length;</code>
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip_min_length 20;</code></p>
 
 <p>これは無圧縮のほうがコスパ良いサイズについて設定します。</p>
 
 <p>ここの値は通信帯域やパケットサイズに関係します。デフォルトは小さすぎるので1k(1024)にします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   gzip_min_length 1024;
 }
 </code></pre></div></div>
@@ -841,13 +843,13 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 
 <p>パラメータは複数指定が可能です。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_proxied off|expired|no-cache|no-store|private|no_last_modified|no_etag|auth|any ...;</code><br />
-デフォルト: <code class="highlighter-rouge">gzip_proxied off;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_proxied off|expired|no-cache|no-store|private|no_last_modified|no_etag|auth|any ...;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip_proxied off;</code></p>
 
 <p>nginxはリバースプロキシ機能を持っており、そこで圧縮したレスポンスを内部ネットワークに応答することもできます。<br />
 その場合は既に圧縮したレスポンスに関しては何もする必要がありません。</p>
 
-<p>プロキシ経由かどうかは<code class="highlighter-rouge">Via</code>ヘッダーフィールドの存在で確認できます。</p>
+<p>プロキシ経由かどうかは<code class="language-plaintext highlighter-rouge">Via</code>ヘッダーフィールドの存在で確認できます。</p>
 
 <p>パラメータが多いので表にします。</p>
 
@@ -865,31 +867,31 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
     </tr>
     <tr>
       <td>expired</td>
-      <td>期限切れ<code class="highlighter-rouge">Expires</code>があれば有効</td>
+      <td>期限切れ<code class="language-plaintext highlighter-rouge">Expires</code>があれば有効</td>
     </tr>
     <tr>
       <td>no-cache</td>
-      <td><code class="highlighter-rouge">Cache-Control</code>に<code class="highlighter-rouge">no-cache</code>があれば有効</td>
+      <td><code class="language-plaintext highlighter-rouge">Cache-Control</code>に<code class="language-plaintext highlighter-rouge">no-cache</code>があれば有効</td>
     </tr>
     <tr>
       <td>no-store</td>
-      <td><code class="highlighter-rouge">Cache-Control</code>に<code class="highlighter-rouge">no-store</code>があれば有効</td>
+      <td><code class="language-plaintext highlighter-rouge">Cache-Control</code>に<code class="language-plaintext highlighter-rouge">no-store</code>があれば有効</td>
     </tr>
     <tr>
       <td>private</td>
-      <td><code class="highlighter-rouge">Cache-Control</code>に<code class="highlighter-rouge">private</code>があれば有効</td>
+      <td><code class="language-plaintext highlighter-rouge">Cache-Control</code>に<code class="language-plaintext highlighter-rouge">private</code>があれば有効</td>
     </tr>
     <tr>
       <td>no_last_modified</td>
-      <td><code class="highlighter-rouge">Last-Modified</code>が<strong>なければ</strong>有効</td>
+      <td><code class="language-plaintext highlighter-rouge">Last-Modified</code>が<strong>なければ</strong>有効</td>
     </tr>
     <tr>
       <td>no_etag</td>
-      <td><code class="highlighter-rouge">ETag</code>が<strong>なければ</strong>有効</td>
+      <td><code class="language-plaintext highlighter-rouge">ETag</code>が<strong>なければ</strong>有効</td>
     </tr>
     <tr>
       <td>auth</td>
-      <td><code class="highlighter-rouge">Authorization</code>があれば有効</td>
+      <td><code class="language-plaintext highlighter-rouge">Authorization</code>があれば有効</td>
     </tr>
     <tr>
       <td>any</td>
@@ -900,29 +902,29 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 
 <p>複数指定は、スペース区切りで設定します。</p>
 
-<p>今回はリバースプロキシは介さないのでデフォルト(<code class="highlighter-rouge">off</code>)のままにします。</p>
+<p>今回はリバースプロキシは介さないのでデフォルト(<code class="language-plaintext highlighter-rouge">off</code>)のままにします。</p>
 
 <h3 id="gzip_typesディレクティブ">gzip_typesディレクティブ</h3>
 
 <p>圧縮対象となるMIMEタイプを設定します。<br />
-なお<code class="highlighter-rouge">text/html</code>は常に圧縮されます。また <code class="highlighter-rouge">*</code>を指定すると全てのMIMEに一致します。</p>
+なお<code class="language-plaintext highlighter-rouge">text/html</code>は常に圧縮されます。また <code class="language-plaintext highlighter-rouge">*</code>を指定すると全てのMIMEに一致します。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_types mime-type ...;</code>
-デフォルト: <code class="highlighter-rouge">gzip_types text/html;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_types mime-type ...;</code>
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip_types text/html;</code></p>
 
 <p>今回は、CSSやJavascript、JSONも圧縮対象にします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   gzip_types text/css text/javascript application/json;
 }
 </code></pre></div></div>
 
 <h3 id="gzip_varyディレクティブ">gzip_varyディレクティブ</h3>
-<p>圧縮ディレクティブ(<code class="highlighter-rouge">gzip</code>, <code class="highlighter-rouge">gzip_static</code>, <code class="highlighter-rouge">gunzip</code>)が有効であれば、
-<code class="highlighter-rouge">Vary: Accept-Encoding</code>ヘッダの挿入の有無を設定します。</p>
+<p>圧縮ディレクティブ(<code class="language-plaintext highlighter-rouge">gzip</code>, <code class="language-plaintext highlighter-rouge">gzip_static</code>, <code class="language-plaintext highlighter-rouge">gunzip</code>)が有効であれば、
+<code class="language-plaintext highlighter-rouge">Vary: Accept-Encoding</code>ヘッダの挿入の有無を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">gzip_vary on | off;</code>
-デフォルト: <code class="highlighter-rouge">gzip_vary off;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">gzip_vary on | off;</code>
+デフォルト: <code class="language-plaintext highlighter-rouge">gzip_vary off;</code></p>
 
 <p>これは圧縮可能と不可能の２クライアントから同一リソースにアクセスがあった場合に起きる問題の回避として使います。
 詳しくは<a href="https://qiita.com/cubicdaiya/items/09c8f23891bfc07b14d3">こちらの記事</a>が参考になります。</p>
@@ -930,9 +932,9 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 <h2 id="serverコンテキスト">serverコンテキスト</h2>
 <p>バーチャルサーバの設定をします。</p>
 
-<p>少し長いですが<code class="highlighter-rouge">nginx.cnf.default</code>から<code class="highlighter-rouge">server</code>を抜粋したものが下記です。</p>
+<p>少し長いですが<code class="language-plaintext highlighter-rouge">nginx.cnf.default</code>から<code class="language-plaintext highlighter-rouge">server</code>を抜粋したものが下記です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   listen       8080;
   server_name  localhost;
 
@@ -985,26 +987,26 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
 <p>構文:</p>
 <ol>
   <li>listen address
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen address[:port] [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen address[:port] [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number]
  [fastopen=number] [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter]
  [deferred] [bind] [ipv6only=on|off] [reuseport] [so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
 </code></pre></div>    </div>
   </li>
   <li>listen port
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen port [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number] [fastopen=number]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen port [default_server] [ssl] [http2 | spdy] [proxy_protocol] [setfib=number] [fastopen=number]
  [backlog=number] [rcvbuf=size] [sndbuf=size] [accept_filter=filter] [deferred] [bind]
  [ipv6only=on|off] [reuseport] [so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
 </code></pre></div>    </div>
   </li>
   <li>listen unix:path
-    <div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen unix:path [default_server] [ssl] [http2 | spdy] [proxy_protocol] [backlog=number]
+    <div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>listen unix:path [default_server] [ssl] [http2 | spdy] [proxy_protocol] [backlog=number]
 [rcvbuf=size] [sndbuf=size] [accept_filter=filter] [deferred] [bind]
 [so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]];
 </code></pre></div>    </div>
   </li>
 </ol>
 
-<p>デフォルト: <code class="highlighter-rouge">listen *:80 | *:8000;</code></p>
+<p>デフォルト: <code class="language-plaintext highlighter-rouge">listen *:80 | *:8000;</code></p>
 
 <p>パターンは大きく3つに分かれており、オプションも膨大です。</p>
 
@@ -1054,15 +1056,15 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
     </tr>
     <tr>
       <td>backlog=number</td>
-      <td>保留中接続キューの最大長.接続要求が最大長超えると<code class="highlighter-rouge">ECONNREFUSED</code>エラーが起きる.FreeBSD,DragonFly BSD, macOSは-1、その他は511.詳細は<a href="https://kazuhira-r.hatenablog.com/entry/2019/07/10/015733">こちら</a></td>
+      <td>保留中接続キューの最大長.接続要求が最大長超えると<code class="language-plaintext highlighter-rouge">ECONNREFUSED</code>エラーが起きる.FreeBSD,DragonFly BSD, macOSは-1、その他は511.詳細は<a href="https://kazuhira-r.hatenablog.com/entry/2019/07/10/015733">こちら</a></td>
     </tr>
     <tr>
       <td>rcvbuf=size</td>
-      <td>受信バッファサイズ(<code class="highlighter-rouge">SO_RCVBUF</code>)</td>
+      <td>受信バッファサイズ(<code class="language-plaintext highlighter-rouge">SO_RCVBUF</code>)</td>
     </tr>
     <tr>
       <td>sndbuf=size</td>
-      <td>送信バッファサイズ(<code class="highlighter-rouge">SO_SNDBUF</code>)</td>
+      <td>送信バッファサイズ(<code class="language-plaintext highlighter-rouge">SO_SNDBUF</code>)</td>
     </tr>
     <tr>
       <td>accept_filter=filter</td>
@@ -1070,30 +1072,30 @@ FreeBSDでは<code class="highlighter-rouge">TCP_NOPUSH</code>でLinuxでは<cod
     </tr>
     <tr>
       <td>deferred</td>
-      <td>Linuxで遅延accept()<code class="highlighter-rouge">TCP_DEFER_ACCEPT</code>を使用有無.詳細は<a href="https://blog.yuuk.io/entry/2013/07/21/022859">こちら</a></td>
+      <td>Linuxで遅延accept()<code class="language-plaintext highlighter-rouge">TCP_DEFER_ACCEPT</code>を使用有無.詳細は<a href="https://blog.yuuk.io/entry/2013/07/21/022859">こちら</a></td>
     </tr>
     <tr>
       <td>bind</td>
-      <td>指定された<code class="highlighter-rouge">address:port</code>ペアに個別で<code class="highlighter-rouge">bind()</code>する。hoge:80,fuga:80,<em>:80の3つlistenがあったら,</em>:80にだけ<code class="highlighter-rouge">bind()</code>する。注意点は接続受付先アドレスの決定に<code class="highlighter-rouge">getsockname()</code>がが使われる。<code class="highlighter-rouge">setfib</code>, <code class="highlighter-rouge">backlog</code>,<code class="highlighter-rouge">rcvbuf</code>, <code class="highlighter-rouge">sndbuf</code>, <code class="highlighter-rouge">accept_fileter</code>, <code class="highlighter-rouge">deferred</code>, <code class="highlighter-rouge">ipv6only</code>,<code class="highlighter-rouge">so_keepalive</code>が使われたら、渡された<code class="highlighter-rouge">address:port</code>は個々に常に<code class="highlighter-rouge">bind()</code>する</td>
+      <td>指定された<code class="language-plaintext highlighter-rouge">address:port</code>ペアに個別で<code class="language-plaintext highlighter-rouge">bind()</code>する。hoge:80,fuga:80,<em>:80の3つlistenがあったら,</em>:80にだけ<code class="language-plaintext highlighter-rouge">bind()</code>する。注意点は接続受付先アドレスの決定に<code class="language-plaintext highlighter-rouge">getsockname()</code>がが使われる。<code class="language-plaintext highlighter-rouge">setfib</code>, <code class="language-plaintext highlighter-rouge">backlog</code>,<code class="language-plaintext highlighter-rouge">rcvbuf</code>, <code class="language-plaintext highlighter-rouge">sndbuf</code>, <code class="language-plaintext highlighter-rouge">accept_fileter</code>, <code class="language-plaintext highlighter-rouge">deferred</code>, <code class="language-plaintext highlighter-rouge">ipv6only</code>,<code class="language-plaintext highlighter-rouge">so_keepalive</code>が使われたら、渡された<code class="language-plaintext highlighter-rouge">address:port</code>は個々に常に<code class="language-plaintext highlighter-rouge">bind()</code>する</td>
     </tr>
     <tr>
       <td>ipv6only=</td>
-      <td><code class="highlighter-rouge">IPV6_V6ONLY</code>を経由してワイルドカードアドレス[::]でlistenしてるIPv6ソケットがIPv6接続だけかIPv4接続の両方を受け付けるかを決める。パラメータは<code class="highlighter-rouge">on</code>と<code class="highlighter-rouge">off</code>でデフォルトは<code class="highlighter-rouge">on</code></td>
+      <td><code class="language-plaintext highlighter-rouge">IPV6_V6ONLY</code>を経由してワイルドカードアドレス[::]でlistenしてるIPv6ソケットがIPv6接続だけかIPv4接続の両方を受け付けるかを決める。パラメータは<code class="language-plaintext highlighter-rouge">on</code>と<code class="language-plaintext highlighter-rouge">off</code>でデフォルトは<code class="language-plaintext highlighter-rouge">on</code></td>
     </tr>
     <tr>
       <td>reuseport</td>
-      <td>カーネルが接続をワーカープロセス間に分散して、各ワーカープロセスに<code class="highlighter-rouge">SO_REUSEPORT</code>を使って個々のlistenソケットを生成指示する。Linux3.9+とDragonFly BSDのみ。</td>
+      <td>カーネルが接続をワーカープロセス間に分散して、各ワーカープロセスに<code class="language-plaintext highlighter-rouge">SO_REUSEPORT</code>を使って個々のlistenソケットを生成指示する。Linux3.9+とDragonFly BSDのみ。</td>
     </tr>
     <tr>
       <td>so_keepalive=on|off|[keepidle]:[keepintvl]:[keepcnt]]</td>
-      <td>TCP keepaliveの挙動設定する。パラメタ省略するとOS値が設定される。<code class="highlighter-rouge">on</code>だと<code class="highlighter-rouge">SO_KEEPALIVE</code>がソケットに対し<code class="highlighter-rouge">on</code>になる。 <code class="highlighter-rouge">off</code>だと<code class="highlighter-rouge">SO_KEEPALIVE</code>に対し<code class="highlighter-rouge">off</code>となる。Linux2.4+, NetBSD 5+ FreeBSD 9.0-Stableでは、<code class="highlighter-rouge">TCP_KEEPIDLE</code>,<code class="highlighter-rouge">TCP_KEEPINTVL</code>,<code class="highlighter-rouge">TCP_KEEPCNT</code>を使ってkeepaliveをサポートする。省略した場合はOSのデフォルト値が使われる。</td>
+      <td>TCP keepaliveの挙動設定する。パラメタ省略するとOS値が設定される。<code class="language-plaintext highlighter-rouge">on</code>だと<code class="language-plaintext highlighter-rouge">SO_KEEPALIVE</code>がソケットに対し<code class="language-plaintext highlighter-rouge">on</code>になる。 <code class="language-plaintext highlighter-rouge">off</code>だと<code class="language-plaintext highlighter-rouge">SO_KEEPALIVE</code>に対し<code class="language-plaintext highlighter-rouge">off</code>となる。Linux2.4+, NetBSD 5+ FreeBSD 9.0-Stableでは、<code class="language-plaintext highlighter-rouge">TCP_KEEPIDLE</code>,<code class="language-plaintext highlighter-rouge">TCP_KEEPINTVL</code>,<code class="language-plaintext highlighter-rouge">TCP_KEEPCNT</code>を使ってkeepaliveをサポートする。省略した場合はOSのデフォルト値が使われる。</td>
     </tr>
   </tbody>
 </table>
 
 <p>今回はその他のパラメータは今回は使わず、3030ポートを開こうと思います。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   listen 3030;
 }
 </code></pre></div></div>
@@ -1107,23 +1109,23 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 <h3 id="server_nameディレクティブ">server_nameディレクティブ</h3>
 <p>バーチャルサーバの名前を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">server_name name ...;</code><br />
-デフォルト: <code class="highlighter-rouge">server_name "";</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">server_name name ...;</code><br />
+デフォルト: <code class="language-plaintext highlighter-rouge">server_name "";</code></p>
 
 <h4 id="ワイルドカード">ワイルドカード</h4>
-<p>サーバ名には最初と最後の名前にワイルドカード(<code class="highlighter-rouge">*</code>)が使えます。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server_name example.com *.example.com api.example.*;
+<p>サーバ名には最初と最後の名前にワイルドカード(<code class="language-plaintext highlighter-rouge">*</code>)が使えます。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server_name example.com *.example.com api.example.*;
 </code></pre></div></div>
-<p>ちなみに<code class="highlighter-rouge">example.com</code>と<code class="highlighter-rouge">*.example.com</code>は<code class="highlighter-rouge">.example.com</code>に結合できます。</p>
+<p>ちなみに<code class="language-plaintext highlighter-rouge">example.com</code>と<code class="language-plaintext highlighter-rouge">*.example.com</code>は<code class="language-plaintext highlighter-rouge">.example.com</code>に結合できます。</p>
 
 <h4 id="正規表現">正規表現</h4>
-<p>名前の前にチルダ(<code class="highlighter-rouge">~</code>)をつけて</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>servername www.exmaple.com ~^www\d+\.example\.com$;
+<p>名前の前にチルダ(<code class="language-plaintext highlighter-rouge">~</code>)をつけて</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>servername www.exmaple.com ~^www\d+\.example\.com$;
 </code></pre></div></div>
 <p>のように正規表現を使えます。</p>
 
 <p>またキャプチャも使えます。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   server_name ~^(www\.)?(.+)$;
   location / {
     root /sites/$2;
@@ -1132,7 +1134,7 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 </code></pre></div></div>
 
 <p>名前付きキャプチャは変数として使えます。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   server_name ~^(www\.)?(?&lt;domain&gt;.+)$;
 
   location / {
@@ -1141,25 +1143,25 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 }
 </code></pre></div></div>
 
-<p>ちなみに <code class="highlighter-rouge">$hostname</code>にはマシンのホスト名が入ります。</p>
+<p>ちなみに <code class="language-plaintext highlighter-rouge">$hostname</code>にはマシンのホスト名が入ります。</p>
 
 <p>今回はローカルホストにサーバを立てるのでlocalhostを使います。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   server_name localhost;
 }
 </code></pre></div></div>
 
 <h3 id="charsetディレクティブ">charsetディレクティブ</h3>
-<p>指定した文字セットを<code class="highlighter-rouge">Content-Type</code>レスポンスヘッダフィールドに追加します。</p>
+<p>指定した文字セットを<code class="language-plaintext highlighter-rouge">Content-Type</code>レスポンスヘッダフィールドに追加します。</p>
 
-<p>構文: <code class="highlighter-rouge">charset charset | off;</code>
-デフォルト: <code class="highlighter-rouge">charset off;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">charset charset | off;</code>
+デフォルト: <code class="language-plaintext highlighter-rouge">charset off;</code></p>
 
-<p>注意点：<code class="highlighter-rouge">source_charset</code> と違うと変換が発生する。</p>
+<p>注意点：<code class="language-plaintext highlighter-rouge">source_charset</code> と違うと変換が発生する。</p>
 
-<p>今回は無難に<code class="highlighter-rouge">utf-8</code>で行きます。</p>
+<p>今回は無難に<code class="language-plaintext highlighter-rouge">utf-8</code>で行きます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   charset utf-8;
 }
 </code></pre></div></div>
@@ -1172,40 +1174,40 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 
 <p>今回はこのサーバだけのアクセスログを残しておきます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   access_log /usr/local/var/log/nginx/localhost.access.log  main;
 }
 </code></pre></div></div>
 
-<p>formatは既に定義済みの<code class="highlighter-rouge">main</code>を使います。</p>
+<p>formatは既に定義済みの<code class="language-plaintext highlighter-rouge">main</code>を使います。</p>
 
 <h4 id="open-2-no-such-file-or-directory-が出る場合">open() 2: No such file or directory が出る場合</h4>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx: [emerg] open() "/usr/local/var/log/enginx/localhost.access.log" failed (2: No such file or directory)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx: [emerg] open() "/usr/local/var/log/enginx/localhost.access.log" failed (2: No such file or directory)
 </code></pre></div></div>
 <p>よく見ると分かりますが、パスが間違ってます。</p>
 
 <h3 id="error_pageディレクティブ">error_pageディレクティブ</h3>
 
 <p>エラーページとエラーコードのマッピングを設定します。<br />
-<code class="highlighter-rouge">uri</code>には変数を使えます。</p>
+<code class="language-plaintext highlighter-rouge">uri</code>には変数を使えます。</p>
 
-<p>構文: <code class="highlighter-rouge">error_page code ... [=[response]] uri;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">error_page code ... [=[response]] uri;</code></p>
 
 <p>例えば404と500番台でエラーページを用意してるなら</p>
 
 <h4 id="getに変更してリダイレクト">GETに変更してリダイレクト</h4>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   error_page 404 /404.html;
   error_page 500 502 503 504 /50x.html;
 }
 </code></pre></div></div>
 
-<p>と設定すると、ステータスコードと一致するページにHEAD以外のリクエストを全て<code class="highlighter-rouge">GET</code>に変更して、内部的にリダイレクトします。</p>
+<p>と設定すると、ステータスコードと一致するページにHEAD以外のリクエストを全て<code class="language-plaintext highlighter-rouge">GET</code>に変更して、内部的にリダイレクトします。</p>
 
 <h4 id="応答コードの変更">応答コードの変更</h4>
 <p>例えば404ではなく200にしてEmtpy pageを出したいなら</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   error_page 404 = 200 /empty.html;
 }
 </code></pre></div></div>
@@ -1213,7 +1215,7 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 
 <h4 id="応答ページを別サーバに渡す">応答ページを別サーバに渡す</h4>
 <p>例えばPHPなどで404を返すページがある場合</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   error_page 404 = 404php;
 }
 </code></pre></div></div>
@@ -1222,7 +1224,7 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 <h4 id="別locationコンテキストにエラー処理を渡す">別locationコンテキストにエラー処理を渡す</h4>
 <p>内部リダイレクトでURIとメソッド変更させない場合は</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   location / {
     error_page 404 = @fallback;
   }
@@ -1235,7 +1237,7 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 
 <p>今回は404は専用ページを用意する設定にします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>server {
   error_page 404 /404.html;
 }
 </code></pre></div></div>
@@ -1246,13 +1248,13 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 
 <p>構文:</p>
 <ul>
-  <li><code class="highlighter-rouge">location [ = | ~ | ~* | ^~ ] uri { ... }</code></li>
+  <li><code class="language-plaintext highlighter-rouge">location [ = | ~ | ~* | ^~ ] uri { ... }</code></li>
   <li>
-    <p><code class="highlighter-rouge">location @name {... }</code></p>
+    <p><code class="language-plaintext highlighter-rouge">location @name {... }</code></p>
   </li>
   <li>“%XX”形式エンコードされてテキストはデコード</li>
-  <li>相対パス<code class="highlighter-rouge">.</code>と<code class="highlighter-rouge">..</code>の参照は解決</li>
-  <li>２つ以上続くスラッシュ<code class="highlighter-rouge">/</code>は1つに差し替え</li>
+  <li>相対パス<code class="language-plaintext highlighter-rouge">.</code>と<code class="language-plaintext highlighter-rouge">..</code>の参照は解決</li>
+  <li>２つ以上続くスラッシュ<code class="language-plaintext highlighter-rouge">/</code>は1つに差し替え</li>
 </ul>
 
 <p>その後、正規化されたURIに対してマッチングが実施される。</p>
@@ -1262,8 +1264,8 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 <p><strong>正規表現のオプション</strong></p>
 
 <ul>
-  <li>先頭文字が<code class="highlighter-rouge">~*</code>修飾子なら大文字小文字を区別しないマッチング</li>
-  <li>先頭文字が<code class="highlighter-rouge">~</code>修飾子なら大文字小文字を区別するマッチング</li>
+  <li>先頭文字が<code class="language-plaintext highlighter-rouge">~*</code>修飾子なら大文字小文字を区別しないマッチング</li>
+  <li>先頭文字が<code class="language-plaintext highlighter-rouge">~</code>修飾子なら大文字小文字を区別するマッチング</li>
 </ul>
 
 <h3 id="locationの検索フロー">locationの検索フロー</h3>
@@ -1274,8 +1276,8 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
   <li>nginxはまずプリフィックス文字列を使って定義されるlcoationを調べます</li>
   <li>それらの中で、一番長くマッチするプリフィックスlocationが選択され記憶されます
     <ul>
-      <li>記憶したプリフィックスlocationに<code class="highlighter-rouge">^~</code>修飾子があれば以降の正規表現チェックはしません。</li>
-      <li>完全一致<code class="highlighter-rouge">=</code>修飾子で一致したら検索は終了します</li>
+      <li>記憶したプリフィックスlocationに<code class="language-plaintext highlighter-rouge">^~</code>修飾子があれば以降の正規表現チェックはしません。</li>
+      <li>完全一致<code class="language-plaintext highlighter-rouge">=</code>修飾子で一致したら検索は終了します</li>
     </ul>
   </li>
   <li>設定ファイルの中に現れる順番で正規表現を調べます
@@ -1290,7 +1292,7 @@ nginx: <span class="o">[</span>emerg] <span class="nb">bind</span><span class="o
 
 <h3 id="検索フロー例">検索フロー例</h3>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
   # A
 }
 location / {
@@ -1309,45 +1311,45 @@ location ~* \.(gif|jpeg|jpg|png)$ {
 <p>というlocationがあった場合、</p>
 
 <ul>
-  <li><code class="highlighter-rouge">/</code> はAにマッチ</li>
-  <li><code class="highlighter-rouge">/index.html</code> はBにマッチ</li>
-  <li><code class="highlighter-rouge">/documents/document.html</code> はCにマッチ</li>
-  <li><code class="highlighter-rouge">/images/1.gif</code> はDにマッチ</li>
-  <li><code class="highlighter-rouge">/documents/1.jpg</code> はEにマッチ</li>
+  <li><code class="language-plaintext highlighter-rouge">/</code> はAにマッチ</li>
+  <li><code class="language-plaintext highlighter-rouge">/index.html</code> はBにマッチ</li>
+  <li><code class="language-plaintext highlighter-rouge">/documents/document.html</code> はCにマッチ</li>
+  <li><code class="language-plaintext highlighter-rouge">/images/1.gif</code> はDにマッチ</li>
+  <li><code class="language-plaintext highlighter-rouge">/documents/1.jpg</code> はEにマッチ</li>
 </ul>
 
 <p>というマッチング結果となります。</p>
 
 <h3 id="名前付きlocation">名前付きlocation</h3>
-<p><code class="highlighter-rouge">@</code>プレフィックスをつけることで名前付きとして定義できます。<br />
+<p><code class="language-plaintext highlighter-rouge">@</code>プレフィックスをつけることで名前付きとして定義できます。<br />
 リクエストのリダイレクトに使います。</p>
 
 <h3 id="パーマネントリダイレクト">パーマネントリダイレクト</h3>
-<p>locationが末尾が<code class="highlighter-rouge">/</code>で終わる定義で、設定が <code class="highlighter-rouge">proxy_pass</code>, <code class="highlighter-rouge">fastcgi_pass</code>, <code class="highlighter-rouge">uwsgi_pass</code>, <code class="highlighter-rouge">scgi_pass</code>, <code class="highlighter-rouge">memcached_pass</code>, <code class="highlighter-rouge">grpc_pass</code>の1つで処理された場合は、特別処理がされます。
-同じURIだが最後の<code class="highlighter-rouge">/</code>がないリクエストの応答は、<code class="highlighter-rouge">/</code>がリクエストのURIに追加されて301として返される。</p>
+<p>locationが末尾が<code class="language-plaintext highlighter-rouge">/</code>で終わる定義で、設定が <code class="language-plaintext highlighter-rouge">proxy_pass</code>, <code class="language-plaintext highlighter-rouge">fastcgi_pass</code>, <code class="language-plaintext highlighter-rouge">uwsgi_pass</code>, <code class="language-plaintext highlighter-rouge">scgi_pass</code>, <code class="language-plaintext highlighter-rouge">memcached_pass</code>, <code class="language-plaintext highlighter-rouge">grpc_pass</code>の1つで処理された場合は、特別処理がされます。
+同じURIだが最後の<code class="language-plaintext highlighter-rouge">/</code>がないリクエストの応答は、<code class="language-plaintext highlighter-rouge">/</code>がリクエストのURIに追加されて301として返される。</p>
 
 <h3 id="rootディレクティブ">rootディレクティブ</h3>
 
 <p>ルートディレクトリを設定する。</p>
 
-<p>構文: <code class="highlighter-rouge">root path;</code>
-デフォルト: <code class="highlighter-rouge">root html;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">root path;</code>
+デフォルト: <code class="language-plaintext highlighter-rouge">root html;</code></p>
 
 <p>例えば次の設定の場合</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /i/ {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /i/ {
   root /data/wwww;
 }
 </code></pre></div></div>
-<p><code class="highlighter-rouge">/i/top.png</code>リクエストは、<code class="highlighter-rouge">/data/www/i/top.png</code>が応答します。</p>
+<p><code class="language-plaintext highlighter-rouge">/i/top.png</code>リクエストは、<code class="language-plaintext highlighter-rouge">/data/www/i/top.png</code>が応答します。</p>
 
-<p><code class="highlighter-rouge">path</code> には <code class="highlighter-rouge">$document_root</code>と<code class="highlighter-rouge">$realpath_root</code>を除く変数が使えます。</p>
+<p><code class="language-plaintext highlighter-rouge">path</code> には <code class="language-plaintext highlighter-rouge">$document_root</code>と<code class="language-plaintext highlighter-rouge">$realpath_root</code>を除く変数が使えます。</p>
 
 <p>ルートディレクトリの値にURIを追加するだけでファイルパスが構築されます。
-URIを変更する場合は、<code class="highlighter-rouge">alias</code>ディレクティブを使います。</p>
+URIを変更する場合は、<code class="language-plaintext highlighter-rouge">alias</code>ディレクティブを使います。</p>
 
 <p>今回はトップページ、記事ページ、画像の3locationを用意します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
   root /usr/local/var/www;
 }
 location /articles/ {
@@ -1361,22 +1363,22 @@ location ~* \.(gif|jpg|jpeg|png)$ {
 <h3 id="aliasディレクティブ">aliasディレクティブ</h3>
 <p>指定locationの置き換えを設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">alias path;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">alias path;</code></p>
 
 <p>例えば次の設定の場合</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /i/ {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /i/ {
   alias /data/www/images/;
 }
 </code></pre></div></div>
-<p><code class="highlighter-rouge">/i/top.png</code>リクエストは、<code class="highlighter-rouge">/data/www/images/top.png</code>が応答します。</p>
+<p><code class="language-plaintext highlighter-rouge">/i/top.png</code>リクエストは、<code class="language-plaintext highlighter-rouge">/data/www/images/top.png</code>が応答します。</p>
 
 <p>もしlocationがディレクティブの最後の場所に一致する場合</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /images/ {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /images/ {
   alias /data/www/images/;
 }
 </code></pre></div></div>
-<p>この場合は、<code class="highlighter-rouge">root</code>ディレクティブを使ったほうがいいです。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /images/ {
+<p>この場合は、<code class="language-plaintext highlighter-rouge">root</code>ディレクティブを使ったほうがいいです。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location /images/ {
   root /data/www;
 }
 </code></pre></div></div>
@@ -1385,17 +1387,17 @@ location ~* \.(gif|jpg|jpeg|png)$ {
 
 <p>indexとして使われるファイル定義を設定します。</p>
 
-<p><code class="highlighter-rouge">file</code>には変数を使えます。
+<p><code class="language-plaintext highlighter-rouge">file</code>には変数を使えます。
 ファイルは設定順でチェックします。</p>
 
-<p>構文: <code class="highlighter-rouge">index file ...;</code>
-デフォルト: <code class="highlighter-rouge">index index.html;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">index file ...;</code>
+デフォルト: <code class="language-plaintext highlighter-rouge">index index.html;</code></p>
 
 <p><strong>注意点:</strong></p>
 
-<p><code class="highlighter-rouge">index</code>を使うと内部リダイレクトが発生し、想定外のlocationで処理されることがあります。</p>
+<p><code class="language-plaintext highlighter-rouge">index</code>を使うと内部リダイレクトが発生し、想定外のlocationで処理されることがあります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
   index index.html;
 }
 location / {
@@ -1403,11 +1405,11 @@ location / {
 }
 </code></pre></div></div>
 
-<p>この場合、<code class="highlighter-rouge">/</code> リクエストは<code class="highlighter-rouge">/index.html</code>として、2番目のlocation(B)で処理されます。</p>
+<p>この場合、<code class="language-plaintext highlighter-rouge">/</code> リクエストは<code class="language-plaintext highlighter-rouge">/index.html</code>として、2番目のlocation(B)で処理されます。</p>
 
 <p>今回はトップページのみ指定します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>location = / {
   root /usr/local/var/www;
   index index.html;
 }
@@ -1416,18 +1418,18 @@ location / {
 <h3 id="denyディレクティブ">denyディレクティブ</h3>
 <p>指定ネットワークやアドレスのアクエス拒否を設定します。</p>
 
-<p>構文: <code class="highlighter-rouge">deny address | CIDR | unix: | all;</code></p>
+<p>構文: <code class="language-plaintext highlighter-rouge">deny address | CIDR | unix: | all;</code></p>
 
-<p><code class="highlighter-rouge">unix:</code>の場合は全てのUNIXドメインソケットのアクセス拒否になります。</p>
+<p><code class="language-plaintext highlighter-rouge">unix:</code>の場合は全てのUNIXドメインソケットのアクセス拒否になります。</p>
 
 <p>特定のファイルに対してアクセス拒否したい場合などに使います。<br />
 今回は特に拒否したいファイルなどはないため設定しません。</p>
 
 <h2 id="出来上がった設定ファイルnginxconf">出来上がった設定ファイル(nginx.conf)</h2>
 
-<p>この記事を通して<code class="highlighter-rouge">nginx.conf.default</code>から必要なディレクティブのみを設定したものになります。</p>
+<p>この記事を通して<code class="language-plaintext highlighter-rouge">nginx.conf.default</code>から必要なディレクティブのみを設定したものになります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_processes  4;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>worker_processes  4;
 
 error_log /usr/local/var/log/nginx/error.log error;
 
@@ -1485,7 +1487,7 @@ http {
 <h3 id="ファイル配置図">ファイル配置図</h3>
 
 <p><em>/usr/local/var/www</em> 配下は次のように配置してます。
-<code class="highlighter-rouge">$ tree
+<code class="language-plaintext highlighter-rouge">$ tree
 .
 ├── 404.html
 ├── articles
@@ -1496,10 +1498,10 @@ http {
 </code></p>
 
 <ul>
-  <li><code class="highlighter-rouge">localhost:8080</code>にアクセスすると <code class="highlighter-rouge">index.html</code>が返ってきます。</li>
-  <li><code class="highlighter-rouge">localhost:8080/articles/1.html</code> にアクセスすると <code class="highlighter-rouge">1.html</code> が返ってきます。</li>
-  <li><code class="highlighter-rouge">localhost:8080/nginx.png</code>にアクセスすると <code class="highlighter-rouge">nginx.png</code>が返ってきます。</li>
-  <li><code class="highlighter-rouge">localhost:8080/hoge</code>にアクセスすると <code class="highlighter-rouge">404.html</code>が返ってきます。</li>
+  <li><code class="language-plaintext highlighter-rouge">localhost:8080</code>にアクセスすると <code class="language-plaintext highlighter-rouge">index.html</code>が返ってきます。</li>
+  <li><code class="language-plaintext highlighter-rouge">localhost:8080/articles/1.html</code> にアクセスすると <code class="language-plaintext highlighter-rouge">1.html</code> が返ってきます。</li>
+  <li><code class="language-plaintext highlighter-rouge">localhost:8080/nginx.png</code>にアクセスすると <code class="language-plaintext highlighter-rouge">nginx.png</code>が返ってきます。</li>
+  <li><code class="language-plaintext highlighter-rouge">localhost:8080/hoge</code>にアクセスすると <code class="language-plaintext highlighter-rouge">404.html</code>が返ってきます。</li>
 </ul>
 
 <h2 id="macにnginxでゼロから丁寧に簡易なhttpサーバを立てる">Macにnginxでゼロから丁寧に簡易なHTTPサーバを立てる</h2>

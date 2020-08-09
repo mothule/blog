@@ -14,8 +14,8 @@
   <title>setNeedsLayoutやlayoutSubviewsなどの役割を整理する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-12T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png" />
+<meta property="twitter:title" content="setNeedsLayoutやlayoutSubviewsなどの役割を整理する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/ios-ui-constraint-layout-update","headline":"setNeedsLayoutやlayoutSubviewsなどの役割を整理する","dateModified":"2020-05-12T05:47:47+09:00","datePublished":"2020-05-12T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/ios-ui-constraint-layout-update"},"description":"layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。","image":"https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/ios-ui-constraint-layout-update","headline":"setNeedsLayoutやlayoutSubviewsなどの役割を整理する","dateModified":"2020-05-12T05:47:47+09:00","datePublished":"2020-05-12T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-12-ios-ui-constraint-layout-update/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/ios-ui-constraint-layout-update"},"description":"layoutIfNeededはビュー位置すぐ分かって便利。layoutSubviewsは呼んだらいけない。setNeedsLayoutはパフォーマンス良し。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -198,31 +200,31 @@
 </ul>
   </div>
   <section>
-  <p><code class="highlighter-rouge">layoutIfNeeded</code>はビュー位置すぐ分かって便利。<code class="highlighter-rouge">layoutSubviews</code>は呼んだらいけない。<code class="highlighter-rouge">setNeedsLayout</code>はパフォーマンス良し。</p>
+  <p><code class="language-plaintext highlighter-rouge">layoutIfNeeded</code>はビュー位置すぐ分かって便利。<code class="language-plaintext highlighter-rouge">layoutSubviews</code>は呼んだらいけない。<code class="language-plaintext highlighter-rouge">setNeedsLayout</code>はパフォーマンス良し。</p>
 
 <p>ビュー周りをコーディング中にUIが反映されない不具合に遭遇したら、<br />
-「ビューが反映されていない。とりあえず可能性を潰すために<code class="highlighter-rouge">Constraint</code>や<code class="highlighter-rouge">Layout</code>を更新」<br />
-って思って、Xcode上で<code class="highlighter-rouge">constraint</code>とか<code class="highlighter-rouge">layout</code>って打ったら候補に上がるたくさんのメソッド。
+「ビューが反映されていない。とりあえず可能性を潰すために<code class="language-plaintext highlighter-rouge">Constraint</code>や<code class="language-plaintext highlighter-rouge">Layout</code>を更新」<br />
+って思って、Xcode上で<code class="language-plaintext highlighter-rouge">constraint</code>とか<code class="language-plaintext highlighter-rouge">layout</code>って打ったら候補に上がるたくさんのメソッド。
 「とりあえずそれぞれ何個か呼べば反映処理は走るだろう・・・」<br />
 なんてことないですか？</p>
 
-<p>この記事では、<code class="highlighter-rouge">setNeedsLayout</code>,<code class="highlighter-rouge">layoutIfNeeded</code>,<code class="highlighter-rouge">layoutSubviews</code>,<code class="highlighter-rouge">updateConstraints</code>,<code class="highlighter-rouge">setNeedsUpdateConstraints</code>,<code class="highlighter-rouge">updateConstraintsIfNeeded</code>について調べて、詳細は省いて噛み砕いて説明します。</p>
+<p>この記事では、<code class="language-plaintext highlighter-rouge">setNeedsLayout</code>,<code class="language-plaintext highlighter-rouge">layoutIfNeeded</code>,<code class="language-plaintext highlighter-rouge">layoutSubviews</code>,<code class="language-plaintext highlighter-rouge">updateConstraints</code>,<code class="language-plaintext highlighter-rouge">setNeedsUpdateConstraints</code>,<code class="language-plaintext highlighter-rouge">updateConstraintsIfNeeded</code>について調べて、詳細は省いて噛み砕いて説明します。</p>
 
 <h2 id="iosのレイアウト更新をメソッド整理する">iOSのレイアウト更新をメソッド整理する</h2>
 
 <ul>
   <li>制約系
     <ul>
-      <li><code class="highlighter-rouge">updateConstraints</code></li>
-      <li><code class="highlighter-rouge">setNeedsUpdateConstraints</code></li>
-      <li><code class="highlighter-rouge">updateConstraintsIfNeeded</code></li>
+      <li><code class="language-plaintext highlighter-rouge">updateConstraints</code></li>
+      <li><code class="language-plaintext highlighter-rouge">setNeedsUpdateConstraints</code></li>
+      <li><code class="language-plaintext highlighter-rouge">updateConstraintsIfNeeded</code></li>
     </ul>
   </li>
   <li>レイアウト系
     <ul>
-      <li><code class="highlighter-rouge">layoutSubviews</code></li>
-      <li><code class="highlighter-rouge">setNeedsLayout</code></li>
-      <li><code class="highlighter-rouge">layoutIfNeeded</code></li>
+      <li><code class="language-plaintext highlighter-rouge">layoutSubviews</code></li>
+      <li><code class="language-plaintext highlighter-rouge">setNeedsLayout</code></li>
+      <li><code class="language-plaintext highlighter-rouge">layoutIfNeeded</code></li>
     </ul>
   </li>
 </ul>
@@ -240,12 +242,12 @@
 
 <h3 id="updateconstraintsifneeded">updateConstraintsIfNeeded</h3>
 <p>システムがレイアウト更新時に呼ぶ。最新の制約を得たい場合は手動で呼ぶことも可能。
-<code class="highlighter-rouge">setNeedsUpdateConstraints</code>の後にこれを呼ぶと制約更新が走る。</p>
+<code class="language-plaintext highlighter-rouge">setNeedsUpdateConstraints</code>の後にこれを呼ぶと制約更新が走る。</p>
 
 <h3 id="layoutsubviews">layoutSubviews</h3>
 <p>制約を使いサブビューのサイズと位置を決定する。<br />
-このメソッドは直接呼んではならない、代わりに<code class="highlighter-rouge">setNeedsLayout</code>使うこと。<br />
-もし、ビューのレイアウトをすぐ欲しい場合は、<code class="highlighter-rouge">layoutIfNeeded</code>を呼ぶこと。</p>
+このメソッドは直接呼んではならない、代わりに<code class="language-plaintext highlighter-rouge">setNeedsLayout</code>使うこと。<br />
+もし、ビューのレイアウトをすぐ欲しい場合は、<code class="language-plaintext highlighter-rouge">layoutIfNeeded</code>を呼ぶこと。</p>
 
 <h3 id="setneedslayout">setNeedsLayout</h3>
 <p>サブビューのレイアウトを無効化する＝次回レイアウト更新時に更新を必須とする。<br />
@@ -255,25 +257,25 @@
 <p>サブビューが保留中ならすぐさま更新する。更新不要なら何もしない。<br />
 呼んだビューをルートとして、サブビューのレイアウト更新する。<br />
 内部では制約の変更も更新する。<br />
-<code class="highlighter-rouge">setNeedsLayout</code>を呼んだビューで呼ぶとその場でレイアウト更新処理が走る。</p>
+<code class="language-plaintext highlighter-rouge">setNeedsLayout</code>を呼んだビューで呼ぶとその場でレイアウト更新処理が走る。</p>
 
 <h2 id="制約変更してすぐにレイアウトが欲しい場合">制約変更してすぐにレイアウトが欲しい場合</h2>
 <p>制約を変更した直後に、影響を受けた後のビュー状態が欲しい場合は、<br />
-影響を受けるビューの親ビューの<code class="highlighter-rouge">layoutIfNeeded</code>を呼ぶ。<br />
+影響を受けるビューの親ビューの<code class="language-plaintext highlighter-rouge">layoutIfNeeded</code>を呼ぶ。<br />
 これにより無効化されたビューのレイアウト更新が実行されます。<br />
-レイアウト更新は内部で<code class="highlighter-rouge">updateConstraints</code>が呼ばれてから、<code class="highlighter-rouge">layoutSubviews</code>が呼ばれてます。</p>
+レイアウト更新は内部で<code class="language-plaintext highlighter-rouge">updateConstraints</code>が呼ばれてから、<code class="language-plaintext highlighter-rouge">layoutSubviews</code>が呼ばれてます。</p>
 
 <h3 id="コードで表す">コードで表す</h3>
 
 <p>あるUIViewControllerにUILabelが配置されてるとする。<br />
 UILabelは左右と上にsuperviewとConstraintを引いている。<br />
-左右のConstraintsはそれぞれ<code class="highlighter-rouge">16</code>になっている。</p>
+左右のConstraintsはそれぞれ<code class="language-plaintext highlighter-rouge">16</code>になっている。</p>
 
-<p>左右のConstraints(<code class="highlighter-rouge">labelRightConstraint</code>と<code class="highlighter-rouge">labelLeftConstraint</code>)の値を変更。<br />
+<p>左右のConstraints(<code class="language-plaintext highlighter-rouge">labelRightConstraint</code>と<code class="language-plaintext highlighter-rouge">labelLeftConstraint</code>)の値を変更。<br />
 ラベルの中身も変更する。</p>
 
-<p>この状態で制約変更後のラベルの座標が欲しい場合は、<code class="highlighter-rouge">layoutIfNeeded</code>を呼ぶ。<br />
-<code class="highlighter-rouge">setNeedsLayout</code>は呼ばなくてもラベルの変更によりレイアウトが無効化（更新必須化）されている。</p>
+<p>この状態で制約変更後のラベルの座標が欲しい場合は、<code class="language-plaintext highlighter-rouge">layoutIfNeeded</code>を呼ぶ。<br />
+<code class="language-plaintext highlighter-rouge">setNeedsLayout</code>は呼ばなくてもラベルの変更によりレイアウトが無効化（更新必須化）されている。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
 <span class="k">self</span><span class="o">.</span><span class="n">labelLeftConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">40.0</span>
@@ -283,12 +285,12 @@ UILabelは左右と上にsuperviewとConstraintを引いている。<br />
 </code></pre></div></div>
 
 <p><em>コンソール</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 40.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 40.0
 </code></pre></div></div>
 
 <h3 id="親ビューを更新しないといけない">親ビューを更新しないといけない</h3>
 
-<p><code class="highlighter-rouge">layoutIfNeeded</code>をラベルの親ビューではなく、ラベル自身で呼んでも変更されない。</p>
+<p><code class="language-plaintext highlighter-rouge">layoutIfNeeded</code>をラベルの親ビューではなく、ラベル自身で呼んでも変更されない。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
 <span class="k">self</span><span class="o">.</span><span class="n">labelLeftConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">40.0</span>
@@ -298,12 +300,12 @@ UILabelは左右と上にsuperviewとConstraintを引いている。<br />
 </code></pre></div></div>
 
 <p><em>コンソール</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
 </code></pre></div></div>
 
 <h3 id="setneedslayoutは無効化するだけ">setNeedsLayoutは無効化するだけ</h3>
 
-<p><code class="highlighter-rouge">setNeedsLayout</code>を呼ぶと次回更新時に更新されるが、その場で更新はされない。</p>
+<p><code class="language-plaintext highlighter-rouge">setNeedsLayout</code>を呼ぶと次回更新時に更新されるが、その場で更新はされない。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
 <span class="k">self</span><span class="o">.</span><span class="n">labelLeftConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">40.0</span>
@@ -313,12 +315,12 @@ UILabelは左右と上にsuperviewとConstraintを引いている。<br />
 </code></pre></div></div>
 
 <p><em>コンソール</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
 </code></pre></div></div>
 
 <h3 id="constraint更新してもフレーム位置は変わらない">Constraint更新してもフレーム位置は変わらない</h3>
 
-<p><code class="highlighter-rouge">setNeedsUpdateConstraints</code>と<code class="highlighter-rouge">updateConstraintsIfNeeded</code>で制約更新しても<br />
+<p><code class="language-plaintext highlighter-rouge">setNeedsUpdateConstraints</code>と<code class="language-plaintext highlighter-rouge">updateConstraintsIfNeeded</code>で制約更新しても<br />
 レイアウト更新はされないので、ラベルの位置は更新されない。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">self</span><span class="o">.</span><span class="n">labelRightConstraint</span><span class="o">.</span><span class="n">constant</span> <span class="o">=</span> <span class="mf">30.0</span>
@@ -330,15 +332,15 @@ UILabelは左右と上にsuperviewとConstraintを引いている。<br />
 </code></pre></div></div>
 
 <p><em>コンソール</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ラベルX: 16.0
 </code></pre></div></div>
 
 <h2 id="あまり使うケース少ない">あまり使うケース少ない</h2>
-<p><code class="highlighter-rouge">setNeedsLayout</code>と<code class="highlighter-rouge">setNeedsUpdateConstraints</code>はパフォーマンス良いと説明されている。<br />
+<p><code class="language-plaintext highlighter-rouge">setNeedsLayout</code>と<code class="language-plaintext highlighter-rouge">setNeedsUpdateConstraints</code>はパフォーマンス良いと説明されている。<br />
 だけど呼ばなくても最近のiPhoneでは動く。<br />
 そしてUIベースのアプリは、これが必要なほど凝ったUIは作るべきではないと私は思う。</p>
 
-<p>かろうじて使うのは<code class="highlighter-rouge">layoutIfNeeded</code>だろうか。</p>
+<p>かろうじて使うのは<code class="language-plaintext highlighter-rouge">layoutIfNeeded</code>だろうか。</p>
 
   </section>
 

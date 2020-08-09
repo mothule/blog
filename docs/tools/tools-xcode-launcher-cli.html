@@ -14,8 +14,8 @@
   <title>コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOSで使うXcodeをターミナルなどコマンドラインからプロジェクトを開くときにxcodeprojかxcworkspaceなのか判断をいい感じにしてくれるスクリプトを作ったので紹介する記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-20T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png" />
+<meta property="twitter:title" content="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/tools-xcode-launcher-cli","headline":"コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った","dateModified":"2020-05-20T22:59:22+09:00","datePublished":"2020-05-20T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/tools-xcode-launcher-cli"},"description":"iOSで使うXcodeをターミナルなどコマンドラインからプロジェクトを開くときにxcodeprojかxcworkspaceなのか判断をいい感じにしてくれるスクリプトを作ったので紹介する記事です。","image":"https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/tools-xcode-launcher-cli","headline":"コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った","dateModified":"2020-05-20T22:59:22+09:00","datePublished":"2020-05-20T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/tools-xcode-launcher-cli"},"description":"iOSで使うXcodeをターミナルなどコマンドラインからプロジェクトを開くときにxcodeprojかxcworkspaceなのか判断をいい感じにしてくれるスクリプトを作ったので紹介する記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -193,7 +195,7 @@
   </div>
   <section>
   <p>キータイプ数「open hoge.xcworkspace」を「<strong>xc</strong>」にまで減らします。<br />
-<code class="highlighter-rouge">xcodeproj</code>か<code class="highlighter-rouge">xcworkspace</code>かいちいち確認不要になります。</p>
+<code class="language-plaintext highlighter-rouge">xcodeproj</code>か<code class="language-plaintext highlighter-rouge">xcworkspace</code>かいちいち確認不要になります。</p>
 
 <p>iOSエンジニアでもターミナルを使う頻度は非常に高いです。<br />
 そのためターミナル上からXcodeプロジェクトを開くことも多いです。</p>
@@ -204,7 +206,7 @@
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>open hoge.xcodeproj
 </code></pre></div></div>
 
-<p>しかしCocoaPodsを入れたりすると、xcodeprojではなく<code class="highlighter-rouge">xcworkspace</code>を開く必要があります。<br />
+<p>しかしCocoaPodsを入れたりすると、xcodeprojではなく<code class="language-plaintext highlighter-rouge">xcworkspace</code>を開く必要があります。<br />
 そのためターミナルでは次のコマンドになります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>open hoge.xcworkspace
@@ -221,7 +223,7 @@
 <p><a href="/assets/images/2020-05-20-tools-xcode-launcher-cli/1.gif"><img src="/assets/images/2020-05-20-tools-xcode-launcher-cli/1.gif" width="100%" alt="xcコマンドの動作" /></a></p>
 
 <h3 id="xcコマンドの使い方">xcコマンドの使い方</h3>
-<p>使い方は簡単です。<code class="highlighter-rouge">xc</code>コマンドを叩くことでカレントディレクトリからXcodeプロジェクトを見つけて起動します。</p>
+<p>使い方は簡単です。<code class="language-plaintext highlighter-rouge">xc</code>コマンドを叩くことでカレントディレクトリからXcodeプロジェクトを見つけて起動します。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd </span>your/xcode/proj/path
 <span class="nv">$ </span>xc

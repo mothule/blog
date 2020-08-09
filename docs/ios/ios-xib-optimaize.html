@@ -14,8 +14,8 @@
   <title>StoryboardやXibのロード処理の作りを改善する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="StoryboardやXibのロード処理の作りを改善する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。 そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので あまりよろしくありません。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-29-ios-xib-optimaize.png" />
+<meta property="twitter:title" content="StoryboardやXibのロード処理の作りを改善する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/ios-xib-optimaize","headline":"StoryboardやXibのロード処理の作りを改善する","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/ios-xib-optimaize"},"description":"至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。 そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので あまりよろしくありません。","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-xib-optimaize.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/ios-xib-optimaize","headline":"StoryboardやXibのロード処理の作りを改善する","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-xib-optimaize.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/ios-xib-optimaize"},"description":"至る所で使われるStoryboardとxibは、コードの読み込みによくある使い方をする上で少し助長があります。 そしてそれがロード処理で至る所で使われるため、ボイラープレートが増えることからコード可読性が下がるので あまりよろしくありません。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -218,7 +220,7 @@ Identifierに好きな名前をつけることができます。</p>
 <ul>
   <li>1 View Controller に対し 1 Storyboard</li>
   <li>Identifier には制御クラス名が入る</li>
-  <li>storyboardファイル/xibファイルは<code class="highlighter-rouge">制御クラス名.拡張子</code>となっている</li>
+  <li>storyboardファイル/xibファイルは<code class="language-plaintext highlighter-rouge">制御クラス名.拡張子</code>となっている</li>
 </ul>
 
 <h2 id="法則性によりロード処理がシンプルになる">法則性によりロード処理がシンプルになる</h2>
@@ -228,7 +230,7 @@ Identifierに好きな名前をつけることができます。</p>
 
 <h3 id="storyboard">Storyboard</h3>
 <p>Storyboardをロードする処理を通常通り書くと次のような処理になります。
-下記コードは<code class="highlighter-rouge">Is Initial View Controller</code>が<code class="highlighter-rouge">ON</code> and Identifierが未設定のViewControllerのロードにトライし、それが失敗だったら<br />
+下記コードは<code class="language-plaintext highlighter-rouge">Is Initial View Controller</code>が<code class="language-plaintext highlighter-rouge">ON</code> and Identifierが未設定のViewControllerのロードにトライし、それが失敗だったら<br />
 Identifierを指定してViewControllerのロードにトライして、HogeViewControllerのロード処理を行っています。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">storyboard</span> <span class="o">=</span> <span class="kt">UIStoryboard</span><span class="p">(</span><span class="nv">name</span><span class="p">:</span> <span class="s">"HogeViewController"</span><span class="p">,</span> <span class="nv">bundle</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
@@ -273,7 +275,7 @@ Identifierを指定してViewControllerのロードにトライして、HogeView
 
 <h2 id="xibのコードを改善してみる">xibのコードを改善してみる</h2>
 
-<p>例えばUITableViewCellのサブクラスとなる<code class="highlighter-rouge">TableViewCell</code>が定義されてたとして、xibファイルは<code class="highlighter-rouge">TableViewCell.xib</code>だったとします。
+<p>例えばUITableViewCellのサブクラスとなる<code class="language-plaintext highlighter-rouge">TableViewCell</code>が定義されてたとして、xibファイルは<code class="language-plaintext highlighter-rouge">TableViewCell.xib</code>だったとします。
 xibファイルは前述したルールに制御クラス名でなければいけません。</p>
 
 <p>UITableViewにそのセルを表示するには</p>
@@ -286,10 +288,10 @@ xibファイルは前述したルールに制御クラス名でなければい�
 <p>の2つが必要になります。</p>
 
 <h3 id="テーブル登録">テーブル登録</h3>
-<p>テーブルへの登録には、 <code class="highlighter-rouge">UITableView.register</code> が使われます。</p>
+<p>テーブルへの登録には、 <code class="language-plaintext highlighter-rouge">UITableView.register</code> が使われます。</p>
 
-<p>これは <code class="highlighter-rouge">UINib</code>と対象のセルの<code class="highlighter-rouge">Identifier</code>を渡すことで登録が行われます。
-そして<code class="highlighter-rouge">UINib</code>はxibファイル名が必要になります。</p>
+<p>これは <code class="language-plaintext highlighter-rouge">UINib</code>と対象のセルの<code class="language-plaintext highlighter-rouge">Identifier</code>を渡すことで登録が行われます。
+そして<code class="language-plaintext highlighter-rouge">UINib</code>はxibファイル名が必要になります。</p>
 
 <p>つまり UITableViewCellのサブクラスを登録するには、</p>
 
@@ -300,8 +302,8 @@ xibファイルは前述したルールに制御クラス名でなければい�
 
 <p>の2つが必要になります。</p>
 
-<p>そして、前述したルールに沿えば、xibファイル名は<code class="highlighter-rouge">制御クラス名.xib</code>でなければならないのと、
-セルのIdentifierも<code class="highlighter-rouge">制御クラス名</code>でなければなりません。</p>
+<p>そして、前述したルールに沿えば、xibファイル名は<code class="language-plaintext highlighter-rouge">制御クラス名.xib</code>でなければならないのと、
+セルのIdentifierも<code class="language-plaintext highlighter-rouge">制御クラス名</code>でなければなりません。</p>
 
 <p>つまり<strong>制御クラス名が分かれば、登録処理に必要な情報が分かります。</strong></p>
 
@@ -358,7 +360,7 @@ xibファイルは前述したルールに制御クラス名でなければい�
 <p>前述したコードはたしかに登録処理がシンプルになりましたが、 TableViewCell専用です。<br />
 なのでこれをどのUITableViewCellサブクラスにも使えるようにします。</p>
 
-<p>まず制御クラス名(<code class="highlighter-rouge">className</code>)とIdentifierをTableViewCell専用から汎用に変えるためにprotocol抽出します。<br />
+<p>まず制御クラス名(<code class="language-plaintext highlighter-rouge">className</code>)とIdentifierをTableViewCell専用から汎用に変えるためにprotocol抽出します。<br />
 UIViewControllerやUITableViewCellらは根底としてNSObjectを基底クラスとして持っており、そしてNSObjectはNSObjectProtcolを採用しています。</p>
 
 <p>なので今回は NSObjectProtocol protocolを拡張することでUIViewControllerやUITableViewCellのクラス名やIdentifierが取れるようにします。<br />
@@ -370,11 +372,11 @@ UIViewControllerやUITableViewCellらは根底としてNSObjectを基底クラ�
 <span class="p">}</span>
 </code></pre></div></div>
 <p>こうすることで UIViewControllerやUITableViewCellらは、自分のクラス名とIDを持つことができました。
-残すは<code class="highlighter-rouge">nib: UINib</code>になります。</p>
+残すは<code class="language-plaintext highlighter-rouge">nib: UINib</code>になります。</p>
 
-<p>これには新しく <code class="highlighter-rouge">Nibable</code> protocol を用意して、NIBを持つ制御クラスにこのprotocolを採用させることで、
-採用したクラスは<code class="highlighter-rouge">nib: UINib</code>が持てるようにします。<br />
-またnibにはクラス名がいるので先程の<code class="highlighter-rouge">NSObjectProtcol</code>に準拠させます。</p>
+<p>これには新しく <code class="language-plaintext highlighter-rouge">Nibable</code> protocol を用意して、NIBを持つ制御クラスにこのprotocolを採用させることで、
+採用したクラスは<code class="language-plaintext highlighter-rouge">nib: UINib</code>が持てるようにします。<br />
+またnibにはクラス名がいるので先程の<code class="language-plaintext highlighter-rouge">NSObjectProtcol</code>に準拠させます。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Nibable</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
   <span class="kd">static</span> <span class="k">var</span> <span class="nv">nibName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
@@ -386,14 +388,14 @@ UIViewControllerやUITableViewCellらは根底としてNSObjectを基底クラ�
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>これを<code class="highlighter-rouge">TableViewCell</code>に採用させると次のようになります。</p>
+<p>これを<code class="language-plaintext highlighter-rouge">TableViewCell</code>に採用させると次のようになります。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableViewCell</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="p">,</span> <span class="kt">Nibable</span> <span class="p">{</span> <span class="p">}</span>
 </code></pre></div></div>
 <p>TableViewCell自体に制御クラス名などは持たせる必要はありません。
 Nibableを採用したことでデフォルトでそれらを持っているためです。</p>
 
-<p>こうすることで、別のテーブル定義にも <code class="highlighter-rouge">Nibable</code> を採用させることで登録処理を簡易化できるようになります。</p>
+<p>こうすることで、別のテーブル定義にも <code class="language-plaintext highlighter-rouge">Nibable</code> を採用させることで登録処理を簡易化できるようになります。</p>
 
 <p>しかし先程同様にデータ側が整理されても登録も整理されていないと動きません。
 なので先程改修したregiserを修正します。</p>
@@ -404,7 +406,7 @@ Nibableを採用したことでデフォルトでそれらを持っているた�
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>型を<code class="highlighter-rouge">UITableViewCell</code>を継承したサブクラス限定にして、 そのサブクラスが<code class="highlighter-rouge">Nibable</code>を採用している条件にします。</p>
+<p>型を<code class="language-plaintext highlighter-rouge">UITableViewCell</code>を継承したサブクラス限定にして、 そのサブクラスが<code class="language-plaintext highlighter-rouge">Nibable</code>を採用している条件にします。</p>
 
 <p>xibやテーブルだけでなくUICollectionViewにも使われます。</p>
 
@@ -415,13 +417,13 @@ Nibableを採用したことでデフォルトでそれらを持っているた�
 <p>これは通常は</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withIdentifier</span><span class="p">:</span> <span class="s">"TableViewCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">TableViewCell</span>
 </code></pre></div></div>
-<p>というふうに <code class="highlighter-rouge">Identifier</code>と<code class="highlighter-rouge">制御クラス</code>へのキャストが必要になります。</p>
+<p>というふうに <code class="language-plaintext highlighter-rouge">Identifier</code>と<code class="language-plaintext highlighter-rouge">制御クラス</code>へのキャストが必要になります。</p>
 
 <p>これを今回は</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">tableView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="kt">TableViewCell</span><span class="o">.</span><span class="k">self</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span>
 </code></pre></div></div>
 <p>のように制御クラスへのキャストやIdentifierの指定を閉じ込めます。
-これは、<code class="highlighter-rouge">制御クラスの型</code>を渡すだけで中で<code class="highlighter-rouge">Identifler</code>と<code class="highlighter-rouge">制御クラス</code>へのキャストをしてくれる拡張メソッドを用意すればいいだけですね。</p>
+これは、<code class="language-plaintext highlighter-rouge">制御クラスの型</code>を渡すだけで中で<code class="language-plaintext highlighter-rouge">Identifler</code>と<code class="language-plaintext highlighter-rouge">制御クラス</code>へのキャストをしてくれる拡張メソッドを用意すればいいだけですね。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">extension</span> <span class="kt">UITableView</span> <span class="p">{</span>
   <span class="kd">func</span> <span class="n">dequeueReusableCell</span><span class="o">&lt;</span><span class="kt">T</span><span class="p">:</span> <span class="kt">UITableViewCell</span><span class="o">&gt;</span><span class="p">(</span><span class="n">_</span> <span class="nv">cellType</span><span class="p">:</span> <span class="kt">T</span><span class="o">.</span><span class="k">Type</span><span class="p">,</span> <span class="k">for</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span> <span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">T</span> <span class="p">{</span>
@@ -429,11 +431,11 @@ Nibableを採用したことでデフォルトでそれらを持っているた�
   <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>今度はNibableは必要ありません。型推論によりキャストもできて、UITableViewCellは<code class="highlighter-rouge">NSObjectProtcol</code>を採用しているので<code class="highlighter-rouge">identifier</code>も取ってこれます。</p>
+<p>今度はNibableは必要ありません。型推論によりキャストもできて、UITableViewCellは<code class="language-plaintext highlighter-rouge">NSObjectProtcol</code>を採用しているので<code class="language-plaintext highlighter-rouge">identifier</code>も取ってこれます。</p>
 
 <h2 id="storyboardのコードを改善してみる">storyboardのコードを改善してみる</h2>
 
-<p>StoryboardもNibableのように<code class="highlighter-rouge">Storyboardable</code>を用意する方法です。</p>
+<p>StoryboardもNibableのように<code class="language-plaintext highlighter-rouge">Storyboardable</code>を用意する方法です。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">protocol</span> <span class="kt">Storyboardable</span><span class="p">:</span> <span class="kt">NSObjectProtocol</span> <span class="p">{</span>
     <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span>
@@ -466,14 +468,14 @@ Nibableを採用したことでデフォルトでそれらを持っているた�
 <p>これは冒頭に記載したコードと意図は同じです。</p>
 
 <h2 id="既存の1storyboardに複数個のviewcontrollerが紐付いてるstoryboardに対して">既存の1storyboardに複数個のViewControllerが紐付いてるstoryboardに対して</h2>
-<p><code class="highlighter-rouge">FugaViewController</code> の対象UIが <code class="highlighter-rouge">HogeViewController.storyboard</code> にある場合は次のように実装します。</p>
+<p><code class="language-plaintext highlighter-rouge">FugaViewController</code> の対象UIが <code class="language-plaintext highlighter-rouge">HogeViewController.storyboard</code> にある場合は次のように実装します。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">FugaViewController</span><span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">Storyboardable</span> <span class="p">{</span>
   <span class="kd">static</span> <span class="k">var</span> <span class="nv">storyboardName</span><span class="p">:</span> <span class="kt">String</span> <span class="p">{</span> <span class="k">return</span> <span class="s">"HogeViewController"</span> <span class="p">}</span>
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>このようにすれば HogeViewController.storyboard内の<code class="highlighter-rouge">FugaViewController</code>のIdentifierを持つView Controllerをロードします。</p>
+<p>このようにすれば HogeViewController.storyboard内の<code class="language-plaintext highlighter-rouge">FugaViewController</code>のIdentifierを持つView Controllerをロードします。</p>
 
 <h2 id="全容">全容</h2>
 <p>部分的にコード抜粋で全容を見ないと分からないと思うのでコードの全容を記載します。</p>

@@ -14,8 +14,8 @@
   <title>ターミナルからRubyMineを起動、比較、マージなどする - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="ターミナルからRubyMineを起動、比較、マージなどする" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-18T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png" />
+<meta property="twitter:title" content="ターミナルからRubyMineを起動、比較、マージなどする" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal","headline":"ターミナルからRubyMineを起動、比較、マージなどする","dateModified":"2020-05-18T18:36:28+09:00","datePublished":"2020-05-18T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal"},"description":"RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。","image":"https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal","headline":"ターミナルからRubyMineを起動、比較、マージなどする","dateModified":"2020-05-18T18:36:28+09:00","datePublished":"2020-05-18T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rubymine/tools-rubymine-launch-from-terminal"},"description":"RubyMineは便利ですが、普段はターミナルを触ることが多いので、ターミナルからRubyMineを開く方法について調べたら、開く以外のことができることが分かったのでまとめます。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -217,7 +219,7 @@
 
 <h2 id="ターミナルからrubymineで開く">ターミナルからRubyMineで開く</h2>
 
-<p>まずターミナルからRubyMine.appwを開くには<code class="highlighter-rouge">open</code>コマンドを使います。
+<p>まずターミナルからRubyMine.appwを開くには<code class="language-plaintext highlighter-rouge">open</code>コマンドを使います。
 最後のドットはそのフォルダをRubyMineで開くことを意味します。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>open <span class="nt">-na</span> <span class="s2">"RubyMine.app"</span> <span class="nb">.</span>
@@ -236,12 +238,12 @@
 open <span class="nt">-na</span> <span class="s2">"RubyMine.app"</span> <span class="nt">--args</span> <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span>
 </code></pre></div></div>
 
-<p>これを<code class="highlighter-rouge">rubymine</code>という名前で保存します。</p>
+<p>これを<code class="language-plaintext highlighter-rouge">rubymine</code>という名前で保存します。</p>
 
 <h3 id="実行権限付与">実行権限付与</h3>
 <p>さっき作ったシェルスクリプトの実行権限を変更します</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>chmod 711 rubymine
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">chmod </span>711 rubymine
 </code></pre></div></div>
 
 <p>これでターミナルからrubymineスクリプトを実行できるようになります。</p>
@@ -250,10 +252,10 @@ open <span class="nt">-na</span> <span class="s2">"RubyMine.app"</span> <span cl
 
 <p>このままだと配置した場所のパスが必要になるので、ターミナルが見えるようにパスが見える場所に配置します。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mv rubymine /usr/local/bin/
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mv </span>rubymine /usr/local/bin/
 </code></pre></div></div>
 
-<p>なおこの場所でなくとも<code class="highlighter-rouge">cat $PATH</code>で表示されるディレクトリ上にならどこでも構いません。</p>
+<p>なおこの場所でなくとも<code class="language-plaintext highlighter-rouge">cat $PATH</code>で表示されるディレクトリ上にならどこでも構いません。</p>
 
 <h3 id="rubymineに渡せる引数一覧">RubyMineに渡せる引数一覧</h3>
 
@@ -267,7 +269,7 @@ open <span class="nt">-na</span> <span class="s2">"RubyMine.app"</span> <span cl
 </ul>
 
 <h2 id="rubymineでファイル差分を見る">RubyMineでファイル差分を見る</h2>
-<p>Syntax: <code class="highlighter-rouge">rubymine diff &lt;path1&gt; &lt;path2&gt;</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">rubymine diff &lt;path1&gt; &lt;path2&gt;</code></p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"Hoge"</span> <span class="o">&gt;</span> hoge.txt
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"Fuga"</span> <span class="o">&gt;</span> fuga.txt
@@ -277,19 +279,19 @@ open <span class="nt">-na</span> <span class="s2">"RubyMine.app"</span> <span cl
 <p><a href="/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/1.png"><img src="/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/1.png" width="100%" alt="RubyMine diff画面" /></a></p>
 
 <h2 id="rubymineでファイルマージする">RubyMineでファイルマージする</h2>
-<p>Syntax: <code class="highlighter-rouge">rubymine merge &lt;path1&gt; &lt;path2&gt; [&lt;base&gt;] &lt;output&gt;</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">rubymine merge &lt;path1&gt; &lt;path2&gt; [&lt;base&gt;] &lt;output&gt;</code></p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"Hoge"</span> <span class="o">&gt;</span> hoge.txt
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"Fuga"</span> <span class="o">&gt;</span> fuga.txt
-<span class="nv">$ </span>touch base.txt
-<span class="nv">$ </span>touch out.txt
+<span class="nv">$ </span><span class="nb">touch </span>base.txt
+<span class="nv">$ </span><span class="nb">touch </span>out.txt
 <span class="nv">$ </span>rubymine diff hoge.txt fuga.txt base.txt out.txt
 </code></pre></div></div>
 
 <p><a href="/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/2.png"><img src="/assets/images/2020-05-18-tools-rubymine-launch-from-terminal/2.png" width="100%" alt="RubyMine merge画面" /></a></p>
 
 <h2 id="rubymineでファイルフォーマットを適用する">RubyMineでファイルフォーマットを適用する</h2>
-<p>Syntax: <code class="highlighter-rouge">rubymine format [&lt;options&gt;] &lt;path ...&gt;</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">rubymine format [&lt;options&gt;] &lt;path ...&gt;</code></p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>ruby.rb
 def main
@@ -318,12 +320,12 @@ end
 </ul>
 
 <h2 id="rubymineでコード検査する">RubyMineでコード検査する</h2>
-<p>Syntax: <code class="highlighter-rouge">rubymine inspect &lt;project&gt; &lt;inspection-profile&gt; &lt;output&gt; [&lt;options&gt;]</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">rubymine inspect &lt;project&gt; &lt;inspection-profile&gt; &lt;output&gt; [&lt;options&gt;]</code></p>
 
 <p>RubyMineでコード書いていると警告されるアレです。<br />
 ターミナル上からコード検査をして結果を外部ファイルに出力します。</p>
 
-<p><code class="highlighter-rouge">~/Downloads/sandbox</code>ディレクトリがあり、その中に<code class="highlighter-rouge">ruby.rb</code>ファイルがあった場合</p>
+<p><code class="language-plaintext highlighter-rouge">~/Downloads/sandbox</code>ディレクトリがあり、その中に<code class="language-plaintext highlighter-rouge">ruby.rb</code>ファイルがあった場合</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rubymine inspect ~/Downloads/sandbox/ ~/Downloads/sandbox/.idea/inspectionProfiles/Project_Default.xml ~/Downloads/sandbox/InspectionResults <span class="nt">-v2</span> <span class="nt">-d</span> ~/Downloads/sandbox/
 </code></pre></div></div>
@@ -349,7 +351,7 @@ end
 もし渡せたら重いp4mergeとはオサラバです。</p>
 
 <p><a href="https://www.jetbrains.com/help/ruby/working-with-the-ide-features-from-command-line.html">RubyMine - Command-line interface</a>を参考にしてあります。
-なお公式記事内では <code class="highlighter-rouge">inspect</code> が <code class="highlighter-rouge">rinspect</code> となっています。<code class="highlighter-rouge">rinspect</code>では動かなかったので多分タイポです。</p>
+なお公式記事内では <code class="language-plaintext highlighter-rouge">inspect</code> が <code class="language-plaintext highlighter-rouge">rinspect</code> となっています。<code class="language-plaintext highlighter-rouge">rinspect</code>では動かなかったので多分タイポです。</p>
 
   </section>
 

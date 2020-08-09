@@ -14,8 +14,8 @@
   <title>Xcodeのxcconfigの理解と使い方 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Xcodeのxcconfigの理解と使い方" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="XcodeのBuild Settingsでビルド構成を管理する不便をxcconfigを使って解決するためにxcconfigの理解や使い方、実際のアプリ開発での構成について説明した記事。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-30T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" />
+<meta property="twitter:title" content="Xcodeのxcconfigの理解と使い方" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use","headline":"Xcodeのxcconfigの理解と使い方","dateModified":"2020-07-30T19:41:30+09:00","datePublished":"2020-07-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use"},"description":"XcodeのBuild Settingsでビルド構成を管理する不便をxcconfigを使って解決するためにxcconfigの理解や使い方、実際のアプリ開発での構成について説明した記事。","image":"https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use","headline":"Xcodeのxcconfigの理解と使い方","dateModified":"2020-07-30T19:41:30+09:00","datePublished":"2020-07-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use"},"description":"XcodeのBuild Settingsでビルド構成を管理する不便をxcconfigを使って解決するためにxcconfigの理解や使い方、実際のアプリ開発での構成について説明した記事。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -273,13 +275,13 @@ xcconfigを使うことでプロジェクトやターゲットのビルドパラ
 <p><a href="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/1.png"><img src="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/1.png" width="50%" alt="xcconfig" /></a></p>
 
 <p>テキスト形式の外部ファイルなので拡張子さえあっていれば追加方法は何でもいいです。<br />
-もしXcode上から追加する場合は、<code class="highlighter-rouge">Configuration Settings File</code>を選んでください。↓</p>
+もしXcode上から追加する場合は、<code class="language-plaintext highlighter-rouge">Configuration Settings File</code>を選んでください。↓</p>
 
 <p><a href="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/2.png"><img src="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/2.png" width="75%" alt="NewFileOnXcode" /></a></p>
 
 <h3 id="ビルドパラメータの設定">ビルドパラメータの設定</h3>
 
-<p>設定フォーマットは<code class="highlighter-rouge">ParameterName = ParameterValue</code>となります。<br />
+<p>設定フォーマットは<code class="language-plaintext highlighter-rouge">ParameterName = ParameterValue</code>となります。<br />
 1ビルドパラメータ1行で表現します。<br />
 例えば下記はアプリアイコンで使うAppIcon名を設定する例です。</p>
 
@@ -300,9 +302,9 @@ xcconfigを使うことでプロジェクトやターゲットのビルドパラ
 </code></pre></div></div>
 
 <p>この上書きルールは同一ファイルだけでなくファイルを横断して適用されます。<br />
-つまりプロジェクトで<code class="highlighter-rouge">ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon</code>と設定しても<br />
-ターゲットで<code class="highlighter-rouge">ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon2</code>と設定してれば、<br />
-そのターゲットでは<code class="highlighter-rouge">AppIcon2</code>になります。</p>
+つまりプロジェクトで<code class="language-plaintext highlighter-rouge">ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon</code>と設定しても<br />
+ターゲットで<code class="language-plaintext highlighter-rouge">ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon2</code>と設定してれば、<br />
+そのターゲットでは<code class="language-plaintext highlighter-rouge">AppIcon2</code>になります。</p>
 
 <h3 id="パラメータの型">パラメータの型</h3>
 
@@ -345,15 +347,15 @@ xcconfigを使うことでプロジェクトやターゲットのビルドパラ
 
 <h3 id="変数展開">変数展開</h3>
 
-<p>パラメータ値では変数展開ができます。形式は<code class="highlighter-rouge">$(variable_name)</code>になります。
+<p>パラメータ値では変数展開ができます。形式は<code class="language-plaintext highlighter-rouge">$(variable_name)</code>になります。
 例えば下記は、既存パラメータを上書きせず追加する例です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OTHER_SWIFT_FLAGS = $(inherited) -v
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OTHER_SWIFT_FLAGS = $(inherited) -v
 </code></pre></div></div>
 
 <p>下記のように他のビルドパラメータも参照可能です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OBJROOT = $(SYMROOT)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OBJROOT = $(SYMROOT)
 
 DSTROOT = /tmp/$(PROJECT_NAME).dst
 
@@ -386,23 +388,23 @@ CONFIGURATION_BUILD_DIR = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME
   </tbody>
 </table>
 
-<p>設定フォーマットは<code class="highlighter-rouge">ParameterName[Conditional=ConditionalValue] = ParameterValue</code>になります。</p>
+<p>設定フォーマットは<code class="language-plaintext highlighter-rouge">ParameterName[Conditional=ConditionalValue] = ParameterValue</code>になります。</p>
 
-<p>例えば下記はiOSの場合のみ<code class="highlighter-rouge">OTHER_SWIFT_FLAGS</code>に<code class="highlighter-rouge">-v</code>を追加する例です。</p>
+<p>例えば下記はiOSの場合のみ<code class="language-plaintext highlighter-rouge">OTHER_SWIFT_FLAGS</code>に<code class="language-plaintext highlighter-rouge">-v</code>を追加する例です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OTHER_SWIFT_FLAGS[sdk=iphoneos*] = $(inherited) -v
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OTHER_SWIFT_FLAGS[sdk=iphoneos*] = $(inherited) -v
 </code></pre></div></div>
 
 <h4 id="組み合わせ可能">組み合わせ可能</h4>
 <p>条件sdkとarchは組み合わせ可能です。</p>
 
-<p>下記はx86_64系iOSの場合のみ<code class="highlighter-rouge">OTHER_SWIFT_FLAGS</code>に<code class="highlighter-rouge">-v</code>を追加する例です。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OTHER_SWIFT_FLAGS[sdk=iphoneos*][arch=x86_64] = $(inherited) -v
+<p>下記はx86_64系iOSの場合のみ<code class="language-plaintext highlighter-rouge">OTHER_SWIFT_FLAGS</code>に<code class="language-plaintext highlighter-rouge">-v</code>を追加する例です。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>OTHER_SWIFT_FLAGS[sdk=iphoneos*][arch=x86_64] = $(inherited) -v
 </code></pre></div></div>
 
 <h3 id="他ビルド構成ファイルの読み込み">他ビルド構成ファイルの読み込み</h3>
 <p>xcconfigは他のxcconfigを読み込み展開できます。
-他xcconfigを読み込むには<code class="highlighter-rouge">#include "other file path"</code>を使います。<br />
+他xcconfigを読み込むには<code class="language-plaintext highlighter-rouge">#include "other file path"</code>を使います。<br />
 パスは「ファイル名」「相対パス」「絶対パス」を利用できます。</p>
 
 <ul>
@@ -414,7 +416,7 @@ CONFIGURATION_BUILD_DIR = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME
 
 <h4 id="指定ファイル見つからない場合">指定ファイル見つからない場合</h4>
 <p>ビルド時に指定のファイルが見つからない場合は、ビルド警告が表示されます。<br />
-もしこの警告を抑制したい場合は、<code class="highlighter-rouge">#include? "other file path"</code>と、<code class="highlighter-rouge">?</code>をつけます。</p>
+もしこの警告を抑制したい場合は、<code class="language-plaintext highlighter-rouge">#include? "other file path"</code>と、<code class="language-plaintext highlighter-rouge">?</code>をつけます。</p>
 
 <h3 id="ビルドパラメータ名が分からない場合">ビルドパラメータ名が分からない場合</h3>
 
@@ -464,7 +466,7 @@ CONFIGURATION_BUILD_DIR = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME
 
 <p>の3カテゴリに分けられるかと思います。</p>
 
-<p>これを11個それぞれにビルドパラメータを設定するのは多量の重複が発生するので、<code class="highlighter-rouge">include</code>を利用したxcconfigの階層化が必要かと思います。
+<p>これを11個それぞれにビルドパラメータを設定するのは多量の重複が発生するので、<code class="language-plaintext highlighter-rouge">include</code>を利用したxcconfigの階層化が必要かと思います。
 階層の分け方としては先程分けた分類に加えてBuild Configurationを考慮した形が良さそうです。</p>
 
 <p>つまり整理すると、</p>
@@ -526,11 +528,11 @@ AppExtension系xconfigは今の所この2つのターゲットではDebugでもR
 
 <h3 id="xcconfigの中身">xcconfigの中身</h3>
 
-<p>中身は予定通り<code class="highlighter-rouge">#include</code>プレフィックスを使って共通xcconfigを読み込んでから、それぞれ特別値を個別設定してあります。</p>
+<p>中身は予定通り<code class="language-plaintext highlighter-rouge">#include</code>プレフィックスを使って共通xcconfigを読み込んでから、それぞれ特別値を個別設定してあります。</p>
 
-<p>例えば下記は<code class="highlighter-rouge">Project.debug.xcconfig</code>の全容です。</p>
+<p>例えば下記は<code class="language-plaintext highlighter-rouge">Project.debug.xcconfig</code>の全容です。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Project.base.xcconfig"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>#include "Project.base.xcconfig"
 
 //:configuration = Debug
 ONLY_ACTIVE_ARCH = YES

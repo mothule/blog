@@ -14,8 +14,8 @@
   <title>iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOSエンジニアでもスクリプトがかければ生産性は上がります。 ちょっとしたツールを作るだけでコーディング以外の作業を効率化できるからです。 この記事ではセットアップとよく使う関数の紹介や何がスクリプトに適してるか説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-08T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-08-ruby-script-basic.png" />
+<meta property="twitter:title" content="iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/ruby-script-basic","headline":"iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業","dateModified":"2020-02-08T23:35:44+09:00","datePublished":"2020-02-08T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/ruby-script-basic"},"description":"iOSエンジニアでもスクリプトがかければ生産性は上がります。 ちょっとしたツールを作るだけでコーディング以外の作業を効率化できるからです。 この記事ではセットアップとよく使う関数の紹介や何がスクリプトに適してるか説明します。","image":"https://blog.mothule.com/assets/images/2020-02-08-ruby-script-basic.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ruby/ruby-script-basic","headline":"iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業","dateModified":"2020-02-08T23:35:44+09:00","datePublished":"2020-02-08T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-08-ruby-script-basic.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/ruby-script-basic"},"description":"iOSエンジニアでもスクリプトがかければ生産性は上がります。 ちょっとしたツールを作るだけでコーディング以外の作業を効率化できるからです。 この記事ではセットアップとよく使う関数の紹介や何がスクリプトに適してるか説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -300,7 +302,7 @@ puts <span class="sb">`</span>ruby <span class="nt">-v</span><span class="sb">`<
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv <span class="nb">local</span> &lt;version&gt;
 </code></pre></div></div>
 <p>特に理由がなければ最新バージョンを使います。<br />
-実行すれば <code class="highlighter-rouge">.ruby-version</code> が作成されます。<br />
+実行すれば <code class="language-plaintext highlighter-rouge">.ruby-version</code> が作成されます。<br />
 指定バージョンがrbenvになければインストールしてください。</p>
 
 <p>これでRubyバージョン固定できました。</p>
@@ -320,23 +322,23 @@ Swiftなどコンパイル言語であればコンパイルエラーで検知で
 
 <h4 id="インストール時はgem先を指定する">インストール時はgem先を指定する</h4>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle install <span class="nt">--path</span><span class="o">=</span>vender/bundle <span class="nt">-j4</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">install</span> <span class="nt">--path</span><span class="o">=</span>vender/bundle <span class="nt">-j4</span>
 </code></pre></div></div>
-<p>gemの準備ができたらインストールですが、gemのインストール先を <code class="highlighter-rouge">vender/bundle</code> に指定することでカレントディレクトリにgemsがインストールされるようになり、使われているgemsに対して検索やコードリーディングなどしやすくなります。</p>
+<p>gemの準備ができたらインストールですが、gemのインストール先を <code class="language-plaintext highlighter-rouge">vender/bundle</code> に指定することでカレントディレクトリにgemsがインストールされるようになり、使われているgemsに対して検索やコードリーディングなどしやすくなります。</p>
 
-<p><code class="highlighter-rouge">-j4</code> はインストールジョブが4つ同時に走るのでインストールが早く終わります。</p>
+<p><code class="language-plaintext highlighter-rouge">-j4</code> はインストールジョブが4つ同時に走るのでインストールが早く終わります。</p>
 
 <h4 id="active-support-gemでrubyをより使いやすくする">Active Support gemでRubyをより使いやすくする</h4>
 
 <p>RailsでRubyを書いてる書き方はActive Support gemのお陰で便利にコーディングできます。<br />
-これをRailsなしのスクリプトでも使えるようにするには、<code class="highlighter-rouge">activesupport</code> gemが必要です。  <br />
-<em>Gemfile</em> に <code class="highlighter-rouge">gem 'activesupport'</code> を追記しましょう。</p>
+これをRailsなしのスクリプトでも使えるようにするには、<code class="language-plaintext highlighter-rouge">activesupport</code> gemが必要です。  <br />
+<em>Gemfile</em> に <code class="language-plaintext highlighter-rouge">gem 'activesupport'</code> を追記しましょう。</p>
 
 <h2 id="railsなしでbundlerを使うには">RailsなしでBundlerを使うには？</h2>
 
 <p>Rubyでは当然のようにBundlerを使ってgem管理を行い, gemを追加すればすぐ使えるものばかりですが、
 Railsなしの場合は、require を自分で呼ぶ必要があります。
-<code class="highlighter-rouge">require 'rubygems'</code> と <code class="highlighter-rouge">require 'bundler/setup'</code> を入れます。</p>
+<code class="language-plaintext highlighter-rouge">require 'rubygems'</code> と <code class="language-plaintext highlighter-rouge">require 'bundler/setup'</code> を入れます。</p>
 
 <p><em>main</em></p>
 <div class="language-rb highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">#!/usr/bin/env ruby</span>
@@ -346,24 +348,24 @@ Railsなしの場合は、require を自分で呼ぶ必要があります。
 </code></pre></div></div>
 
 <h3 id="rbenvのrubyパスshebangについて">rbenvのRubyパス(shebang)について</h3>
-<p>前述コードのshebangは、rbenvを使う場合は、 <code class="highlighter-rouge"><span class="c1">#!/usr/bin/env ruby</span></code> にします。</p>
+<p>前述コードのshebangは、rbenvを使う場合は、 <code class="language-plaintext highlighter-rouge">#!/usr/bin/env ruby</code> にします。</p>
 
 <h2 id="chmodでスクリプトに実行権限を与える">chmodでスクリプトに実行権限を与える</h2>
 <p>作成したファイルのままでは実行権限が不十分です。
-<code class="highlighter-rouge">chmod</code> コマンドで誰でも実行できるように権限付与します。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>chmod 711 main
+<code class="language-plaintext highlighter-rouge">chmod</code> コマンドで誰でも実行できるように権限付与します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">chmod </span>711 main
 </code></pre></div></div>
 <p>(権限エラーの場合はsudoをつけて再実行)</p>
 
 <h2 id="０から準備まで工程を列挙する">０から準備まで工程を列挙する</h2>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mkdir hoge <span class="o">&amp;&amp;</span> <span class="nb">cd</span> <span class="nv">$_</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir </span>hoge <span class="o">&amp;&amp;</span> <span class="nb">cd</span> <span class="nv">$_</span>
 <span class="nv">$ </span>rbenv <span class="nb">local </span>2.7.0
 <span class="nv">$ </span>bundle init
 <span class="nv">$ </span><span class="nb">echo</span> <span class="s2">"gem 'activesupport'"</span> <span class="o">&gt;&gt;</span> Gemfile
-<span class="nv">$ </span>bundle install <span class="nt">-j4</span> <span class="nt">--path</span><span class="o">=</span>vendor/bundle
-<span class="nv">$ </span>touch main
-<span class="nv">$ </span>chmod 711 main
+<span class="nv">$ </span>bundle <span class="nb">install</span> <span class="nt">-j4</span> <span class="nt">--path</span><span class="o">=</span>vendor/bundle
+<span class="nv">$ </span><span class="nb">touch </span>main
+<span class="nv">$ </span><span class="nb">chmod </span>711 main
 <span class="nv">$ </span>vim main
 </code></pre></div></div>
 
@@ -381,7 +383,7 @@ Railsなしの場合は、require を自分で呼ぶ必要があります。
 
 <h2 id="よく使う関数やシェルコマンド">よく使う関数やシェルコマンド</h2>
 <p>Rubyにはシェル操作関数があります。
-つまりRubyから<code class="highlighter-rouge">cd</code> や <code class="highlighter-rouge">cp</code> といったシェルコマンドや、 <code class="highlighter-rouge">curl</code> や <code class="highlighter-rouge">http</code> といったHomebrewで落としたコマンドラインツールも実行することができます。</p>
+つまりRubyから<code class="language-plaintext highlighter-rouge">cd</code> や <code class="language-plaintext highlighter-rouge">cp</code> といったシェルコマンドや、 <code class="language-plaintext highlighter-rouge">curl</code> や <code class="language-plaintext highlighter-rouge">http</code> といったHomebrewで落としたコマンドラインツールも実行することができます。</p>
 
 <p>スクリプトを作るときに比較的よく使う関数やシェルコマンドを紹介します。</p>
 

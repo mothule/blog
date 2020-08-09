@@ -14,8 +14,8 @@
   <title>readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="以前tigが動かなくなる件をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-07-23T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-07-23-mac-homebrew-fix-readline-missmatch-version.png" />
+<meta property="twitter:title" content="readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version","headline":"readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-07-23T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version"},"description":"以前tigが動かなくなる件をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。","image":"https://blog.mothule.com/assets/images/2019-07-23-mac-homebrew-fix-readline-missmatch-version.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version","headline":"readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-07-23T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-07-23-mac-homebrew-fix-readline-missmatch-version.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version"},"description":"以前tigが動かなくなる件をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -188,7 +190,7 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#追記brew-switch-と-brew-upgrade-混ぜたことによる悲報と朗報について追記">追記：<code class="highlighter-rouge">brew switch</code> と <code class="highlighter-rouge">brew upgrade</code> 混ぜたことによる悲報と朗報について追記</a></li>
+  <li><a href="#追記brew-switch-と-brew-upgrade-混ぜたことによる悲報と朗報について追記">追記：<code class="language-plaintext highlighter-rouge">brew switch</code> と <code class="language-plaintext highlighter-rouge">brew upgrade</code> 混ぜたことによる悲報と朗報について追記</a></li>
   <li><a href="#byebug-が動かなくなっていた">byebug が動かなくなっていた</a></li>
   <li><a href="#readlineが7から8に変わってる">readlineが7から8に変わってる</a></li>
   <li><a href="#brew-switch-でバージョンを戻す">brew switch でバージョンを戻す</a></li>
@@ -197,8 +199,8 @@
   <section>
   <p>以前<a href="/tools/tig/fix-tig-lib-not-loaded">tigが動かなくなる件</a>をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。</p>
 
-<h2 id="追記brew-switch-と-brew-upgrade-混ぜたことによる悲報と朗報について追記">追記：<code class="highlighter-rouge">brew switch</code> と <code class="highlighter-rouge">brew upgrade</code> 混ぜたことによる悲報と朗報について追記</h2>
-<p><code class="highlighter-rouge">brew switch</code> を試す前に↓の記事の冒頭を呼んで状況判断することをオススメします。
+<h2 id="追記brew-switch-と-brew-upgrade-混ぜたことによる悲報と朗報について追記">追記：<code class="language-plaintext highlighter-rouge">brew switch</code> と <code class="language-plaintext highlighter-rouge">brew upgrade</code> 混ぜたことによる悲報と朗報について追記</h2>
+<p><code class="language-plaintext highlighter-rouge">brew switch</code> を試す前に↓の記事の冒頭を呼んで状況判断することをオススメします。
 じゃないと無駄な作業が発生することになります。 😭</p>
 
 <p><a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a></p>
@@ -206,7 +208,7 @@
 <h2 id="byebug-が動かなくなっていた">byebug が動かなくなっていた</h2>
 <p>bundle exec rspec で動かしたのですが、下記エラーログが出て失敗するようになっていました。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sorry, you can't use byebug without Readline. To solve this, you need to
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Sorry, you can't use byebug without Readline. To solve this, you need to
 rebuild Ruby with Readline support. If using Ubuntu, try `sudo apt-get
 install libreadline-dev` and then reinstall your Ruby.
 </code></pre></div></div>
@@ -250,7 +252,7 @@ Macならbrew switchでバージョンを切り替えることで簡単に解決
 Cleaning /usr/local/Cellar/readline/8.0.0_1
 Cleaning /usr/local/Cellar/readline/7.0.3
 Cleaning /usr/local/Cellar/readline/7.0.3_1
-Opt link created <span class="k">for</span> /usr/local/Cellar/readline/7.0.3_1
+Opt <span class="nb">link </span>created <span class="k">for</span> /usr/local/Cellar/readline/7.0.3_1
 </code></pre></div></div>
 
 <p>リンクのほうも7系に切り替わっています。</p>

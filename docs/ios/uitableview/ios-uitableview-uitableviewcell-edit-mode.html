@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableViewのセルの編集制御を極める - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableViewのセルの編集制御を極める" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOSのUITableViewのセルは編集モードがあり、並び替えや追加や削除、前方スワイプや後方スワイプでアクションやメニュー表示など動作制御や、削除ラベル変更や指定セルの編集禁止など表示制御と多様です。これらをコードと動画で一つずつ説明する詳細記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-30T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png" />
+<meta property="twitter:title" content="【初心者向け】UITableViewのセルの編集制御を極める" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode","headline":"【初心者向け】UITableViewのセルの編集制御を極める","dateModified":"2020-04-16T03:18:33+09:00","datePublished":"2019-09-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode"},"description":"iOSのUITableViewのセルは編集モードがあり、並び替えや追加や削除、前方スワイプや後方スワイプでアクションやメニュー表示など動作制御や、削除ラベル変更や指定セルの編集禁止など表示制御と多様です。これらをコードと動画で一つずつ説明する詳細記事です。","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode","headline":"【初心者向け】UITableViewのセルの編集制御を極める","dateModified":"2020-04-16T03:18:33+09:00","datePublished":"2019-09-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode"},"description":"iOSのUITableViewのセルは編集モードがあり、並び替えや追加や削除、前方スワイプや後方スワイプでアクションやメニュー表示など動作制御や、削除ラベル変更や指定セルの編集禁止など表示制御と多様です。これらをコードと動画で一つずつ説明する詳細記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -229,12 +231,12 @@
 実際にどういったことが出来るのかコードと動画を使って分かりやすくまとめてみました。</p>
 
 <h2 id="編集モードとは">編集モードとは</h2>
-<p><code class="highlighter-rouge">UITableView.isEditing</code> を <code class="highlighter-rouge">true</code> にすると編集モードに切り替わります。</p>
+<p><code class="language-plaintext highlighter-rouge">UITableView.isEditing</code> を <code class="language-plaintext highlighter-rouge">true</code> にすると編集モードに切り替わります。</p>
 
 <p>次のように削除と並び替えが出てきます。
 <a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-1.gif" width="100%" alt="" /></a></p>
 
-<p>つまり 編集モードには <code class="highlighter-rouge">アクション</code> と <code class="highlighter-rouge">並び替え</code> の2機能を備えてます。</p>
+<p>つまり 編集モードには <code class="language-plaintext highlighter-rouge">アクション</code> と <code class="language-plaintext highlighter-rouge">並び替え</code> の2機能を備えてます。</p>
 
 <p>しかしこのままでは削除を押しても何もおきないし、並び替えできてもセルを隠すと元に戻ります。</p>
 
@@ -308,7 +310,7 @@
 <p>削除は セル左側の赤◯ボタンを押すと右側から出てくる赤背景のアクションをタップするとイベントが呼ばれます。<br />
 その内部でテーブルとデータを更新します。</p>
 
-<p>呼ばれるメソッドは <code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">func tableView(_:commit:forRowAt:)</code> になります。</p>
+<p>呼ばれるメソッドは <code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> の <code class="language-plaintext highlighter-rouge">func tableView(_:commit:forRowAt:)</code> になります。</p>
 
 <p>このメソッドに次のようにテーブルとデータを更新します。</p>
 
@@ -327,7 +329,7 @@
 <p>並び替えはセルをドロップしたら、イベントが呼ばれます。
 その内部でデータを更新します。 テーブルは既に変わっているので特に何もする必要はありません。</p>
 
-<p>呼ばれるメソッドは <code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">func tableView(_:moveRowAt:to:)</code> になります。</p>
+<p>呼ばれるメソッドは <code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> の <code class="language-plaintext highlighter-rouge">func tableView(_:moveRowAt:to:)</code> になります。</p>
 
 <p>このメソッドに次のコードでようにデータを更新します</p>
 
@@ -346,7 +348,7 @@
 
 <p>セル右側の削除ラベルのタイトルは変えることができます。</p>
 
-<p>変更用メソッドは <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:titleForDeleteConfirmationButtonForRowAt:) -&gt; String?</code> になります。</p>
+<p>変更用メソッドは <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:titleForDeleteConfirmationButtonForRowAt:) -&gt; String?</code> になります。</p>
 
 <p>このメソッドに次のように文字列を渡すことで変更できます。</p>
 
@@ -357,13 +359,13 @@
 
 <p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-5.png" width="100%" alt="" /></a></p>
 
-<p>ちなみに <code class="highlighter-rouge">nil</code> を渡すとデフォルトで文字列ではなく空白になります。</p>
+<p>ちなみに <code class="language-plaintext highlighter-rouge">nil</code> を渡すとデフォルトで文字列ではなく空白になります。</p>
 
 <h2 id="並び替えのみ有効にする">並び替えのみ有効にする</h2>
 
 <p>削除はできず並び替えだけしたい場合があります。</p>
 
-<p>その場合は <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> を使います。</p>
+<p>その場合は <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> を使います。</p>
 
 <p>次のように実装します。</p>
 
@@ -376,7 +378,7 @@
 
 <p>しかしこれだと左側に謎のスペースが残ったままになります。</p>
 
-<p>これはインデントが作用してることが原因なので <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">func tableView(_:shouldIndentWhileEditingRowAt:) -&gt; Bool</code> メソッドを使います。</p>
+<p>これはインデントが作用してることが原因なので <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">func tableView(_:shouldIndentWhileEditingRowAt:) -&gt; Bool</code> メソッドを使います。</p>
 
 <p>先程のコードに次のコードを追加します。</p>
 
@@ -393,7 +395,7 @@
 
 <p>並び替えはできず削除のみしたい場合があります。</p>
 
-<p>その場合は <code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">tableView(_:canMoveRowAt:) -&gt; Bool</code> メソッドを使います。</p>
+<p>その場合は <code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> の <code class="language-plaintext highlighter-rouge">tableView(_:canMoveRowAt:) -&gt; Bool</code> メソッドを使います。</p>
 
 <p>次のコードを追加するだけです。</p>
 
@@ -407,7 +409,7 @@
 <h3 id="指定セルの編集モードできないようにする">指定セルの編集モードできないようにする</h3>
 
 <p>セル単位で編集モードを出さないようにできます。
-<code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">func tableView(_:canEditRowAt:) -&gt; Bool</code> メソッドを使います。</p>
+<code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> の <code class="language-plaintext highlighter-rouge">func tableView(_:canEditRowAt:) -&gt; Bool</code> メソッドを使います。</p>
 
 <p>例えば一番上のセルのみを編集モード(削除,並び替え)が出ないようにした場合は  でセル別に設定します。</p>
 
@@ -425,7 +427,7 @@
 <h2 id="削除ではなく追加にする">削除ではなく追加にする</h2>
 
 <p>前述したコードは全部アクションは削除一択でしたが、これを追加アクションにすることができます。<br />
-<code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> メソッドを使います。</p>
+<code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> メソッドを使います。</p>
 
 <p>既に 削除を無効にする方法で説明してるメソッドです。</p>
 
@@ -438,11 +440,11 @@
 <p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-11.png" width="100%" alt="" /></a></p>
 
 <p>削除と違って追加ボタンを押すとすぐに
-<code class="highlighter-rouge">UITableViewDataSource</code> の <code class="highlighter-rouge">tableView(_:commit:forRowAt:)</code> メソッドが呼ばれます。</p>
+<code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> の <code class="language-plaintext highlighter-rouge">tableView(_:commit:forRowAt:)</code> メソッドが呼ばれます。</p>
 
 <p>これは削除時と同じメソッドです。</p>
 
-<p>削除と追加を分けるには引数の <code class="highlighter-rouge">editingStyle: UITableViewCell.EditingStyle</code> で削除として呼ばれたのか追加として呼ばれたのか判別できます。</p>
+<p>削除と追加を分けるには引数の <code class="language-plaintext highlighter-rouge">editingStyle: UITableViewCell.EditingStyle</code> で削除として呼ばれたのか追加として呼ばれたのか判別できます。</p>
 
 <p>例えば削除と追加を混じったコードは次のようになります。</p>
 
@@ -470,11 +472,11 @@
 
 <p>上記のようにアクションをカスタマイズできます。</p>
 
-<p>カスタマイズには <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">func tableView(_:editActionsForRowAt) -&gt; [UITableViewRowAction]?</code> メソッドを使います。</p>
+<p>カスタマイズには <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">func tableView(_:editActionsForRowAt) -&gt; [UITableViewRowAction]?</code> メソッドを使います。</p>
 
 <p>このメソッドを次のように実装します。
-また、このメソッドを実装すると、<code class="highlighter-rouge">tableView(_:titleForDeleteConfirmationButtonForRowAt:)</code> は使われなくなります。
-このとき <code class="highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> は <code class="highlighter-rouge">.delete</code> でないと出てきません。</p>
+また、このメソッドを実装すると、<code class="language-plaintext highlighter-rouge">tableView(_:titleForDeleteConfirmationButtonForRowAt:)</code> は使われなくなります。
+このとき <code class="language-plaintext highlighter-rouge">tableView(_:editingStyleForRowAt:) -&gt; UITableViewCell.EditingStyle</code> は <code class="language-plaintext highlighter-rouge">.delete</code> でないと出てきません。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">editActionsForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="p">[</span><span class="kt">UITableViewRowAction</span><span class="p">]?</span> <span class="p">{</span>
     <span class="k">return</span> <span class="p">[</span>
@@ -491,12 +493,12 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>各アクションのタップは <code class="highlighter-rouge">UITableViewRowAction</code> 毎のハンドラーで処理します。上記コードはコンソールに出力してるだけになります。</p>
+<p>各アクションのタップは <code class="language-plaintext highlighter-rouge">UITableViewRowAction</code> 毎のハンドラーで処理します。上記コードはコンソールに出力してるだけになります。</p>
 
 <h2 id="スワイプ用アクションで前方スワイプと後方スワイプでのアクションを制御する">スワイプ用アクションで前方スワイプと後方スワイプでのアクションを制御する</h2>
 <p>左から右スワイプと右から左スワイプでアクションを出します。</p>
 
-<p><strong>このスワイプアクションは編集モードとは独立しており、<code class="highlighter-rouge">TableView.isEditing</code> が <code class="highlighter-rouge">true</code> だと編集モードのほうを優先されるため機能しません。なので<code class="highlighter-rouge">tableView.isEditing</code> を <code class="highlighter-rouge">false</code> にしてください。</strong></p>
+<p><strong>このスワイプアクションは編集モードとは独立しており、<code class="language-plaintext highlighter-rouge">TableView.isEditing</code> が <code class="language-plaintext highlighter-rouge">true</code> だと編集モードのほうを優先されるため機能しません。なので<code class="language-plaintext highlighter-rouge">tableView.isEditing</code> を <code class="language-plaintext highlighter-rouge">false</code> にしてください。</strong></p>
 
 <h3 id="アクションには通常アクションと削除アクションの２種類がある">アクションには通常アクションと削除アクションの２種類がある</h3>
 
@@ -509,7 +511,7 @@
 
 <h3 id="前方スワイプ">前方スワイプ</h3>
 
-<p><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:leadingSwipeActionsConfigurationForRowAt:) -&gt; UISwipeActionsConfiguration?</code> メソッドを実装します。</p>
+<p><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:leadingSwipeActionsConfigurationForRowAt:) -&gt; UISwipeActionsConfiguration?</code> メソッドを実装します。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">leadingSwipeActionsConfigurationForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">?</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">action</span> <span class="o">=</span> <span class="kt">UIContextualAction</span><span class="p">(</span><span class="nv">style</span><span class="p">:</span> <span class="o">.</span><span class="n">normal</span><span class="p">,</span> <span class="nv">title</span><span class="p">:</span> <span class="s">"normal"</span><span class="p">)</span> <span class="p">{</span> <span class="p">(</span><span class="n">ctxAction</span><span class="p">,</span> <span class="n">view</span><span class="p">,</span> <span class="n">completionHandler</span><span class="p">)</span> <span class="k">in</span>
@@ -519,13 +521,13 @@
     <span class="k">return</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">(</span><span class="nv">actions</span><span class="p">:</span> <span class="p">[</span><span class="n">action</span><span class="p">,</span> <span class="n">action2</span><span class="p">])</span>
 <span class="p">}</span>
 </code></pre></div></div>
-<p>コードのように <code class="highlighter-rouge">UIContextualAction</code> を配列で <code class="highlighter-rouge">UISwipeActionsConfiguration</code> に渡し返す必要があります。</p>
+<p>コードのように <code class="language-plaintext highlighter-rouge">UIContextualAction</code> を配列で <code class="language-plaintext highlighter-rouge">UISwipeActionsConfiguration</code> に渡し返す必要があります。</p>
 
-<p><code class="highlighter-rouge">UIContextualAction</code> 1つにつきアクション1つと結びつきます。<br />
-<code class="highlighter-rouge">UIContextualAction</code> の3つ目の引数がアクションとなる処理を書いて、完了したら <code class="highlighter-rouge">completionHandler</code> を呼びます。</p>
+<p><code class="language-plaintext highlighter-rouge">UIContextualAction</code> 1つにつきアクション1つと結びつきます。<br />
+<code class="language-plaintext highlighter-rouge">UIContextualAction</code> の3つ目の引数がアクションとなる処理を書いて、完了したら <code class="language-plaintext highlighter-rouge">completionHandler</code> を呼びます。</p>
 
 <h3 id="後方スワイプ">後方スワイプ</h3>
-<p><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:trailingSwipeActionsConfigurationForRowAt:) -&gt; UISwipeActionsConfiguration?</code> メソッドを実装します</p>
+<p><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:trailingSwipeActionsConfigurationForRowAt:) -&gt; UISwipeActionsConfiguration?</code> メソッドを実装します</p>
 
 <p>使い方は前方スワイプと同じです。</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">trailingSwipeActionsConfigurationForRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UISwipeActionsConfiguration</span><span class="p">?</span> <span class="p">{</span>
@@ -539,14 +541,14 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p>後方スワイプの <code class="highlighter-rouge">.destructive</code> は自動でセルが消えます。<br />
+<p>後方スワイプの <code class="language-plaintext highlighter-rouge">.destructive</code> は自動でセルが消えます。<br />
 しかしデータ側を教えておかないと、セルの再読み込み時に元に戻ってしまいます。</p>
 
 <h2 id="編集モード前後イベント">編集モード前後イベント</h2>
 
 <p>編集モードの開始直前と終了直後のイベントを受け取ることができます。</p>
 
-<p><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:willBeginEditingRowAt:)</code> と <code class="highlighter-rouge">tableView(_:didEndEditingRowAt:)</code> メソッドです。</p>
+<p><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:willBeginEditingRowAt:)</code> と <code class="language-plaintext highlighter-rouge">tableView(_:didEndEditingRowAt:)</code> メソッドです。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1">// 行ごとの編集モード開始直前</span>
 <span class="kd">func</span> <span class="nf">tableView</span><span class="p">(</span><span class="n">_</span> <span class="nv">tableView</span><span class="p">:</span> <span class="kt">UITableView</span><span class="p">,</span> <span class="n">willBeginEditingRowAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="p">{</span>
@@ -562,7 +564,7 @@
 <h2 id="並び替え制御">並び替え制御</h2>
 
 <p>並び替えの許可や制御を行うことができます。
-<code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:targetIndexPathForMoveFromRowAt:toProposedIndexPath:) -&gt; IndexPath</code> メソッドです。</p>
+<code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:targetIndexPathForMoveFromRowAt:toProposedIndexPath:) -&gt; IndexPath</code> メソッドです。</p>
 
 <p>デフォルトの並び替えではセクションを横断して並び替えをすることが可能です。
 これを例えばセクションをまたいだ並び替えを禁止して、またいだ場合は移動前に戻したい場合は次のコードのように使うことができます。</p>
@@ -585,9 +587,9 @@
 <p>メニューを表示させるには1度に3つのメソッドを実装する必要があります。1つでも抜けてると機能しません。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:shouldShowMenuForRowAt:) -&gt; Bool</code></li>
-  <li><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:canPerformAction:forRowAt:withSender:) -&gt; Bool</code></li>
-  <li><code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">tableView(_:performAction:forRowAt:withSender:)</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:shouldShowMenuForRowAt:) -&gt; Bool</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:canPerformAction:forRowAt:withSender:) -&gt; Bool</code></li>
+  <li><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">tableView(_:performAction:forRowAt:withSender:)</code></li>
 </ul>
 
 <p>それぞれがメニューの表示許可, アクション毎の実行許可, アクション実行時の処理になります。</p>
@@ -611,7 +613,7 @@
 
 <p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-edit-mode/2019-09-30-ios-uitableview-uitableviewcell-edit-mode-16.gif" width="100%" alt="" /></a></p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:canPerformAction:forRowAt:withSender:)action: didSetResponderTargetForCalloutBar:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:canPerformAction:forRowAt:withSender:)action: didSetResponderTargetForCalloutBar:
 tableView(_:canPerformAction:forRowAt:withSender:)action: cut:
 tableView(_:canPerformAction:forRowAt:withSender:)action: copy:
 tableView(_:canPerformAction:forRowAt:withSender:)action: select:
@@ -656,7 +658,7 @@ tableView(_:performAction:forRowAt:withSender:)
 
 <h2 id="どれも簡単な物ばかり">どれも簡単な物ばかり</h2>
 
-<p><code class="highlighter-rouge">UITableViewDelegate</code> の中身にはたくさんのメソッドがあって折れそうになりますが、1つ1つ見て試すとそんなに難しいものはなくどれも簡単に実装できるものばかりです。</p>
+<p><code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の中身にはたくさんのメソッドがあって折れそうになりますが、1つ1つ見て試すとそんなに難しいものはなくどれも簡単に実装できるものばかりです。</p>
 
 <p>ただ今回のセル編集機能のような少し凝ったUIは、データ構造がUIとの親和性をよくする設計になっていないと苦労すると思います。</p>
 

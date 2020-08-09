@@ -14,8 +14,8 @@
   <title>Mac上でRailsとMySQLのサーバー分けたい - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Mac上でRailsとMySQLのサーバー分けたい" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-active-record-separate-rails-and-db.png" />
+<meta property="twitter:title" content="Mac上でRailsとMySQLのサーバー分けたい" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db","headline":"Mac上でRailsとMySQLのサーバー分けたい","dateModified":"2020-02-02T20:33:06+09:00","datePublished":"2019-08-05T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db"},"description":"開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？","image":"https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-active-record-separate-rails-and-db.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db","headline":"Mac上でRailsとMySQLのサーバー分けたい","dateModified":"2020-02-02T20:33:06+09:00","datePublished":"2019-08-05T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-active-record-separate-rails-and-db.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-active-record-separate-rails-and-db"},"description":"開発中はMacでRailsアプリを開発してて、「いざ本番環境へデプロイ！完了！」って一息ついた矢先、「なんか重い…」「想定より遅い…」なんて経験ありませんか？","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -286,12 +288,12 @@
 
 <p>これはローカルネットワーク内においてIPアドレスを直接使う方法です。 一時的であれば最も簡単です。</p>
 
-<p>Macで自分のローカルネットワークを調べる方法は、 <code class="highlighter-rouge">ifconfig</code> で調べます。</p>
+<p>Macで自分のローカルネットワークを調べる方法は、 <code class="language-plaintext highlighter-rouge">ifconfig</code> で調べます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ifconfig | <span class="nb">grep </span>192 inet 192.168.11.3 netmask 0xffffff00 broadcast 192.168.11.255
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">192.168.11.3</code> というのが、 <code class="highlighter-rouge">ifconfig</code> を叩いたPCにIPアドレスになります。</p>
+<p><code class="language-plaintext highlighter-rouge">192.168.11.3</code> というのが、 <code class="language-plaintext highlighter-rouge">ifconfig</code> を叩いたPCにIPアドレスになります。</p>
 
 <h4 id="メリット">メリット</h4>
 
@@ -307,18 +309,18 @@
 
 <h2 id="mysqlが外部アクセスされる準備">MySQLが外部アクセスされる準備</h2>
 
-<p>そもそもMySQLが外部からアクセスを許可していないのは、そう設定がされているためです。<code class="highlighter-rouge">bind-address</code> という設定がデフォルトは 127.0.0.1 つまり localhost からの接続のみ許可する設定になっています。</p>
+<p>そもそもMySQLが外部からアクセスを許可していないのは、そう設定がされているためです。<code class="language-plaintext highlighter-rouge">bind-address</code> という設定がデフォルトは 127.0.0.1 つまり localhost からの接続のみ許可する設定になっています。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhostbind-address <span class="o">=</span> 127.0.0.1
 </code></pre></div></div>
 
 <p>my.cnfの場所が分からない場合は、こちらの記事で確認してみてください。</p>
 
-<p>my.cnfに<code class="highlighter-rouge">bind-address</code>でIPを指定することで、そのIPからの通信を許可します。 ちなみに注意事項としては、MacDのIPアドレスになります。 MacWのIPアドレスではありません。</p>
+<p>my.cnfに<code class="language-plaintext highlighter-rouge">bind-address</code>でIPを指定することで、そのIPからの通信を許可します。 ちなみに注意事項としては、MacDのIPアドレスになります。 MacWのIPアドレスではありません。</p>
 
-<p>まず前提知識として、PCには <strong>複数のネットワークインターフェイスがあります。</strong> その中のどのネットワークインターフェイスを許可するのかが<code class="highlighter-rouge">bind-address</code>になります。 先程<code class="highlighter-rouge">bind-address</code>のデフォルトはlocalhostと説明したように、デフォルトではlocalhostからのアクセスのみを許可しています。</p>
+<p>まず前提知識として、PCには <strong>複数のネットワークインターフェイスがあります。</strong> その中のどのネットワークインターフェイスを許可するのかが<code class="language-plaintext highlighter-rouge">bind-address</code>になります。 先程<code class="language-plaintext highlighter-rouge">bind-address</code>のデフォルトはlocalhostと説明したように、デフォルトではlocalhostからのアクセスのみを許可しています。</p>
 
-<p>今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Wi-Fi環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので <code class="highlighter-rouge">bind-address</code> には <code class="highlighter-rouge">0.0.0.0</code> を設定します。 これは <strong>制限なし</strong> の指定になります。どのネットワークインターフェイスからでもアクセスできます。 ちなみに全ての<code class="highlighter-rouge">bind-address</code>をコメントアウトすると同様に無条件で受け付けることになります。</p>
+<p>今回はパブリック環境でどこからでも誰からでもアクセスできる本番環境と違って、自宅や職場の同一Wi-Fi環境下での話なのでアクセス制限かけたりセキュリティの部分には気を使っていません。 なので <code class="language-plaintext highlighter-rouge">bind-address</code> には <code class="language-plaintext highlighter-rouge">0.0.0.0</code> を設定します。 これは <strong>制限なし</strong> の指定になります。どのネットワークインターフェイスからでもアクセスできます。 ちなみに全ての<code class="language-plaintext highlighter-rouge">bind-address</code>をコメントアウトすると同様に無条件で受け付けることになります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> /usr/local/etc/my.cnf# Default Homebrew MySQL server config[mysqld]# Only allow connections from localhost# bind-address <span class="o">=</span> 127.0.0.1bind-address <span class="o">=</span> 0.0.0.0
 </code></pre></div></div>
@@ -342,7 +344,7 @@
   <li>対象IP: 192.16配下全部</li>
 </ul>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- ユーザー作成
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>-- ユーザー作成
 create user "hoge"@"192.168.%" identified by "pass";
 -- 権限付与
 mysql\&gt; grant all on \*.\* to "hoge"@"192.168.%" identified by "pass";
@@ -350,7 +352,7 @@ mysql\&gt; grant all on \*.\* to "hoge"@"192.168.%" identified by "pass";
 
 <p>のようにすれば、ユーザー作成して対象DBへの権限設定がされます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql\&gt; select user, host from mysql.user;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql\&gt; select user, host from mysql.user;
 +------+-------------+
 | user | host |
 +------+-------------+
@@ -374,7 +376,7 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> hoge <span class="nt">-h</span> 192.168.11.6 <span class="nt">-p</span>
 </code></pre></div></div>
 
-<p><strong>ローカルホスト名指定</strong> ホスト名が <code class="highlighter-rouge">fuga.local</code> の場合</p>
+<p><strong>ローカルホスト名指定</strong> ホスト名が <code class="language-plaintext highlighter-rouge">fuga.local</code> の場合</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql <span class="nt">-u</span> hoge <span class="nt">-h</span> fuga.local <span class="nt">-p</span>
 </code></pre></div></div>
@@ -387,7 +389,7 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
 
 <p>dataases.yml で接続先を指定するだけになります。</p>
 
-<p>IPアドレスが <code class="highlighter-rouge">192.168.11.6</code>の場合</p>
+<p>IPアドレスが <code class="language-plaintext highlighter-rouge">192.168.11.6</code>の場合</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">development</span><span class="pi">:</span>
   <span class="na">username</span><span class="pi">:</span> <span class="s">hoge</span>
@@ -402,7 +404,7 @@ mysql\&gt; show grants for 'hoge'@'192.168.%';
 
 <p>1PCでUnixドメインソケット通信した場合と2PCでTCP/IP通信した場合で平均値を出してみました。</p>
 
-<p>1万件のUser(name: string)を事前に用意し、<code class="highlighter-rouge">@users = User.all</code> が呼ばれて一覧を返すcontroller に対し<code class="highlighter-rouge">GET http://localhost:3000/users</code> を5回呼び出し、最速と最遅を抜いた3つで平均値を出して測定しました。</p>
+<p>1万件のUser(name: string)を事前に用意し、<code class="language-plaintext highlighter-rouge">@users = User.all</code> が呼ばれて一覧を返すcontroller に対し<code class="language-plaintext highlighter-rouge">GET http://localhost:3000/users</code> を5回呼び出し、最速と最遅を抜いた3つで平均値を出して測定しました。</p>
 
 <h3 id="unixドメインソケット通信">Unixドメインソケット通信</h3>
 

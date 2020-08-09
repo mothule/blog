@@ -14,8 +14,8 @@
   <title>ln -sでシンボリックリンクを作る - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="ln -sでシンボリックリンクを作る" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="lnコマンドで-sオプションを使いシンボリックリンクを作る方法と作成されたか確認する方法、不要になったシンボリックリンクをunlinkで解除する方法についてまとめた記事。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-18T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png" />
+<meta property="twitter:title" content="ln -sでシンボリックリンクを作る" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/ln/tools-ln-guide","headline":"ln -sでシンボリックリンクを作る","dateModified":"2020-05-18T20:02:14+09:00","datePublished":"2020-05-18T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/ln/tools-ln-guide"},"description":"lnコマンドで-sオプションを使いシンボリックリンクを作る方法と作成されたか確認する方法、不要になったシンボリックリンクをunlinkで解除する方法についてまとめた記事。","image":"https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/ln/tools-ln-guide","headline":"ln -sでシンボリックリンクを作る","dateModified":"2020-05-18T20:02:14+09:00","datePublished":"2020-05-18T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-18-tools-ln-guide/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/ln/tools-ln-guide"},"description":"lnコマンドで-sオプションを使いシンボリックリンクを作る方法と作成されたか確認する方法、不要になったシンボリックリンクをunlinkで解除する方法についてまとめた記事。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -198,31 +200,31 @@
 
 <h2 id="ln--sでシンボリックリンクを構築">ln -sでシンボリックリンクを構築</h2>
 
-<p>Syntax: <code class="highlighter-rouge">ln -s リンク対象パス リンク作成先のディレクトリパス</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">ln -s リンク対象パス リンク作成先のディレクトリパス</code></p>
 
 <p>自分の中で「リンク」ってワードが邪魔して<br />
 src/destどっちがどっちか分からなくなることが頻発する。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ln <span class="nt">-s</span> ~/オレの/最強の/凄いコマンド /usr/local/bin/
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> ~/オレの/最強の/凄いコマンド /usr/local/bin/
 </code></pre></div></div>
 
 <h2 id="ls--lでシンボリックを確認">ls -lでシンボリックを確認</h2>
 
-<p>シンボリックリンクはファイル名とリンク先が「<code class="highlighter-rouge">name -&gt; original path</code>」形式で表示されます。</p>
+<p>シンボリックリンクはファイル名とリンク先が「<code class="language-plaintext highlighter-rouge">name -&gt; original path</code>」形式で表示されます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ln <span class="nt">-s</span> ~/オレの/最強の/凄いコマンド /usr/local/bin/
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> ~/オレの/最強の/凄いコマンド /usr/local/bin/
 <span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-l</span> /usr/local/bin/
 凄いコマンド -&gt; ~/オレの/最強の/凄いコマンド
 </code></pre></div></div>
 
 <h2 id="unlinkでシンボリックリンクを解除">unlinkでシンボリックリンクを解除</h2>
 
-<p>Syntax: <code class="highlighter-rouge">unlink シンボリックのパス</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">unlink シンボリックのパス</code></p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>unlink /usr/local/bin/使い物にならない自作コマンド
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">unlink</span> /usr/local/bin/使い物にならない自作コマンド
 </code></pre></div></div>
 
-<p>せめて<code class="highlighter-rouge">ln -d</code>とかにしてほしかったな。</p>
+<p>せめて<code class="language-plaintext highlighter-rouge">ln -d</code>とかにしてほしかったな。</p>
 
   </section>
 

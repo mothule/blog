@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableViewのヘッダーをカスタマイズする - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableViewのヘッダーをカスタマイズする" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png" />
+<meta property="twitter:title" content="【初心者向け】UITableViewのヘッダーをカスタマイズする" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize","headline":"【初心者向け】UITableViewのヘッダーをカスタマイズする","dateModified":"2020-04-16T03:52:12+09:00","datePublished":"2019-09-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize"},"description":"iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize","headline":"【初心者向け】UITableViewのヘッダーをカスタマイズする","dateModified":"2020-04-16T03:52:12+09:00","datePublished":"2019-09-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-29-ios-uitableview-section-header-customize/2019-09-29-ios-uitableview-section-header-customize.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-section-header-customize"},"description":"iOSのUITableViewにはセクション毎にヘッダーとフッターがあり、これを独自にカスタマイズつまり自作可能です。この記事では凝ったUIViewをxibで別ファイルとして作成して登録後、ヘッダー高さを調整して表示する方法についてコードと動画で説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -199,7 +201,7 @@
 </ul>
   </div>
   <section>
-  <p>UITableViewのヘッダーとはセクション毎の上下表示されるSectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のことを指しこれらはカスタマイズ可能です。シンプルなカスタマイズであれば<code class="highlighter-rouge">UITableDataSource</code>の<code class="highlighter-rouge">titleForHeaderInSection</code>などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は<code class="highlighter-rouge">UITableViewDelegate</code>を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。</p>
+  <p>UITableViewのヘッダーとはセクション毎の上下表示されるSectionHeader(セクションヘッダー)とSectionFooter(セクションフッター)のことを指しこれらはカスタマイズ可能です。シンプルなカスタマイズであれば<code class="language-plaintext highlighter-rouge">UITableDataSource</code>の<code class="language-plaintext highlighter-rouge">titleForHeaderInSection</code>などを変更することで簡単なカスタマイズは可能です。しかし、独自UIViewなどを設定したいなど複雑な場合は<code class="language-plaintext highlighter-rouge">UITableViewDelegate</code>を使った実装が必要になります。この記事ではその独自UIViewなどを使ったヘッダーの実装方法について説明します。</p>
 
 <p>もし基本的なセクションヘッダーの変更であれば、「<span><a href="/ios/uitableview/ios-uitableview-section-basic">【初心者向け】UITableViewのSection(セクション)の使い方</a></span>
 」の記事を見てください。</p>
@@ -217,8 +219,8 @@
 </blockquote>
 
 <p>つまり、この方法ではフォントは固定で、もしカスタマイズしたい場合は、UILabelを使います。
-これを実装するには、<code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -&gt; UIView?</code> を実装します。<br />
-なぜ急に<code class="highlighter-rouge">delegate</code>？ と多少違和感を感じますが、少なくとも<code class="highlighter-rouge">DataSource</code>ではないと思うと多少疑念が和らぎます。</p>
+これを実装するには、<code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -&gt; UIView?</code> を実装します。<br />
+なぜ急に<code class="language-plaintext highlighter-rouge">delegate</code>？ と多少違和感を感じますが、少なくとも<code class="language-plaintext highlighter-rouge">DataSource</code>ではないと思うと多少疑念が和らぎます。</p>
 
 <h2 id="セクションヘッダーとなるuitableviewheaderfooterviewを用意する">セクションヘッダーとなるUITableViewHeaderFooterViewを用意する</h2>
 
@@ -268,10 +270,10 @@
 <h2 id="セクションヘッダーの高さを変更する">セクションヘッダーの高さを変更する</h2>
 
 <p>デフォルトではセクションヘッダーも高さが決まっているので変えておかないと小さいです。
-変更方法は <code class="highlighter-rouge">UITableViewDelegate</code> の <code class="highlighter-rouge">heightForHeaderInSection</code> でセクション単位で変更する方法と、<br />
-<code class="highlighter-rouge">UITableView.sectionHeaderHeight</code> で一律変更する方法です。</p>
+変更方法は <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の <code class="language-plaintext highlighter-rouge">heightForHeaderInSection</code> でセクション単位で変更する方法と、<br />
+<code class="language-plaintext highlighter-rouge">UITableView.sectionHeaderHeight</code> で一律変更する方法です。</p>
 
-<p>今回は一律でサイズは予め分かっているので固定値にします。<code class="highlighter-rouge">delegate</code>や<code class="highlighter-rouge">dataSource</code>の設定の下あたりに置いときます。</p>
+<p>今回は一律でサイズは予め分かっているので固定値にします。<code class="language-plaintext highlighter-rouge">delegate</code>や<code class="language-plaintext highlighter-rouge">dataSource</code>の設定の下あたりに置いときます。</p>
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">tableView</span><span class="o">.</span><span class="n">sectionHeaderHeight</span> <span class="o">=</span> <span class="mi">88</span>
 </code></pre></div></div>
 
@@ -290,7 +292,7 @@
 <span class="p">}</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">dequeueReusableHeaderFooterView</code> を使ってID指定で取り出します。<br />
+<p><code class="language-plaintext highlighter-rouge">dequeueReusableHeaderFooterView</code> を使ってID指定で取り出します。<br />
 注意点としては、メソッド名に書いてるようにヘッダーとフッター両方が取れます。<br />
 実装によっては判別を行う必要があります。</p>
 
@@ -320,7 +322,7 @@
 <h2 id="セクションフッターも同様に可能">セクションフッターも同様に可能</h2>
 
 <p>セクションフッターもヘッダー同様に追加することが可能です。
-変更点は、呼び出すメソッドが <code class="highlighter-rouge">tableView(_:viewForFooterInSection:) -&gt; UIView?</code>になります。</p>
+変更点は、呼び出すメソッドが <code class="language-plaintext highlighter-rouge">tableView(_:viewForFooterInSection:) -&gt; UIView?</code>になります。</p>
 
   </section>
 

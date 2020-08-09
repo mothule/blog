@@ -14,8 +14,8 @@
   <title>iOS開発で便利なSwiftのArrayとDictionaryのイディオム - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="Swiftではデータ構造の代表格としてArrayとDictionaryがあります。 この2つを使いこなすことは、iOSエンジニアとして重要なことです。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-01T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-01-ios-swift-collection-idiom/0.png" />
+<meta property="twitter:title" content="iOS開発で便利なSwiftのArrayとDictionaryのイディオム" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/swift/ios-swift-collection-idiom","headline":"iOS開発で便利なSwiftのArrayとDictionaryのイディオム","dateModified":"2020-05-05T19:12:44+09:00","datePublished":"2020-05-01T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-collection-idiom"},"description":"Swiftではデータ構造の代表格としてArrayとDictionaryがあります。 この2つを使いこなすことは、iOSエンジニアとして重要なことです。","image":"https://blog.mothule.com/assets/images/2020-05-01-ios-swift-collection-idiom/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/swift/ios-swift-collection-idiom","headline":"iOS開発で便利なSwiftのArrayとDictionaryのイディオム","dateModified":"2020-05-05T19:12:44+09:00","datePublished":"2020-05-01T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-01-ios-swift-collection-idiom/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-collection-idiom"},"description":"Swiftではデータ構造の代表格としてArrayとDictionaryがあります。 この2つを使いこなすことは、iOSエンジニアとして重要なことです。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -248,10 +250,10 @@ iOSエンジニアなら知っておくべきSwiftのArrayとDictionaryに関す
 </code></pre></div></div>
 
 <h2 id="arrayからdictionaryに変換する">ArrayからDictionaryに変換する</h2>
-<p><code class="highlighter-rouge">reduce</code>で配列要素をDictionaryのKeyとValueに変換します。<br />
+<p><code class="language-plaintext highlighter-rouge">reduce</code>で配列要素をDictionaryのKeyとValueに変換します。<br />
 変換には、<strong>配列の要素をKeyとValueへの分解が必須条件です。</strong></p>
 
-<p>下記はある<code class="highlighter-rouge">[商品]</code>を<code class="highlighter-rouge">[商品ID: 商品]</code>の型に変換するコードです。</p>
+<p>下記はある<code class="language-plaintext highlighter-rouge">[商品]</code>を<code class="language-plaintext highlighter-rouge">[商品ID: 商品]</code>の型に変換するコードです。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">struct</span> <span class="kt">Item</span> <span class="p">{</span>
     <span class="k">let</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">Int</span>
@@ -271,7 +273,7 @@ iOSエンジニアなら知っておくべきSwiftのArrayとDictionaryに関す
 </code></pre></div></div>
 
 <p>コンソール結果</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1: Item(id: 1, name: "砂糖", price: 512), 2: Item(id: 2, name: "唐辛子", price: 223), 0: Item(id: 0, name: "梅干し", price: 230)]
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>[1: Item(id: 1, name: "砂糖", price: 512), 2: Item(id: 2, name: "唐辛子", price: 223), 0: Item(id: 0, name: "梅干し", price: 230)]
 </code></pre></div></div>
 
 <h2 id="データ加工を段階的に分解する">データ加工を段階的に分解する</h2>
@@ -293,7 +295,7 @@ iOSエンジニアなら知っておくべきSwiftのArrayとDictionaryに関す
 <span class="p">]</span>
 </code></pre></div></div>
 
-<p>このarrayから「Item配列から値引き合計額を求める」処理を<code class="highlighter-rouge">reduce</code>だけで書くとこうなります。</p>
+<p>このarrayから「Item配列から値引き合計額を求める」処理を<code class="language-plaintext highlighter-rouge">reduce</code>だけで書くとこうなります。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">price</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="nf">reduce</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="p">{</span> <span class="n">total</span><span class="p">,</span> <span class="n">item</span> <span class="k">in</span>
     <span class="n">total</span> <span class="o">+</span> <span class="n">item</span><span class="o">.</span><span class="n">isSale</span> <span class="p">?</span> <span class="p">(</span><span class="n">item</span><span class="o">.</span><span class="n">regularPrice</span> <span class="o">-</span> <span class="n">item</span><span class="o">.</span><span class="n">price</span><span class="p">)</span> <span class="p">:</span> <span class="mi">0</span>
@@ -344,13 +346,13 @@ iOSエンジニアなら知っておくべきSwiftのArrayとDictionaryに関す
 <h2 id="arrayで単体検索ならfilterよりfirst">Arrayで単体検索ならfilterよりfirst</h2>
 <p><strong>filterは全要素アクセスするが、firstは条件満たしたら中断する</strong></p>
 
-<p><code class="highlighter-rouge">filter</code>は要素の絞り込みが目的です。各要素すべてに対して条件評価するので単体検索には不向きです。<br />
-一方で<code class="highlighter-rouge">first</code>は最初の条件クリアする要素を見つけた時点で終了するので平均して速いです。</p>
+<p><code class="language-plaintext highlighter-rouge">filter</code>は要素の絞り込みが目的です。各要素すべてに対して条件評価するので単体検索には不向きです。<br />
+一方で<code class="language-plaintext highlighter-rouge">first</code>は最初の条件クリアする要素を見つけた時点で終了するので平均して速いです。</p>
 
 <h3 id="実際に動きを見る">実際に動きを見る</h3>
 
-<p>下記コードは<code class="highlighter-rouge">filter</code>を使って<code class="highlighter-rouge">exit</code>を探す処理です。<br />
-3回目で<code class="highlighter-rouge">exit</code>を見つけてますが、最後の要素まで繰り返します。</p>
+<p>下記コードは<code class="language-plaintext highlighter-rouge">filter</code>を使って<code class="language-plaintext highlighter-rouge">exit</code>を探す処理です。<br />
+3回目で<code class="language-plaintext highlighter-rouge">exit</code>を見つけてますが、最後の要素まで繰り返します。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"exit"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">]</span>
 <span class="k">if</span> <span class="k">let</span> <span class="nv">exit</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="nf">filter</span><span class="p">({</span>
@@ -362,15 +364,15 @@ iOSエンジニアなら知っておくべきSwiftのArrayとDictionaryに関す
 </code></pre></div></div>
 
 <p>コンソール結果</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A
 B
 exit
 C
 found exit
 </code></pre></div></div>
 
-<p>下記コードは<code class="highlighter-rouge">first</code>を使って<code class="highlighter-rouge">exit</code>を探す処理です。<br />
-<code class="highlighter-rouge">exit</code>が見つかった時点で以降の要素にはアクセスしていません。</p>
+<p>下記コードは<code class="language-plaintext highlighter-rouge">first</code>を使って<code class="language-plaintext highlighter-rouge">exit</code>を探す処理です。<br />
+<code class="language-plaintext highlighter-rouge">exit</code>が見つかった時点で以降の要素にはアクセスしていません。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s">"A"</span><span class="p">,</span> <span class="s">"B"</span><span class="p">,</span> <span class="s">"exit"</span><span class="p">,</span> <span class="s">"C"</span><span class="p">]</span>
 <span class="k">if</span> <span class="k">let</span> <span class="nv">exit</span> <span class="o">=</span> <span class="n">array</span><span class="o">.</span><span class="nf">first</span><span class="p">(</span><span class="nv">where</span><span class="p">:</span> <span class="p">{</span>
@@ -382,13 +384,13 @@ found exit
 </code></pre></div></div>
 
 <p>コンソール結果</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>A
 B
 exit
 found exit
 </code></pre></div></div>
 
-<p>このように単体検索なら<code class="highlighter-rouge">first</code>の方が効率的です。</p>
+<p>このように単体検索なら<code class="language-plaintext highlighter-rouge">first</code>の方が効率的です。</p>
 
 <h2 id="arrayで存在確認ならfirstよりcontains">Arrayで存在確認ならfirstよりcontains</h2>
 <p>firstとcontainsはともに条件ヒットしたら終了します。<br />
@@ -417,7 +419,7 @@ containsの戻り値はboolで、探してた要素を使わない場合はこ�
 </code></pre></div></div>
 
 <p>コンソール結果</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>10
 11
 12
 13
@@ -461,21 +463,21 @@ containsの戻り値はboolで、探してた要素を使わない場合はこ�
 </code></pre></div></div>
 
 <p>コンソール</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optional(1)
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Optional(1)
 nil
 </code></pre></div></div>
 
 <h2 id="arrayで要素数を気にせず範囲取得">Arrayで要素数を気にせず範囲取得</h2>
 
 <p>配列の要素数を気にせず範囲取得したい場合に「先頭からN」または「後方からN」のパターンであれば<br />
-<code class="highlighter-rouge">prefix</code>と<code class="highlighter-rouge">suffix</code>を使うことで、要素数を上回るとり方をしてもクラッシュせず範囲取得ができます。</p>
+<code class="language-plaintext highlighter-rouge">prefix</code>と<code class="language-plaintext highlighter-rouge">suffix</code>を使うことで、要素数を上回るとり方をしてもクラッシュせず範囲取得ができます。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">array</span><span class="p">:</span> <span class="p">[</span><span class="kt">Int</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">]</span>
 <span class="nf">print</span><span class="p">(</span><span class="kt">Array</span><span class="p">(</span><span class="n">array</span><span class="o">.</span><span class="nf">prefix</span><span class="p">(</span><span class="mi">5</span><span class="p">)))</span> <span class="c1">// [1, 2, 3]</span>
 </code></pre></div></div>
 
-<p>prefixの戻り値は<code class="highlighter-rouge">ArraySlice</code>型であって<code class="highlighter-rouge">Array</code>ではありません。<br />
-Arrayのinitにわたすことで<code class="highlighter-rouge">Array</code>に変換できます。</p>
+<p>prefixの戻り値は<code class="language-plaintext highlighter-rouge">ArraySlice</code>型であって<code class="language-plaintext highlighter-rouge">Array</code>ではありません。<br />
+Arrayのinitにわたすことで<code class="language-plaintext highlighter-rouge">Array</code>に変換できます。</p>
 
 <p><strong>ここをシンタックスシュガー表現にすると、違う結果になるので注意です。</strong></p>
 

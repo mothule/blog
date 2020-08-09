@@ -14,8 +14,8 @@
   <title>MacのHomebrewとは？仕組み・使い方と用語整理 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="MacのHomebrewとは？仕組み・使い方と用語整理" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacのHomebrewとは？GitHubやFormulaやCellerなどの用語からそれらの仕組みやinstallやlist,info,outdatedやupgradeやservices関連コマンドなどの使い方やkeg-onlyやtapなど細かな部分について説明する記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-18T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-18-mac-homebrew-basic/eyecatch.png" />
+<meta property="twitter:title" content="MacのHomebrewとは？仕組み・使い方と用語整理" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-basic","headline":"MacのHomebrewとは？仕組み・使い方と用語整理","dateModified":"2020-05-19T00:46:04+09:00","datePublished":"2020-05-18T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-basic"},"description":"MacのHomebrewとは？GitHubやFormulaやCellerなどの用語からそれらの仕組みやinstallやlist,info,outdatedやupgradeやservices関連コマンドなどの使い方やkeg-onlyやtapなど細かな部分について説明する記事です。","image":"https://blog.mothule.com/assets/images/2020-05-18-mac-homebrew-basic/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-basic","headline":"MacのHomebrewとは？仕組み・使い方と用語整理","dateModified":"2020-05-19T00:46:04+09:00","datePublished":"2020-05-18T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-18-mac-homebrew-basic/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-basic"},"description":"MacのHomebrewとは？GitHubやFormulaやCellerなどの用語からそれらの仕組みやinstallやlist,info,outdatedやupgradeやservices関連コマンドなどの使い方やkeg-onlyやtapなど細かな部分について説明する記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -236,7 +238,7 @@ Macで使えるソフトウェア(パッケージ)の検索(search)、追加(ins
 <h3 id="インストール">インストール</h3>
 <p>ターミナルを開いて次のコマンドを実行するとHomebrewのインストールが始まります。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="s2">"</span><span class="k">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/master/install.sh<span class="k">)</span><span class="s2">"</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>/bin/bash <span class="nt">-c</span> <span class="s2">"</span><span class="si">$(</span>curl <span class="nt">-fsSL</span> https://raw.githubusercontent.com/Homebrew/install/master/install.sh<span class="si">)</span><span class="s2">"</span>
 </code></pre></div></div>
 
 <p><a href="/assets/images/2020-05-18-mac-homebrew-basic/1.png"><img src="/assets/images/2020-05-18-mac-homebrew-basic/1.png" width="100%" alt="Homebrew インストールフロー" /></a></p>
@@ -257,7 +259,7 @@ Formulaにはインストール手順が書いてあるため、それに従っ�
 
 <p>例えばnginxだと次のような手順書になっています。<a href="https://github.com/Homebrew/homebrew-core/blob/master/Formula/nginx.rb">homebrew-core/nginx.rb</a></p>
 
-<p>インストールしたら<code class="highlighter-rouge">/usr/local/Celler</code>に配置して、<code class="highlighter-rouge">/usr/local/bin</code>にシンボリックリンクを貼ることでどこからでも呼べるようにします。</p>
+<p>インストールしたら<code class="language-plaintext highlighter-rouge">/usr/local/Celler</code>に配置して、<code class="language-plaintext highlighter-rouge">/usr/local/bin</code>にシンボリックリンクを貼ることでどこからでも呼べるようにします。</p>
 
 <p>「酒造方法が公開された様々な自家製ビールを製造して自分の酒貯蔵室に入れる」ってイメージです。</p>
 
@@ -268,18 +270,18 @@ Formulaにはインストール手順が書いてあるため、それに従っ�
 <p>最後(6)のシンボリックリンクもHomebrewがやります。</p>
 
 <h2 id="searchコマンド">searchコマンド</h2>
-<p>Syntax: <code class="highlighter-rouge">brew search [formula]</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew search [formula]</code></p>
 
-<p>例えば<code class="highlighter-rouge">nginx</code>で調べた場合です。</p>
+<p>例えば<code class="language-plaintext highlighter-rouge">nginx</code>で調べた場合です。</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew search nginx
 <span class="o">==&gt;</span> Formulae
 nginx ✔
 </code></pre></div></div>
 
 <h2 id="infoコマンド">infoコマンド</h2>
-<p>Syntax: <code class="highlighter-rouge">brew info [formula...]</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew info [formula...]</code></p>
 
-<p>例えば<code class="highlighter-rouge">nginx</code>の場合です。</p>
+<p>例えば<code class="language-plaintext highlighter-rouge">nginx</code>の場合です。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew info nginx
 nginx: stable 1.17.10 <span class="o">(</span>bottled<span class="o">)</span>, HEAD
@@ -306,7 +308,7 @@ To have launchd start nginx now and restart at login:
 Or,if you dont want/need a background service you can just run:
   nginx
   <span class="o">==&gt;</span> Analytics
-install: 33,169 <span class="o">(</span>30 days<span class="o">)</span>, 103,486 <span class="o">(</span>90 days<span class="o">)</span>, 410,718 <span class="o">(</span>365 days<span class="o">)</span>
+<span class="nb">install</span>: 33,169 <span class="o">(</span>30 days<span class="o">)</span>, 103,486 <span class="o">(</span>90 days<span class="o">)</span>, 410,718 <span class="o">(</span>365 days<span class="o">)</span>
 install-on-request: 32,184 <span class="o">(</span>30 days<span class="o">)</span>, 100,197 <span class="o">(</span>90 days<span class="o">)</span>, 394,782 <span class="o">(</span>365 days<span class="o">)</span>
 build-error: 0 <span class="o">(</span>30 days<span class="o">)</span>
 </code></pre></div></div>
@@ -314,13 +316,13 @@ build-error: 0 <span class="o">(</span>30 days<span class="o">)</span>
 <p>この表示の元となる情報は<a href="https://github.com/Homebrew/homebrew-core/blob/master/Formula/nginx.rb">Formula</a>になります。</p>
 
 <h2 id="installコマンド">installコマンド</h2>
-<p>Syntax: <code class="highlighter-rouge">brew install [formula...]</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew install [formula...]</code></p>
 
 <p>指定されたFormulaをインストールします。</p>
 
-<p>例えば<code class="highlighter-rouge">bash-completion</code>の場合です。</p>
+<p>例えば<code class="language-plaintext highlighter-rouge">bash-completion</code>の場合です。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install bash-completion
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>bash-completion
 Updating Homebrew...
 <span class="o">==&gt;</span> Auto-updated Homebrew!
 Updated Homebrew from 9fcaa46cd to ca5eac845.
@@ -350,57 +352,57 @@ Bash completion has been installed to:
 </code></pre></div></div>
 
 <p>インストールした後に追加で必要な設定や追加のインストールなど重要な情報が載っている場合があります。
-この場合は、<code class="highlighter-rouge">.bash_profile</code>に処理を追加するよう書いてます。</p>
+この場合は、<code class="language-plaintext highlighter-rouge">.bash_profile</code>に処理を追加するよう書いてます。</p>
 
 <h2 id="listlsコマンド">list(ls)コマンド</h2>
-<p>Syntax: <code class="highlighter-rouge">brew list</code> または <code class="highlighter-rouge">brew ls</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew list</code> または <code class="language-plaintext highlighter-rouge">brew ls</code></p>
 
-<p><code class="highlighter-rouge">brew list</code>または<code class="highlighter-rouge">brew ls</code>でインストール済みのパッケージを確認します。<br />
-<code class="highlighter-rouge">ls</code>コマンド同様に<code class="highlighter-rouge">-l</code>オプションを渡すことで縦に一覧化します。</p>
+<p><code class="language-plaintext highlighter-rouge">brew list</code>または<code class="language-plaintext highlighter-rouge">brew ls</code>でインストール済みのパッケージを確認します。<br />
+<code class="language-plaintext highlighter-rouge">ls</code>コマンド同様に<code class="language-plaintext highlighter-rouge">-l</code>オプションを渡すことで縦に一覧化します。</p>
 
 <h2 id="uninstallコマンド">uninstallコマンド</h2>
-<p>Syntax: <code class="highlighter-rouge">brew uninstall formula...</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew uninstall formula...</code></p>
 
 <p>Formulaをアンインストールします。</p>
 
 <h2 id="outdatedコマンド">outdatedコマンド</h2>
-<p>Syntax: <code class="highlighter-rouge">brew outdated [formula...]</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew outdated [formula...]</code></p>
 
 <p>新バージョン差異を確認する。<br />
 バージョン差異がなければ何も表示されない。
-引数で<code class="highlighter-rouge">formula</code>無指定だとインストールしている全てのformulaを対象。</p>
+引数で<code class="language-plaintext highlighter-rouge">formula</code>無指定だとインストールしている全てのformulaを対象。</p>
 
 <h2 id="upgradeコマンド">upgradeコマンド</h2>
-<p>Syntax: <code class="highlighter-rouge">brew upgrade [formula...]</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew upgrade [formula...]</code></p>
 
 <p>formulaを新しいバージョンに更新する。
-引数で<code class="highlighter-rouge">formula</code>無指定だとインストールしている全てのformulaを対象。</p>
+引数で<code class="language-plaintext highlighter-rouge">formula</code>無指定だとインストールしている全てのformulaを対象。</p>
 
 <h2 id="servicesコマンド群でlaunchd制御">servicesコマンド群でlaunchd制御</h2>
 <p>自動起動の登録制御です。<br />
 インストールしたソフトウェアによっては自動起動をサポートするものもあります。</p>
 
-<p><code class="highlighter-rouge">services</code>コマンド群はそれらを<code class="highlighter-rouge">launchctl</code>コマンドや<code class="highlighter-rouge">~/Library/LaunchAgents</code>ディレクトリにplistファイルを配置せずに
-<code class="highlighter-rouge">services start</code>, <code class="highlighter-rouge">stop</code>, <code class="highlighter-rouge">list</code>コマンドを使って<code class="highlighter-rouge">launchd</code>デーモンを制御できるようになります。</p>
+<p><code class="language-plaintext highlighter-rouge">services</code>コマンド群はそれらを<code class="language-plaintext highlighter-rouge">launchctl</code>コマンドや<code class="language-plaintext highlighter-rouge">~/Library/LaunchAgents</code>ディレクトリにplistファイルを配置せずに
+<code class="language-plaintext highlighter-rouge">services start</code>, <code class="language-plaintext highlighter-rouge">stop</code>, <code class="language-plaintext highlighter-rouge">list</code>コマンドを使って<code class="language-plaintext highlighter-rouge">launchd</code>デーモンを制御できるようになります。</p>
 
 <h3 id="services-startコマンド">services startコマンド</h3>
-<p>Syntax: <code class="highlighter-rouge">brew services start formula</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew services start formula</code></p>
 
 <p>渡したコマンドを自動起動します。</p>
 
-<p>例えば<code class="highlighter-rouge">mysql@5.6</code>formulaを<code class="highlighter-rouge">brew info</code>で見ると次のように案内があります。</p>
+<p>例えば<code class="language-plaintext highlighter-rouge">mysql@5.6</code>formulaを<code class="language-plaintext highlighter-rouge">brew info</code>で見ると次のように案内があります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To have launchd start mysql@5.6 now and restart at login:
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>To have launchd start mysql@5.6 now and restart at login:
   brew services start mysql@5.6
 Or, if you don't want/need a background service you can just run:
   /usr/local/opt/mysql@5.6/bin/mysql.server start
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">mysql.server start</code>コマンドでMySQLサーバーをその都度起動するか、
-もしくは、<code class="highlighter-rouge">brew services start mysql@5.6</code>コマンドで自動起動させるか方法を提示してます。</p>
+<p><code class="language-plaintext highlighter-rouge">mysql.server start</code>コマンドでMySQLサーバーをその都度起動するか、
+もしくは、<code class="language-plaintext highlighter-rouge">brew services start mysql@5.6</code>コマンドで自動起動させるか方法を提示してます。</p>
 
 <h3 id="services-listコマンド">services listコマンド</h3>
-<p>Syntax: <code class="highlighter-rouge">brew services list</code> or <code class="highlighter-rouge">ls</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew services list</code> or <code class="language-plaintext highlighter-rouge">ls</code></p>
 
 <p>現在自動起動中になっているformula一覧を確認します。</p>
 
@@ -417,7 +419,7 @@ selenium-server-standalone started mothule /Users/mothule/Library/LaunchAgents/h
 </code></pre></div></div>
 
 <h3 id="services-stopコマンド">services stopコマンド</h3>
-<p>Syntax: <code class="highlighter-rouge">brew services stop formula</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew services stop formula</code></p>
 
 <p>自動起動を解除します。</p>
 
@@ -429,44 +431,44 @@ Stopping <span class="sb">`</span>nginx<span class="sb">`</span>... <span class=
 </code></pre></div></div>
 
 <h3 id="services-runコマンド">services runコマンド</h3>
-<p>Syntax: <code class="highlighter-rouge">brew services run formula</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew services run formula</code></p>
 
 <p>自動起動の登録せずにサービスとして起動します。</p>
 
 <h2 id="homebrew-caskでguiアプリの制御">Homebrew caskでGUIアプリの制御</h2>
-<p>紹介したコマンドに<code class="highlighter-rouge">brew</code>とコマンドの間に<code class="highlighter-rouge">cask</code>を入れるとGUIアプリケーションの制御となります。<br />
+<p>紹介したコマンドに<code class="language-plaintext highlighter-rouge">brew</code>とコマンドの間に<code class="language-plaintext highlighter-rouge">cask</code>を入れるとGUIアプリケーションの制御となります。<br />
 caskとはお酒を入れる木製の大樽です。</p>
 
-<p>Syntax: <code class="highlighter-rouge">brew cask commands ...</code></p>
+<p>Syntax: <code class="language-plaintext highlighter-rouge">brew cask commands ...</code></p>
 
 <p>つまりこういうことです。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">brew cask search formula</code></li>
-  <li><code class="highlighter-rouge">brew cask info formula</code></li>
-  <li><code class="highlighter-rouge">brew cask install formula</code></li>
-  <li><code class="highlighter-rouge">brew cask list</code> or <code class="highlighter-rouge">ls</code></li>
-  <li><code class="highlighter-rouge">brew cask uninstall</code></li>
-  <li><code class="highlighter-rouge">brew cask outdated</code></li>
-  <li><code class="highlighter-rouge">brew cask upgrade</code></li>
+  <li><code class="language-plaintext highlighter-rouge">brew cask search formula</code></li>
+  <li><code class="language-plaintext highlighter-rouge">brew cask info formula</code></li>
+  <li><code class="language-plaintext highlighter-rouge">brew cask install formula</code></li>
+  <li><code class="language-plaintext highlighter-rouge">brew cask list</code> or <code class="language-plaintext highlighter-rouge">ls</code></li>
+  <li><code class="language-plaintext highlighter-rouge">brew cask uninstall</code></li>
+  <li><code class="language-plaintext highlighter-rouge">brew cask outdated</code></li>
+  <li><code class="language-plaintext highlighter-rouge">brew cask upgrade</code></li>
 </ul>
 
 <h2 id="keg-onlyとは">keg-onlyとは</h2>
-<p>時折brew infoなどで<code class="highlighter-rouge">keg-only</code>という単語を見かけます。</p>
+<p>時折brew infoなどで<code class="language-plaintext highlighter-rouge">keg-only</code>という単語を見かけます。</p>
 
-<p>例えば<code class="highlighter-rouge">brew info mysql@5.6</code>にも<code class="highlighter-rouge">key-only</code>とあります。
+<p>例えば<code class="language-plaintext highlighter-rouge">brew info mysql@5.6</code>にも<code class="language-plaintext highlighter-rouge">key-only</code>とあります。
 これは大抵が上書きリスクのあるformulaについてます。
 例えばMacに標準インストールされているコマンドのGNU版などです。</p>
 
-<p>これはインストールして<code class="highlighter-rouge">/usr/local/Celler</code>に配置まではしたが、<br />
-<code class="highlighter-rouge">/usr/local/bin</code>へシンボリックリンクを繋いでいない状態です。</p>
+<p>これはインストールして<code class="language-plaintext highlighter-rouge">/usr/local/Celler</code>に配置まではしたが、<br />
+<code class="language-plaintext highlighter-rouge">/usr/local/bin</code>へシンボリックリンクを繋いでいない状態です。</p>
 
-<p><code class="highlighter-rouge">brew link</code>することでリンクされて使えるようになります。<br />
+<p><code class="language-plaintext highlighter-rouge">brew link</code>することでリンクされて使えるようになります。<br />
 しかし、既存コマンドのパスが変わる可能性が高いので、慎重に行うことを推奨します。</p>
 
 <h2 id="formulaが見つからない">formulaが見つからない</h2>
 <p>手元のhomebrewが古い可能性があります。<br />
-<code class="highlighter-rouge">brew update</code>で更新することで見つかるかもしれません。</p>
+<code class="language-plaintext highlighter-rouge">brew update</code>で更新することで見つかるかもしれません。</p>
 
 <p>しかし、手元の古いバージョンは破棄することがあるので、<br />
 今まで偶然残っていたお陰で動いてたコマンドがバージョンが最新のみになったことでパスが通らなくなり知らぬところでエラーが発生することもあるので注意が必要です。</p>
@@ -474,12 +476,12 @@ caskとはお酒を入れる木製の大樽です。</p>
 <h2 id="再インストール">再インストール</h2>
 <p>インストール済みのソフトウェアが何かの拍子におかしくなった場合、<br />
 再インストールを促されることがあります。<br />
-Homebrewの場合は<code class="highlighter-rouge">brew reinstall</code>コマンドがあります。</p>
+Homebrewの場合は<code class="language-plaintext highlighter-rouge">brew reinstall</code>コマンドがあります。</p>
 
 <h2 id="tapってコマンドが出てきた">tapってコマンドが出てきた</h2>
 <p>デフォルトのformula一覧とは別の場所からformulaを取ってきたい場合に使うコマンドです。<br />
-この<code class="highlighter-rouge">tap</code>コマンドを使うことでタップした先からもformulaをインストールすることが出来ます。<br />
-<code class="highlighter-rouge">tap</code>とは蛇口です。樽に蛇口を差し込んだイメージが丁度いいです。</p>
+この<code class="language-plaintext highlighter-rouge">tap</code>コマンドを使うことでタップした先からもformulaをインストールすることが出来ます。<br />
+<code class="language-plaintext highlighter-rouge">tap</code>とは蛇口です。樽に蛇口を差し込んだイメージが丁度いいです。</p>
 
 <h2 id="基本は簡単だけど運用は難しい">基本は簡単だけど運用は難しい</h2>
 <p>Homebrewの説明は以上です。ある程度網羅かつシンプルな説明にはなっていますが、

@@ -14,8 +14,8 @@
   <title>Macでnginxをインストールして起動する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Macでnginxをインストールして起動する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-21T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png" />
+<meta property="twitter:title" content="Macでnginxをインストールして起動する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac","headline":"Macでnginxをインストールして起動する","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-21T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。","image":"https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac","headline":"Macでnginxをインストールして起動する","dateModified":"2020-03-29T04:28:01+09:00","datePublished":"2020-02-21T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-21-web-nginx-getting-started-step1-on-mac/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/web/nginx/web-nginx-getting-started-step1-on-mac"},"description":"MacでWebサーバnginxを立ち上げるための入門記事シリーズ初回です。 Webサーバとしての基礎知識、Macにnginxのインストール、基本構成や基本動作や設定など初期知識に必要な情報をまとめました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -219,8 +221,8 @@
       <li><a href="#ポートの確認と変更">ポートの確認と変更</a></li>
       <li><a href="#nginxの設定ファイルのテスト">nginxの設定ファイルのテスト</a>
         <ul>
-          <li><a href="#-nginx--tでテスト結果を表示"><code class="highlighter-rouge">$ nginx -t</code>でテスト結果を表示</a></li>
-          <li><a href="#-nginx--tで設定ファイルも表示"><code class="highlighter-rouge">$ nginx -T</code>で設定ファイルも表示</a></li>
+          <li><a href="#-nginx--tでテスト結果を表示"><code class="language-plaintext highlighter-rouge">$ nginx -t</code>でテスト結果を表示</a></li>
+          <li><a href="#-nginx--tで設定ファイルも表示"><code class="language-plaintext highlighter-rouge">$ nginx -T</code>で設定ファイルも表示</a></li>
         </ul>
       </li>
     </ul>
@@ -285,7 +287,7 @@ MacとLinuxではコマンドやパス構成が異なることから、Mac上で
 
 <h3 id="homebrewでインストール">homebrewでインストール</h3>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install nginx
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>nginx
 </code></pre></div></div>
 
 <h3 id="nginxが入ってるか確認">nginxが入ってるか確認</h3>
@@ -296,20 +298,20 @@ nginx version: nginx/1.17.8
 
 <h3 id="nginxを起動する">nginxを起動する</h3>
 
-<p><code class="highlighter-rouge">launchd</code>として起動すれば、ログイン時に自動でサービス起動します。</p>
+<p><code class="language-plaintext highlighter-rouge">launchd</code>として起動すれば、ログイン時に自動でサービス起動します。</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew services start nginx
 </code></pre></div></div>
 
-<p>単純起動は <code class="highlighter-rouge">nginx</code> を実行するだけです。</p>
+<p>単純起動は <code class="language-plaintext highlighter-rouge">nginx</code> を実行するだけです。</p>
 
-<p>どのポートを開いてるかは<code class="highlighter-rouge">lsof</code>で確認できます。</p>
+<p>どのポートを開いてるかは<code class="language-plaintext highlighter-rouge">lsof</code>で確認できます。</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>lsof <span class="nt">-c</span> nginx <span class="nt">-P</span> | <span class="nb">grep </span>LISTEN
 nginx   97024 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span class="k">*</span>:8080 <span class="o">(</span>LISTEN<span class="o">)</span>
 nginx   97025 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span class="k">*</span>:8080 <span class="o">(</span>LISTEN<span class="o">)</span>
 </code></pre></div></div>
 <p>この場合は8080が開いてるので、 http://localhost:8080 にアクセスすると表示されます。</p>
 
-<p>▼<code class="highlighter-rouge">lsof</code>に関しては以下のの記事で説明してます。<br />
+<p>▼<code class="language-plaintext highlighter-rouge">lsof</code>に関しては以下のの記事で説明してます。<br />
 <span><a href="/tools/lsof/tools-lsof-basic">lsofでプロセスが使用中のポートやファイルを確認</a></span></p>
 
 <p>設定に問題なければ、デフォルトで用意されているhtmlページが表示されます。</p>
@@ -319,7 +321,7 @@ nginx   97025 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span
 <h3 id="nginxを停止する">nginxを停止する</h3>
 <p>stopシグナルを送ります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nginx -s stop
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ nginx -s stop
 </code></pre></div></div>
 
 <h3 id="その他シグナル">その他シグナル</h3>
@@ -373,28 +375,28 @@ nginx   97025 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span
 設定ファイルを変更してnginxをチューニングできます。</p>
 
 <h3 id="nginxの設定ファイルの場所">nginxの設定ファイルの場所</h3>
-<p>Macの場合は<code class="highlighter-rouge">/usr/local/etc/nginx/nginx.conf</code>になります。
-フォルダ上に<code class="highlighter-rouge">nginx.conf</code>だけでなく<code class="highlighter-rouge">nginx.conf</code>内部でincludeされている設定ファイル(<code class="highlighter-rouge">mime.types</code>など)が配置されてあります。</p>
+<p>Macの場合は<code class="language-plaintext highlighter-rouge">/usr/local/etc/nginx/nginx.conf</code>になります。
+フォルダ上に<code class="language-plaintext highlighter-rouge">nginx.conf</code>だけでなく<code class="language-plaintext highlighter-rouge">nginx.conf</code>内部でincludeされている設定ファイル(<code class="language-plaintext highlighter-rouge">mime.types</code>など)が配置されてあります。</p>
 
 <h4 id="補足-brew-info-の-usrlocaletcnginxservers">補足: brew info の /usr/local/etc/nginx/servers/</h4>
-<p>ちなみに <code class="highlighter-rouge">brew info nginx</code>で</p>
+<p>ちなみに <code class="language-plaintext highlighter-rouge">brew info nginx</code>で</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>nginx will load all files <span class="k">in</span> /usr/local/etc/nginx/servers/.
 </code></pre></div></div>
-<p>とは記述されているのは、 <code class="highlighter-rouge">nginx.conf</code>内で</p>
+<p>とは記述されているのは、 <code class="language-plaintext highlighter-rouge">nginx.conf</code>内で</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include servers/*;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>include servers/*;
 </code></pre></div></div>
 <p>と記述されてるためです。</p>
 
-<p><code class="highlighter-rouge">servers</code>フォルダ内にファイルを置くことで設定ファイルとして読み込んでくれるということです。<br />
-なお、<code class="highlighter-rouge">servers</code>フォルダは存在しないため自分で作成が必要です。</p>
+<p><code class="language-plaintext highlighter-rouge">servers</code>フォルダ内にファイルを置くことで設定ファイルとして読み込んでくれるということです。<br />
+なお、<code class="language-plaintext highlighter-rouge">servers</code>フォルダは存在しないため自分で作成が必要です。</p>
 
 <h3 id="ドキュメントルートの確認と変更">ドキュメントルートの確認と変更</h3>
-<p>ドキュメントルートは<code class="highlighter-rouge">nginx.conf</code>内に定義されてます。</p>
+<p>ドキュメントルートは<code class="language-plaintext highlighter-rouge">nginx.conf</code>内に定義されてます。</p>
 
 <p>↓は抜粋したものです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   server {
     location / {
       root  /usr/local/var/www;
@@ -406,11 +408,11 @@ nginx   97025 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span
 
 <h3 id="ポートの確認と変更">ポートの確認と変更</h3>
 
-<p>現在のポート番号は <code class="highlighter-rouge">nginx.conf</code>内に定義されてます。</p>
+<p>現在のポート番号は <code class="language-plaintext highlighter-rouge">nginx.conf</code>内に定義されてます。</p>
 
 <p>↓は抜粋したものです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>http {
   server {
     listen  8080;
   }
@@ -423,7 +425,7 @@ nginx   97025 mothule    6u    IPv4 0x9e21b4cd1c187225      0t0        TCP <span
 <p>設定ファイルの書き方に問題がないかテストする方法があります。
 方法は２つあり、</p>
 
-<h4 id="-nginx--tでテスト結果を表示"><code class="highlighter-rouge">$ nginx -t</code>でテスト結果を表示</h4>
+<h4 id="-nginx--tでテスト結果を表示"><code class="language-plaintext highlighter-rouge">$ nginx -t</code>でテスト結果を表示</h4>
 <p>設定ファイルをテストして結果を表示する。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>nginx <span class="nt">-t</span>
@@ -431,7 +433,7 @@ nginx: the configuration file /usr/local/etc/nginx/nginx.conf syntax is ok
 nginx: configuration file /usr/local/etc/nginx/nginx.conf <span class="nb">test </span>is successful
 </code></pre></div></div>
 
-<h4 id="-nginx--tで設定ファイルも表示"><code class="highlighter-rouge">$ nginx -T</code>で設定ファイルも表示</h4>
+<h4 id="-nginx--tで設定ファイルも表示"><code class="language-plaintext highlighter-rouge">$ nginx -T</code>で設定ファイルも表示</h4>
 <p>設定ファイルをテストして、設定ファイルinclude含め一つの設定ファイルとして表示する。</p>
 
 <h2 id="nginxのログファイル">nginxのログファイル</h2>
@@ -439,7 +441,7 @@ nginx: configuration file /usr/local/etc/nginx/nginx.conf <span class="nb">test 
 ログの出力先は設定ファイルで変更できます。</p>
 
 <p><em>nginx.conf</em></p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error_log  logs/error.log;
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>error_log  logs/error.log;
 
 ...
 

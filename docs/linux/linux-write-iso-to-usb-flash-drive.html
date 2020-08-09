@@ -14,8 +14,8 @@
   <title>MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-04-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" />
+<meta property="twitter:title" content="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive","headline":"MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む","dateModified":"2020-04-29T22:54:00+09:00","datePublished":"2020-04-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive"},"description":"Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。","image":"https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive","headline":"MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む","dateModified":"2020-04-29T22:54:00+09:00","datePublished":"2020-04-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive"},"description":"Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -260,13 +262,13 @@
 </ol>
 
 <h3 id="diskutil-listコマンドで対象ドライブのパス確認">diskutil listコマンドで対象ドライブのパス確認</h3>
-<p><code class="highlighter-rouge">diskutil list</code>コマンドで現在マウントしてるUSBフラッシュメモリドライブを探します。</p>
+<p><code class="language-plaintext highlighter-rouge">diskutil list</code>コマンドで現在マウントしてるUSBフラッシュメモリドライブを探します。</p>
 
-<p>例えば下記は自分の環境で<code class="highlighter-rouge">diskutil list</code>を実行した結果です。<br />
-この場合だと最後<code class="highlighter-rouge">external</code>と<code class="highlighter-rouge">physical</code>と表示されてる<code class="highlighter-rouge">/dev/disk2</code>ですね。<br />
+<p>例えば下記は自分の環境で<code class="language-plaintext highlighter-rouge">diskutil list</code>を実行した結果です。<br />
+この場合だと最後<code class="language-plaintext highlighter-rouge">external</code>と<code class="language-plaintext highlighter-rouge">physical</code>と表示されてる<code class="language-plaintext highlighter-rouge">/dev/disk2</code>ですね。<br />
 容量(SIZE)も用意したUSBフラッシュメモリと同じなので間違いないです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
 /dev/disk0 (internal):
    #:                       TYPE NAME                    SIZE       IDENTIFIER
    0:      GUID_partition_scheme                         251.0 GB   disk0
@@ -289,24 +291,24 @@
 </code></pre></div></div>
 
 <h3 id="diskutil-erasediskコマンドでパス指定で削除">diskutil eraseDiskコマンドでパス指定で削除</h3>
-<p><code class="highlighter-rouge">diskutil eraseDisk</code>コマンドで対象ディスクのパスを指定してディスクを初期化します。<br />
+<p><code class="language-plaintext highlighter-rouge">diskutil eraseDisk</code>コマンドで対象ディスクのパスを指定してディスクを初期化します。<br />
 使い方を簡単にすると下記です。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eraseDisk format name ドライブのパス
 </code></pre></div></div>
 
-<p>ドライブのパスは、先程調べたパス(<code class="highlighter-rouge">/dev/disk2</code>)になるので結果的に実行するコマンドは下記になります。</p>
+<p>ドライブのパスは、先程調べたパス(<code class="language-plaintext highlighter-rouge">/dev/disk2</code>)になるので結果的に実行するコマンドは下記になります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">MS-DOS</code>はファイルフォーマット<code class="highlighter-rouge">FAT</code>となります。<code class="highlighter-rouge">FAT32</code>は古いので大抵のOSではサポートしてるため。
-今回はUSBフラッシュメモリの容量は4GBなので<code class="highlighter-rouge">FAT</code>でちょうど良かったりする。
+<p><code class="language-plaintext highlighter-rouge">MS-DOS</code>はファイルフォーマット<code class="language-plaintext highlighter-rouge">FAT</code>となります。<code class="language-plaintext highlighter-rouge">FAT32</code>は古いので大抵のOSではサポートしてるため。
+今回はUSBフラッシュメモリの容量は4GBなので<code class="language-plaintext highlighter-rouge">FAT</code>でちょうど良かったりする。
 (FATの最大ファイルサイズは4GiB)<br />
-<code class="highlighter-rouge">UNTITLED</code>は何でもいいです。</p>
+<code class="language-plaintext highlighter-rouge">UNTITLED</code>は何でもいいです。</p>
 
 <p>下記は先程のコマンドを実行した結果です。<br />
-<code class="highlighter-rouge">Finished erase on disk2</code>と出て無事初期化成功しています。</p>
+<code class="language-plaintext highlighter-rouge">Finished erase on disk2</code>と出て無事初期化成功しています。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
 Started erase on disk2
@@ -325,10 +327,10 @@ Finished erase on disk2
 <p>削除工程の最後は、マウント解除です。<br />
 これをせず次工程のISOイメージファイルをコピーしようとすると下記エラーとなります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dd: /dev/disk2: Resource busy
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dd: /dev/disk2: Resource busy
 </code></pre></div></div>
 
-<p>下記は<code class="highlighter-rouge">diskutil unmountDisk</code>コマンドでマウント解除した結果です。</p>
+<p>下記は<code class="language-plaintext highlighter-rouge">diskutil unmountDisk</code>コマンドでマウント解除した結果です。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil unmountDisk /dev/disk2
 Unmount of all volumes on disk2 was successful
@@ -336,9 +338,9 @@ Unmount of all volumes on disk2 was successful
 
 <h2 id="ddコマンドでisoイメージファイルをusbフラッシュメモリにコピー">ddコマンドでisoイメージファイルをUSBフラッシュメモリにコピー</h2>
 
-<p><code class="highlighter-rouge">diskutil eraseDisk</code>でUSBフラッシュメモリをキレイにできました。<br />
+<p><code class="language-plaintext highlighter-rouge">diskutil eraseDisk</code>でUSBフラッシュメモリをキレイにできました。<br />
 今度はisoイメージファイルをUSBフラッシュメモリにコピーします。<br />
-コピーには<code class="highlighter-rouge">dd</code>コマンドを使います。</p>
+コピーには<code class="language-plaintext highlighter-rouge">dd</code>コマンドを使います。</p>
 
 <h3 id="ddコマンドとは">ddコマンドとは？</h3>
 <p>ファイルの変換とコピーするコマンドです。
@@ -346,20 +348,20 @@ Unmount of all volumes on disk2 was successful
 入力データは512バイトのブロック毎に入力・出力します。</p>
 
 <h3 id="ddコマンドでisoファイルをusbメモリにコピーする">ddコマンドでISOファイルをUSBメモリにコピーする</h3>
-<p><code class="highlighter-rouge">dd</code>コマンドを次のように指定します。</p>
+<p><code class="language-plaintext highlighter-rouge">dd</code>コマンドを次のように指定します。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>dd <span class="k">if</span><span class="o">=</span>~/Downloads/linuxmint-19.3-xfce-32bit.iso <span class="nv">of</span><span class="o">=</span>/dev/disk2 <span class="nv">bs</span><span class="o">=</span>4028
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo dd </span><span class="k">if</span><span class="o">=</span>~/Downloads/linuxmint-19.3-xfce-32bit.iso <span class="nv">of</span><span class="o">=</span>/dev/disk2 <span class="nv">bs</span><span class="o">=</span>4028
 489925+1 records <span class="k">in
 </span>489925+1 records out
 1973420032 bytes transferred <span class="k">in </span>1604.956170 secs <span class="o">(</span>1229579 bytes/sec<span class="o">)</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">dd</code>コマンドのオプションに<code class="highlighter-rouge">if</code>と<code class="highlighter-rouge">of</code>と<code class="highlighter-rouge">bs</code>オプションを使います。</p>
+<p><code class="language-plaintext highlighter-rouge">dd</code>コマンドのオプションに<code class="language-plaintext highlighter-rouge">if</code>と<code class="language-plaintext highlighter-rouge">of</code>と<code class="language-plaintext highlighter-rouge">bs</code>オプションを使います。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">if=</code>オプションで入力ファイルとなるISOイメージファイルのパスを指定します。</li>
-  <li><code class="highlighter-rouge">of=</code>オプションで出力ファイルとなるドライブのパスを指定します。</li>
-  <li><code class="highlighter-rouge">bs=</code>オプションでブロックサイズを指定します。未指定時は512バイトです。</li>
+  <li><code class="language-plaintext highlighter-rouge">if=</code>オプションで入力ファイルとなるISOイメージファイルのパスを指定します。</li>
+  <li><code class="language-plaintext highlighter-rouge">of=</code>オプションで出力ファイルとなるドライブのパスを指定します。</li>
+  <li><code class="language-plaintext highlighter-rouge">bs=</code>オプションでブロックサイズを指定します。未指定時は512バイトです。</li>
 </ul>
 
 <p>このコマンドは完了に時間がかかります。<br />
@@ -373,9 +375,9 @@ Unmount of all volumes on disk2 was successful
 Disk /dev/disk2 ejected
 </code></pre></div></div>
 
-<p>下記は<code class="highlighter-rouge">diskutil list</code>を実行した結果です。消えてることが分かります。</p>
+<p>下記は<code class="language-plaintext highlighter-rouge">diskutil list</code>を実行した結果です。消えてることが分かります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
 /dev/disk0 (internal):
    #:                       TYPE NAME                    SIZE       IDENTIFIER
    0:      GUID_partition_scheme                         251.0 GB   disk0

@@ -14,8 +14,8 @@
   <title>XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-07-28T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png" />
+<meta property="twitter:title" content="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods","headline":"XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する","dateModified":"2020-07-29T22:26:25+09:00","datePublished":"2020-07-28T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods"},"description":"XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。","image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods","headline":"XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する","dateModified":"2020-07-29T22:26:25+09:00","datePublished":"2020-07-28T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcodegen/ios-xcodegen-carthage-cocoapods"},"description":"XcodeGenでCarthageやCocoaPodsでライブラリ管理されたXcodeプロジェクトを生成する流れを説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -241,12 +243,12 @@
       <span class="pi">-</span> <span class="na">target</span><span class="pi">:</span> <span class="s">iOSWithCarthageProj</span>
 </code></pre></div></div>
 
-<p>sourcesの<code class="highlighter-rouge">iOSWithCarthageProj</code>と<code class="highlighter-rouge">iOSWithCarthageProjTests</code>はターゲット追加時にXcodeによって自動生成されるファイル群です。<br />
-このyamlを<code class="highlighter-rouge">project.yml</code>として保存して<code class="highlighter-rouge">xcodegen generate</code>コマンドを実行するとUnitTest付きのiOSアプリのXcodeプロジェクトが生成されます。</p>
+<p>sourcesの<code class="language-plaintext highlighter-rouge">iOSWithCarthageProj</code>と<code class="language-plaintext highlighter-rouge">iOSWithCarthageProjTests</code>はターゲット追加時にXcodeによって自動生成されるファイル群です。<br />
+このyamlを<code class="language-plaintext highlighter-rouge">project.yml</code>として保存して<code class="language-plaintext highlighter-rouge">xcodegen generate</code>コマンドを実行するとUnitTest付きのiOSアプリのXcodeプロジェクトが生成されます。</p>
 
 <h2 id="プロジェクトにcarthage管理のライブラリを追加する">プロジェクトにCarthage管理のライブラリを追加する</h2>
 
-<p>例えばCarthageで<code class="highlighter-rouge">Alamofire</code>と<code class="highlighter-rouge">AlamofireImage</code>をビルドして、それらをプロダクトターゲットに追加する場合は次のように書きます。</p>
+<p>例えばCarthageで<code class="language-plaintext highlighter-rouge">Alamofire</code>と<code class="language-plaintext highlighter-rouge">AlamofireImage</code>をビルドして、それらをプロダクトターゲットに追加する場合は次のように書きます。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">iOSWithCarthageProj</span><span class="pi">:</span>
   <span class="c1"># ~ 略 ~</span>
@@ -261,7 +263,7 @@
 <h3 id="注意事項">注意事項</h3>
 <p>XcodeGenはあくまでもXcodeプロジェクトをプロジェクト仕様に基づいて生成するだけです。<br />
 そのためCarthageによるフレームワークビルド自体は、事前に行っておく必要があります。<br />
-Carthageでフレームワークビルドをせず先に<code class="highlighter-rouge">xcodegen generate</code>を実行すると次のように形はあるけど存在しないリンク情報がセットされてしまいます。</p>
+Carthageでフレームワークビルドをせず先に<code class="language-plaintext highlighter-rouge">xcodegen generate</code>を実行すると次のように形はあるけど存在しないリンク情報がセットされてしまいます。</p>
 
 <p><a href="/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/1.png"><img src="/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/1.png" width="50%" alt="MissedFrameworks" /></a></p>
 
@@ -278,8 +280,8 @@ Carthageでフレームワークビルドをせず先に<code class="highlighter
 
 <h3 id="carthageのビルド結果のパスを変更する">Carthageのビルド結果のパスを変更する</h3>
 
-<p>デフォルトでは<code class="highlighter-rouge">Carthage/Build</code>です。
-もしこれを別のパスに変更したい場合は、<code class="highlighter-rouge">options.carthageBuildPath</code>で指定します。</p>
+<p>デフォルトでは<code class="language-plaintext highlighter-rouge">Carthage/Build</code>です。
+もしこれを別のパスに変更したい場合は、<code class="language-plaintext highlighter-rouge">options.carthageBuildPath</code>で指定します。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
   <span class="na">carthageBuildPath</span><span class="pi">:</span> <span class="s">../../Carthage/Build</span> <span class="c1"># 例</span>
@@ -293,25 +295,25 @@ Carthageでフレームワークビルドをせず先に<code class="highlighter
 
 <p>というのもXcodeGenはワークスペースではなくプロジェクトを生成しているだけなので、
 プロジェクト仕様ファイルでPodfileなどを参照する必要ありません。
-XcodeGenでプロジェクト生成後に、<code class="highlighter-rouge">pod install</code>を実行するだけです。</p>
+XcodeGenでプロジェクト生成後に、<code class="language-plaintext highlighter-rouge">pod install</code>を実行するだけです。</p>
 
-<p>そして実はプロジェクト仕様ファイルには、生成コマンド実行後フックが用意されているのでプロジェクト仕様ファイル内で<code class="highlighter-rouge">pod install</code>を呼び出すことを設定できます。</p>
+<p>そして実はプロジェクト仕様ファイルには、生成コマンド実行後フックが用意されているのでプロジェクト仕様ファイル内で<code class="language-plaintext highlighter-rouge">pod install</code>を呼び出すことを設定できます。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
   <span class="na">postGenCommand</span><span class="pi">:</span> <span class="s">pod install</span>
 </code></pre></div></div>
 
-<p>このオプションを追加することで<code class="highlighter-rouge">xcodegen generate</code>を実行するとそのまま<code class="highlighter-rouge">pod install</code>も実行されます。</p>
+<p>このオプションを追加することで<code class="language-plaintext highlighter-rouge">xcodegen generate</code>を実行するとそのまま<code class="language-plaintext highlighter-rouge">pod install</code>も実行されます。</p>
 
 <h3 id="疑問点">疑問点</h3>
-<p>公式では<code class="highlighter-rouge">--use-cache</code>と<code class="highlighter-rouge">postGenCommand</code>オプションを組み合わせを推奨しています。
-しかし、<code class="highlighter-rouge">Podfile</code>を変更して<code class="highlighter-rouge">xcodegen generate</code>を実行してもスキップされてしまいます。
-Podfileだけの更新であれば<code class="highlighter-rouge">pod install</code>を実行すれば良いという話ではありますが…</p>
+<p>公式では<code class="language-plaintext highlighter-rouge">--use-cache</code>と<code class="language-plaintext highlighter-rouge">postGenCommand</code>オプションを組み合わせを推奨しています。
+しかし、<code class="language-plaintext highlighter-rouge">Podfile</code>を変更して<code class="language-plaintext highlighter-rouge">xcodegen generate</code>を実行してもスキップされてしまいます。
+Podfileだけの更新であれば<code class="language-plaintext highlighter-rouge">pod install</code>を実行すれば良いという話ではありますが…</p>
 
 <h2 id="findcarthageframeworksというオプション">findCarthageFrameworksというオプション</h2>
 
-<p>Carthageのオプションに<code class="highlighter-rouge">findCarthageFrameworks</code>というものがあります。
-これは例えば<code class="highlighter-rouge">ReactiveMapKit</code>を使う場合通常であれば依存してるフレームワーク全部を記載します。</p>
+<p>Carthageのオプションに<code class="language-plaintext highlighter-rouge">findCarthageFrameworks</code>というものがあります。
+これは例えば<code class="language-plaintext highlighter-rouge">ReactiveMapKit</code>を使う場合通常であれば依存してるフレームワーク全部を記載します。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">targets</span><span class="pi">:</span>
   <span class="na">App</span><span class="pi">:</span>
@@ -320,7 +322,7 @@ Podfileだけの更新であれば<code class="highlighter-rouge">pod install</c
       <span class="pi">-</span> <span class="na">carthage</span><span class="pi">:</span> <span class="s">ReactiveMapKit</span>
 </code></pre></div></div>
 
-<p>しかし<code class="highlighter-rouge">findCarthageFrameworks</code>オプションを使うことで<code class="highlighter-rouge">ReactiveCocoa</code>の時点で<code class="highlighter-rouge">ReactiveMapKit</code>も一緒に依存解決してくれるオプションです。</p>
+<p>しかし<code class="language-plaintext highlighter-rouge">findCarthageFrameworks</code>オプションを使うことで<code class="language-plaintext highlighter-rouge">ReactiveCocoa</code>の時点で<code class="language-plaintext highlighter-rouge">ReactiveMapKit</code>も一緒に依存解決してくれるオプションです。</p>
 
 <div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">options</span><span class="pi">:</span>
   <span class="na">findCarthageFrameworks</span><span class="pi">:</span> <span class="no">true</span>

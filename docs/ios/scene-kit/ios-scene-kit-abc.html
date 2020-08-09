@@ -14,8 +14,8 @@
   <title>360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-07T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc.jpg" />
+<meta property="twitter:title" content="360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc","headline":"360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話","dateModified":"2019-10-07T19:29:16+09:00","datePublished":"2019-09-07T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc"},"description":"GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。","image":"https://blog.mothule.com/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc.jpg","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc","headline":"360度パノラマ画像を閲覧するpod更新でGLKitからSceneKitに変えた話","dateModified":"2019-10-07T19:29:16+09:00","datePublished":"2019-09-07T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc.jpg","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/scene-kit/ios-scene-kit-abc"},"description":"GLKitからSceneKitに変えざるを得ない状況に直面し、SceneKitの調査や躓いたポイントについてまとめます。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -242,7 +244,7 @@
 
 <p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-1.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-1.png" width="50%" alt="" /></a></p>
 
-<p><strong>oh…</strong> なんとほぼ全部が <code class="highlighter-rouge">Deprecated</code> ラベルがついてました。</p>
+<p><strong>oh…</strong> なんとほぼ全部が <code class="language-plaintext highlighter-rouge">Deprecated</code> ラベルがついてました。</p>
 
 <p>これでは折角ライブラリのSwiftを追従させても、追従したとは言えません。
 Swiftバージョンだけでなく、描画周りも一新することにしました。</p>
@@ -279,7 +281,7 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 
 <h3 id="scnnodeはデザインとしては多少強引な何でもボックス">SCNNodeはデザインとしては多少強引な何でもボックス</h3>
 
-<p>このNodeと呼ばれるものは<code class="highlighter-rouge">SCNNode</code>一つで上の全てのオブジェクトをサポートしている
+<p>このNodeと呼ばれるものは<code class="language-plaintext highlighter-rouge">SCNNode</code>一つで上の全てのオブジェクトをサポートしている
 設計としては多少強引な何でもボックスです。</p>
 
 <p>なぜなら</p>
@@ -304,8 +306,8 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 <p>先の説明の通り、Sceneで描画計画を立てたら、それを実際に反映する先が必要になります。
 映画でいうと映画館のスクリーンといったところです。</p>
 
-<p>これはSCNViewと呼ばれる<code class="highlighter-rouge">UIView</code>のサブクラスを対象ViewControllerのviewに代入すれば終わりです。
-以下は<code class="highlighter-rouge">viewDidLoad()</code>の抜粋です.</p>
+<p>これはSCNViewと呼ばれる<code class="language-plaintext highlighter-rouge">UIView</code>のサブクラスを対象ViewControllerのviewに代入すれば終わりです。
+以下は<code class="language-plaintext highlighter-rouge">viewDidLoad()</code>の抜粋です.</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">open</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
   <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
@@ -338,14 +340,14 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 <span class="k">self</span><span class="o">.</span><span class="n">view</span> <span class="o">=</span> <span class="n">sceneView</span>
 </code></pre></div></div>
 
-<p>SCNViewの初期化メソッドは、frameは描画領域、optionsは MetalやOpenGLなど<code class="highlighter-rouge">SCNRenderer</code>に渡すオプションになります。<br />
+<p>SCNViewの初期化メソッドは、frameは描画領域、optionsは MetalやOpenGLなど<code class="language-plaintext highlighter-rouge">SCNRenderer</code>に渡すオプションになります。<br />
 このoptionsは<a href="https://developer.apple.com/documentation/scenekit/scnrenderer/1518404-init">MetalのSCNRenderer</a>や<a href="https://developer.apple.com/documentation/scenekit/scnrenderer/1518408-init">OpenGLのSCNRenderer</a>は将来向けの拡張オプションでまだ使われていないようです。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kt">SCNView</span><span class="o">.</span><span class="nf">init</span><span class="p">(</span><span class="nv">frame</span><span class="p">:</span> <span class="kt">CGRect</span><span class="p">,</span> <span class="nv">options</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">:</span> <span class="kt">Any</span><span class="p">]?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span>
 </code></pre></div></div>
 
 <h4 id="2-scnscenerendererdelegateで毎フレームフックする">2. SCNSceneRendererDelegateで毎フレームフックする</h4>
-<p>SCNView.delegateは <code class="highlighter-rouge">SCNSceneRendererDelegate</code> protocolになります。
+<p>SCNView.delegateは <code class="language-plaintext highlighter-rouge">SCNSceneRendererDelegate</code> protocolになります。
 これを採用すれば、SceneKitが行っている描画やアニメ処理、物理演算といったタイミングにフックすることができます。</p>
 
 <div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">sceneView</span><span class="o">.</span><span class="n">delegate</span> <span class="o">=</span> <span class="k">self</span>
@@ -366,7 +368,7 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 同様にdelegateによるフックも呼び出されません。</p>
 
 <p>これでは1フレーム毎に動かしたい、一定時間たったら動くなど、時間軸による制御が不可能なので、常にこれが呼ばれるようにする必要があります。
-これは<a href="https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously">SCNView.rendersContinuously</a>として用意されてるので、これを<code class="highlighter-rouge">true</code>にすれば,後述するFPS値のレートで更新処理が行われます。</p>
+これは<a href="https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously">SCNView.rendersContinuously</a>として用意されてるので、これを<code class="language-plaintext highlighter-rouge">true</code>にすれば,後述するFPS値のレートで更新処理が行われます。</p>
 
 <h4 id="3-fps指定">3. FPS指定</h4>
 
@@ -382,7 +384,7 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 つまり60FPSであれば0.01秒に1回描画を行うように動きます。<br />
 またもう1点は、与えられたFPSにそのまま適用するのではなくSceneKit内部で定めたできるだけ近いFPSを選択するようです。</p>
 
-<p><a href="https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously">rendersContinuously</a>は先程述べたように、これを<code class="highlighter-rouge">true</code>にしないと毎回FPSレートに呼ばれなくなります。</p>
+<p><a href="https://developer.apple.com/documentation/scenekit/scnview/2867339-renderscontinuously">rendersContinuously</a>は先程述べたように、これを<code class="language-plaintext highlighter-rouge">true</code>にしないと毎回FPSレートに呼ばれなくなります。</p>
 
 <h4 id="4-その他">4. その他</h4>
 
@@ -391,7 +393,7 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 <span class="n">sceneView</span><span class="o">.</span><span class="n">showsStatistics</span> <span class="o">=</span> <span class="kc">true</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">backgroundColor</code>自体に説明は特に不要ですが、アドバイスとしては、SCNLightの色とは異なる色にしておくことをオススメします。
+<p><code class="language-plaintext highlighter-rouge">backgroundColor</code>自体に説明は特に不要ですが、アドバイスとしては、SCNLightの色とは異なる色にしておくことをオススメします。
 なぜなら最初の実装中は、ライトと同じ色にしていると描画されているのかどうか分からないためです。</p>
 
 <p>例えば、背景を白、ライトを白の場合にしたとしましょう。<br />
@@ -406,11 +408,11 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 <p>など複数要因が浮上し、原因特定に時間がかかるためです。</p>
 
 <p><a href="https://developer.apple.com/documentation/scenekit/scnscenerenderer/1523812-autoenablesdefaultlighting">autoenablesDefaultLighting</a>はSceneに自動でライトを追加するかどうかを決めます。
-<code class="highlighter-rouge">true</code>の場合、ライトなしかambientライトのみのときに、omnidirectionalなライトを自動で追加、配置します。</p>
+<code class="language-plaintext highlighter-rouge">true</code>の場合、ライトなしかambientライトのみのときに、omnidirectionalなライトを自動で追加、配置します。</p>
 
 <p><a href="https://developer.apple.com/documentation/scenekit/scnscenerenderer/1522763-showsstatistics">showsStatistics</a>はstatisticsを表示するフラグです。</p>
 
-<p><code class="highlighter-rouge">true</code>にして実行すると画面下にオーバーレイでviewが表示されます。</p>
+<p><code class="language-plaintext highlighter-rouge">true</code>にして実行すると画面下にオーバーレイでviewが表示されます。</p>
 
 <p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-4.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-4.png" width="100%" alt="" /></a></p>
 
@@ -436,9 +438,9 @@ OpenGLかDirectXかなど描画エンジンになるべく気にせずコンテ�
 <span class="k">self</span><span class="o">.</span><span class="n">cameraNode</span> <span class="o">=</span> <span class="n">cameraNode</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">SCNode</code>という箱にcameraに対して <code class="highlighter-rouge">SCNCamera</code>をセットしたことでカメラとして使います。ダックタイピングみたいですね。。
-<code class="highlighter-rouge">position</code>は<code class="highlighter-rouge">SCNCamera</code>の位置となります。
-<code class="highlighter-rouge">camera</code>のFOVとZ-Farの値を設定します。
+<p><code class="language-plaintext highlighter-rouge">SCNode</code>という箱にcameraに対して <code class="language-plaintext highlighter-rouge">SCNCamera</code>をセットしたことでカメラとして使います。ダックタイピングみたいですね。。
+<code class="language-plaintext highlighter-rouge">position</code>は<code class="language-plaintext highlighter-rouge">SCNCamera</code>の位置となります。
+<code class="language-plaintext highlighter-rouge">camera</code>のFOVとZ-Farの値を設定します。
 この値がなんなのかは、<a href="https://developer.apple.com/documentation/scenekit/scncamera">公式</a>に解説があります。
 ざっくり説明するとFOVが視野でZ-Farが見える距離です。</p>
 
@@ -472,7 +474,7 @@ diffuseの他にambientやmetalness,specularなどシェーダーがあります
 <p><a href="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-7.png"><img src="/assets/images/2019-09-07-ios-scene-kit-abc/2019-09-07-ios-scene-kit-abc-7.png" width="100%" alt="" /></a>
 (図は[Kawase 2003]より)</p>
 
-<p><code class="highlighter-rouge">isDoubleSided</code> はポリゴン面の法線を無視して両面に画像を表示するように支持しています。
+<p><code class="language-plaintext highlighter-rouge">isDoubleSided</code> はポリゴン面の法線を無視して両面に画像を表示するように支持しています。
 これは360度パノラマ画像は球体の中から見ることを基本としてるためです。
 本来であれば球体の法線を逆ベクトルにする方法もあるのですが、SCNSphereは予めモデリングされたものなので面毎に法線を反転となると再生成となり、元の球体自作と変わらないので、今回の形をとりました。</p>
 

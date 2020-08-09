@@ -14,8 +14,8 @@
   <title>Carthageの使い方を体系的に理解する - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="Carthageの使い方を体系的に理解する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-15T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png" />
+<meta property="twitter:title" content="Carthageの使い方を体系的に理解する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-17T18:54:56+09:00","datePublished":"2019-09-15T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage","headline":"Carthageの使い方を体系的に理解する","dateModified":"2020-05-17T18:54:56+09:00","datePublished":"2019-09-15T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-15-ios-carthage/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage"},"description":"iOSのCarthageのインストールやCocoaPodsとの違いやメリット長所やデメリット、Cartfileの書き方や注意点やバージョン指定方法やupdateとbootstrapの違いやテストライブラリ管理など実務に必要な知識を体系的に説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -274,8 +276,8 @@ iOSアプリに主軸を置いて説明しています。</p>
 <p>CocoaPodsとの違いで方針を知りましょう。</p>
 
 <h3 id="carthageの読み方">Carthageの読み方</h3>
-<p><a href="https://ja.wikipedia.org/wiki/カーセッジ">Wikipedia</a>だと<code class="highlighter-rouge">カーセージ</code>と<code class="highlighter-rouge">カルタゴ</code>の２つあります。<br />
-作者の出身や公式ロゴ背景から考えて<code class="highlighter-rouge">カルタゴ</code>な気がしますが、<br />
+<p><a href="https://ja.wikipedia.org/wiki/カーセッジ">Wikipedia</a>だと<code class="language-plaintext highlighter-rouge">カーセージ</code>と<code class="language-plaintext highlighter-rouge">カルタゴ</code>の２つあります。<br />
+作者の出身や公式ロゴ背景から考えて<code class="language-plaintext highlighter-rouge">カルタゴ</code>な気がしますが、<br />
 呼びやすい方でいいと思います。</p>
 
 <h3 id="carthageとは">Carthageとは？</h3>
@@ -355,9 +357,9 @@ iOSアプリに主軸を置いて説明しています。</p>
 」にまとめてます。</p>
 
 <h2 id="carthageのgit管理について">Carthageのgit管理について</h2>
-<p><code class="highlighter-rouge">carthage update</code>が生成したデータは、<strong>全てをgit管理する必要はありません。</strong><br />
+<p><code class="language-plaintext highlighter-rouge">carthage update</code>が生成したデータは、<strong>全てをgit管理する必要はありません。</strong><br />
 git管理下には別PCでも環境再現ができればいいのですから、<br />
-最低限で言えば<code class="highlighter-rouge">Cartfile.resolved</code>だけで環境の再現は可能です。<br />
+最低限で言えば<code class="language-plaintext highlighter-rouge">Cartfile.resolved</code>だけで環境の再現は可能です。<br />
 しかしそれだと大抵はCIで困ることが起きます。<br />
 詳細は「<span><a href="/ios/carthage/ios-carthage-team-collaboration">Carthage bootstrapとGit管理をチーム運用観点で整理</a></span>
 」にまとめてます。</p>
@@ -376,7 +378,7 @@ Build Configurationを指定するには、<strong>–configuration</strong> オ
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthge update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span> <span class="nt">--configuration</span> Debug
 </code></pre></div></div>
-<p><code class="highlighter-rouge">update</code>ではなくとも<code class="highlighter-rouge">bootstrap</code>でも大丈夫です。</p>
+<p><code class="language-plaintext highlighter-rouge">update</code>ではなくとも<code class="language-plaintext highlighter-rouge">bootstrap</code>でも大丈夫です。</p>
 
 <p>またBuild ConfigirationがReleaseなどでコード最適化されている場合は、ステップ実行すると次のログがコンソールに表示されます。</p>
 
@@ -389,7 +391,7 @@ Build Configurationを指定するには、<strong>–configuration</strong> オ
 Carthageでライブラリを導入してる場合の新規登録時や更新時などのバージョン制御があります。</p>
 
 <p>例えば次のようなCartfileでバージョンを指定することが出来ます。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "SwiftyJSON" ~&gt; 4.2.0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "SwiftyJSON" ~&gt; 4.2.0
 </code></pre></div></div>
 
 <p>詳しくは「<span><a href="/ios/carthage/ios-carthage-cartfile-format">CarthageのCartfileの書き方と個別更新方法</a></span>
@@ -401,7 +403,7 @@ Carthageでライブラリを導入してる場合の新規登録時や更新時
 例えば次のシェルはこのような意味になります。</p>
 
 <ul>
-  <li><code class="highlighter-rouge">SwiftJSON</code>と<code class="highlighter-rouge">APIKit</code>を更新</li>
+  <li><code class="language-plaintext highlighter-rouge">SwiftJSON</code>と<code class="language-plaintext highlighter-rouge">APIKit</code>を更新</li>
   <li>GitHubなどにアップロード済みのzipなどを使わず、コードから</li>
   <li>iOSプラットフォームだけを対象</li>
 </ul>
@@ -409,10 +411,10 @@ Carthageでライブラリを導入してる場合の新規登録時や更新時
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update SwiftyJSON APIKit <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span>
 </code></pre></div></div>
 
-<p><code class="highlighter-rouge">--platform iOS</code>はiOSアプリでしか使わないのであれば他プラットフォーム用ビルドをしても意味ないので、<br />
+<p><code class="language-plaintext highlighter-rouge">--platform iOS</code>はiOSアプリでしか使わないのであれば他プラットフォーム用ビルドをしても意味ないので、<br />
 その場合はこのオプションをつけます。</p>
 
-<p><code class="highlighter-rouge">--no-use-binaries</code>はGitHubにビルド済みがアップロードされてる場合はそれを使おうとするので、<br />
+<p><code class="language-plaintext highlighter-rouge">--no-use-binaries</code>はGitHubにビルド済みがアップロードされてる場合はそれを使おうとするので、<br />
 それを使わずコードからビルドしたい場合はこのオプションをつけます。<br />
 バイナリ使ったほうが更新処理は早いのですが、<br />
 もしアップロードされてるSwiftバージョンが異なったりするとエラーとなるので、<br />
@@ -421,9 +423,9 @@ Carthageでライブラリを導入してる場合の新規登録時や更新時
 
 <h2 id="carthageにテスト用ライブラリをインストールする方法">Carthageにテスト用ライブラリをインストールする方法</h2>
 <p>テストでしか使用しないフレームワークはCartfileではなく<br />
-<code class="highlighter-rouge">Cartfile.private</code>ファイルを用意して、インストールします。</p>
+<code class="language-plaintext highlighter-rouge">Cartfile.private</code>ファイルを用意して、インストールします。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch Cartfile.private
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ touch Cartfile.private
 </code></pre></div></div>
 
 <p>中身の書き方は通常のCartfileと変わりません。<br />
@@ -432,7 +434,7 @@ Carthageでライブラリを導入してる場合の新規登録時や更新時
 <h2 id="新しいバージョンを確認する">新しいバージョンを確認する</h2>
 <p>開発ではライブラリを使っていると新しいバージョンがリリースされたら追従させる必要があります。
 Carthageで管理してるライブラリに新しいバージョンがリリースされているかどうかを調べる方法があります。
-<code class="highlighter-rouge">carthage outdated</code>コマンドを実行すると一覧で確認することができます。</p>
+<code class="language-plaintext highlighter-rouge">carthage outdated</code>コマンドを実行すると一覧で確認することができます。</p>
 
 <p>例えばSwiftyJSONに新しいバージョンが出てる場合です。</p>
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage outdated
@@ -447,7 +449,7 @@ SwiftyJSON <span class="s2">"4.3.0"</span> -&gt; <span class="s2">"4.3.0"</span>
 例えば社内限定であれば自社内にOSSのGitレポジトリがありますし、GitLabやGitBucketもあります。<br />
 その場合はCartfileに次の書き方でそれぞれのライブラリをインストールできるようになります。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "https://enterprise.local/hoge/fuga/perfect-library" # GitHub Enterprise
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "https://enterprise.local/hoge/fuga/perfect-library" # GitHub Enterprise
 git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
 </code></pre></div></div>
 
@@ -458,7 +460,7 @@ git "https://enterprise.local/hoge/fuga/perfect-me.git" # Other Git repositories
 <p>当然ながら、<a href="https://github.com/Carthage/Carthage">公式</a>には記載がされているので暇があったら少しずつ追うのもいいかもしれません。<br />
 README.mdだけでなく<a href="https://github.com/Carthage/Carthage/tree/master/Documentation">Documentation</a>もあるので見落とさず。</p>
 
-<p>今後も<code class="highlighter-rouge">Carthage</code>自体がシンプルなままで、対応ライブラリが増えるといいですね。</p>
+<p>今後も<code class="language-plaintext highlighter-rouge">Carthage</code>自体がシンプルなままで、対応ライブラリが増えるといいですね。</p>
 
   </section>
 

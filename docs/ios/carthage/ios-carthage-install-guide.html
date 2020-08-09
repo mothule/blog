@@ -14,8 +14,8 @@
   <title>iOSのCarthage導入手順と注意点 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="iOSのCarthage導入手順と注意点" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="iOSのCarthageのインストールやXcodeプロジェクトへの導入手順、Cartfileの記入などそれら手順の注意点、導入後の運用に必要な個別ライブラリ更新についてまとめた記事です。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-05-14T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png" />
+<meta property="twitter:title" content="iOSのCarthage導入手順と注意点" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-install-guide","headline":"iOSのCarthage導入手順と注意点","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-05-14T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-install-guide"},"description":"iOSのCarthageのインストールやXcodeプロジェクトへの導入手順、Cartfileの記入などそれら手順の注意点、導入後の運用に必要な個別ライブラリ更新についてまとめた記事です。","image":"https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/carthage/ios-carthage-install-guide","headline":"iOSのCarthage導入手順と注意点","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-05-14T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-05-14-ios-carthage-install-guide/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/carthage/ios-carthage-install-guide"},"description":"iOSのCarthageのインストールやXcodeプロジェクトへの導入手順、Cartfileの記入などそれら手順の注意点、導入後の運用に必要な個別ライブラリ更新についてまとめた記事です。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -204,7 +206,7 @@
   <li><a href="#ビルドフェイズにフレームワークのコピースクリプトを作成">ビルドフェイズにフレームワークのコピースクリプトを作成</a>
     <ul>
       <li><a href="#1-ビルドフェイズにスクリプトフェイズ追加">1. ビルドフェイズにスクリプトフェイズ追加</a></li>
-      <li><a href="#2-carthage-copy-frameworksコマンドをセット">2. <code class="highlighter-rouge">carthage copy-frameworks</code>コマンドをセット</a></li>
+      <li><a href="#2-carthage-copy-frameworksコマンドをセット">2. <code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドをセット</a></li>
       <li><a href="#3-スクリプトの入力情報をセット">3. スクリプトの入力情報をセット</a></li>
       <li><a href="#4-スクリプトの出力情報をセット">4. スクリプトの出力情報をセット</a></li>
       <li><a href="#注意-carthage-copy-frameworksを忘れるとランタイムエラー">注意: carthage copy-frameworksを忘れるとランタイムエラー</a></li>
@@ -214,7 +216,7 @@
   </li>
   <li><a href="#ライブラリを追加する">ライブラリを追加する</a>
     <ul>
-      <li><a href="#carthage-updateでライブラリ個別更新"><code class="highlighter-rouge">carthage update</code>でライブラリ個別更新</a></li>
+      <li><a href="#carthage-updateでライブラリ個別更新"><code class="language-plaintext highlighter-rouge">carthage update</code>でライブラリ個別更新</a></li>
     </ul>
   </li>
   <li><a href="#もっと体系的に理解する">もっと体系的に理解する</a></li>
@@ -241,7 +243,7 @@
 
 <p>CarthageはHomebrewでインストールできます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew install carthage
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>carthage
 </code></pre></div></div>
 
 <p>Homebrewの使い方に関しては「<span><a href="/mac/homebrew/mac-homebrew-basic">MacのHomebrewとは？仕組み・使い方と用語整理</a></span>
@@ -249,7 +251,7 @@
 
 <h2 id="cartfileにライブラリを記入">Cartfileにライブラリを記入</h2>
 
-<p><code class="highlighter-rouge">Cartfile</code>とはCarthageのライブラリ管理ファイルです。<br />
+<p><code class="language-plaintext highlighter-rouge">Cartfile</code>とはCarthageのライブラリ管理ファイルです。<br />
 テキストファイルになってて、<br />
 この中にCarthageで管理したいライブラリをまとめます。</p>
 
@@ -260,26 +262,26 @@
 
 <h3 id="cartfileファイルの用意">Cartfileファイルの用意</h3>
 
-<p><code class="highlighter-rouge">Cartfile</code>はプロジェクト毎に用意できます。<br />
-対象プロジェクトのディレクトリ上に<code class="highlighter-rouge">Cartfile</code>を用意します。</p>
+<p><code class="language-plaintext highlighter-rouge">Cartfile</code>はプロジェクト毎に用意できます。<br />
+対象プロジェクトのディレクトリ上に<code class="language-plaintext highlighter-rouge">Cartfile</code>を用意します。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cd</span> ~/your/xcode/project/path
-<span class="nv">$ </span>touch Cartfile
+<span class="nv">$ </span><span class="nb">touch </span>Cartfile
 </code></pre></div></div>
 
 <h3 id="cartfile編集">Cartfile編集</h3>
-<p>インストールしたいライブラリを<code class="highlighter-rouge">Cartfile</code>に記入します。<br />
+<p>インストールしたいライブラリを<code class="language-plaintext highlighter-rouge">Cartfile</code>に記入します。<br />
 例えば<a href="https://github.com/SwiftyJSON/SwiftyJSON">SwiftyJSON</a>であればに次のように記入します。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "SwiftyJSON/SwiftyJSON"
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>github "SwiftyJSON/SwiftyJSON"
 </code></pre></div></div>
 
 <p>バージョン指定をしたい場合は「<span><a href="/ios/carthage/ios-carthage-cartfile-format">CarthageのCartfileの書き方と個別更新方法</a></span>
 」に書き方をまとめてあります。</p>
 
 <h2 id="cartfileからframework作成">Cartfileからframework作成</h2>
-<p><code class="highlighter-rouge">Cartfile</code>の準備ができたら<code class="highlighter-rouge">carthage update</code>コマンドでフレームワークを作成します。<br />
-オプションに<code class="highlighter-rouge">--platform</code>と<code class="highlighter-rouge">--no-use-binaries</code>をつけます。</p>
+<p><code class="language-plaintext highlighter-rouge">Cartfile</code>の準備ができたら<code class="language-plaintext highlighter-rouge">carthage update</code>コマンドでフレームワークを作成します。<br />
+オプションに<code class="language-plaintext highlighter-rouge">--platform</code>と<code class="language-plaintext highlighter-rouge">--no-use-binaries</code>をつけます。</p>
 
 <table>
   <thead>
@@ -300,7 +302,7 @@
   </tbody>
 </table>
 
-<p><code class="highlighter-rouge">carthage update</code>コマンドを実行するとframework作成処理が走ります。</p>
+<p><code class="language-plaintext highlighter-rouge">carthage update</code>コマンドを実行するとframework作成処理が走ります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span>
 
@@ -310,17 +312,17 @@
 <span class="k">***</span> Building scheme <span class="s2">"SwiftyJSON iOS"</span> <span class="k">in </span>SwiftyJSON.xcworkspace
 </code></pre></div></div>
 
-<p>成功すると<code class="highlighter-rouge">Carthage</code>ディレクトリと<code class="highlighter-rouge">Cartfile.resolved</code>ファイルが作成されます。</p>
+<p>成功すると<code class="language-plaintext highlighter-rouge">Carthage</code>ディレクトリと<code class="language-plaintext highlighter-rouge">Cartfile.resolved</code>ファイルが作成されます。</p>
 
 <ul>
   <li>Cartfile.resolved
     <ul>
-      <li><code class="highlighter-rouge">carthage update</code>で最終的な依存ライブラリ情報をまとめたテキストファイル</li>
+      <li><code class="language-plaintext highlighter-rouge">carthage update</code>で最終的な依存ライブラリ情報をまとめたテキストファイル</li>
     </ul>
   </li>
   <li>Carthage
     <ul>
-      <li><code class="highlighter-rouge">carthage update</code>で作成されたライブラリのフレームワークが格納されたディレクトリ</li>
+      <li><code class="language-plaintext highlighter-rouge">carthage update</code>で作成されたライブラリのフレームワークが格納されたディレクトリ</li>
     </ul>
   </li>
 </ul>
@@ -330,15 +332,15 @@
 
 <h2 id="プロジェクトにframeworkをリンク">プロジェクトにframeworkをリンク</h2>
 <p>frameworkはプロジェクトにリンクしないと使えません。<br />
-プロジェクトの<code class="highlighter-rouge">Target &gt; General &gt; Linked frameworks and Libraries</code>を ＋ ボタンを押してください。</p>
+プロジェクトの<code class="language-plaintext highlighter-rouge">Target &gt; General &gt; Linked frameworks and Libraries</code>を ＋ ボタンを押してください。</p>
 
 <p><a href="/assets/images/2020-05-14-ios-carthage-install-guide/1.png"><img src="/assets/images/2020-05-14-ios-carthage-install-guide/1.png" width="100%" alt="" /></a></p>
 
-<p>フレームワーク／ライブラリの選択画面が出るので、<code class="highlighter-rouge">Add Other...</code> ボタンを押してください。
+<p>フレームワーク／ライブラリの選択画面が出るので、<code class="language-plaintext highlighter-rouge">Add Other...</code> ボタンを押してください。
 <a href="/assets/images/2020-05-14-ios-carthage-install-guide/2.png"><img src="/assets/images/2020-05-14-ios-carthage-install-guide/2.png" width="100%" alt="" /></a></p>
 
 <p>ここで先程作成したframeworkを指定します。<br />
-なおフレームワークは、<code class="highlighter-rouge">Carthage/Build/iOS</code>ディレクトリの中にあります。</p>
+なおフレームワークは、<code class="language-plaintext highlighter-rouge">Carthage/Build/iOS</code>ディレクトリの中にあります。</p>
 
 <p><a href="/assets/images/2020-05-14-ios-carthage-install-guide/3.png"><img src="/assets/images/2020-05-14-ios-carthage-install-guide/3.png" width="100%" alt="" /></a></p>
 
@@ -354,11 +356,11 @@
 
 <h3 id="注意embed-contentだとビルドエラーになる">注意：Embed Contentだとビルドエラーになる</h3>
 
-<p>frameworkのリンク経路は、<code class="highlighter-rouge">Target &gt; General</code>と<code class="highlighter-rouge">Target &gt; Build Phases</code>の2つあり<br />
-<code class="highlighter-rouge">General</code>からframeworkを追加すると、デフォルトでは<code class="highlighter-rouge">Embed &amp; Sign</code>になります。<br />
+<p>frameworkのリンク経路は、<code class="language-plaintext highlighter-rouge">Target &gt; General</code>と<code class="language-plaintext highlighter-rouge">Target &gt; Build Phases</code>の2つあり<br />
+<code class="language-plaintext highlighter-rouge">General</code>からframeworkを追加すると、デフォルトでは<code class="language-plaintext highlighter-rouge">Embed &amp; Sign</code>になります。<br />
 このままビルドすると次のようなビルドエラーが起きます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Multiple commands produce '.../YOUR-APP-NAME.app/Frameworks/&lt;FRAMEWORK NAME&gt;.framework':
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Multiple commands produce '.../YOUR-APP-NAME.app/Frameworks/&lt;FRAMEWORK NAME&gt;.framework':
 
 1) Target '&lt;YOUR TARGET NAME&gt;' has copy command from
 '/your/project/path/Carthage/Build/iOS/&lt;FRAMEWORK NAME&gt;.framework' to '.../YOUR-APP-NAME.app/Frameworks/&lt;FRAMEWORK NAME&gt;.framework'
@@ -366,42 +368,42 @@
 2) That command depends on command in Target '&lt;YOUR TARGET NAME&gt;': script phase “Run Script”
 </code></pre></div></div>
 
-<p>Embedded Frameworkではないので、<code class="highlighter-rouge">Do Not Embed</code>に直してください。</p>
+<p>Embedded Frameworkではないので、<code class="language-plaintext highlighter-rouge">Do Not Embed</code>に直してください。</p>
 
 <h2 id="ビルドフェイズにフレームワークのコピースクリプトを作成">ビルドフェイズにフレームワークのコピースクリプトを作成</h2>
 <p>リンクでビルドは通りますが、プロダクト内にframeworkが配置されていません。<br />
 <strong>ビルド時にframeworkをコピーするスクリプトを用意します。</strong><br />
-コピー処理は<code class="highlighter-rouge">carthage copy-frameworks</code>コマンドを使います。</p>
+コピー処理は<code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドを使います。</p>
 
 <ol>
   <li>ビルドフェイズにスクリプトフェイズ追加</li>
-  <li><code class="highlighter-rouge">carthage copy-frameworks</code>コマンドをセット</li>
+  <li><code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドをセット</li>
   <li>スクリプトの入力情報をセット</li>
   <li>スクリプトの出力情報をセット</li>
 </ol>
 
 <h3 id="1-ビルドフェイズにスクリプトフェイズ追加">1. ビルドフェイズにスクリプトフェイズ追加</h3>
-<p><code class="highlighter-rouge">Build Phases</code>上の ＋ ボタンを押して<code class="highlighter-rouge">New Run Script Phase</code>を選ぶと<code class="highlighter-rouge">Run Script</code>フェイズが作成されます。</p>
+<p><code class="language-plaintext highlighter-rouge">Build Phases</code>上の ＋ ボタンを押して<code class="language-plaintext highlighter-rouge">New Run Script Phase</code>を選ぶと<code class="language-plaintext highlighter-rouge">Run Script</code>フェイズが作成されます。</p>
 
 <p><a href="/assets/images/2020-05-14-ios-carthage-install-guide/5.png"><img src="/assets/images/2020-05-14-ios-carthage-install-guide/5.png" width="100%" alt="" /></a></p>
 
-<h3 id="2-carthage-copy-frameworksコマンドをセット">2. <code class="highlighter-rouge">carthage copy-frameworks</code>コマンドをセット</h3>
-<p>Shellはシェルコマンドが呼べればいいので<code class="highlighter-rouge">/bin/sh</code>のままです。<br />
-スクリプト内で<code class="highlighter-rouge">carthage copy-frameworks</code>コマンドを追記します。<br />
+<h3 id="2-carthage-copy-frameworksコマンドをセット">2. <code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドをセット</h3>
+<p>Shellはシェルコマンドが呼べればいいので<code class="language-plaintext highlighter-rouge">/bin/sh</code>のままです。<br />
+スクリプト内で<code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドを追記します。<br />
 絶対パスでも相対パスでもパスが通っていればどちらでも大丈夫です。</p>
 
 <p><a href="/assets/images/2020-05-14-ios-carthage-install-guide/6.png"><img src="/assets/images/2020-05-14-ios-carthage-install-guide/6.png" width="100%" alt="" /></a></p>
 
 <h3 id="3-スクリプトの入力情報をセット">3. スクリプトの入力情報をセット</h3>
-<p><code class="highlighter-rouge">carthage copy-frameworks</code>はframeworkのパスを渡すと、ビルド対象プロジェクト内にコピーします。<br />
-厳密には<code class="highlighter-rouge">$BUILD_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH</code>パスにコピーします。<a href="https://github.com/Carthage/Carthage/blob/f656edfe35651b54eec50d814e79d079f8eea7c4/Source/carthage/CopyFrameworks.swift#L25">GitHub/Carthage</a></p>
+<p><code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>はframeworkのパスを渡すと、ビルド対象プロジェクト内にコピーします。<br />
+厳密には<code class="language-plaintext highlighter-rouge">$BUILD_PRODUCTS_DIR/$FRAMEWORKS_FOLDER_PATH</code>パスにコピーします。<a href="https://github.com/Carthage/Carthage/blob/f656edfe35651b54eec50d814e79d079f8eea7c4/Source/carthage/CopyFrameworks.swift#L25">GitHub/Carthage</a></p>
 
 <p><a href="/assets/images/2020-05-14-ios-carthage-install-guide/7.png"><img src="/assets/images/2020-05-14-ios-carthage-install-guide/7.png" width="100%" alt="Carthage Xcode Build Phases Run Script Input Files" /></a></p>
 
 <h3 id="4-スクリプトの出力情報をセット">4. スクリプトの出力情報をセット</h3>
-<p><code class="highlighter-rouge">Output Files</code>はコピー先を指定します。</p>
+<p><code class="language-plaintext highlighter-rouge">Output Files</code>はコピー先を指定します。</p>
 
-<p>実は<code class="highlighter-rouge">Output Files</code>は指定せずとも動作に問題はありません。<strong>しかしビルドパフォーマンスに影響します。</strong><br />
+<p>実は<code class="language-plaintext highlighter-rouge">Output Files</code>は指定せずとも動作に問題はありません。<strong>しかしビルドパフォーマンスに影響します。</strong><br />
 詳しくは「<span><a href="/ios/carthage/ios-carthage-measure-copy-speed-with-output-files">CarthageのビルドフェイズでOutput Files指定による速度調査</a></span>
 」に調査結果をまとめてあります。</p>
 
@@ -409,10 +411,10 @@
 
 <h3 id="注意-carthage-copy-frameworksを忘れるとランタイムエラー">注意: carthage copy-frameworksを忘れるとランタイムエラー</h3>
 
-<p><code class="highlighter-rouge">carthage copy-frameworks</code>コマンドを実行しなくてもビルドは通ります。<br />
+<p><code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドを実行しなくてもビルドは通ります。<br />
 しかし実行すると次のようなにライブラリのロードエラーが起きます。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dyld: Library not loaded: @rpath/SwiftyJSON.framework/SwiftyJSON
   Referenced from: /Users/mothule/Library/Developer/CoreSimulator/Devices/1DB7E7C4-D7CD-44BA-B3F9-F66DC4E5EC51/data/Containers/Bundle/Application/6B0FDFCC-9D12-47D5-9B74-B837BE8FC983/UseCarthage.app/UseCarthage
   Reason: image not found
 </code></pre></div></div>
@@ -422,10 +424,10 @@
 
 <h3 id="注意-input-filesで渡すframeworkのパスを間違えるとビルドエラー">注意: Input Filesで渡すframeworkのパスを間違えるとビルドエラー</h3>
 
-<p><code class="highlighter-rouge">carthage copy-frameworks</code>コマンドに渡すframeworkのパスが間違っているとビルドエラーが発生します。<br />
-<code class="highlighter-rouge">Input Files</code>または<code class="highlighter-rouge">Input File Lists</code>で渡してるframeworkのパスが正しいか確認してください。</p>
+<p><code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドに渡すframeworkのパスが間違っているとビルドエラーが発生します。<br />
+<code class="language-plaintext highlighter-rouge">Input Files</code>または<code class="language-plaintext highlighter-rouge">Input File Lists</code>で渡してるframeworkのパスが正しいか確認してください。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Could not find framework "&lt;framework name&gt;" at path &lt;wrong framework path&gt;.
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Could not find framework "&lt;framework name&gt;" at path &lt;wrong framework path&gt;.
 Ensure that the given path is appropriately entered and that your "Input Files" and "Input File Lists" have been entered correctly.
 </code></pre></div></div>
 
@@ -437,25 +439,25 @@ Ensure that the given path is appropriately entered and that your "Input Files" 
 
 <h2 id="ライブラリを追加する">ライブラリを追加する</h2>
 <p>新しくframeworkを追加や更新する場合は、<br />
-<code class="highlighter-rouge">carthage copy-frameworks</code>コマンドの登録以外の作業をやります。<br />
-また<code class="highlighter-rouge">update</code>にオプションが一つ増えます</p>
+<code class="language-plaintext highlighter-rouge">carthage copy-frameworks</code>コマンドの登録以外の作業をやります。<br />
+また<code class="language-plaintext highlighter-rouge">update</code>にオプションが一つ増えます</p>
 
 <ol>
   <li>Cartfileにライブラリ追加</li>
-  <li><code class="highlighter-rouge">carthage update</code>でライブラリ個別更新</li>
+  <li><code class="language-plaintext highlighter-rouge">carthage update</code>でライブラリ個別更新</li>
   <li>リンクにframeworkを追加</li>
   <li>コピースクリプトのInput FilesとOutput Filesに追加</li>
 </ol>
 
 <p>新しくビルドフェイズにスクリプトを追加はしません。</p>
 
-<h3 id="carthage-updateでライブラリ個別更新"><code class="highlighter-rouge">carthage update</code>でライブラリ個別更新</h3>
+<h3 id="carthage-updateでライブラリ個別更新"><code class="language-plaintext highlighter-rouge">carthage update</code>でライブラリ個別更新</h3>
 
-<p><code class="highlighter-rouge">carthage update</code>とするとCartfileにかかれている全てのライブラリが対象となります。<br />
+<p><code class="language-plaintext highlighter-rouge">carthage update</code>とするとCartfileにかかれている全てのライブラリが対象となります。<br />
 他のライブラリのバージョンは更新せず追加したライブラリだけのframework作成をしたい場合は、<br />
-<code class="highlighter-rouge">carthage update</code>にライブラリ名を渡します。</p>
+<code class="language-plaintext highlighter-rouge">carthage update</code>にライブラリ名を渡します。</p>
 
-<p>例えば新しく追加したライブラリが<code class="highlighter-rouge">SDWebImage</code>であれば、コマンドラインは次のようになります。</p>
+<p>例えば新しく追加したライブラリが<code class="language-plaintext highlighter-rouge">SDWebImage</code>であれば、コマンドラインは次のようになります。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>carthage update <span class="nt">--platform</span> iOS <span class="nt">--no-use-binaries</span> SDWebImage
 </code></pre></div></div>

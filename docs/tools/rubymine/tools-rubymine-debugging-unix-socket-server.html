@@ -14,8 +14,8 @@
   <title>RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-03-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" />
+<meta property="twitter:title" content="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server","headline":"RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法","dateModified":"2020-03-29T05:12:12+09:00","datePublished":"2020-03-29T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server"},"description":"RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。","image":"https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server","headline":"RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法","dateModified":"2020-03-29T05:12:12+09:00","datePublished":"2020-03-29T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rubymine/tools-rubymine-debugging-unix-socket-server"},"description":"RubyMine使ってますか？周りで使ってる人は少なく、ネットでも一部の人しか使われていない印象です。 しかしIDE上がりの人間からするとやはりIDEの恩恵は授かりたいものですよね。 私達は開発環境を整えるためにRubyを弄ってるのではなくアプリやツールなど体験を提供するサービスを作りたいのが本質のはずですし。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -226,8 +228,8 @@
 
 <h2 id="rubymineから実行はunixドメインソケット通信による起動がない">RubyMineから実行はUNIXドメインソケット通信による起動がない</h2>
 
-<p>通常ならRubyMineからRailsアプリを実行するには、メニューバーの <code class="highlighter-rouge">Run &gt; Run... &gt; Development: app_name</code> の順で実行できます。
-もし設定を変更したい場合は、<code class="highlighter-rouge">Run &gt; Edit Configurations...</code>を選ぶことで登録された設定情報を変更できる画面が表示されます。</p>
+<p>通常ならRubyMineからRailsアプリを実行するには、メニューバーの <code class="language-plaintext highlighter-rouge">Run &gt; Run... &gt; Development: app_name</code> の順で実行できます。
+もし設定を変更したい場合は、<code class="language-plaintext highlighter-rouge">Run &gt; Edit Configurations...</code>を選ぶことで登録された設定情報を変更できる画面が表示されます。</p>
 
 <p><em>▼RubyMineのEdit Configurations…を開いた画面</em><br />
 <a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/2.png" width="100%" alt="RubyMineのEdit Configurations...を開いた画面" /></a></p>
@@ -235,7 +237,7 @@
 <p>ここでIP addressとPortを指定して実行すればサーバが立ち上がります。
 しかしこの方法はTCP/IPによるポートが開かれるタイプとなり、UNIXドメインソケットによる立ち上げとは異なります。</p>
 
-<p><code class="highlighter-rouge">Server</code>項目を見てもそれらしき項目は見当たりません。</p>
+<p><code class="language-plaintext highlighter-rouge">Server</code>項目を見てもそれらしき項目は見当たりません。</p>
 
 <p><em>▼サーバーパラメータ一覧</em><br />
 <a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/1.png" width="100%" alt="RubyMineのEdit Configurations...を開いた画面のServer一覧" /></a></p>
@@ -246,7 +248,7 @@
 
 <h2 id="unixドメインソケット通信はrubymineでrailsアプリをアタッチする">UNIXドメインソケット通信はRubyMineでRailsアプリをアタッチする</h2>
 
-<p>それはメニューバーの<code class="highlighter-rouge">Run &gt; Attach to Process...</code>による<strong>既存プロセスにアタッチ</strong>する方法です。</p>
+<p>それはメニューバーの<code class="language-plaintext highlighter-rouge">Run &gt; Attach to Process...</code>による<strong>既存プロセスにアタッチ</strong>する方法です。</p>
 
 <p><em>▼メニューバーのRunにAttach to Process…はあります。</em><br />
 <a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/3.png" width="100%" alt="RubyMineのメニューバーのRunを開いた画面" /></a></p>
@@ -284,7 +286,7 @@ Use Ctrl-C to stop
 
 <h3 id="rubymineからattach-to-processを実行">RubyMineからAttach to Process…を実行</h3>
 
-<p><code class="highlighter-rouge">Attach to Process...</code>を選ぶとRubyMineがRubyで起動してるプロセスを見つけて一覧として出してくれます。</p>
+<p><code class="language-plaintext highlighter-rouge">Attach to Process...</code>を選ぶとRubyMineがRubyで起動してるプロセスを見つけて一覧として出してくれます。</p>
 
 <p><em>▼Rubyプロセス一覧</em><br />
 <a href="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png"><img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/4.png" width="100%" alt="Attach to Process...で出る一覧画面" /></a></p>
@@ -313,11 +315,11 @@ executed <span class="sb">`</span>bt<span class="sb">`</span> <span class="nb">c
 executed <span class="sb">`</span>thread <span class="k">select </span>23<span class="sb">`</span> <span class="nb">command </span>inside lldb.
 executed <span class="sb">`</span>bt<span class="sb">`</span> <span class="nb">command </span>inside lldb.
 executed <span class="sb">`</span>thread <span class="k">select </span>1<span class="sb">`</span> <span class="nb">command </span>inside lldb.
-executed <span class="sb">`</span>expr <span class="o">(</span>void <span class="k">*</span><span class="o">)</span> dlopen<span class="o">(</span><span class="s2">"/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle"</span>, 2<span class="o">)</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
-executed <span class="sb">`</span>expr <span class="o">(</span>int<span class="o">)</span> debase_start_attach<span class="o">()</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span><span class="nb">expr</span> <span class="o">(</span>void <span class="k">*</span><span class="o">)</span> dlopen<span class="o">(</span><span class="s2">"/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle"</span>, 2<span class="o">)</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span><span class="nb">expr</span> <span class="o">(</span>int<span class="o">)</span> debase_start_attach<span class="o">()</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
 executed <span class="sb">`</span>breakpoint <span class="nb">set</span> <span class="nt">--shlib</span> /Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib/attach.bundle <span class="nt">--name</span> __func_to_set_breakpoint_at<span class="sb">`</span> <span class="nb">command </span>inside lldb.
 continuing
-executed <span class="sb">`</span>expr <span class="o">(</span>void<span class="o">)</span> debase_rb_eval<span class="o">(</span><span class="s2">"require '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/../lib/ruby-debug-ide/attach/debugger_loader'; load_debugger(['/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib', '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib'], ['--key-value', '--step-over-in-blocks', '--disable-int-handler', '--evaluation-timeout', '20', '--evaluation-control', '--time-limit', '100', '--memory-limit', '0', '--rubymine-protocol-extensions', '--port', '61951', '--host', '0.0.0.0', '--dispatcher-port', '61952', '--attach-mode'])"</span><span class="o">)</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
+executed <span class="sb">`</span><span class="nb">expr</span> <span class="o">(</span>void<span class="o">)</span> debase_rb_eval<span class="o">(</span><span class="s2">"require '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/bin/../lib/ruby-debug-ide/attach/debugger_loader'; load_debugger(['/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/ruby-debug-ide-0.8.0.beta21/lib', '/Users/mothule/.rbenv/versions/2.6.5/lib/ruby/gems/2.6.0/gems/debase-0.3.0.beta23/lib'], ['--key-value', '--step-over-in-blocks', '--disable-int-handler', '--evaluation-timeout', '20', '--evaluation-control', '--time-limit', '100', '--memory-limit', '0', '--rubymine-protocol-extensions', '--port', '61951', '--host', '0.0.0.0', '--dispatcher-port', '61952', '--attach-mode'])"</span><span class="o">)</span><span class="sb">`</span> <span class="nb">command </span>inside lldb.
 </code></pre></div></div>
 
 <p>成功するとRailsアプリのログにも次のようなログが出力されます。</p>

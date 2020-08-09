@@ -14,8 +14,8 @@
   <title>CircleCIで別途SSHキーを追加して使う方法 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="CircleCIで別途SSHキーを追加して使う方法" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="最近CircleCIを使って定期実行的なことをするために弄り始めました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2018-11-27T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2018-11-27-circleci-add-ssh-key.png" />
+<meta property="twitter:title" content="CircleCIで別途SSHキーを追加して使う方法" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key","headline":"CircleCIで別途SSHキーを追加して使う方法","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2018-11-27T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key"},"description":"最近CircleCIを使って定期実行的なことをするために弄り始めました。","image":"https://blog.mothule.com/assets/images/2018-11-27-circleci-add-ssh-key.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key","headline":"CircleCIで別途SSHキーを追加して使う方法","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2018-11-27T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2018-11-27-circleci-add-ssh-key.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key"},"description":"最近CircleCIを使って定期実行的なことをするために弄り始めました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -207,16 +209,16 @@
 <h2 id="手順">手順</h2>
 
 <ol>
-  <li><code class="highlighter-rouge">ssh-keygen -m PEM -t rsa</code> などで鍵生成</li>
+  <li><code class="language-plaintext highlighter-rouge">ssh-keygen -m PEM -t rsa</code> などで鍵生成</li>
   <li>GitHubのrepository設定のdeploy keyに公開鍵を登録</li>
   <li>repository毎の設定 &gt; PERMISSIONS &gt; SSH Permissions へ移動</li>
   <li>Add SSH Key を押下</li>
   <li>ホスト名を github.com</li>
   <li>Private Keyに秘密鍵を登録</li>
-  <li>.circleci/config.yml の steps 内で <code class="highlighter-rouge">add_ssh_key</code> コマンドを記入</li>
+  <li>.circleci/config.yml の steps 内で <code class="language-plaintext highlighter-rouge">add_ssh_key</code> コマンドを記入</li>
 </ol>
 
-<p>※ <code class="highlighter-rouge">add_ssh_key</code> に関しては<a href="https://circleci.com/docs/2.0/configuration-reference/#add_ssh_keys">CircleCIのadd_ssh_keys</a>を参照。
+<p>※ <code class="language-plaintext highlighter-rouge">add_ssh_key</code> に関しては<a href="https://circleci.com/docs/2.0/configuration-reference/#add_ssh_keys">CircleCIのadd_ssh_keys</a>を参照。
 記事中に出てくる Fingerprint は GitHubかCircleCIのrepository設定ページで確認可能。</p>
 
 <h2 id="関連">関連</h2>

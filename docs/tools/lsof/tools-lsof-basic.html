@@ -14,8 +14,8 @@
   <title>lsofでプロセスが開いてるポートやファイルを確認する方法 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="lsofでプロセスが開いてるポートやファイルを確認する方法" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="lsofを使ってプロセスが使っているポートを確認したり、指定したファイルをどのプロセスが開いているかを確認したり、指定プロセスが開いてるファイルを確認する方法をまとめました。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2020-02-21T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-21-tools-lsof-basic.png" />
+<meta property="twitter:title" content="lsofでプロセスが開いてるポートやファイルを確認する方法" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/tools/lsof/tools-lsof-basic","headline":"lsofでプロセスが開いてるポートやファイルを確認する方法","dateModified":"2020-02-21T16:42:46+09:00","datePublished":"2020-02-21T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/lsof/tools-lsof-basic"},"description":"lsofを使ってプロセスが使っているポートを確認したり、指定したファイルをどのプロセスが開いているかを確認したり、指定プロセスが開いてるファイルを確認する方法をまとめました。","image":"https://blog.mothule.com/assets/images/2020-02-21-tools-lsof-basic.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/lsof/tools-lsof-basic","headline":"lsofでプロセスが開いてるポートやファイルを確認する方法","dateModified":"2020-02-21T16:42:46+09:00","datePublished":"2020-02-21T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-02-21-tools-lsof-basic.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/lsof/tools-lsof-basic"},"description":"lsofを使ってプロセスが使っているポートを確認したり、指定したファイルをどのプロセスが開いているかを確認したり、指定プロセスが開いてるファイルを確認する方法をまとめました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -204,17 +206,17 @@
 UNIXプロセスに対して開かれているファイルに関する情報を表示します。</p>
 
 <p>ファイルは様々なタイプをサポートしてます。
-↓ <code class="highlighter-rouge">man lsof</code> より引用</p>
+↓ <code class="language-plaintext highlighter-rouge">man lsof</code> より引用</p>
 <blockquote>
   <p>An open file may be a regular file, a directory, a block special file, a character special file, an executing text reference, a library, a stream or a net-
 work file (Internet socket, NFS file or UNIX domain socket.)  A specific file or all the files in a file system may be selected by path.</p>
 </blockquote>
 
-<p>今回はこの中の <code class="highlighter-rouge">a stream or a net-work file (Internet socket, NFS file or UNIX domain socket.)</code></p>
+<p>今回はこの中の <code class="language-plaintext highlighter-rouge">a stream or a net-work file (Internet socket, NFS file or UNIX domain socket.)</code></p>
 
 <h2 id="指定ポートを開いてるプロセスを確認">指定ポートを開いてるプロセスを確認</h2>
 
-<p><code class="highlighter-rouge">lsof -i:[ポート番号]</code>で確認できます。</p>
+<p><code class="language-plaintext highlighter-rouge">lsof -i:[ポート番号]</code>で確認できます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>lsof <span class="nt">-i</span>:4000,3000,8080 <span class="nt">-P</span> | <span class="nb">grep </span>LISTEN
 nginx     97024 mothule    6u  IPv4 0x9e21b4cd1c187225      0t0  TCP <span class="k">*</span>:8080 <span class="o">(</span>LISTEN<span class="o">)</span>
@@ -223,15 +225,15 @@ ruby      98474 mothule    9u  IPv4 0x9e21b4cd1e91bba5      0t0  TCP localhost:4
 </code></pre></div></div>
 
 <ul>
-  <li><code class="highlighter-rouge">-i:</code>の後にカンマ区切りでポート番号を指定します。</li>
-  <li><code class="highlighter-rouge">-P</code>でwell-known portを自動置換を無効化します。</li>
+  <li><code class="language-plaintext highlighter-rouge">-i:</code>の後にカンマ区切りでポート番号を指定します。</li>
+  <li><code class="language-plaintext highlighter-rouge">-P</code>でwell-known portを自動置換を無効化します。</li>
 </ul>
 
 <p>grepで LISTENしてる理由は、CLOSEDが混じらせないため。</p>
 
 <h2 id="指定ファイルを開いているプロセスを確認">指定ファイルを開いているプロセスを確認</h2>
 
-<p><code class="highlighter-rouge">lsof [path]</code> で確認できます。</p>
+<p><code class="language-plaintext highlighter-rouge">lsof [path]</code> で確認できます。</p>
 
 <p>例えばnginxのアクセスログを開いているプロセスを知りたい場合は</p>
 
@@ -243,7 +245,7 @@ nginx   97025 mothule    4w   REG    1,4    37496 8599850676 /usr/local/var/log/
 
 <h2 id="指定プロセスidpidが開いてるファイルを確認">指定プロセスID(PID)が開いてるファイルを確認</h2>
 
-<p><code class="highlighter-rouge">lsof -p [PID]</code>で確認できます。</p>
+<p><code class="language-plaintext highlighter-rouge">lsof -p [PID]</code>で確認できます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>lsof <span class="nt">-p</span> 97024
 COMMAND   PID    USER   FD   TYPE             DEVICE SIZE/OFF       NODE NAME
@@ -255,7 +257,7 @@ nginx   97024 mothule  txt    REG                1,4   448496 8665868586 /usr/lo
 
 <h2 id="指定プロセスが開いてるファイルを確認">指定プロセスが開いてるファイルを確認</h2>
 
-<p><code class="highlighter-rouge">lsof -c [COMMAND]</code>で確認できます。</p>
+<p><code class="language-plaintext highlighter-rouge">lsof -c [COMMAND]</code>で確認できます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>lsof <span class="nt">-c</span> nginx
 COMMAND   PID    USER   FD     TYPE             DEVICE SIZE/OFF       NODE NAME
@@ -279,19 +281,19 @@ nginx   97024 mothule  txt      REG                1,4   973824 8628277556 /usr/
   </thead>
   <tbody>
     <tr>
-      <td><code class="highlighter-rouge">lsof -i:[ポート番号]</code></td>
+      <td><code class="language-plaintext highlighter-rouge">lsof -i:[ポート番号]</code></td>
       <td>指定ポートを開いてるプロセスを確認</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">lsof [path]</code></td>
+      <td><code class="language-plaintext highlighter-rouge">lsof [path]</code></td>
       <td>指定ファイルを開いているプロセスを確認</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">lsof -p [PID]</code></td>
+      <td><code class="language-plaintext highlighter-rouge">lsof -p [PID]</code></td>
       <td>指定プロセスID(PID)が開いてるファイルを確認</td>
     </tr>
     <tr>
-      <td><code class="highlighter-rouge">lsof -c [COMMAND]</code></td>
+      <td><code class="language-plaintext highlighter-rouge">lsof -c [COMMAND]</code></td>
       <td>指定プロセスが開いてるファイルを確認</td>
     </tr>
   </tbody>

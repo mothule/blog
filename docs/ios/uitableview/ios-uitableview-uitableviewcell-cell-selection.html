@@ -14,8 +14,8 @@
   <title>【初心者向け】UITableViewのセル選択を制御する方法 - もちゅろぐ</title>
 
 
-<!-- Begin Jekyll SEO tag v2.5.0 -->
-<meta name="generator" content="Jekyll v3.8.5" />
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="【初心者向け】UITableViewのセル選択を制御する方法" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="UITableViewのUITableViewCell(セル)をタップを検知する実装方法について説明します。" />
@@ -27,9 +27,11 @@
 <meta property="og:type" content="article" />
 <meta property="article:published_time" content="2019-09-30T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection.png" />
+<meta property="twitter:title" content="【初心者向け】UITableViewのセル選択を制御する方法" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-cell-selection","headline":"【初心者向け】UITableViewのセル選択を制御する方法","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-cell-selection"},"description":"UITableViewのUITableViewCell(セル)をタップを検知する実装方法について説明します。","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-cell-selection","headline":"【初心者向け】UITableViewのセル選択を制御する方法","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-09-30T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableview-uitableviewcell-cell-selection"},"description":"UITableViewのUITableViewCell(セル)をタップを検知する実装方法について説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -214,42 +216,42 @@
 <h2 id="セルの選択イベント一覧">セルの選択イベント一覧</h2>
 
 <ul>
-  <li>セルタップ制御: <code class="highlighter-rouge">func tableView(_:shouldHighlightRowAt:) -&gt; Bool</code></li>
-  <li>セルハイライト直後: <code class="highlighter-rouge">func tableView(_:didHighlightRowAt:)</code></li>
-  <li>セルハイライト解除直後: <code class="highlighter-rouge">func tableView(_:didUnhighlightRowAt:)</code></li>
-  <li>セル選択直前: <code class="highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
-  <li>セル選択解除直前: <code class="highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
-  <li>セル選択直後: <code class="highlighter-rouge">func tableView(_:didSelectRowAt:)</code></li>
-  <li>セル選択解除直後: <code class="highlighter-rouge">func tableView(_:didDeselectRowAt:)</code></li>
+  <li>セルタップ制御: <code class="language-plaintext highlighter-rouge">func tableView(_:shouldHighlightRowAt:) -&gt; Bool</code></li>
+  <li>セルハイライト直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didHighlightRowAt:)</code></li>
+  <li>セルハイライト解除直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didUnhighlightRowAt:)</code></li>
+  <li>セル選択直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択解除直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didSelectRowAt:)</code></li>
+  <li>セル選択解除直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didDeselectRowAt:)</code></li>
 </ul>
 
-<p><code class="highlighter-rouge">セルタップ制御</code>では、falseを返したセルはタップしてもハイライトにもタップイベントも呼ばれません。<br />
+<p><code class="language-plaintext highlighter-rouge">セルタップ制御</code>では、falseを返したセルはタップしてもハイライトにもタップイベントも呼ばれません。<br />
 ラベルセルとして実装する場合にここをfalseにしてタップできないようにします。</p>
 
-<p><code class="highlighter-rouge">セル選択直前</code>と<code class="highlighter-rouge">セル選択解除直前</code>の戻り値は返したセル位置が実際に選択状態を変更します。<br />
+<p><code class="language-plaintext highlighter-rouge">セル選択直前</code>と<code class="language-plaintext highlighter-rouge">セル選択解除直前</code>の戻り値は返したセル位置が実際に選択状態を変更します。<br />
 正直使うケースに出くわしたことはありません。</p>
 
-<p><code class="highlighter-rouge">セル選択直後</code>はセルがタップされたときにここにセルごとの処理を記述することで、セルのタップハンドリングができます。</p>
+<p><code class="language-plaintext highlighter-rouge">セル選択直後</code>はセルがタップされたときにここにセルごとの処理を記述することで、セルのタップハンドリングができます。</p>
 
 <h2 id="セルの選択解除を検知する">セルの選択/解除を検知する</h2>
 <ul>
-  <li>セル選択直前: <code class="highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
-  <li>セル選択解除直前: <code class="highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
-  <li>セル選択直後: <code class="highlighter-rouge">func tableView(_:didSelectRowAt:)</code></li>
-  <li>セル選択解除直後: <code class="highlighter-rouge">func tableView(_:didDeselectRowAt:)</code></li>
-  <li>セルハイライト直後: <code class="highlighter-rouge">func tableView(_:didHighlightRowAt:)</code></li>
-  <li>セルハイライト解除直後: <code class="highlighter-rouge">func tableView(_:didUnhighlightRowAt:)</code></li>
+  <li>セル選択直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択解除直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didSelectRowAt:)</code></li>
+  <li>セル選択解除直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didDeselectRowAt:)</code></li>
+  <li>セルハイライト直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didHighlightRowAt:)</code></li>
+  <li>セルハイライト解除直後: <code class="language-plaintext highlighter-rouge">func tableView(_:didUnhighlightRowAt:)</code></li>
 </ul>
 
 <p>この4つはセルの選択や解除の前後で呼ばれるコールバックメソッドです。</p>
 
 <ul>
-  <li>セル選択直前: <code class="highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
-  <li>セル選択解除直前: <code class="highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willSelectRowAt:) -&gt; IndexPath?</code></li>
+  <li>セル選択解除直前: <code class="language-plaintext highlighter-rouge">func tableView(_:willDeselectRowAt:) -&gt; IndexPath?</code></li>
 </ul>
 
 <p>直前に呼ばれるこの2つは、選択するセル／解除するセルを制御することも可能です。 <br />
-<code class="highlighter-rouge">nil</code>を返すと選択の拒否／解除の拒否する動作になります。</p>
+<code class="language-plaintext highlighter-rouge">nil</code>を返すと選択の拒否／解除の拒否する動作になります。</p>
 
 <h3 id="イベント検知したら通知する実装">イベント検知したら通知する実装</h3>
 <p>次のコードはセルをタップしたら、選択や解除の前後でコンソールにアウトプットするコードです。</p>
@@ -293,7 +295,7 @@
 
 <p>上記動きをしたときの出力結果は次の通りです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:didHighlightRowAt:)0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:didHighlightRowAt:)0
 tableView(_:didUnhighlightRowAt:)0
 tableView(_:willSelectRowAt:)0
 tableView(_:didSelectRowAt:)0
@@ -333,7 +335,7 @@ tableView(_:didSelectRowAt:)2
 
 <p>セルをタップしたら別画面に遷移するなど、セルの押下で処理をしたい場合は</p>
 
-<p><code class="highlighter-rouge">tableView(_:didSelectRowAt:)</code>メソッドでやります。</p>
+<p><code class="language-plaintext highlighter-rouge">tableView(_:didSelectRowAt:)</code>メソッドでやります。</p>
 
 <h2 id="セル選択を拒否する">セル選択を拒否する</h2>
 <p>セルをタップしたさいにハイライト状態のち選択状態になります。<br />
@@ -341,9 +343,9 @@ tableView(_:didSelectRowAt:)2
 
 <p><a href="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-2.png"><img src="/assets/images/2019-09-30-ios-uitableview-uitableviewcell-cell-selection/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-2.png" width="100%" alt="" /></a></p>
 
-<p>この選択状態を拒否するメソッドがあります。それが<code class="highlighter-rouge">func tableView(_:shouldHighlightRowAt:) -&gt; Bool</code>になります。</p>
+<p>この選択状態を拒否するメソッドがあります。それが<code class="language-plaintext highlighter-rouge">func tableView(_:shouldHighlightRowAt:) -&gt; Bool</code>になります。</p>
 
-<p>このメソッドの戻り値で<code class="highlighter-rouge">false</code>を返すと、返されたセルはタップしても何も起こらなくなります。</p>
+<p>このメソッドの戻り値で<code class="language-plaintext highlighter-rouge">false</code>を返すと、返されたセルはタップしても何も起こらなくなります。</p>
 
 <p>次の動画は一番上のセル以外はタップ禁止にしたさいの動きになります。
 動画では選択状態にもハイライトにもなっていません。<br />
@@ -351,7 +353,7 @@ tableView(_:didSelectRowAt:)2
 
 <video autoplay="" loop="" muted="" playsinline="" src="/assets/videos/2019-09-30-ios-uitableview-uitableviewcell-cell-selection-1.mp4" width="100%" height="400px"></video>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:willSelectRowAt:)0
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>tableView(_:willSelectRowAt:)0
 tableView(_:didSelectRowAt:)0
 </code></pre></div></div>
 
