@@ -11,33 +11,33 @@
 
 
 
-  <title>xcconfigで使うパラメータ名の見つけ方 - もちゅろぐ</title>
+  <title>iOSでMVVMする前に基本を整理する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.5.0 -->
 <meta name="generator" content="Jekyll v3.8.5" />
-<meta property="og:title" content="xcconfigで使うパラメータ名の見つけ方" />
+<meta property="og:title" content="iOSでMVVMする前に基本を整理する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。" />
-<meta property="og:description" content="xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" />
-<meta property="og:url" content="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" />
+<meta name="description" content="iOSでMVVM(View-Model-ViewModel)アーキテクチャを採用するにあたりMVVMを知ることで、メリットを活かしデメリットを抑えるために基本を説明します。" />
+<meta property="og:description" content="iOSでMVVM(View-Model-ViewModel)アーキテクチャを採用するにあたりMVVMを知ることで、メリットを活かしデメリットを抑えるために基本を説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/ios/swift/ios-swift-mvvm" />
+<meta property="og:url" content="https://blog.mothule.com/ios/swift/ios-swift-mvvm" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-07-30T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-08-08T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config","headline":"xcconfigで使うパラメータ名の見つけ方","dateModified":"2020-07-30T19:49:43+09:00","datePublished":"2020-07-30T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config"},"description":"xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。","image":"https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
+{"url":"https://blog.mothule.com/ios/swift/ios-swift-mvvm","headline":"iOSでMVVMする前に基本を整理する","dateModified":"2020-08-09T19:24:57+09:00","datePublished":"2020-08-08T00:00:00+09:00","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/swift/ios-swift-mvvm"},"description":"iOSでMVVM(View-Model-ViewModel)アーキテクチャを採用するにあたりMVVMを知ることで、メリットを活かしデメリットを抑えるために基本を説明します。","image":"https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png","@type":"BlogPosting","@context":"http://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="xcconfigで使うパラメータ名の見つけ方">
-<meta name="twitter:description" content="xcconfigで使うパラメータ名の見つけ方、探し方が分からない人は多いです。この記事では見つけ方を説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png">
+<meta name="twitter:title" content="iOSでMVVMする前に基本を整理する">
+<meta name="twitter:description" content="iOSでMVVM(View-Model-ViewModel)アーキテクチャを採用するにあたりMVVMを知ることで、メリットを活かしデメリットを抑えるために基本を説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -140,8 +140,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#xcode" itemprop="item">
-              <span itemprop="name">Xcode</span>
+            <a href="/tags#swift" itemprop="item">
+              <span itemprop="name">Swift</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -150,7 +150,7 @@
         
         
           <li>
-            xcconfigで使うパラメータ名の見つけ方
+            iOSでMVVMする前に基本を整理する
           </li>
         
       
@@ -162,27 +162,27 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" alt="xcconfigで使うパラメータ名の見つけ方">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-08-08-ios-swift-mvvm/0.png" alt="iOSでMVVMする前に基本を整理する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>xcconfigで使うパラメータ名の見つけ方</h1>
+    <h1>iOSでMVVMする前に基本を整理する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
+            <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#program-design">プログラム設計</a></li>
+          
             <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#xcode">Xcode</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#xcconfig">xcconfig</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2020-7-30</time></span>
+        <span"><time class="post-date">2020-8-8</time></span>
       </div>
     </div>
   </header>
@@ -190,76 +190,123 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#xcconfigへの変換はxcodeがサポートしてる">xcconfigへの変換はXcodeがサポートしてる</a></li>
-  <li><a href="#xcodeのbuild-settingsの表示方法をパラメータ名に変更">XcodeのBuild Settingsの表示方法をパラメータ名に変更</a></li>
-  <li><a href="#xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー">XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー</a></li>
+  <li><a href="#mvvmとは">MVVMとは？</a>
+    <ul>
+      <li><a href="#model">Model</a>
+        <ul>
+          <li><a href="#表示寄りデータの扱い">表示寄りデータの扱い</a></li>
+          <li><a href="#注意点">注意点</a></li>
+        </ul>
+      </li>
+      <li><a href="#view">View</a>
+        <ul>
+          <li><a href="#データバインディング">データバインディング</a></li>
+        </ul>
+      </li>
+      <li><a href="#viewmodel">ViewModel</a></li>
+      <li><a href="#viewmodelとmodel間のバインディング">ViewModelとModel間のバインディング</a></li>
+    </ul>
+  </li>
+  <li><a href="#iosでmvvmを実現するには">iOSでMVVMを実現するには</a>
+    <ul>
+      <li><a href="#データバインディング機構を提供するライブラリ">データバインディング機構を提供するライブラリ</a></li>
+    </ul>
+  </li>
+  <li><a href="#iosでmvvm採用するメリットとデメリット">iOSでMVVM採用するメリットとデメリット</a>
+    <ul>
+      <li><a href="#fat-viewmodelになるリスク">Fat ViewModelになるリスク</a></li>
+    </ul>
+  </li>
 </ul>
   </div>
   <section>
-  <p>xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。<br />
-この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。</p>
+  <p>MVVMを知らなかったり曖昧知識で採用すると、MVCとは異なる部分で問題がおきるだけです。</p>
 
-<p>xcconfigについて分からない方は「<span><a href="/ios/xcode/ios-xcode-xcconfig-how-to-use">Xcodeのxcconfigの理解と使い方</a></span>
-」に詳細を説明してます。</p>
+<h2 id="mvvmとは">MVVMとは？</h2>
+<p>アーキテクチャパターンの一つ。
+MVCの派生パターンでModel-View-ViewModel
+プレゼンテーションとドメインを分離することで保守性と生産性を貢献する。</p>
 
-<h2 id="xcconfigへの変換はxcodeがサポートしてる">xcconfigへの変換はXcodeがサポートしてる</h2>
-<p>xcconfigの書き方が分かって実際に使おうにも、ビルドパラメータ名が分からないと設定しようがありません。<br />
-XcodeのBuild Settingsでカスタマイズされた項目をxcconfigだとどうやって書けばいいか分からないと思います。<br />
-実は<strong>XcodeのBuild Settingsからxcconfigへのフォーマット変換はXcodeがサポートしてます。</strong></p>
+<h3 id="model">Model</h3>
+<p>アプリのドメイン（問題領域）を担当する。
+ここで、このアプリが解決するドメイン(問題領域)のデータと手続き処理（ビジネスロジック）を表現する。<br />
+その他にも永続化ロジック、通信ロジックも含める。</p>
 
-<p>確認する方法は2つあります。</p>
+<h4 id="表示寄りデータの扱い">表示寄りデータの扱い</h4>
+<p>アプリが背景色や文字色や余白のサイズなど表示カスタマイズ機能をもつ場合は、<br />
+それら表示に関する情報を保持するのはModelになる。<br />
+もちろんModelの情報はViewModelを経由してバインドされる。</p>
+
+<h4 id="注意点">注意点</h4>
+<p>一般的にドメインを担当すると決めつけると混乱が生じる。
+例えばサーバの存在するクライアント・サーバモデルだとドメイン(問題領域)はサーバ側にあたるため、
+クライアント側はアプリケーションとしてみたときにドメインではなくプレゼンテーションに該当する。</p>
+
+<p>ModelはViewとViewModelの役割以外の部分を担うのが妥当。</p>
+
+<h3 id="view">View</h3>
+<p>UIへの入出力を担当。</p>
 
 <ul>
-  <li>XcodeのBuild Settingsの表示方法をパラメータ名に変更する</li>
-  <li>XcodeのBuild Settingsの各パラメータをxcconfig形式でコピーする</li>
+  <li>アプリが扱うデータをユーザーに向けて表示</li>
+  <li>ユーザーからの入力を受け取る</li>
 </ul>
 
-<h2 id="xcodeのbuild-settingsの表示方法をパラメータ名に変更">XcodeのBuild Settingsの表示方法をパラメータ名に変更</h2>
+<p>MVVMにおけるViewはViewModelが持つデータを<code class="highlighter-rouge">データバインディング</code>機構を通じて自身の担当領域を全うする。
+Viewは複雑なロジックと状態を持たないのがMVVMのViewの特徴。</p>
 
-<p><code class="highlighter-rouge">Build Settings</code>を開いた後に<code class="highlighter-rouge">Editor &gt; Show Setting Names</code>を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。</p>
+<h4 id="データバインディング">データバインディング</h4>
+<p>RxSwiftやReactiveSwiftやCombineなどを使って、予めデータとイベントと振る舞いの関係性を宣言しておくことで、<br />
+実際のイベント発生時には宣言した処理フローに従って振る舞いが行われる。</p>
 
-<video playsinline="" muted="" autoplay="" loop="" width="100%" height="400px">
-    <source type="video/mp4" src="/assets/videos/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.mp4" />
-</video>
+<h3 id="viewmodel">ViewModel</h3>
+<p>Viewが状態やロジックを待たない分ここで解決する。
+Viewの見た目に影響する状態の保持、Viewから受け取った入力を適切な形に変換しModelに伝達する役目。
+つまりViewとModel間の情報伝達とView用状態保持の役割を持つ。</p>
 
-<p>例えば、 <code class="highlighter-rouge">Architectures &gt; Build Active Architecture Only</code>であれば、<code class="highlighter-rouge">ONLY_ACTIVE_ARCH</code>になります。<br />
-これをxcconfigで使うなら<code class="highlighter-rouge">ONLY_ACTIVE_ARCH = YES</code>となります。</p>
+<h3 id="viewmodelとmodel間のバインディング">ViewModelとModel間のバインディング</h3>
+<p>MVVMではView-ViewModel間はデータバインディング機構を使うことでメッセージフローを実現している。<br />
+では、ViewModel-Model間も同様にデータバインディングを行ってはいけないのか？というと、それは別に構わないと思っている。<br />
+MVVMはアーキテクチャパターンであり、そこから肉付けするのは自由だから。
+メッセージフローを統一する観点においてデータバインディングやオブザーバーパターンによるメッセージフローの仕組み化を行うことは問題ないと見れる。</p>
 
-<h2 id="xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー">XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー</h2>
+<h2 id="iosでmvvmを実現するには">iOSでMVVMを実現するには</h2>
+<p>MVVMは特性上<code class="highlighter-rouge">データバインディング</code>が重要な機能となる。<br />
+iOSではViewとViewModel間の情報伝達を手動で同期が必要となるため、そのままでは実現コストが高くMVVMメリットへのコスパが悪い。
+そのためiOSでMVVMアーキテクチャを実現するためには、データバインディング機構を何らかの方法で取り込む必要があります。</p>
 
-<p>パラメータ名を確認するだけなら<code class="highlighter-rouge">Show Setting Names</code>で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。<br />
-実は<code class="highlighter-rouge">Build Settings</code>はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。</p>
+<h3 id="データバインディング機構を提供するライブラリ">データバインディング機構を提供するライブラリ</h3>
+<p>一般的に認知度の高いデータバインディング機構を提供してるライブラリ下記になります。</p>
 
-<p><a href="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png"><img src="/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png" width="100%" alt="XcodeBuildSettings" /></a></p>
+<ul>
+  <li>RxSwift</li>
+  <li>ReactiveSwift</li>
+  <li>Combine</li>
+</ul>
 
-<p>例えば<code class="highlighter-rouge">Build Active Architecture Only</code>の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。</p>
+<p>この中でCombineはiOS13からApple公式frameworkとして提供されています。<br />
+近い将来公式のCombineがデファクトスタンダードとなるかもしれませんが、登場して間もないためまだまだ他のライブラリの利用率が高いです。</p>
 
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
-ONLY_ACTIVE_ARCH = YES
+<h2 id="iosでmvvm採用するメリットとデメリット">iOSでMVVM採用するメリットとデメリット</h2>
 
-//:configuration = Release
+<p>ここまでで得た情報からiOSでMVVMを採用することで得られるメリットとデメリットについて並べました。</p>
 
-//:completeSettings = some
-ONLY_ACTIVE_ARCH
-</code></pre></div></div>
+<ul>
+  <li>Viewロジックのテスタビリティが向上</li>
+  <li>Viewロジックとドメインロジックを分離できる</li>
+  <li>データバインディング機構を提供するライブラリのメンテナンスが必要</li>
+  <li>データバインディング機構を提供するライブラリの理解が必要</li>
+</ul>
 
-<p><code class="highlighter-rouge">//:configuration = Debug</code>や<code class="highlighter-rouge">Release</code>とはBuild Configuration毎に分けられてます。
-<code class="highlighter-rouge">Release</code>に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。</p>
+<h3 id="fat-viewmodelになるリスク">Fat ViewModelになるリスク</h3>
+<p>ドメイン(アプリの問題領域)を理解できていないと、</p>
 
-<p><code class="highlighter-rouge">some</code>はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。</p>
+<ul>
+  <li>「ModelではないのでViewModel」</li>
+  <li>「この画面で扱うデータはドメインではなく画面依存だからViewModel」</li>
+</ul>
 
-<p>もう一つ例として<code class="highlighter-rouge">Build Options &gt; Debug Information Format</code>を見るとこうなります。</p>
-<div class="highlighter-rouge"><div class="highlight"><pre class="highlight"><code>//:configuration = Debug
-DEBUG_INFORMATION_FORMAT = dwarf
-
-//:configuration = Release
-DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
-
-//:completeSettings = some
-DEBUG_INFORMATION_FORMAT
-</code></pre></div></div>
-
-<p>これを使えばXcodeからxcconfigを作りたい場合に<code class="highlighter-rouge">Build Settings</code>の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。</p>
+<p>など、データやロジックがドメインなのか判断できないことが起因してViewModelへと責務が委任されていきます。</p>
 
   </section>
 
@@ -304,95 +351,7 @@ DEBUG_INFORMATION_FORMAT
                 
                 
                 
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/xcode/ios-xcode-xcconfig-how-to-use">Xcodeのxcconfigの理解と使い方</a></h3></li>
-                    
-                    
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/xcodegen/ios-xcodegen-settings">XcodeGenのSettings周りを整理する</a></h3></li>
-                    
-                    
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-
-            
-                
-                
-                
-                    <li><h3><a href="/ios/xcode/ios-xcode-dl-old-version">XcodeをApp Storeからダウンロードせず旧バージョンと共存させる</a></h3></li>
+                    <li><h3><a href="/ios/swift/ios-swift-ecosystem-design">iOSアプリ開発のエコシステムを考えてみた</a></h3></li>
                     
                     
                 
@@ -641,6 +600,50 @@ DEBUG_INFORMATION_FORMAT
                 
                 
                 
+                    <li><h3><a href="/ios/ios-how-to-find-good-lib">iOS開発におけるライブラリの選定戦略について考えてみた</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -1016,6 +1019,30 @@ DEBUG_INFORMATION_FORMAT
                 
                 
                 
+                    <li><h3><a href="/notebook/program-design/design-simple-class-is-not-simple-code">中堅でも間違えるクラス名のSimpleやEasyは内部構造と比例しない話</a></h3></li>
+                    
+                    
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
 
             
                 
@@ -1023,8 +1050,32 @@ DEBUG_INFORMATION_FORMAT
                 
 
             
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
+                
+                
+
+            
+                
                 
                 
+                    <li><h3><a href="/notebook/wrong-architecture-design">Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない</a></h3></li>
+                    
+                    
                 
 
             

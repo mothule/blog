@@ -1,4 +1,196 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-08-07T19:34:11+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する</title><link href="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection" rel="alternate" type="text/html" title="Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T03:55:23+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection">&lt;p&gt;例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.8.5">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-08-09T19:25:07+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">iOSでMVVMする前に基本を整理する</title><link href="https://blog.mothule.com/ios/swift/ios-swift-mvvm" rel="alternate" type="text/html" title="iOSでMVVMする前に基本を整理する" /><published>2020-08-08T00:00:00+09:00</published><updated>2020-08-09T19:24:57+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-mvvm</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-mvvm">&lt;p&gt;MVVMを知らなかったり曖昧知識で採用すると、MVCとは異なる部分で問題がおきるだけです。&lt;/p&gt;
+
+&lt;h2 id=&quot;mvvmとは&quot;&gt;MVVMとは？&lt;/h2&gt;
+&lt;p&gt;アーキテクチャパターンの一つ。
+MVCの派生パターンでModel-View-ViewModel
+プレゼンテーションとドメインを分離することで保守性と生産性を貢献する。&lt;/p&gt;
+
+&lt;h3 id=&quot;model&quot;&gt;Model&lt;/h3&gt;
+&lt;p&gt;アプリのドメイン（問題領域）を担当する。
+ここで、このアプリが解決するドメイン(問題領域)のデータと手続き処理（ビジネスロジック）を表現する。&lt;br /&gt;
+その他にも永続化ロジック、通信ロジックも含める。&lt;/p&gt;
+
+&lt;h4 id=&quot;表示寄りデータの扱い&quot;&gt;表示寄りデータの扱い&lt;/h4&gt;
+&lt;p&gt;アプリが背景色や文字色や余白のサイズなど表示カスタマイズ機能をもつ場合は、&lt;br /&gt;
+それら表示に関する情報を保持するのはModelになる。&lt;br /&gt;
+もちろんModelの情報はViewModelを経由してバインドされる。&lt;/p&gt;
+
+&lt;h4 id=&quot;注意点&quot;&gt;注意点&lt;/h4&gt;
+&lt;p&gt;一般的にドメインを担当すると決めつけると混乱が生じる。
+例えばサーバの存在するクライアント・サーバモデルだとドメイン(問題領域)はサーバ側にあたるため、
+クライアント側はアプリケーションとしてみたときにドメインではなくプレゼンテーションに該当する。&lt;/p&gt;
+
+&lt;p&gt;ModelはViewとViewModelの役割以外の部分を担うのが妥当。&lt;/p&gt;
+
+&lt;h3 id=&quot;view&quot;&gt;View&lt;/h3&gt;
+&lt;p&gt;UIへの入出力を担当。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;アプリが扱うデータをユーザーに向けて表示&lt;/li&gt;
+  &lt;li&gt;ユーザーからの入力を受け取る&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;MVVMにおけるViewはViewModelが持つデータを&lt;code class=&quot;highlighter-rouge&quot;&gt;データバインディング&lt;/code&gt;機構を通じて自身の担当領域を全うする。
+Viewは複雑なロジックと状態を持たないのがMVVMのViewの特徴。&lt;/p&gt;
+
+&lt;h4 id=&quot;データバインディング&quot;&gt;データバインディング&lt;/h4&gt;
+&lt;p&gt;RxSwiftやReactiveSwiftやCombineなどを使って、予めデータとイベントと振る舞いの関係性を宣言しておくことで、&lt;br /&gt;
+実際のイベント発生時には宣言した処理フローに従って振る舞いが行われる。&lt;/p&gt;
+
+&lt;h3 id=&quot;viewmodel&quot;&gt;ViewModel&lt;/h3&gt;
+&lt;p&gt;Viewが状態やロジックを待たない分ここで解決する。
+Viewの見た目に影響する状態の保持、Viewから受け取った入力を適切な形に変換しModelに伝達する役目。
+つまりViewとModel間の情報伝達とView用状態保持の役割を持つ。&lt;/p&gt;
+
+&lt;h3 id=&quot;viewmodelとmodel間のバインディング&quot;&gt;ViewModelとModel間のバインディング&lt;/h3&gt;
+&lt;p&gt;MVVMではView-ViewModel間はデータバインディング機構を使うことでメッセージフローを実現している。&lt;br /&gt;
+では、ViewModel-Model間も同様にデータバインディングを行ってはいけないのか？というと、それは別に構わないと思っている。&lt;br /&gt;
+MVVMはアーキテクチャパターンであり、そこから肉付けするのは自由だから。
+メッセージフローを統一する観点においてデータバインディングやオブザーバーパターンによるメッセージフローの仕組み化を行うことは問題ないと見れる。&lt;/p&gt;
+
+&lt;h2 id=&quot;iosでmvvmを実現するには&quot;&gt;iOSでMVVMを実現するには&lt;/h2&gt;
+&lt;p&gt;MVVMは特性上&lt;code class=&quot;highlighter-rouge&quot;&gt;データバインディング&lt;/code&gt;が重要な機能となる。&lt;br /&gt;
+iOSではViewとViewModel間の情報伝達を手動で同期が必要となるため、そのままでは実現コストが高くMVVMメリットへのコスパが悪い。
+そのためiOSでMVVMアーキテクチャを実現するためには、データバインディング機構を何らかの方法で取り込む必要があります。&lt;/p&gt;
+
+&lt;h3 id=&quot;データバインディング機構を提供するライブラリ&quot;&gt;データバインディング機構を提供するライブラリ&lt;/h3&gt;
+&lt;p&gt;一般的に認知度の高いデータバインディング機構を提供してるライブラリ下記になります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;RxSwift&lt;/li&gt;
+  &lt;li&gt;ReactiveSwift&lt;/li&gt;
+  &lt;li&gt;Combine&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;この中でCombineはiOS13からApple公式frameworkとして提供されています。&lt;br /&gt;
+近い将来公式のCombineがデファクトスタンダードとなるかもしれませんが、登場して間もないためまだまだ他のライブラリの利用率が高いです。&lt;/p&gt;
+
+&lt;h2 id=&quot;iosでmvvm採用するメリットとデメリット&quot;&gt;iOSでMVVM採用するメリットとデメリット&lt;/h2&gt;
+
+&lt;p&gt;ここまでで得た情報からiOSでMVVMを採用することで得られるメリットとデメリットについて並べました。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Viewロジックのテスタビリティが向上&lt;/li&gt;
+  &lt;li&gt;Viewロジックとドメインロジックを分離できる&lt;/li&gt;
+  &lt;li&gt;データバインディング機構を提供するライブラリのメンテナンスが必要&lt;/li&gt;
+  &lt;li&gt;データバインディング機構を提供するライブラリの理解が必要&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;fat-viewmodelになるリスク&quot;&gt;Fat ViewModelになるリスク&lt;/h3&gt;
+&lt;p&gt;ドメイン(アプリの問題領域)を理解できていないと、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;「ModelではないのでViewModel」&lt;/li&gt;
+  &lt;li&gt;「この画面で扱うデータはドメインではなく画面依存だからViewModel」&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;など、データやロジックがドメインなのか判断できないことが起因してViewModelへと責務が委任されていきます。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="program-design" /><category term="ios" /><summary type="html">MVVMを知らなかったり曖昧知識で採用すると、MVCとは異なる部分で問題がおきるだけです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" /></entry><entry><title type="html">SwiftのCollectionとRangeを組み合わせて使いこなし術</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips" rel="alternate" type="text/html" title="SwiftのCollectionとRangeを組み合わせて使いこなし術" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T19:34:01+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips">&lt;p&gt;SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。&lt;br /&gt;
+今回は&lt;a href=&quot;https://developer.apple.com/documentation/swift/swift_standard_library/collections/supporting_types&quot;&gt;Supporting Types - Apple Developer Documentation&lt;/a&gt;にあるサポート機能について使えそうなものがないかを調べてまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;collectionとrangeの組み合わせ&quot;&gt;CollectionとRangeの組み合わせ&lt;/h2&gt;
+
+&lt;p&gt;Collectionには範囲取得する機能があります。&lt;br /&gt;
+範囲を表す型は、Rangeを使います。&lt;br /&gt;
+例えば、下のコードを見かけた人は多いと思います。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;values&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;partial&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [2, 3]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;実はこれ以外の範囲指定方法がCollectionには用意されています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;PartialRangeUpTo: 上限のみ(上限未満)&lt;/li&gt;
+  &lt;li&gt;PartialRangeThrough: 上限のみ(上限以下)&lt;/li&gt;
+  &lt;li&gt;PartialRangeFrom: 下限のみ&lt;/li&gt;
+  &lt;li&gt;UnboundedRange_: 上限下限なし&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;partialrangeupto-上限のみ上限未満&quot;&gt;PartialRangeUpTo: 上限のみ(上限未満)&lt;/h3&gt;
+
+&lt;p&gt;上限値のみが指定された範囲型です。&lt;br /&gt;
+下限は無制限となります。&lt;br /&gt;
+そのため&lt;code class=&quot;highlighter-rouge&quot;&gt;contains&lt;/code&gt;メソッドで範囲内判定を確認するとマイナスでも&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;を返します。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upToFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// PartialRangeUpTo&amp;lt;Double&amp;gt;&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ちなみにパターンマッチング演算子(&lt;code class=&quot;highlighter-rouge&quot;&gt;~=&lt;/code&gt;)が用意されているので下記2つは同じ意味です。&lt;/p&gt;
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;partialrangethrough-上限のみ上限以下&quot;&gt;PartialRangeThrough: 上限のみ(上限以下)&lt;/h3&gt;
+
+&lt;p&gt;PartialRangeUpToと同じですが、こちらは上限値も範囲に含めます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;throughFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3, 4]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;h3 id=&quot;partialrangefrom-下限のみ&quot;&gt;PartialRangeFrom: 下限のみ&lt;/h3&gt;
+
+&lt;p&gt;下限値のみが指定された範囲型です。&lt;br /&gt;
+上限は無制限となります。&lt;br /&gt;
+&lt;code class=&quot;highlighter-rouge&quot;&gt;contains&lt;/code&gt;メソッドで確認すると下記のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;atLeastFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 5]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;unboundedrange_-上限下限なし&quot;&gt;UnboundedRange_: 上限下限なし&lt;/h3&gt;
+
+&lt;p&gt;これはレアケースな気がしますが、上限も下限も無制限の指定方法があります。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3, 4, 5]&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;collectionrangeまとめ&quot;&gt;Collection+Rangeまとめ&lt;/h2&gt;
+
+&lt;p&gt;出てきた書き方を下記にまとめます。&lt;/p&gt;
+
+&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;zip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;999&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;forEach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Collectionの範囲取得で 0..&amp;lt;3 のような書き方をショートハンドのように省略できるようになります。&lt;br /&gt;
+使い所は広くはありませんが、知っておくとライブラリコードで突然出てきても落ち着いて読み進めることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。 今回はSupporting Types - Apple Developer Documentationにあるサポート機能について使えそうなものがないかを調べてまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png" /></entry><entry><title type="html">Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する</title><link href="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection" rel="alternate" type="text/html" title="Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T03:55:23+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection">&lt;p&gt;例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。&lt;/p&gt;
 
 &lt;h2 id=&quot;swiftの高階関数はその場でクロージャを評価する&quot;&gt;Swiftの高階関数はその場でクロージャを評価する&lt;/h2&gt;
 &lt;p&gt;SwiftのCollectionなどで使える高階関数(filter, map, reduceなど)は、&lt;br /&gt;
@@ -134,113 +326,7 @@ lazyにすることで通常と比べ遅延用の仕組みが必要となるた�
 &lt;ul&gt;
   &lt;li&gt;LazyCollectionやLazySequenceには用意されてない高階関数がある&lt;/li&gt;
   &lt;li&gt;呼出元と処理実行タイミングが異なるため、どこで実際の処理が走るのか読みにくくなる&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-lazy-sequence-and-collection/0.png" /></entry><entry><title type="html">SwiftのCollectionとRangeを組み合わせて使いこなし術</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips" rel="alternate" type="text/html" title="SwiftのCollectionとRangeを組み合わせて使いこなし術" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T19:34:01+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips">&lt;p&gt;SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。&lt;br /&gt;
-今回は&lt;a href=&quot;https://developer.apple.com/documentation/swift/swift_standard_library/collections/supporting_types&quot;&gt;Supporting Types - Apple Developer Documentation&lt;/a&gt;にあるサポート機能について使えそうなものがないかを調べてまとめました。&lt;/p&gt;
-
-&lt;h2 id=&quot;collectionとrangeの組み合わせ&quot;&gt;CollectionとRangeの組み合わせ&lt;/h2&gt;
-
-&lt;p&gt;Collectionには範囲取得する機能があります。&lt;br /&gt;
-範囲を表す型は、Rangeを使います。&lt;br /&gt;
-例えば、下のコードを見かけた人は多いと思います。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;values&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;partial&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [2, 3]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;実はこれ以外の範囲指定方法がCollectionには用意されています。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;PartialRangeUpTo: 上限のみ(上限未満)&lt;/li&gt;
-  &lt;li&gt;PartialRangeThrough: 上限のみ(上限以下)&lt;/li&gt;
-  &lt;li&gt;PartialRangeFrom: 下限のみ&lt;/li&gt;
-  &lt;li&gt;UnboundedRange_: 上限下限なし&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;partialrangeupto-上限のみ上限未満&quot;&gt;PartialRangeUpTo: 上限のみ(上限未満)&lt;/h3&gt;
-
-&lt;p&gt;上限値のみが指定された範囲型です。&lt;br /&gt;
-下限は無制限となります。&lt;br /&gt;
-そのため&lt;code class=&quot;highlighter-rouge&quot;&gt;contains&lt;/code&gt;メソッドで範囲内判定を確認するとマイナスでも&lt;code class=&quot;highlighter-rouge&quot;&gt;true&lt;/code&gt;を返します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upToFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// PartialRangeUpTo&amp;lt;Double&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ちなみにパターンマッチング演算子(&lt;code class=&quot;highlighter-rouge&quot;&gt;~=&lt;/code&gt;)が用意されているので下記2つは同じ意味です。&lt;/p&gt;
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;partialrangethrough-上限のみ上限以下&quot;&gt;PartialRangeThrough: 上限のみ(上限以下)&lt;/h3&gt;
-
-&lt;p&gt;PartialRangeUpToと同じですが、こちらは上限値も範囲に含めます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;throughFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3, 4]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;partialrangefrom-下限のみ&quot;&gt;PartialRangeFrom: 下限のみ&lt;/h3&gt;
-
-&lt;p&gt;下限値のみが指定された範囲型です。&lt;br /&gt;
-上限は無制限となります。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;contains&lt;/code&gt;メソッドで確認すると下記のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;atLeastFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 5]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;unboundedrange_-上限下限なし&quot;&gt;UnboundedRange_: 上限下限なし&lt;/h3&gt;
-
-&lt;p&gt;これはレアケースな気がしますが、上限も下限も無制限の指定方法があります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3, 4, 5]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;collectionrangeまとめ&quot;&gt;Collection+Rangeまとめ&lt;/h2&gt;
-
-&lt;p&gt;出てきた書き方を下記にまとめます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;zip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;999&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;forEach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Collectionの範囲取得で 0..&amp;lt;3 のような書き方をショートハンドのように省略できるようになります。&lt;br /&gt;
-使い所は広くはありませんが、知っておくとライブラリコードで突然出てきても落ち着いて読み進めることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。 今回はSupporting Types - Apple Developer Documentationにあるサポート機能について使えそうなものがないかを調べてまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png" /></entry><entry><title type="html">iOSアプリ開発のエコシステムを考えてみた</title><link href="https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design" rel="alternate" type="text/html" title="iOSアプリ開発のエコシステムを考えてみた" /><published>2020-08-02T00:00:00+09:00</published><updated>2020-08-06T03:45:17+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design">&lt;p&gt;iOSアプリ開発で開発の周辺環境いわゆるエコシステムについて、現状どうなってるか整理も踏まえて考えて見ました。&lt;/p&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-lazy-sequence-and-collection/0.png" /></entry><entry><title type="html">iOSアプリ開発のエコシステムを考えてみた</title><link href="https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design" rel="alternate" type="text/html" title="iOSアプリ開発のエコシステムを考えてみた" /><published>2020-08-02T00:00:00+09:00</published><updated>2020-08-06T03:45:17+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-ecosystem-design">&lt;p&gt;iOSアプリ開発で開発の周辺環境いわゆるエコシステムについて、現状どうなってるか整理も踏まえて考えて見ました。&lt;/p&gt;
 
 &lt;h2 id=&quot;この記事では説明しない部分&quot;&gt;この記事では説明しない部分&lt;/h2&gt;
 
@@ -1139,184 +1225,4 @@ MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
 &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;今回のコードは&lt;a href=&quot;https://github.com/mothule/research_embedded_framework&quot;&gt;GitHub&lt;/a&gt;にあげてあります。実際にXcode立ち上げて確認したい方はどうぞ。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">開発中のビルド時間の短縮やレイヤードアーキテクチャをより疎結合にする設計や、Extensionや他Platformなどでコード共有したい場合は、Embedded frameworkで解決できます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-embedded-framework/0.png" /></entry><entry><title type="html">XcodeGenのSettings周りを整理する</title><link href="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings" rel="alternate" type="text/html" title="XcodeGenのSettings周りを整理する" /><published>2020-07-29T00:00:00+09:00</published><updated>2020-07-31T00:45:04+09:00</updated><id>https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings</id><content type="html" xml:base="https://blog.mothule.com/ios/xcodegen/ios-xcodegen-settings">&lt;p&gt;XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。&lt;/p&gt;
-
-&lt;h2 id=&quot;settingsとは&quot;&gt;Settingsとは？&lt;/h2&gt;
-&lt;p&gt;XcodeGenのプロジェクト仕様ファイル内で使えるビルド設定を定義するプロパティと総称。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;settings&lt;/code&gt;はプロジェクトとターゲットの2箇所で使える&lt;/li&gt;
-  &lt;li&gt;ビルド設定の値の解決はレベル順となっている&lt;/li&gt;
-  &lt;li&gt;Build Configuration(DebugやReleaseなど)別でビルドパラメータを設定できる&lt;/li&gt;
-  &lt;li&gt;Build Configurationにも適用される&lt;code class=&quot;highlighter-rouge&quot;&gt;base&lt;/code&gt;プロパティがある&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;settingGroups&lt;/code&gt;でビルド設定を共通化できる&lt;/li&gt;
-  &lt;li&gt;Xcode同様に自動で適用されるプリセットビルド設定がある&lt;/li&gt;
-  &lt;li&gt;ビルド設定群を別ファイル(xcconfig)として抜き出せる&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;ビルド設定はプロジェクトとターゲットで出来る&quot;&gt;ビルド設定はプロジェクトとターゲットで出来る&lt;/h2&gt;
-
-&lt;p&gt;例えば次のプロジェクト仕様はプロジェクトとMyAppターゲットそれぞれでビルド設定をセットしています。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;project_value&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;MyApp&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;target_value&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ビルド設定の値の解決方法&quot;&gt;ビルド設定の値の解決方法&lt;/h2&gt;
-&lt;p&gt;ビルド設定の値はレベル順に見ていってる。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Target&lt;/li&gt;
-  &lt;li&gt;Target xcconfig file&lt;/li&gt;
-  &lt;li&gt;Project&lt;/li&gt;
-  &lt;li&gt;Project xcconfig file&lt;/li&gt;
-  &lt;li&gt;SDK defaults&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;Targetの設定が一番強く、下に行くほど範囲は広いが上書きされる。&lt;/p&gt;
-
-&lt;p&gt;検証するために次のプロジェクト仕様で確認する。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;name&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Settings&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;options&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;bundleIdPrefix&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;com.mothule&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;project_value&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-
-
-&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;application&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;platform&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;iOS&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;sources&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;Settings&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;target_value&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これを実際にXcodeで確認するとこうなる。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-29-ios-xcodegen-settings/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-29-ios-xcodegen-settings/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildSettings&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;想定通り、&lt;code class=&quot;highlighter-rouge&quot;&gt;Settings&lt;/code&gt;ターゲットでは値は&lt;code class=&quot;highlighter-rouge&quot;&gt;target_value&lt;/code&gt;で解決されてる。&lt;br /&gt;
-この挙動に関しては理解は容易と言える。&lt;/p&gt;
-
-&lt;h2 id=&quot;build-configuration別でビルドパラメータを設定できる&quot;&gt;Build Configuration別でビルドパラメータを設定できる&lt;/h2&gt;
-
-&lt;p&gt;DebugやReleaseなどBuild Configuration別でビルド設定を変えることができます。&lt;br /&gt;
-例えば下記はDebug時は&lt;code class=&quot;highlighter-rouge&quot;&gt;DEBUG&lt;/code&gt;が定義され、Release時は&lt;code class=&quot;highlighter-rouge&quot;&gt;RELEASE&lt;/code&gt;が定義されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;MyApp&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;configs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-        &lt;span class=&quot;na&quot;&gt;Release&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-          &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;RELEASE&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;build-configurationにも適用されるbaseプロパティがある&quot;&gt;Build Configurationにも適用される&lt;code class=&quot;highlighter-rouge&quot;&gt;base&lt;/code&gt;プロパティがある&lt;/h2&gt;
-&lt;p&gt;Build Configurationに依存せず設定したビルドパラメータを入れたい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;base&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;configs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;debug&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;CI&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;debug&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Release&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;release&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;base&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;DEVELOPMENT_TEAM&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;HogeHoge&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;configs&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;CI&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;DEBUG&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;CI&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;Release&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;SWIFT_ACTIVE_COMPILATION_CONDITIONS&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;RELEASE&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この場合はどのBuild Configurationであっても&lt;code class=&quot;highlighter-rouge&quot;&gt;DEVELOPMENT_TEAM&lt;/code&gt;は&lt;code class=&quot;highlighter-rouge&quot;&gt;HogeHoge&lt;/code&gt;となります。&lt;/p&gt;
-
-&lt;h2 id=&quot;settinggroupsでビルド設定を共通化できる&quot;&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;settingGroups&lt;/code&gt;でビルド設定を共通化できる&lt;/h2&gt;
-
-&lt;p&gt;例えばターゲットが5個あって、そのうち3つには同じビルド設定群がある場合、&lt;code class=&quot;highlighter-rouge&quot;&gt;settingGroups&lt;/code&gt;を使うことで設定箇所を1箇所にまとめることができます。&lt;/p&gt;
-
-&lt;p&gt;下記は&lt;code class=&quot;highlighter-rouge&quot;&gt;settingGroups&lt;/code&gt;を使わなかったケースです。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;App1&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEVELOPMENT_TEAM&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;HogeHoge&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;App2&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEVELOPMENT_TEAM&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;HogeHoge&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;App3&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEVELOPMENT_TEAM&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;HogeHoge&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;DebugApp&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEBUG_MODE&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;YES&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;StgApp&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEBUG_MODE&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;NO&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これだと1箇所ずつ更新する必要があり、更新し忘れなどが発生します。&lt;br /&gt;
-下記のように&lt;code class=&quot;highlighter-rouge&quot;&gt;settingGroups&lt;/code&gt;を使うことで情報を1箇所に集約することができます。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;settingGroups&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;# ← 任意のグループ名&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEVELOPMENT_TEAM&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;HogeHoge&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;target&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;App1&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;App2&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;App3&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;groups&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;pi&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;]&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;DebugApp&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEBUG_MODE&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;YES&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;StgApp&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;settings&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;DEBUG_MODE&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;NO&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;xcode同様に自動で適用されるプリセットビルド設定がある&quot;&gt;Xcode同様に自動で適用されるプリセットビルド設定がある&lt;/h2&gt;
-&lt;p&gt;Xcodeがプロジェクトやターゲット追加時に自動で設定が設定されるのと同様に、XcodeGenにもプロジェクトとターゲットにデフォルト設定を設定する。&lt;br /&gt;
-プロジェクトにはDebugとReleaseの設定が、ターゲットにはプラットフォームとプロダクトタイプに応じた設定が適用される。&lt;/p&gt;
-
-&lt;p&gt;これらのプリセットを変更・無効するには&lt;code class=&quot;highlighter-rouge&quot;&gt;options.settingPresets&lt;/code&gt;プロパティを使います。&lt;br /&gt;
-デフォルトでは&lt;code class=&quot;highlighter-rouge&quot;&gt;all&lt;/code&gt;となっておりプロジェクトとターゲット両方に対して適用されています。&lt;br /&gt;
-もしターゲットだけ、プロジェクトだけとしたい場合は、&lt;code class=&quot;highlighter-rouge&quot;&gt;options.settingPresets: project&lt;/code&gt;や&lt;code class=&quot;highlighter-rouge&quot;&gt;targets&lt;/code&gt;とすることで部分適用されます。&lt;br /&gt;
-もし両方とも自動適用を無効にする場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;none&lt;/code&gt;になります。&lt;/p&gt;
-
-&lt;h2 id=&quot;ビルド設定群を別ファイルxcconfigとして抜き出せる&quot;&gt;ビルド設定群を別ファイル(xcconfig)として抜き出せる&lt;/h2&gt;
-&lt;p&gt;ビルド設定のボリュームが大きくなると、プロジェクト仕様全体として見通しの悪いファイルとなってしまいます。&lt;br /&gt;
-その場合は&lt;code class=&quot;highlighter-rouge&quot;&gt;configFiles&lt;/code&gt;を使って&lt;code class=&quot;highlighter-rouge&quot;&gt;xcconfig&lt;/code&gt;ファイルをインポートしてビルド構成を別ファイルに抽出できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-yml highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;na&quot;&gt;configFiles&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;debug.xcconfig&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;Release&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;release.xcconfig&lt;/span&gt;
-&lt;span class=&quot;na&quot;&gt;targets&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-  &lt;span class=&quot;na&quot;&gt;MyApp&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-    &lt;span class=&quot;na&quot;&gt;configFiles&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;Debug&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;MyApp/debug.xcconfig&lt;/span&gt;
-      &lt;span class=&quot;na&quot;&gt;Release&lt;/span&gt;&lt;span class=&quot;pi&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;s&quot;&gt;MyApp/release.xcconfig&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;highlighter-rouge&quot;&gt;configFiles&lt;/code&gt;でもプロジェクト単位とターゲット単位で設定できます。&lt;br /&gt;
-&lt;code class=&quot;highlighter-rouge&quot;&gt;xcconfig&lt;/code&gt;について分からない方は「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-use&quot;&gt;Xcodeのxcconfigの理解と使い方&lt;/a&gt;&lt;/span&gt;
-」にまとめた記事をお読みください。&lt;/p&gt;
-
-&lt;h2 id=&quot;結論&quot;&gt;結論&lt;/h2&gt;
-&lt;p&gt;この記事を書くにあたって、xcconfigの仕様を調べましたが、settings周りの仕様はxcconfigの仕様を把握すると理解が一気に深まりました。&lt;br /&gt;
-xcconfigについては「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-use&quot;&gt;Xcodeのxcconfigの理解と使い方&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcodegen" /><category term="xcode" /><category term="xcconfig" /><summary type="html">XcodeGenは便利ですが、プロジェクト仕様ファイル(project.yml)のSettingsに関して自分の中で不透明なので整理しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-xcodegen-settings/0.png" /></entry></feed>
+&lt;p&gt;今回のコードは&lt;a href=&quot;https://github.com/mothule/research_embedded_framework&quot;&gt;GitHub&lt;/a&gt;にあげてあります。実際にXcode立ち上げて確認したい方はどうぞ。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><summary type="html">開発中のビルド時間の短縮やレイヤードアーキテクチャをより疎結合にする設計や、Extensionや他Platformなどでコード共有したい場合は、Embedded frameworkで解決できます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-29-ios-embedded-framework/0.png" /></entry></feed>
