@@ -4,6 +4,174 @@ categories: ruby rails active-record
 tags: ruby rails active-record
 ---
 
+Linux 基礎コマンド
+
+```bash
+useradd <user name>
+```
+
+```bash
+passwd [user name]
+```
+ユーザ名未指定だと自分のパスワード変更する。
+
+```bash
+cat /etc/passwd
+```
+ユーザー情報が1行1ユーザーで格納される。
+
+```bash
+id <user name>
+```
+
+```bash
+userdel [-r] <user name>
+```
+-r: ホームディレクトリごと削除する
+
+
+```bash
+groupadd <group name>
+```
+
+```bash
+usermod -G <group name> <user_name>
+```
+
+```bash
+groupdel <group name>
+```
+
+```bash
+cat /etc/group
+```
+グループ情報が1グループ1行で格納される。
+
+
+```bash
+chown <user name> <file or directory>
+```
+
+```bash
+chgrp <group name> <file or directory>
+```
+
+変数をエクスポートすることで定義したシェルから起動したシェルや実行したコマンドから変数を参照できるようになる。
+これを環境変数と呼ぶ。
+```bash
+export var2=cdn
+```
+
+```bash
+locate <file pattern>
+```
+
+```bash
+ps
+```
+|オプション|説明|
+|---|---|
+|a|全ユーザーのプロセス表示|
+|u|ユーザー名表示|
+|x|全端末のプロセス表示|
+
+```bash
+$ ps aux | head -n 5
+USER       PID %CPU %MEM    VSZ   RSS TTY      STAT START   TIME COMMAND
+root         1  0.0  0.1  19232  1500 ?        Ss   12:54   0:00 /sbin/init
+root         2  0.0  0.0      0     0 ?        S    12:54   0:00 [kthreadd]
+root         3  0.0  0.0      0     0 ?        S    12:54   0:00 [migration/0]
+root         4  0.0  0.0      0     0 ?        S    12:54   0:00 [ksoftirqd/0]
+```
+
+プロセスの親子関係を表示
+```bash
+mothule@centos ~]$ pstree
+init─┬─auditd───{auditd}
+     ├─crond
+     ├─dhclient
+     ├─login───bash
+     ├─master─┬─pickup
+     │        └─qmgr
+     ├─5*[mingetty]
+     ├─rsyslogd───3*[{rsyslogd}]
+     ├─sshd───sshd───sshd───bash─┬─less
+     │                           └─pstree
+     └─udevd───2*[udevd]
+```
+
+プロセスに送るシグナル表
+
+|ID|名|動作|
+|---|---|---|
+|9|KILL|強制終了|
+|15|TERM|終了(デフォルト)|
+|18|COUNT|再開|
+|19|STOP|一時停止|
+
+シグナル送信は kill コマンドを使う
+```bash
+$ kill 28000
+```
+
+IDではなくシグナル名を指定する場合は
+```bash
+$ kill -s TERM 28000
+```
+
+プロセスIDではなくプロセス名でシグナル送信したい場合は
+```bash
+$ killall -15 xclock
+```
+のようにする -15 は シグナルID
+
+
+ユーザー側の処理単位をジョブ
+1ジョブで複数プロセスが走るので 1ジョブ=1プロセスではない
+実行中のジョブ一覧
+```bash
+$ jobs
+```
+
+コマンドの末尾に & をつけるとバックグラウンドで実行する
+```bash
+$ less hoge.txt &
+```
+
+Ctrl+Z でジョブは一時停止状態になる
+一時停止状態のジョブを再開するには
+fg [%ジョブID]
+
+バックグラウンドで再開するには
+bg [%ジョブID]
+
+
+/etc/hosts にはIPアドレスとホスト名の対応が記述する
+/etc/resolv.conf には利用するDNSサーバやドメイン名を指定する
+/etc/sysconfig/network にはネットワークの基本情報を設定する
+
+
+公開鍵認証方式でsshログイン
+公開鍵は接続先
+秘密鍵は接続元
+.sshのパーミッションは700
+.ssh/authorized_keys は 600
+公開鍵は
+cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+で登録
+rm ~/.ssh/id_rsa.pub で不要になった元の公開鍵を削除
+
+
+パスワード認証を禁止する
+/etc/ssh/sshd_config を vimで編集する
+PasswordAuthentication no
+PubkeyAuthentication yes
+にする
+
+scp でクライアントからサーバーへ転送する方法
+scp <コピー元> <コピー先>
+リモート先は [サーバーのユーザーID][サーバーアドレス]:<パス> で表す
+
 # VirtualBox
 
 ## ホストOSからゲストOSにssh接続する

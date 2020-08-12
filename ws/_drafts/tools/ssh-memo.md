@@ -30,6 +30,8 @@ tags: tools ssh
   - 接続経験のあるサーバのSSHサーバ証明書が格納される。
 - ssh-agent
   - ssh-addコマンド
+    - [SSH-ADD (1)](https://euske.github.io/openssh-jman/ssh-add.html)
+  - [ssh-agentを利用して、安全にSSH認証を行う - Qiita](https://qiita.com/naoki_mochizuki/items/93ee2643a4c6ab0a20f5)
   - agent forwarding
 - /etc/hosts
 - ssh-keygen
