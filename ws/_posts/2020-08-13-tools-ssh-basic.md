@@ -1,8 +1,16 @@
 ---
 title: エンジニアなら知らないとヤバいSSHの基礎
+description: GitHubなど多様に使われているSSH。known_hostsやフィンガープリント、公開鍵や秘密鍵、パスワード認証や公開鍵認証をイチから理解、実際にGitHubに対して公開鍵認証方式によるSSH接続を体験方法を説明します。
 categories: tools ssh
 tags: tools ssh
+image:
+  path: /assets/images/2020-08-13-tools-ssh-basic/eyecatch.png
 ---
+インフラエンジニアでなくともSSH接続や公開鍵認証は基本知識として覚えといたほうがいいです。  
+普段めったに触ることのないiOSエンジニアでもknown_hostsや鍵生成などと接する機会は定期的に発生します。  
+GitHubにSSHの技術が使われています。基本知識として覚えといて損はないと思います。
+
+この記事ではSSHの基本理解から始まり、実際にGitHubに対して公開鍵認証でSSH接続するまでを説明します。
 
 ## SSHとは？
 
@@ -167,7 +175,10 @@ IdentityFile ~/.ssh/my_second_pc.key
 ```
 
 ### Are you sure you want to continue connecting (yes/no)? をスキップ
-~/.ssh/config の接続先ホストに `StrictHostKeyChecking no` を設定することでスキップできる
+~/.ssh/config の接続先ホストに`StrictHostKeyChecking no`を設定することでスキップできる
+
+### SSH接続のタイムアウトを防ぐ
+~/.ssh/config の接続先ホストに`ServerAliveInterval 60`を設定することでSSHセッションにハートビート導入できる。
 
 ## GitHubに公開鍵認証方式でSSH接続する
 
@@ -186,62 +197,68 @@ $ ssh-keygen -f ~/.ssh/github -N pass-phrase-this-key
 
 ネットで見かける記事によっては、`-t`や`-b`オプションを使っていますが、キータイプのデフォルトはRSAで、RSAのデフォルトビット数は3072ビットになるので、  
 省略しても目的のキータイプや一定の強度を保ったキーが作成されます。  
-鍵の名前はデフォルトだと`id_rsa`にしようとしてくるので、そこは別名にすることをおすすめします。  
-理由としてはしばらく時間経過後に.sshフォルダを覗いたときに`id_rsa`が何の鍵なのか判断つかなくなるのと、  
-キー作成時に誤ってデフォルト名(id_rsa)にしてしまうと上書きされるリスクがあるためです。
 
 `-N`でパスフレーズを決めれます。パスフレーズは空でも作成されますが、セキュリティを上げるためになるべくつけることを推奨します。
 
+
+#### キー名を別名にする理由
+鍵の名前はデフォルトだと`id_rsa`にしようとしてくるので、そこは別名にすることをおすすめします。  
+理由としてはしばらく時間経過後に.sshフォルダを覗いたときに`id_rsa`が何の鍵なのか判断つかなくなるのと、  
+**キー作成時に誤ってデフォルト名(id_rsa)にしてしまうと上書きされるリスクがあるためです。**
+
+#### ssh-keygenの詳細について
 ssh-keygenで公開鍵周りについて詳しく知りたい場合は、「{% post_link_text 2020-08-14-tools-ssh-keygen-basic %}」にまとめてあります。
 
 
-- 秘密鍵と公開鍵
-  - id_rsa／id_rsa.pubとは？
-    - id_rsa 秘密鍵
-    - id_rsa.pub 公開鍵
-  - RSA
+### GitHubに公開鍵登録
 
+1. [GitHub > Settings > SSH and GPG keys](https://github.com/settings/keys)の遷移
+1. `New SSH key`ボタンを押下
+1. `キー名`と`公開鍵`を入力して`Add SSH key`ボタンを押下
+1. アカウントのパスワード入力
 
-### Permission denied (publickey).
-サーバー側とクライアント側の公開鍵と秘密鍵が一致していないことがよくある原因。
+成功すると一覧画面に戻り新しく公開鍵が登録されていることを確認できます。
 
+{% page_image 2.png 75% GitHubSSHKey %}
 
-## sshクライアント
+※今回は記事用に用意した鍵であり既に削除済みです。くれぐれもむやみに鍵は公開しないことを推奨します。
 
-- `ServerAliveInterval 60`でSSHセッションにハートビート導入
+#### 登録されてる公開鍵のフィンガープリントについて
+GitHubで表示されているフィンガープリントは使われてるハッシュ関数はSHA256ではなくMD5になります。  
+そのため手元の公開鍵のフィンガープリントを確認する場合は、`-E`で`md5`の指定が必要になります。
 
-## ssh-agent
-[ssh-agentを利用して、安全にSSH認証を行う - Qiita](https://qiita.com/naoki_mochizuki/items/93ee2643a4c6ab0a20f5)
+```sh
+$ ssh-keygen -l -f github -E md5
+3072 MD5:59:68:3f:44:4f:ec:79:23:e9:c8:9a:88:10:1e:36:59 GitHub (RSA)
+```
 
-agent forwarding
+`-E`指定なしだとデフォルトとして`sha256`が使われるため、期待する値になりません。
+```sh
+$ ssh-keygen -l -f github
+3072 SHA256:1/1Sdu/MJXQJnPOBDibvs/cvXrmxJKMibFa1kC3NtoI GitHub (RSA)
+```
 
-- ssh-agent
-  - ssh-addコマンド
-    - [SSH-ADD (1)](https://euske.github.io/openssh-jman/ssh-add.html)
-  - [ssh-agentを利用して、安全にSSH認証を行う - Qiita](https://qiita.com/naoki_mochizuki/items/93ee2643a4c6ab0a20f5)
-  - agent forwarding
-- /etc/hosts
-- ssh-keygen
+### GitHubに公開鍵認証方式でSSH接続
 
+GitHubにSSH接続するには`git@github.com`で接続します。
+認証鍵の指定は、先程登録した鍵を`-i`オプションで指定します。
 
-## SSHサーバ
-- SSH認証を公開鍵認証方式に変更する
-  - 公開鍵は接続先
-  - 秘密鍵は接続元
-  - .sshのパーミッションは700
-  - .ssh/authorized_keys は 600
-  - 公開鍵は cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys で登録
-  - rm ~/.ssh/id_rsa.pub で不要になった元の公開鍵を削除
-  - パスワード認証を禁止する
-    - /etc/ssh/sshd_config を vimで編集する
-    - PasswordAuthentication no
-    - PubkeyAuthentication yes
-  - ssh-copy-idでリモートで公開鍵を登録する
-  - rootユーザでのssh禁止は`PermitRootLogin no`
+```sh
+$ ssh -i github git@github.com
+Enter passphrase for key 'github':
+PTY allocation request failed on channel 0
+Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+```
 
+GitHubはシェルアクセスを許可していないのですぐに終了してしまいますが、接続が成功できたことは確認できます。
 
-### インターネット上に公開されてる場合のセキュリティ
-- デフォルトのポート番号を使わない
-  - SSHのポート番号は22番と決まっているため、ポートを変えることで最初の防御を敷くことが出来る。
-- パスワード認証は使わない・無効化
-  - ブルートフォースアタックでパスワードを破られる
+#### Permission denied (publickey)エラーが出たら
+SSH接続で`Permission denied (publickey)`が出たら、公開鍵に限らず、秘密鍵が無効値になっているケースでもこのエラーが表示されます。
+公開鍵と秘密鍵のどちらかが正しい値になっていない可能性があります。  
+分からない場合はもう一度作成して再登録してください。
+
+#### GitHubを使ったSSH接続はサーバ設定は不要
+GitHubに対して公開鍵認証方式によるSSH接続を試しましたが、  
+GitHubではSSHサーバとしての設定はGitHub側がよしなになってくれているため、  
+公開鍵を渡した後のSSHサーバ側の説明はスキップしてます。
