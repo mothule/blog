@@ -11,35 +11,35 @@
 
 
 
-  <title>Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない - もちゅろぐ</title>
+  <title>エンジニアなら知らないとヤバいSSHの基礎 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない" />
+<meta property="og:title" content="エンジニアなら知らないとヤバいSSHの基礎" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。 私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。 そんななか、最近のQiitaとかのアーキテクチャ記事に凄い違和感を覚えるので、頭の整理も兼ねてチラ裏としてまとめてみました。" />
-<meta property="og:description" content="ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。 私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。 そんななか、最近のQiitaとかのアーキテクチャ記事に凄い違和感を覚えるので、頭の整理も兼ねてチラ裏としてまとめてみました。" />
-<link rel="canonical" href="https://blog.mothule.com/notebook/wrong-architecture-design" />
-<meta property="og:url" content="https://blog.mothule.com/notebook/wrong-architecture-design" />
+<meta name="description" content="GitHubなど多様に使われているSSH。known_hostsやフィンガープリント、公開鍵や秘密鍵、パスワード認証や公開鍵認証をイチから理解、実際にGitHubに対して公開鍵認証方式によるSSH接続を体験方法を説明します。" />
+<meta property="og:description" content="GitHubなど多様に使われているSSH。known_hostsやフィンガープリント、公開鍵や秘密鍵、パスワード認証や公開鍵認証をイチから理解、実際にGitHubに対して公開鍵認証方式によるSSH接続を体験方法を説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/ssh/tools-ssh-basic" />
+<meta property="og:url" content="https://blog.mothule.com/tools/ssh/tools-ssh-basic" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2016-10-18-wrong-architecture-design.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2016-10-18T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-08-13T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2016-10-18-wrong-architecture-design.png" />
-<meta property="twitter:title" content="Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png" />
+<meta property="twitter:title" content="エンジニアなら知らないとヤバいSSHの基礎" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/notebook/wrong-architecture-design","headline":"Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない","dateModified":"2020-04-08T04:40:50+09:00","datePublished":"2016-10-18T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2016-10-18-wrong-architecture-design.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/notebook/wrong-architecture-design"},"description":"ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。 私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。 そんななか、最近のQiitaとかのアーキテクチャ記事に凄い違和感を覚えるので、頭の整理も兼ねてチラ裏としてまとめてみました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/ssh/tools-ssh-basic","headline":"エンジニアなら知らないとヤバいSSHの基礎","dateModified":"2020-08-18T05:09:00+09:00","datePublished":"2020-08-13T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/ssh/tools-ssh-basic"},"description":"GitHubなど多様に使われているSSH。known_hostsやフィンガープリント、公開鍵や秘密鍵、パスワード認証や公開鍵認証をイチから理解、実際にGitHubに対して公開鍵認証方式によるSSH接続を体験方法を説明します。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない">
-<meta name="twitter:description" content="ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。そんななか、最近のQiitaとかのアーキテクチャ記事に凄い違和感を覚えるので、頭の整理も兼ねてチラ裏としてまとめてみました。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2016-10-18-wrong-architecture-design.png">
+<meta name="twitter:title" content="エンジニアなら知らないとヤバいSSHの基礎">
+<meta name="twitter:description" content="GitHubなど多様に使われているSSH。known_hostsやフィンガープリント、公開鍵や秘密鍵、パスワード認証や公開鍵認証をイチから理解、実際にGitHubに対して公開鍵認証方式によるSSH接続を体験方法を説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#notebook" itemprop="item">
-              <span itemprop="name">雑記</span>
+            <a href="/tags#tools" itemprop="item">
+              <span itemprop="name">ツール</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -141,8 +141,18 @@
       
         
         
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ssh" itemprop="item">
+              <span itemprop="name">SSH</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
           <li>
-            Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない
+            エンジニアなら知らないとヤバいSSHの基礎
           </li>
         
       
@@ -154,25 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2016-10-18-wrong-architecture-design.png" alt="Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png" alt="エンジニアなら知らないとヤバいSSHの基礎">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>Webアーキテクチャとモバイルアーキテクチャをごっちゃにすると違和感と齟齬しか残らない</h1>
+    <h1>エンジニアなら知らないとヤバいSSHの基礎</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#program-design">プログラム設計</a></li>
+            <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
           
-            <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
+            <li class="list-inline-item"><a href="/tags#ssh">SSH</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2016-10-18</time></span>
+        <span"><time class="post-date">2020-8-13</time></span>
       </div>
     </div>
   </header>
@@ -180,9 +190,61 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#アーキテクチャのほとんどがモバイルアプリではオーバーデザイン">アーキテクチャのほとんどがモバイルアプリではオーバーデザイン</a></li>
-  <li><a href="#iosだと追従しなければいけない">iOSだと追従しなければいけない</a></li>
-  <li><a href="#モバイルに求められるアーキテクチャ">モバイルに求められるアーキテクチャ</a></li>
+  <li><a href="#sshとは">SSHとは？</a>
+    <ul>
+      <li><a href="#sshプロトコルを実装したソフトウェア">SSHプロトコルを実装したソフトウェア</a></li>
+      <li><a href="#sshのない時代">SSHのない時代</a></li>
+      <li><a href="#sshはクライアントサーバソフトウェア">SSHはクライアントサーバソフトウェア</a></li>
+      <li><a href="#sshの認証方法">SSHの認証方法</a>
+        <ul>
+          <li><a href="#パスワード認証方式">パスワード認証方式</a></li>
+          <li><a href="#公開鍵認証方式">公開鍵認証方式</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#sshを使ってみる">SSHを使ってみる</a>
+    <ul>
+      <li><a href="#macでsshサーバ用意">MacでSSHサーバ用意</a></li>
+      <li><a href="#sshサーバに接続">SSHサーバに接続</a></li>
+      <li><a href="#初回アクセスだと警告が表示される">初回アクセスだと警告が表示される</a></li>
+      <li><a href="#フィンガープリントとは">フィンガープリントとは</a></li>
+      <li><a href="#暗号学的ハッシュ関数とは">暗号学的ハッシュ関数とは</a></li>
+      <li><a href="#暗号化とハッシュ化の違い">暗号化とハッシュ化の違い</a></li>
+      <li><a href="#known_hostsとは">known_hostsとは</a>
+        <ul>
+          <li><a href="#known_hostsの役割">known_hostsの役割</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#sshconfigで接続情報を管理する">.ssh/configで接続情報を管理する</a>
+    <ul>
+      <li><a href="#are-you-sure-you-want-to-continue-connecting-yesno-をスキップ">Are you sure you want to continue connecting (yes/no)? をスキップ</a></li>
+      <li><a href="#ssh接続のタイムアウトを防ぐ">SSH接続のタイムアウトを防ぐ</a></li>
+    </ul>
+  </li>
+  <li><a href="#githubに公開鍵認証方式でssh接続する">GitHubに公開鍵認証方式でSSH接続する</a>
+    <ul>
+      <li><a href="#キーペア作成">キーペア作成</a>
+        <ul>
+          <li><a href="#キー名を別名にする理由">キー名を別名にする理由</a></li>
+          <li><a href="#ssh-keygenの詳細について">ssh-keygenの詳細について</a></li>
+        </ul>
+      </li>
+      <li><a href="#githubに公開鍵登録">GitHubに公開鍵登録</a>
+        <ul>
+          <li><a href="#登録されてる公開鍵のフィンガープリントについて">登録されてる公開鍵のフィンガープリントについて</a></li>
+        </ul>
+      </li>
+      <li><a href="#githubに公開鍵認証方式でssh接続">GitHubに公開鍵認証方式でSSH接続</a>
+        <ul>
+          <li><a href="#permission-denied-publickeyエラーが出たら">Permission denied (publickey)エラーが出たら</a></li>
+          <li><a href="#githubを使ったssh接続はサーバ設定は不要">GitHubを使ったSSH接続はサーバ設定は不要</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
 </ul>
   </div>
 
@@ -202,51 +264,266 @@
   
 
   <section>
-  <p>ネットで見かけるアーキテクチャパターンのほとんどモバイルアプリではオーバーデザインです。
-私は仕事でWebのフロントエンド、バックエンドと、モバイル(iOS/Android/Xamarin)の開発を一通り経験しました。
-そんななか、最近のQiitaとかのアーキテクチャ記事に凄い違和感を覚えるので、頭の整理も兼ねてチラ裏としてまとめてみました。</p>
+  <p>インフラエンジニアでなくともSSH接続や公開鍵認証は基本知識として覚えといたほうがいいです。<br />
+普段めったに触ることのないiOSエンジニアでもknown_hostsや鍵生成などと接する機会は定期的に発生します。<br />
+GitHubにSSHの技術が使われています。基本知識として覚えといて損はないと思います。</p>
 
-<h3 id="アーキテクチャのほとんどがモバイルアプリではオーバーデザイン">アーキテクチャのほとんどがモバイルアプリではオーバーデザイン</h3>
-<p>昔からMVCの対抗案/亜種として、MVP/MVVM/Fluxとか色々と出ています。
-出てること自体は特に気にしていないのですが、アーキテクチャは具体案ではなく概念に近い話なので、
-Web/Mobile問わずどのプラットフォームにも実現することか可能です。</p>
+<p>この記事ではSSHの基本理解から始まり、実際にGitHubに対して公開鍵認証でSSH接続するまでを説明します。</p>
 
-<p>Qiitaの記事にもアーキテクチャ・設計に関する記事が結構あります。
-だけどアーキテクチャの記事がサーバサイドとアプリで分け隔てなく書かれていることが多いと感じています。</p>
+<h2 id="sshとは">SSHとは？</h2>
 
-<p>サーバ側はドメイン領域が大きくなりやすく、複数DB、複数サービスとの連携が当たり前になりやすいです。
-いっぽうアプリ側はどうかと言うと、ドメインのロジックはアプリ側では持たずに最近はサーバにロジック、データをおいておきアプリはノードになることが多いので、
-アプリ側のドメイン領域が肥大・複雑化しにくいと思います。</p>
+<p>SSHとは、安全にネットワーク先のコンピュータと通信するためのプロトコルです。<br />
+暗号や認証の技術を利用してセキュリティを強固にしており、このプロトコルによる通信は全て暗号化されます。<br />
+ちなみにSSHはSecure Shellの略名です。</p>
 
-<p>これがオフラインアプリやモバイル特有の機能(BLE/Camera/GPSなど)が複雑であるのなら分かります。
-しかしそもそもサーバ連携あるのに、アプリ側のドメインが肥大するのは、サービスという視野から見るとDRY原則を破ってます。</p>
+<p>SSHは通信元がなりすまし防止するために認証の仕組みを提供している。</p>
 
-<p>ドメインのエンティティはライフサイクルを持っているので、サーバ側のDBに居たり、モバイルのメモリ上に居たりするので、モバイル側はドメインは完全不要ではないですが、
-サーバ側と同じ複雑さに耐えられるアーキテクチャデザインをモバイル側にも考えずに適用すると、実際に手を動かしてみると非常に違和感を感じます。
-違和感とは中身のないレイヤー(=メソッド)が多く、「この緩衝材(メソッド)いるの？」と感じてしまいます。</p>
+<h3 id="sshプロトコルを実装したソフトウェア">SSHプロトコルを実装したソフトウェア</h3>
+<p>SSHはあくまでRFCによって策定されたプロトコル（約束事）であり、実在するソフトウェアではありません。<br />
+このSSHプロトコルを準拠して作成されたソフトウェアの中でデファクトスタンダードとなっているのは、<br />
+OSSとして開発されているOpenSSHになります。<br />
+Macで標準インストールされているSSHもこのOpenSSHで、<code class="language-plaintext highlighter-rouge">$ man ssh</code>を実行すれば確認できます。</p>
 
-<p>複雑さに耐えられるアーキテクチャの恩恵よりもアーキテクチャ自体の複雑さが勝ってしまい、シンプルな要求の実装がかえって複雑になってしまうケースが多いです。
-アーキテクチャを提唱したライブラリを使うのも手ですが、リスクは存在します。</p>
+<p><a href="/assets/images/2020-08-13-tools-ssh-basic/1.png"><img src="/assets/images/2020-08-13-tools-ssh-basic/1.png" width="100%" alt="OpenSSH" /></a></p>
 
-<h3 id="iosだと追従しなければいけない">iOSだと追従しなければいけない</h3>
-<p>リスクとして、iOSだと常に定期的にバージョンアップが実施されスパンも短いです。
-バージョンアップが実施されるだけならまだしも、最新バージョンでビルドしたものでなければリジェクト対象になるので、必然的に所謂お上についていかなければいけないです。
-その環境下で、アーキテクチャをライブラリなど使って実現していると、ライブラリのバージョンアップ対応待ち、場合によっては対応されないので自分らで対応になります。</p>
+<h3 id="sshのない時代">SSHのない時代</h3>
+<p>Telnetやrshなどネットワーク先のコンピュータとの通信は平文で行われていたため、<br />
+重要ファイルやパスワードをネットワーク経路上で盗聴されるリスクがありました。</p>
 
-<p>たしかにライブラリはある一定の条件下の範囲内（想定範囲内）であれば高速・安定の開発を保証できますが、その基盤（お上）が変わると、必然的に影響は避けられずビルドエラーならまだしも、ランタイムエラーや挙動変更によるライブラリ挙動変化による不具合のリスクもあります。
-サーバ側であれば非推奨バージョン、非サポートバージョンはあれど緩やかで開発者のペースで移行作業が行えます。</p>
+<h3 id="sshはクライアントサーバソフトウェア">SSHはクライアントサーバソフトウェア</h3>
+<p>SSH通信を実現するためには通信元(SSHクライアント)と通信先(SSHサーバ)がSSHプロトコルに準拠したソフトウェアがインストールされている必要があります。<br />
+MacやLinuxであればOpenSSHがSSHクライアントとSSHサーバをサポートしています。</p>
 
-<h3 id="モバイルに求められるアーキテクチャ">モバイルに求められるアーキテクチャ</h3>
+<p>サーバもクライアントもどちらもOpneSSHを使うので勘違いしてしまいそうですが、<br />
+SSHサーバとSSHクライアントは別物です。</p>
 
-<p>ほとんどジャストアイデアですが、次のような要件を満たす骨組みでしょうか。
-主に長期的でアプリを長く育てていこうとしている場合です。何かのイベント用であれば、好きにすればいいと思います。</p>
+<p>SSHクライアントは<code class="language-plaintext highlighter-rouge">ssh</code>を使い、SSHサーバは<code class="language-plaintext highlighter-rouge">sshd</code>を使います。</p>
+
+<p><a href="/assets/images/2020-08-13-tools-ssh-basic/ssh-server-client-networking.png"><img src="/assets/images/2020-08-13-tools-ssh-basic/ssh-server-client-networking.png" width="100%" alt="SSHServerClientNetworking" /></a></p>
+
+<h3 id="sshの認証方法">SSHの認証方法</h3>
+
+<p>SSHの認証方法は色々と充実しているが、ここでは2つに絞ります。</p>
 
 <ul>
-  <li>サーバサイドとして提唱しているアーキテクチャは、脊髄反射で組み込まない。</li>
-  <li>複雑さに耐えられるアーキテクチャよりも、壊しやすい組み立てやすい、プロダクトストーリーを優先できて、技術負債（＝複雑さ）は空いた時間にインクリメントに改善できるライトウェイトなアーキテクチャを考える。</li>
-  <li>インクリメントな改善を支えられるように、シンプルな思考でテストケースを追加しやすく、実施速度が早いテスト環境を構築する。</li>
-  <li>（Option)UIに強いライブラリを採用する.</li>
+  <li>パスワード認証方式</li>
+  <li>公開鍵認証方式</li>
 </ul>
+
+<h4 id="パスワード認証方式">パスワード認証方式</h4>
+
+<p>クライアントからユーザ名とパスワード名を受け取る方式。</p>
+
+<ul>
+  <li>デフォルト値</li>
+  <li>ユーザ名とパスワードの一致で認証する</li>
+  <li>アカウントは接続先OSのユーザアカウントを使う</li>
+  <li>簡易だがセキュリティは脆弱なので運用時は非推奨</li>
+</ul>
+
+<h4 id="公開鍵認証方式">公開鍵認証方式</h4>
+
+<p>クライアントが秘密鍵を使い、サーバが公開鍵を使って認証する方式。</p>
+
+<ul>
+  <li>秘密鍵と公開鍵の2つの鍵を使う</li>
+  <li>予めサーバ側に公開鍵、クライアント側に秘密鍵を登録しておく</li>
+  <li>通信時に秘密鍵と公開鍵で認証を行う</li>
+</ul>
+
+<h2 id="sshを使ってみる">SSHを使ってみる</h2>
+
+<p>実際に別Macにパスワード認証でSSH接続してみます。</p>
+
+<h3 id="macでsshサーバ用意">MacでSSHサーバ用意</h3>
+
+<p>同一ネットワーク内限定ですが、MacでもSSHサーバを起動できます。</p>
+
+<ol>
+  <li>システム環境設定.appを開く</li>
+  <li>共有を開く</li>
+  <li>リモートログインをONにする</li>
+  <li>アクセスを許可をすべてのユーザにする</li>
+</ol>
+
+<p><strong>※使い終わったら必ずリモートログインをOFFにしてください。</strong></p>
+
+<h3 id="sshサーバに接続">SSHサーバに接続</h3>
+
+<p>SSHクライアントとしてSSHサーバに接続するには次のコマンドを使います。</p>
+
+<p><code class="language-plaintext highlighter-rouge">ssh user@host</code></p>
+
+<p>今回別Macで用意したSSHサーバでは<code class="language-plaintext highlighter-rouge">mothule@192.168.11.10</code>と表示されたので、</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh mothule@192.168.11.10
+</code></pre></div></div>
+
+<p>となります。</p>
+
+<h3 id="初回アクセスだと警告が表示される">初回アクセスだと警告が表示される</h3>
+<p>接続先が初めてだと「信頼性を確立できていない」と警告が表示されます。<br />
+それと同時に接続を再開してもよいか確認が表示されます。<br />
+ここで<code class="language-plaintext highlighter-rouge">yes</code>をタイプすると<code class="language-plaintext highlighter-rouge">known_hosts</code>にホスト情報が追加された後、パスワード認証に進みます。<br />
+ちなみに<code class="language-plaintext highlighter-rouge">no</code>の場合は<code class="language-plaintext highlighter-rouge">Host key verification failed.</code>となり中断します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh mothule@192.168.11.10
+The authenticity of host <span class="s1">'192.168.11.10 (192.168.11.10)'</span> can not be established.
+ECDSA key fingerprint is SHA256:yhxvI/1TAjI0wvlYiRMCJvUsiYAX/L6eiy5bg6+Rv00.
+Are you sure you want to <span class="k">continue </span>connecting <span class="o">(</span><span class="nb">yes</span>/no/[fingerprint]<span class="o">)</span>?
+<span class="nv">$ </span><span class="nb">yes
+</span>Warning: Permanently added <span class="s1">'192.168.11.10'</span> <span class="o">(</span>ECDSA<span class="o">)</span> to the list of known hosts.
+Password:
+Last login: Thu Aug 13 04:16:45 2020
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">ECDSA key fingerprint is SHA256:yhxvI/1TAjI0wvlYiRMCJvUsiYAX/L6eiy5bg6+Rv00.</code>とは、
+ECDSA(Elliptic Curve Digital Signature Algorithm)の暗号アルゴリズムを使った鍵のフィンガープリントを表しています。</p>
+
+<p>腹落ちしてないはずなので、順に説明します。</p>
+
+<h3 id="フィンガープリントとは">フィンガープリントとは</h3>
+<p>フィンガープリント(指紋)とは、公開鍵を識別するための短いバイト列です。<br />
+指紋は公開鍵を元に暗号学的ハッシュ関数を通すことで作成されます。<br />
+指紋は鍵長より短いので、目的は管理の単純化です。<br />
+<code class="language-plaintext highlighter-rouge">SHA256</code>とは<code class="language-plaintext highlighter-rouge">暗号学的ハッシュ関数</code>です。</p>
+
+<h3 id="暗号学的ハッシュ関数とは">暗号学的ハッシュ関数とは</h3>
+<p>暗号学的ハッシュ関数とは、暗号数理性質をもったハッシュ関数です。<br />
+ハッシュ関数は、任意データから短い固定長値(ハッシュ値)を得る関数です。</p>
+
+<h3 id="暗号化とハッシュ化の違い">暗号化とハッシュ化の違い</h3>
+<p>暗号化もハッシュ化もどちらも元のデータを別のデータに変換する処理ですが、大きな違いとしては、
+ハッシュ化は不可逆変換なので元のデータに復元できません。<br />
+一方暗号化は当然複合できます。</p>
+
+<h3 id="known_hostsとは">known_hostsとは</h3>
+<p>接続経験のあるホストの公開鍵を保存したテキストファイルです。<br />
+ユーザ単位であれば<code class="language-plaintext highlighter-rouge">.ssh/known_hosts</code>に配置されてます。<br />
+中身はテキストなので<code class="language-plaintext highlighter-rouge">cat</code>などで見れます。<br />
+1行1ホストで列挙されており、<code class="language-plaintext highlighter-rouge">[host],address 暗号スイート 公開鍵</code>の並びになってます。<br />
+<code class="language-plaintext highlighter-rouge">[host]</code>がない行もあります。</p>
+
+<h4 id="known_hostsの役割">known_hostsの役割</h4>
+<p>このファイルに登録されてることで、手元に残してる公開鍵に紐づく秘密鍵があるか検証することで、万が一サーバ側の公開鍵が変更されていても気付ける仕組みとなってます。</p>
+
+<p>SSHクライント側は、既に一度でも接続経験のあるホストなのに、ワーニングが出たら「鍵が変更された」が想定外か判断してください。</p>
+
+<h2 id="sshconfigで接続情報を管理する">.ssh/configで接続情報を管理する</h2>
+<p><code class="language-plaintext highlighter-rouge">config</code>とは<code class="language-plaintext highlighter-rouge">.ssh</code>フォルダ内に配置するテキストファイルです。</p>
+
+<p><code class="language-plaintext highlighter-rouge">ssh</code>コマンドでSSHサーバに接続するには、少なくとも<code class="language-plaintext highlighter-rouge">ホスト</code>情報が必要です。</p>
+
+<ul>
+  <li>SSHポートがデフォルト22ではない場合は、<code class="language-plaintext highlighter-rouge">-p</code>オプション</li>
+  <li>ユーザー名を指定する場合はホストの前に<code class="language-plaintext highlighter-rouge">user_name@</code></li>
+  <li>公開鍵認証の鍵がデフォルト名ではない場合は、<code class="language-plaintext highlighter-rouge">-i</code>オプション</li>
+</ul>
+
+<p>これら全部を指定すると、</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh mothule@192.168.11,10 <span class="nt">-p</span> 2200 <span class="nt">-i</span> ~/.ssh/my_second_pc.key
+</code></pre></div></div>
+<p>のように長くなってしまいます。</p>
+
+<p>更に接続先が1つだけでなく複数となってくると、毎回同じ情報を入力するのは無駄な時間です。
+<code class="language-plaintext highlighter-rouge">config</code>はこれらを事前に登録しておくことでsshコマンドのオプション等を省略できます。</p>
+
+<p>例えば先程の全指定したSSH接続の場合だと下記設定を<code class="language-plaintext highlighter-rouge">config</code>に追記することで、<code class="language-plaintext highlighter-rouge">$ ssh hoge</code>だけで済みます。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host hoge
+HostName 192.168.11.10
+User mothule
+Port 2200
+IdentityFile ~/.ssh/my_second_pc.key
+</code></pre></div></div>
+
+<h3 id="are-you-sure-you-want-to-continue-connecting-yesno-をスキップ">Are you sure you want to continue connecting (yes/no)? をスキップ</h3>
+<p>~/.ssh/config の接続先ホストに<code class="language-plaintext highlighter-rouge">StrictHostKeyChecking no</code>を設定することでスキップできる</p>
+
+<h3 id="ssh接続のタイムアウトを防ぐ">SSH接続のタイムアウトを防ぐ</h3>
+<p>~/.ssh/config の接続先ホストに<code class="language-plaintext highlighter-rouge">ServerAliveInterval 60</code>を設定することでSSHセッションにハートビート導入できる。</p>
+
+<h2 id="githubに公開鍵認証方式でssh接続する">GitHubに公開鍵認証方式でSSH接続する</h2>
+
+<p>SSH接続するまでの流れです</p>
+
+<ul>
+  <li>キーペア作成</li>
+  <li>GitHubに公開鍵登録</li>
+  <li>秘密鍵でssh接続</li>
+</ul>
+
+<h3 id="キーペア作成">キーペア作成</h3>
+<p>公開鍵と秘密鍵の作成はssh-keygenを使います。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-f</span> ~/.ssh/github <span class="nt">-N</span> pass-phrase-this-key
+</code></pre></div></div>
+
+<p>ネットで見かける記事によっては、<code class="language-plaintext highlighter-rouge">-t</code>や<code class="language-plaintext highlighter-rouge">-b</code>オプションを使っていますが、キータイプのデフォルトはRSAで、RSAのデフォルトビット数は3072ビットになるので、<br />
+省略しても目的のキータイプや一定の強度を保ったキーが作成されます。</p>
+
+<p><code class="language-plaintext highlighter-rouge">-N</code>でパスフレーズを決めれます。パスフレーズは空でも作成されますが、セキュリティを上げるためになるべくつけることを推奨します。</p>
+
+<h4 id="キー名を別名にする理由">キー名を別名にする理由</h4>
+<p>鍵の名前はデフォルトだと<code class="language-plaintext highlighter-rouge">id_rsa</code>にしようとしてくるので、そこは別名にすることをおすすめします。<br />
+理由としてはしばらく時間経過後に.sshフォルダを覗いたときに<code class="language-plaintext highlighter-rouge">id_rsa</code>が何の鍵なのか判断つかなくなるのと、<br />
+<strong>キー作成時に誤ってデフォルト名(id_rsa)にしてしまうと上書きされるリスクがあるためです。</strong></p>
+
+<h4 id="ssh-keygenの詳細について">ssh-keygenの詳細について</h4>
+<p>ssh-keygenで公開鍵周りについて詳しく知りたい場合は、「<span><a href="/tools/ssh/tools-ssh-keygen-basic">SSH公開鍵認証で必要なssh-keygenの使い方を理解する</a></span>
+」にまとめてあります。</p>
+
+<h3 id="githubに公開鍵登録">GitHubに公開鍵登録</h3>
+
+<ol>
+  <li><a href="https://github.com/settings/keys">GitHub &gt; Settings &gt; SSH and GPG keys</a>の遷移</li>
+  <li><code class="language-plaintext highlighter-rouge">New SSH key</code>ボタンを押下</li>
+  <li><code class="language-plaintext highlighter-rouge">キー名</code>と<code class="language-plaintext highlighter-rouge">公開鍵</code>を入力して<code class="language-plaintext highlighter-rouge">Add SSH key</code>ボタンを押下</li>
+  <li>アカウントのパスワード入力</li>
+</ol>
+
+<p>成功すると一覧画面に戻り新しく公開鍵が登録されていることを確認できます。</p>
+
+<p><a href="/assets/images/2020-08-13-tools-ssh-basic/2.png"><img src="/assets/images/2020-08-13-tools-ssh-basic/2.png" width="75%" alt="GitHubSSHKey" /></a></p>
+
+<p>※今回は記事用に用意した鍵であり既に削除済みです。くれぐれもむやみに鍵は公開しないことを推奨します。</p>
+
+<h4 id="登録されてる公開鍵のフィンガープリントについて">登録されてる公開鍵のフィンガープリントについて</h4>
+<p>GitHubで表示されているフィンガープリントは使われてるハッシュ関数はSHA256ではなくMD5になります。<br />
+そのため手元の公開鍵のフィンガープリントを確認する場合は、<code class="language-plaintext highlighter-rouge">-E</code>で<code class="language-plaintext highlighter-rouge">md5</code>の指定が必要になります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-l</span> <span class="nt">-f</span> github <span class="nt">-E</span> md5
+3072 MD5:59:68:3f:44:4f:ec:79:23:e9:c8:9a:88:10:1e:36:59 GitHub <span class="o">(</span>RSA<span class="o">)</span>
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">-E</code>指定なしだとデフォルトとして<code class="language-plaintext highlighter-rouge">sha256</code>が使われるため、期待する値になりません。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen <span class="nt">-l</span> <span class="nt">-f</span> github
+3072 SHA256:1/1Sdu/MJXQJnPOBDibvs/cvXrmxJKMibFa1kC3NtoI GitHub <span class="o">(</span>RSA<span class="o">)</span>
+</code></pre></div></div>
+
+<h3 id="githubに公開鍵認証方式でssh接続">GitHubに公開鍵認証方式でSSH接続</h3>
+
+<p>GitHubにSSH接続するには<code class="language-plaintext highlighter-rouge">git@github.com</code>で接続します。
+認証鍵の指定は、先程登録した鍵を<code class="language-plaintext highlighter-rouge">-i</code>オプションで指定します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh <span class="nt">-i</span> github git@github.com
+Enter passphrase <span class="k">for </span>key <span class="s1">'github'</span>:
+PTY allocation request failed on channel 0
+Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+</code></pre></div></div>
+
+<p>GitHubはシェルアクセスを許可していないのですぐに終了してしまいますが、接続が成功できたことは確認できます。</p>
+
+<h4 id="permission-denied-publickeyエラーが出たら">Permission denied (publickey)エラーが出たら</h4>
+<p>SSH接続で<code class="language-plaintext highlighter-rouge">Permission denied (publickey)</code>が出たら、公開鍵に限らず、秘密鍵が無効値になっているケースでもこのエラーが表示されます。
+公開鍵と秘密鍵のどちらかが正しい値になっていない可能性があります。<br />
+分からない場合はもう一度作成して再登録してください。</p>
+
+<h4 id="githubを使ったssh接続はサーバ設定は不要">GitHubを使ったSSH接続はサーバ設定は不要</h4>
+<p>GitHubに対して公開鍵認証方式によるSSH接続を試しましたが、<br />
+GitHubではSSHサーバとしての設定はGitHub側がよしなになってくれているため、<br />
+公開鍵を渡した後のSSHサーバ側の説明はスキップしてます。</p>
 
   </section>
 
@@ -277,379 +554,25 @@ Web/Mobile問わずどのプラットフォームにも実現することか可�
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ios/swift/ios-swift-mvvm">
-      <img src="/assets/images/2020-08-08-ios-swift-mvvm/0.png" alt="iOSでMVVMする前に基本を整理する" style="width: 100%; object-fit: contain;">
+    <a href="/tools/ssh/tools-ssh-keygen-basic">
+      <img src="/assets/images/2020-08-14-tools-ssh-keygen-basic/eyecatch.png" alt="SSH公開鍵認証で必要なssh-keygenの使い方を理解する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ios/swift/ios-swift-mvvm">
-      <h3>iOSでMVVMする前に基本を整理する</h3>
+    <a href="/tools/ssh/tools-ssh-keygen-basic">
+      <h3>SSH公開鍵認証で必要なssh-keygenの使い方を理解する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
+        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
       
-        <li class="list-inline-item"><a href="/tags#program-design">プログラム設計</a></li>
+        <li class="list-inline-item"><a href="/tags#ssh">SSH</a></li>
       
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ios/ios-how-to-find-good-lib">
-      <img src="/assets/images/2020-02-10-ios-how-to-find-good-lib.png" alt="iOS開発におけるライブラリの選定戦略について考えてみた" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ios/ios-how-to-find-good-lib">
-      <h3>iOS開発におけるライブラリの選定戦略について考えてみた</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#program-design">プログラム設計</a></li>
+        <li class="list-inline-item"><a href="/tags#ssh-keygen">ssh-keygen</a></li>
       
     </ul>
   </div>
@@ -1159,32 +1082,328 @@ Web/Mobile問わずどのプラットフォームにも実現することか可�
                 
                 
 
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/notebook/program-design/design-simple-class-is-not-simple-code">
-      <img src="/assets/images/2018-10-21-design-simple-class-is-not-simple-code.png" alt="中堅でも間違えるクラス名のSimpleやEasyは内部構造と比例しない話" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/notebook/program-design/design-simple-class-is-not-simple-code">
-      <h3>中堅でも間違えるクラス名のSimpleやEasyは内部構造と比例しない話</h3>
-    </a>
 
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#program-design">プログラム設計</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
-      
-    </ul>
-  </div>
-</div>
+            
+                
+                
+                
 
-                    </li>
 
-                    
-                    
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
                 
 
 
