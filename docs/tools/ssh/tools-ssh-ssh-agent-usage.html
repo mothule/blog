@@ -11,35 +11,35 @@
 
 
 
-  <title>CircleCIで別途SSHキーを追加して使う方法 - もちゅろぐ</title>
+  <title>公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="CircleCIで別途SSHキーを追加して使う方法" />
+<meta property="og:title" content="公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="最近CircleCIを使って定期実行的なことをするために弄り始めました。" />
-<meta property="og:description" content="最近CircleCIを使って定期実行的なことをするために弄り始めました。" />
-<link rel="canonical" href="https://blog.mothule.com/ci/circleci/circleci-add-ssh-key" />
-<meta property="og:url" content="https://blog.mothule.com/ci/circleci/circleci-add-ssh-key" />
+<meta name="description" content="SSH公開鍵認証で必要な公開鍵と秘密鍵はセキュリティ対策が必要ですが、多重SSHなどSSH接続したサーバーから続けて別サーバに接続するにはサーバ上に秘密鍵が必要になるが、ssh-agentを使うことでこれを解決する。" />
+<meta property="og:description" content="SSH公開鍵認証で必要な公開鍵と秘密鍵はセキュリティ対策が必要ですが、多重SSHなどSSH接続したサーバーから続けて別サーバに接続するにはサーバ上に秘密鍵が必要になるが、ssh-agentを使うことでこれを解決する。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage" />
+<meta property="og:url" content="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2018-11-27-circleci-add-ssh-key.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2018-11-27T00:00:00+09:00" />
+<meta property="article:published_time" content="2020-08-18T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2018-11-27-circleci-add-ssh-key.png" />
-<meta property="twitter:title" content="CircleCIで別途SSHキーを追加して使う方法" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/eyecatch.png" />
+<meta property="twitter:title" content="公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"url":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key","headline":"CircleCIで別途SSHキーを追加して使う方法","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2018-11-27T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2018-11-27-circleci-add-ssh-key.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ci/circleci/circleci-add-ssh-key"},"description":"最近CircleCIを使って定期実行的なことをするために弄り始めました。","@type":"BlogPosting","@context":"https://schema.org"}</script>
+{"url":"https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage","headline":"公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する","dateModified":"2020-08-21T00:09:15+09:00","datePublished":"2020-08-18T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage"},"description":"SSH公開鍵認証で必要な公開鍵と秘密鍵はセキュリティ対策が必要ですが、多重SSHなどSSH接続したサーバーから続けて別サーバに接続するにはサーバ上に秘密鍵が必要になるが、ssh-agentを使うことでこれを解決する。","@type":"BlogPosting","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="CircleCIで別途SSHキーを追加して使う方法">
-<meta name="twitter:description" content="最近CircleCIを使って定期実行的なことをするために弄り始めました。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2018-11-27-circleci-add-ssh-key.png">
+<meta name="twitter:title" content="公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する">
+<meta name="twitter:description" content="SSH公開鍵認証で必要な公開鍵と秘密鍵はセキュリティ対策が必要ですが、多重SSHなどSSH接続したサーバーから続けて別サーバに接続するにはサーバ上に秘密鍵が必要になるが、ssh-agentを使うことでこれを解決する。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ci" itemprop="item">
-              <span itemprop="name">CI</span>
+            <a href="/tags#tools" itemprop="item">
+              <span itemprop="name">ツール</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#circleci" itemprop="item">
-              <span itemprop="name">CircleCI</span>
+            <a href="/tags#ssh" itemprop="item">
+              <span itemprop="name">SSH</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            CircleCIで別途SSHキーを追加して使う方法
+            公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する
           </li>
         
       
@@ -164,27 +164,27 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2018-11-27-circleci-add-ssh-key.png" alt="CircleCIで別途SSHキーを追加して使う方法">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/eyecatch.png" alt="公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>CircleCIで別途SSHキーを追加して使う方法</h1>
+    <h1>公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#circleci">CircleCI</a></li>
+            <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
           
             <li class="list-inline-item"><a href="/tags#ssh">SSH</a></li>
           
-            <li class="list-inline-item"><a href="/tags#ci">CI</a></li>
+            <li class="list-inline-item"><a href="/tags#ssh-agent">ssh-agent</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2018-11-27</time></span>
+        <span"><time class="post-date">2020-8-18</time></span>
       </div>
     </div>
   </header>
@@ -192,9 +192,49 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#circleci-が自動で生成登録してる鍵は-read-only">CircleCI が自動で生成＆登録してる鍵は read-only</a></li>
-  <li><a href="#手順">手順</a></li>
-  <li><a href="#関連">関連</a></li>
+  <li><a href="#ssh-agentとは">ssh-agentとは？</a></li>
+  <li><a href="#ssh-agentの最大のメリット">ssh-agentの最大のメリット</a></li>
+  <li><a href="#ssh-agentの起動">ssh-agentの起動</a>
+    <ul>
+      <li><a href="#ssh-agentの起動オプション一覧">ssh-agentの起動オプション一覧</a>
+        <ul>
+          <li><a href="#-a-bind_address-unixドメインソケットのパス指定">-a bind_address: UNIXドメインソケットのパス指定</a></li>
+          <li><a href="#-c-cシェルでログイン">-c: Cシェルでログイン</a></li>
+          <li><a href="#-s-bourneシェルでログイン">-s: Bourneシェルでログイン</a></li>
+          <li><a href="#-d-フォアグラウンドで起動">-D: フォアグラウンドで起動</a></li>
+          <li><a href="#-d-デバッグモードで起動">-d: デバッグモードで起動</a></li>
+          <li><a href="#-e-fingerprint_hash-フィンガープリントのハッシュ関数を指定">-E fingerprint_hash: フィンガープリントのハッシュ関数を指定</a></li>
+          <li><a href="#-p-pkcs11_whitelist-pkcs11共有ライブラリのパス指定">-P pkcs11_whitelist: PKCS#11共有ライブラリのパス指定</a></li>
+          <li><a href="#-t-life-追加した鍵の保持寿命設定">-t life: 追加した鍵の保持寿命設定</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#ssh-agentの終了">ssh-agentの終了</a>
+    <ul>
+      <li><a href="#指定のエージェントを終了">指定のエージェントを終了</a></li>
+    </ul>
+  </li>
+  <li><a href="#ssh-agentに鍵追加">ssh-agentに鍵追加</a>
+    <ul>
+      <li><a href="#addkeystoagentで登録する">AddKeysToAgentで登録する</a>
+        <ul>
+          <li><a href="#addkeystoagent未指定">AddKeysToAgent未指定</a></li>
+          <li><a href="#addkeystoagent指定">AddKeysToAgent指定</a></li>
+        </ul>
+      </li>
+      <li><a href="#ssh-addでキー追加する">ssh-addでキー追加する</a></li>
+    </ul>
+  </li>
+  <li><a href="#ssh-agentの登録済み鍵の確認">ssh-agentの登録済み鍵の確認</a></li>
+  <li><a href="#ssh-agentの登録済み鍵の削除">ssh-agentの登録済み鍵の削除</a></li>
+  <li><a href="#鍵の保持寿命を設定">鍵の保持寿命を設定</a></li>
+  <li><a href="#ssh-agentを接続先ホストでも使うssh-agent-forwarding">ssh-agentを接続先ホストでも使う(SSH Agent forwarding)</a>
+    <ul>
+      <li><a href="#agent-forwardingの事前条件">Agent forwardingの事前条件</a></li>
+    </ul>
+  </li>
+  <li><a href="#ssh-agentのリスク">ssh-agentのリスク</a></li>
 </ul>
   </div>
 
@@ -214,32 +254,244 @@
   
 
   <section>
-  <p>最近CircleCIを使って定期実行的なことをするために弄り始めました。</p>
+  <p>ssh接続で使う公開鍵のパスフレーズ入力は面倒ですが、ssh-agentでパスフレーズ入力を代理してくれます。<br />
+また、複数サーバを横断する場合に鍵の管理に困りますが、ssh-agentで秘密鍵をサーバに配置せずに済みます。</p>
 
-<h2 id="circleci-が自動で生成登録してる鍵は-read-only">CircleCI が自動で生成＆登録してる鍵は read-only</h2>
+<h2 id="ssh-agentとは">ssh-agentとは？</h2>
+<p>ssh-agentは認証代理プログラムです。<br />
+RSAやDSA、ECDSAなど公開鍵認証に使う秘密鍵をメモリ上に保持します。<br />
+エージェントプロセスが生きている間は、sshログイン時のパスフレーズ入力を代理します。</p>
 
-<p>CircleCIを使ってサーバーにデプロイしたい場合やGitHubへpushしたい場合は、 自動生成＆登録されるSSH Keyでは権限が足りずエラーになります。</p>
+<h2 id="ssh-agentの最大のメリット">ssh-agentの最大のメリット</h2>
+<p>ssh-agentはパスフレーズを代理してくれることですが、最もその効果を発揮するのは、<br />
+複数サーバーを跨いだ認証で、サーバ毎に秘密鍵の配置が不要になります。<br />
+インターネット上に秘密鍵を配置するリスクを負わずに、ローカル上で秘密鍵を保持しててもエージェントが認証を代理してくれます。<br />
+ssh-agentを使わない場合は、踏み台サーバにサーバBへの秘密鍵を置くなどリスクまたは手間が生じます。</p>
 
-<p>別途SSH Keyを登録して利用することで上記のような目的を達成できるようになります。</p>
+<p><a href="/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/ssh-agent-multi-server.png"><img src="/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/ssh-agent-multi-server.png" width="100%" alt="複数サーバでのssh-agent" /></a></p>
 
-<h2 id="手順">手順</h2>
+<p>ssh-agentを使うことで、認証データを他PCに保存不要で、パスフレーズがネットワークに乗りません。<br />
+秘密鍵を必要とする操作をエージェントによって実行されるため、<br />
+秘密鍵はエージェントを使うクライアントに公開されません。</p>
 
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">ssh-keygen -m PEM -t rsa</code> などで鍵生成</li>
-  <li>GitHubのrepository設定のdeploy keyに公開鍵を登録</li>
-  <li>repository毎の設定 &gt; PERMISSIONS &gt; SSH Permissions へ移動</li>
-  <li>Add SSH Key を押下</li>
-  <li>ホスト名を github.com</li>
-  <li>Private Keyに秘密鍵を登録</li>
-  <li>.circleci/config.yml の steps 内で <code class="language-plaintext highlighter-rouge">add_ssh_key</code> コマンドを記入</li>
-</ol>
+<h2 id="ssh-agentの起動">ssh-agentの起動</h2>
 
-<p>※ <code class="language-plaintext highlighter-rouge">add_ssh_key</code> に関しては<a href="https://circleci.com/docs/2.0/configuration-reference/#add_ssh_keys">CircleCIのadd_ssh_keys</a>を参照。
-記事中に出てくる Fingerprint は GitHubかCircleCIのrepository設定ページで確認可能。</p>
+<p>ssh-agentを起動するには<code class="language-plaintext highlighter-rouge">ssh-agent</code>コマンドを使います。<br />
+実行するとシェルスクリプトが表示されます。</p>
 
-<h2 id="関連">関連</h2>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-agent
+<span class="nv">SSH_AUTH_SOCK</span><span class="o">=</span>/var/folders/45/7f_wlrcs3xv6rmstcz2l5_000000gn/T//ssh-2tCfpXRm9s6R/agent.12199<span class="p">;</span> <span class="nb">export </span>SSH_AUTH_SOCK<span class="p">;</span>
+<span class="nv">SSH_AGENT_PID</span><span class="o">=</span>12200<span class="p">;</span> <span class="nb">export </span>SSH_AGENT_PID<span class="p">;</span>
+<span class="nb">echo </span>Agent pid 12200<span class="p">;</span>
+</code></pre></div></div>
 
-<p>CircleCIにSSH Key登録が失敗する場合は<a href="/ci/circleci/circleci-fail-add-ssh-key">CircleCIでSSH Key登録が失敗する場合の原因特定方法と自分が見つけた解決方法</a>を参考にしてみてください。</p>
+<p>このスクリプトを実行して環境変数を登録する必要があります。</p>
+
+<ul>
+  <li>SSH_AUTH_SOCK環境変数: unixドメインソケットの名前が入る</li>
+  <li>SSH_AGENT_PID環境変数: エージェントのプロセスIDが入る</li>
+</ul>
+
+<p>なので、通常は起動には、<code class="language-plaintext highlighter-rouge">eval</code>コマンドを使い、出力をそのまま実行します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">eval</span> <span class="sb">`</span>ssh-agent<span class="sb">`</span>
+Agent pid 12200
+</code></pre></div></div>
+
+<h3 id="ssh-agentの起動オプション一覧">ssh-agentの起動オプション一覧</h3>
+
+<p>エージェントの起動には様々なオプションを渡せます。</p>
+
+<p><code class="language-plaintext highlighter-rouge">ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash] [-P pkcs11_whitelist] [-t life] [command [arg ...]]</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">ssh-agent</code>コマンドで使えるオプションを説明します。</p>
+
+<h4 id="-a-bind_address-unixドメインソケットのパス指定">-a bind_address: UNIXドメインソケットのパス指定</h4>
+<p>ssh-agentを指定したUNIXドメインソケットにバインドします。<br />
+デフォルトは<code class="language-plaintext highlighter-rouge">$TMPDIR/ssh-XXXXXXXXXX/agent.&lt;ppid&gt;</code>です。</p>
+
+<h4 id="-c-cシェルでログイン">-c: Cシェルでログイン</h4>
+<p>起動時に表示するシェルをCシェルコマンドで出力します。
+SHELL環境変数の値がcsh互換性の場合は、この出力がデフォルトです。</p>
+
+<h4 id="-s-bourneシェルでログイン">-s: Bourneシェルでログイン</h4>
+<p>起動時に表示するシェルをBourneシェル(所謂sh)コマンドで出力します。
+SHELL環境変数の値がsh互換性の場合は、この出力がデフォルトです。</p>
+
+<h4 id="-d-フォアグラウンドで起動">-D: フォアグラウンドで起動</h4>
+<p>フォアグラウンドモードで起動します。<br />
+このオプションを使うとssh-agentはforkを使わなくなります。</p>
+
+<h4 id="-d-デバッグモードで起動">-d: デバッグモードで起動</h4>
+<p>デバッグモードで起動します。<br />
+このオプションを使うとssh-agentはforkを使わず、デバッグ情報を標準エラーに出力します。</p>
+
+<h4 id="-e-fingerprint_hash-フィンガープリントのハッシュ関数を指定">-E fingerprint_hash: フィンガープリントのハッシュ関数を指定</h4>
+<p>キーのフィンガープリントを使うハッシュ関数を指定します。<br />
+オプションは、<code class="language-plaintext highlighter-rouge">md5</code>、<code class="language-plaintext highlighter-rouge">sha256</code>で、デフォルトは<code class="language-plaintext highlighter-rouge">sha256</code>です。</p>
+
+<h4 id="-p-pkcs11_whitelist-pkcs11共有ライブラリのパス指定">-P pkcs11_whitelist: PKCS#11共有ライブラリのパス指定</h4>
+<p><code class="language-plaintext highlighter-rouge">ss-add</code>に<code class="language-plaintext highlighter-rouge">-s</code>オプションを使って追加できるPKCS#11共有ライブラリの受け入れ可能なパスパターンリストを指定する。<br />
+デフォルトは<code class="language-plaintext highlighter-rouge">/usr/lib/*</code>、<code class="language-plaintext highlighter-rouge">/usr/local/lib/*</code>からPKCS#11ライブラリをロードします。</p>
+
+<p>渡されたホワイトリストに一致しないPKCS#11ライブラリは拒否します。</p>
+
+<h4 id="-t-life-追加した鍵の保持寿命設定">-t life: 追加した鍵の保持寿命設定</h4>
+<p>エージェントに追加されるIDの最大存続時間のデフォルト値を設定します。<br />
+存続時間は秒単位やsshd_configで指定された時間形式で指定します。</p>
+
+<p><code class="language-plaintext highlighter-rouge">ssh-add</code>でIDに指定された有効期限は、この値を上書きします。<br />
+このオプションがない場合の最大存続時間は無制限です。</p>
+
+<p>保持寿命を設定することで、プロセスが起動し続けてても寿命過ぎるとエージェントから削除されるので、セキュリティ制御ができるようになります。</p>
+
+<h2 id="ssh-agentの終了">ssh-agentの終了</h2>
+
+<p>エージェントを終了するには、<code class="language-plaintext highlighter-rouge">ssh-agent</code>に<code class="language-plaintext highlighter-rouge">-k</code>オプションを渡します。<br />
+現在のエージェントを強制終了します。<br />
+終了する対象エージェントは環境変数<code class="language-plaintext highlighter-rouge">SSH_AGENT_PID</code>のPIDを終了します。</p>
+
+<p><code class="language-plaintext highlighter-rouge">ssh-agent [-c | -s] -k</code></p>
+
+<p><code class="language-plaintext highlighter-rouge">-c</code>と<code class="language-plaintext highlighter-rouge">-s</code>は起動時に渡したのであれば同じように渡します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-agent <span class="nt">-k</span>
+<span class="nb">unset </span>SSH_AUTH_SOCK<span class="p">;</span>
+<span class="nb">unset </span>SSH_AGENT_PID<span class="p">;</span>
+<span class="nb">echo </span>Agent pid 12200 killed<span class="p">;</span>
+</code></pre></div></div>
+
+<p>終了処理も起動と同じでシェルスクリプトが表示されるので、終了時は<code class="language-plaintext highlighter-rouge">eval</code>コマンドで囲います。</p>
+
+<h3 id="指定のエージェントを終了">指定のエージェントを終了</h3>
+<p>起動時に環境変数<code class="language-plaintext highlighter-rouge">SSH_AGENT_PID</code>がセットされてるので、<br />
+通常は問題になりませんが、起動時に環境変数が未登録だと、<code class="language-plaintext highlighter-rouge">SSH_AGENT_PID not set, cannot kill agent</code>が表示されます。<br />
+つまり、<code class="language-plaintext highlighter-rouge">SSH_AGENT_PID</code>に終了したいエージェントのPIDをセットすることで、指定エージェントを終了できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps aux | <span class="nb">grep </span>ssh-agent
+mothule          28671   0.0  0.0  4334652    612 s002  U+    4:33AM   0:00.00 <span class="nb">grep </span>ssh-agent
+mothule          27257   0.0  0.0  4300640    428   ??  Ss    4:33AM   0:00.00 ssh-agent
+mothule          26972   0.0  0.0  4289376    428   ??  Ss    4:33AM   0:00.00 ssh-agent
+
+<span class="nv">$ SSH_AGENT_PID</span><span class="o">=</span>27257 ssh-agent <span class="nt">-k</span>
+<span class="nb">unset </span>SSH_AUTH_SOCK<span class="p">;</span>
+<span class="nb">unset </span>SSH_AGENT_PID<span class="p">;</span>
+<span class="nb">echo </span>Agent pid 27257 killed<span class="p">;</span>
+
+<span class="nv">$ </span>ps aux | <span class="nb">grep </span>ssh-agent
+mothule          28703   0.0  0.0  4268300    704 s002  S+    4:35AM   0:00.00 <span class="nb">grep </span>ssh-agent
+mothule          26972   0.0  0.0  4289376    428   ??  Ss    4:33AM   0:00.00 ssh-agent
+</code></pre></div></div>
+
+<h2 id="ssh-agentに鍵追加">ssh-agentに鍵追加</h2>
+<p>当然ながらssh-agentの起動直後は秘密鍵がありません。<br />
+鍵の追加は、<code class="language-plaintext highlighter-rouge">.ssh/config</code>の<code class="language-plaintext highlighter-rouge">AddKeysToAgent</code>か<code class="language-plaintext highlighter-rouge">ssh-add</code>で追加していきます。
+ややこしいですが、削除や確認にも<code class="language-plaintext highlighter-rouge">ssh-add</code>を使います。</p>
+
+<h3 id="addkeystoagentで登録する">AddKeysToAgentで登録する</h3>
+<p><code class="language-plaintext highlighter-rouge">AddKeysToAgent</code>は<code class="language-plaintext highlighter-rouge">.ssh/config</code>で使うオプションです。<br />
+ホスト毎に指定できて、指定されてることで<code class="language-plaintext highlighter-rouge">ssh-agent</code>に秘密鍵の追加有無を設定できます。</p>
+
+<h4 id="addkeystoagent未指定">AddKeysToAgent未指定</h4>
+<p><code class="language-plaintext highlighter-rouge">AddKeysToAgent</code>未指定の<em>~/.ssh/config</em>です。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host github
+  HostName github.com
+  IdentityFile ~/.ssh/github
+  User git
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">AddKeysToAgent</code>がないと、パスフレーズを求められます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh github
+Enter passphrase <span class="k">for </span>key <span class="s1">'/Users/mothule/.ssh/github'</span>:
+PTY allocation request failed on channel 0
+Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+</code></pre></div></div>
+
+<h4 id="addkeystoagent指定">AddKeysToAgent指定</h4>
+<p><code class="language-plaintext highlighter-rouge">ssh-agent</code>への鍵登録を許可するには、<code class="language-plaintext highlighter-rouge">AddKeysToAgent</code>で<code class="language-plaintext highlighter-rouge">yes</code>が指定します。</p>
+
+<p><code class="language-plaintext highlighter-rouge">AddKeysToAgent</code>が指定された<em>~/.ssh/config</em>です。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Host github
+  HostName github.com
+  IdentityFile ~/.ssh/github
+  User git
+  AddKeysToAgent yes
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">AddKeysToAgent</code>があると、パスフレーズは求められません。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh github
+PTY allocation request failed on channel 0
+Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+</code></pre></div></div>
+
+<p>もし指定鍵がssh-agentから見つからない場合は、パスフレーズをユーザーから求めた後に自動でssh-agentに登録します。</p>
+
+<h3 id="ssh-addでキー追加する">ssh-addでキー追加する</h3>
+<p>ssh-addは認証エージェント(ssh-agent)に秘密鍵IDを追加するプログラムです。<br />
+そのため、ssh-addを使うには、ssh-agentが実行されていて、<code class="language-plaintext highlighter-rouge">SSH_AUTH_SOCK</code>環境変数にエージェントへのソケット名が含まれてる必要があります。</p>
+
+<p><code class="language-plaintext highlighter-rouge">ssh-add 秘密鍵パス</code>で秘密鍵を追加します。<br />
+引数なしで実行すると、<code class="language-plaintext highlighter-rouge">~/.ssh/id_rsa</code> <code class="language-plaintext highlighter-rouge">~/.ssh/id_dsa</code> <code class="language-plaintext highlighter-rouge">~/.ssh/id_ecdsa</code> <code class="language-plaintext highlighter-rouge">~/.ssh/id_ed25519</code>の秘密鍵を追加します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-add .ssh/github
+Enter passphrase <span class="k">for</span> .ssh/github:
+Identity added: .ssh/github <span class="o">(</span>mothule@mothule.local<span class="o">)</span>
+<span class="nv">$ </span>ssh-add <span class="nt">-l</span>
+3072 SHA256:Ik22naSN6JXh0HGRjifWkBDERYUy8Td2dvDYUt3wGpE mothule@mothule.local <span class="o">(</span>RSA<span class="o">)</span>
+<span class="nv">$ </span>ssh github
+PTY allocation request failed on channel 0
+Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
+Connection to github.com closed.
+</code></pre></div></div>
+
+<h2 id="ssh-agentの登録済み鍵の確認">ssh-agentの登録済み鍵の確認</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ssh-add -l</code>で登録済み鍵をフィンガープリントで一覧表示します。</li>
+  <li><code class="language-plaintext highlighter-rouge">ssh-add -L</code>で登録済み鍵の公開鍵を一覧表示します。</li>
+</ul>
+
+<h2 id="ssh-agentの登録済み鍵の削除">ssh-agentの登録済み鍵の削除</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">ssh-add -d</code>で指定鍵の削除</li>
+  <li><code class="language-plaintext highlighter-rouge">ssh-add -D</code>で登録済み鍵の全削除</li>
+</ul>
+
+<h2 id="鍵の保持寿命を設定">鍵の保持寿命を設定</h2>
+<p><code class="language-plaintext highlighter-rouge">ssh-add -t life</code>で追加する鍵をエージェントが保持する期間を設定できます。<br />
+未指定の場合は、エージェントのデフォルト値が期間として使われます。<br />
+エージェントのデフォルト値も未指定だと期間は無制限になります。</p>
+
+<p>無制限はセキュリティの観点からしてリスクがあるので、一定の期間を設けておくことを推奨します。</p>
+
+<h2 id="ssh-agentを接続先ホストでも使うssh-agent-forwarding">ssh-agentを接続先ホストでも使う(SSH Agent forwarding)</h2>
+<p>Agent forwardingで接続することで、接続先ホストでローカルのssh-agentを使うことができます。<br />
+つまり、接続先ホストに秘密鍵をおかずに、秘密鍵を使うことができるようになります。</p>
+
+<h3 id="agent-forwardingの事前条件">Agent forwardingの事前条件</h3>
+
+<ul>
+  <li>SSHサーバが<code class="language-plaintext highlighter-rouge">AllowAgentForwarding</code>の許可が必要</li>
+  <li>SSHクライアント接続時に何れかの方法で指定する
+    <ul>
+      <li>sshコマンドに<code class="language-plaintext highlighter-rouge">-A</code>オプションを渡す(セッション毎)</li>
+      <li><code class="language-plaintext highlighter-rouge">.ssh/config</code>に全体またはホスト毎に<code class="language-plaintext highlighter-rouge">ForwardAgent yes</code>を記載する(ユーザー・ホスト毎)</li>
+      <li><code class="language-plaintext highlighter-rouge">/etc/ssh/ssh_config</code>に<code class="language-plaintext highlighter-rouge">ForwardAgent yes</code>を記載する(システム全体)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="ssh-agentのリスク">ssh-agentのリスク</h2>
+
+<p>便利なssh-agentですが、運用にはリスクが伴います。</p>
+
+<p><code class="language-plaintext highlighter-rouge">man ssh</code>の<code class="language-plaintext highlighter-rouge">-A</code>でも記載されてますが、Agent forwardingには一定のセキュリティリスクが潜在します。<br />
+またssh-agentはパスフレーズを一度登録すればなしにしてしまうので、キーの保持寿命を設定するなど使用には注意が必要です。</p>
 
   </section>
 
@@ -276,808 +528,34 @@
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/tools/ssh/tools-ssh-keygen-basic">
+      <img src="/assets/images/2020-08-14-tools-ssh-keygen-basic/eyecatch.png" alt="SSH公開鍵認証で必要なssh-keygenの使い方を理解する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/tools/ssh/tools-ssh-keygen-basic">
+      <h3>SSH公開鍵認証で必要なssh-keygenの使い方を理解する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ssh">SSH</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ssh-keygen">ssh-keygen</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
                 
 
 
@@ -1089,20 +567,18 @@
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ci/circleci/circleci-fail-add-ssh-key">
-      <img src="/assets/images/2018-11-26-circleci-fail-add-ssh-key.png" alt="CircleCIでSSH Key登録が失敗する場合の原因特定方法と自分が見つけた解決方法" style="width: 100%; object-fit: contain;">
+    <a href="/tools/ssh/tools-ssh-basic">
+      <img src="/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png" alt="エンジニアなら知らないとヤバいSSHの基礎" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ci/circleci/circleci-fail-add-ssh-key">
-      <h3>CircleCIでSSH Key登録が失敗する場合の原因特定方法と自分が見つけた解決方法</h3>
+    <a href="/tools/ssh/tools-ssh-basic">
+      <h3>エンジニアなら知らないとヤバいSSHの基礎</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#circleci">CircleCI</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#ci">CI</a></li>
+        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
       
         <li class="list-inline-item"><a href="/tags#ssh">SSH</a></li>
       
@@ -1114,6 +590,810 @@
 
                     
                     
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
                 
 
 
