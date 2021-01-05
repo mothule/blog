@@ -44,7 +44,7 @@ fi
 
 # clean sitemap.xml
 info 'Clean sitemap.xml'
-clean_sitemap.rb
+ruby bin/clean_sitemap.rb
 
 # rsync
 info "Copy to docs/ ... start"
