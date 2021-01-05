@@ -1,0 +1,41 @@
+- テーブル削除(drop table)
+- テーブル一覧の確認(show tables)
+- テーブル内データ削除(truncate)
+- テーブルのカラム確認(show columns)
+- インデックスの確認(show index)
+- インデックス一覧の確認(information_schema.statistics)
+- クエリーの実行計画の確認(explain)
+- ユーザー一覧の確認(mysql.user)
+- 一括更新
+- 部分一致検索(LIKE)
+- 寿司ビール問題(utf8/utf8mb4)
+- レプリケーション
+- ストレージエンジンを確認する
+- ストレージエンジンを変更する
+- バックアップ
+  - フルバックアップ
+    - datadir(/var/lib/mysql)
+    - mysqldump --single-transaction --all-databases
+    - xtrabackup --socket=/var/lib/mysql/mysql.sock --user=root --stream=tar /var/lib/mysql
+    - その時点でのスナップショット作成。リプレイではないので遡ることはできない。その分早い。
+  - バイナリーログバックアップ(mysqlbinlog)
+    - 増分バックアップ（差分ではない）
+  - 差分バックアップ
+    - xtrabackup
+    - mysqldumpはテーブル構成依存
+    - 無理してやることない
+  - 物理バックアップ
+    - MySQLがデータ格納に使ってるファイルをそのまま複製(同一CPU,同一バージョン,同一設定でリストア推奨)
+    - /var/lib/mysqlをそのままtarとかrsyncとか
+    - xtrabackupもこれ
+    - リストア早いけどファイルでかい
+  - 論理バックアップ
+    - ファイル構造に依存せずsqlでデータ取得(全テーブルにselect句を繰り返す)
+    - バージョンアップ手順の一つ(例： 5.5→5.6)
+    - mysqldumpがこれ
+    - リストア遅いけどファイル小さい
+  - バイナリーログバックアップ
+- フルバックアップ＋バイナリーログで復元
+- mysqldump --all-databases --single-transaction --routines --triggers --events --master-info=2 --hex-blob --quick
+- InnoDB,MyISAMとは
+- 参考 https://www.slideshare.net/yoku0825/mysql-90289401

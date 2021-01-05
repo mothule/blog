@@ -1,7 +1,7 @@
 # Gemネタ
 gemの紹介記事として使う↓
 
-
+CarrierWave
 gem 'signet'
 OAuth2
 
