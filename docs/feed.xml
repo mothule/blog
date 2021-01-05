@@ -1,4 +1,77 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2020-08-21T00:09:30+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する</title><link href="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage" rel="alternate" type="text/html" title="公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する" /><published>2020-08-18T00:00:00+09:00</published><updated>2020-08-21T00:09:15+09:00</updated><id>https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage</id><content type="html" xml:base="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage">&lt;p&gt;ssh接続で使う公開鍵のパスフレーズ入力は面倒ですが、ssh-agentでパスフレーズ入力を代理してくれます。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-06T03:15:46+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Railsのアセットパイプラインの概要を最短理解する</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief" rel="alternate" type="text/html" title="Railsのアセットパイプラインの概要を最短理解する" /><published>2021-01-05T00:00:00+09:00</published><updated>2021-01-06T03:11:40+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief">&lt;p&gt;Railsのアセットパイプラインは、最先端ではないですが、現状の開発において必要な仕組みです。&lt;br /&gt;
+最近ではフロントエンドと分離する傾向がありますが、それでもアセットパイプラインを使ったサービスはたくさんあります。&lt;br /&gt;
+今回、手っ取り早く全体像を理解するためにまとめました。&lt;/p&gt;
+
+&lt;h2 id=&quot;アセットパイプラインasset-pipelineとは&quot;&gt;アセットパイプライン(Asset Pipeline)とは&lt;/h2&gt;
+&lt;p&gt;JavaScriptやCSSを最小化や圧縮して連結するフレームワークです。&lt;br /&gt;
+CofeeScriptやSass(SCSS)の変換もサポートします。&lt;br /&gt;
+アセットパイプラインの実体はSprocketsミドルウェアです。&lt;/p&gt;
+
+&lt;p&gt;特徴としては下記です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;ファイルのミニファイ&lt;/li&gt;
+  &lt;li&gt;ファイルの結合&lt;/li&gt;
+  &lt;li&gt;ファイルの変換&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;これらをデプロイ前に事前に処理（プリコンパイル）します。&lt;/p&gt;
+
+&lt;h2 id=&quot;特徴1-ファイルの最小化ミニファイ&quot;&gt;特徴1. ファイルの最小化(ミニファイ)&lt;/h2&gt;
+&lt;p&gt;最小化とは、スペースや改行を詰めてサイズを減らすことです。&lt;br /&gt;
+最小化はミニファイ(minify)とも呼びます。&lt;/p&gt;
+
+&lt;p&gt;ファイルを最小化することで、3つメリットがあります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;通信量の節約&lt;/li&gt;
+  &lt;li&gt;難読化によるセキュリティ向上&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;通信量を節約できる&quot;&gt;通信量を節約できる&lt;/h3&gt;
+&lt;p&gt;ファイルにはスペースや改行などが含まれます。&lt;br /&gt;
+これらは人には可読性のために必要です。&lt;br /&gt;
+でもWebブラウザのファイル解析には、ほとんどが不要です。&lt;br /&gt;
+不要なスペースや改行を無くすことで、ファイルサイズが減らせます。&lt;/p&gt;
+
+&lt;p&gt;ファイルの縮小は通信量削減に繋がります。&lt;br /&gt;
+その分Webページ表示に必要なファイル取得を短縮できます。&lt;br /&gt;
+結果Webページの高速化に繋がります。&lt;/p&gt;
+
+&lt;h3 id=&quot;難読化によるセキュリティ向上&quot;&gt;難読化によるセキュリティ向上&lt;/h3&gt;
+&lt;p&gt;前項でも説明しましたが、スペースや改行などは可読性にとって重要です。&lt;br /&gt;
+またJavaScript難読化ツールによっては、変数名を短くします。&lt;br /&gt;
+短くなることはファイルサイズ削減にもなります。&lt;br /&gt;
+そして変数が持つ意味も取り除けます。&lt;/p&gt;
+
+&lt;p&gt;これらがなくなることで、人はコードを非常に読み解きにくくなります。&lt;br /&gt;
+読み解きにくくなれば悪意な行動ができなくなります。&lt;br /&gt;
+要はセキュリティが向上します。&lt;/p&gt;
+
+&lt;h2 id=&quot;特徴2-複数ファイルの結合&quot;&gt;特徴2. 複数ファイルの結合&lt;/h2&gt;
+&lt;p&gt;例えば、あるページに5ファイル必要であれば、&lt;br /&gt;
+そのままの場合は、5回に渡りファイルを取得します。&lt;br /&gt;
+当然5回分はサーバに負担はかかり、通信帯域も埋めます。&lt;/p&gt;
+
+&lt;p&gt;これを5ファイルを1つに結合してしまえば、その分パフォーマンスは向上します。&lt;/p&gt;
+
+&lt;h2 id=&quot;特徴3-coffeescriptやsassのトランスパイル&quot;&gt;特徴3. CoffeeScriptやSassのトランスパイル&lt;/h2&gt;
+&lt;p&gt;トランスパイルとは、ある開発言語から別の開発言語を生成するコンパイル処理です。&lt;/p&gt;
+
+&lt;p&gt;例えば、&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;CoffeeScriptからJavaScriptへ変換&lt;/li&gt;
+  &lt;li&gt;Sass(SCSS)からCSSへ変換&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;などです。&lt;/p&gt;
+
+&lt;p&gt;WebブラウザがサポートしてるJavaScriptやCSSなどを直接記述するよりも、&lt;br /&gt;
+TypeScriptやSCSSを使ったほうが生産的です。&lt;br /&gt;
+アセットパイプラインはその変換作業をサポートします。&lt;/p&gt;
+
+&lt;p&gt;例えばSass(SCSS)であれば、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sass-rails gem&lt;/code&gt;が使われます。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="asset-pipeline" /><summary type="html">Railsのアセットパイプラインは、最先端ではないですが、現状の開発において必要な仕組みです。 最近ではフロントエンドと分離する傾向がありますが、それでもアセットパイプラインを使ったサービスはたくさんあります。 今回、手っ取り早く全体像を理解するためにまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する</title><link href="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage" rel="alternate" type="text/html" title="公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する" /><published>2020-08-18T00:00:00+09:00</published><updated>2020-08-21T00:09:15+09:00</updated><id>https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage</id><content type="html" xml:base="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage">&lt;p&gt;ssh接続で使う公開鍵のパスフレーズ入力は面倒ですが、ssh-agentでパスフレーズ入力を代理してくれます。&lt;br /&gt;
 また、複数サーバを横断する場合に鍵の管理に困りますが、ssh-agentで秘密鍵をサーバに配置せずに済みます。&lt;/p&gt;
 
 &lt;h2 id=&quot;ssh-agentとは&quot;&gt;ssh-agentとは？&lt;/h2&gt;
@@ -1419,70 +1492,7 @@ mintコマンドの有無ではなく、Mintfileの有無のほうが「知ら�
 &lt;span class=&quot;k&quot;&gt;else
   &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint&quot;&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ios" /><category term="mint" /><category term="swift" /><summary type="html">HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">xcconfigで使うパラメータ名の見つけ方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config" rel="alternate" type="text/html" title="xcconfigで使うパラメータ名の見つけ方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:49:43+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config">&lt;p&gt;xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。&lt;br /&gt;
-この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。&lt;/p&gt;
-
-&lt;p&gt;xcconfigについて分からない方は「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-use&quot;&gt;Xcodeのxcconfigの理解と使い方&lt;/a&gt;&lt;/span&gt;
-」に詳細を説明してます。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcconfigへの変換はxcodeがサポートしてる&quot;&gt;xcconfigへの変換はXcodeがサポートしてる&lt;/h2&gt;
-&lt;p&gt;xcconfigの書き方が分かって実際に使おうにも、ビルドパラメータ名が分からないと設定しようがありません。&lt;br /&gt;
-XcodeのBuild Settingsでカスタマイズされた項目をxcconfigだとどうやって書けばいいか分からないと思います。&lt;br /&gt;
-実は&lt;strong&gt;XcodeのBuild Settingsからxcconfigへのフォーマット変換はXcodeがサポートしてます。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;p&gt;確認する方法は2つあります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更する&lt;/li&gt;
-  &lt;li&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピーする&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;xcodeのbuild-settingsの表示方法をパラメータ名に変更&quot;&gt;XcodeのBuild Settingsの表示方法をパラメータ名に変更&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;を開いた後に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Editor &amp;gt; Show Setting Names&lt;/code&gt;を選ぶと、表示されてるパラメータ名が表示用からコマンド用に変わります。&lt;/p&gt;
-
-&lt;video playsinline=&quot;&quot; muted=&quot;&quot; autoplay=&quot;&quot; loop=&quot;&quot; width=&quot;100%&quot; height=&quot;400px&quot;&gt;
-    &lt;source type=&quot;video/mp4&quot; src=&quot;/assets/videos/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.mp4&quot; /&gt;
-&lt;/video&gt;
-
-&lt;p&gt;例えば、 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Architectures &amp;gt; Build Active Architecture Only&lt;/code&gt;であれば、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH&lt;/code&gt;になります。&lt;br /&gt;
-これをxcconfigで使うなら&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ONLY_ACTIVE_ARCH = YES&lt;/code&gt;となります。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcodeのbuild-settingsの各パラメータをxcconfig形式でコピー&quot;&gt;XcodeのBuild Settingsの各パラメータをxcconfig形式でコピー&lt;/h2&gt;
-
-&lt;p&gt;パラメータ名を確認するだけなら&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Show Setting Names&lt;/code&gt;で確認できますが、Xcodeはそれよりも強力な変換機能を備えています。&lt;br /&gt;
-実は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;はコピー＆ペーストをサポートしており、対象ビルドパラメータをコピーしてテキストにペーストすると、xcconfig形式で貼り付けします。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/1.png&quot; width=&quot;100%&quot; alt=&quot;XcodeBuildSettings&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;例えば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Build Active Architecture Only&lt;/code&gt;の項目を選択し、コピー(⌘+C)してテキストエディタでペースト(⌘+V)すると、下記のように貼り付けされます。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
-ONLY_ACTIVE_ARCH = YES
-
-//:configuration = Release
-
-//:completeSettings = some
-ONLY_ACTIVE_ARCH
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;//:configuration = Debug&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Release&lt;/code&gt;とはBuild Configuration毎に分けられてます。
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Release&lt;/code&gt;に何も表示されていないのは、カスタマイズ値ではなくデフォルト値なので空になります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;some&lt;/code&gt;はコピーしたビルドパラメータの明確ビルドパラメータ名が列挙されます。ここはxcconfigでは不要なので削除します。&lt;/p&gt;
-
-&lt;p&gt;もう一つ例として&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Build Options &amp;gt; Debug Information Format&lt;/code&gt;を見るとこうなります。&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;//:configuration = Debug
-DEBUG_INFORMATION_FORMAT = dwarf
-
-//:configuration = Release
-DEBUG_INFORMATION_FORMAT = dwarf-with-dsym
-
-//:completeSettings = some
-DEBUG_INFORMATION_FORMAT
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これを使えばXcodeからxcconfigを作りたい場合に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Build Settings&lt;/code&gt;の項目全部を選択してコピーすれば、簡単に現在のビルド構成を表現したxcconfigが作成できます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigは便利ですが、中身のパラメータ名が何書けばいいか特定できないと使い物になりません。 この記事はXcodeのBuild Settingsで書いてるビルドパラメータがxcconfigではどう書くのかを説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-search-build-config/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Xcodeのxcconfigの理解と使い方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use" rel="alternate" type="text/html" title="Xcodeのxcconfigの理解と使い方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:41:30+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use">&lt;h2 id=&quot;xcconfigとは&quot;&gt;xcconfigとは？&lt;/h2&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ios" /><category term="mint" /><category term="swift" /><summary type="html">HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Xcodeのxcconfigの理解と使い方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use" rel="alternate" type="text/html" title="Xcodeのxcconfigの理解と使い方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:41:30+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use">&lt;h2 id=&quot;xcconfigとは&quot;&gt;xcconfigとは？&lt;/h2&gt;
 &lt;p&gt;Xcodeのビルド構成ファイルです。略称からして&lt;strong&gt;XC&lt;/strong&gt;ode&lt;strong&gt;CONFIG&lt;/strong&gt;urationといったところだと思います。&lt;/p&gt;
 
 &lt;p&gt;Xcodeではビルドパラメータ等を「プロジェクト」や「ターゲット」単位で設定ができます。&lt;br /&gt;
