@@ -1,4 +1,99 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-06T03:15:46+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Railsのアセットパイプラインの概要を最短理解する</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief" rel="alternate" type="text/html" title="Railsのアセットパイプラインの概要を最短理解する" /><published>2021-01-05T00:00:00+09:00</published><updated>2021-01-06T03:11:40+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief">&lt;p&gt;Railsのアセットパイプラインは、最先端ではないですが、現状の開発において必要な仕組みです。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-15T02:53:37+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">Webアプリの自動テストのcapybaraやSeleniumなど用語を整理した</title><link href="https://blog.mothule.com/tools/selenium/tools-selenium-glossary" rel="alternate" type="text/html" title="Webアプリの自動テストのcapybaraやSeleniumなど用語を整理した" /><published>2021-01-14T00:00:00+09:00</published><updated>2021-01-15T02:53:19+09:00</updated><id>https://blog.mothule.com/tools/selenium/tools-selenium-glossary</id><content type="html" xml:base="https://blog.mothule.com/tools/selenium/tools-selenium-glossary">&lt;p&gt;SeleniumやWebDriverは、Webアプリのシステムテストの自動化に関する用語です。&lt;br /&gt;
+これら用語は名前が似てたり関係性が曖昧で、ネット記事を見てもいまいちに腹落ちしません。&lt;br /&gt;
+それゆえ、これらの用語の意味や関係性を整理しました。&lt;/p&gt;
+
+&lt;h2 id=&quot;整理した用語一覧&quot;&gt;整理した用語一覧&lt;/h2&gt;
+&lt;p&gt;今回整理した用語はSeleniumを使う上で、混乱の中心となる用語に絞ります。&lt;br /&gt;
+選定基準は、私が調べながら分かりにくいと感じた用語です。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;capybara&lt;/li&gt;
+  &lt;li&gt;WebKit&lt;/li&gt;
+  &lt;li&gt;Selenium&lt;/li&gt;
+  &lt;li&gt;WebDriver&lt;/li&gt;
+  &lt;li&gt;ChromeDriver&lt;/li&gt;
+  &lt;li&gt;Chrome用WebDriver&lt;/li&gt;
+  &lt;li&gt;selenium_chrome&lt;/li&gt;
+  &lt;li&gt;capybara-webkit&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;capybaraとはライブラリ名&quot;&gt;capybaraとはライブラリ名&lt;/h2&gt;
+&lt;p&gt;capybaraはRubyのライブラリ(gem)の1つで、RackベースのWebアプリ用統合テストツールです。&lt;br /&gt;
+Webサイト上のユーザー操作をシミュレートします。
+&lt;a href=&quot;https://rubygems.org/gems/capybara&quot;&gt;capybara&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;webkitとはレンダリングエンジン&quot;&gt;WebKitとはレンダリングエンジン&lt;/h2&gt;
+&lt;p&gt;WebKitはHTMLレンダリングエンジンの1つで、Safariのレンダリングエンジンとして使われてます。&lt;/p&gt;
+
+&lt;blockquote&gt;
+  &lt;p&gt;WebKitは、元々アップルのmacOSに搭載されるSafariのレンダリングエンジンとして、LinuxやBSDといった、Unix系用のレンダリングエンジンであるKHTMLをフォークして開発された。現在はその他の多くのプラットフォームに移植されている。Wikipediaより抜粋&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;h2 id=&quot;seleniumとはテストプロジェクト&quot;&gt;Seleniumとはテストプロジェクト&lt;/h2&gt;
+&lt;p&gt;SeleniumはWebアプリを自動テストするためのフレームワークまたはプロジェクトです。
+「フレームワークまたはプロジェクト」と曖昧なのは、Seleniumの歴史によって用語の意味が変わってるためです。&lt;/p&gt;
+
+&lt;p&gt;現在であれば、プロジェクトです。&lt;/p&gt;
+&lt;blockquote&gt;
+  &lt;p&gt;Selenium is an umbrella project encapsulating a variety of tools and libraries enabling web browser automation.&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;SeleniumはWebブラウザの自動化に関する様々なツールやライブラリで構成されたプロジェクトです。&lt;br /&gt;
+Selenium WebDriver, Selenium Grid, Selenium IDEなど複数ツールがある。&lt;/p&gt;
+
+&lt;h2 id=&quot;webdriverとはコンポーネント&quot;&gt;WebDriverとはコンポーネント&lt;/h2&gt;
+&lt;p&gt;WebDriverはSeleniumコンポーネントの1つで、ブラウザ操作用のAPI群とプロトコルです。&lt;br /&gt;
+このプロトコルをブラウザで準拠させたものをDriverと呼ばれ、Seleniumとブラウザ間の通信を仲介します。&lt;br /&gt;
+つまり、実行ブラウザ(Driver)が変わっても操作は変えずに実行できます。&lt;/p&gt;
+
+&lt;p&gt;各ブラウザは特定のWebDriverの実装を持ってます。&lt;br /&gt;
+例えば、ChromeならChrome用WebDriver（ChromeDriver）がそれにあたります。&lt;/p&gt;
+
+&lt;h2 id=&quot;chromedriverとはwebdriverの1つ&quot;&gt;ChromeDriverとはWebDriverの1つ&lt;/h2&gt;
+&lt;p&gt;ChromeDirverはWebDriverをChrome用に実装したDriverであり、ツール名です。&lt;/p&gt;
+
+&lt;p&gt;ChromeDriverはPC向けChromeとAndroid向けChromeで利用できます。&lt;br /&gt;
+OSもMac, Linux, Windows, ChromeOSに対応してます。&lt;/p&gt;
+
+&lt;h2 id=&quot;selenium_chromeとは識別用の文字列&quot;&gt;selenium_chromeとは識別用の文字列&lt;/h2&gt;
+&lt;p&gt;Capybaraのドライバー指定で、Chrome用WebDriver(ChromeDriver)を指定する文字列です。
+下記コードのように使います。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;no&quot;&gt;Capybara&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;configure&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;do&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;capybara_config&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;|&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;capybara_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default_driver&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:selenium_chrome&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;capybara_config&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;default_max_wait_time&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;capybara-webkitとはライブラリ名&quot;&gt;capybara-webkitとはライブラリ名&lt;/h2&gt;
+&lt;p&gt;capybara-webkitはRubyのライブラリ(gem)の1つで、CapybaraのためのヘッドレスWebKit用WebDriverです。
+&lt;a href=&quot;https://github.com/thoughtbot/capybara-webkit&quot;&gt;capybara-webkit&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;現在はQtWebKitが非推奨となってことで、アーカイブ状態となってます。&lt;br /&gt;
+公式では、代わりにSeleniumかApparitionという別のドライバーを推薦してます。&lt;/p&gt;
+
+&lt;h2 id=&quot;safari用のwebdriverは&quot;&gt;Safari用のWebDriverは？&lt;/h2&gt;
+&lt;p&gt;あるようですが、ヘッドレスモードはないようです。&lt;a href=&quot;https://github.com/SeleniumHQ/selenium/issues/5985&quot;&gt;GitHub/selenium&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;またiOS13からiOS版Safariでも、WebDriverを正式サポートされました。&lt;a href=&quot;https://www.publickey1.jp/blog/19/ios_13safariwebdriverseleniumui.html&quot;&gt;URL&lt;/a&gt;&lt;/p&gt;
+
+&lt;h2 id=&quot;最も重要な用語の関係性を表す&quot;&gt;最も重要な用語の関係性を表す&lt;/h2&gt;
+&lt;p&gt;Seleniumを知る上で重要な用語が、SeleniumとWebDriverそして、ChromeDriverです。&lt;br /&gt;
+これらの関係性を文章にすると、&lt;br /&gt;
+&lt;strong&gt;「SeleniumプロジェクトのWebDriverコンポーネントのプロトコルを採用したChromeウェブブラウザ用WebDriverは、ChromeDriverです」&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;ツリー構造だと次の構造になります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Selenium
+    &lt;ul&gt;
+      &lt;li&gt;WebDriver
+        &lt;ul&gt;
+          &lt;li&gt;ChromeDriver(=Chrome用WebDriver)&lt;/li&gt;
+        &lt;/ul&gt;
+      &lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;</content><author><name></name></author><category term="tools" /><category term="selenium" /><category term="capybara" /><category term="webkit" /><category term="web_driver" /><category term="chrome_driver" /><summary type="html">SeleniumやWebDriverは、Webアプリのシステムテストの自動化に関する用語です。 これら用語は名前が似てたり関係性が曖昧で、ネット記事を見てもいまいちに腹落ちしません。 それゆえ、これらの用語の意味や関係性を整理しました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-14-tools-selenium-glossary/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-14-tools-selenium-glossary/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Railsのアセットパイプラインの概要を最短理解する</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief" rel="alternate" type="text/html" title="Railsのアセットパイプラインの概要を最短理解する" /><published>2021-01-05T00:00:00+09:00</published><updated>2021-01-06T03:11:40+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief">&lt;p&gt;Railsのアセットパイプラインは、最先端ではないですが、現状の開発において必要な仕組みです。&lt;br /&gt;
 最近ではフロントエンドと分離する傾向がありますが、それでもアセットパイプラインを使ったサービスはたくさんあります。&lt;br /&gt;
 今回、手っ取り早く全体像を理解するためにまとめました。&lt;/p&gt;
 
@@ -1492,327 +1587,4 @@ mintコマンドの有無ではなく、Mintfileの有無のほうが「知ら�
 &lt;span class=&quot;k&quot;&gt;else
   &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint&quot;&lt;/span&gt;
 &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ios" /><category term="mint" /><category term="swift" /><summary type="html">HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Xcodeのxcconfigの理解と使い方</title><link href="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use" rel="alternate" type="text/html" title="Xcodeのxcconfigの理解と使い方" /><published>2020-07-30T00:00:00+09:00</published><updated>2020-07-30T19:41:30+09:00</updated><id>https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use</id><content type="html" xml:base="https://blog.mothule.com/ios/xcode/ios-xcode-xcconfig-how-to-use">&lt;h2 id=&quot;xcconfigとは&quot;&gt;xcconfigとは？&lt;/h2&gt;
-&lt;p&gt;Xcodeのビルド構成ファイルです。略称からして&lt;strong&gt;XC&lt;/strong&gt;ode&lt;strong&gt;CONFIG&lt;/strong&gt;urationといったところだと思います。&lt;/p&gt;
-
-&lt;p&gt;Xcodeではビルドパラメータ等を「プロジェクト」や「ターゲット」単位で設定ができます。&lt;br /&gt;
-これらは通常XcodeのBuild Settingsから閲覧・編集することができますが、以下の不便があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;やり直し(アンドゥ)が効かない&lt;/li&gt;
-  &lt;li&gt;クリック操作が多く編集効率が悪い&lt;/li&gt;
-  &lt;li&gt;カスタマイズしたプロパティが把握しにくい&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;xcconfigはこれら&lt;strong&gt;設定情報をテキスト形式の外部ファイルとして扱えるようにしたファイル&lt;/strong&gt;です。&lt;br /&gt;
-xcconfigを使うことでプロジェクトやターゲットのビルドパラメータを定義・上書きできます。&lt;/p&gt;
-
-&lt;h3 id=&quot;xcconfigの利点&quot;&gt;xcconfigの利点&lt;/h3&gt;
-
-&lt;p&gt;xcconfigによる利点は元の編集状況が抱える課題を解決する利点を持ちます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;テキストとして扱える&lt;/li&gt;
-  &lt;li&gt;カスタマイズした設定だけが並ぶ&lt;/li&gt;
-  &lt;li&gt;Gitとの相性が良い(コンフリクト解消難易度が低い)&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;xcconfigの書き方&quot;&gt;xcconfigの書き方&lt;/h2&gt;
-
-&lt;p&gt;下記の項目について説明します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ファイル作成&lt;/li&gt;
-  &lt;li&gt;ビルドパラメータの設定&lt;/li&gt;
-  &lt;li&gt;パラメータの型&lt;/li&gt;
-  &lt;li&gt;変数展開&lt;/li&gt;
-  &lt;li&gt;ビルドパラメータにプラットフォーム条件の追加&lt;/li&gt;
-  &lt;li&gt;他ビルド構成ファイルの読み込み&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;構成設定ファイルのフォーマット説明はAppleの&lt;a href=&quot;https://help.apple.com/xcode/mac/11.4/#/dev745c5c974&quot;&gt;Configuration Settings File (xcconfig) format&lt;/a&gt;を参考してます。&lt;/p&gt;
-
-&lt;h3 id=&quot;ファイル作成&quot;&gt;ファイル作成&lt;/h3&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/1.png&quot; width=&quot;50%&quot; alt=&quot;xcconfig&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;テキスト形式の外部ファイルなので拡張子さえあっていれば追加方法は何でもいいです。&lt;br /&gt;
-もしXcode上から追加する場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Configuration Settings File&lt;/code&gt;を選んでください。↓&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/2.png&quot; width=&quot;75%&quot; alt=&quot;NewFileOnXcode&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;ビルドパラメータの設定&quot;&gt;ビルドパラメータの設定&lt;/h3&gt;
-
-&lt;p&gt;設定フォーマットは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ParameterName = ParameterValue&lt;/code&gt;となります。&lt;br /&gt;
-1ビルドパラメータ1行で表現します。&lt;br /&gt;
-例えば下記はアプリアイコンで使うAppIcon名を設定する例です。&lt;/p&gt;
-
-&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;// アプリアイコンとして使うAppIconの名前&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AppIcon&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;また利点にも記載しましたが、全てのビルドパラメータを記載する必要はありません。&lt;br /&gt;
-カスタマイズしたパラメータだけを列挙します。&lt;br /&gt;
-未記載のビルドパラメータはXcode側が持つデフォルト値が使われます。&lt;/p&gt;
-
-&lt;h4 id=&quot;上書き&quot;&gt;上書き&lt;/h4&gt;
-&lt;p&gt;ビルドパラメータは上書きが可能です。
-後から書いた同一パラメータが使われます。&lt;/p&gt;
-
-&lt;div class=&quot;language-js highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nx&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AppIcon&lt;/span&gt;
-&lt;span class=&quot;nx&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nx&quot;&gt;AppIcon2&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ← これが使われる&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この上書きルールは同一ファイルだけでなくファイルを横断して適用されます。&lt;br /&gt;
-つまりプロジェクトで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon&lt;/code&gt;と設定しても&lt;br /&gt;
-ターゲットで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon2&lt;/code&gt;と設定してれば、&lt;br /&gt;
-そのターゲットでは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AppIcon2&lt;/code&gt;になります。&lt;/p&gt;
-
-&lt;h3 id=&quot;パラメータの型&quot;&gt;パラメータの型&lt;/h3&gt;
-
-&lt;p&gt;パラメータの値には多様な型をサポートしています。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;型&lt;/th&gt;
-      &lt;th&gt;説明&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;Boolean&lt;/td&gt;
-      &lt;td&gt;YES or NO&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;string&lt;/td&gt;
-      &lt;td&gt;テキスト&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;enumeration(string)&lt;/td&gt;
-      &lt;td&gt;定義済みテキスト&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;string list&lt;/td&gt;
-      &lt;td&gt;空白区切りのテキスト一覧。もしテキスト内に空白があるなら引用符(“)で囲みます。&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;path&lt;/td&gt;
-      &lt;td&gt;ファイルまたはディレクトリのパス(形式はPOSIXに準拠)&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;path list&lt;/td&gt;
-      &lt;td&gt;string listのpath版&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;h3 id=&quot;変数展開&quot;&gt;変数展開&lt;/h3&gt;
-
-&lt;p&gt;パラメータ値では変数展開ができます。形式は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$(variable_name)&lt;/code&gt;になります。
-例えば下記は、既存パラメータを上書きせず追加する例です。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OTHER_SWIFT_FLAGS = $(inherited) -v
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;下記のように他のビルドパラメータも参照可能です。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OBJROOT = $(SYMROOT)
-
-DSTROOT = /tmp/$(PROJECT_NAME).dst
-
-CONFIGURATION_BUILD_DIR = $(BUILD_DIR)/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ビルドパラメータにプラットフォーム条件の追加&quot;&gt;ビルドパラメータにプラットフォーム条件の追加&lt;/h3&gt;
-
-&lt;p&gt;ビルドパラメータには簡易ですが、条件をつけれます。&lt;br /&gt;
-条件はSDKとArchitectureの2種類です。&lt;/p&gt;
-
-&lt;p&gt;SDKとはmacOSやiOSなどで、Architectureはx86_64やarm64などです。&lt;/p&gt;
-
-&lt;table&gt;
-  &lt;thead&gt;
-    &lt;tr&gt;
-      &lt;th&gt;条件名&lt;/th&gt;
-      &lt;th&gt;値(例)&lt;/th&gt;
-    &lt;/tr&gt;
-  &lt;/thead&gt;
-  &lt;tbody&gt;
-    &lt;tr&gt;
-      &lt;td&gt;sdk&lt;/td&gt;
-      &lt;td&gt;macos10.12, iphoneos10.2, iphoneos*&lt;/td&gt;
-    &lt;/tr&gt;
-    &lt;tr&gt;
-      &lt;td&gt;arch&lt;/td&gt;
-      &lt;td&gt;x86_64, arm64&lt;/td&gt;
-    &lt;/tr&gt;
-  &lt;/tbody&gt;
-&lt;/table&gt;
-
-&lt;p&gt;設定フォーマットは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ParameterName[Conditional=ConditionalValue] = ParameterValue&lt;/code&gt;になります。&lt;/p&gt;
-
-&lt;p&gt;例えば下記はiOSの場合のみ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OTHER_SWIFT_FLAGS&lt;/code&gt;に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-v&lt;/code&gt;を追加する例です。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OTHER_SWIFT_FLAGS[sdk=iphoneos*] = $(inherited) -v
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;組み合わせ可能&quot;&gt;組み合わせ可能&lt;/h4&gt;
-&lt;p&gt;条件sdkとarchは組み合わせ可能です。&lt;/p&gt;
-
-&lt;p&gt;下記はx86_64系iOSの場合のみ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;OTHER_SWIFT_FLAGS&lt;/code&gt;に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-v&lt;/code&gt;を追加する例です。&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;OTHER_SWIFT_FLAGS[sdk=iphoneos*][arch=x86_64] = $(inherited) -v
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;他ビルド構成ファイルの読み込み&quot;&gt;他ビルド構成ファイルの読み込み&lt;/h3&gt;
-&lt;p&gt;xcconfigは他のxcconfigを読み込み展開できます。
-他xcconfigを読み込むには&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#include &quot;other file path&quot;&lt;/code&gt;を使います。&lt;br /&gt;
-パスは「ファイル名」「相対パス」「絶対パス」を利用できます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;ファイル名: 同一ディレクトリ上から一致するファイルを探します。&lt;/li&gt;
-  &lt;li&gt;相対パス: 同一ディレクトリ上を基点として一致するファイルを探します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;他xcconfigへのパス解決は、ビルド設定を処理する前に実施されます。&lt;/p&gt;
-
-&lt;h4 id=&quot;指定ファイル見つからない場合&quot;&gt;指定ファイル見つからない場合&lt;/h4&gt;
-&lt;p&gt;ビルド時に指定のファイルが見つからない場合は、ビルド警告が表示されます。&lt;br /&gt;
-もしこの警告を抑制したい場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#include? &quot;other file path&quot;&lt;/code&gt;と、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;?&lt;/code&gt;をつけます。&lt;/p&gt;
-
-&lt;h3 id=&quot;ビルドパラメータ名が分からない場合&quot;&gt;ビルドパラメータ名が分からない場合&lt;/h3&gt;
-
-&lt;p&gt;もしビルドパラメータ名が分からない場合は「&lt;span&gt;&lt;a href=&quot;/ios/xcode/ios-xcode-xcconfig-how-to-search-build-config&quot;&gt;xcconfigで使うパラメータ名の見つけ方&lt;/a&gt;&lt;/span&gt;
-」に探し方をまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;xcconfigの実践活用&quot;&gt;xcconfigの実践活用&lt;/h2&gt;
-
-&lt;p&gt;実際のアプリ開発ではどういった運用にすればよいか考えてみます。&lt;/p&gt;
-
-&lt;p&gt;ターゲットの数ですが、最近の動向から考えて次の観点で考えてみます。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;4層構造&lt;/li&gt;
-  &lt;li&gt;AppExtension N個&lt;/li&gt;
-  &lt;li&gt;各ターゲットにUT&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これを元にプロジェクトとターゲットの構図で表すと次のツリー構造です。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Project
-    &lt;ul&gt;
-      &lt;li&gt;App&lt;/li&gt;
-      &lt;li&gt;AppTests&lt;/li&gt;
-      &lt;li&gt;AppUITests&lt;/li&gt;
-      &lt;li&gt;AppCore&lt;/li&gt;
-      &lt;li&gt;AppCoreTests&lt;/li&gt;
-      &lt;li&gt;Infrastructure&lt;/li&gt;
-      &lt;li&gt;InfrastructureTests&lt;/li&gt;
-      &lt;li&gt;Library&lt;/li&gt;
-      &lt;li&gt;LibraryTests&lt;/li&gt;
-      &lt;li&gt;AppExtensionA&lt;/li&gt;
-      &lt;li&gt;AppExtensionB&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;11個のターゲットに分かれました。
-分類としては、&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;レイヤー別&lt;/li&gt;
-  &lt;li&gt;テスト or プロダクト&lt;/li&gt;
-  &lt;li&gt;AppExtension&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;の3カテゴリに分けられるかと思います。&lt;/p&gt;
-
-&lt;p&gt;これを11個それぞれにビルドパラメータを設定するのは多量の重複が発生するので、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include&lt;/code&gt;を利用したxcconfigの階層化が必要かと思います。
-階層の分け方としては先程分けた分類に加えてBuild Configurationを考慮した形が良さそうです。&lt;/p&gt;
-
-&lt;p&gt;つまり整理すると、&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;プロジェクトのビルド構成を用意&lt;/li&gt;
-  &lt;li&gt;テスト共通ビルド構成を用意&lt;/li&gt;
-  &lt;li&gt;プロダクト共通ビルド構成を用意&lt;/li&gt;
-  &lt;li&gt;ターゲット毎にビルド構成を用意&lt;/li&gt;
-  &lt;li&gt;Build Configuration共通ビルド構成を用意&lt;/li&gt;
-  &lt;li&gt;Build Configuration毎にビルド構成を用意&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;になります。&lt;/p&gt;
-
-&lt;p&gt;Xcode上で見るとこうなります。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/3.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/3.png&quot; width=&quot;50%&quot; alt=&quot;LayeredTargets&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;これを今回はxcconfigを次のように分けました。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/4.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/4.png&quot; width=&quot;100%&quot; alt=&quot;xcconfigMapping&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;xcconfigファイル自体はターゲットフォルダと1:1ではないので、別フォルダとして集約しました。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/5.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/5.png&quot; width=&quot;50%&quot; alt=&quot;xcconfigFiles&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;これら親子関係をツリー表現すると次のようになります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Project.base.xcconfig
-    &lt;ul&gt;
-      &lt;li&gt;Project.debug.xcconfig
-        &lt;ul&gt;
-          &lt;li&gt;App.base.xcconfig
-            &lt;ul&gt;
-              &lt;li&gt;App.debug.xcconfig&lt;/li&gt;
-            &lt;/ul&gt;
-          &lt;/li&gt;
-          &lt;li&gt;UnitTest.xcconfig&lt;/li&gt;
-          &lt;li&gt;UITest.xcconfig&lt;/li&gt;
-          &lt;li&gt;Extension.base.xcconfig&lt;/li&gt;
-        &lt;/ul&gt;
-      &lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;releaseはdebugと同じなので省略してあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;今回この構成にした理由&quot;&gt;今回この構成にした理由&lt;/h3&gt;
-
-&lt;p&gt;テスト系xcconfigはReleaseで実施するケースは考えにくいためBuild Configurationによる分割はしていません。&lt;br /&gt;
-AppExtension系xconfigは今の所この2つのターゲットではDebugでもReleaseでも差異はなかったのですが、開発を進めるにあたって分岐しやすいと予想し、
-そのときの半分準備としてbaseを使うようにしています。今後DebugとReleaseで分岐が生まれたら、他同様になります。&lt;/p&gt;
-
-&lt;p&gt;当然ですが、この構成が絶対正解ではありません。プロダクトの特性や状況に応じその時点でのベストは異なります。&lt;br /&gt;
-エンジニアはこれを考えるのが重要な仕事です。&lt;/p&gt;
-
-&lt;h3 id=&quot;xcconfigの中身&quot;&gt;xcconfigの中身&lt;/h3&gt;
-
-&lt;p&gt;中身は予定通り&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;#include&lt;/code&gt;プレフィックスを使って共通xcconfigを読み込んでから、それぞれ特別値を個別設定してあります。&lt;/p&gt;
-
-&lt;p&gt;例えば下記は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Project.debug.xcconfig&lt;/code&gt;の全容です。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;#include &quot;Project.base.xcconfig&quot;
-
-//:configuration = Debug
-ONLY_ACTIVE_ARCH = YES
-DEBUG_INFORMATION_FORMAT = dwarf
-ENABLE_TESTABILITY = YES
-GCC_DYNAMIC_NO_PIC = NO
-GCC_OPTIMIZATION_LEVEL = 0
-GCC_PREPROCESSOR_DEFINITIONS = DEBUG=1 $(inherited)
-SWIFT_OPTIMIZATION_LEVEL = -Onone
-SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG
-MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;xcconfigは少なく抑えたほうが良い&quot;&gt;xcconfigは少なく抑えたほうが良い&lt;/h3&gt;
-
-&lt;p&gt;なるべくxcconfigのファイル数は少なくなるような構成にしてたほうがいいです。&lt;br /&gt;
-なぜならxcconfigの分岐ポイントが「Build Configuration」「Platform」「Testing」と分岐要素が多いことでファイル数が増えやすいためです。&lt;br /&gt;
-例えば、今回はBuild Configurationはデフォルト値となるDebugとReleaseの2つでした。&lt;br /&gt;
-しかしこれがDebug,Staging,AppStore,CIと4つに増えた場合にその分増えてしまいます。&lt;/p&gt;
-
-&lt;p&gt;もしBuild Configurationも増えるようであれば、組み合わせ爆発を起こさないためにも工夫が必要です。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="xcode" /><category term="xcconfig" /><summary type="html">xcconfigとは？ Xcodeのビルド構成ファイルです。略称からしてXCodeCONFIGurationといったところだと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-07-30-ios-xcode-xcconfig-how-to-use/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="ios" /><category term="mint" /><category term="swift" /><summary type="html">HomebrewでSwiftLintのバージョンを上げたら、別プロジェクトにも影響与えてコントロール失う経験ありますよね。Mintはそれを解決します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-07-31-ios-mint-basic-usage/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
