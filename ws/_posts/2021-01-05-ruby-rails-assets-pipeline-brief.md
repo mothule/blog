@@ -78,12 +78,8 @@ TypeScriptやSCSSを使ったほうが生産的です。
 例えばSass(SCSS)であれば、`sass-rails gem`が使われます。
 
 
-{% comment %}
-<!-- TODO: アセットパイプライン作ったら解除する
 ## アセットパイプラインの使い方
 
 アセットパイプラインは、パフォーマンス目的のためにファイル(アセット)をミニファイやファイル結合、トランスパイルするフレームワークです。
 
-実際の使い方は、{% post_link_text 2021-01-06-ruby-rails-assets-pipeline-use %}
--->
-{% endcomment %}
+実際の使い方は、{% post_link_text 2021-01-06-ruby-rails-assets-pipeline-use %}にまとめてあります。
