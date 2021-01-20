@@ -11,35 +11,35 @@
 
 
 
-  <title>ActiveRecordでpluckとselectしてpluckに変化はあるか？ - もちゅろぐ</title>
+  <title>Railsのアセットパイプラインの使い方を最短理解する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="og:title" content="Railsのアセットパイプラインの使い方を最短理解する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。" />
-<meta property="og:description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord" />
+<meta name="description" content="Railsのアセットパイプラインの使い方、全体像、用語を知り効率よくアセットパイプラインを使えるようにまとめました。" />
+<meta property="og:description" content="Railsのアセットパイプラインの使い方、全体像、用語を知り効率よくアセットパイプラインを使えるようにまとめました。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-use" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-use" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-08-05T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-06T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png" />
-<meta property="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png" />
+<meta property="twitter:title" content="Railsのアセットパイプラインの使い方を最短理解する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png","description":"ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord"},"@type":"BlogPosting","url":"https://blog.mothule.com/ruby/rails/active-record/ruby-rails-activerecord","headline":"ActiveRecordでpluckとselectしてpluckに変化はあるか？","dateModified":"2020-02-02T20:42:57+09:00","datePublished":"2019-08-05T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png","description":"Railsのアセットパイプラインの使い方、全体像、用語を知り効率よくアセットパイプラインを使えるようにまとめました。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-use"},"@type":"BlogPosting","url":"https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-use","headline":"Railsのアセットパイプラインの使い方を最短理解する","dateModified":"2021-01-20T19:53:23+09:00","datePublished":"2021-01-06T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
-<meta name="twitter:description" content="ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-05-ruby-rails-activerecord.png">
+<meta name="twitter:title" content="Railsのアセットパイプラインの使い方を最短理解する">
+<meta name="twitter:description" content="Railsのアセットパイプラインの使い方、全体像、用語を知り効率よくアセットパイプラインを使えるようにまとめました。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -151,18 +151,8 @@
       
         
         
-          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#active-record" itemprop="item">
-              <span itemprop="name">ActiveRecord</span>
-            </a>
-            <meta itemprop="position" content="4">
-          </li>
-        
-      
-        
-        
           <li>
-            ActiveRecordでpluckとselectしてpluckに変化はあるか？
+            Railsのアセットパイプラインの使い方を最短理解する
           </li>
         
       
@@ -174,12 +164,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-05-ruby-rails-activerecord.png" alt="ActiveRecordでpluckとselectしてpluckに変化はあるか？">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png" alt="Railsのアセットパイプラインの使い方を最短理解する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>ActiveRecordでpluckとselectしてpluckに変化はあるか？</h1>
+    <h1>Railsのアセットパイプラインの使い方を最短理解する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -189,12 +179,12 @@
           
             <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
           
-            <li class="list-inline-item"><a href="/tags#active-record">ActiveRecord</a></li>
+            <li class="list-inline-item"><a href="/tags#asset-pipeline">Asset Pipeline</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-8-5</time></span>
+        <span"><time class="post-date">2021-1-6</time></span>
       </div>
     </div>
   </header>
@@ -202,10 +192,47 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#sqlは同じ">SQLは同じ</a></li>
-  <li><a href="#速度は微妙な変化">速度は微妙な変化</a></li>
-  <li><a href="#しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</a></li>
-  <li><a href="#結論">結論</a></li>
+  <li><a href="#アセットパイプラインasset-pipelineの概要">アセットパイプライン(Asset Pipeline)の概要</a></li>
+  <li><a href="#アセットパイプラインasset-pipelineとは">アセットパイプライン(Asset Pipeline)とは</a>
+    <ul>
+      <li><a href="#アセットとは">アセットとは</a></li>
+      <li><a href="#パイプラインとは">パイプラインとは</a></li>
+      <li><a href="#マニフェストファイルとは">マニフェストファイルとは</a></li>
+      <li><a href="#ディレクティブとは">ディレクティブとは</a></li>
+    </ul>
+  </li>
+  <li><a href="#アセットパイプラインの全体フローを知る">アセットパイプラインの全体フローを知る</a>
+    <ul>
+      <li><a href="#アセットパイプライン処理の対象フォルダ">アセットパイプライン処理の対象フォルダ</a></li>
+    </ul>
+  </li>
+  <li><a href="#アセットパイプラインasset-pipelineを使う">アセットパイプライン(Asset Pipeline)を使う</a>
+    <ul>
+      <li><a href="#仕組みはデフォルトで用意されている">仕組みはデフォルトで用意されている</a></li>
+      <li><a href="#マスターファイルをロードする">マスターファイルをロードする</a></li>
+    </ul>
+  </li>
+  <li><a href="#ディレクティブについて">ディレクティブについて</a>
+    <ul>
+      <li><a href="#require_tree">require_tree</a></li>
+      <li><a href="#require_self">require_self</a></li>
+      <li><a href="#ディレクティブ順番が結合順">ディレクティブ順番が結合順</a></li>
+    </ul>
+  </li>
+  <li><a href="#アセットのコンパイルは環境依存">アセットのコンパイルは環境依存</a>
+    <ul>
+      <li><a href="#本番では自動コンパイル無効">本番では自動コンパイル無効</a></li>
+      <li><a href="#自動コンパイルの設定確認">自動コンパイルの設定確認</a></li>
+    </ul>
+  </li>
+  <li><a href="#本番用にプリコンパイルする">本番用にプリコンパイルする</a>
+    <ul>
+      <li><a href="#ファイルが見つからないとエラーが起きる">ファイルが見つからないとエラーが起きる</a></li>
+      <li><a href="#フィンガープリントでキャッシュ制御">フィンガープリントでキャッシュ制御</a></li>
+    </ul>
+  </li>
+  <li><a href="#マニフェストを増やす">マニフェストを増やす</a></li>
+  <li><a href="#アセットパイプラインは未だに健在する">アセットパイプラインは未だに健在する</a></li>
 </ul>
   </div>
 
@@ -225,89 +252,165 @@
   
 
   <section>
-  <p>ちょっとした疑問になりますが、明確な違いなどは生まれるのか気になるコードがあります。</p>
+  <p>Railsのアセットパイプラインの理解に時間を費やしたくないけど、理解しないといけないケースが多いです。<br />
+アセットパイプラインの使い方をなるべく端的にまとめました。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">select</span><span class="p">(</span><span class="ss">:name</span><span class="p">).</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<h2 id="アセットパイプラインasset-pipelineの概要">アセットパイプライン(Asset Pipeline)の概要</h2>
+<p>アセットパイプラインの概要は「<span><a href="/ruby/rails/ruby-rails-assets-pipeline-brief">Railsのアセットパイプラインの概要を最短理解する</a></span>
+」にまとめてあります。</p>
+
+<h2 id="アセットパイプラインasset-pipelineとは">アセットパイプライン(Asset Pipeline)とは</h2>
+<p>アセットパイプラインを後述する用語を使って説明します。</p>
+
+<p>アセットパイプラインとは、マニフェスト毎に集めたアセット群から1つのマスターファイルを作成するフレームワークです。<br />
+マニフェストファイルにはアセットの一覧となるマニフェストが書かれており、マニフェストの表現にディレクティブ（命令）を使います。<br />
+マニフェストファイルが2個あれば、マスターファイルは2つ作成されます。</p>
+
+<h3 id="アセットとは">アセットとは</h3>
+<p>アセットとはスタイルシートやJavaScriptなどのリソースの指します。</p>
+
+<h3 id="パイプラインとは">パイプラインとは</h3>
+<p>アセットを次々に一連の処理が施される仕組みです。</p>
+
+<h3 id="マニフェストファイルとは">マニフェストファイルとは</h3>
+<p>マニフェストとはロードするアセットの集まりであり、<br />
+マニフェストファイルとはそのマニフェストが書かれたファイルです。</p>
+
+<h3 id="ディレクティブとは">ディレクティブとは</h3>
+<p>マニフェストを実現するためのファイルロードに関する命令です。<br />
+ディレクティブを駆使してマニフェスト（アセットのリスト）を表現します。</p>
+
+<h2 id="アセットパイプラインの全体フローを知る">アセットパイプラインの全体フローを知る</h2>
+<p>例えば、アセットパイプラインを使って複数のスタイルシートから1つのスタイルシートがロードされるまでの流れです。</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">application.scss</code>内のディレクティブに沿ってファイルをロード
+    <ul>
+      <li>ロード対象の検索先は<code class="language-plaintext highlighter-rouge">app/assets/stylesheets</code>です。</li>
+    </ul>
+  </li>
+  <li>ロードしたファイルをコンパイル</li>
+  <li>マスターファイルとなる<code class="language-plaintext highlighter-rouge">application.css</code>にコンパイル済みファイルを結合</li>
+  <li>マスターファイルを<code class="language-plaintext highlighter-rouge">application.html.haml</code>からロードする</li>
+</ol>
+
+<p>本番環境の場合はコンパイル処理は事前に実施(プリコンパイル)され、<code class="language-plaintext highlighter-rouge">public/assets</code>フォルダに配置されます。</p>
+
+<h3 id="アセットパイプライン処理の対象フォルダ">アセットパイプライン処理の対象フォルダ</h3>
+<p>前述したロード対象の検索先の他にもいくつか検索候補があります。</p>
+
+<ol>
+  <li><code class="language-plaintext highlighter-rouge">app/assets</code></li>
+  <li><code class="language-plaintext highlighter-rouge">lib/assets</code></li>
+  <li><code class="language-plaintext highlighter-rouge">vendor/assets</code></li>
+</ol>
+
+<p>このなかの<code class="language-plaintext highlighter-rouge">app/assets</code>は、Railsアプリを作成時に自動で作成されます。</p>
+
+<h2 id="アセットパイプラインasset-pipelineを使う">アセットパイプライン(Asset Pipeline)を使う</h2>
+
+<p>では実際にアセットパイプラインを使ってみます。<br />
+なお、説明に使うコードはerbではなくhamlを使います。</p>
+
+<h3 id="仕組みはデフォルトで用意されている">仕組みはデフォルトで用意されている</h3>
+<p>実はRailsアプリを作成すれば、既にアセットパイプラインを利用できる環境は整っています。<br />
+そのため、各Controllerのスタイルシートを編集してるだけで、それらのスタイルシートはパイプラインの処理を施されマスターファイルが作成されます。</p>
+
+<p>なぜなら、デフォルトファイル<code class="language-plaintext highlighter-rouge">application.scss</code>は自身の位置するフォルダ配下のアセットを対象としたマニフェストが書かれてるからです。</p>
+
+<p>そのため、Controllerを作成すればスタイルシートは<code class="language-plaintext highlighter-rouge">app/assets/stylesheets</code>フォルダ配下に作成されますが、マニフェストの対象となっているため、自動でマスターファイル(<code class="language-plaintext highlighter-rouge">application.css</code>)に結合されます。</p>
+
+<h3 id="マスターファイルをロードする">マスターファイルをロードする</h3>
+<p>作成されたマスターファイルのロードは、<code class="language-plaintext highlighter-rouge">stylesheet_link_tag</code>を使用します。</p>
+
+<p>なお、マスターファイル<code class="language-plaintext highlighter-rouge">application.css</code>は、デフォルトのレイアウトファイル<code class="language-plaintext highlighter-rouge">application.html.haml</code>でロードされています。
+次のコードは<code class="language-plaintext highlighter-rouge">application.html.haml</code>を一部抜粋したものです。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>!!!
+%html
+  %head
+    %meta{:content =&gt; "text/html; charset=UTF-8", "http-equiv" =&gt; "Content-Type"}/
+    %meta{name: 'viewport', content: 'width=device-width,initial-scale=1'}
+    %title AnyTitle
+    = csrf_meta_tags
+    = csp_meta_tag
+    = stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload'
+    = javascript_pack_tag 'application', 'data-turbolinks-track': 'reload'
+    = stylesheet_pack_tag 'application', 'data-turbolinks-track': 'reload'
 </code></pre></div></div>
 
-<p>と</p>
+<p><code class="language-plaintext highlighter-rouge">'data-turbolinks-track': 'reload'</code>はページ遷移時にリソースを必要に応じてリロードします。</p>
 
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">User</span><span class="p">.</span><span class="nf">pluck</span><span class="p">(</span><span class="ss">:name</span><span class="p">)</span>
+<h2 id="ディレクティブについて">ディレクティブについて</h2>
+<p>マニフェストファイル(<code class="language-plaintext highlighter-rouge">application.scss</code>)にはマニフェスト表現のためにディレクティブが書かれてます。
+具体的には、次のようなコメント上で特殊な構文が使われます。</p>
+
+<div class="language-scss highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">*=</span> <span class="nt">require_tree</span> <span class="nc">.</span>
+<span class="o">*=</span> <span class="nt">require_self</span>
 </code></pre></div></div>
 
-<p>に速度差や消費メモリ差はあるのか？</p>
+<h3 id="require_tree">require_tree</h3>
+<p><code class="language-plaintext highlighter-rouge">require_tree</code>ディレクティブは指定した相対パスのディレクトリ以下全てのアセットを対象にします。
+子ディレクトリにも再帰的に動きます。</p>
 
-<h2 id="sqlは同じ">SQLは同じ</h2>
+<p>特定のディレクトリだけ指定したい場合は、<code class="language-plaintext highlighter-rouge">require_directory</code>ディレクティブを使います。</p>
 
-<p>出力されるSQLはどちらも同じでした。</p>
+<h3 id="require_self">require_self</h3>
+<p><code class="language-plaintext highlighter-rouge">require_self</code>は自身のCSSを使います。</p>
 
-<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">SELECT</span> <span class="nv">`users`</span><span class="p">.</span><span class="nv">`name`</span> <span class="k">FROM</span> <span class="nv">`users`</span>
+<h3 id="ディレクティブ順番が結合順">ディレクティブ順番が結合順</h3>
+<p>ディレクティブの順番によってマスターファイルに結合される順番が変わります。
+順番によってはcssの設定が上書きされたりするので、注意が必要です。</p>
+
+<h2 id="アセットのコンパイルは環境依存">アセットのコンパイルは環境依存</h2>
+<p>アセットパイプラインの処理には、ミニファイや結合などのファイル操作があります。<br />
+このファイル操作は開発環境では、ファイルのロード時に動的でコンパイルされます。<br />
+これは開発中にアセットが変更されても、自動でコンパイルするので開発しやすいです。</p>
+
+<h3 id="本番では自動コンパイル無効">本番では自動コンパイル無効</h3>
+<p>しかし、本番環境ではアセットは頻繁に変わることはないので、サーバーが動的にコンパイルするのは無駄です。<br />
+そのため、本番環境ではコンパイルはOFFにされており、事前にアセットのコンパイル(プリコンパイル)が必要です。</p>
+
+<h3 id="自動コンパイルの設定確認">自動コンパイルの設定確認</h3>
+<p>なお、アセットの動的コンパイルは次のコードで設定します。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">config</span><span class="p">.</span><span class="nf">assets</span><span class="p">.</span><span class="nf">compile</span> <span class="o">=</span> <span class="kp">true</span>
 </code></pre></div></div>
 
-<h2 id="速度は微妙な変化">速度は微妙な変化</h2>
+<p>本番環境ではこの値がfalseになっています。</p>
 
-<p>90万件に対して行った結果</p>
+<h2 id="本番用にプリコンパイルする">本番用にプリコンパイルする</h2>
+<p>本番環境用にマスターファイルを作成するには、<code class="language-plaintext highlighter-rouge">rails assets:precompile</code>タスクを使います。</p>
 
-<table>
-  <thead>
-    <tr>
-      <th>pluckのみ</th>
-      <th>select+pluck</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td>3228</td>
-      <td>3349</td>
-    </tr>
-    <tr>
-      <td>3152</td>
-      <td>2972</td>
-    </tr>
-    <tr>
-      <td>3126</td>
-      <td>3370</td>
-    </tr>
-    <tr>
-      <td>3101</td>
-      <td>3144</td>
-    </tr>
-    <tr>
-      <td>3271</td>
-      <td>2945</td>
-    </tr>
-    <tr>
-      <td>3454</td>
-      <td>3227</td>
-    </tr>
-    <tr>
-      <td>3120</td>
-      <td>3306</td>
-    </tr>
-    <tr>
-      <td>3488</td>
-      <td>3577</td>
-    </tr>
-    <tr>
-      <td>3046</td>
-      <td>3072</td>
-    </tr>
-    <tr>
-      <td>3228</td>
-      <td>3413</td>
-    </tr>
-  </tbody>
-</table>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ RAILS_ENV</span><span class="o">=</span>production bin/rails assets:precompile
+</code></pre></div></div>
 
-<p>pluckのみ平均: 3210.0ms select+pluck平均: 3231.625ms</p>
+<p>プリコンパイルされたファイルは<code class="language-plaintext highlighter-rouge">public/assets</code>に展開され、<code class="language-plaintext highlighter-rouge">public</code>ディレクトリ同様に静的ファイルとして扱われます。</p>
 
-<h2 id="しかしselectは確実に処理されてる">しかしselectは確実に処理されてる</h2>
+<h3 id="ファイルが見つからないとエラーが起きる">ファイルが見つからないとエラーが起きる</h3>
+<p>本番環境でプリコンパイル済みファイルが見つからないと、<code class="language-plaintext highlighter-rouge">Sprockets::Helpers::RailsHelper::AssetPaths::AssetNotPrecompiledError</code>が発生します。</p>
 
-<p>SQLは同じ、速度差も大きな違いはないが、トレースしたところ 確実はselectメソッドは処理されてからpluckを呼び出されている。 速度で微妙にpluckのみが勝っているのもこのselectメソッド処理が呼ばれているからではないかと予想。</p>
+<h3 id="フィンガープリントでキャッシュ制御">フィンガープリントでキャッシュ制御</h3>
+<p>キャッシュが有効な場合、マスターファイルにはフィンガープリントでキャッシュ制御が必要です。<br />
+なぜなら、キャッシュはパスで管理されます。<br />
+アセットに変更が加わってもマスターファイルのパスは変わらないので、キャッシュ有効と判断されます。</p>
 
-<h2 id="結論">結論</h2>
+<p>そのため、プリコンパイルするたびにファイル名にフィンガープリントが付与されます。</p>
 
-<p>実践に影響を及ぼす変化は起こりにくいと考えてよいが、 確実に無駄な処理は起きていることは事実であり、表面上のコード量も増えるので、 <strong>pluckを呼ぶのであれば,selectは呼ぶ必要はない。</strong></p>
+<h2 id="マニフェストを増やす">マニフェストを増やす</h2>
+<p>デフォルトではマニフェストファイルは<code class="language-plaintext highlighter-rouge">application.scss</code>や<code class="language-plaintext highlighter-rouge">application.js</code>です。</p>
+
+<p>例えばRailsアプリに管理画面を追加したく、管理画面用Bootstrapフレームワークを使いたいなど、レイアウトが大きく変えたい場合などはマニフェストを分けたほうが使いもしないコードの混在を回避できます。</p>
+
+<p>別のマニフェストを追加したい場合は、<code class="language-plaintext highlighter-rouge">config/initializers/assets.rb</code>内で<code class="language-plaintext highlighter-rouge">Rails.application.config.assets.precompile</code>を使用します。<br />
+管理画面用のマニフェストを<code class="language-plaintext highlighter-rouge">admin</code>にしたい場合は、コードは次のようになります。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="no">Rails</span><span class="p">.</span><span class="nf">application</span><span class="p">.</span><span class="nf">config</span><span class="p">.</span><span class="nf">assets</span><span class="p">.</span><span class="nf">precompile</span> <span class="o">+=</span> <span class="sx">%w( admin.js admin.css )</span>
+</code></pre></div></div>
+
+<h2 id="アセットパイプラインは未だに健在する">アセットパイプラインは未だに健在する</h2>
+<p>アセットパイプラインはモダンな環境では使われないかもしれません。<br />
+しかし、世の中で動いているサービスの比率で言うとまだまだアセットパイプラインは負債扱い・現役問わず、まだまだ使用されています。<br />
+アセットパイプラインを使った環境で開発したり、使わない環境へリニューアルするにしてもアセットパイプラインの知識がまだまだ必要なはずです。</p>
 
   </section>
 
@@ -342,36 +445,6 @@
             
                 
                 
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-use">
-      <img src="/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png" alt="Railsのアセットパイプラインの使い方を最短理解する" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-use">
-      <h3>Railsのアセットパイプラインの使い方を最短理解する</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#asset-pipeline">Asset Pipeline</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
                 
 
 
@@ -799,6 +872,142 @@
         <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
       
         <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/ruby/rails/ruby-rails-rails-5_2_3-update">
+      <img src="/assets/images/2019-11-14-ruby-rails-rails-5_2_3-update.png" alt="Railsを5.0.0から5.2.3に変更した" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/ruby/rails/ruby-rails-rails-5_2_3-update">
+      <h3>Railsを5.0.0から5.2.3に変更した</h3>
+    </a>
+
+    <ul class="list-inline">
       
         <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
       
