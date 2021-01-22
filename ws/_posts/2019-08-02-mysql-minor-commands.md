@@ -66,6 +66,8 @@ mysql> SHOW FULL COLUMNS FROM table_name
 
 {% page_image -2.png %}
 
+なお、`SHOW COLUMNS`などカラム情報の確認に関する詳細は、{% post_link_text 2021-01-22-db-mysql-show-columns %}にまとめてあります。
+
 ### 指定テーブルの作成時のクエリー表示
 
 ```
