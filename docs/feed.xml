@@ -1,14 +1,15 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-22T12:56:45+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MySQLのテーブル一覧を表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-tables" rel="alternate" type="text/html" title="MySQLのテーブル一覧を表示して確認する" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-22T12:56:30+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-tables</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-tables">&lt;p&gt;MySQLのテーブル一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;構文を使います。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;構文は、特定データベース内の&lt;em&gt;TEMPORARY&lt;/em&gt;以外のテーブルを一覧表示します。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-22T19:03:58+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MySQLのテーブル一覧を表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-tables" rel="alternate" type="text/html" title="MySQLのテーブル一覧を表示して確認する" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-22T19:01:50+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-tables</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-tables">&lt;p&gt;MySQLのテーブル一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;ステートメントは特定データベース内の&lt;em&gt;TEMPORARY&lt;/em&gt;以外のテーブルを一覧表示します。&lt;br /&gt;
 また、ビューも一覧表示します。&lt;/p&gt;
 
-&lt;h2 id=&quot;mysqlのshow-tables構文&quot;&gt;MySQLのSHOW TABLES構文&lt;/h2&gt;
+&lt;h2 id=&quot;mysqlのshow-tablesステートメントの構文&quot;&gt;MySQLのSHOW TABLESステートメントの構文&lt;/h2&gt;
 &lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW [FULL] TABLES [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]&lt;/code&gt;&lt;/p&gt;
 
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[]&lt;/code&gt;は任意で、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{|}&lt;/code&gt;はどちらかを選択になります。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[]&lt;/code&gt;は任意で、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{|}&lt;/code&gt;はどちらかを選択になります。&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{FROM | IN}&lt;/code&gt;であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FROM&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IN&lt;/code&gt;どちらかを使えます。&lt;/p&gt;
 
 &lt;h2 id=&quot;show-tablesの実行例&quot;&gt;SHOW TABLESの実行例&lt;/h2&gt;
-&lt;p&gt;USE構文でDB&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge_development&lt;/code&gt;を選択したのちに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;を実行してます。&lt;/p&gt;
+&lt;p&gt;USEステートメントでDB&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge_development&lt;/code&gt;を選択したのちに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;を実行してます。&lt;/p&gt;
 
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
 +---------------------------------+
@@ -105,7 +106,180 @@ Database: hoge_development
 +----------------------------+
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;ただし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt; のように&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句は使えません。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLのテーブル一覧を表示するには、SHOW TABLES構文を使います。 SHOW TABLES構文は、特定データベース内のTEMPORARY以外のテーブルを一覧表示します。 また、ビューも一覧表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication" rel="alternate" type="text/html" title="5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法" /><published>2021-01-21T00:00:00+09:00</published><updated>2021-01-21T12:15:41+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication">&lt;p&gt;5年近くフルリモートワークを経験して分かったことは、テキストコミュニケーションの改善は組織を大きく改善します。&lt;br /&gt;
+&lt;p&gt;ただし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt; のように&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句は使えません。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLのテーブル一覧を表示するには、SHOW TABLESステートメントを使います。 SHOW TABLESステートメントは特定データベース内のTEMPORARY以外のテーブルを一覧表示します。 また、ビューも一覧表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLでテーブルのカラムを表示して確認</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-columns" rel="alternate" type="text/html" title="MySQLでテーブルのカラムを表示して確認" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-22T19:02:05+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-columns</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-columns">&lt;p&gt;MySQLでテーブルのカラム一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;構文は指定したテーブル内のカラム情報を表示します。&lt;br /&gt;
+これはビューのカラムも表示します。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのshow-columnsステートメントの構文&quot;&gt;MySQLのSHOW COLUMNSステートメントの構文&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW [FULL] COLUMNS {FROM | IN} tbl_name [{FROM | IN} db_name] [LIKE 'pattern | WHERE expr]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[]&lt;/code&gt;は任意で、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{|}&lt;/code&gt;はどちらかを選択になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのshow-columnsの実行例&quot;&gt;MySQLのSHOW COLUMNSの実行例&lt;/h2&gt;
+&lt;p&gt;次の例は、USEステートメントでDB&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge_development&lt;/code&gt;を選択したのちに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;を実行してます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show columns from &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;              | bigint&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;20&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NO   | PRI | NULL    | auto_increment |
+| email           | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | YES  |     | NULL    |                |
+| password_digest | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | YES  |     | NULL    |                |
+| created_at      | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  | NO   |     | NULL    |                |
+| updated_at      | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  | NO   |     | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+5 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;db名とテーブル名のfrom句を結合する&quot;&gt;DB名とテーブル名のFROM句を結合する&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;db_name&lt;/code&gt;と&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tbl_name&lt;/code&gt;を&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.&lt;/code&gt;で繋ぐことができます。次の2つは同等です。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show full columns from &lt;span class=&quot;nb&quot;&gt;users &lt;/span&gt;from hoge&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+mysql&amp;gt; show full columns from hoge_development.users&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-columnsのlike句で表示カラムを絞る&quot;&gt;SHOW COLUMNSのLIKE句で表示カラムを絞る&lt;/h2&gt;
+&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;句を使うことで表示カラムを選択できます。&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;句はカラム名と照合します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show columns from &lt;span class=&quot;nb&quot;&gt;users &lt;/span&gt;like &lt;span class=&quot;s1&quot;&gt;'%_at'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| created_at | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | NO   |     | NULL    |       |
+| updated_at | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | NO   |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.01 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-columnsのfull修飾子でcollation照合順序とprivileges権限とcommentコメントを追加表示する&quot;&gt;SHOW COLUMNSのFULL修飾子でCollation(照合順序)とPrivileges(権限)とComment(コメント)を追加表示する&lt;/h2&gt;
+&lt;p&gt;構文内にあるFULL装飾子がついた&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW FULL COLUMNS&lt;/code&gt;を使うことで出力カラムにCollation(照合順序)とPrivileges(権限)とComment(コメント)を表示します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show full columns from &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| Field           | Type         | Collation          | Null | Key | Default | Extra          | Privileges                      | Comment |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;              | bigint&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;20&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NULL               | NO   | PRI | NULL    | auto_increment | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| email           | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | utf8mb4_general_ci | YES  |     | NULL    |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| password_digest | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | utf8mb4_general_ci | YES  |     | NULL    |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| created_at      | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  | NULL               | NO   |     | NULL    |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| updated_at      | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  | NULL               | NO   |     | NULL    |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+5 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-columnsが表示する値の説明&quot;&gt;SHOW COLUMNSが表示する値の説明&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW FULL COLUMNS&lt;/code&gt;が表示する値について説明します。&lt;/p&gt;
+
+&lt;h3 id=&quot;fieldフィールド&quot;&gt;Field(フィールド)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Field&lt;/code&gt;フィールドはテーブルのカラム名です。&lt;/p&gt;
+
+&lt;h3 id=&quot;typeカラムデータ型&quot;&gt;Type(カラムデータ型)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Type&lt;/code&gt;フィールドはカラムデータの型です。&lt;/p&gt;
+
+&lt;h3 id=&quot;collation照合順序&quot;&gt;Collation(照合順序)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Collation&lt;/code&gt;フィールドは文字列カラムの照合順序です。文字列でもバイナリは除きます。&lt;br /&gt;
+その他の型の場合はNULLになります。&lt;/p&gt;
+
+&lt;p&gt;この値は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FULL&lt;/code&gt;装飾子を使ったときだけ表示されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;null&quot;&gt;Null&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Null&lt;/code&gt;フィールドはNULLを格納できるかどうかを示します。&lt;br /&gt;
+NULLを設定できる場合は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;YES&lt;/code&gt;、できない場合は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;NO&lt;/code&gt;が表示されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;key&quot;&gt;Key&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Key&lt;/code&gt;フィールドはこのカラムのインデックス設定を&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;(空)/PRI/UNI/MUL&lt;/code&gt;のいずれかで示します。&lt;/p&gt;
+
+&lt;h4 id=&quot;keyが空の場合&quot;&gt;Keyが空の場合&lt;/h4&gt;
+&lt;p&gt;インデックス未設定か、&lt;/p&gt;
+&lt;h4 id=&quot;keyがpriの場合&quot;&gt;KeyがPRIの場合&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;PRIMARY KEY&lt;/code&gt;か、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;マルチカラムPRIMARY KEY&lt;/code&gt;の一つです。&lt;/p&gt;
+
+&lt;h4 id=&quot;keyがuniの場合&quot;&gt;KeyがUNIの場合&lt;/h4&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;UNIQUE&lt;/code&gt;インデックスです。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;NULL&lt;/code&gt;は複数の存在を許してしまいます。&lt;br /&gt;
+もし困る場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Null&lt;/code&gt;が&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;NO&lt;/code&gt;にして&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;NULL&lt;/code&gt;自体を拒否してください。&lt;/p&gt;
+&lt;h4 id=&quot;keyがmulの場合&quot;&gt;KeyがMULの場合&lt;/h4&gt;
+&lt;p&gt;特定の値が複数存在することを許可した一意(ユニーク)ではないインデックスの最初のカラムです。&lt;/p&gt;
+
+&lt;h3 id=&quot;default&quot;&gt;Default&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Default&lt;/code&gt;フィールドはカラムのデフォルト値です。&lt;br /&gt;
+デフォルト値がNULLだったり、カラム定義に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DEFAULT&lt;/code&gt;句がない場合は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;NULL&lt;/code&gt;が表示されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;extra&quot;&gt;Extra&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Extra&lt;/code&gt;フィールドは追加情報が含まれます。&lt;br /&gt;
+この値が空以外になるのは、次のケースです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AUTO_INCREMENT&lt;/code&gt;属性を持つカラムだと&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;auto_increment&lt;/code&gt;が表示されます。&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ON UPDATE CURRENT_TIMESTAMP&lt;/code&gt;属性を持つ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;TIMESTAMP&lt;/code&gt;または&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DATETIME&lt;/code&gt;カラムだと&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;on update CURRENT_TIMESTAMP&lt;/code&gt;が表示されます。&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;privileges権限&quot;&gt;Privileges(権限)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Privileges&lt;/code&gt;フィールドはユーザーがカラムに持っている権限を示します。&lt;br /&gt;
+この値は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FULL&lt;/code&gt;装飾子を使ったときだけ表示されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;commentコメント&quot;&gt;Comment(コメント)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Comment&lt;/code&gt;フィールドは任意のコメントを示します。&lt;br /&gt;
+この値は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FULL&lt;/code&gt;装飾子を使ったときだけ表示されます。&lt;/p&gt;
+
+&lt;h2 id=&quot;show-columnsをwhere句で表示カラムを絞る&quot;&gt;SHOW COLUMNSをWHERE句で表示カラムを絞る&lt;/h2&gt;
+&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句を使うことで表示カラムを選択できます。&lt;br /&gt;
+テーブル&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;users&lt;/code&gt;から&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Type&lt;/code&gt;カラムに対して照合すると次のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show columns from &lt;span class=&quot;nb&quot;&gt;users &lt;/span&gt;where Type like &lt;span class=&quot;s1&quot;&gt;'%char%'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| email           | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | YES  |     | NULL    |       |
+| password_digest | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | YES  |     | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+2 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;注意-show-columnsは権限がないカラムは表示されない&quot;&gt;注意: SHOW COLUMNSは権限がないカラムは表示されない&lt;/h2&gt;
+&lt;p&gt;カラムに対する権限を持っていない場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;の結果に表示されません。&lt;/p&gt;
+
+&lt;h2 id=&quot;その他同様のステートメント&quot;&gt;その他同様のステートメント&lt;/h2&gt;
+&lt;p&gt;構文にもあるように&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;と&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW FIELDS&lt;/code&gt;は同じ処理を行います。&lt;/p&gt;
+
+&lt;p&gt;また&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DESCRIBE&lt;/code&gt;ステートメントも&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;と同じ情報を提供できます。&lt;br /&gt;
+さらに、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DESCRIBE&lt;/code&gt;と&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;EXPLAIN&lt;/code&gt;と&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DESC&lt;/code&gt;はシノニム(代替名)です。&lt;br /&gt;
+つまり、次の行は全て同じ結果を返します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show columns from &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+mysql&amp;gt; show fields from &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+mysql&amp;gt; describe &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+mysql&amp;gt; explain &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+mysql&amp;gt; desc &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ただし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW FULL COLUMNS&lt;/code&gt;で追加表示されるカラムは、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DESCRIBE&lt;/code&gt;ステートメントには表示されません。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのmysqlshowコマンドでも取得可能&quot;&gt;MySQLのmysqlshowコマンドでも取得可能&lt;/h2&gt;
+&lt;p&gt;ターミナル上で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysqlshow&lt;/code&gt;コマンドを実行することで、同様にMySQLのカラム一覧を表示できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysqlshow &lt;span class=&quot;nt&quot;&gt;-uroot&lt;/span&gt; hoge_development &lt;span class=&quot;nb&quot;&gt;users
+&lt;/span&gt;Database: hoge_development  Table: &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| Field           | Type         | Collation          | Null | Key | Default | Extra          | Privileges                      | Comment |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;              | bigint&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;20&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   |                    | NO   | PRI |         | auto_increment | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| email           | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | utf8mb4_general_ci | YES  |     |         |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| password_digest | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;255&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | utf8mb4_general_ci | YES  |     |         |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| created_at      | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  |                    | NO   |     |         |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
+| updated_at      | datetime&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;6&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  |                    | NO   |     |         |                | &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt;,insert,update,references |         |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ただし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt; のように&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句は使えません。&lt;/p&gt;
+
+&lt;h2 id=&quot;最も手軽にテーブル構造を確認するのはdescステートメント&quot;&gt;最も手軽にテーブル構造を確認するのはDESCステートメント&lt;/h2&gt;
+&lt;p&gt;前述された情報から考えて、最もタイプ数が少なくて、手軽にテーブル構造を確認する方法は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DESC&lt;/code&gt;ステートメントを使うことです。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; desc &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLでテーブルのカラム一覧を表示するには、SHOW COLUMNSステートメントを使います。 SHOW COLUMNS構文は指定したテーブル内のカラム情報を表示します。 これはビューのカラムも表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication" rel="alternate" type="text/html" title="5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法" /><published>2021-01-21T00:00:00+09:00</published><updated>2021-01-21T12:15:41+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication">&lt;p&gt;5年近くフルリモートワークを経験して分かったことは、テキストコミュニケーションの改善は組織を大きく改善します。&lt;br /&gt;
 リモートワークはテキストコミュニケーションが要です。&lt;/p&gt;
 
 &lt;p&gt;この記事では、そんな私がテキストコミュニケーションとは何か？どうやったら上手になれるか？一人から始められる改善についてまとめました。&lt;/p&gt;
@@ -1496,140 +1670,4 @@ iOSではViewとViewModel間の情報伝達を手動で同期が必要となる�
   &lt;li&gt;「この画面で扱うデータはドメインではなく画面依存だからViewModel」&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;など、データやロジックがドメインなのか判断できないことが起因してViewModelへと責務が委任されていきます。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="program-design" /><category term="ios" /><summary type="html">MVVMを知らなかったり曖昧知識で採用すると、MVCとは異なる部分で問題がおきるだけです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する</title><link href="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection" rel="alternate" type="text/html" title="Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T03:55:23+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection">&lt;p&gt;例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。&lt;/p&gt;
-
-&lt;h2 id=&quot;swiftの高階関数はその場でクロージャを評価する&quot;&gt;Swiftの高階関数はその場でクロージャを評価する&lt;/h2&gt;
-&lt;p&gt;SwiftのCollectionなどで使える高階関数(filter, map, reduceなど)は、&lt;br /&gt;
-関数が呼ばれたら、その場でクロージャが評価されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sequence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stride&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Will call count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sequence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;例えば上記コードを実行すると、コンソールには下記が出力されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;toString(from:)
-Will call count
-1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ケースによっては無駄な処理が生まれる&quot;&gt;ケースによっては無駄な処理が生まれる&lt;/h2&gt;
-
-&lt;p&gt;例えば10万件に対しあるfilter処理した結果に対し&lt;strong&gt;isEmpty&lt;/strong&gt;を呼びたいケースはコードだとこうなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sequence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stride&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sequence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これを高階関数を使わず書くとこうなります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;var&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Bool&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;true&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sequence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stride&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;sequence&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;val&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kc&quot;&gt;false&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// ①&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;isEmptyは1回でも条件満たせばいいので、それ以降のループ処理を走らせる必要がありません。&lt;br /&gt;
-①の部分でisEmpty = falseの後にbreakでループを抜けるべきです。&lt;/p&gt;
-
-&lt;h3 id=&quot;高負荷だと無駄が顕著に現れる&quot;&gt;高負荷だと無駄が顕著に現れる&lt;/h3&gt;
-
-&lt;p&gt;例えば高階関数のクロージャが少し重かったとします。(0.001秒かかる)&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sequence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stride&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;forTimeInterval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sequence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この場合、最終的な結果を得るには、少なくとも100秒(0.001秒 × 10万件)かかります。&lt;/p&gt;
-
-&lt;h2 id=&quot;lazy遅延評価を使う&quot;&gt;lazy(遅延評価)を使う&lt;/h2&gt;
-&lt;p&gt;SwiftのSequenceやCollectionにはlazy機能があります。&lt;br /&gt;
-これは実際の値が必要になるまで高階関数内クロージャを実行しません。&lt;br /&gt;
-実際の値とは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;isEmpty&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;count&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;first&lt;/code&gt;などです。&lt;/p&gt;
-
-&lt;h3 id=&quot;遅延を確認する&quot;&gt;遅延を確認する&lt;/h3&gt;
-
-&lt;p&gt;lazyを使うには、高階関数を呼ぶ前に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lazy&lt;/code&gt;メソッドを呼びます。&lt;br /&gt;
-冒頭に説明したコードを使ってlazy化します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;kd&quot;&gt;func&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;from&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&amp;gt;&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;#function&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;String&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;val&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sequence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;nf&quot;&gt;stride&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;10&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;lazy&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;*&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;amp;&amp;amp;&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;lt;&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;map&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;toString&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;Will call count&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sequence&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これを実行するとコンソールには下記が出力されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Will call count
-toString(from:)
-1
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;高階関数内で呼ばれている&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;toString(from:)&lt;/code&gt;が&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Will call count&lt;/code&gt;より後に来ています。&lt;/p&gt;
-
-&lt;h3 id=&quot;効率化を確認する&quot;&gt;効率化を確認する&lt;/h3&gt;
-
-&lt;p&gt;Swiftのlazyにはもう一つ特徴があります。&lt;br /&gt;
-それは実際の値を必要としてるメソッドによって、高階関数のクロージャを中断することです。&lt;br /&gt;
-例えば先程使った100秒かかるコードをlazy化してみます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;sequence&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;kt&quot;&gt;Array&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;stride&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;from&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;to&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;100000&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;by&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;kd&quot;&gt;lazy&lt;/span&gt;
-    &lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;filter&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;({&lt;/span&gt;
-        &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s&quot;&gt;&quot;in filter&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;kt&quot;&gt;Thread&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sleep&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;forTimeInterval&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;mf&quot;&gt;0.001&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-        &lt;span class=&quot;k&quot;&gt;return&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$0&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;%&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;0&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;})&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sequence&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;isEmpty&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これを実行するとコンソールは下記を出力します。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;in filter
-false
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;in filter&lt;/code&gt;が1回しか呼ばれていないです。
-これは1回目のループで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;true&lt;/code&gt;になったことで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;isEmpty&lt;/code&gt;の判断ができるようになったので処理を中断してます。&lt;/p&gt;
-
-&lt;p&gt;ちなみに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;isEmpty&lt;/code&gt;を&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;count&lt;/code&gt;にすると、lazyしてないコード同様に全てのループを実行します。&lt;br /&gt;
-これは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;count&lt;/code&gt;の結果を判断するには全部の処理を通さないと結果が分からないためです。&lt;/p&gt;
-
-&lt;p&gt;つまり&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;lazy&lt;/code&gt;を使うことで途中で結果が得られたら中断し得られない場合は継続します。&lt;/p&gt;
-
-&lt;h2 id=&quot;全部lazyというわけではない&quot;&gt;全部lazyというわけではない&lt;/h2&gt;
-&lt;p&gt;とりあえず全部lazyにしとけば良いというものではありません。&lt;br /&gt;
-lazyにすることで通常と比べ遅延用の仕組みが必要となるため内部処理が複雑となるため速度やメモリ負荷がその分かかります。&lt;/p&gt;
-
-&lt;p&gt;またlazyは評価を遅らせます。遅延評価のデメリットが発生することを知る必要があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;LazyCollectionやLazySequenceには用意されてない高階関数がある&lt;/li&gt;
-  &lt;li&gt;呼出元と処理実行タイミングが異なるため、どこで実際の処理が走るのか読みにくくなる&lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-lazy-sequence-and-collection/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-lazy-sequence-and-collection/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;p&gt;など、データやロジックがドメインなのか判断できないことが起因してViewModelへと責務が委任されていきます。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="program-design" /><category term="ios" /><summary type="html">MVVMを知らなかったり曖昧知識で採用すると、MVCとは異なる部分で問題がおきるだけです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>

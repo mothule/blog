@@ -31,7 +31,7 @@
 <meta property="twitter:title" content="MySQLのテーブル一覧を表示して確認する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png","description":"MySQLのテーブル(TABLE)を一覧で表示して確認できるステートメントSHOW TABLESについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-show-tables"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-show-tables","headline":"MySQLのテーブル一覧を表示して確認する","dateModified":"2021-01-22T12:56:30+09:00","datePublished":"2021-01-22T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png","description":"MySQLのテーブル(TABLE)を一覧で表示して確認できるステートメントSHOW TABLESについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-show-tables"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-show-tables","headline":"MySQLのテーブル一覧を表示して確認する","dateModified":"2021-01-22T19:01:50+09:00","datePublished":"2021-01-22T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
@@ -190,7 +190,7 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#mysqlのshow-tables構文">MySQLのSHOW TABLES構文</a></li>
+  <li><a href="#mysqlのshow-tablesステートメントの構文">MySQLのSHOW TABLESステートメントの構文</a></li>
   <li><a href="#show-tablesの実行例">SHOW TABLESの実行例</a></li>
   <li><a href="#show-tablesのlike句で表示テーブルを絞る">SHOW TABLESのLIKE句で表示テーブルを絞る</a></li>
   <li><a href="#show-tablesのfull修飾子でテーブルタイプを追加表示する">SHOW TABLESのFULL修飾子でテーブルタイプを追加表示する</a></li>
@@ -216,17 +216,18 @@
   
 
   <section>
-  <p>MySQLのテーブル一覧を表示するには、<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>構文を使います。<br />
-<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>構文は、特定データベース内の<em>TEMPORARY</em>以外のテーブルを一覧表示します。<br />
+  <p>MySQLのテーブル一覧を表示するには、<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>ステートメントを使います。<br />
+<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>ステートメントは特定データベース内の<em>TEMPORARY</em>以外のテーブルを一覧表示します。<br />
 また、ビューも一覧表示します。</p>
 
-<h2 id="mysqlのshow-tables構文">MySQLのSHOW TABLES構文</h2>
+<h2 id="mysqlのshow-tablesステートメントの構文">MySQLのSHOW TABLESステートメントの構文</h2>
 <p><code class="language-plaintext highlighter-rouge">SHOW [FULL] TABLES [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]</code></p>
 
-<p><code class="language-plaintext highlighter-rouge">[]</code>は任意で、<code class="language-plaintext highlighter-rouge">{|}</code>はどちらかを選択になります。</p>
+<p><code class="language-plaintext highlighter-rouge">[]</code>は任意で、<code class="language-plaintext highlighter-rouge">{|}</code>はどちらかを選択になります。<br />
+<code class="language-plaintext highlighter-rouge">{FROM | IN}</code>であれば<code class="language-plaintext highlighter-rouge">FROM</code>か<code class="language-plaintext highlighter-rouge">IN</code>どちらかを使えます。</p>
 
 <h2 id="show-tablesの実行例">SHOW TABLESの実行例</h2>
-<p>USE構文でDB<code class="language-plaintext highlighter-rouge">hoge_development</code>を選択したのちに<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>を実行してます。</p>
+<p>USEステートメントでDB<code class="language-plaintext highlighter-rouge">hoge_development</code>を選択したのちに<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>を実行してます。</p>
 
 <div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show tables<span class="p">;</span>
 +---------------------------------+
@@ -352,6 +353,40 @@ Database: hoge_development
             
                 
                 
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/db-mysql-show-columns">
+      <img src="/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" alt="MySQLでテーブルのカラムを表示して確認" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/db-mysql-show-columns">
+      <h3>MySQLでテーブルのカラムを表示して確認</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
                 
 
 
