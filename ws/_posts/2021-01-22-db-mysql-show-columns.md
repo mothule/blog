@@ -1,5 +1,5 @@
 ---
-title: MySQLでテーブルのカラムを表示して確認
+title: MySQLでテーブルのカラムを表示して確認する
 description: MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。
 image:
   path: /assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png
@@ -36,7 +36,7 @@ mysql> show columns from users;
 `db_name`と`tbl_name`を`.`で繋ぐことができます。次の2つは同等です。
 
 ```sh
-mysql> show full columns from users from hoge;
+mysql> show full columns from users from hoge_development;
 mysql> show full columns from hoge_development.users;
 ```
 
