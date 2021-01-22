@@ -11,35 +11,35 @@
 
 
 
-  <title>【初心者向け】UITableViewControllerの使い方 - もちゅろぐ</title>
+  <title>MySQLのテーブル一覧を表示して確認する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="【初心者向け】UITableViewControllerの使い方" />
+<meta property="og:title" content="MySQLのテーブル一覧を表示して確認する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="UITableViewControllerの使い方について説明します。" />
-<meta property="og:description" content="UITableViewControllerの使い方について説明します。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic" />
-<meta property="og:url" content="https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic" />
+<meta name="description" content="MySQLのテーブル(TABLE)を一覧で表示して確認できるステートメントSHOW TABLESについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
+<meta property="og:description" content="MySQLのテーブル(TABLE)を一覧で表示して確認できるステートメントSHOW TABLESについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
+<link rel="canonical" href="https://blog.mothule.com/db/mysql/db-mysql-show-tables" />
+<meta property="og:url" content="https://blog.mothule.com/db/mysql/db-mysql-show-tables" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-10-08T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-22T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png" />
-<meta property="twitter:title" content="【初心者向け】UITableViewControllerの使い方" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" />
+<meta property="twitter:title" content="MySQLのテーブル一覧を表示して確認する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png","description":"UITableViewControllerの使い方について説明します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic"},"@type":"BlogPosting","url":"https://blog.mothule.com/ios/uitableview/ios-uitableviewcontroller-basic","headline":"【初心者向け】UITableViewControllerの使い方","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-08T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png","description":"MySQLのテーブル(TABLE)を一覧で表示して確認できるステートメントSHOW TABLESについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-show-tables"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-show-tables","headline":"MySQLのテーブル一覧を表示して確認する","dateModified":"2021-01-22T12:56:30+09:00","datePublished":"2021-01-22T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="【初心者向け】UITableViewControllerの使い方">
-<meta name="twitter:description" content="UITableViewControllerの使い方について説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png">
+<meta name="twitter:title" content="MySQLのテーブル一覧を表示して確認する">
+<meta name="twitter:description" content="MySQLのテーブル(TABLE)を一覧で表示して確認できるステートメントSHOW TABLESについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ios" itemprop="item">
-              <span itemprop="name">iOS</span>
+            <a href="/tags#db" itemprop="item">
+              <span itemprop="name">DB</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#uitableview" itemprop="item">
-              <span itemprop="name">UITableView</span>
+            <a href="/tags#mysql" itemprop="item">
+              <span itemprop="name">MySQL</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            【初心者向け】UITableViewControllerの使い方
+            MySQLのテーブル一覧を表示して確認する
           </li>
         
       
@@ -164,25 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png" alt="【初心者向け】UITableViewControllerの使い方">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" alt="MySQLのテーブル一覧を表示して確認する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>【初心者向け】UITableViewControllerの使い方</h1>
+    <h1>MySQLのテーブル一覧を表示して確認する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+            <li class="list-inline-item"><a href="/tags#db">DB</a></li>
           
-            <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
+            <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-10-8</time></span>
+        <span"><time class="post-date">2021-1-22</time></span>
       </div>
     </div>
   </header>
@@ -190,16 +190,13 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#まずはただ表示する">まずはただ表示する</a>
-    <ul>
-      <li><a href="#tableviewcontrollerswift">TableViewController.swift</a></li>
-      <li><a href="#tableviewcontrollerstoryboard">TableViewController.storyboard</a></li>
-    </ul>
-  </li>
-  <li><a href="#唯一の特性であるstaticcell">唯一の特性であるStaticCell</a></li>
-  <li><a href="#uitableviewcontrollerでrefreshcontrol実装">UITableViewControllerでrefreshcontrol実装</a></li>
-  <li><a href="#titleは使えない">titleは使えない</a></li>
-  <li><a href="#uitableviewcontrollerは用途は限定的">UITableViewControllerは用途は限定的</a></li>
+  <li><a href="#mysqlのshow-tables構文">MySQLのSHOW TABLES構文</a></li>
+  <li><a href="#show-tablesの実行例">SHOW TABLESの実行例</a></li>
+  <li><a href="#show-tablesのlike句で表示テーブルを絞る">SHOW TABLESのLIKE句で表示テーブルを絞る</a></li>
+  <li><a href="#show-tablesのfull修飾子でテーブルタイプを追加表示する">SHOW TABLESのFULL修飾子でテーブルタイプを追加表示する</a></li>
+  <li><a href="#show-tablesをwhere句で表示テーブルを絞る">SHOW TABLESをWHERE句で表示テーブルを絞る</a></li>
+  <li><a href="#注意-show-tablesは権限がない場合は表示されない">注意: SHOW TABLESは権限がない場合は表示されない</a></li>
+  <li><a href="#mysqlのmysqlshowコマンドでも取得可能">MySQLのmysqlshowコマンドでも取得可能</a></li>
 </ul>
   </div>
 
@@ -219,143 +216,114 @@
   
 
   <section>
-  <p>UITableViewControllerの使い方について説明します。</p>
+  <p>MySQLのテーブル一覧を表示するには、<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>構文を使います。<br />
+<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>構文は、特定データベース内の<em>TEMPORARY</em>以外のテーブルを一覧表示します。<br />
+また、ビューも一覧表示します。</p>
 
-<p>UIViewControllerと対等の位置にありますが、実態はUIViewControllerにテーブル機能を追加して、他の機能を削っただけです。</p>
+<h2 id="mysqlのshow-tables構文">MySQLのSHOW TABLES構文</h2>
+<p><code class="language-plaintext highlighter-rouge">SHOW [FULL] TABLES [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]</code></p>
 
-<h2 id="まずはただ表示する">まずはただ表示する</h2>
+<p><code class="language-plaintext highlighter-rouge">[]</code>は任意で、<code class="language-plaintext highlighter-rouge">{|}</code>はどちらかを選択になります。</p>
 
-<p>次のファイルを作成する</p>
+<h2 id="show-tablesの実行例">SHOW TABLESの実行例</h2>
+<p>USE構文でDB<code class="language-plaintext highlighter-rouge">hoge_development</code>を選択したのちに<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>を実行してます。</p>
 
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show tables<span class="p">;</span>
++---------------------------------+
+| Tables_in_hoge_development      |
++---------------------------------+
+| active_admin_comments           |
+| active_storage_attachments      |
+| active_storage_blobs            |
+| ar_internal_metadata            |
+| schema_migrations               |
+| hoges                           |
+| tokens                          |
+| <span class="nb">users</span>                           |
++---------------------------------+
+8 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="show-tablesのlike句で表示テーブルを絞る">SHOW TABLESのLIKE句で表示テーブルを絞る</h2>
+
+<p>構文内にある<code class="language-plaintext highlighter-rouge">LIKE</code>句を使うことで表示テーブルを選択できます。<br />
+先程のテーブル名から先頭に<code class="language-plaintext highlighter-rouge">active</code> と入るテーブル名を選択する場合は次のようになります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show tables like <span class="s1">'active_%'</span><span class="p">;</span>
++--------------------------------------------+
+| Tables_in_hoge_development <span class="o">(</span>active_%<span class="o">)</span>      |
++--------------------------------------------+
+| active_admin_comments                      |
+| active_storage_attachments                 |
+| active_storage_blobs                       |
++--------------------------------------------+
+3 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="show-tablesのfull修飾子でテーブルタイプを追加表示する">SHOW TABLESのFULL修飾子でテーブルタイプを追加表示する</h2>
+
+<p>構文内にあるFULL装飾子がついた<code class="language-plaintext highlighter-rouge">SHOW FULL TABLES</code>を使うことで出力カラムにテーブルタイプを表示します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show full tables<span class="p">;</span>
++---------------------------------+------------+
+| Tables_in_hoge_development      | Table_type |
++---------------------------------+------------+
+| active_admin_comments           | BASE TABLE |
+| active_storage_attachments      | BASE TABLE |
+| active_storage_blobs            | BASE TABLE |
+| ar_internal_metadata            | BASE TABLE |
+| schema_migrations               | BASE TABLE |
+| hoges                           | BASE TABLE |
+| tokens                          | BASE TABLE |
+| <span class="nb">users</span>                           | BASE TABLE |
++---------------------------------+------------+
+8 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<p>テーブルタイプ(Table_type)の値は、テーブルかビューで変わります。</p>
 <ul>
-  <li>TableViewController.swift</li>
-  <li>TableViewController.storyboard</li>
+  <li>テーブルは<code class="language-plaintext highlighter-rouge">BASE TABLE</code></li>
+  <li>ビューは<code class="language-plaintext highlighter-rouge">VIEW</code></li>
 </ul>
 
-<h3 id="tableviewcontrollerswift">TableViewController.swift</h3>
+<h2 id="show-tablesをwhere句で表示テーブルを絞る">SHOW TABLESをWHERE句で表示テーブルを絞る</h2>
 
-<p><code class="language-plaintext highlighter-rouge">Cocoa Touch Class</code> を選択して、 <code class="language-plaintext highlighter-rouge">Subclass of</code> を <code class="language-plaintext highlighter-rouge">UITableViewController</code> にすると自動でコードが生成されます。</p>
+<p>構文内にある<code class="language-plaintext highlighter-rouge">WHERE</code>句を使うことで表示テーブルを選択できます。<br />
+先程のテーブル名から<code class="language-plaintext highlighter-rouge">users</code>テーブルを選択する場合は次のようになります。</p>
 
-<p><a href="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/2.png"><img src="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/2.png" width="50%" alt="" /></a></p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show tables where Tables_in_hoge_development <span class="o">=</span> <span class="s1">'users'</span><span class="p">;</span>
++---------------------------------+
+| Tables_in_hoge_development      |
++---------------------------------+
+| <span class="nb">users</span>                           |
++---------------------------------+
+1 row <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+<p>また、FULL装飾子をつけてテーブルタイプ(Table_type)を追加すれば、同様に条件として使えます。</p>
 
-<p>コードの定義を見ると分かるように <code class="language-plaintext highlighter-rouge">UITableViewController</code> は <code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> と <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> を採用しています。</p>
+<h2 id="注意-show-tablesは権限がない場合は表示されない">注意: SHOW TABLESは権限がない場合は表示されない</h2>
+<p>テーブルやビューに対する権限を持っていない場合は、<code class="language-plaintext highlighter-rouge">SHOW TABLES</code>の結果に表示されません。</p>
 
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">open</span> <span class="kd">class</span> <span class="kt">UITableViewController</span> <span class="p">:</span> <span class="kt">UIViewController</span><span class="p">,</span> <span class="kt">UITableViewDelegate</span><span class="p">,</span> <span class="kt">UITableViewDataSource</span>
+<h2 id="mysqlのmysqlshowコマンドでも取得可能">MySQLのmysqlshowコマンドでも取得可能</h2>
+<p>ターミナル上で<code class="language-plaintext highlighter-rouge">mysqlshow</code>コマンドを実行することで、同様にMySQLのテーブル一覧を表示できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysqlshow <span class="nt">-uroot</span> hoge_development
+Database: hoge_development
++----------------------------+
+|           Tables           |
++----------------------------+
+| active_admin_comments      |
+| active_storage_attachments |
+| active_storage_blobs       |
+| ar_internal_metadata       |
+| schema_migrations          |
+| hoges                      |
+| tokens                     |
+| <span class="nb">users</span>                      |
++----------------------------+
 </code></pre></div></div>
 
-<p>テーブルの基本について分からない場合はこちらの記事をどうぞ</p>
-
-<div class="link-container">
-  <a href="/ios/uitableview/ios-uitableview-basic">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-09-26-ios-uitableview-basic/2019-09-26-ios-uitableview-basic.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>【初心者向け】UITableViewの基本的な使い方を極める【入門】</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>初心者向けにiOSのUITableViewの基本的な使い方について説明します。
-この記事を一通り読むことでほとんどの部分を極めれることを目標にしています。
-
-</span>
-      </div>
-    </div>
-  </a>
-</div>
-
-<p>自動生成されたコード量に少し面倒くささを感じますが、コメントアウトされたコードを見ると<br />
-<code class="language-plaintext highlighter-rouge">UITableViewDataSource</code> と <code class="language-plaintext highlighter-rouge">UITableViewDelegate</code> の必須とよく使うメソッドば抜粋されているだけです。</p>
-
-<p>もし<code class="language-plaintext highlighter-rouge">UITableViewDelegate</code>で分からない場合は、こちらの記事を先にどうぞ</p>
-
-<div class="link-container">
-  <a href="/ios/uitableview/ios-uitableview-uitableviewdelegate-basic">
-    <div class="link-container-image">
-      <img src="/assets/images/2019-09-27-ios-uitableview-uitableviewdelegate-basic.png" />
-    </div>
-    <div class="link-container-summary">
-      <div class="link-container-summary-title">
-        <span>【初心者向け】UITableViewDelegateで出来ること</span>
-      </div>
-      <div class="link-container-summary-brief">
-        <span>`UITableViewDelegate`とは`UITableView`の操作イベントをハンドリングするプロトコルです。
-単純なセルのタップイベントをはじめ、
-今回はタップのみですが、それ以外にも様々なイベントフックや制御ができます。
-
-</span>
-      </div>
-    </div>
-  </a>
-</div>
-
-<h3 id="tableviewcontrollerstoryboard">TableViewController.storyboard</h3>
-
-<p><code class="language-plaintext highlighter-rouge">UITableViewController</code>を配置します。</p>
-
-<p><a href="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png"><img src="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/1.png" width="50%" alt="" /></a></p>
-
-<p>制御クラスは <code class="language-plaintext highlighter-rouge">TableViewController</code> にします。</p>
-
-<h2 id="唯一の特性であるstaticcell">唯一の特性であるStaticCell</h2>
-
-<p>UITableViewControllerはテーブルを静的にデータとして扱うことができます。</p>
-
-<p>これは例えば次のようなテーブルにいくつかのカスタムセルがあったとして、</p>
-
-<p><a href="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/4.png"><img src="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/4.png" width="100%" alt="" /></a></p>
-
-<p>コード側では次のように直接Outletとして持つことができます。</p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="kd">class</span> <span class="kt">TableViewController</span><span class="p">:</span> <span class="kt">UITableViewController</span> <span class="p">{</span>
-
-    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">textField</span><span class="p">:</span> <span class="kt">UITextField</span><span class="o">!</span>
-    <span class="kd">@IBAction</span> <span class="kd">func</span> <span class="nf">onTouchedButton</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">Any</span><span class="p">)</span> <span class="p">{</span>
-        <span class="k">let</span> <span class="nv">vc</span> <span class="o">=</span> <span class="kt">UIAlertController</span><span class="p">(</span><span class="nv">title</span><span class="p">:</span> <span class="s">""</span><span class="p">,</span> <span class="nv">message</span><span class="p">:</span> <span class="n">textField</span><span class="o">.</span><span class="n">text</span> <span class="p">??</span> <span class="s">""</span><span class="p">,</span> <span class="nv">preferredStyle</span><span class="p">:</span> <span class="o">.</span><span class="n">alert</span><span class="p">)</span>
-        <span class="nf">present</span><span class="p">(</span><span class="n">vc</span><span class="p">,</span> <span class="nv">animated</span><span class="p">:</span> <span class="kc">true</span><span class="p">,</span> <span class="nv">completion</span><span class="p">:</span> <span class="kc">nil</span><span class="p">)</span>
-        <span class="n">textField</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span class="s">""</span>
-    <span class="p">}</span>
-    <span class="c1">// ...</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<p><a href="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/5.gif"><img src="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/5.gif" width="100%" alt="" /></a></p>
-
-<p>テーブルのセル内のイベントやUIを用意に取れるのはかなり協力ですが、弱点としては名前の通り静的構造限定です。<br />
-動的にセルが変化したり増えたりするのはできません。</p>
-
-<h2 id="uitableviewcontrollerでrefreshcontrol実装">UITableViewControllerでrefreshcontrol実装</h2>
-<p>UITableViewControllerに下に引っ張って更新するPull to refreshを実装するのは他と変わらずです。</p>
-
-<p><a href="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/3.gif"><img src="/assets/images/2019-10-08-ios-uitableviewcontroller-basic/3.gif" width="100%" alt="" /></a></p>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
-    <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
-
-    <span class="k">self</span><span class="o">.</span><span class="n">refreshControl</span> <span class="o">=</span> <span class="kt">UIRefreshControl</span><span class="p">()</span>
-    <span class="k">self</span><span class="o">.</span><span class="n">refreshControl</span><span class="p">?</span><span class="o">.</span><span class="nf">addTarget</span><span class="p">(</span><span class="k">self</span><span class="p">,</span> <span class="nv">action</span><span class="p">:</span> <span class="kd">#selector(</span><span class="nf">onRefresh(_:)</span><span class="kd">)</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="o">.</span><span class="n">valueChanged</span><span class="p">)</span>    
-<span class="p">}</span>
-
-<span class="kd">@objc</span> <span class="kd">private</span> <span class="kd">func</span> <span class="nf">onRefresh</span><span class="p">(</span><span class="n">_</span> <span class="nv">sender</span><span class="p">:</span> <span class="kt">AnyObject</span><span class="p">)</span> <span class="p">{</span>
-    <span class="nf">print</span><span class="p">(</span><span class="kd">#function</span><span class="p">)</span>
-
-    <span class="kt">DispatchQueue</span><span class="o">.</span><span class="n">main</span><span class="o">.</span><span class="nf">asyncAfter</span><span class="p">(</span><span class="nv">deadline</span><span class="p">:</span> <span class="o">.</span><span class="nf">now</span><span class="p">()</span> <span class="o">+</span> <span class="mf">1.0</span><span class="p">,</span> <span class="nv">execute</span><span class="p">:</span> <span class="p">{</span> <span class="p">[</span><span class="k">weak</span> <span class="k">self</span> <span class="p">]</span> <span class="k">in</span>
-        <span class="k">self</span><span class="p">?</span><span class="o">.</span><span class="n">refreshControl</span><span class="p">?</span><span class="o">.</span><span class="nf">endRefreshing</span><span class="p">()</span>
-    <span class="p">})</span>
-<span class="p">}</span>
-</code></pre></div></div>
-
-<h2 id="titleは使えない">titleは使えない</h2>
-<p><code class="language-plaintext highlighter-rouge">UITableViewController</code> にはタイトルを設定する項目はありますが、<code class="language-plaintext highlighter-rouge">UINavigationController</code> や <code class="language-plaintext highlighter-rouge">UITabBarController</code> などViewControllerコンテナで呼ばない限りタイトルは表示されません。</p>
-
-<h2 id="uitableviewcontrollerは用途は限定的">UITableViewControllerは用途は限定的</h2>
-
-<p>UITableViewControllerは UIViewController+UIViewTableで実装が楽になると思いますが、  <br />
-それ以上に柔軟性を犠牲にしており、実際のアプリ開発の画面ではUITableView単体で完結することはほとんどなく<br />
-大抵が複数のViewを組み合わせて画面が構築されます。</p>
-
-<p>そのため<code class="language-plaintext highlighter-rouge">UITableViewController</code>で実装を進めていると後で痛い目をみます。<br />
-私個人としては使うべきではないです。</p>
+<p>ただし、<code class="language-plaintext highlighter-rouge">SHOW TABLES</code> のように<code class="language-plaintext highlighter-rouge">LIKE</code>や<code class="language-plaintext highlighter-rouge">WHERE</code>句は使えません。</p>
 
   </section>
 
@@ -620,23 +588,561 @@
                 
                 
 
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ios/uitableview/ios-uitableview-cell-layout-update">
-      <img src="/assets/images/2020-05-09-ios-uitableview-cell-layout-update/0.png" alt="UITableViewのサイズ可変なセル内画像を非同期で単体更新する" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/mysql-minor-commands">
+      <img src="/assets/images/2019-08-02-mysql-minor-commands.png" alt="忘れるのに定期的に必要になるMySQLコマンド" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ios/uitableview/ios-uitableview-cell-layout-update">
-      <h3>UITableViewのサイズ可変なセル内画像を非同期で単体更新する</h3>
+    <a href="/db/mysql/mysql-minor-commands">
+      <h3>忘れるのに定期的に必要になるMySQLコマンド</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/mysql-find-mycnf">
+      <img src="/assets/images/2019-08-02-mysql-find-mycnf/0.png" alt="MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/mysql-find-mycnf">
+      <h3>MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -830,199 +1336,6 @@
 
 
             
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ios/uitableview/ios-uitableview-actual-practice">
-      <img src="/assets/images/2019-10-14-ios-uitableview-actual-practice/0.png" alt="【初心者必見】UITableViewの実践デザイン分析" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ios/uitableview/ios-uitableview-actual-practice">
-      <h3>【初心者必見】UITableViewの実践デザイン分析</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ios/uitableview/ios-uitableview-separator-basic">
-      <img src="/assets/images/2019-10-08-ios-uitableview-separator-basic/5.png" alt="【初心者向け】UITableView separator(区切り線)を色々試す" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ios/uitableview/ios-uitableview-separator-basic">
-      <h3>【初心者向け】UITableView separator(区切り線)を色々試す</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ios/uitableview/ios-uitableview-reload-basic">
-      <img src="/assets/images/2019-10-08-ios-uitableview-reload-basic/0.png" alt="【初心者向け】UITableView(テーブル)の更新方法の基本と注意点" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ios/uitableview/ios-uitableview-reload-basic">
-      <h3>【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic">
-      <img src="/assets/images/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic/2019-10-06-ios-uitableview-uitableviewdatasourceprefetching-basic.png" alt="【初心者向け】UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ios/uitableview/ios-uitableview-uitableviewdatasourceprefetching-basic">
-      <h3>【初心者向け】UITableViewDataSourcePrefetchingで事前処理して最適スクローリングする</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                      
 
             
               <li class="related-post-item">
