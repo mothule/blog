@@ -6,17 +6,18 @@ image:
 categories: db mysql
 tags: db mysql
 ---
-MySQLのテーブル一覧を表示するには、`SHOW TABLES`構文を使います。  
-`SHOW TABLES`構文は、特定データベース内の*TEMPORARY*以外のテーブルを一覧表示します。  
+MySQLのテーブル一覧を表示するには、`SHOW TABLES`ステートメントを使います。  
+`SHOW TABLES`ステートメントは特定データベース内の*TEMPORARY*以外のテーブルを一覧表示します。  
 また、ビューも一覧表示します。
 
-## MySQLのSHOW TABLES構文
+## MySQLのSHOW TABLESステートメントの構文
 `SHOW [FULL] TABLES [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]`
 
-`[]`は任意で、`{|}`はどちらかを選択になります。
+`[]`は任意で、`{|}`はどちらかを選択になります。  
+`{FROM | IN}`であれば`FROM`か`IN`どちらかを使えます。
 
 ## SHOW TABLESの実行例
-USE構文でDB`hoge_development`を選択したのちに`SHOW TABLES`を実行してます。
+USEステートメントでDB`hoge_development`を選択したのちに`SHOW TABLES`を実行してます。
 
 ```sh
 mysql> show tables;
