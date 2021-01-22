@@ -1,4 +1,111 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-21T12:16:00+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication" rel="alternate" type="text/html" title="5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法" /><published>2021-01-21T00:00:00+09:00</published><updated>2021-01-21T12:15:41+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication">&lt;p&gt;5年近くフルリモートワークを経験して分かったことは、テキストコミュニケーションの改善は組織を大きく改善します。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-22T12:56:45+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MySQLのテーブル一覧を表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-tables" rel="alternate" type="text/html" title="MySQLのテーブル一覧を表示して確認する" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-22T12:56:30+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-tables</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-tables">&lt;p&gt;MySQLのテーブル一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;構文を使います。&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;構文は、特定データベース内の&lt;em&gt;TEMPORARY&lt;/em&gt;以外のテーブルを一覧表示します。&lt;br /&gt;
+また、ビューも一覧表示します。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのshow-tables構文&quot;&gt;MySQLのSHOW TABLES構文&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW [FULL] TABLES [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[]&lt;/code&gt;は任意で、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{|}&lt;/code&gt;はどちらかを選択になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;show-tablesの実行例&quot;&gt;SHOW TABLESの実行例&lt;/h2&gt;
+&lt;p&gt;USE構文でDB&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge_development&lt;/code&gt;を選択したのちに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;を実行してます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------------------------+
+| Tables_in_hoge_development      |
++---------------------------------+
+| active_admin_comments           |
+| active_storage_attachments      |
+| active_storage_blobs            |
+| ar_internal_metadata            |
+| schema_migrations               |
+| hoges                           |
+| tokens                          |
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           |
++---------------------------------+
+8 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-tablesのlike句で表示テーブルを絞る&quot;&gt;SHOW TABLESのLIKE句で表示テーブルを絞る&lt;/h2&gt;
+
+&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;句を使うことで表示テーブルを選択できます。&lt;br /&gt;
+先程のテーブル名から先頭に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;active&lt;/code&gt; と入るテーブル名を選択する場合は次のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables like &lt;span class=&quot;s1&quot;&gt;'active_%'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++--------------------------------------------+
+| Tables_in_hoge_development &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;active_%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;      |
++--------------------------------------------+
+| active_admin_comments                      |
+| active_storage_attachments                 |
+| active_storage_blobs                       |
++--------------------------------------------+
+3 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-tablesのfull修飾子でテーブルタイプを追加表示する&quot;&gt;SHOW TABLESのFULL修飾子でテーブルタイプを追加表示する&lt;/h2&gt;
+
+&lt;p&gt;構文内にあるFULL装飾子がついた&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW FULL TABLES&lt;/code&gt;を使うことで出力カラムにテーブルタイプを表示します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show full tables&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------------------------+------------+
+| Tables_in_hoge_development      | Table_type |
++---------------------------------+------------+
+| active_admin_comments           | BASE TABLE |
+| active_storage_attachments      | BASE TABLE |
+| active_storage_blobs            | BASE TABLE |
+| ar_internal_metadata            | BASE TABLE |
+| schema_migrations               | BASE TABLE |
+| hoges                           | BASE TABLE |
+| tokens                          | BASE TABLE |
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           | BASE TABLE |
++---------------------------------+------------+
+8 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;テーブルタイプ(Table_type)の値は、テーブルかビューで変わります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;テーブルは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BASE TABLE&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;ビューは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;VIEW&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;show-tablesをwhere句で表示テーブルを絞る&quot;&gt;SHOW TABLESをWHERE句で表示テーブルを絞る&lt;/h2&gt;
+
+&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句を使うことで表示テーブルを選択できます。&lt;br /&gt;
+先程のテーブル名から&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;users&lt;/code&gt;テーブルを選択する場合は次のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables where Tables_in_hoge_development &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'users'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------------------------+
+| Tables_in_hoge_development      |
++---------------------------------+
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           |
++---------------------------------+
+1 row &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;また、FULL装飾子をつけてテーブルタイプ(Table_type)を追加すれば、同様に条件として使えます。&lt;/p&gt;
+
+&lt;h2 id=&quot;注意-show-tablesは権限がない場合は表示されない&quot;&gt;注意: SHOW TABLESは権限がない場合は表示されない&lt;/h2&gt;
+&lt;p&gt;テーブルやビューに対する権限を持っていない場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;の結果に表示されません。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのmysqlshowコマンドでも取得可能&quot;&gt;MySQLのmysqlshowコマンドでも取得可能&lt;/h2&gt;
+&lt;p&gt;ターミナル上で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysqlshow&lt;/code&gt;コマンドを実行することで、同様にMySQLのテーブル一覧を表示できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysqlshow &lt;span class=&quot;nt&quot;&gt;-uroot&lt;/span&gt; hoge_development
+Database: hoge_development
++----------------------------+
+|           Tables           |
++----------------------------+
+| active_admin_comments      |
+| active_storage_attachments |
+| active_storage_blobs       |
+| ar_internal_metadata       |
+| schema_migrations          |
+| hoges                      |
+| tokens                     |
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                      |
++----------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ただし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt; のように&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句は使えません。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLのテーブル一覧を表示するには、SHOW TABLES構文を使います。 SHOW TABLES構文は、特定データベース内のTEMPORARY以外のテーブルを一覧表示します。 また、ビューも一覧表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication" rel="alternate" type="text/html" title="5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法" /><published>2021-01-21T00:00:00+09:00</published><updated>2021-01-21T12:15:41+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication">&lt;p&gt;5年近くフルリモートワークを経験して分かったことは、テキストコミュニケーションの改善は組織を大きく改善します。&lt;br /&gt;
 リモートワークはテキストコミュニケーションが要です。&lt;/p&gt;
 
 &lt;p&gt;この記事では、そんな私がテキストコミュニケーションとは何か？どうやったら上手になれるか？一人から始められる改善についてまとめました。&lt;/p&gt;
@@ -1389,113 +1496,7 @@ iOSではViewとViewModel間の情報伝達を手動で同期が必要となる�
   &lt;li&gt;「この画面で扱うデータはドメインではなく画面依存だからViewModel」&lt;/li&gt;
 &lt;/ul&gt;
 
-&lt;p&gt;など、データやロジックがドメインなのか判断できないことが起因してViewModelへと責務が委任されていきます。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="program-design" /><category term="ios" /><summary type="html">MVVMを知らなかったり曖昧知識で採用すると、MVCとは異なる部分で問題がおきるだけです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">SwiftのCollectionとRangeを組み合わせて使いこなし術</title><link href="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips" rel="alternate" type="text/html" title="SwiftのCollectionとRangeを組み合わせて使いこなし術" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T19:34:01+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-collection-range-tips">&lt;p&gt;SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。&lt;br /&gt;
-今回は&lt;a href=&quot;https://developer.apple.com/documentation/swift/swift_standard_library/collections/supporting_types&quot;&gt;Supporting Types - Apple Developer Documentation&lt;/a&gt;にあるサポート機能について使えそうなものがないかを調べてまとめました。&lt;/p&gt;
-
-&lt;h2 id=&quot;collectionとrangeの組み合わせ&quot;&gt;CollectionとRangeの組み合わせ&lt;/h2&gt;
-
-&lt;p&gt;Collectionには範囲取得する機能があります。&lt;br /&gt;
-範囲を表す型は、Rangeを使います。&lt;br /&gt;
-例えば、下のコードを見かけた人は多いと思います。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;values&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;partial&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;values&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;1&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;partial&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [2, 3]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;実はこれ以外の範囲指定方法がCollectionには用意されています。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;PartialRangeUpTo: 上限のみ(上限未満)&lt;/li&gt;
-  &lt;li&gt;PartialRangeThrough: 上限のみ(上限以下)&lt;/li&gt;
-  &lt;li&gt;PartialRangeFrom: 下限のみ&lt;/li&gt;
-  &lt;li&gt;UnboundedRange_: 上限下限なし&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;partialrangeupto-上限のみ上限未満&quot;&gt;PartialRangeUpTo: 上限のみ(上限未満)&lt;/h3&gt;
-
-&lt;p&gt;上限値のみが指定された範囲型です。&lt;br /&gt;
-下限は無制限となります。&lt;br /&gt;
-そのため&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;contains&lt;/code&gt;メソッドで範囲内判定を確認するとマイナスでも&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;true&lt;/code&gt;を返します。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;upToFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;type&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;of&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;:&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// PartialRangeUpTo&amp;lt;Double&amp;gt;&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;upToFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ちなみにパターンマッチング演算子(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~=&lt;/code&gt;)が用意されているので下記2つは同じ意味です。&lt;/p&gt;
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;((&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;partialrangethrough-上限のみ上限以下&quot;&gt;PartialRangeThrough: 上限のみ(上限以下)&lt;/h3&gt;
-
-&lt;p&gt;PartialRangeUpToと同じですが、こちらは上限値も範囲に含めます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;throughFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;3.14&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.0&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;5.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;throughFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;mf&quot;&gt;0.1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3, 4]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;h3 id=&quot;partialrangefrom-下限のみ&quot;&gt;PartialRangeFrom: 下限のみ&lt;/h3&gt;
-
-&lt;p&gt;下限値のみが指定された範囲型です。&lt;br /&gt;
-上限は無制限となります。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;contains&lt;/code&gt;メソッドで確認すると下記のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;atLeastFive&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// false&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;atLeastFive&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;contains&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;kt&quot;&gt;Int&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;max&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;))&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// true&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをCollectionの範囲指定として使えます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 5]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;unboundedrange_-上限下限なし&quot;&gt;UnboundedRange_: 上限下限なし&lt;/h3&gt;
-
-&lt;p&gt;これはレアケースな気がしますが、上限も下限も無制限の指定方法があります。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt; &lt;span class=&quot;c1&quot;&gt;// [4, 2, 3, 4, 5]&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;collectionrangeまとめ&quot;&gt;Collection+Rangeまとめ&lt;/h2&gt;
-
-&lt;p&gt;出てきた書き方を下記にまとめます。&lt;/p&gt;
-
-&lt;div class=&quot;language-swift highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;let&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;numbers&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;4&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;]&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;[&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;])&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;zip&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;numbers&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;999&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;...&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;forEach&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
-    &lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;v1&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;v2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;nf&quot;&gt;print&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;..&amp;lt;&lt;/span&gt;&lt;span class=&quot;mi&quot;&gt;3&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;~=&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;2&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Collectionの範囲取得で 0..&amp;lt;3 のような書き方をショートハンドのように省略できるようになります。&lt;br /&gt;
-使い所は広くはありませんが、知っておくとライブラリコードで突然出てきても落ち着いて読み進めることができます。&lt;/p&gt;</content><author><name></name></author><category term="ios" /><category term="swift" /><summary type="html">SwiftのCollectionはSetやArray、Dictionaryの土台となる重要なポジションです。 今回はSupporting Types - Apple Developer Documentationにあるサポート機能について使えそうなものがないかを調べてまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-07-ios-swift-collection-range-tips/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する</title><link href="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection" rel="alternate" type="text/html" title="Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T03:55:23+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection">&lt;p&gt;例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。&lt;/p&gt;
+&lt;p&gt;など、データやロジックがドメインなのか判断できないことが起因してViewModelへと責務が委任されていきます。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="program-design" /><category term="ios" /><summary type="html">MVVMを知らなかったり曖昧知識で採用すると、MVCとは異なる部分で問題がおきるだけです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-08-ios-swift-mvvm/0.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する</title><link href="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection" rel="alternate" type="text/html" title="Swiftの高階関数で遅延評価(lazy)を使い処理を効率化する" /><published>2020-08-07T00:00:00+09:00</published><updated>2020-08-07T03:55:23+09:00</updated><id>https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection</id><content type="html" xml:base="https://blog.mothule.com/ios/swift/ios-swift-lazy-sequence-and-collection">&lt;p&gt;例えばlazyを使うと10万件のフルアクセス処理が1件で済みます。&lt;/p&gt;
 
 &lt;h2 id=&quot;swiftの高階関数はその場でクロージャを評価する&quot;&gt;Swiftの高階関数はその場でクロージャを評価する&lt;/h2&gt;
 &lt;p&gt;SwiftのCollectionなどで使える高階関数(filter, map, reduceなど)は、&lt;br /&gt;
