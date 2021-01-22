@@ -11,35 +11,35 @@
 
 
 
-  <title>【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する - もちゅろぐ</title>
+  <title>MySQLでテーブルのカラムを表示して確認 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する" />
+<meta property="og:title" content="MySQLでテーブルのカラムを表示して確認" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="UICollectionViewを使ったCarousel(カルーセル)を実装します。" />
-<meta property="og:description" content="UICollectionViewを使ったCarousel(カルーセル)を実装します。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple" />
-<meta property="og:url" content="https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple" />
+<meta name="description" content="MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
+<meta property="og:description" content="MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
+<link rel="canonical" href="https://blog.mothule.com/db/mysql/db-mysql-show-columns" />
+<meta property="og:url" content="https://blog.mothule.com/db/mysql/db-mysql-show-columns" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-10-12T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-22T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" />
-<meta property="twitter:title" content="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" />
+<meta property="twitter:title" content="MySQLでテーブルのカラムを表示して確認" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png","description":"UICollectionViewを使ったCarousel(カルーセル)を実装します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple"},"@type":"BlogPosting","url":"https://blog.mothule.com/ios/uicollectionview/ios-uicollectionview-carousel-simple","headline":"【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する","dateModified":"2019-10-17T05:14:04+09:00","datePublished":"2019-10-12T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png","description":"MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-show-columns"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-show-columns","headline":"MySQLでテーブルのカラムを表示して確認","dateModified":"2021-01-22T19:02:05+09:00","datePublished":"2021-01-22T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する">
-<meta name="twitter:description" content="UICollectionViewを使ったCarousel(カルーセル)を実装します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png">
+<meta name="twitter:title" content="MySQLでテーブルのカラムを表示して確認">
+<meta name="twitter:description" content="MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ios" itemprop="item">
-              <span itemprop="name">iOS</span>
+            <a href="/tags#db" itemprop="item">
+              <span itemprop="name">DB</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#uicollectionview" itemprop="item">
-              <span itemprop="name">UICollectionView</span>
+            <a href="/tags#mysql" itemprop="item">
+              <span itemprop="name">MySQL</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する
+            MySQLでテーブルのカラムを表示して確認
           </li>
         
       
@@ -164,25 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/1.png" alt="【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" alt="MySQLでテーブルのカラムを表示して確認">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>【初心者向け】UICollectionViewでCarousel(カルーセル)を実装する</h1>
+    <h1>MySQLでテーブルのカラムを表示して確認</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+            <li class="list-inline-item"><a href="/tags#db">DB</a></li>
           
-            <li class="list-inline-item"><a href="/tags#uicollectionview">UICollectionView</a></li>
+            <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-10-12</time></span>
+        <span"><time class="post-date">2021-1-22</time></span>
       </div>
     </div>
   </header>
@@ -190,13 +190,39 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#実装する">実装する</a>
+  <li><a href="#mysqlのshow-columnsステートメントの構文">MySQLのSHOW COLUMNSステートメントの構文</a></li>
+  <li><a href="#mysqlのshow-columnsの実行例">MySQLのSHOW COLUMNSの実行例</a>
     <ul>
-      <li><a href="#storyboard">storyboard</a></li>
-      <li><a href="#コード">コード</a></li>
+      <li><a href="#db名とテーブル名のfrom句を結合する">DB名とテーブル名のFROM句を結合する</a></li>
     </ul>
   </li>
-  <li><a href="#まとめ">まとめ</a></li>
+  <li><a href="#show-columnsのlike句で表示カラムを絞る">SHOW COLUMNSのLIKE句で表示カラムを絞る</a></li>
+  <li><a href="#show-columnsのfull修飾子でcollation照合順序とprivileges権限とcommentコメントを追加表示する">SHOW COLUMNSのFULL修飾子でCollation(照合順序)とPrivileges(権限)とComment(コメント)を追加表示する</a></li>
+  <li><a href="#show-columnsが表示する値の説明">SHOW COLUMNSが表示する値の説明</a>
+    <ul>
+      <li><a href="#fieldフィールド">Field(フィールド)</a></li>
+      <li><a href="#typeカラムデータ型">Type(カラムデータ型)</a></li>
+      <li><a href="#collation照合順序">Collation(照合順序)</a></li>
+      <li><a href="#null">Null</a></li>
+      <li><a href="#key">Key</a>
+        <ul>
+          <li><a href="#keyが空の場合">Keyが空の場合</a></li>
+          <li><a href="#keyがpriの場合">KeyがPRIの場合</a></li>
+          <li><a href="#keyがuniの場合">KeyがUNIの場合</a></li>
+          <li><a href="#keyがmulの場合">KeyがMULの場合</a></li>
+        </ul>
+      </li>
+      <li><a href="#default">Default</a></li>
+      <li><a href="#extra">Extra</a></li>
+      <li><a href="#privileges権限">Privileges(権限)</a></li>
+      <li><a href="#commentコメント">Comment(コメント)</a></li>
+    </ul>
+  </li>
+  <li><a href="#show-columnsをwhere句で表示カラムを絞る">SHOW COLUMNSをWHERE句で表示カラムを絞る</a></li>
+  <li><a href="#注意-show-columnsは権限がないカラムは表示されない">注意: SHOW COLUMNSは権限がないカラムは表示されない</a></li>
+  <li><a href="#その他同様のステートメント">その他同様のステートメント</a></li>
+  <li><a href="#mysqlのmysqlshowコマンドでも取得可能">MySQLのmysqlshowコマンドでも取得可能</a></li>
+  <li><a href="#最も手軽にテーブル構造を確認するのはdescステートメント">最も手軽にテーブル構造を確認するのはDESCステートメント</a></li>
 </ul>
   </div>
 
@@ -216,90 +242,180 @@
   
 
   <section>
-  <p>UICollectionViewを使ったCarousel(カルーセル)を実装します。</p>
+  <p>MySQLでテーブルのカラム一覧を表示するには、<code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code>ステートメントを使います。<br />
+<code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code>構文は指定したテーブル内のカラム情報を表示します。<br />
+これはビューのカラムも表示します。</p>
 
-<p>カルーセルとは横にバナー画像が並んだ画像ビューワーです。
-主な用途として期間中のキャンペーンバナーの表示として使われます。</p>
+<h2 id="mysqlのshow-columnsステートメントの構文">MySQLのSHOW COLUMNSステートメントの構文</h2>
+<p><code class="language-plaintext highlighter-rouge">SHOW [FULL] COLUMNS {FROM | IN} tbl_name [{FROM | IN} db_name] [LIKE 'pattern | WHERE expr]</code></p>
 
-<p>色々な実装方法がありますが、今回はとにかくシンプルを優先して実装します。</p>
+<p><code class="language-plaintext highlighter-rouge">[]</code>は任意で、<code class="language-plaintext highlighter-rouge">{|}</code>はどちらかを選択になります。</p>
 
-<p>なお記事中の解説画像は<a href="https://placeholder.com">Placeholder.com</a>で生成したものを使っています。</p>
+<h2 id="mysqlのshow-columnsの実行例">MySQLのSHOW COLUMNSの実行例</h2>
+<p>次の例は、USEステートメントでDB<code class="language-plaintext highlighter-rouge">hoge_development</code>を選択したのちに<code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code>を実行してます。</p>
 
-<h2 id="実装する">実装する</h2>
-
-<p>今回実装するのは次のようなカルーセルです。</p>
-
-<p>背景色は識別用に出しているだけなのでデフォルトに戻しても問題ありません。</p>
-
-<p><a href="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif"><img src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/3.gif" width="100%" alt="" /></a></p>
-
-<h3 id="storyboard">storyboard</h3>
-
-<p><a href="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png"><img src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/2.png" width="100%" alt="" /></a></p>
-
-<p>スクロールをページングスタイルにするために、 <code class="language-plaintext highlighter-rouge">Paging Enabled</code> を <code class="language-plaintext highlighter-rouge">ON</code> にします。
-<a href="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png"><img src="/assets/images/2019-10-12-ios-uicollectionview-carousel-simple/4.png" width="50%" alt="" /></a></p>
-
-<h3 id="コード">コード</h3>
-
-<div class="language-swift highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">let</span> <span class="nv">images</span><span class="p">:</span> <span class="p">[</span><span class="kt">UIImage</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image1"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image2"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image3"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image4"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image5"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image6"</span><span class="p">)</span><span class="o">!</span><span class="p">,</span>
-    <span class="kt">UIImage</span><span class="p">(</span><span class="nv">named</span><span class="p">:</span> <span class="s">"image7"</span><span class="p">)</span><span class="o">!</span>
-<span class="p">]</span>
-
-<span class="kd">class</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UIViewController</span> <span class="p">{</span>
-    <span class="kd">@IBOutlet</span> <span class="kd">private</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="o">!</span>
-    <span class="kd">@IBOutlet</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">collectionViewHeightConstraint</span><span class="p">:</span> <span class="kt">NSLayoutConstraint</span><span class="o">!</span>
-
-    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLoad</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLoad</span><span class="p">()</span>
-        <span class="n">collectionView</span><span class="o">.</span><span class="n">dataSource</span> <span class="o">=</span> <span class="k">self</span>
-    <span class="p">}</span>
-
-    <span class="k">override</span> <span class="kd">func</span> <span class="nf">viewDidLayoutSubviews</span><span class="p">()</span> <span class="p">{</span>
-        <span class="k">super</span><span class="o">.</span><span class="nf">viewDidLayoutSubviews</span><span class="p">()</span>
-        <span class="k">let</span> <span class="nv">layout</span> <span class="o">=</span> <span class="kt">UICollectionViewFlowLayout</span><span class="p">()</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">scrollDirection</span> <span class="o">=</span> <span class="o">.</span><span class="n">horizontal</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">minimumInteritemSpacing</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">minimumLineSpacing</span> <span class="o">=</span> <span class="mf">0.0</span>
-        <span class="n">layout</span><span class="o">.</span><span class="n">itemSize</span> <span class="o">=</span> <span class="n">collectionView</span><span class="o">.</span><span class="n">bounds</span><span class="o">.</span><span class="n">size</span>
-        <span class="n">collectionView</span><span class="o">.</span><span class="n">collectionViewLayout</span> <span class="o">=</span> <span class="n">layout</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">extension</span> <span class="kt">ViewController</span><span class="p">:</span> <span class="kt">UICollectionViewDataSource</span> <span class="p">{</span>
-    <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="p">,</span> <span class="n">numberOfItemsInSection</span> <span class="nv">section</span><span class="p">:</span> <span class="kt">Int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Int</span> <span class="p">{</span>
-        <span class="k">return</span> <span class="n">images</span><span class="o">.</span><span class="n">count</span>
-    <span class="p">}</span>
-
-    <span class="kd">func</span> <span class="nf">collectionView</span><span class="p">(</span><span class="n">_</span> <span class="nv">collectionView</span><span class="p">:</span> <span class="kt">UICollectionView</span><span class="p">,</span> <span class="n">cellForItemAt</span> <span class="nv">indexPath</span><span class="p">:</span> <span class="kt">IndexPath</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">UICollectionViewCell</span> <span class="p">{</span>
-        <span class="k">let</span> <span class="nv">cell</span> <span class="o">=</span> <span class="n">collectionView</span><span class="o">.</span><span class="nf">dequeueReusableCell</span><span class="p">(</span><span class="nv">withReuseIdentifier</span><span class="p">:</span> <span class="s">"CollectionViewCell"</span><span class="p">,</span> <span class="nv">for</span><span class="p">:</span> <span class="n">indexPath</span><span class="p">)</span> <span class="k">as!</span> <span class="kt">CollectionViewCell</span>
-        <span class="n">cell</span><span class="o">.</span><span class="n">imageView</span><span class="o">.</span><span class="n">image</span> <span class="o">=</span> <span class="n">images</span><span class="p">[</span><span class="n">indexPath</span><span class="o">.</span><span class="n">item</span><span class="p">]</span>
-        <span class="k">return</span> <span class="n">cell</span>
-    <span class="p">}</span>
-<span class="p">}</span>
-
-<span class="kd">class</span> <span class="kt">CollectionViewCell</span><span class="p">:</span> <span class="kt">UICollectionViewCell</span> <span class="p">{</span>
-    <span class="kd">@IBOutlet</span>  <span class="k">weak</span> <span class="k">var</span> <span class="nv">imageView</span><span class="p">:</span> <span class="kt">UIImageView</span><span class="o">!</span>
-<span class="p">}</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show columns from <span class="nb">users</span><span class="p">;</span>
++-----------------+--------------+------+-----+---------+----------------+
+| Field           | Type         | Null | Key | Default | Extra          |
++-----------------+--------------+------+-----+---------+----------------+
+| <span class="nb">id</span>              | bigint<span class="o">(</span>20<span class="o">)</span>   | NO   | PRI | NULL    | auto_increment |
+| email           | varchar<span class="o">(</span>255<span class="o">)</span> | YES  |     | NULL    |                |
+| password_digest | varchar<span class="o">(</span>255<span class="o">)</span> | YES  |     | NULL    |                |
+| created_at      | datetime<span class="o">(</span>6<span class="o">)</span>  | NO   |     | NULL    |                |
+| updated_at      | datetime<span class="o">(</span>6<span class="o">)</span>  | NO   |     | NULL    |                |
++-----------------+--------------+------+-----+---------+----------------+
+5 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">viewDidLoad</code> ではなく <code class="language-plaintext highlighter-rouge">viewDidLayoutSubviews</code> に実装してるのは、画面回転に対応するためです。</p>
+<h3 id="db名とテーブル名のfrom句を結合する">DB名とテーブル名のFROM句を結合する</h3>
+<p><code class="language-plaintext highlighter-rouge">db_name</code>と<code class="language-plaintext highlighter-rouge">tbl_name</code>を<code class="language-plaintext highlighter-rouge">.</code>で繋ぐことができます。次の2つは同等です。</p>
 
-<p><code class="language-plaintext highlighter-rouge">itemSize</code> を UICollectionViewのサイズと同じにすることで1スクリーンに1セルになります。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show full columns from <span class="nb">users </span>from hoge<span class="p">;</span>
+mysql&gt; show full columns from hoge_development.users<span class="p">;</span>
+</code></pre></div></div>
 
-<p>あとはこれを横スクロールにすれば、カルーセルの完成です。</p>
+<h2 id="show-columnsのlike句で表示カラムを絞る">SHOW COLUMNSのLIKE句で表示カラムを絞る</h2>
+<p>構文内にある<code class="language-plaintext highlighter-rouge">LIKE</code>句を使うことで表示カラムを選択できます。<br />
+<code class="language-plaintext highlighter-rouge">LIKE</code>句はカラム名と照合します。</p>
 
-<p>よりカルーセルらしく見せるには画像の比率を合わせることで余白がなくなりそれっぽく見えます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show columns from <span class="nb">users </span>like <span class="s1">'%_at'</span><span class="p">;</span>
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| created_at | datetime<span class="o">(</span>6<span class="o">)</span> | NO   |     | NULL    |       |
+| updated_at | datetime<span class="o">(</span>6<span class="o">)</span> | NO   |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.01 sec<span class="o">)</span>
+</code></pre></div></div>
 
-<h2 id="まとめ">まとめ</h2>
+<h2 id="show-columnsのfull修飾子でcollation照合順序とprivileges権限とcommentコメントを追加表示する">SHOW COLUMNSのFULL修飾子でCollation(照合順序)とPrivileges(権限)とComment(コメント)を追加表示する</h2>
+<p>構文内にあるFULL装飾子がついた<code class="language-plaintext highlighter-rouge">SHOW FULL COLUMNS</code>を使うことで出力カラムにCollation(照合順序)とPrivileges(権限)とComment(コメント)を表示します。</p>
 
-<p>UIデザインパターンの1つで、ECサイトやキュレーションサイトなど様々なサービスで使われやすいデザインなので覚えておいて損はないと思います。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show full columns from <span class="nb">users</span><span class="p">;</span>
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| Field           | Type         | Collation          | Null | Key | Default | Extra          | Privileges                      | Comment |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| <span class="nb">id</span>              | bigint<span class="o">(</span>20<span class="o">)</span>   | NULL               | NO   | PRI | NULL    | auto_increment | <span class="k">select</span>,insert,update,references |         |
+| email           | varchar<span class="o">(</span>255<span class="o">)</span> | utf8mb4_general_ci | YES  |     | NULL    |                | <span class="k">select</span>,insert,update,references |         |
+| password_digest | varchar<span class="o">(</span>255<span class="o">)</span> | utf8mb4_general_ci | YES  |     | NULL    |                | <span class="k">select</span>,insert,update,references |         |
+| created_at      | datetime<span class="o">(</span>6<span class="o">)</span>  | NULL               | NO   |     | NULL    |                | <span class="k">select</span>,insert,update,references |         |
+| updated_at      | datetime<span class="o">(</span>6<span class="o">)</span>  | NULL               | NO   |     | NULL    |                | <span class="k">select</span>,insert,update,references |         |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+5 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="show-columnsが表示する値の説明">SHOW COLUMNSが表示する値の説明</h2>
+<p><code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code>や<code class="language-plaintext highlighter-rouge">SHOW FULL COLUMNS</code>が表示する値について説明します。</p>
+
+<h3 id="fieldフィールド">Field(フィールド)</h3>
+<p><code class="language-plaintext highlighter-rouge">Field</code>フィールドはテーブルのカラム名です。</p>
+
+<h3 id="typeカラムデータ型">Type(カラムデータ型)</h3>
+<p><code class="language-plaintext highlighter-rouge">Type</code>フィールドはカラムデータの型です。</p>
+
+<h3 id="collation照合順序">Collation(照合順序)</h3>
+<p><code class="language-plaintext highlighter-rouge">Collation</code>フィールドは文字列カラムの照合順序です。文字列でもバイナリは除きます。<br />
+その他の型の場合はNULLになります。</p>
+
+<p>この値は<code class="language-plaintext highlighter-rouge">FULL</code>装飾子を使ったときだけ表示されます。</p>
+
+<h3 id="null">Null</h3>
+<p><code class="language-plaintext highlighter-rouge">Null</code>フィールドはNULLを格納できるかどうかを示します。<br />
+NULLを設定できる場合は<code class="language-plaintext highlighter-rouge">YES</code>、できない場合は<code class="language-plaintext highlighter-rouge">NO</code>が表示されます。</p>
+
+<h3 id="key">Key</h3>
+<p><code class="language-plaintext highlighter-rouge">Key</code>フィールドはこのカラムのインデックス設定を<code class="language-plaintext highlighter-rouge">(空)/PRI/UNI/MUL</code>のいずれかで示します。</p>
+
+<h4 id="keyが空の場合">Keyが空の場合</h4>
+<p>インデックス未設定か、</p>
+<h4 id="keyがpriの場合">KeyがPRIの場合</h4>
+<p><code class="language-plaintext highlighter-rouge">PRIMARY KEY</code>か、<code class="language-plaintext highlighter-rouge">マルチカラムPRIMARY KEY</code>の一つです。</p>
+
+<h4 id="keyがuniの場合">KeyがUNIの場合</h4>
+<p><code class="language-plaintext highlighter-rouge">UNIQUE</code>インデックスです。</p>
+
+<p><code class="language-plaintext highlighter-rouge">NULL</code>は複数の存在を許してしまいます。<br />
+もし困る場合は、<code class="language-plaintext highlighter-rouge">Null</code>が<code class="language-plaintext highlighter-rouge">NO</code>にして<code class="language-plaintext highlighter-rouge">NULL</code>自体を拒否してください。</p>
+<h4 id="keyがmulの場合">KeyがMULの場合</h4>
+<p>特定の値が複数存在することを許可した一意(ユニーク)ではないインデックスの最初のカラムです。</p>
+
+<h3 id="default">Default</h3>
+<p><code class="language-plaintext highlighter-rouge">Default</code>フィールドはカラムのデフォルト値です。<br />
+デフォルト値がNULLだったり、カラム定義に<code class="language-plaintext highlighter-rouge">DEFAULT</code>句がない場合は<code class="language-plaintext highlighter-rouge">NULL</code>が表示されます。</p>
+
+<h3 id="extra">Extra</h3>
+<p><code class="language-plaintext highlighter-rouge">Extra</code>フィールドは追加情報が含まれます。<br />
+この値が空以外になるのは、次のケースです。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">AUTO_INCREMENT</code>属性を持つカラムだと<code class="language-plaintext highlighter-rouge">auto_increment</code>が表示されます。</li>
+  <li><code class="language-plaintext highlighter-rouge">ON UPDATE CURRENT_TIMESTAMP</code>属性を持つ<code class="language-plaintext highlighter-rouge">TIMESTAMP</code>または<code class="language-plaintext highlighter-rouge">DATETIME</code>カラムだと<code class="language-plaintext highlighter-rouge">on update CURRENT_TIMESTAMP</code>が表示されます。</li>
+</ul>
+
+<h3 id="privileges権限">Privileges(権限)</h3>
+<p><code class="language-plaintext highlighter-rouge">Privileges</code>フィールドはユーザーがカラムに持っている権限を示します。<br />
+この値は<code class="language-plaintext highlighter-rouge">FULL</code>装飾子を使ったときだけ表示されます。</p>
+
+<h3 id="commentコメント">Comment(コメント)</h3>
+<p><code class="language-plaintext highlighter-rouge">Comment</code>フィールドは任意のコメントを示します。<br />
+この値は<code class="language-plaintext highlighter-rouge">FULL</code>装飾子を使ったときだけ表示されます。</p>
+
+<h2 id="show-columnsをwhere句で表示カラムを絞る">SHOW COLUMNSをWHERE句で表示カラムを絞る</h2>
+<p>構文内にある<code class="language-plaintext highlighter-rouge">WHERE</code>句を使うことで表示カラムを選択できます。<br />
+テーブル<code class="language-plaintext highlighter-rouge">users</code>から<code class="language-plaintext highlighter-rouge">Type</code>カラムに対して照合すると次のようになります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show columns from <span class="nb">users </span>where Type like <span class="s1">'%char%'</span><span class="p">;</span>
++-----------------+--------------+------+-----+---------+-------+
+| Field           | Type         | Null | Key | Default | Extra |
++-----------------+--------------+------+-----+---------+-------+
+| email           | varchar<span class="o">(</span>255<span class="o">)</span> | YES  |     | NULL    |       |
+| password_digest | varchar<span class="o">(</span>255<span class="o">)</span> | YES  |     | NULL    |       |
++-----------------+--------------+------+-----+---------+-------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="注意-show-columnsは権限がないカラムは表示されない">注意: SHOW COLUMNSは権限がないカラムは表示されない</h2>
+<p>カラムに対する権限を持っていない場合は、<code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code>の結果に表示されません。</p>
+
+<h2 id="その他同様のステートメント">その他同様のステートメント</h2>
+<p>構文にもあるように<code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code>と<code class="language-plaintext highlighter-rouge">SHOW FIELDS</code>は同じ処理を行います。</p>
+
+<p>また<code class="language-plaintext highlighter-rouge">DESCRIBE</code>ステートメントも<code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code>と同じ情報を提供できます。<br />
+さらに、<code class="language-plaintext highlighter-rouge">DESCRIBE</code>と<code class="language-plaintext highlighter-rouge">EXPLAIN</code>と<code class="language-plaintext highlighter-rouge">DESC</code>はシノニム(代替名)です。<br />
+つまり、次の行は全て同じ結果を返します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show columns from <span class="nb">users</span><span class="p">;</span>
+mysql&gt; show fields from <span class="nb">users</span><span class="p">;</span>
+mysql&gt; describe <span class="nb">users</span><span class="p">;</span>
+mysql&gt; explain <span class="nb">users</span><span class="p">;</span>
+mysql&gt; desc <span class="nb">users</span><span class="p">;</span>
+</code></pre></div></div>
+
+<p>ただし、<code class="language-plaintext highlighter-rouge">SHOW FULL COLUMNS</code>で追加表示されるカラムは、<code class="language-plaintext highlighter-rouge">DESCRIBE</code>ステートメントには表示されません。</p>
+
+<h2 id="mysqlのmysqlshowコマンドでも取得可能">MySQLのmysqlshowコマンドでも取得可能</h2>
+<p>ターミナル上で<code class="language-plaintext highlighter-rouge">mysqlshow</code>コマンドを実行することで、同様にMySQLのカラム一覧を表示できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysqlshow <span class="nt">-uroot</span> hoge_development <span class="nb">users
+</span>Database: hoge_development  Table: <span class="nb">users</span>
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| Field           | Type         | Collation          | Null | Key | Default | Extra          | Privileges                      | Comment |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| <span class="nb">id</span>              | bigint<span class="o">(</span>20<span class="o">)</span>   |                    | NO   | PRI |         | auto_increment | <span class="k">select</span>,insert,update,references |         |
+| email           | varchar<span class="o">(</span>255<span class="o">)</span> | utf8mb4_general_ci | YES  |     |         |                | <span class="k">select</span>,insert,update,references |         |
+| password_digest | varchar<span class="o">(</span>255<span class="o">)</span> | utf8mb4_general_ci | YES  |     |         |                | <span class="k">select</span>,insert,update,references |         |
+| created_at      | datetime<span class="o">(</span>6<span class="o">)</span>  |                    | NO   |     |         |                | <span class="k">select</span>,insert,update,references |         |
+| updated_at      | datetime<span class="o">(</span>6<span class="o">)</span>  |                    | NO   |     |         |                | <span class="k">select</span>,insert,update,references |         |
++-----------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+</code></pre></div></div>
+
+<p>ただし、<code class="language-plaintext highlighter-rouge">SHOW COLUMNS</code> のように<code class="language-plaintext highlighter-rouge">LIKE</code>や<code class="language-plaintext highlighter-rouge">WHERE</code>句は使えません。</p>
+
+<h2 id="最も手軽にテーブル構造を確認するのはdescステートメント">最も手軽にテーブル構造を確認するのはDESCステートメント</h2>
+<p>前述された情報から考えて、最もタイプ数が少なくて、手軽にテーブル構造を確認する方法は<code class="language-plaintext highlighter-rouge">DESC</code>ステートメントを使うことです。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; desc <span class="nb">users</span><span class="p">;</span>
+</code></pre></div></div>
 
   </section>
 
@@ -330,6 +446,304 @@
                 
                 
 
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/db-mysql-show-tables">
+      <img src="/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" alt="MySQLのテーブル一覧を表示して確認する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/db-mysql-show-tables">
+      <h3>MySQLのテーブル一覧を表示して確認する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
 
             
                 
@@ -807,20 +1221,20 @@
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ios/uicollectionview/uicollectionview-in-table">
-      <img src="/assets/images/2019-10-12-uicollectionview-in-table/1.png" alt="UITableView内にUICollectionViewでCarousel(カルーセル)を実装する" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/mysql-minor-commands">
+      <img src="/assets/images/2019-08-02-mysql-minor-commands.png" alt="忘れるのに定期的に必要になるMySQLコマンド" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ios/uicollectionview/uicollectionview-in-table">
-      <h3>UITableView内にUICollectionViewでCarousel(カルーセル)を実装する</h3>
+    <a href="/db/mysql/mysql-minor-commands">
+      <h3>忘れるのに定期的に必要になるMySQLコマンド</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#uicollectionview">UICollectionView</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -830,72 +1244,6 @@
 
                     
                     
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
                 
 
 
@@ -907,22 +1255,20 @@
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ios/ios-xib-optimaize">
-      <img src="/assets/images/2019-09-29-ios-xib-optimaize.png" alt="StoryboardやXibのロード処理の作りを改善する" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/mysql-find-mycnf">
+      <img src="/assets/images/2019-08-02-mysql-find-mycnf/0.png" alt="MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ios/ios-xib-optimaize">
-      <h3>StoryboardやXibのロード処理の作りを改善する</h3>
+    <a href="/db/mysql/mysql-find-mycnf">
+      <h3>MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#uitableview">UITableView</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#uicollectionview">UICollectionView</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -932,210 +1278,6 @@
 
                     
                     
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
                 
 
 
