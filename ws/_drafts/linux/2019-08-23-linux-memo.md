@@ -6,59 +6,59 @@ tags: ruby rails active-record
 
 Linux 基礎コマンド
 
-```bash
+```sh
 useradd <user name>
 ```
 
-```bash
+```sh
 passwd [user name]
 ```
 ユーザ名未指定だと自分のパスワード変更する。
 
-```bash
+```sh
 cat /etc/passwd
 ```
 ユーザー情報が1行1ユーザーで格納される。
 
-```bash
+```sh
 id <user name>
 ```
 
-```bash
+```sh
 userdel [-r] <user name>
 ```
 -r: ホームディレクトリごと削除する
 
 
-```bash
+```sh
 groupadd <group name>
 ```
 
-```bash
+```sh
 usermod -G <group name> <user_name>
 ```
 
-```bash
+```sh
 groupdel <group name>
 ```
 
-```bash
+```sh
 cat /etc/group
 ```
 グループ情報が1グループ1行で格納される。
 
 
-```bash
+```sh
 chown <user name> <file or directory>
 ```
 
-```bash
+```sh
 chgrp <group name> <file or directory>
 ```
 
 変数をエクスポートすることで定義したシェルから起動したシェルや実行したコマンドから変数を参照できるようになる。
 これを環境変数と呼ぶ。
-```bash
+```sh
 export var2=cdn
 ```
 
