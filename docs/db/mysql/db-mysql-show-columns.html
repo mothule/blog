@@ -11,12 +11,12 @@
 
 
 
-  <title>MySQLでテーブルのカラムを表示して確認 - もちゅろぐ</title>
+  <title>MySQLでテーブルのカラムを表示して確認する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="MySQLでテーブルのカラムを表示して確認" />
+<meta property="og:title" content="MySQLでテーブルのカラムを表示して確認する" />
 <meta property="og:locale" content="ja_JP" />
 <meta name="description" content="MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
 <meta property="og:description" content="MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
@@ -28,16 +28,16 @@
 <meta property="article:published_time" content="2021-01-22T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
 <meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" />
-<meta property="twitter:title" content="MySQLでテーブルのカラムを表示して確認" />
+<meta property="twitter:title" content="MySQLでテーブルのカラムを表示して確認する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png","description":"MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-show-columns"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-show-columns","headline":"MySQLでテーブルのカラムを表示して確認","dateModified":"2021-01-22T19:02:05+09:00","datePublished":"2021-01-22T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png","description":"MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-show-columns"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-show-columns","headline":"MySQLでテーブルのカラムを表示して確認する","dateModified":"2021-01-23T04:17:01+09:00","datePublished":"2021-01-22T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="MySQLでテーブルのカラムを表示して確認">
+<meta name="twitter:title" content="MySQLでテーブルのカラムを表示して確認する">
 <meta name="twitter:description" content="MySQLでテーブル(TABLE)のカラム(COLUMNS)を一覧で表示して確認できるステートメントSHOW COLUMNSやDESCRIBEについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。">
 <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png">
 
@@ -152,7 +152,7 @@
         
         
           <li>
-            MySQLでテーブルのカラムを表示して確認
+            MySQLでテーブルのカラムを表示して確認する
           </li>
         
       
@@ -164,12 +164,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" alt="MySQLでテーブルのカラムを表示して確認">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" alt="MySQLでテーブルのカラムを表示して確認する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>MySQLでテーブルのカラムを表示して確認</h1>
+    <h1>MySQLでテーブルのカラムを表示して確認する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -270,7 +270,7 @@
 <h3 id="db名とテーブル名のfrom句を結合する">DB名とテーブル名のFROM句を結合する</h3>
 <p><code class="language-plaintext highlighter-rouge">db_name</code>と<code class="language-plaintext highlighter-rouge">tbl_name</code>を<code class="language-plaintext highlighter-rouge">.</code>で繋ぐことができます。次の2つは同等です。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show full columns from <span class="nb">users </span>from hoge<span class="p">;</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show full columns from <span class="nb">users </span>from hoge_development<span class="p">;</span>
 mysql&gt; show full columns from hoge_development.users<span class="p">;</span>
 </code></pre></div></div>
 
@@ -440,6 +440,40 @@ mysql&gt; desc <span class="nb">users</span><span class="p">;</span>
             
             
             
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/db-mysql-show-index">
+      <img src="/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" alt="MySQLでテーブルのインデックスを表示して確認する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/db-mysql-show-index">
+      <h3>MySQLでテーブルのインデックスを表示して確認する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
 
             
                 

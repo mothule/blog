@@ -11,35 +11,35 @@
 
 
 
-  <title>原因と対応「Error: RuboCop found unsupported Ruby version 2.1」 - もちゅろぐ</title>
+  <title>MySQLでテーブルのインデックスを表示して確認する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」" />
+<meta property="og:title" content="MySQLでテーブルのインデックスを表示して確認する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。" />
-<meta property="og:description" content="先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version" />
+<meta name="description" content="MySQLのテーブル(TABLE)のインデックス(INDEX)を表示して確認できるステートメントSHOW INDEXについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
+<meta property="og:description" content="MySQLのテーブル(TABLE)のインデックス(INDEX)を表示して確認できるステートメントSHOW INDEXについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。" />
+<link rel="canonical" href="https://blog.mothule.com/db/mysql/db-mysql-show-index" />
+<meta property="og:url" content="https://blog.mothule.com/db/mysql/db-mysql-show-index" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-09-15T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-23T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png" />
-<meta property="twitter:title" content="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" />
+<meta property="twitter:title" content="MySQLでテーブルのインデックスを表示して確認する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png","description":"先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version"},"@type":"BlogPosting","url":"https://blog.mothule.com/ruby/rubocop/ruby-rubocop-found-unsupported-ruby-version","headline":"原因と対応「Error: RuboCop found unsupported Ruby version 2.1」","dateModified":"2019-09-15T18:35:47+09:00","datePublished":"2019-09-15T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png","description":"MySQLのテーブル(TABLE)のインデックス(INDEX)を表示して確認できるステートメントSHOW INDEXについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-show-index"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-show-index","headline":"MySQLでテーブルのインデックスを表示して確認する","dateModified":"2021-01-23T19:07:25+09:00","datePublished":"2021-01-23T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」">
-<meta name="twitter:description" content="先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png">
+<meta name="twitter:title" content="MySQLでテーブルのインデックスを表示して確認する">
+<meta name="twitter:description" content="MySQLのテーブル(TABLE)のインデックス(INDEX)を表示して確認できるステートメントSHOW INDEXについて簡単な使い方や詳細な使い方、注意事項についてまとめてます。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ruby" itemprop="item">
-              <span itemprop="name">Ruby</span>
+            <a href="/tags#db" itemprop="item">
+              <span itemprop="name">DB</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#rubocop" itemprop="item">
-              <span itemprop="name">Rubocop</span>
+            <a href="/tags#mysql" itemprop="item">
+              <span itemprop="name">MySQL</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            原因と対応「Error: RuboCop found unsupported Ruby version 2.1」
+            MySQLでテーブルのインデックスを表示して確認する
           </li>
         
       
@@ -164,25 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-09-15-ruby-rubocop-found-unsupported-ruby-version.png" alt="原因と対応「Error: RuboCop found unsupported Ruby version 2.1」">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" alt="MySQLでテーブルのインデックスを表示して確認する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>原因と対応「Error: RuboCop found unsupported Ruby version 2.1」</h1>
+    <h1>MySQLでテーブルのインデックスを表示して確認する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+            <li class="list-inline-item"><a href="/tags#db">DB</a></li>
           
-            <li class="list-inline-item"><a href="/tags#rubocop">Rubocop</a></li>
+            <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-9-15</time></span>
+        <span"><time class="post-date">2021-1-23</time></span>
       </div>
     </div>
   </header>
@@ -190,18 +190,16 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#rubocopでエラーが発生">RuboCopでエラーが発生</a>
+  <li><a href="#mysqlのshow-indexステートメントの構文">MySQLのSHOW INDEXステートメントの構文</a></li>
+  <li><a href="#show-indexの実行例">SHOW INDEXの実行例</a>
     <ul>
-      <li><a href="#targetrubyversion-を指定し忘れ">TargetRubyVersion を指定し忘れ</a></li>
+      <li><a href="#db名とテーブル名のfrom句を結合する">DB名とテーブル名のFROM句を結合する</a></li>
     </ul>
   </li>
-  <li><a href="#エラーをちゃんと読むと分かる">エラーをちゃんと読むと分かる</a></li>
-  <li><a href="#なぜエラーが起きたのか">なぜエラーが起きたのか？</a>
-    <ul>
-      <li><a href="#指定方法を間違えている">指定方法を間違えている</a></li>
-    </ul>
-  </li>
-  <li><a href="#rubocop-found-unsupported-ruby-version-21-の原因と対応方法のまとめ">RuboCop found unsupported Ruby version 2.1 の原因と対応方法のまとめ</a></li>
+  <li><a href="#mysqlのshow-indexで表示される項目">MySQLのSHOW INDEXで表示される項目</a></li>
+  <li><a href="#show-indexをwhere句で表示テーブルを絞る">SHOW INDEXをWHERE句で表示テーブルを絞る</a></li>
+  <li><a href="#注意-show-indexは権限がない場合は表示されない">注意: SHOW INDEXは権限がない場合は表示されない</a></li>
+  <li><a href="#mysqlのmysqlshowコマンドでも取得可能">MySQLのmysqlshowコマンドでも取得可能</a></li>
 </ul>
   </div>
 
@@ -221,101 +219,163 @@
   
 
   <section>
-  <p>先日コマンドラインツールを作ろうと bunlder や activesupport, rubocop など環境構築をしていたときに、ちょっとした勘違いでRuboCopがエラーを吐いて躓いたので、調査して分かった原因と対応方法についてまとめました。</p>
+  <p>MySQLでテーブルのインデックスを表示するには、<code class="language-plaintext highlighter-rouge">SHOW INDEX</code>ステートメントを使います。<br />
+<code class="language-plaintext highlighter-rouge">SHOW INDEX</code>構文は指定したテーブル内のインデックス情報を表示します。</p>
 
-<h2 id="rubocopでエラーが発生">RuboCopでエラーが発生</h2>
+<h2 id="mysqlのshow-indexステートメントの構文">MySQLのSHOW INDEXステートメントの構文</h2>
 
-<p><code class="language-plaintext highlighter-rouge">$ bundle exec rubocop</code> を実行したら次のようなエラーが発生しました。</p>
+<p><code class="language-plaintext highlighter-rouge">SHOW {INDEX | INDEXES | KEYS} {FROM | IN} tbl_name [{FROM | IN} db_name] [WHERE expr]</code></p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">exec </span>rubocop
-Error: RuboCop found unsupported Ruby version 2.1 <span class="k">in</span> <span class="sb">`</span>TargetRubyVersion<span class="sb">`</span> parameter <span class="o">(</span><span class="k">in </span>vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml<span class="o">)</span><span class="nb">.</span> 2.1-compatible analysis was dropped after version 0.58.
-Supported versions: 2.3, 2.4, 2.5, 2.6, 2.7
+<p><code class="language-plaintext highlighter-rouge">[]</code>は任意で、<code class="language-plaintext highlighter-rouge">{|}</code>はどちらかを選択になります。<br />
+<code class="language-plaintext highlighter-rouge">{FROM | IN}</code>であれば<code class="language-plaintext highlighter-rouge">FROM</code>か<code class="language-plaintext highlighter-rouge">IN</code>どちらかを使えます。</p>
+
+<p><code class="language-plaintext highlighter-rouge">INDEX</code>と<code class="language-plaintext highlighter-rouge">INDEXES</code>、そして<code class="language-plaintext highlighter-rouge">KEYS</code>はどれを選んでも結果は同じです。<br />
+<code class="language-plaintext highlighter-rouge">INDEXES</code>と<code class="language-plaintext highlighter-rouge">KEYS</code>は<code class="language-plaintext highlighter-rouge">INDEX</code>のシノニム(代替名)です。</p>
+
+<h2 id="show-indexの実行例">SHOW INDEXの実行例</h2>
+<p>USEステートメントでDB<code class="language-plaintext highlighter-rouge">hoge_development</code>を選択したのちに<code class="language-plaintext highlighter-rouge">SHOW INDEX</code>を実行してます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show index from tokens<span class="p">;</span>
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table  | Non_unique | Key_name                | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tokens |          0 | PRIMARY                 |            1 | <span class="nb">id</span>          | A         |           1 |     NULL | NULL   |      | BTREE      |         |               |
+| tokens |          0 | index_tokens_on_value   |            1 | value       | A         |           1 |     NULL | NULL   | YES  | BTREE      |         |               |
+| tokens |          1 | index_tokens_on_user_id |            1 | user_id     | A         |           1 |     NULL | NULL   | YES  | BTREE      |         |               |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+3 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
 </code></pre></div></div>
 
-<p>2.1？ 自分の環境では rbenv で .ruby-version を使っており、 2.6.2 を使っていました。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> .ruby-version
-2.6.2
+<h3 id="db名とテーブル名のfrom句を結合する">DB名とテーブル名のFROM句を結合する</h3>
+<p><code class="language-plaintext highlighter-rouge">db_name</code>と<code class="language-plaintext highlighter-rouge">tbl_name</code>を<code class="language-plaintext highlighter-rouge">.</code>で繋ぐことができます。次の2つは同等です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show index from <span class="nb">users </span>from hoge_development<span class="p">;</span>
+mysql&gt; show index from hoge_development.users<span class="p">;</span>
 </code></pre></div></div>
 
-<h3 id="targetrubyversion-を指定し忘れ">TargetRubyVersion を指定し忘れ</h3>
-<p>TargetRubyVersion指定するのを忘れてたので .rubocop.yml に追記しました。</p>
-<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">AllCops</span><span class="pi">:</span>
-  <span class="na">TargetRubyVersion </span><span class="pi">:</span> <span class="s">2.6.2</span>
-</code></pre></div></div>
+<h2 id="mysqlのshow-indexで表示される項目">MySQLのSHOW INDEXで表示される項目</h2>
 
-<p>しかし問題は解決せず…</p>
+<table>
+  <thead>
+    <tr>
+      <th>項目名</th>
+      <th>説明</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Table</td>
+      <td>テーブル名です。</td>
+    </tr>
+    <tr>
+      <td>Non_unique</td>
+      <td>重複許可を表します。重複可能:1, 重複不可:0</td>
+    </tr>
+    <tr>
+      <td>Key_name</td>
+      <td>インデックスの名前。このインデックスが主キーなら、常に PRIMARY です。</td>
+    </tr>
+    <tr>
+      <td>Seq_in_index</td>
+      <td>インデックス内のカラムシーケンス番号であり、1から始まります。</td>
+    </tr>
+    <tr>
+      <td>Column_name</td>
+      <td>カラム名です。</td>
+    </tr>
+    <tr>
+      <td>Collation</td>
+      <td>インデックス内カラムのソート方法。<code class="language-plaintext highlighter-rouge">A</code>なら<code class="language-plaintext highlighter-rouge">昇順</code>, <code class="language-plaintext highlighter-rouge">NULL</code>なら<code class="language-plaintext highlighter-rouge">ソートされない</code>のどちらかです。</td>
+    </tr>
+    <tr>
+      <td>Cardinality</td>
+      <td>インデックス内のユニーク数の推定値。統計値なため必ずしも正確ではない。この値が高いほど結合時にこのインデックス利用可能性が高くなります。</td>
+    </tr>
+    <tr>
+      <td>Sub_part</td>
+      <td>カラムが部分的インデックス設定されてるときの文字の数。カラム全体がインデックス設定されている場合は NULLが入ります。</td>
+    </tr>
+    <tr>
+      <td>Packed</td>
+      <td>キーがパックされる方法を示します。パックされない場合は NULL。</td>
+    </tr>
+    <tr>
+      <td>Null</td>
+      <td>このカラムに<code class="language-plaintext highlighter-rouge">NULL</code>を含められるなら<code class="language-plaintext highlighter-rouge">YES</code>、含められないなら空白が入ります。</td>
+    </tr>
+    <tr>
+      <td>Index_type</td>
+      <td>使用されるインデックス方法 (BTREE、FULLTEXT、HASH、RTREEのいずれかです)。</td>
+    </tr>
+    <tr>
+      <td>Comment</td>
+      <td>各カラムで説明されていないこのインデックスに関する情報</td>
+    </tr>
+    <tr>
+      <td>Index_comment</td>
+      <td>このインデックスが作成されたときに COMMENT 属性で設定された任意のコメント。</td>
+    </tr>
+  </tbody>
+</table>
 
-<h2 id="エラーをちゃんと読むと分かる">エラーをちゃんと読むと分かる</h2>
-<p>一行目の半分あたりを読んだ後に1行目終わりから2行目初めにパスが記載されていたので、それ以外の箇所をきちんと読んでいませんでした。
-問題が起きてる場所が <code class="language-plaintext highlighter-rouge">vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml</code> と書いており自分の場所ではない。
-しかも 何やら .rubocop.yml が配置されている。
-中身を見ると次のような指定がされています。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat </span>vendor/bundle/ruby/2.6.0/gems/rainbow-3.0.0/.rubocop.yml
-inherit_from: .rubocop_todo.yml
+<p>この中でよく確認したりチューニング時に見る項目は次の項目が多いかと思います。<br />
+<code class="language-plaintext highlighter-rouge">Table</code>、<code class="language-plaintext highlighter-rouge">Non_unique</code>、<code class="language-plaintext highlighter-rouge">Key_name</code>、<code class="language-plaintext highlighter-rouge">Column_name</code>、<code class="language-plaintext highlighter-rouge">Cardinality</code>、<code class="language-plaintext highlighter-rouge">Sub_part</code>、<code class="language-plaintext highlighter-rouge">Null</code></p>
 
-AllCops:
-  DisplayCopNames: <span class="nb">true
-  </span>DisplayStyleGuide: <span class="nb">true
-  </span>TargetRubyVersion: <span class="s2">"2.1"</span>
-  Exclude:
-    - <span class="s2">"spec/**/*"</span>
-    - <span class="s2">"vendor/**/*"</span>
-Documentation:
-  Enabled: <span class="nb">false
-
-</span>HashSyntax:
-  Enabled: <span class="nb">false
-
-</span>MethodName:
-  Enabled: <span class="nb">false
-
-</span>StringLiterals:
-  Enabled: <span class="nb">false</span>
-</code></pre></div></div>
-
-<p>どうやら raibow gem では <code class="language-plaintext highlighter-rouge">TargetRubyVersion</code> が <code class="language-plaintext highlighter-rouge">2.1</code> を指定してあることで、互換性エラーが起きていました。
-エラー文「2.1-compatible analysis was dropped after version 0.58.」と書いてあるように RubCop version 0.58 以降では 2.1互換性を破棄しています。</p>
-
-<p>インストールした RubCop のバージョンは0.72.0でした。</p>
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">exec </span>rubocop <span class="nt">-v</span>
-0.72.0
-</code></pre></div></div>
-
-<h2 id="なぜエラーが起きたのか">なぜエラーが起きたのか？</h2>
-<p>普段自分が作っている別のrailsアプリとかでは、このような問題は起きていません。
-しかしRuboCopがgems内まで解析しようとしていることはエラーから判断できます。</p>
-
-<p><code class="language-plaintext highlighter-rouge">.rubocop.yml</code> でもgemは見ないように設定しています。</p>
-
-<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">AllCops</span><span class="pi">:</span>
-  <span class="na">TargetRubyVersion</span><span class="pi">:</span> <span class="s">2.6.2</span>
-  <span class="na">Exclude</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="s">vendor/</span>
-    <span class="pi">-</span> <span class="s">tmp/**/*</span>
-</code></pre></div></div>
-
-<p>これ今見ると恥ずかしいミスです。。</p>
-
-<h3 id="指定方法を間違えている">指定方法を間違えている</h3>
-
-<p>実は gems内の解析を除外する指定方法が間違っており正しくははこうでした。</p>
-
-<div class="language-yml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="na">AllCops</span><span class="pi">:</span>
-  <span class="na">TargetRubyVersion</span><span class="pi">:</span> <span class="s">2.6.2</span>
-  <span class="na">Exclude</span><span class="pi">:</span>
-    <span class="pi">-</span> <span class="s">vendor/**/*</span>
-    <span class="pi">-</span> <span class="s">tmp/**/*</span>
-</code></pre></div></div>
-<p><code class="language-plaintext highlighter-rouge">vendor/</code>でも下のtmp同様に除外されると勘違いしていました。
-おそらく.gitignoreで指定フォルダを無視する設定をした後だったのか原因かもしれません。</p>
-
-<h2 id="rubocop-found-unsupported-ruby-version-21-の原因と対応方法のまとめ">RuboCop found unsupported Ruby version 2.1 の原因と対応方法のまとめ</h2>
-
+<p>インデックスの条件等を確認するなら、次の項目あたりになります。</p>
 <ul>
-  <li>原因：gem内も解析対象となっている</li>
-  <li>対応：.rubocop.ymlで<code class="language-plaintext highlighter-rouge">vendor/**/*</code>のように除外指定をする</li>
-  <li>まとめ：エラー文をちゃんと読む</li>
+  <li>Table</li>
+  <li>Non_unique</li>
+  <li>Key_name</li>
+  <li>Column_name</li>
+  <li>Null</li>
 </ul>
+
+<p>チューニングでインデックスの状態を確認するなら、次の項目あたりになります。</p>
+<ul>
+  <li>Cardinality</li>
+  <li>Sub_part</li>
+</ul>
+
+<h2 id="show-indexをwhere句で表示テーブルを絞る">SHOW INDEXをWHERE句で表示テーブルを絞る</h2>
+
+<p>構文内にある<code class="language-plaintext highlighter-rouge">WHERE</code>句を使うことで表示インデックスを選択できます。<br />
+テーブル<code class="language-plaintext highlighter-rouge">tokens</code>から<code class="language-plaintext highlighter-rouge">Key_name</code>カラムに対して照合すると次のようになります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show index from tokens where Key_name like <span class="s1">'index_%'</span><span class="p">;</span>
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table  | Non_unique | Key_name                | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tokens |          0 | index_tokens_on_value   |            1 | value       | A         |           1 |     NULL | NULL   | YES  | BTREE      |         |               |
+| tokens |          1 | index_tokens_on_user_id |            1 | user_id     | A         |           1 |     NULL | NULL   | YES  | BTREE      |         |               |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<h2 id="注意-show-indexは権限がない場合は表示されない">注意: SHOW INDEXは権限がない場合は表示されない</h2>
+<p>カラムに対する権限を持っていない場合は、<code class="language-plaintext highlighter-rouge">SHOW INDEX</code>の結果に表示されません。</p>
+
+<h2 id="mysqlのmysqlshowコマンドでも取得可能">MySQLのmysqlshowコマンドでも取得可能</h2>
+<p>ターミナル上で<code class="language-plaintext highlighter-rouge">mysqlshow -k db_name tbl_name</code>コマンドを実行することで、テーブルのインデックスを一覧表示できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysqlshow <span class="nt">-uroot</span> <span class="nt">-k</span> hoge_test tokens
+Database: hoge_test  Table: tokens
++------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| Field      | Type         | Collation          | Null | Key | Default | Extra          | Privileges                      | Comment |
++------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
+| <span class="nb">id</span>         | bigint<span class="o">(</span>20<span class="o">)</span>   |                    | NO   | PRI |         | auto_increment | <span class="k">select</span>,insert,update,references |         |
+| value      | varchar<span class="o">(</span>256<span class="o">)</span> | utf8mb4_general_ci | YES  | UNI |         |                | <span class="k">select</span>,insert,update,references |         |
+| user_id    | bigint<span class="o">(</span>20<span class="o">)</span>   |                    | YES  | MUL |         |                | <span class="k">select</span>,insert,update,references |         |
+| created_at | datetime<span class="o">(</span>6<span class="o">)</span>  |                    | NO   |     |         |                | <span class="k">select</span>,insert,update,references |         |
+| updated_at | datetime<span class="o">(</span>6<span class="o">)</span>  |                    | NO   |     |         |                | <span class="k">select</span>,insert,update,references |         |
++------------+--------------+--------------------+------+-----+---------+----------------+---------------------------------+---------+
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table  | Non_unique | Key_name                | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tokens | 0          | PRIMARY                 | 1            | <span class="nb">id</span>          | A         | 1           |          |        |      | BTREE      |         |               |
+| tokens | 0          | index_tokens_on_value   | 1            | value       | A         | 1           |          |        | YES  | BTREE      |         |               |
+| tokens | 1          | index_tokens_on_user_id | 1            | user_id     | A         | 1           |          |        | YES  | BTREE      |         |               |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+</code></pre></div></div>
 
   </section>
 
@@ -352,10 +412,66 @@ Documentation:
                 
                 
 
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/db-mysql-show-tables">
+      <img src="/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" alt="MySQLのテーブル一覧を表示して確認する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/db-mysql-show-tables">
+      <h3>MySQLのテーブル一覧を表示して確認する</h3>
+    </a>
 
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
             
                 
                 
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/db-mysql-show-columns">
+      <img src="/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" alt="MySQLでテーブルのカラムを表示して確認する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/db-mysql-show-columns">
+      <h3>MySQLでテーブルのカラムを表示して確認する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
                 
 
 
@@ -1096,13 +1212,69 @@ Documentation:
                 
                 
 
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/mysql-minor-commands">
+      <img src="/assets/images/2019-08-02-mysql-minor-commands.png" alt="忘れるのに定期的に必要になるMySQLコマンド" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/mysql-minor-commands">
+      <h3>忘れるのに定期的に必要になるMySQLコマンド</h3>
+    </a>
 
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
             
                 
                 
                 
 
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/mysql-find-mycnf">
+      <img src="/assets/images/2019-08-02-mysql-find-mycnf/0.png" alt="MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/mysql-find-mycnf">
+      <h3>MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</h3>
+    </a>
 
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
             
                 
                 
@@ -1285,6 +1457,19 @@ Documentation:
 
             
 
+            
+              <li class="related-post-item">
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-format="fluid"
+                   data-ad-layout-key="-ga-4d+ii+16-1f4"
+                   data-ad-client="ca-pub-5156339577835247"
+                   data-ad-slot="9550753128"></ins>
+              <script>
+                   (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+              </li>
             
 
       </div>
