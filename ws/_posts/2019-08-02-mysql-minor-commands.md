@@ -21,6 +21,9 @@ SHOW INDEX FROM table_name
 
 {% page_image -1.png %}
 
+なお、`SHOW INDEX`に関する詳細は、{% post_link_text 2021-01-23-db-mysql-show-index %}にまとめてあります。
+
+
 ### 指定テーブルのインデックス削除
 
 ```
