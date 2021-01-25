@@ -11,35 +11,35 @@
 
 
 
-  <title>OpenSSL Library not loadedが出たら疑う場所 - もちゅろぐ</title>
+  <title>MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="OpenSSL Library not loadedが出たら疑う場所" />
+<meta property="og:title" content="MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。" />
-<meta property="og:description" content="今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。" />
-<link rel="canonical" href="https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error" />
-<meta property="og:url" content="https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error" />
+<meta name="description" content="MySQLのINFORMATION_SCHEMAデータベース内にあるSTATISTICSテーブルを表示して、インデックス情報を確認する方法についてまとめてあります。" />
+<meta property="og:description" content="MySQLのINFORMATION_SCHEMAデータベース内にあるSTATISTICSテーブルを表示して、インデックス情報を確認する方法についてまとめてあります。" />
+<link rel="canonical" href="https://blog.mothule.com/db/mysql/db-mysql-information-schema" />
+<meta property="og:url" content="https://blog.mothule.com/db/mysql/db-mysql-information-schema" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-02-20T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-25T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png" />
-<meta property="twitter:title" content="OpenSSL Library not loadedが出たら疑う場所" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png" />
+<meta property="twitter:title" content="MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png","description":"今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。 この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error"},"@type":"BlogPosting","url":"https://blog.mothule.com/tools/rbenv/tools-rbenv-ssl-load-error","headline":"OpenSSL Library not loadedが出たら疑う場所","dateModified":"2020-05-19T00:52:14+09:00","datePublished":"2020-02-20T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png","description":"MySQLのINFORMATION_SCHEMAデータベース内にあるSTATISTICSテーブルを表示して、インデックス情報を確認する方法についてまとめてあります。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-information-schema"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-information-schema","headline":"MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する","dateModified":"2021-01-25T22:45:22+09:00","datePublished":"2021-01-25T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="OpenSSL Library not loadedが出たら疑う場所">
-<meta name="twitter:description" content="今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png">
+<meta name="twitter:title" content="MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する">
+<meta name="twitter:description" content="MySQLのINFORMATION_SCHEMAデータベース内にあるSTATISTICSテーブルを表示して、インデックス情報を確認する方法についてまとめてあります。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#tools" itemprop="item">
-              <span itemprop="name">ツール</span>
+            <a href="/tags#db" itemprop="item">
+              <span itemprop="name">DB</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#rbenv" itemprop="item">
-              <span itemprop="name">rbenv</span>
+            <a href="/tags#mysql" itemprop="item">
+              <span itemprop="name">MySQL</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            OpenSSL Library not loadedが出たら疑う場所
+            MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する
           </li>
         
       
@@ -164,27 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-02-20-tools-rbenv-ssl-load-error.png" alt="OpenSSL Library not loadedが出たら疑う場所">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png" alt="MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>OpenSSL Library not loadedが出たら疑う場所</h1>
+    <h1>MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+            <li class="list-inline-item"><a href="/tags#db">DB</a></li>
           
-            <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+            <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2020-2-20</time></span>
+        <span"><time class="post-date">2021-1-25</time></span>
       </div>
     </div>
   </header>
@@ -192,22 +190,11 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#何をしたのか">何をしたのか？</a>
-    <ul>
-      <li><a href="#homebrewでnginxの依存関係を調べる">homebrewでnginxの依存関係を調べる</a></li>
-    </ul>
-  </li>
-  <li><a href="#原因調査">原因調査</a>
-    <ul>
-      <li><a href="#ruby再インストール解決せず">Ruby再インストール(解決せず)</a></li>
-      <li><a href="#シンボリックリンクを用意解決せず">シンボリックリンクを用意(解決せず)</a></li>
-      <li><a href="#mysqlが起動しないことが発覚">MySQLが起動しないことが発覚</a></li>
-      <li><a href="#mysql2-gem-を再インストール">mysql2 gem を再インストール</a></li>
-      <li><a href="#ついに動いた">ついに動いた</a></li>
-    </ul>
-  </li>
-  <li><a href="#それぞれのopensslのパスがズレていた">それぞれのopensslのパスがズレていた？</a></li>
-  <li><a href="#openssl-library-not-loadedが出たときの対処法">OpenSSL Library not loadedが出たときの対処法</a></li>
+  <li><a href="#mysqlのinformation_schemaは情報データベース">MySQLのINFORMATION_SCHEMAは情報データベース</a></li>
+  <li><a href="#information_schemaのstatisticsはテーブルインデックスの情報を持つ">INFORMATION_SCHEMAのSTATISTICSはテーブルインデックスの情報を持つ</a></li>
+  <li><a href="#show-indexとほぼ結果は同じ">SHOW INDEXとほぼ結果は同じ</a></li>
+  <li><a href="#複数テーブルのインデックスを表示して確認できる">複数テーブルのインデックスを表示して確認できる</a></li>
+  <li><a href="#インデックス情報の確認は大抵はshow-indexで事足りる">インデックス情報の確認は大抵はSHOW INDEXで事足りる</a></li>
 </ul>
   </div>
 
@@ -227,132 +214,82 @@
   
 
   <section>
-  <p>今回あることをしてRails実行したらOpenSSLがロードされないエラーが発生しました。
-この記事は何をしたらこのエラーが起きたのか？何をしたらこのエラーを対処できたのかをまとめました。</p>
+  <p>MySQLのインデックスを確認する方法として、<code class="language-plaintext highlighter-rouge">SHOW INDEX</code>ステートメントがありますが、<br />
+他にもMySQLのINFORMATION_SCHEMAデータベース内にあるSTATISTICSテーブルを表示して、インデックス情報を確認する方法があります。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
-  dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
+<h2 id="mysqlのinformation_schemaは情報データベース">MySQLのINFORMATION_SCHEMAは情報データベース</h2>
+
+<p>INFORMATION_SCHEMAは、「MySQLサーバが保持する全てのデータベース」に関する情報を格納するデータベースです。
+次のMySQLサーバに関する情報を提供します。</p>
+
+<ul>
+  <li>データベースの名前</li>
+  <li>テーブルの名前</li>
+  <li>カラムのデータ型</li>
+  <li>アクセス権限</li>
+</ul>
+
+<h2 id="information_schemaのstatisticsはテーブルインデックスの情報を持つ">INFORMATION_SCHEMAのSTATISTICSはテーブルインデックスの情報を持つ</h2>
+<p><code class="language-plaintext highlighter-rouge">STATISTICS</code>テーブルの構造を見てみます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; desc statistics<span class="p">;</span>
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| TABLE_CATALOG | varchar<span class="o">(</span>512<span class="o">)</span>  | NO   |     |         |       |
+| TABLE_SCHEMA  | varchar<span class="o">(</span>64<span class="o">)</span>   | NO   |     |         |       |
+| TABLE_NAME    | varchar<span class="o">(</span>64<span class="o">)</span>   | NO   |     |         |       |
+| NON_UNIQUE    | bigint<span class="o">(</span>1<span class="o">)</span>     | NO   |     | 0       |       |
+| INDEX_SCHEMA  | varchar<span class="o">(</span>64<span class="o">)</span>   | NO   |     |         |       |
+| INDEX_NAME    | varchar<span class="o">(</span>64<span class="o">)</span>   | NO   |     |         |       |
+| SEQ_IN_INDEX  | bigint<span class="o">(</span>2<span class="o">)</span>     | NO   |     | 0       |       |
+| COLUMN_NAME   | varchar<span class="o">(</span>64<span class="o">)</span>   | NO   |     |         |       |
+| COLLATION     | varchar<span class="o">(</span>1<span class="o">)</span>    | YES  |     | NULL    |       |
+| CARDINALITY   | bigint<span class="o">(</span>21<span class="o">)</span>    | YES  |     | NULL    |       |
+| SUB_PART      | bigint<span class="o">(</span>3<span class="o">)</span>     | YES  |     | NULL    |       |
+| PACKED        | varchar<span class="o">(</span>10<span class="o">)</span>   | YES  |     | NULL    |       |
+| NULLABLE      | varchar<span class="o">(</span>3<span class="o">)</span>    | NO   |     |         |       |
+| INDEX_TYPE    | varchar<span class="o">(</span>16<span class="o">)</span>   | NO   |     |         |       |
+| COMMENT       | varchar<span class="o">(</span>16<span class="o">)</span>   | YES  |     | NULL    |       |
+| INDEX_COMMENT | varchar<span class="o">(</span>1024<span class="o">)</span> | NO   |     |         |       |
++---------------+---------------+------+-----+---------+-------+
+16 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
 </code></pre></div></div>
 
-<h2 id="何をしたのか">何をしたのか？</h2>
-<p>homebrew管理下のnginxを更新(<code class="language-plaintext highlighter-rouge">$ brew upgrade nginx</code>)しました。</p>
+<h2 id="show-indexとほぼ結果は同じ">SHOW INDEXとほぼ結果は同じ</h2>
+<p>下記は<code class="language-plaintext highlighter-rouge">hoge_development</code>データベースの<code class="language-plaintext highlighter-rouge">tokens</code>テーブルのインデックス情報を表示した結果です。</p>
 
-<h3 id="homebrewでnginxの依存関係を調べる">homebrewでnginxの依存関係を調べる</h3>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; <span class="k">select</span> <span class="k">*</span> from statistics where table_schema <span class="o">=</span> <span class="s1">'hoge_development'</span> and table_name <span class="o">=</span> <span class="s1">'tokens'</span><span class="p">;</span>
++---------------+-----------------------+------------+------------+-----------------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+----------+------------+---------+---------------+
+| TABLE_CATALOG | TABLE_SCHEMA          | TABLE_NAME | NON_UNIQUE | INDEX_SCHEMA          | INDEX_NAME              | SEQ_IN_INDEX | COLUMN_NAME | COLLATION | CARDINALITY | SUB_PART | PACKED | NULLABLE | INDEX_TYPE | COMMENT | INDEX_COMMENT |
++---------------+-----------------------+------------+------------+-----------------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+----------+------------+---------+---------------+
+| def           | hoge_development | tokens     |          0 | hoge_development | PRIMARY                 |            1 | <span class="nb">id</span>          | A         |           3 |     NULL | NULL   |          | BTREE      |         |               |
+| def           | hoge_development | tokens     |          1 | hoge_development | index_tokens_on_user_id |            1 | user_id     | A         |           3 |     NULL | NULL   | YES      | BTREE      |         |               |
++---------------+-----------------------+------------+------------+-----------------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+----------+------------+---------+---------------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
 
-<p>homebrewには管理してるformulaがどのformulaを使っているのか依存関係を調べることができます。</p>
+<p>出力されるカラム名は異なりますが、<code class="language-plaintext highlighter-rouge">SHOW INDEX</code>ステートメントと値は同じものになります。</p>
 
-<p>下記はその機能を使って、nginxがどのformulaに依存してるのかを調べた結果です。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; show index from tokens from hoge_development<span class="p">;</span>
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table  | Non_unique | Key_name                | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tokens |          0 | PRIMARY                 |            1 | <span class="nb">id</span>          | A         |           3 |     NULL | NULL   |      | BTREE      |         |               |
+| tokens |          1 | index_tokens_on_user_id |            1 | user_id     | A         |           3 |     NULL | NULL   | YES  | BTREE      |         |               |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+2 rows <span class="k">in </span><span class="nb">set</span> <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
 
-<p>Homebrewに関する詳細記事は「<span><a href="/mac/homebrew/mac-homebrew-basic">MacのHomebrewとは？仕組み・使い方と用語整理</a></span>
+<h2 id="複数テーブルのインデックスを表示して確認できる">複数テーブルのインデックスを表示して確認できる</h2>
+<p><code class="language-plaintext highlighter-rouge">SHOW INDEX</code>は一つのテーブルに対するインデックス情報を表示しますが、<code class="language-plaintext highlighter-rouge">INFORMATION_SCHEMA STATISTICS</code>を使うとデータベースを横断してアクセスするため、<br />
+<code class="language-plaintext highlighter-rouge">Where</code>で絞り込むことで複数テーブルのインデックス情報を表示して確認できます。</p>
+
+<h2 id="インデックス情報の確認は大抵はshow-indexで事足りる">インデックス情報の確認は大抵はSHOW INDEXで事足りる</h2>
+<p><code class="language-plaintext highlighter-rouge">INFORMATION_SCHEMA STATISTICS</code>テーブルを使えば多くの情報を得られますが、インデックスを調べるだけであれば、大抵は<code class="language-plaintext highlighter-rouge">SHOW INDEX</code>ステートメントで事足ります。</p>
+
+<p><code class="language-plaintext highlighter-rouge">SHOW INDEX</code>ステートメントの詳細は、「<span><a href="/db/mysql/db-mysql-show-index">MySQLでテーブルのインデックスを表示して確認する</a></span>
 」にまとめてあります。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew deps nginx
-openssl@1.1
-pcre
-</code></pre></div></div>
-
-<p>どうやらnginxをバージョン更新した際に依存関係であるopensslに何らかの更新が入り、Ruby/Railsで使われているopensslに影響が起きたようです。</p>
-
-<h2 id="原因調査">原因調査</h2>
-<p>自分が調べて対処した順番に書いていきます。
-解決した項目だけを実施しても解決しないかも知れません。
-なぜなら問題が複数ケースだったり、順番に実施した内容のなかで必要手順が含まれていたのかもしれないからです。</p>
-
-<h3 id="ruby再インストール解決せず">Ruby再インストール(解決せず)</h3>
-<p>ネットで調べたところ、 Rubyに紐づくopensslが外れた事で読み込めなくなっているのではないか？と仮説にたどり着きました。
-Rubyはrbenvで管理しているため、rbenvで対象バージョンを再インストールすることで再紐付けされないか？と試してみることにしました。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv <span class="nb">install</span> &lt;ruby version&gt;
-</code></pre></div></div>
-
-<p>しかし解決はしませんでした。</p>
-
-<h3 id="シンボリックリンクを用意解決せず">シンボリックリンクを用意(解決せず)</h3>
-
-<p>OpenSSLのライブラリ置き場を確認したら次のように<code class="language-plaintext highlighter-rouge">1.0.0</code>版なくなってました。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ls</span> <span class="nt">-lkh</span> /usr/local/opt/openssl/lib/
-total 7236
-drwxr-xr-x  4 mothule  staff   128B  9 10 22:13 engines-1.1
-<span class="nt">-r--r--r--</span>  1 mothule  staff   2.2M  2 20 21:43 libcrypto.1.1.dylib
-<span class="nt">-r--r--r--</span>  1 mothule  staff   3.7M  9 10 22:13 libcrypto.a
-lrwxr-xr-x  1 mothule  staff    19B  9 10 22:13 libcrypto.dylib -&gt; libcrypto.1.1.dylib
-<span class="nt">-r--r--r--</span>  1 mothule  staff   474K  2 20 21:43 libssl.1.1.dylib
-<span class="nt">-r--r--r--</span>  1 mothule  staff   704K  9 10 22:13 libssl.a
-lrwxr-xr-x  1 mothule  staff    16B  9 10 22:13 libssl.dylib -&gt; libssl.1.1.dylib
-drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
-</code></pre></div></div>
-
-<p>どうやら存在しないバージョンファイルに対してアクセスをしているため失敗しているようです。</p>
-
-<p>強引ですが、試しにシンボリックリンクで1.1版に向けてみたら動かないか試してみました。<br />
-<strong>と思ったのも、セマンティック バージョニングなら1.0.0から1.1はマイナーバージョンアップになるので、運が良ければ破壊変更はないからです。（それでも将来的に考えたらこの方法はNGです）</strong></p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> libssl.1.1.dylib libssl.1.0.0.dylib
-<span class="nv">$ </span><span class="nb">ln</span> <span class="nt">-s</span> libcrypto.1.1.dylib libcrypto.1.0.0.dylib
-</code></pre></div></div>
-
-<p>こちらで試しましたが、MySQLの起動が失敗するようになりました。</p>
-
-<h3 id="mysqlが起動しないことが発覚">MySQLが起動しないことが発覚</h3>
-<p>ガサツな方法だと解決できない根深さなようなので本腰入れて調べることにしました。</p>
-
-<p>エラーログを確認すると、opensslはmysql2 gemがopensslを使おうとしてエラーを起こしています。</p>
-
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>LoadError:
-  dlopen(/Users/mothule/workspace/piglet/vendor/bundle/ruby/2.5.0/gems/mysql2-0.5.2/lib/mysql2/mysql2.bundle, 9): Library not loaded: /usr/local/opt/openssl/lib/libssl.1.0.0.dylib
-</code></pre></div></div>
-
-<p>まず問題を特定するために、そもそもMySQLが起動するかを確認しましたが、MySQLが起動(<code class="language-plaintext highlighter-rouge">$ mysql.server start</code>)しなくなっていました。</p>
-
-<p>MySQLは都合上最新ではなく MySQL5.6を使っており、homebrewで管理しています。
-なので再インストールをしてみることにしました。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew reinstall mysql@5.6
-</code></pre></div></div>
-
-<p><strong>MySQLは立ち上がるようになりました。</strong> しかしRailsは以前変わらず起動しません。</p>
-
-<h3 id="mysql2-gem-を再インストール">mysql2 gem を再インストール</h3>
-
-<p>前述したようにエラーはmysql2で起きてます。 MySQLが動くようになったので、今度はRubyとMySQLのアダプターとなる<code class="language-plaintext highlighter-rouge">mysql2</code>を再インストールしました。</p>
-
-<p>gem直接ではなくbunlder管理なのでbundlerから経由で指示します。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">exec </span>gem uninstall mysql2
-<span class="nv">$ </span>bundle <span class="nb">install</span>
-</code></pre></div></div>
-
-<p>結果は変わらず起動していませんが、エラー内容が少し変わりました。</p>
-
-<h3 id="ついに動いた">ついに動いた</h3>
-
-<p>エラー内容がマイグレーション関係のエラーだったので、マイグレーションを走らせました。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bin/rake db:migrate:reset db:seed
-</code></pre></div></div>
-
-<p>これで起動したらついに動きました。</p>
-
-<h2 id="それぞれのopensslのパスがズレていた">それぞれのopensslのパスがズレていた？</h2>
-<p>振り返ってみると、nginxを更新したことでopensslが更新され、MySQL,ruby,mysql2とそれぞれでopensslのパスがズレたことが原因じゃないかと見ています。</p>
-
-<p>なので、どれか一つではなく、複数の対処で解決したんじゃないかと思ってます。</p>
-
-<h2 id="openssl-library-not-loadedが出たときの対処法">OpenSSL Library not loadedが出たときの対処法</h2>
-
-<p>今回自分が行った対処一覧となります。</p>
-
-<ol>
-  <li><code class="language-plaintext highlighter-rouge">$ brew reinstall mysql@5.6</code></li>
-  <li><code class="language-plaintext highlighter-rouge">$ rbenv install 2.5.7 &amp;&amp; gem install bundler -v "2.0.2"</code></li>
-  <li><code class="language-plaintext highlighter-rouge">$ bundle</code></li>
-  <li><code class="language-plaintext highlighter-rouge">$ bundle exec gem uninstall mysql2</code></li>
-  <li><code class="language-plaintext highlighter-rouge">$ bundle</code></li>
-  <li><code class="language-plaintext highlighter-rouge">$ bin/rake db:migrate:reset db:seed RAILS_ENV=test</code></li>
-</ol>
-
-<p>全ての環境で解決はしないと思いますが、その場合は自分のように原因領域の特定と仮説、試行の繰り返しが重要です。</p>
 
   </section>
 
@@ -389,361 +326,23 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/tools/tools-xcode-launcher-cli">
-      <img src="/assets/images/2020-05-20-tools-xcode-launcher-cli/eyecatch.png" alt="コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-show-index">
+      <img src="/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" alt="MySQLでテーブルのインデックスを表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/tools/tools-xcode-launcher-cli">
-      <h3>コマンドラインからいい感じにXcodeプロジェクトを開くスクリプト作った</h3>
+    <a href="/db/mysql/db-mysql-show-index">
+      <h3>MySQLでテーブルのインデックスを表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#xcode">Xcode</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint">
-      <img src="/assets/images/2020-03-29-tools-rubymine-how-to-conditioned-breakpoint/0.png" alt="RubyMineで条件付きブレイクポイントを使いこなす方法" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/tools/rubymine/tools-rubymine-how-to-conditioned-breakpoint">
-      <h3>RubyMineで条件付きブレイクポイントを使いこなす方法</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rubymine">RubyMine</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -764,28 +363,20 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">
-      <img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" alt="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-show-tables">
+      <img src="/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" alt="MySQLのテーブル一覧を表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">
-      <h3>RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</h3>
+    <a href="/db/mysql/db-mysql-show-tables">
+      <h3>MySQLのテーブル一覧を表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#rubymine">RubyMine</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -803,97 +394,23 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ruby/ruby-script-basic">
-      <img src="/assets/images/2020-02-08-ruby-script-basic.png" alt="iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-show-columns">
+      <img src="/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" alt="MySQLでテーブルのカラムを表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ruby/ruby-script-basic">
-      <h3>iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</h3>
+    <a href="/db/mysql/db-mysql-show-columns">
+      <h3>MySQLでテーブルのカラムを表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#shellscript">シェルスクリプト</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -1163,23 +680,537 @@ drwxr-xr-x  5 mothule  staff   160B  2 20 21:43 pkgconfig
                 
                 
 
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/tools/tools-training-support-tools-urcoach">
-      <img src="/assets/images/2019-09-15-tools-training-support-tools-urcoach/2019-09-15-tools-training-support-tools-urcoach.jpg" alt="実装の速度を養うトレーニングサポートツールを作った" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/mysql-minor-commands">
+      <img src="/assets/images/2019-08-02-mysql-minor-commands.png" alt="忘れるのに定期的に必要になるMySQLコマンド" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/tools/tools-training-support-tools-urcoach">
-      <h3>実装の速度を養うトレーニングサポートツールを作った</h3>
+    <a href="/db/mysql/mysql-minor-commands">
+      <h3>忘れるのに定期的に必要になるMySQLコマンド</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/mysql-find-mycnf">
+      <img src="/assets/images/2019-08-02-mysql-find-mycnf/0.png" alt="MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/mysql-find-mycnf">
+      <h3>MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>

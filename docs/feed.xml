@@ -1,4 +1,79 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-23T19:07:44+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MySQLでテーブルのインデックスを表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-index" rel="alternate" type="text/html" title="MySQLでテーブルのインデックスを表示して確認する" /><published>2021-01-23T00:00:00+09:00</published><updated>2021-01-23T19:07:25+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-index</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-index">&lt;p&gt;MySQLでテーブルのインデックスを表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-25T22:49:20+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-information-schema" rel="alternate" type="text/html" title="MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する" /><published>2021-01-25T00:00:00+09:00</published><updated>2021-01-25T22:45:22+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-information-schema</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-information-schema">&lt;p&gt;MySQLのインデックスを確認する方法として、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;ステートメントがありますが、&lt;br /&gt;
+他にもMySQLのINFORMATION_SCHEMAデータベース内にあるSTATISTICSテーブルを表示して、インデックス情報を確認する方法があります。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのinformation_schemaは情報データベース&quot;&gt;MySQLのINFORMATION_SCHEMAは情報データベース&lt;/h2&gt;
+
+&lt;p&gt;INFORMATION_SCHEMAは、「MySQLサーバが保持する全てのデータベース」に関する情報を格納するデータベースです。
+次のMySQLサーバに関する情報を提供します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;データベースの名前&lt;/li&gt;
+  &lt;li&gt;テーブルの名前&lt;/li&gt;
+  &lt;li&gt;カラムのデータ型&lt;/li&gt;
+  &lt;li&gt;アクセス権限&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;information_schemaのstatisticsはテーブルインデックスの情報を持つ&quot;&gt;INFORMATION_SCHEMAのSTATISTICSはテーブルインデックスの情報を持つ&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;STATISTICS&lt;/code&gt;テーブルの構造を見てみます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; desc statistics&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------+---------------+------+-----+---------+-------+
+| Field         | Type          | Null | Key | Default | Extra |
++---------------+---------------+------+-----+---------+-------+
+| TABLE_CATALOG | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;512&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;  | NO   |     |         |       |
+| TABLE_SCHEMA  | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NO   |     |         |       |
+| TABLE_NAME    | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NO   |     |         |       |
+| NON_UNIQUE    | bigint&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     | NO   |     | 0       |       |
+| INDEX_SCHEMA  | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NO   |     |         |       |
+| INDEX_NAME    | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NO   |     |         |       |
+| SEQ_IN_INDEX  | bigint&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;2&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     | NO   |     | 0       |       |
+| COLUMN_NAME   | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;64&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NO   |     |         |       |
+| COLLATION     | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    | YES  |     | NULL    |       |
+| CARDINALITY   | bigint&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;21&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    | YES  |     | NULL    |       |
+| SUB_PART      | bigint&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;     | YES  |     | NULL    |       |
+| PACKED        | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;10&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | YES  |     | NULL    |       |
+| NULLABLE      | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;3&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;    | NO   |     |         |       |
+| INDEX_TYPE    | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;16&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | NO   |     |         |       |
+| COMMENT       | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;16&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;   | YES  |     | NULL    |       |
+| INDEX_COMMENT | varchar&lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;1024&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; | NO   |     |         |       |
++---------------+---------------+------+-----+---------+-------+
+16 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-indexとほぼ結果は同じ&quot;&gt;SHOW INDEXとほぼ結果は同じ&lt;/h2&gt;
+&lt;p&gt;下記は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge_development&lt;/code&gt;データベースの&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tokens&lt;/code&gt;テーブルのインデックス情報を表示した結果です。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; &lt;span class=&quot;k&quot;&gt;select&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt; from statistics where table_schema &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'hoge_development'&lt;/span&gt; and table_name &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'tokens'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------+-----------------------+------------+------------+-----------------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+----------+------------+---------+---------------+
+| TABLE_CATALOG | TABLE_SCHEMA          | TABLE_NAME | NON_UNIQUE | INDEX_SCHEMA          | INDEX_NAME              | SEQ_IN_INDEX | COLUMN_NAME | COLLATION | CARDINALITY | SUB_PART | PACKED | NULLABLE | INDEX_TYPE | COMMENT | INDEX_COMMENT |
++---------------+-----------------------+------------+------------+-----------------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+----------+------------+---------+---------------+
+| def           | hoge_development | tokens     |          0 | hoge_development | PRIMARY                 |            1 | &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;          | A         |           3 |     NULL | NULL   |          | BTREE      |         |               |
+| def           | hoge_development | tokens     |          1 | hoge_development | index_tokens_on_user_id |            1 | user_id     | A         |           3 |     NULL | NULL   | YES      | BTREE      |         |               |
++---------------+-----------------------+------------+------------+-----------------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+----------+------------+---------+---------------+
+2 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;出力されるカラム名は異なりますが、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;ステートメントと値は同じものになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show index from tokens from hoge_development&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| Table  | Non_unique | Key_name                | Seq_in_index | Column_name | Collation | Cardinality | Sub_part | Packed | Null | Index_type | Comment | Index_comment |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+| tokens |          0 | PRIMARY                 |            1 | &lt;span class=&quot;nb&quot;&gt;id&lt;/span&gt;          | A         |           3 |     NULL | NULL   |      | BTREE      |         |               |
+| tokens |          1 | index_tokens_on_user_id |            1 | user_id     | A         |           3 |     NULL | NULL   | YES  | BTREE      |         |               |
++--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
+2 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;複数テーブルのインデックスを表示して確認できる&quot;&gt;複数テーブルのインデックスを表示して確認できる&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;は一つのテーブルに対するインデックス情報を表示しますが、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INFORMATION_SCHEMA STATISTICS&lt;/code&gt;を使うとデータベースを横断してアクセスするため、&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Where&lt;/code&gt;で絞り込むことで複数テーブルのインデックス情報を表示して確認できます。&lt;/p&gt;
+
+&lt;h2 id=&quot;インデックス情報の確認は大抵はshow-indexで事足りる&quot;&gt;インデックス情報の確認は大抵はSHOW INDEXで事足りる&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;INFORMATION_SCHEMA STATISTICS&lt;/code&gt;テーブルを使えば多くの情報を得られますが、インデックスを調べるだけであれば、大抵は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;ステートメントで事足ります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;ステートメントの詳細は、「&lt;span&gt;&lt;a href=&quot;/db/mysql/db-mysql-show-index&quot;&gt;MySQLでテーブルのインデックスを表示して確認する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLのインデックスを確認する方法として、SHOW INDEXステートメントがありますが、 他にもMySQLのINFORMATION_SCHEMAデータベース内にあるSTATISTICSテーブルを表示して、インデックス情報を確認する方法があります。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLでテーブルのインデックスを表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-index" rel="alternate" type="text/html" title="MySQLでテーブルのインデックスを表示して確認する" /><published>2021-01-23T00:00:00+09:00</published><updated>2021-01-23T19:07:25+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-index</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-index">&lt;p&gt;MySQLでテーブルのインデックスを表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW INDEX&lt;/code&gt;構文は指定したテーブル内のインデックス情報を表示します。&lt;/p&gt;
 
 &lt;h2 id=&quot;mysqlのshow-indexステートメントの構文&quot;&gt;MySQLのSHOW INDEXステートメントの構文&lt;/h2&gt;
@@ -154,115 +229,7 @@ Database: hoge_test  Table: tokens
 | tokens | 0          | index_tokens_on_value   | 1            | value       | A         | 1           |          |        | YES  | BTREE      |         |               |
 | tokens | 1          | index_tokens_on_user_id | 1            | user_id     | A         | 1           |          |        | YES  | BTREE      |         |               |
 +--------+------------+-------------------------+--------------+-------------+-----------+-------------+----------+--------+------+------------+---------+---------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLでテーブルのインデックスを表示するには、SHOW INDEXステートメントを使います。 SHOW INDEX構文は指定したテーブル内のインデックス情報を表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLのテーブル一覧を表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-tables" rel="alternate" type="text/html" title="MySQLのテーブル一覧を表示して確認する" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-22T19:01:50+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-tables</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-tables">&lt;p&gt;MySQLのテーブル一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;ステートメントは特定データベース内の&lt;em&gt;TEMPORARY&lt;/em&gt;以外のテーブルを一覧表示します。&lt;br /&gt;
-また、ビューも一覧表示します。&lt;/p&gt;
-
-&lt;h2 id=&quot;mysqlのshow-tablesステートメントの構文&quot;&gt;MySQLのSHOW TABLESステートメントの構文&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW [FULL] TABLES [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[]&lt;/code&gt;は任意で、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{|}&lt;/code&gt;はどちらかを選択になります。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{FROM | IN}&lt;/code&gt;であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FROM&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IN&lt;/code&gt;どちらかを使えます。&lt;/p&gt;
-
-&lt;h2 id=&quot;show-tablesの実行例&quot;&gt;SHOW TABLESの実行例&lt;/h2&gt;
-&lt;p&gt;USEステートメントでDB&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge_development&lt;/code&gt;を選択したのちに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;を実行してます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-+---------------------------------+
-| Tables_in_hoge_development      |
-+---------------------------------+
-| active_admin_comments           |
-| active_storage_attachments      |
-| active_storage_blobs            |
-| ar_internal_metadata            |
-| schema_migrations               |
-| hoges                           |
-| tokens                          |
-| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           |
-+---------------------------------+
-8 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;show-tablesのlike句で表示テーブルを絞る&quot;&gt;SHOW TABLESのLIKE句で表示テーブルを絞る&lt;/h2&gt;
-
-&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;句を使うことで表示テーブルを選択できます。&lt;br /&gt;
-先程のテーブル名から先頭に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;active&lt;/code&gt; と入るテーブル名を選択する場合は次のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables like &lt;span class=&quot;s1&quot;&gt;'active_%'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-+--------------------------------------------+
-| Tables_in_hoge_development &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;active_%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;      |
-+--------------------------------------------+
-| active_admin_comments                      |
-| active_storage_attachments                 |
-| active_storage_blobs                       |
-+--------------------------------------------+
-3 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;show-tablesのfull修飾子でテーブルタイプを追加表示する&quot;&gt;SHOW TABLESのFULL修飾子でテーブルタイプを追加表示する&lt;/h2&gt;
-
-&lt;p&gt;構文内にあるFULL装飾子がついた&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW FULL TABLES&lt;/code&gt;を使うことで出力カラムにテーブルタイプを表示します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show full tables&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-+---------------------------------+------------+
-| Tables_in_hoge_development      | Table_type |
-+---------------------------------+------------+
-| active_admin_comments           | BASE TABLE |
-| active_storage_attachments      | BASE TABLE |
-| active_storage_blobs            | BASE TABLE |
-| ar_internal_metadata            | BASE TABLE |
-| schema_migrations               | BASE TABLE |
-| hoges                           | BASE TABLE |
-| tokens                          | BASE TABLE |
-| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           | BASE TABLE |
-+---------------------------------+------------+
-8 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;テーブルタイプ(Table_type)の値は、テーブルかビューで変わります。&lt;/p&gt;
-&lt;ul&gt;
-  &lt;li&gt;テーブルは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BASE TABLE&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;ビューは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;VIEW&lt;/code&gt;&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;show-tablesをwhere句で表示テーブルを絞る&quot;&gt;SHOW TABLESをWHERE句で表示テーブルを絞る&lt;/h2&gt;
-
-&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句を使うことで表示テーブルを選択できます。&lt;br /&gt;
-先程のテーブル名から&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;users&lt;/code&gt;テーブルを選択する場合は次のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables where Tables_in_hoge_development &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'users'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-+---------------------------------+
-| Tables_in_hoge_development      |
-+---------------------------------+
-| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           |
-+---------------------------------+
-1 row &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;また、FULL装飾子をつけてテーブルタイプ(Table_type)を追加すれば、同様に条件として使えます。&lt;/p&gt;
-
-&lt;h2 id=&quot;注意-show-tablesは権限がない場合は表示されない&quot;&gt;注意: SHOW TABLESは権限がない場合は表示されない&lt;/h2&gt;
-&lt;p&gt;テーブルやビューに対する権限を持っていない場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;の結果に表示されません。&lt;/p&gt;
-
-&lt;h2 id=&quot;mysqlのmysqlshowコマンドでも取得可能&quot;&gt;MySQLのmysqlshowコマンドでも取得可能&lt;/h2&gt;
-&lt;p&gt;ターミナル上で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysqlshow&lt;/code&gt;コマンドを実行することで、同様にMySQLのテーブル一覧を表示できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysqlshow &lt;span class=&quot;nt&quot;&gt;-uroot&lt;/span&gt; hoge_development
-Database: hoge_development
-+----------------------------+
-|           Tables           |
-+----------------------------+
-| active_admin_comments      |
-| active_storage_attachments |
-| active_storage_blobs       |
-| ar_internal_metadata       |
-| schema_migrations          |
-| hoges                      |
-| tokens                     |
-| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                      |
-+----------------------------+
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ただし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt; のように&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句は使えません。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLのテーブル一覧を表示するには、SHOW TABLESステートメントを使います。 SHOW TABLESステートメントは特定データベース内のTEMPORARY以外のテーブルを一覧表示します。 また、ビューも一覧表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLでテーブルのカラムを表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-columns" rel="alternate" type="text/html" title="MySQLでテーブルのカラムを表示して確認する" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-23T04:17:01+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-columns</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-columns">&lt;p&gt;MySQLでテーブルのカラム一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLでテーブルのインデックスを表示するには、SHOW INDEXステートメントを使います。 SHOW INDEX構文は指定したテーブル内のインデックス情報を表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLでテーブルのカラムを表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-columns" rel="alternate" type="text/html" title="MySQLでテーブルのカラムを表示して確認する" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-23T04:17:01+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-columns</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-columns">&lt;p&gt;MySQLでテーブルのカラム一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
 &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW COLUMNS&lt;/code&gt;構文は指定したテーブル内のカラム情報を表示します。&lt;br /&gt;
 これはビューのカラムも表示します。&lt;/p&gt;
 
@@ -435,7 +402,115 @@ mysql&amp;gt; desc &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span c
 &lt;p&gt;前述された情報から考えて、最もタイプ数が少なくて、手軽にテーブル構造を確認する方法は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;DESC&lt;/code&gt;ステートメントを使うことです。&lt;/p&gt;
 
 &lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; desc &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLでテーブルのカラム一覧を表示するには、SHOW COLUMNSステートメントを使います。 SHOW COLUMNS構文は指定したテーブル内のカラム情報を表示します。 これはビューのカラムも表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication" rel="alternate" type="text/html" title="5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法" /><published>2021-01-21T00:00:00+09:00</published><updated>2021-01-21T12:15:41+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication">&lt;p&gt;5年近くフルリモートワークを経験して分かったことは、テキストコミュニケーションの改善は組織を大きく改善します。&lt;br /&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLでテーブルのカラム一覧を表示するには、SHOW COLUMNSステートメントを使います。 SHOW COLUMNS構文は指定したテーブル内のカラム情報を表示します。 これはビューのカラムも表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLのテーブル一覧を表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-tables" rel="alternate" type="text/html" title="MySQLのテーブル一覧を表示して確認する" /><published>2021-01-22T00:00:00+09:00</published><updated>2021-01-22T19:01:50+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-tables</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-tables">&lt;p&gt;MySQLのテーブル一覧を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;ステートメントを使います。&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;ステートメントは特定データベース内の&lt;em&gt;TEMPORARY&lt;/em&gt;以外のテーブルを一覧表示します。&lt;br /&gt;
+また、ビューも一覧表示します。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのshow-tablesステートメントの構文&quot;&gt;MySQLのSHOW TABLESステートメントの構文&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW [FULL] TABLES [{FROM | IN} db_name] [LIKE 'pattern' | WHERE expr]&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[]&lt;/code&gt;は任意で、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{|}&lt;/code&gt;はどちらかを選択になります。&lt;br /&gt;
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;{FROM | IN}&lt;/code&gt;であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FROM&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;IN&lt;/code&gt;どちらかを使えます。&lt;/p&gt;
+
+&lt;h2 id=&quot;show-tablesの実行例&quot;&gt;SHOW TABLESの実行例&lt;/h2&gt;
+&lt;p&gt;USEステートメントでDB&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge_development&lt;/code&gt;を選択したのちに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;を実行してます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------------------------+
+| Tables_in_hoge_development      |
++---------------------------------+
+| active_admin_comments           |
+| active_storage_attachments      |
+| active_storage_blobs            |
+| ar_internal_metadata            |
+| schema_migrations               |
+| hoges                           |
+| tokens                          |
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           |
++---------------------------------+
+8 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-tablesのlike句で表示テーブルを絞る&quot;&gt;SHOW TABLESのLIKE句で表示テーブルを絞る&lt;/h2&gt;
+
+&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;句を使うことで表示テーブルを選択できます。&lt;br /&gt;
+先程のテーブル名から先頭に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;active&lt;/code&gt; と入るテーブル名を選択する場合は次のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables like &lt;span class=&quot;s1&quot;&gt;'active_%'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++--------------------------------------------+
+| Tables_in_hoge_development &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;active_%&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;      |
++--------------------------------------------+
+| active_admin_comments                      |
+| active_storage_attachments                 |
+| active_storage_blobs                       |
++--------------------------------------------+
+3 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;show-tablesのfull修飾子でテーブルタイプを追加表示する&quot;&gt;SHOW TABLESのFULL修飾子でテーブルタイプを追加表示する&lt;/h2&gt;
+
+&lt;p&gt;構文内にあるFULL装飾子がついた&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW FULL TABLES&lt;/code&gt;を使うことで出力カラムにテーブルタイプを表示します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show full tables&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------------------------+------------+
+| Tables_in_hoge_development      | Table_type |
++---------------------------------+------------+
+| active_admin_comments           | BASE TABLE |
+| active_storage_attachments      | BASE TABLE |
+| active_storage_blobs            | BASE TABLE |
+| ar_internal_metadata            | BASE TABLE |
+| schema_migrations               | BASE TABLE |
+| hoges                           | BASE TABLE |
+| tokens                          | BASE TABLE |
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           | BASE TABLE |
++---------------------------------+------------+
+8 rows &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;テーブルタイプ(Table_type)の値は、テーブルかビューで変わります。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;テーブルは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BASE TABLE&lt;/code&gt;&lt;/li&gt;
+  &lt;li&gt;ビューは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;VIEW&lt;/code&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;show-tablesをwhere句で表示テーブルを絞る&quot;&gt;SHOW TABLESをWHERE句で表示テーブルを絞る&lt;/h2&gt;
+
+&lt;p&gt;構文内にある&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句を使うことで表示テーブルを選択できます。&lt;br /&gt;
+先程のテーブル名から&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;users&lt;/code&gt;テーブルを選択する場合は次のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysql&amp;gt; show tables where Tables_in_hoge_development &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'users'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
++---------------------------------+
+| Tables_in_hoge_development      |
++---------------------------------+
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                           |
++---------------------------------+
+1 row &lt;span class=&quot;k&quot;&gt;in &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;0.00 sec&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;また、FULL装飾子をつけてテーブルタイプ(Table_type)を追加すれば、同様に条件として使えます。&lt;/p&gt;
+
+&lt;h2 id=&quot;注意-show-tablesは権限がない場合は表示されない&quot;&gt;注意: SHOW TABLESは権限がない場合は表示されない&lt;/h2&gt;
+&lt;p&gt;テーブルやビューに対する権限を持っていない場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt;の結果に表示されません。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqlのmysqlshowコマンドでも取得可能&quot;&gt;MySQLのmysqlshowコマンドでも取得可能&lt;/h2&gt;
+&lt;p&gt;ターミナル上で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysqlshow&lt;/code&gt;コマンドを実行することで、同様にMySQLのテーブル一覧を表示できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;mysqlshow &lt;span class=&quot;nt&quot;&gt;-uroot&lt;/span&gt; hoge_development
+Database: hoge_development
++----------------------------+
+|           Tables           |
++----------------------------+
+| active_admin_comments      |
+| active_storage_attachments |
+| active_storage_blobs       |
+| ar_internal_metadata       |
+| schema_migrations          |
+| hoges                      |
+| tokens                     |
+| &lt;span class=&quot;nb&quot;&gt;users&lt;/span&gt;                      |
++----------------------------+
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ただし、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHOW TABLES&lt;/code&gt; のように&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;LIKE&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;WHERE&lt;/code&gt;句は使えません。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLのテーブル一覧を表示するには、SHOW TABLESステートメントを使います。 SHOW TABLESステートメントは特定データベース内のTEMPORARY以外のテーブルを一覧表示します。 また、ビューも一覧表示します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法</title><link href="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication" rel="alternate" type="text/html" title="5年近くリモートワークで培ったテキストコミュニケーションを一人で改善する方法" /><published>2021-01-21T00:00:00+09:00</published><updated>2021-01-21T12:15:41+09:00</updated><id>https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication</id><content type="html" xml:base="https://blog.mothule.com/notebook/remote-work/notebook-remote-work-cool-text-communication">&lt;p&gt;5年近くフルリモートワークを経験して分かったことは、テキストコミュニケーションの改善は組織を大きく改善します。&lt;br /&gt;
 リモートワークはテキストコミュニケーションが要です。&lt;/p&gt;
 
 &lt;p&gt;この記事では、そんな私がテキストコミュニケーションとは何か？どうやったら上手になれるか？一人から始められる改善についてまとめました。&lt;/p&gt;
@@ -1481,263 +1556,4 @@ The key&lt;span class=&quot;se&quot;&gt;\'&lt;/span&gt;s randomart image is:
       &lt;li&gt;ECDSAキーの場合は256, 384, 521ビット&lt;/li&gt;
     &lt;/ul&gt;
   &lt;/li&gt;
-&lt;/ul&gt;</content><author><name></name></author><category term="tools" /><category term="ssh" /><category term="ssh-keygen" /><summary type="html">ネット記事に書いてる通りに従ってSSH用公開鍵を作成してばかりで、ssh-keygen自体の理解が進んでいない人に向けて、ssh-keygenの公開鍵認証周りに絞って説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-14-tools-ssh-keygen-basic/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-14-tools-ssh-keygen-basic/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">エンジニアなら知らないとヤバいSSHの基礎</title><link href="https://blog.mothule.com/tools/ssh/tools-ssh-basic" rel="alternate" type="text/html" title="エンジニアなら知らないとヤバいSSHの基礎" /><published>2020-08-13T00:00:00+09:00</published><updated>2020-08-18T05:09:00+09:00</updated><id>https://blog.mothule.com/tools/ssh/tools-ssh-basic</id><content type="html" xml:base="https://blog.mothule.com/tools/ssh/tools-ssh-basic">&lt;p&gt;インフラエンジニアでなくともSSH接続や公開鍵認証は基本知識として覚えといたほうがいいです。&lt;br /&gt;
-普段めったに触ることのないiOSエンジニアでもknown_hostsや鍵生成などと接する機会は定期的に発生します。&lt;br /&gt;
-GitHubにSSHの技術が使われています。基本知識として覚えといて損はないと思います。&lt;/p&gt;
-
-&lt;p&gt;この記事ではSSHの基本理解から始まり、実際にGitHubに対して公開鍵認証でSSH接続するまでを説明します。&lt;/p&gt;
-
-&lt;h2 id=&quot;sshとは&quot;&gt;SSHとは？&lt;/h2&gt;
-
-&lt;p&gt;SSHとは、安全にネットワーク先のコンピュータと通信するためのプロトコルです。&lt;br /&gt;
-暗号や認証の技術を利用してセキュリティを強固にしており、このプロトコルによる通信は全て暗号化されます。&lt;br /&gt;
-ちなみにSSHはSecure Shellの略名です。&lt;/p&gt;
-
-&lt;p&gt;SSHは通信元がなりすまし防止するために認証の仕組みを提供している。&lt;/p&gt;
-
-&lt;h3 id=&quot;sshプロトコルを実装したソフトウェア&quot;&gt;SSHプロトコルを実装したソフトウェア&lt;/h3&gt;
-&lt;p&gt;SSHはあくまでRFCによって策定されたプロトコル（約束事）であり、実在するソフトウェアではありません。&lt;br /&gt;
-このSSHプロトコルを準拠して作成されたソフトウェアの中でデファクトスタンダードとなっているのは、&lt;br /&gt;
-OSSとして開発されているOpenSSHになります。&lt;br /&gt;
-Macで標準インストールされているSSHもこのOpenSSHで、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ man ssh&lt;/code&gt;を実行すれば確認できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-08-13-tools-ssh-basic/1.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-08-13-tools-ssh-basic/1.png&quot; width=&quot;100%&quot; alt=&quot;OpenSSH&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;sshのない時代&quot;&gt;SSHのない時代&lt;/h3&gt;
-&lt;p&gt;Telnetやrshなどネットワーク先のコンピュータとの通信は平文で行われていたため、&lt;br /&gt;
-重要ファイルやパスワードをネットワーク経路上で盗聴されるリスクがありました。&lt;/p&gt;
-
-&lt;h3 id=&quot;sshはクライアントサーバソフトウェア&quot;&gt;SSHはクライアントサーバソフトウェア&lt;/h3&gt;
-&lt;p&gt;SSH通信を実現するためには通信元(SSHクライアント)と通信先(SSHサーバ)がSSHプロトコルに準拠したソフトウェアがインストールされている必要があります。&lt;br /&gt;
-MacやLinuxであればOpenSSHがSSHクライアントとSSHサーバをサポートしています。&lt;/p&gt;
-
-&lt;p&gt;サーバもクライアントもどちらもOpneSSHを使うので勘違いしてしまいそうですが、&lt;br /&gt;
-SSHサーバとSSHクライアントは別物です。&lt;/p&gt;
-
-&lt;p&gt;SSHクライアントは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt;を使い、SSHサーバは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sshd&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-08-13-tools-ssh-basic/ssh-server-client-networking.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-08-13-tools-ssh-basic/ssh-server-client-networking.png&quot; width=&quot;100%&quot; alt=&quot;SSHServerClientNetworking&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;sshの認証方法&quot;&gt;SSHの認証方法&lt;/h3&gt;
-
-&lt;p&gt;SSHの認証方法は色々と充実しているが、ここでは2つに絞ります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;パスワード認証方式&lt;/li&gt;
-  &lt;li&gt;公開鍵認証方式&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;パスワード認証方式&quot;&gt;パスワード認証方式&lt;/h4&gt;
-
-&lt;p&gt;クライアントからユーザ名とパスワード名を受け取る方式。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;デフォルト値&lt;/li&gt;
-  &lt;li&gt;ユーザ名とパスワードの一致で認証する&lt;/li&gt;
-  &lt;li&gt;アカウントは接続先OSのユーザアカウントを使う&lt;/li&gt;
-  &lt;li&gt;簡易だがセキュリティは脆弱なので運用時は非推奨&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h4 id=&quot;公開鍵認証方式&quot;&gt;公開鍵認証方式&lt;/h4&gt;
-
-&lt;p&gt;クライアントが秘密鍵を使い、サーバが公開鍵を使って認証する方式。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;秘密鍵と公開鍵の2つの鍵を使う&lt;/li&gt;
-  &lt;li&gt;予めサーバ側に公開鍵、クライアント側に秘密鍵を登録しておく&lt;/li&gt;
-  &lt;li&gt;通信時に秘密鍵と公開鍵で認証を行う&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;sshを使ってみる&quot;&gt;SSHを使ってみる&lt;/h2&gt;
-
-&lt;p&gt;実際に別Macにパスワード認証でSSH接続してみます。&lt;/p&gt;
-
-&lt;h3 id=&quot;macでsshサーバ用意&quot;&gt;MacでSSHサーバ用意&lt;/h3&gt;
-
-&lt;p&gt;同一ネットワーク内限定ですが、MacでもSSHサーバを起動できます。&lt;/p&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;システム環境設定.appを開く&lt;/li&gt;
-  &lt;li&gt;共有を開く&lt;/li&gt;
-  &lt;li&gt;リモートログインをONにする&lt;/li&gt;
-  &lt;li&gt;アクセスを許可をすべてのユーザにする&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;&lt;strong&gt;※使い終わったら必ずリモートログインをOFFにしてください。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h3 id=&quot;sshサーバに接続&quot;&gt;SSHサーバに接続&lt;/h3&gt;
-
-&lt;p&gt;SSHクライアントとしてSSHサーバに接続するには次のコマンドを使います。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh user@host&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;今回別Macで用意したSSHサーバでは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mothule@192.168.11.10&lt;/code&gt;と表示されたので、&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh mothule@192.168.11.10
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;となります。&lt;/p&gt;
-
-&lt;h3 id=&quot;初回アクセスだと警告が表示される&quot;&gt;初回アクセスだと警告が表示される&lt;/h3&gt;
-&lt;p&gt;接続先が初めてだと「信頼性を確立できていない」と警告が表示されます。&lt;br /&gt;
-それと同時に接続を再開してもよいか確認が表示されます。&lt;br /&gt;
-ここで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yes&lt;/code&gt;をタイプすると&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;known_hosts&lt;/code&gt;にホスト情報が追加された後、パスワード認証に進みます。&lt;br /&gt;
-ちなみに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;no&lt;/code&gt;の場合は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Host key verification failed.&lt;/code&gt;となり中断します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh mothule@192.168.11.10
-The authenticity of host &lt;span class=&quot;s1&quot;&gt;'192.168.11.10 (192.168.11.10)'&lt;/span&gt; can not be established.
-ECDSA key fingerprint is SHA256:yhxvI/1TAjI0wvlYiRMCJvUsiYAX/L6eiy5bg6+Rv00.
-Are you sure you want to &lt;span class=&quot;k&quot;&gt;continue &lt;/span&gt;connecting &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes&lt;/span&gt;/no/[fingerprint]&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;?
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;yes
-&lt;/span&gt;Warning: Permanently added &lt;span class=&quot;s1&quot;&gt;'192.168.11.10'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;ECDSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt; to the list of known hosts.
-Password:
-Last login: Thu Aug 13 04:16:45 2020
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ECDSA key fingerprint is SHA256:yhxvI/1TAjI0wvlYiRMCJvUsiYAX/L6eiy5bg6+Rv00.&lt;/code&gt;とは、
-ECDSA(Elliptic Curve Digital Signature Algorithm)の暗号アルゴリズムを使った鍵のフィンガープリントを表しています。&lt;/p&gt;
-
-&lt;p&gt;腹落ちしてないはずなので、順に説明します。&lt;/p&gt;
-
-&lt;h3 id=&quot;フィンガープリントとは&quot;&gt;フィンガープリントとは&lt;/h3&gt;
-&lt;p&gt;フィンガープリント(指紋)とは、公開鍵を識別するための短いバイト列です。&lt;br /&gt;
-指紋は公開鍵を元に暗号学的ハッシュ関数を通すことで作成されます。&lt;br /&gt;
-指紋は鍵長より短いので、目的は管理の単純化です。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SHA256&lt;/code&gt;とは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;暗号学的ハッシュ関数&lt;/code&gt;です。&lt;/p&gt;
-
-&lt;h3 id=&quot;暗号学的ハッシュ関数とは&quot;&gt;暗号学的ハッシュ関数とは&lt;/h3&gt;
-&lt;p&gt;暗号学的ハッシュ関数とは、暗号数理性質をもったハッシュ関数です。&lt;br /&gt;
-ハッシュ関数は、任意データから短い固定長値(ハッシュ値)を得る関数です。&lt;/p&gt;
-
-&lt;h3 id=&quot;暗号化とハッシュ化の違い&quot;&gt;暗号化とハッシュ化の違い&lt;/h3&gt;
-&lt;p&gt;暗号化もハッシュ化もどちらも元のデータを別のデータに変換する処理ですが、大きな違いとしては、
-ハッシュ化は不可逆変換なので元のデータに復元できません。&lt;br /&gt;
-一方暗号化は当然複合できます。&lt;/p&gt;
-
-&lt;h3 id=&quot;known_hostsとは&quot;&gt;known_hostsとは&lt;/h3&gt;
-&lt;p&gt;接続経験のあるホストの公開鍵を保存したテキストファイルです。&lt;br /&gt;
-ユーザ単位であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ssh/known_hosts&lt;/code&gt;に配置されてます。&lt;br /&gt;
-中身はテキストなので&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;cat&lt;/code&gt;などで見れます。&lt;br /&gt;
-1行1ホストで列挙されており、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[host],address 暗号スイート 公開鍵&lt;/code&gt;の並びになってます。&lt;br /&gt;
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[host]&lt;/code&gt;がない行もあります。&lt;/p&gt;
-
-&lt;h4 id=&quot;known_hostsの役割&quot;&gt;known_hostsの役割&lt;/h4&gt;
-&lt;p&gt;このファイルに登録されてることで、手元に残してる公開鍵に紐づく秘密鍵があるか検証することで、万が一サーバ側の公開鍵が変更されていても気付ける仕組みとなってます。&lt;/p&gt;
-
-&lt;p&gt;SSHクライント側は、既に一度でも接続経験のあるホストなのに、ワーニングが出たら「鍵が変更された」が想定外か判断してください。&lt;/p&gt;
-
-&lt;h2 id=&quot;sshconfigで接続情報を管理する&quot;&gt;.ssh/configで接続情報を管理する&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config&lt;/code&gt;とは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ssh&lt;/code&gt;フォルダ内に配置するテキストファイルです。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh&lt;/code&gt;コマンドでSSHサーバに接続するには、少なくとも&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ホスト&lt;/code&gt;情報が必要です。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;SSHポートがデフォルト22ではない場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-p&lt;/code&gt;オプション&lt;/li&gt;
-  &lt;li&gt;ユーザー名を指定する場合はホストの前に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user_name@&lt;/code&gt;&lt;/li&gt;
-  &lt;li&gt;公開鍵認証の鍵がデフォルト名ではない場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-i&lt;/code&gt;オプション&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;これら全部を指定すると、&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh mothule@192.168.11,10 &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; 2200 &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; ~/.ssh/my_second_pc.key
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;のように長くなってしまいます。&lt;/p&gt;
-
-&lt;p&gt;更に接続先が1つだけでなく複数となってくると、毎回同じ情報を入力するのは無駄な時間です。
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config&lt;/code&gt;はこれらを事前に登録しておくことでsshコマンドのオプション等を省略できます。&lt;/p&gt;
-
-&lt;p&gt;例えば先程の全指定したSSH接続の場合だと下記設定を&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config&lt;/code&gt;に追記することで、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$ ssh hoge&lt;/code&gt;だけで済みます。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Host hoge
-HostName 192.168.11.10
-User mothule
-Port 2200
-IdentityFile ~/.ssh/my_second_pc.key
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;are-you-sure-you-want-to-continue-connecting-yesno-をスキップ&quot;&gt;Are you sure you want to continue connecting (yes/no)? をスキップ&lt;/h3&gt;
-&lt;p&gt;~/.ssh/config の接続先ホストに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;StrictHostKeyChecking no&lt;/code&gt;を設定することでスキップできる&lt;/p&gt;
-
-&lt;h3 id=&quot;ssh接続のタイムアウトを防ぐ&quot;&gt;SSH接続のタイムアウトを防ぐ&lt;/h3&gt;
-&lt;p&gt;~/.ssh/config の接続先ホストに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ServerAliveInterval 60&lt;/code&gt;を設定することでSSHセッションにハートビート導入できる。&lt;/p&gt;
-
-&lt;h2 id=&quot;githubに公開鍵認証方式でssh接続する&quot;&gt;GitHubに公開鍵認証方式でSSH接続する&lt;/h2&gt;
-
-&lt;p&gt;SSH接続するまでの流れです&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;キーペア作成&lt;/li&gt;
-  &lt;li&gt;GitHubに公開鍵登録&lt;/li&gt;
-  &lt;li&gt;秘密鍵でssh接続&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;キーペア作成&quot;&gt;キーペア作成&lt;/h3&gt;
-&lt;p&gt;公開鍵と秘密鍵の作成はssh-keygenを使います。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; ~/.ssh/github &lt;span class=&quot;nt&quot;&gt;-N&lt;/span&gt; pass-phrase-this-key
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;ネットで見かける記事によっては、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-t&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-b&lt;/code&gt;オプションを使っていますが、キータイプのデフォルトはRSAで、RSAのデフォルトビット数は3072ビットになるので、&lt;br /&gt;
-省略しても目的のキータイプや一定の強度を保ったキーが作成されます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-N&lt;/code&gt;でパスフレーズを決めれます。パスフレーズは空でも作成されますが、セキュリティを上げるためになるべくつけることを推奨します。&lt;/p&gt;
-
-&lt;h4 id=&quot;キー名を別名にする理由&quot;&gt;キー名を別名にする理由&lt;/h4&gt;
-&lt;p&gt;鍵の名前はデフォルトだと&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_rsa&lt;/code&gt;にしようとしてくるので、そこは別名にすることをおすすめします。&lt;br /&gt;
-理由としてはしばらく時間経過後に.sshフォルダを覗いたときに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;id_rsa&lt;/code&gt;が何の鍵なのか判断つかなくなるのと、&lt;br /&gt;
-&lt;strong&gt;キー作成時に誤ってデフォルト名(id_rsa)にしてしまうと上書きされるリスクがあるためです。&lt;/strong&gt;&lt;/p&gt;
-
-&lt;h4 id=&quot;ssh-keygenの詳細について&quot;&gt;ssh-keygenの詳細について&lt;/h4&gt;
-&lt;p&gt;ssh-keygenで公開鍵周りについて詳しく知りたい場合は、「&lt;span&gt;&lt;a href=&quot;/tools/ssh/tools-ssh-keygen-basic&quot;&gt;SSH公開鍵認証で必要なssh-keygenの使い方を理解する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;githubに公開鍵登録&quot;&gt;GitHubに公開鍵登録&lt;/h3&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;&lt;a href=&quot;https://github.com/settings/keys&quot;&gt;GitHub &amp;gt; Settings &amp;gt; SSH and GPG keys&lt;/a&gt;の遷移&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;New SSH key&lt;/code&gt;ボタンを押下&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;キー名&lt;/code&gt;と&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;公開鍵&lt;/code&gt;を入力して&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Add SSH key&lt;/code&gt;ボタンを押下&lt;/li&gt;
-  &lt;li&gt;アカウントのパスワード入力&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;p&gt;成功すると一覧画面に戻り新しく公開鍵が登録されていることを確認できます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-08-13-tools-ssh-basic/2.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-08-13-tools-ssh-basic/2.png&quot; width=&quot;75%&quot; alt=&quot;GitHubSSHKey&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;※今回は記事用に用意した鍵であり既に削除済みです。くれぐれもむやみに鍵は公開しないことを推奨します。&lt;/p&gt;
-
-&lt;h4 id=&quot;登録されてる公開鍵のフィンガープリントについて&quot;&gt;登録されてる公開鍵のフィンガープリントについて&lt;/h4&gt;
-&lt;p&gt;GitHubで表示されているフィンガープリントは使われてるハッシュ関数はSHA256ではなくMD5になります。&lt;br /&gt;
-そのため手元の公開鍵のフィンガープリントを確認する場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-E&lt;/code&gt;で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;md5&lt;/code&gt;の指定が必要になります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; github &lt;span class=&quot;nt&quot;&gt;-E&lt;/span&gt; md5
-3072 MD5:59:68:3f:44:4f:ec:79:23:e9:c8:9a:88:10:1e:36:59 GitHub &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;RSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-E&lt;/code&gt;指定なしだとデフォルトとして&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sha256&lt;/code&gt;が使われるため、期待する値になりません。&lt;/p&gt;
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; github
-3072 SHA256:1/1Sdu/MJXQJnPOBDibvs/cvXrmxJKMibFa1kC3NtoI GitHub &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;RSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;githubに公開鍵認証方式でssh接続&quot;&gt;GitHubに公開鍵認証方式でSSH接続&lt;/h3&gt;
-
-&lt;p&gt;GitHubにSSH接続するには&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git@github.com&lt;/code&gt;で接続します。
-認証鍵の指定は、先程登録した鍵を&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-i&lt;/code&gt;オプションで指定します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh &lt;span class=&quot;nt&quot;&gt;-i&lt;/span&gt; github git@github.com
-Enter passphrase &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;key &lt;span class=&quot;s1&quot;&gt;'github'&lt;/span&gt;:
-PTY allocation request failed on channel 0
-Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
-Connection to github.com closed.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;GitHubはシェルアクセスを許可していないのですぐに終了してしまいますが、接続が成功できたことは確認できます。&lt;/p&gt;
-
-&lt;h4 id=&quot;permission-denied-publickeyエラーが出たら&quot;&gt;Permission denied (publickey)エラーが出たら&lt;/h4&gt;
-&lt;p&gt;SSH接続で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Permission denied (publickey)&lt;/code&gt;が出たら、公開鍵に限らず、秘密鍵が無効値になっているケースでもこのエラーが表示されます。
-公開鍵と秘密鍵のどちらかが正しい値になっていない可能性があります。&lt;br /&gt;
-分からない場合はもう一度作成して再登録してください。&lt;/p&gt;
-
-&lt;h4 id=&quot;githubを使ったssh接続はサーバ設定は不要&quot;&gt;GitHubを使ったSSH接続はサーバ設定は不要&lt;/h4&gt;
-&lt;p&gt;GitHubに対して公開鍵認証方式によるSSH接続を試しましたが、&lt;br /&gt;
-GitHubではSSHサーバとしての設定はGitHub側がよしなになってくれているため、&lt;br /&gt;
-公開鍵を渡した後のSSHサーバ側の説明はスキップしてます。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ssh" /><summary type="html">インフラエンジニアでなくともSSH接続や公開鍵認証は基本知識として覚えといたほうがいいです。 普段めったに触ることのないiOSエンジニアでもknown_hostsや鍵生成などと接する機会は定期的に発生します。 GitHubにSSHの技術が使われています。基本知識として覚えといて損はないと思います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-13-tools-ssh-basic/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;/ul&gt;</content><author><name></name></author><category term="tools" /><category term="ssh" /><category term="ssh-keygen" /><summary type="html">ネット記事に書いてる通りに従ってSSH用公開鍵を作成してばかりで、ssh-keygen自体の理解が進んでいない人に向けて、ssh-keygenの公開鍵認証周りに絞って説明します。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-14-tools-ssh-keygen-basic/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-14-tools-ssh-keygen-basic/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
