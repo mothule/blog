@@ -9,8 +9,7 @@ image:
 特にアップグレード類の操作はしていないけれど、tigが立ち上がらなくなったので、動くようになるまでの流れを記載しました。
 
 ## 追記 `brew switch` で解決できる方法も追加しました。
-この記事の方法で解決が難しい場合はこちらの方法を参考にしてみてください。
-[readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ]({% post_url 2019-07-23-mac-homebrew-fix-readline-missmatch-version %})
+この記事の方法で解決が難しい場合は、「{% post_link_text 2019-07-23-mac-homebrew-fix-readline-missmatch-version %}」の方法を参考にしてみてください。
 
 
 

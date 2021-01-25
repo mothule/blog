@@ -28,4 +28,4 @@ CircleCIを使ってサーバーにデプロイしたい場合やGitHubへpush�
 
 ## 関連
 
-CircleCIにSSH Key登録が失敗する場合は[CircleCIでSSH Key登録が失敗する場合の原因特定方法と自分が見つけた解決方法]({% post_url 2018-11-26-circleci-fail-add-ssh-key %})を参考にしてみてください。
+CircleCIにSSH Key登録が失敗する場合は「{% post_link_text 2018-11-26-circleci-fail-add-ssh-key %}」を参考にしてみてください。
