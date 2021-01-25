@@ -18,8 +18,8 @@
 <meta name="generator" content="Jekyll v3.9.0" />
 <meta property="og:title" content="readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="以前tigが動かなくなる件をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。" />
-<meta property="og:description" content="以前tigが動かなくなる件をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。" />
+<meta name="description" content="以前「dylod: Library not loaded でtigが起動しない状態から動くまで 」をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。" />
+<meta property="og:description" content="以前「dylod: Library not loaded でtigが起動しない状態から動くまで 」をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。" />
 <link rel="canonical" href="https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version" />
 <meta property="og:url" content="https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version" />
 <meta property="og:site_name" content="もちゅろぐ" />
@@ -31,14 +31,14 @@
 <meta property="twitter:title" content="readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-07-23-mac-homebrew-fix-readline-missmatch-version.png","description":"以前tigが動かなくなる件をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version"},"@type":"BlogPosting","url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version","headline":"readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ","dateModified":"2020-02-02T22:50:43+09:00","datePublished":"2019-07-23T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2019-07-23-mac-homebrew-fix-readline-missmatch-version.png","description":"以前「dylod: Library not loaded でtigが起動しない状態から動くまで 」をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version"},"@type":"BlogPosting","url":"https://blog.mothule.com/mac/homebrew/mac-homebrew-fix-readline-missmatch-version","headline":"readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ","dateModified":"2021-01-26T03:28:09+09:00","datePublished":"2019-07-23T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
 <meta name="twitter:title" content="readlineの更新でエラーが出るようになったらbrew switchでその場しのぎ">
-<meta name="twitter:description" content="以前tigが動かなくなる件をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。">
+<meta name="twitter:description" content="以前「dylod: Library not loaded でtigが起動しない状態から動くまで」をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。">
 <meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-07-23-mac-homebrew-fix-readline-missmatch-version.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
@@ -213,13 +213,14 @@
   
 
   <section>
-  <p>以前<a href="/tools/tig/fix-tig-lib-not-loaded">tigが動かなくなる件</a>をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。</p>
+  <p>以前「<span><a href="/tools/tig/fix-tig-lib-not-loaded">dylod: Library not loaded でtigが起動しない状態から動くまで</a></span>
+」をbrew upgradeで解決しましたが、今回は開発で使われてるgemなど更新が簡単にできないパッケージが動かなくなったので、その場しのぎとしての解決方法をまとめました。</p>
 
 <h2 id="追記brew-switch-と-brew-upgrade-混ぜたことによる悲報と朗報について追記">追記：<code class="language-plaintext highlighter-rouge">brew switch</code> と <code class="language-plaintext highlighter-rouge">brew upgrade</code> 混ぜたことによる悲報と朗報について追記</h2>
 <p><code class="language-plaintext highlighter-rouge">brew switch</code> を試す前に↓の記事の冒頭を呼んで状況判断することをオススメします。
 じゃないと無駄な作業が発生することになります。 😭</p>
 
-<p><a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a></p>
+<p><span><a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a></span></p>
 
 <h2 id="byebug-が動かなくなっていた">byebug が動かなくなっていた</h2>
 <p>bundle exec rspec で動かしたのですが、下記エラーログが出て失敗するようになっていました。</p>
