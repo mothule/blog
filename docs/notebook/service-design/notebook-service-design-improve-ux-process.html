@@ -11,35 +11,35 @@
 
 
 
-  <title>CocoaPodsをrbenv+bundlerで管理する - もちゅろぐ</title>
+  <title>効果のあったチームおよびアプリのUX改善施策 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="CocoaPodsをrbenv+bundlerで管理する" />
+<meta property="og:title" content="効果のあったチームおよびアプリのUX改善施策" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。" />
-<meta property="og:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。" />
-<link rel="canonical" href="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
-<meta property="og:url" content="https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler" />
+<meta name="description" content="過去に自身がアプローチしたUX改善の施策によりチーム内のUXに関する知識や観点が身についたり、アプリのUX改善タスクを着実に実施されるようになった話です。" />
+<meta property="og:description" content="過去に自身がアプローチしたUX改善の施策によりチーム内のUXに関する知識や観点が身についたり、アプリのUX改善タスクを着実に実施されるようになった話です。" />
+<link rel="canonical" href="https://blog.mothule.com/notebook/service-design/notebook-service-design-improve-ux-process" />
+<meta property="og:url" content="https://blog.mothule.com/notebook/service-design/notebook-service-design-improve-ux-process" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-28-notebook-service-design-improve-ux-process/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-08-30T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-28T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" />
-<meta property="twitter:title" content="CocoaPodsをrbenv+bundlerで管理する" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-28-notebook-service-design-improve-ux-process/eyecatch.png" />
+<meta property="twitter:title" content="効果のあったチームおよびアプリのUX改善施策" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png","description":"iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。 CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、 fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler"},"@type":"BlogPosting","url":"https://blog.mothule.com/ios/cocoapods/ios-cocoapods-managed-rbenv-bundler","headline":"CocoaPodsをrbenv+bundlerで管理する","dateModified":"2021-01-26T03:28:09+09:00","datePublished":"2019-08-30T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-28-notebook-service-design-improve-ux-process/eyecatch.png","description":"過去に自身がアプローチしたUX改善の施策によりチーム内のUXに関する知識や観点が身についたり、アプリのUX改善タスクを着実に実施されるようになった話です。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/notebook/service-design/notebook-service-design-improve-ux-process"},"@type":"BlogPosting","url":"https://blog.mothule.com/notebook/service-design/notebook-service-design-improve-ux-process","headline":"効果のあったチームおよびアプリのUX改善施策","dateModified":"2021-01-28T13:02:49+09:00","datePublished":"2021-01-28T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="CocoaPodsをrbenv+bundlerで管理する">
-<meta name="twitter:description" content="iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。CocoaPods単体であれば特に考えず $ gem install cocoapods で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png">
+<meta name="twitter:title" content="効果のあったチームおよびアプリのUX改善施策">
+<meta name="twitter:description" content="過去に自身がアプローチしたUX改善の施策によりチーム内のUXに関する知識や観点が身についたり、アプリのUX改善タスクを着実に実施されるようになった話です。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-28-notebook-service-design-improve-ux-process/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ios" itemprop="item">
-              <span itemprop="name">iOS</span>
+            <a href="/tags#notebook" itemprop="item">
+              <span itemprop="name">雑記</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#cocoapods" itemprop="item">
-              <span itemprop="name">CocoaPods</span>
+            <a href="/tags#service-design" itemprop="item">
+              <span itemprop="name">サービス設計</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            CocoaPodsをrbenv+bundlerで管理する
+            効果のあったチームおよびアプリのUX改善施策
           </li>
         
       
@@ -164,29 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-08-30-ios-cocoapods-managed-rbenv-bundler.png" alt="CocoaPodsをrbenv+bundlerで管理する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-28-notebook-service-design-improve-ux-process/eyecatch.png" alt="効果のあったチームおよびアプリのUX改善施策">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>CocoaPodsをrbenv+bundlerで管理する</h1>
+    <h1>効果のあったチームおよびアプリのUX改善施策</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+            <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
           
-            <li class="list-inline-item"><a href="/tags#cocoapods">CocoaPods</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
+            <li class="list-inline-item"><a href="/tags#service-design">サービス設計</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-8-30</time></span>
+        <span"><time class="post-date">2021-1-28</time></span>
       </div>
     </div>
   </header>
@@ -194,24 +190,32 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#結論">結論</a></li>
-  <li><a href="#rbenvでruby管理してgem管理はbundler">rbenvでRuby管理してgem管理はbundler</a>
+  <li><a href="#ux改善はuiuxデザイナーだけのものではない">UX改善はUI/UXデザイナーだけのものではない</a></li>
+  <li><a href="#ux改善に必要な観点をチームで身につける">UX改善に必要な観点をチームで身につける</a></li>
+  <li><a href="#レビュー会とは">レビュー会とは？</a></li>
+  <li><a href="#レビュー会に必要な準備">レビュー会に必要な準備</a>
     <ul>
-      <li><a href="#gemとはrubyが提供するライブラリ単位">gemとはRubyが提供するライブラリ単位</a></li>
-      <li><a href="#rubyバージョン毎にgemがインストールされている">Rubyバージョン毎にgemがインストールされている</a></li>
+      <li><a href="#競合他社のサービスを列挙">競合他社のサービスを列挙</a></li>
+      <li><a href="#自社サービスの画面や体験を列挙">自社サービスの画面や体験を列挙</a></li>
+      <li><a href="#他社自社と画面または体験を組み合わせてレビューお題を用意">他社・自社と画面または体験を組み合わせてレビューお題を用意</a></li>
+      <li><a href="#ランダムで決めれる仕組みを用意">ランダムで決めれる仕組みを用意</a></li>
     </ul>
   </li>
-  <li><a href="#rubyバージョン管理はrbenv">Rubyバージョン管理はrbenv</a></li>
-  <li><a href="#bundler-で-cocoapodsを動かす">bundler で CocoaPodsを動かす</a>
+  <li><a href="#レビュー会で何が変わるのか">レビュー会で何が変わるのか？</a>
     <ul>
-      <li><a href="#bundlerでcocoapodsをインストールする">bundlerでCocoaPodsをインストールする</a></li>
-      <li><a href="#bundlerでcocoapodsを動かす">bundlerでCocoaPodsを動かす</a></li>
+      <li><a href="#メンバーのuiux観点が増加">メンバーのUI/UX観点が増加</a></li>
+      <li><a href="#着実にux改善タスクが実施される">着実にUX改善タスクが実施される</a></li>
+      <li><a href="#uiux観点を意識した開発体制が備わる">UI/UX観点を意識した開発体制が備わる</a></li>
     </ul>
   </li>
-  <li><a href="#rbenv-に-binstubs-をインストール">rbenv に binstubs をインストール</a></li>
-  <li><a href="#cocoapodsのバージョンアップはbundler操作">CocoaPodsのバージョンアップはbundler操作</a></li>
-  <li><a href="#rubyバージョンはrbenv操作">Rubyバージョンはrbenv操作</a></li>
-  <li><a href="#まとめ">まとめ</a></li>
+  <li><a href="#レビュー会に対する否定意見とその返答">レビュー会に対する否定意見とその返答</a>
+    <ul>
+      <li><a href="#毎回改善案出てくるものではないのでは">毎回改善案出てくるものではないのでは？</a></li>
+      <li><a href="#必要になったらまとめて実施してもいい">必要になったらまとめて実施してもいい</a></li>
+      <li><a href="#発言しない人は一定人数存在する">発言しない人は一定人数存在する</a></li>
+    </ul>
+  </li>
+  <li><a href="#組織が改善体質であれば簡単な話">組織が改善体質であれば簡単な話</a></li>
 </ul>
   </div>
 
@@ -231,193 +235,184 @@
   
 
   <section>
-  <p>iOS開発をする上で必要になってくるCocoaPods。これはRubyで書かれたPodという単位でiOSライブラリを管理するライブラリ管理ソフトウェアです。
-CocoaPods単体であれば特に考えず <code class="language-plaintext highlighter-rouge">$ gem install cocoapods</code> で直接現在のRubyのバージョンのCocoaPodsを入れておしまいですが、
-fastlaneやslatherなどRubyで書かれたエコシステムも使うとなると、Rubyバージョンを意識する必要が出てきます。</p>
+  <p>チームのUX改善スキルを底上げしつつ、UX改善をプロセス化した話です。</p>
 
-<p>なぜなら、個人開発であれば大抵開発環境は1つであるため問題は起きませんが、
-チーム開発となると環境を揃えず闇雲にその時点の最新バージョンをインストールしていては
-人によって挙動が異なるなど、人依存(環境依存)の不具合が発生するためです。</p>
+<p>iOSエンジニア、Webエンジニアとメインはエンジニアとして働いていますが、常日頃から必ず自分の作った先にはユーザーが存在を意識しています。<br />
+特に画面を作成するフロントエンドにおいてはその意識の欠如はスキルの欠如と言っても過言ではないです。</p>
 
-<p>このようなどうでもいい部分で開発を妨害されないために、今回はCocoaPodsなどRuby製ツールをまとめて管理する方法についてまとめました。</p>
+<p>しかし、全てのエンジニアが得意・出来るとは限りません。そもそも必要理由が腹落ちしてない、優先度が低い、何から始めればいいか分からないなど、人によって様々です。</p>
 
-<h2 id="結論">結論</h2>
+<p>今回は自分が実施した施策で、効果を実感できるチームおよびアプリのUX改善について説明します。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>xcode-select <span class="nt">--install</span>
-<span class="nv">$ </span>brew <span class="nb">install </span>rbenv ruby-build
-rbenv <span class="nb">install</span> <span class="nt">--list</span> でインストールしたいバージョンを決める
-<span class="nv">$ </span>rbenv <span class="nb">install</span> <span class="o">[</span>Ruby version]
-<span class="nv">$ </span>gem <span class="nb">install </span>bundler
-<span class="nv">$ </span>bundle init
-Gemfileに gem <span class="s1">'cocoapods'</span> を追加.バージョン指定はCocoaPodsと同じ.
-<span class="nv">$ </span>git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
-<span class="nv">$ </span>bundle <span class="nb">install</span> <span class="nt">--path</span><span class="o">=</span>vendor/bundle <span class="nt">--binstubs</span><span class="o">=</span>vendor/bin
-<span class="nv">$ </span>pod <span class="nb">install</span>
-</code></pre></div></div>
+<h2 id="ux改善はuiuxデザイナーだけのものではない">UX改善はUI/UXデザイナーだけのものではない</h2>
 
-<h2 id="rbenvでruby管理してgem管理はbundler">rbenvでRuby管理してgem管理はbundler</h2>
+<p>声を大にして言いたいです。<br />
+「UI/UXデザイナーの自分が取り組む業務」<br />
+「UI/UXデザイナーが考えればいい」<br />
+そう考えている人・チームは、チームでもなければ、サービス開発に参加してるエンジニアでもありません。</p>
 
-<p>bundlerの前にRubyバージョンを管理するためにrbenvを入れて、RubyバージョンとbundlerバージョンとCocoaPodsバージョンをあわせます。</p>
+<p>自分の取り組んでいるサービスの利便性・快適性に気づき改善するのは、業種・業務問わず共通です。<br />
+UI/UXデザイナーは専門性や知識、とりまとめが出来るスキルホルダーなだけであって、UI/UXに関する業務を全てその人が担うものでは有りません。</p>
+
+<h2 id="ux改善に必要な観点をチームで身につける">UX改善に必要な観点をチームで身につける</h2>
+
+<p>必要だとは分かってはいても、目となるセンサーがなければUX改善の種に気づけません。議論できるだけの知識や観点が備わってなければUX改善の種は育ちません。</p>
+
+<p>まずはチーム内のレベルアップが必要です。<br />
+週1か月2の定例で<strong>レビュー会</strong>を実施しましょう。</p>
+
+<h2 id="レビュー会とは">レビュー会とは？</h2>
+
+<p>レビュー会とは私が会議名に勝手に名付けてる用語です。</p>
+
+<p>次の会議体で実施します。</p>
 
 <ul>
-  <li>rbenv が Ruby 管理</li>
-  <li>Ruby の bundler gem が CocoaPods gem 管理</li>
+  <li>内容
+    <ul>
+      <li>参加者が自社と競合他社のサービスを触って、UXに関する良い点悪い点を挙げて議論する</li>
+      <li>触るサービスや画面はファシリテーターがサイコロまたは参加者から募る</li>
+      <li>時間を区切って1会議で複数個の画面をレビューしてもよし、1画面に絞るでもよし</li>
+      <li>参加者全員で画面を見ながら良い点悪い点など気になった点を声に出す
+        <ul>
+          <li>理由をデザイン論や視線誘導などのロジックに基づいてると良い</li>
+          <li>または自身の体験談も付け加えると良い</li>
+        </ul>
+      </li>
+      <li>聞いた人も触ってみてその点に賛否を返す</li>
+    </ul>
+  </li>
+  <li>目的
+    <ul>
+      <li>入会フローなどCVRにつながる重要なフローのUX向上し、離脱率を下げるために把握と洗い出しのプロセスを定着させる。</li>
+      <li>サービス関係者（特にエンジニア）の観点を養い、UX改善プロセスを回転速度を上げる。</li>
+    </ul>
+  </li>
+  <li>参加者(PDM, フロントエンドエンジニア, 他希望者)</li>
+  <li>時間30分(仮)</li>
+  <li>人数5~6人程度</li>
+  <li>ゴール: 実施する施策をBacklogやGitHub Issueなどチケット管理に出す（ここで優先順位は決めない）</li>
+  <li>事前: アプリであればサービスの事前インストール</li>
 </ul>
 
-<p>って感じです。 これだけだと分からないので、一つずつ説明していきます。</p>
+<h2 id="レビュー会に必要な準備">レビュー会に必要な準備</h2>
 
-<h3 id="gemとはrubyが提供するライブラリ単位">gemとはRubyが提供するライブラリ単位</h3>
+<p>円滑に進めるためにいくつか事前に準備が必要です。</p>
 
-<p>gemはRubyが提供するライブラリの単位です。
-これはRubyのバージョン毎にgemが管理されています。
-例えば Ruby 2.3のgem一覧と Ruby 2.6のgem一覧はインストールされているgemは異なります。</p>
+<ul>
+  <li>競合他社のサービスやアプリを列挙する</li>
+  <li>自社サービスやアプリの画面または体験を列挙する</li>
+  <li>他社・自社 × 画面または体験の組み合わせリストを用意する</li>
+  <li>サイコロなどランダムで決めれる仕組みを用意する</li>
+</ul>
 
-<p>現在のRubyのバージョンは <code class="language-plaintext highlighter-rouge">$ ruby -v</code> で確認できます。
-そして、このバージョンにインストールされているgem一覧は、<code class="language-plaintext highlighter-rouge">$ gem list</code> で確認できます。
-例えば自分が作っているアプリの環境は次のような感じです。</p>
+<h3 id="競合他社のサービスを列挙">競合他社のサービスを列挙</h3>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ruby <span class="nt">-v</span>
-ruby 2.5.3p105 <span class="o">(</span>2018-10-18 revision 65156<span class="o">)</span> <span class="o">[</span>x86_64-darwin18]
+<p>ユーザーのシェアを競う競合他社のサービスを列挙します。</p>
 
-<span class="nv">$ </span>gem list
+<p>UX改善はユーザー自身で判断される絶対値と、他社サービスと比較される相対値があります。<br />
+前者は単純に使いにくいと感じたりするもので、後者はそこに「◯◯のほうが楽」と比較が加わります。</p>
 
-<span class="k">***</span> LOCAL GEMS <span class="k">***</span>
+<p>競合調査はユーザー知識を知る上でも重要です。<br />
+例えばターゲットが楽天利用率が高いのであれば、情報設計（情報の提供順序）や操作性は似せてあれば、それだけユーザーの認知負荷が減ります。<br />
+分かりやすい悪い例を挙げるとすれば、AndroidアプリにiOSのUIを適用することです。<br />
+つまり、ユーザーの持つ知識や経験は取り巻く環境に依存してるので、そこから乖離(かいり)した知識や経験はユーザーに負担がかかります。</p>
 
-bigdecimal <span class="o">(</span>default: 1.3.4<span class="o">)</span>
-bundler <span class="o">(</span>1.17.3<span class="o">)</span>
-cmath <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-csv <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-<span class="nb">date</span> <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-dbm <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-did_you_mean <span class="o">(</span>1.2.0<span class="o">)</span>
-etc <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-fcntl <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-fiddle <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-fileutils <span class="o">(</span>default: 1.0.2<span class="o">)</span>
-gdbm <span class="o">(</span>default: 2.0.0<span class="o">)</span>
-io-console <span class="o">(</span>default: 0.4.6<span class="o">)</span>
-ipaddr <span class="o">(</span>default: 1.2.0<span class="o">)</span>
-json <span class="o">(</span>default: 2.1.0<span class="o">)</span>
-minitest <span class="o">(</span>5.10.3<span class="o">)</span>
-net-telnet <span class="o">(</span>0.1.1<span class="o">)</span>
-openssl <span class="o">(</span>default: 2.1.2<span class="o">)</span>
-power_assert <span class="o">(</span>1.1.1<span class="o">)</span>
-psych <span class="o">(</span>default: 3.0.2<span class="o">)</span>
-rake <span class="o">(</span>12.3.0<span class="o">)</span>
-rdoc <span class="o">(</span>default: 6.0.1<span class="o">)</span>
-scanf <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-sdbm <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-stringio <span class="o">(</span>default: 0.0.1<span class="o">)</span>
-strscan <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-test-unit <span class="o">(</span>3.2.7<span class="o">)</span>
-webrick <span class="o">(</span>default: 1.4.2<span class="o">)</span>
-xmlrpc <span class="o">(</span>0.3.0<span class="o">)</span>
-zlib <span class="o">(</span>default: 1.0.0<span class="o">)</span>
-</code></pre></div></div>
+<h3 id="自社サービスの画面や体験を列挙">自社サービスの画面や体験を列挙</h3>
 
-<p>上記見ると分かるように<code class="language-plaintext highlighter-rouge">bundler</code>も一つのgemです。
-このbundlerを使うことで他のgemのバージョン管理を行うことができます。</p>
+<p>次に自社サービスの画面名または体験の名称を列挙します。</p>
 
-<h3 id="rubyバージョン毎にgemがインストールされている">Rubyバージョン毎にgemがインストールされている</h3>
-<p><strong>つまりRubyバージョンも合わせる必要があります。</strong></p>
+<p>ここでの体験とは、複数の画面や複数の機能を利用することで得られる体験です。<br />
+例えばECであれば会員登録、商品閲覧／検索、カート追加からの購入、シェアなどが挙げれます。</p>
 
-<p>例えばAさんが環境構築したとき<code class="language-plaintext highlighter-rouge">Ruby</code>バージョンは<code class="language-plaintext highlighter-rouge">2.0</code>でした。
-<code class="language-plaintext highlighter-rouge">CocoaPods</code>は<code class="language-plaintext highlighter-rouge">Ruby 2.0</code>の構文で書かれたバージョンをインストールできるようになります。
-2年後,Bさんがチーム参画し、環境構築したら<code class="language-plaintext highlighter-rouge">Ruby</code>バージョンは<code class="language-plaintext highlighter-rouge">2.5</code>でした。
-<code class="language-plaintext highlighter-rouge">CocoaPods</code>は<code class="language-plaintext highlighter-rouge">Ruby 2.5</code>の構文で書かれたバージョンをインストールできるようになります。
-その結果、Aさんの<code class="language-plaintext highlighter-rouge">CocoaPods</code>の最新バージョン<code class="language-plaintext highlighter-rouge">1.2</code>ですが、Bさんの<code class="language-plaintext highlighter-rouge">CocoaPods</code>は最新バージョンは<code class="language-plaintext highlighter-rouge">2.1</code>でした。
-Bさんは<code class="language-plaintext highlighter-rouge">CocoaPods</code>をAさんと同じ<code class="language-plaintext highlighter-rouge">1.2</code>に合わせたくとも、<code class="language-plaintext highlighter-rouge">Ruby 2.5</code>では動かず…なんてことが起こりえます。</p>
+<h3 id="他社自社と画面または体験を組み合わせてレビューお題を用意">他社・自社と画面または体験を組み合わせてレビューお題を用意</h3>
 
-<p><strong>そのため、Rubyバージョンをあわせておく必要があります。</strong></p>
+<p>他社のサービス、自社の画面や体験が列挙できたらそれらを組み合わせます。<br />
+例えばECであれば、次の競合や画面や体験が列挙できます。</p>
 
-<p>※↑例なので、バージョンや互換性は適当です。</p>
+<ul>
+  <li>メルカリの会員登録</li>
+  <li>メルカリの商品閲覧／検索</li>
+  <li>メルカリのカート追加からの購入</li>
+  <li>メルカリのシェア</li>
+  <li>ラクマの会員登録</li>
+  <li>ラクマの商品閲覧／検索</li>
+  <li>ラクマのカート追加からの購入</li>
+  <li>ラクマのシェア</li>
+  <li>ZOZOTOWNの会員登録</li>
+  <li>ZOZOTOWNの商品閲覧／検索</li>
+  <li>ZOZOTOWNのカート追加からの購入</li>
+  <li>ZOZOTOWNのシェア</li>
+  <li>SHOPLISTの会員登録</li>
+  <li>SHOPLISTの商品閲覧／検索</li>
+  <li>SHOPLISTのカート追加からの購入</li>
+  <li>SHOPLISTのシェア</li>
+  <li>楽天市場の会員登録</li>
+  <li>楽天市場の商品閲覧／検索</li>
+  <li>楽天市場のカート追加からの購入</li>
+  <li>楽天市場のシェア</li>
+</ul>
 
-<h2 id="rubyバージョン管理はrbenv">Rubyバージョン管理はrbenv</h2>
+<h3 id="ランダムで決めれる仕組みを用意">ランダムで決めれる仕組みを用意</h3>
 
-<p><code class="language-plaintext highlighter-rouge">rbenv</code>は<code class="language-plaintext highlighter-rouge">Homebrew</code>でインストールできます。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>rbenv ruby-build
-</code></pre></div></div>
-<p>(もしxcrunとかでエラーが出るようであれば <code class="language-plaintext highlighter-rouge">$ xcode-select --instal</code> を実行して xcodeパッケージツールのインストールをしてみてください。)</p>
+<p>お題候補が用意できたら、レビュー会でお題に困ったらこれらからランダムで選べるようにしておきます。</p>
 
-<p><code class="language-plaintext highlighter-rouge">$ rbenv versions</code>を実行すると、今rbenvが管理してるRubyのバージョン一覧が表示され、 <code class="language-plaintext highlighter-rouge">*</code> がつくバージョンが現在のRubyバージョンになります。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv versions
-  system
-  2.1.10
-  2.1.2
-  2.2.1
-<span class="k">*</span> 2.3.0 <span class="o">(</span><span class="nb">set </span>by /Users/mothule/.rbenv/version<span class="o">)</span>
-  2.3.6
-  2.3.7
-  2.4.4
-  2.5.1
-  2.5.3
-  2.6.2
-</code></pre></div></div>
-<p>これをiOSプロジェクトだけ2.5.3にしたい場合は、次のコマンドを実行して生成されたファイルをiOSプロジェクト配下(git管理下)においてください。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv <span class="nb">local </span>2.5.3
-</code></pre></div></div>
-<p>このコマンドを実行すると <code class="language-plaintext highlighter-rouge">.ruby-version</code>というファイルが生成され、もう一度Rubyバージョンを確認すると次のようになります。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>rbenv versions
-  system
-  2.1.10
-  2.1.2
-  2.2.1
-  2.3.0
-  2.3.6
-  2.3.7
-  2.4.4
-  2.5.1
-<span class="k">*</span> 2.5.3 <span class="o">(</span><span class="nb">set </span>by /Users/mothule/workspace/ios-project/.ruby-version<span class="o">)</span>
-  2.6.2
-</code></pre></div></div>
-<p>このようにRubyバージョン2.5.3が動くようになっています。 これは <code class="language-plaintext highlighter-rouge">.ruby-version</code>でバージョン指定されているためです。
-ちなみに <code class="language-plaintext highlighter-rouge">.ruby-version</code>は <code class="language-plaintext highlighter-rouge">2.5.3</code> と書いてあるだけです。
-<strong>この <code class="language-plaintext highlighter-rouge">.ruby-version</code>をgit管理し、各開発環境がrbenvを使えば、Rubyバージョンを合わせることができます。</strong></p>
+<p>例えばSlack botのレスポンスを使って、一つのレスポンスにお題候補を入れておくと、Slack botがお題を提案してくれるようになります。</p>
 
-<h2 id="bundler-で-cocoapodsを動かす">bundler で CocoaPodsを動かす</h2>
+<h2 id="レビュー会で何が変わるのか">レビュー会で何が変わるのか？</h2>
 
-<h3 id="bundlerでcocoapodsをインストールする">bundlerでCocoaPodsをインストールする</h3>
+<p>レビュー会を実施したことで次の変化が起こりました。</p>
 
-<p><code class="language-plaintext highlighter-rouge">$ gem install cocoapods</code>ではなく<code class="language-plaintext highlighter-rouge">bundle install</code>で<code class="language-plaintext highlighter-rouge">cocoapods</code>をインストールします。
-そのためにbundlerが管理するファイル<code class="language-plaintext highlighter-rouge">Gemfile</code>を<code class="language-plaintext highlighter-rouge">$ bundle init</code>で作ります。
-エディタで<code class="language-plaintext highlighter-rouge">Gemfile</code>を開くと次のようにgemを追加します。</p>
-<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">gem</span> <span class="s2">"cocoapods"</span>
-</code></pre></div></div>
-<p>保存後に <code class="language-plaintext highlighter-rouge">$ bunlder install --path=vendor/bundle</code>を実行すると, <code class="language-plaintext highlighter-rouge">cocoapods</code>がインストールされます。
-<code class="language-plaintext highlighter-rouge">--path=vendor/bundle</code>とはgemのインストール場所を示すオプションで、iosプロジェクト配下にvendor/bundleフォルダを作成し、その中に <code class="language-plaintext highlighter-rouge">cocoapods</code> のコードがインストールされます。
-この <code class="language-plaintext highlighter-rouge">vendor/</code> は Gemfileがあれば再現可能なので git管理下から外しても構いません。</p>
+<ul>
+  <li>チームメンバーのUI/UXに関する観点が増加</li>
+  <li>着実にUX改善タスクが実施される</li>
+  <li>UI/UX観点を意識した開発体制が備わる</li>
+</ul>
 
-<h3 id="bundlerでcocoapodsを動かす">bundlerでCocoaPodsを動かす</h3>
+<h3 id="メンバーのuiux観点が増加">メンバーのUI/UX観点が増加</h3>
 
-<p>bundler配下のgemを動かすには<code class="language-plaintext highlighter-rouge">$ bunlder exec command</code>のフォーマットに従わなくてはなりません。
-例えば <code class="language-plaintext highlighter-rouge">pod install</code>のインストールを実行するには、 <code class="language-plaintext highlighter-rouge">$ bundle exec pod install</code> となります。
-これは少し手間ですね。次のプラグインをインストールすることで <code class="language-plaintext highlighter-rouge">bundle exec</code>の部分を省くことができます。</p>
+<p>レビュー会では参加者同士で理由をつけて良い点・悪い点を共有します。<br />
+他の参加者は自身では気づかなかった見方を知ることができます。 <br />
+そのため、互いに観点が増えることでチーム全体のUI/UX観点を底上げできます。</p>
 
-<h2 id="rbenv-に-binstubs-をインストール">rbenv に binstubs をインストール</h2>
-<p>直接CocoaPodsをインストールした場合は、パスが通っているため <code class="language-plaintext highlighter-rouge">pod install</code>のように実行することができますが、
-<code class="language-plaintext highlighter-rouge">bundler</code>によってインストールした場合は、パスが通っていないため <code class="language-plaintext highlighter-rouge">pod install</code> を実行しても違うCocoaPodsのgemが動いてしまいます。(直接インストールしたCocoaPodsが動く)
-これをパスを通してくれるようになるプラグインが rbenv-binstubsです。<code class="language-plaintext highlighter-rouge">bundle exec</code>が不要になります。
-プラグインインストールは次の場所にgit cloneで配置するだけです。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>git clone git://github.com/ianheggie/rbenv-binstubs.git ~/.rbenv/plugins/rbenv-binstubs
-</code></pre></div></div>
+<p>またチームメンバー間の知識差がなくなることで、自信を持って意見交換できるようになり、<br />
+よりチーム内のUX改善が活発になります。</p>
 
-<p>また<code class="language-plaintext highlighter-rouge">bundle install</code> にオプションを追加して再実行します。</p>
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>bundle <span class="nb">install</span> <span class="nt">--path</span><span class="o">=</span>vendor/bundle <span class="nt">--binstubs</span><span class="o">=</span>vendor/bin
-</code></pre></div></div>
+<h3 id="着実にux改善タスクが実施される">着実にUX改善タスクが実施される</h3>
 
-<p>こうすることで、 <code class="language-plaintext highlighter-rouge">bundler</code> によってインストールgemにもパスが通るようになるため<code class="language-plaintext highlighter-rouge">pod install</code>だけで、bundler管轄のcocoapodsが呼べるようになります。</p>
+<p>定例で実施し、内容にそったレビューが実施されることで、改善ポイントが見つかれば必ずゴールとしてGitHub Issues等に追加され、消化されていきます。</p>
 
-<h2 id="cocoapodsのバージョンアップはbundler操作">CocoaPodsのバージョンアップはbundler操作</h2>
-<p>bundlerによって管理されたcocoapodsをバージョンアップする場合は、
-<code class="language-plaintext highlighter-rouge">$ bundler update</code>で管轄gemをバージョン指定ルールに従った最新版にアップデートします。</p>
+<h3 id="uiux観点を意識した開発体制が備わる">UI/UX観点を意識した開発体制が備わる</h3>
 
-<h2 id="rubyバージョンはrbenv操作">Rubyバージョンはrbenv操作</h2>
-<p>CocoaPodsや別ソフトウェアによりRubyバージョンを上げる必要がある場合は、 rbenv で新しくインストールし <code class="language-plaintext highlighter-rouge">.ruby-version</code>を変更することでバージョンを変えることができます。
-Rubyバージョンを更新した場合は、 <code class="language-plaintext highlighter-rouge">$ gem install bunlder</code> で <code class="language-plaintext highlighter-rouge">bundler</code> のインストール後に <code class="language-plaintext highlighter-rouge">$ bundle install</code>で新しいRubyバージョンでのbundlerとcocoapodsのインストールが必要になります。</p>
+<p>不定期にまとめて画面リニューアルや大掃除みたいな長時間を確保せずとも、慢性的に実施されることで普段の別タスクを対応中に気づいたら次回レビュー会で発言するか、レビュー会を待たずにSlackで発言されるようになります。</p>
 
-<h2 id="まとめ">まとめ</h2>
-<p>iOS開発で便利なツールにはRuby製のものも多く、サーバーサイドがRailsなどで実装されているのであれば、iOSエンジニアであれどRuby環境を理解しておくだけで、
-今回のような開発環境整備に役立てることができるようになります。</p>
+<h2 id="レビュー会に対する否定意見とその返答">レビュー会に対する否定意見とその返答</h2>
+
+<p>最後にレビュー会に対して実際に受けたネガティブ意見と返答をまとめます。</p>
+
+<h3 id="毎回改善案出てくるものではないのでは">毎回改善案出てくるものではないのでは？</h3>
+
+<p>経験上毎回必ず出ます、また出すことだけが目的ではなく、観点を揃えるためでもあります。</p>
+
+<h3 id="必要になったらまとめて実施してもいい">必要になったらまとめて実施してもいい</h3>
+
+<p>「必要」とは？その判断基準とは？その判断できる観点を持ち合わせていないから実施します。
+また、まとめて実施は思ったより案が出ません。</p>
+
+<p>当人の意識外で勝手にやりきった感を感じて思考が停止、無価値な雑談になりがちです。</p>
+
+<h3 id="発言しない人は一定人数存在する">発言しない人は一定人数存在する</h3>
+
+<p>参加しない人は問題ありますが、発言しないのは問題ありません。<br />
+その場で発言せずとも、当人の知識として、PRや画面実装など別の機会で効果を発揮するためです。</p>
+
+<h2 id="組織が改善体質であれば簡単な話">組織が改善体質であれば簡単な話</h2>
+<p>このように今回説明した施策は、内容としてはとても簡単なものです。<br />
+しかしながら、UXというスキルも効果もデフォルトが定性的なものは、組織の体質によっては門前払いされます。<br />
+上手くいくケースとは、改善を諦めない体質を持った組織、そして社長のマインドまたは企業理念です。</p>
+
+<p>なお、このUXを定性評価から定量評価に変換を実施したこともあり、<span><a href="/notebook/service-design/convert-design-to-data">CX/UX/UIデザインの価値を定量化するために私がした施策</a></span>
+にまとめてあります。</p>
 
   </section>
 
@@ -550,148 +545,6 @@ Rubyバージョンを更新した場合は、 <code class="language-plaintext h
                 
                 
 
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ios/swift/ios-swift-ecosystem-design">
-      <img src="/assets/images/2020-08-02-ios-swift-ecosystem-design/0.png" alt="iOSアプリ開発のエコシステムを考えてみた" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ios/swift/ios-swift-ecosystem-design">
-      <h3>iOSアプリ開発のエコシステムを考えてみた</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#program-design">プログラム設計</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#cocoapods">CocoaPods</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#carthage">Carthage</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#xcodegen">XcodeGen</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#mint">Mint</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#quick">Quick</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#nimble">Nimble</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#homebrew">Homebrew</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#swiftlint">SwiftLint</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#bitrise">Bitrise</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#fastlane">Fastlane</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ios/xcodegen/ios-xcodegen-carthage-cocoapods">
-      <img src="/assets/images/2020-07-28-ios-xcodegen-carthage-cocoapods/0.png" alt="XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ios/xcodegen/ios-xcodegen-carthage-cocoapods">
-      <h3>XcodeGenでCarthageやCocoaPods環境のXcodeプロジェクトを生成する</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#swift">Swift</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#xcodegen">XcodeGen</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#carthage">Carthage</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#cocoapods">CocoaPods</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
 
             
                 
@@ -773,22 +626,20 @@ Rubyバージョンを更新した場合は、 <code class="language-plaintext h
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ios/ios-carthage-vs-cocoapods">
-      <img src="/assets/images/2020-05-14-ios-carthage-vs-cocoapods/0.png" alt="CarthageとCocoaPodsの違いを経験交えて比較する" style="width: 100%; object-fit: contain;">
+    <a href="/notebook/service-design/notebook-service-design-wrong-po-works">
+      <img src="/assets/images/2020-06-02-notebook-service-design-wrong-po-works/eyecatch.png" alt="お前らはPO業務を舐めすぎている" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ios/ios-carthage-vs-cocoapods">
-      <h3>CarthageとCocoaPodsの違いを経験交えて比較する</h3>
+    <a href="/notebook/service-design/notebook-service-design-wrong-po-works">
+      <h3>お前らはPO業務を舐めすぎている</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+        <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
       
-        <li class="list-inline-item"><a href="/tags#carthage">Carthage</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#cocoapods">CocoaPods</a></li>
+        <li class="list-inline-item"><a href="/tags#service-design">サービス設計</a></li>
       
     </ul>
   </div>
@@ -974,31 +825,71 @@ Rubyバージョンを更新した場合は、 <code class="language-plaintext h
                 
                 
 
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ruby/ruby-script-basic">
-      <img src="/assets/images/2020-02-08-ruby-script-basic.png" alt="iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業" style="width: 100%; object-fit: contain;">
+    <a href="/notebook/service-design/convert-design-to-data">
+      <img src="/assets/images/2020-02-09-convert-design-to-data/1.png" alt="CX/UX/UIデザインの価値を定量化するために私がした施策" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ruby/ruby-script-basic">
-      <h3>iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</h3>
+    <a href="/notebook/service-design/convert-design-to-data">
+      <h3>CX/UX/UIデザインの価値を定量化するために私がした施策</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
       
-        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#shellscript">シェルスクリプト</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
+        <li class="list-inline-item"><a href="/tags#service-design">サービス設計</a></li>
       
     </ul>
   </div>
@@ -1008,6 +899,12 @@ Rubyバージョンを更新した場合は、 <code class="language-plaintext h
 
                     
                     
+                
+
+
+            
+                
+                
                 
 
 
