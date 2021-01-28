@@ -11,35 +11,35 @@
 
 
 
-  <title>Railsのアセットパイプラインの概要を最短理解する - もちゅろぐ</title>
+  <title>MySQLサーバからmysqldumpで論理バックアップを作成する - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="Railsのアセットパイプラインの概要を最短理解する" />
+<meta property="og:title" content="MySQLサーバからmysqldumpで論理バックアップを作成する" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="Railsのアセットパイプラインの基本的な概要、全体像、メリットなどをなるべく端的に説明します。" />
-<meta property="og:description" content="Railsのアセットパイプラインの基本的な概要、全体像、メリットなどをなるべく端的に説明します。" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief" />
+<meta name="description" content="MySQLデータベースサーバ上のテーブル構造やデータをmysqldumpコマンドを使って論理バックアップする方法について説明します。" />
+<meta property="og:description" content="MySQLデータベースサーバ上のテーブル構造やデータをmysqldumpコマンドを使って論理バックアップする方法について説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/db/mysql/db-mysql-logic-buckup" />
+<meta property="og:url" content="https://blog.mothule.com/db/mysql/db-mysql-logic-buckup" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2021-01-05T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-28T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" />
-<meta property="twitter:title" content="Railsのアセットパイプラインの概要を最短理解する" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png" />
+<meta property="twitter:title" content="MySQLサーバからmysqldumpで論理バックアップを作成する" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png","description":"Railsのアセットパイプラインの基本的な概要、全体像、メリットなどをなるべく端的に説明します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief"},"@type":"BlogPosting","url":"https://blog.mothule.com/ruby/rails/ruby-rails-assets-pipeline-brief","headline":"Railsのアセットパイプラインの概要を最短理解する","dateModified":"2021-01-20T19:53:23+09:00","datePublished":"2021-01-05T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png","description":"MySQLデータベースサーバ上のテーブル構造やデータをmysqldumpコマンドを使って論理バックアップする方法について説明します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-logic-buckup"},"@type":"BlogPosting","url":"https://blog.mothule.com/db/mysql/db-mysql-logic-buckup","headline":"MySQLサーバからmysqldumpで論理バックアップを作成する","dateModified":"2021-01-28T10:59:01+09:00","datePublished":"2021-01-28T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="Railsのアセットパイプラインの概要を最短理解する">
-<meta name="twitter:description" content="Railsのアセットパイプラインの基本的な概要、全体像、メリットなどをなるべく端的に説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png">
+<meta name="twitter:title" content="MySQLサーバからmysqldumpで論理バックアップを作成する">
+<meta name="twitter:description" content="MySQLデータベースサーバ上のテーブル構造やデータをmysqldumpコマンドを使って論理バックアップする方法について説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#ruby" itemprop="item">
-              <span itemprop="name">Ruby</span>
+            <a href="/tags#db" itemprop="item">
+              <span itemprop="name">DB</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#rails" itemprop="item">
-              <span itemprop="name">Rails</span>
+            <a href="/tags#mysql" itemprop="item">
+              <span itemprop="name">MySQL</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            Railsのアセットパイプラインの概要を最短理解する
+            MySQLサーバからmysqldumpで論理バックアップを作成する
           </li>
         
       
@@ -164,27 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" alt="Railsのアセットパイプラインの概要を最短理解する">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png" alt="MySQLサーバからmysqldumpで論理バックアップを作成する">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>Railsのアセットパイプラインの概要を最短理解する</h1>
+    <h1>MySQLサーバからmysqldumpで論理バックアップを作成する</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+            <li class="list-inline-item"><a href="/tags#db">DB</a></li>
           
-            <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#asset-pipeline">Asset Pipeline</a></li>
+            <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2021-1-5</time></span>
+        <span"><time class="post-date">2021-1-28</time></span>
       </div>
     </div>
   </header>
@@ -192,16 +190,20 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#アセットパイプラインasset-pipelineとは">アセットパイプライン(Asset Pipeline)とは</a></li>
-  <li><a href="#特徴1-ファイルの最小化ミニファイ">特徴1. ファイルの最小化(ミニファイ)</a>
+  <li><a href="#論理バックアップとは">論理バックアップとは？</a>
     <ul>
-      <li><a href="#通信量を節約できる">通信量を節約できる</a></li>
-      <li><a href="#難読化によるセキュリティ向上">難読化によるセキュリティ向上</a></li>
+      <li><a href="#物理バックアップと比べたデメリット">物理バックアップと比べたデメリット</a></li>
     </ul>
   </li>
-  <li><a href="#特徴2-複数ファイルの結合">特徴2. 複数ファイルの結合</a></li>
-  <li><a href="#特徴3-coffeescriptやsassのトランスパイル">特徴3. CoffeeScriptやSassのトランスパイル</a></li>
-  <li><a href="#アセットパイプラインの使い方">アセットパイプラインの使い方</a></li>
+  <li><a href="#mysqldumpコマンドで論理バックアップファイルを作成">mysqldumpコマンドで論理バックアップファイルを作成</a></li>
+  <li><a href="#使用するオプション">使用するオプション</a>
+    <ul>
+      <li><a href="#--quickオプション"><code class="language-plaintext highlighter-rouge">--quick</code>オプション</a></li>
+      <li><a href="#--single-transactionオプション"><code class="language-plaintext highlighter-rouge">--single-transaction</code>オプション</a></li>
+      <li><a href="#--ignore-tableオプション"><code class="language-plaintext highlighter-rouge">--ignore-table</code>オプション</a></li>
+      <li><a href="#--quote-namesオプション"><code class="language-plaintext highlighter-rouge">--quote-names</code>オプション</a></li>
+    </ul>
+  </li>
 </ul>
   </div>
 
@@ -221,87 +223,59 @@
   
 
   <section>
-  <p>Railsのアセットパイプラインは、最先端ではないですが、現状の開発において必要な仕組みです。<br />
-最近ではフロントエンドと分離する傾向がありますが、それでもアセットパイプラインを使ったサービスはたくさんあります。<br />
-今回、手っ取り早く全体像を理解するためにまとめました。</p>
+  <p>MySQLデータベースサーバからデータベースを論理バックアップするには、<code class="language-plaintext highlighter-rouge">mysqldump</code>コマンドを使います。ただ呼ぶだけでなく、いくつかオプションをつけることでより効果良くします。</p>
 
-<h2 id="アセットパイプラインasset-pipelineとは">アセットパイプライン(Asset Pipeline)とは</h2>
-<p>JavaScriptやCSSを最小化や圧縮して連結するフレームワークです。<br />
-CofeeScriptやSass(SCSS)の変換もサポートします。<br />
-アセットパイプラインの実体はSprocketsミドルウェアです。</p>
+<h2 id="論理バックアップとは">論理バックアップとは？</h2>
 
-<p>特徴としては下記です。</p>
+<p>物理バックアップのようにデータファイルをコピーせず、テーブル構造とデータを再生成できるCREATE TABLE や INSERT などのステートメントが含まれたバックアップです。</p>
 
-<ul>
-  <li>ファイルのミニファイ</li>
-  <li>ファイルの結合</li>
-  <li>ファイルの変換</li>
-</ul>
+<h3 id="物理バックアップと比べたデメリット">物理バックアップと比べたデメリット</h3>
 
-<p>これらをデプロイ前に事前に処理（プリコンパイル）します。</p>
+<p>データサイズが大きくなってくると、リストアに時間がかなりかかる。</p>
 
-<h2 id="特徴1-ファイルの最小化ミニファイ">特徴1. ファイルの最小化(ミニファイ)</h2>
-<p>最小化とは、スペースや改行を詰めてサイズを減らすことです。<br />
-最小化はミニファイ(minify)とも呼びます。</p>
+<h2 id="mysqldumpコマンドで論理バックアップファイルを作成">mysqldumpコマンドで論理バックアップファイルを作成</h2>
 
-<p>ファイルを最小化することで、3つメリットがあります。</p>
+<p>バックアップファイルといってもDDLとDMLが書かれたSQLファイルです。</p>
 
-<ul>
-  <li>通信量の節約</li>
-  <li>難読化によるセキュリティ向上</li>
-</ul>
+<p>フォーマットは次のようにします。</p>
 
-<h3 id="通信量を節約できる">通信量を節約できる</h3>
-<p>ファイルにはスペースや改行などが含まれます。<br />
-これらは人には可読性のために必要です。<br />
-でもWebブラウザのファイル解析には、ほとんどが不要です。<br />
-不要なスペースや改行を無くすことで、ファイルサイズが減らせます。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysqldump <span class="nt">-u</span> &lt;ユーザ名&gt; <span class="nt">--databases</span> &lt;DB名&gt; <span class="nt">-p</span> <span class="nt">--host</span> &lt;DBサーバIP&gt; <span class="nt">-P</span> &lt;ポート番号&gt; <span class="nt">--quick</span> <span class="nt">--single-transaction</span> <span class="nt">--quote-names</span> <span class="nt">--ignore-table</span><span class="o">=</span>&lt;無視テーブル名1&gt; <span class="nt">--ignore-table</span><span class="o">=</span>&lt;無視テーブル2&gt; <span class="o">&gt;</span> 出力ファイル名.sql
+</code></pre></div></div>
 
-<p>ファイルの縮小は通信量削減に繋がります。<br />
-その分Webページ表示に必要なファイル取得を短縮できます。<br />
-結果Webページの高速化に繋がります。</p>
+<p>少しオプションが多いですが、いくつかオプションをが入っていることで、安全面や速度の効果を期待できます。</p>
 
-<h3 id="難読化によるセキュリティ向上">難読化によるセキュリティ向上</h3>
-<p>前項でも説明しましたが、スペースや改行などは可読性にとって重要です。<br />
-またJavaScript難読化ツールによっては、変数名を短くします。<br />
-短くなることはファイルサイズ削減にもなります。<br />
-そして変数が持つ意味も取り除けます。</p>
+<p>いくつかのオプションをデフォルトで動くケースではオプション数を減らせます。
+例えばlocalhostのMySQLにrootで全テーブルをバックアップする場合は次のようになります。</p>
 
-<p>これらがなくなることで、人はコードを非常に読み解きにくくなります。<br />
-読み解きにくくなれば悪意な行動ができなくなります。<br />
-要はセキュリティが向上します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysqldump <span class="nt">-uroot</span> hoge_database <span class="nt">--quote-names</span> <span class="nt">--single-transaction</span> <span class="o">&gt;</span> hoge.sql
+</code></pre></div></div>
 
-<h2 id="特徴2-複数ファイルの結合">特徴2. 複数ファイルの結合</h2>
-<p>例えば、あるページに5ファイル必要であれば、<br />
-そのままの場合は、5回に渡りファイルを取得します。<br />
-当然5回分はサーバに負担はかかり、通信帯域も埋めます。</p>
+<h2 id="使用するオプション">使用するオプション</h2>
 
-<p>これを5ファイルを1つに結合してしまえば、その分パフォーマンスは向上します。</p>
+<p><code class="language-plaintext highlighter-rouge">mysql</code>コマンドで既に使ったことのあるオプションは省略します。</p>
 
-<h2 id="特徴3-coffeescriptやsassのトランスパイル">特徴3. CoffeeScriptやSassのトランスパイル</h2>
-<p>トランスパイルとは、ある開発言語から別の開発言語を生成するコンパイル処理です。</p>
+<h3 id="--quickオプション"><code class="language-plaintext highlighter-rouge">--quick</code>オプション</h3>
 
-<p>例えば、</p>
+<p>テーブルのレコードをバッファせず1行ずつダンプする。デフォルトで有効なので、明示的にする目的以外では指定しなくても問題ありません。</p>
 
-<ul>
-  <li>CoffeeScriptからJavaScriptへ変換</li>
-  <li>Sass(SCSS)からCSSへ変換</li>
-</ul>
+<p>なお<code class="language-plaintext highlighter-rouge">--skip-quick</code>を使用すれば、ダンプ前にテーブル内容をメモリにバッファリングしますが、サイズの大きいテーブルがあるとメモリ不足を起こします。</p>
 
-<p>などです。</p>
+<h3 id="--single-transactionオプション"><code class="language-plaintext highlighter-rouge">--single-transaction</code>オプション</h3>
 
-<p>WebブラウザがサポートしてるJavaScriptやCSSなどを直接記述するよりも、<br />
-TypeScriptやSCSSを使ったほうが生産的です。<br />
-アセットパイプラインはその変換作業をサポートします。</p>
+<p>一貫した状態でダンプする。ただし、InnoDBテーブルのみ有効。</p>
 
-<p>例えばSass(SCSS)であれば、<code class="language-plaintext highlighter-rouge">sass-rails gem</code>が使われます。</p>
+<p>MyISAMテーブルを含むDBでは効果がないですが、MySQL5.6からはデフォルトストレージエンジンはInnoDBとなってるので気にするケースは少ないかと思います。</p>
 
-<h2 id="アセットパイプラインの使い方">アセットパイプラインの使い方</h2>
+<p>なお、MyISAMテーブルを含むDBでは、–lock-tablesか–lock-all-tablesを使います。</p>
 
-<p>アセットパイプラインは、パフォーマンス目的のためにファイル(アセット)をミニファイやファイル結合、トランスパイルするフレームワークです。</p>
+<h3 id="--ignore-tableオプション"><code class="language-plaintext highlighter-rouge">--ignore-table</code>オプション</h3>
 
-<p>実際の使い方は、<span><a href="/ruby/rails/ruby-rails-assets-pipeline-use">Railsのアセットパイプラインの使い方を最短理解する</a></span>
-にまとめてあります。</p>
+<p>指定されたテーブルはダンプの対象から外れます。
+複数テーブル指定は複数個オプションを渡します。</p>
+
+<h3 id="--quote-namesオプション"><code class="language-plaintext highlighter-rouge">--quote-names</code>オプション</h3>
+
+<p>識別子を逆引用符文字(バックティック)で囲みます。識別に予約ワードが含まれても問題を起こさないようにします。</p>
 
   </section>
 
@@ -338,67 +312,23 @@ TypeScriptやSCSSを使ったほうが生産的です。<br />
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-use">
-      <img src="/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png" alt="Railsのアセットパイプラインの使い方を最短理解する" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-show-user-and-grants">
+      <img src="/assets/images/2021-01-26-db-mysql-show-user-and-grants/eyecatch.png" alt="MySQLユーザーの一覧や権限を表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-use">
-      <h3>Railsのアセットパイプラインの使い方を最短理解する</h3>
+    <a href="/db/mysql/db-mysql-show-user-and-grants">
+      <h3>MySQLユーザーの一覧や権限を表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#asset-pipeline">Asset Pipeline</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -416,245 +346,23 @@ TypeScriptやSCSSを使ったほうが生産的です。<br />
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-rabl-basic">
-      <img src="/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" alt="RABLの使い方を丁寧に説明" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-information-schema">
+      <img src="/assets/images/2021-01-25-db-mysql-information-schema/eyecatch.png" alt="MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-rabl-basic">
-      <h3>RABLの使い方を丁寧に説明</h3>
+    <a href="/db/mysql/db-mysql-information-schema">
+      <h3>MySQLのINFORMATION_SCHEMA STATISTICSでインデックスを表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -672,79 +380,23 @@ TypeScriptやSCSSを使ったほうが生産的です。<br />
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">
-      <img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" alt="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-show-index">
+      <img src="/assets/images/2021-01-23-db-mysql-show-index/eyecatch.png" alt="MySQLでテーブルのインデックスを表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">
-      <h3>RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</h3>
+    <a href="/db/mysql/db-mysql-show-index">
+      <h3>MySQLでテーブルのインデックスを表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#rubymine">RubyMine</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -762,53 +414,23 @@ TypeScriptやSCSSを使ったほうが生産的です。<br />
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/web/nginx/web-nginx-getting-started-step3-on-mac">
-      <img src="/assets/images/2020-02-24-web-nginx-getting-started-step3-on-mac/0.png" alt="Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-show-tables">
+      <img src="/assets/images/2021-01-22-db-mysql-show-tables/eyecatch.png" alt="MySQLのテーブル一覧を表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/web/nginx/web-nginx-getting-started-step3-on-mac">
-      <h3>Mac1台にnginxでWebサーバとPumaでアプリサーバを立てる</h3>
+    <a href="/db/mysql/db-mysql-show-tables">
+      <h3>MySQLのテーブル一覧を表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#web">Web</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
@@ -826,125 +448,23 @@ TypeScriptやSCSSを使ったほうが生産的です。<br />
                 
                 
 
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-rails-5_2_3-update">
-      <img src="/assets/images/2019-11-14-ruby-rails-rails-5_2_3-update.png" alt="Railsを5.0.0から5.2.3に変更した" style="width: 100%; object-fit: contain;">
+    <a href="/db/mysql/db-mysql-show-columns">
+      <img src="/assets/images/2021-01-22-db-mysql-show-columns/eyecatch.png" alt="MySQLでテーブルのカラムを表示して確認する" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-rails-5_2_3-update">
-      <h3>Railsを5.0.0から5.2.3に変更した</h3>
+    <a href="/db/mysql/db-mysql-show-columns">
+      <h3>MySQLでテーブルのカラムを表示して確認する</h3>
     </a>
 
     <ul class="list-inline">
       
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
       
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
       
     </ul>
   </div>
