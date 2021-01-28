@@ -11,35 +11,35 @@
 
 
 
-  <title>MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む - もちゅろぐ</title>
+  <title>リモートワーク体制よりもまず自立組織型を目指すべき - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" />
+<meta property="og:title" content="リモートワーク体制よりもまず自立組織型を目指すべき" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。" />
-<meta property="og:description" content="Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。" />
-<link rel="canonical" href="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive" />
-<meta property="og:url" content="https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive" />
+<meta name="description" content="私は5年近く長年リモートワークで働いてきた中で、たどり着いた考えに「リモートワーク体制整備よりも従業員や管理職のマインド改革が先」があります。何故マインド改革が先なのか？何故自律型組織なのか？について業務レベルを交えて書いていきます。" />
+<meta property="og:description" content="私は5年近く長年リモートワークで働いてきた中で、たどり着いた考えに「リモートワーク体制整備よりも従業員や管理職のマインド改革が先」があります。何故マインド改革が先なのか？何故自律型組織なのか？について業務レベルを交えて書いていきます。" />
+<link rel="canonical" href="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work" />
+<meta property="og:url" content="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2020-04-29T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-01-29T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" />
-<meta property="twitter:title" content="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" />
+<meta property="twitter:title" content="リモートワーク体制よりもまず自立組織型を目指すべき" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"image":"https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png","description":"Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive"},"@type":"BlogPosting","url":"https://blog.mothule.com/linux/linux-write-iso-to-usb-flash-drive","headline":"MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む","dateModified":"2021-01-26T03:28:09+09:00","datePublished":"2020-04-29T00:00:00+09:00","@context":"https://schema.org"}</script>
+{"image":"https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png","description":"私は5年近く長年リモートワークで働いてきた中で、たどり着いた考えに「リモートワーク体制整備よりも従業員や管理職のマインド改革が先」があります。何故マインド改革が先なのか？何故自律型組織なのか？について業務レベルを交えて書いていきます。","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work"},"@type":"BlogPosting","url":"https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work","headline":"リモートワーク体制よりもまず自立組織型を目指すべき","dateModified":"2021-01-29T02:35:50+09:00","datePublished":"2021-01-29T00:00:00+09:00","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む">
-<meta name="twitter:description" content="Macでターミナル上のシェルコマンドdiskutilとddコマンドを使ってLinuxのISOイメージファイルをUSBフラッシュメモリドライブに焼いてインストールメディアデバイスを作成する方法を説明します。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png">
+<meta name="twitter:title" content="リモートワーク体制よりもまず自立組織型を目指すべき">
+<meta name="twitter:description" content="私は5年近く長年リモートワークで働いてきた中で、たどり着いた考えに「リモートワーク体制整備よりも従業員や管理職のマインド改革が先」があります。何故マインド改革が先なのか？何故自律型組織なのか？について業務レベルを交えて書いていきます。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -132,8 +132,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#linux" itemprop="item">
-              <span itemprop="name">Linux</span>
+            <a href="/tags#notebook" itemprop="item">
+              <span itemprop="name">雑記</span>
             </a>
             <meta itemprop="position" content="2">
           </li>
@@ -141,8 +141,18 @@
       
         
         
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#org-build" itemprop="item">
+              <span itemprop="name">組織作り</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
           <li>
-            MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む
+            リモートワーク体制よりもまず自立組織型を目指すべき
           </li>
         
       
@@ -154,27 +164,25 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/0.png" alt="MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" alt="リモートワーク体制よりもまず自立組織型を目指すべき">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>MacでLinuxのISOファイルをUSBフラッシュメモリに書き込む</h1>
+    <h1>リモートワーク体制よりもまず自立組織型を目指すべき</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
         <ul class="list-inline">
           
-            <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+            <li class="list-inline-item"><a href="/tags#notebook">雑記</a></li>
           
-            <li class="list-inline-item"><a href="/tags#mint">Mint</a></li>
-          
-            <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
+            <li class="list-inline-item"><a href="/tags#org-build">組織作り</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2020-4-29</time></span>
+        <span"><time class="post-date">2021-1-29</time></span>
       </div>
     </div>
   </header>
@@ -182,26 +190,35 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#macでisoイメージファイルをusbに焼く流れ">MacでISOイメージファイルをUSBに焼く流れ</a></li>
-  <li><a href="#isoイメージファイルをサイトからダウンロード">ISOイメージファイルをサイトからダウンロード</a></li>
-  <li><a href="#usbフラッシュメモリドライブをmacにセット">USBフラッシュメモリドライブをMacにセット</a></li>
-  <li><a href="#diskutilコマンドでusbフラッシュメモリを初期化">diskutilコマンドでUSBフラッシュメモリを初期化</a>
+  <li><a href="#自律とは">自律とは？</a>
     <ul>
-      <li><a href="#diskutilとは">diskutilとは？</a></li>
-      <li><a href="#初期化の手順">初期化の手順</a></li>
-      <li><a href="#diskutil-listコマンドで対象ドライブのパス確認">diskutil listコマンドで対象ドライブのパス確認</a></li>
-      <li><a href="#diskutil-erasediskコマンドでパス指定で削除">diskutil eraseDiskコマンドでパス指定で削除</a></li>
-      <li><a href="#diskutil-unmountdiskコマンドでドライブのマウント解除">diskutil unmountDiskコマンドでドライブのマウント解除</a></li>
+      <li><a href="#自立との違い">自立との違い</a></li>
     </ul>
   </li>
-  <li><a href="#ddコマンドでisoイメージファイルをusbフラッシュメモリにコピー">ddコマンドでisoイメージファイルをUSBフラッシュメモリにコピー</a>
+  <li><a href="#自律型組織とは">自律型組織とは？</a></li>
+  <li><a href="#何故自律が良いのか">何故自律が良いのか？</a>
     <ul>
-      <li><a href="#ddコマンドとは">ddコマンドとは？</a></li>
-      <li><a href="#ddコマンドでisoファイルをusbメモリにコピーする">ddコマンドでISOファイルをUSBメモリにコピーする</a></li>
-      <li><a href="#usbフラッシュメモリドライブを抜く">USBフラッシュメモリドライブを抜く</a></li>
+      <li><a href="#一人の上司より複数の部下">一人の上司より複数の部下</a></li>
+      <li><a href="#部下全員に情報を渡して自分で考えさせる">部下全員に情報を渡して自分で考えさせる</a></li>
+      <li><a href="#考えるとは手持ちの情報から予測すること">考えるとは手持ちの情報から予測すること</a></li>
+      <li><a href="#どっちもミスするならそれ以外で良い方を選ぶ">どっちもミスするならそれ以外で良い方を選ぶ</a></li>
+      <li><a href="#オフィスワーク体制でも不完全">オフィスワーク体制でも不完全</a></li>
     </ul>
   </li>
-  <li><a href="#インストールメディアは単純だけど慣れるほど使わない">インストールメディアは単純だけど慣れるほど使わない</a></li>
+  <li><a href="#何故マインド改革が大事なのか">何故マインド改革が大事なのか？</a>
+    <ul>
+      <li><a href="#リモートワーク体制に最も必要なのは設備ではない">リモートワーク体制に最も必要なのは設備ではない</a></li>
+      <li><a href="#縦割り組織が生み出す利点と欠点">縦割り組織が生み出す利点と欠点</a>
+        <ul>
+          <li><a href="#役割が柔軟な対応を縛る">役割が柔軟な対応を縛る</a></li>
+        </ul>
+      </li>
+      <li><a href="#組織化された体制のサービス障害検知は一部の人しかしてない">組織化された体制のサービス障害検知は一部の人しかしてない</a></li>
+      <li><a href="#自律は関係者の境界を曖昧にする">自律は関係者の境界を曖昧にする</a></li>
+      <li><a href="#障害の発見報告は全員が担当">障害の発見、報告は全員が担当</a></li>
+    </ul>
+  </li>
+  <li><a href="#リモートワークでは指示ではなく共有が重要">リモートワークでは指示ではなく共有が重要</a></li>
 </ul>
   </div>
 
@@ -221,200 +238,145 @@
   
 
   <section>
-  <p><strong>Linux触るならシェルで焼こう</strong></p>
+  <p>コロナ渦もあり大手のITに弱い企業でも、リモートワーク体制を整える傾向です。<br />
+そのためにZoomやSlackを導入するなど、設備投資する企業を目にします。</p>
 
-<p>使わなくなったPCにLinuxをインストールして触れる機会を増やし、慣れて知識を増やそう作戦の最初の壁。<br />
-それがLinuxのインストール…ではなく<strong>インストール用ドライブの作成です。</strong><br />
-単純にUSBメディアにISOファイルを入れるだけと思って、Finderで外部デバイスにコピーしたけどちゃんとできない人がいるのでは？</p>
+<p>同時にそのようなIT弱者から金銭を得ようと、大手や縦割り組織が好むサービスを営業するのも目にします。<br />
+どちらもニーズを叶えているから契約数が増えそういった事業が成長するのは事実ですが、<br />
+中には従業員を奴隷か何かと勘違いしたサービスがあったり、自身の業務や方法が重要で効果があると勘違いしている管理職がいるのも多かれ少なかれ事実です。</p>
 
-<p>インストールメディア用として認識させるには、ちゃんとした段取りで正しい方法で用意する必要があります。<br />
-この記事は、Macを使ってLinuxのISOイメージファイルをターミナルを使って作成する手順について説明しています。</p>
+<p>私は5年近く長年リモートワークで働いてきた中で、たどり着いた考えに「リモートワーク体制整備よりも従業員や管理職のマインド改革が先」があります。</p>
 
-<h2 id="macでisoイメージファイルをusbに焼く流れ">MacでISOイメージファイルをUSBに焼く流れ</h2>
+<p>何故マインド改革が先なのか？何故自律型組織なのか？について業務レベルを交えて書いていきます。</p>
 
-<ol>
-  <li>イメージファイルをサイトから<strong>ダウンロード</strong></li>
-  <li><strong>USBフラッシュメモリドライブ</strong> をMacにセット</li>
-  <li>diskutilコマンドで<strong>USBフラッシュメモリを初期化</strong></li>
-  <li>ddコマンドで<strong>isoイメージファイルをUSBフラッシュメモリにコピー</strong></li>
-</ol>
+<h2 id="自律とは">自律とは？</h2>
 
-<h2 id="isoイメージファイルをサイトからダウンロード">ISOイメージファイルをサイトからダウンロード</h2>
-<p>OSのISOイメージファイルを公式サイトからダウンロードします。</p>
+<p>まず自律とは国語辞書では次のように定義されてます。</p>
 
-<p>今回OSは<a href="https://www.linuxmint.com/">Linux Mint</a>にします。</p>
+<blockquote>
+  <p>他からの支配・制約などを受けずに、自分自身で立てた規範に従って行動すること。
+<a href="https://dictionary.goo.ne.jp/word/%E8%87%AA%E5%BE%8B/">https://dictionary.goo.ne.jp/word/自律</a> より引用</p>
+</blockquote>
 
-<p><a href="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/4.png"><img src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/4.png" width="50%" alt="LinuxMintLogo" /></a></p>
+<p>要は自分で考え動けることです。</p>
 
-<p>Linux MintのISOイメージファイルを<a href="https://www.linuxmint.com/download.php">Linux Mintのダウンロードページ</a>から落とします。</p>
+<h3 id="自立との違い">自立との違い</h3>
 
-<h2 id="usbフラッシュメモリドライブをmacにセット">USBフラッシュメモリドライブをMacにセット</h2>
+<p>ちなみに、似た言葉に自立がありますが、こっちは他に頼らず自身で問題を解決することです。</p>
 
-<p>使うUSBフラッシュメモリなら何でもいいです、今回は手元にあるものから用意しました。</p>
+<h2 id="自律型組織とは">自律型組織とは？</h2>
 
-<p><a href="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/1.jpg"><img src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/1.jpg" width="50%" alt="USBフラッシュメモリ" /></a></p>
+<p>では、自律の字を使った自律型組織とは何か？</p>
 
-<p>用意したUSBフラッシュメモリドライブをMacに挿します。<br />
-もし下記アラートが出たら「無視」を選んでください。</p>
+<p>それは、縦割り組織の上司からの指示系統・意思決定のプロセスを持たず、各従業員が自ら思考し、自ら最適な行動を選択している組織です。</p>
 
-<p><a href="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/2.png"><img src="/assets/images/2020-04-29-linux-write-iso-to-usb-flash-drive/2.png" width="50%" alt="MacUSB認識不可ディスクアラート" /></a></p>
+<h2 id="何故自律が良いのか">何故自律が良いのか？</h2>
 
-<h2 id="diskutilコマンドでusbフラッシュメモリを初期化">diskutilコマンドでUSBフラッシュメモリを初期化</h2>
+<p>なぜ従来の上司からの指示や意思決定を貰うプロセスよりも、各従業員が自分で考え行動する組織がいいのか？<br />
+それは人は思ったより無能だからです。一人の能力が優れていても大勢の人的リソースには敵いません。</p>
 
-<p>ターミナルでdiskutilコマンドを使ってドライブ初期化を実行します。</p>
+<h3 id="一人の上司より複数の部下">一人の上司より複数の部下</h3>
 
-<h3 id="diskutilとは">diskutilとは？</h3>
-<p>diskutilとはディスクユーティリティツールです。<br />
-<strong>ローカルのディスクとボリュームを管理</strong> するユーティリティです。<br />
-ほとんどのコマンドにはsudoが必要です。</p>
+<p>指示系統を上司に集約すれば、上司による集中管理ができると思いますが、それは机上の空論です。</p>
 
-<h3 id="初期化の手順">初期化の手順</h3>
-<p>diskutilコマンドを使ってドライブを初期化するには、次の手順になります。</p>
+<p>大抵の会社において「上司が自分の部下全員と比較してら上司の方が優れていて、観点漏れやミスは起こさない」わけがありません。</p>
 
-<ol>
-  <li>diskutil listコマンドで<strong>対象ドライブのパス確認</strong></li>
-  <li>diskutil eraseDiskコマンドで<strong>パス指定で削除</strong></li>
-  <li>diskutil unmountDiskコマンドでドライブのマウント解除</li>
-</ol>
+<p>実際は上司は伝達内容が欠落したり、返答が遅いし、忘れてることもあるし、業務毎のコンテキストを覚えてるわけないので、それぞれ報告から最適な手段を常に出せるわけがありません。</p>
 
-<h3 id="diskutil-listコマンドで対象ドライブのパス確認">diskutil listコマンドで対象ドライブのパス確認</h3>
-<p><code class="language-plaintext highlighter-rouge">diskutil list</code>コマンドで現在マウントしてるUSBフラッシュメモリドライブを探します。</p>
+<p>つまり、自律型組織とか比較せずとも、そもそも上司集中管理は限界があるのです。</p>
 
-<p>例えば下記は自分の環境で<code class="language-plaintext highlighter-rouge">diskutil list</code>を実行した結果です。<br />
-この場合だと最後<code class="language-plaintext highlighter-rouge">external</code>と<code class="language-plaintext highlighter-rouge">physical</code>と表示されてる<code class="language-plaintext highlighter-rouge">/dev/disk2</code>ですね。<br />
-容量(SIZE)も用意したUSBフラッシュメモリと同じなので間違いないです。</p>
+<h3 id="部下全員に情報を渡して自分で考えさせる">部下全員に情報を渡して自分で考えさせる</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
-/dev/disk0 (internal):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      GUID_partition_scheme                         251.0 GB   disk0
-   1:                        EFI EFI                     314.6 MB   disk0s1
-   2:                 Apple_APFS Container disk1         250.7 GB   disk0s2
+<p>一方で部下が自律すれば、意思決定を上司に仰がず自分で考え決めて行動します。<br />
+これにより上司からの返答を待つ時間を短縮できますし、取り掛かっている部下がコンテキストを最も理解してるため最適手段を選べます。</p>
 
-/dev/disk1 (synthesized):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      APFS Container Scheme -                      +250.7 GB   disk1
-                                 Physical Store disk0s2
-   1:                APFS Volume Macintosh HD            206.4 GB   disk1s1
-   2:                APFS Volume Preboot                 47.8 MB    disk1s2
-   3:                APFS Volume Recovery                522.7 MB   disk1s3
-   4:                APFS Volume VM                      3.2 GB     disk1s4
+<p>しかし、これもやはり机上の空論や前提条件が多くあります。<br />
+部下が常に最適な手段を選べる保証は上司同様にありえません。</p>
 
-/dev/disk2 (external, physical):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:     FDisk_partition_scheme                        *4.0 GB     disk2
-   1:                       0xEF                         9.2 MB     disk2s2
-</code></pre></div></div>
+<p>しかし、部下に判断に必要な情報を渡すことで判断ミスを減らすことはできます。</p>
 
-<h3 id="diskutil-erasediskコマンドでパス指定で削除">diskutil eraseDiskコマンドでパス指定で削除</h3>
-<p><code class="language-plaintext highlighter-rouge">diskutil eraseDisk</code>コマンドで対象ディスクのパスを指定してディスクを初期化します。<br />
-使い方を簡単にすると下記です。</p>
+<h3 id="考えるとは手持ちの情報から予測すること">考えるとは手持ちの情報から予測すること</h3>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eraseDisk format name ドライブのパス
-</code></pre></div></div>
+<p>必要な情報が揃っていれば最適な手段を選ぶ確率が上がります。<br />
+そして、部下メンバーの人数分が自律するだけで全体の伝達時間の短縮に繋がり、業務効率は向上します。</p>
 
-<p>ドライブのパスは、先程調べたパス(<code class="language-plaintext highlighter-rouge">/dev/disk2</code>)になるので結果的に実行するコマンドは下記になります。</p>
+<h3 id="どっちもミスするならそれ以外で良い方を選ぶ">どっちもミスするならそれ以外で良い方を選ぶ</h3>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
-</code></pre></div></div>
+<p>どちらにせよミスする確率があるならば、上司は情報を適切に部下に提供し、あとの判断は部下に任せてしまったほうが業務速度の差で軍配が上がります。</p>
 
-<p><code class="language-plaintext highlighter-rouge">MS-DOS</code>はファイルフォーマット<code class="language-plaintext highlighter-rouge">FAT</code>となります。<code class="language-plaintext highlighter-rouge">FAT32</code>は古いので大抵のOSではサポートしてるため。
-今回はUSBフラッシュメモリの容量は4GBなので<code class="language-plaintext highlighter-rouge">FAT</code>でちょうど良かったりする。
-(FATの最大ファイルサイズは4GiB)<br />
-<code class="language-plaintext highlighter-rouge">UNTITLED</code>は何でもいいです。</p>
+<p>当然ながら自律にもリスクは生じますし、銀の弾丸では絶対にないです。<br />
+でも今の環境に適してるのは自律型組織に近づいてます。</p>
 
-<p>下記は先程のコマンドを実行した結果です。<br />
-<code class="language-plaintext highlighter-rouge">Finished erase on disk2</code>と出て無事初期化成功しています。</p>
+<p>つまり自律が良いというよりは、上司集中管理が時代に合わなくなってきたのです。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eraseDisk MS-DOS UNTITLED /dev/disk2
-Started erase on disk2
-Unmounting disk
-Creating the partition map
-Waiting <span class="k">for </span>partitions to activate
-Formatting disk2s2 as MS-DOS <span class="o">(</span>FAT<span class="o">)</span> with name UNTITLED
-512 bytes per physical sector
-/dev/rdisk2s2: 7478992 sectors <span class="k">in </span>934874 FAT32 clusters <span class="o">(</span>4096 bytes/cluster<span class="o">)</span>
-<span class="nv">bps</span><span class="o">=</span>512 <span class="nv">spc</span><span class="o">=</span>8 <span class="nv">res</span><span class="o">=</span>32 <span class="nv">nft</span><span class="o">=</span>2 <span class="nv">mid</span><span class="o">=</span>0xf8 <span class="nv">spt</span><span class="o">=</span>32 <span class="nv">hds</span><span class="o">=</span>255 <span class="nv">hid</span><span class="o">=</span>411648 <span class="nv">drv</span><span class="o">=</span>0x80 <span class="nv">bsec</span><span class="o">=</span>7493632 <span class="nv">bspf</span><span class="o">=</span>7304 <span class="nv">rdcl</span><span class="o">=</span>2 <span class="nv">infs</span><span class="o">=</span>1 <span class="nv">bkbs</span><span class="o">=</span>6
-Mounting disk
-Finished erase on disk2
-</code></pre></div></div>
+<h3 id="オフィスワーク体制でも不完全">オフィスワーク体制でも不完全</h3>
 
-<h3 id="diskutil-unmountdiskコマンドでドライブのマウント解除">diskutil unmountDiskコマンドでドライブのマウント解除</h3>
-<p>削除工程の最後は、マウント解除です。<br />
-これをせず次工程のISOイメージファイルをコピーしようとすると下記エラーとなります。</p>
+<p>そもそもオフィスワーク体制であっても上司集中管理の欠点は存在します。ただそれを上司に直接出向き差し込むように指示や意思決定を仰ぐことでゴリ押しで解決できることでカバーされてました。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>dd: /dev/disk2: Resource busy
-</code></pre></div></div>
+<p>しかしリモートワーク体制となると、指示系統など伝達速度がより低下します。<br />
+上司の元へ直接出向くこともできません。逆に上司が部下に伝達するケースも同様です。</p>
 
-<p>下記は<code class="language-plaintext highlighter-rouge">diskutil unmountDisk</code>コマンドでマウント解除した結果です。</p>
+<p>この欠点がより顕在化したことでリモートワークを悪と捉えたり、オフィスワークマインドのままリモートワーク体制を整えようと上司は動きます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil unmountDisk /dev/disk2
-Unmount of all volumes on disk2 was successful
-</code></pre></div></div>
+<h2 id="何故マインド改革が大事なのか">何故マインド改革が大事なのか？</h2>
 
-<h2 id="ddコマンドでisoイメージファイルをusbフラッシュメモリにコピー">ddコマンドでisoイメージファイルをUSBフラッシュメモリにコピー</h2>
+<p>ただでさえ完全ではない管理体制を現状の構造のまま不足を補おうとするため、管理体制強化が行われ、それを謳うようなサービスが営業されるわけです。</p>
 
-<p><code class="language-plaintext highlighter-rouge">diskutil eraseDisk</code>でUSBフラッシュメモリをキレイにできました。<br />
-今度はisoイメージファイルをUSBフラッシュメモリにコピーします。<br />
-コピーには<code class="language-plaintext highlighter-rouge">dd</code>コマンドを使います。</p>
+<p>そもそも管理業務はトヨタウェイのムダ、正味作業、付帯作業でいう付帯作業です。<br />
+そして指示系統や意思決定の伝達は7つの無駄で言う運搬または動作のムダです。</p>
 
-<h3 id="ddコマンドとは">ddコマンドとは？</h3>
-<p>ファイルの変換とコピーするコマンドです。
-標準入力を標準出力にコピーします。
-入力データは512バイトのブロック毎に入力・出力します。</p>
+<p>そこに力を入れる上司はそもそもそのポストに相応しい仕事をしてると言えるでしょうか？</p>
 
-<h3 id="ddコマンドでisoファイルをusbメモリにコピーする">ddコマンドでISOファイルをUSBメモリにコピーする</h3>
-<p><code class="language-plaintext highlighter-rouge">dd</code>コマンドを次のように指定します。</p>
+<p>部下も自律せず指示を待つ姿勢を続けていれば、上司からすれば「自分が動かさないと仕事が回らない」と思ってしまうのも無理ありません。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo dd </span><span class="k">if</span><span class="o">=</span>~/Downloads/linuxmint-19.3-xfce-32bit.iso <span class="nv">of</span><span class="o">=</span>/dev/disk2 <span class="nv">bs</span><span class="o">=</span>4028
-489925+1 records <span class="k">in
-</span>489925+1 records out
-1973420032 bytes transferred <span class="k">in </span>1604.956170 secs <span class="o">(</span>1229579 bytes/sec<span class="o">)</span>
-</code></pre></div></div>
+<h3 id="リモートワーク体制に最も必要なのは設備ではない">リモートワーク体制に最も必要なのは設備ではない</h3>
 
-<p><code class="language-plaintext highlighter-rouge">dd</code>コマンドのオプションに<code class="language-plaintext highlighter-rouge">if</code>と<code class="language-plaintext highlighter-rouge">of</code>と<code class="language-plaintext highlighter-rouge">bs</code>オプションを使います。</p>
+<p>ここまで読むとリモートワーク体制に「最も」必要なのは設備ではないことが分かると思います。</p>
 
-<ul>
-  <li><code class="language-plaintext highlighter-rouge">if=</code>オプションで入力ファイルとなるISOイメージファイルのパスを指定します。</li>
-  <li><code class="language-plaintext highlighter-rouge">of=</code>オプションで出力ファイルとなるドライブのパスを指定します。</li>
-  <li><code class="language-plaintext highlighter-rouge">bs=</code>オプションでブロックサイズを指定します。未指定時は512バイトです。</li>
-</ul>
+<h3 id="縦割り組織が生み出す利点と欠点">縦割り組織が生み出す利点と欠点</h3>
 
-<p>このコマンドは完了に時間がかかります。<br />
-動いてるかどうかは、USBフラッシュメモリドライブによっては、入出力の点灯で確認できます。</p>
+<p>組織化された体制の全てが悪いわけではありません。<br />
+業務設計がされて、役割毎に部署が分かれ、業務オペレーションも整備されるなど、決まった業務に関しては効果を発揮します。役割の範囲内においては非常に効率が良いと思います。<br />
+たとえ多少ムダがあっても人リソースと資金力とシェア獲得率でコスパ悪ながらも黒字経営が成り立ちます。</p>
 
-<h3 id="usbフラッシュメモリドライブを抜く">USBフラッシュメモリドライブを抜く</h3>
+<p>一方、スタートアップや中小企業では人リソースは少なくタスクが溢れかえっています。<br />
+そのため、人リソースをなるべく使わずムダのなく効率良く経営しないとあっという間に赤字や資金が底をついてしまいます。</p>
 
-<p>ISOイメージファイルをUSBフラッシュメモリへコピーが完了したらマウント解除して安全にUSBドライブが抜けるようにします。</p>
+<h4 id="役割が柔軟な対応を縛る">役割が柔軟な対応を縛る</h4>
 
-<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>diskutil eject /dev/disk2
-Disk /dev/disk2 ejected
-</code></pre></div></div>
+<p>しかし、欠点は役割の範囲外になると途端に動きが鈍くなることです。<br />
+なぜなら、意思決定が上司に仰がないといけないためです。<br />
+またそれだけでなく「これ自分の担当外だ」と決め、そもそも上司に相談すらしなくなります。<br />
+しなくても自分に課せられた業務外だからやらなくても怒られない、悪くないと自信を持っているからです。</p>
 
-<p>下記は<code class="language-plaintext highlighter-rouge">diskutil list</code>を実行した結果です。消えてることが分かります。</p>
+<p>最もこれらが顕著に現れるのはチーム間連携や部署間連携など連携作業となります。</p>
 
-<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ diskutil list
-/dev/disk0 (internal):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      GUID_partition_scheme                         251.0 GB   disk0
-   1:                        EFI EFI                     314.6 MB   disk0s1
-   2:                 Apple_APFS Container disk1         250.7 GB   disk0s2
+<h3 id="組織化された体制のサービス障害検知は一部の人しかしてない">組織化された体制のサービス障害検知は一部の人しかしてない</h3>
 
-/dev/disk1 (synthesized):
-   #:                       TYPE NAME                    SIZE       IDENTIFIER
-   0:      APFS Container Scheme -                      +250.7 GB   disk1
-                                 Physical Store disk0s2
-   1:                APFS Volume Macintosh HD            206.4 GB   disk1s1
-   2:                APFS Volume Preboot                 47.8 MB    disk1s2
-   3:                APFS Volume Recovery                522.7 MB   disk1s3
-   4:                APFS Volume VM                      3.2 GB     disk1s4
-</code></pre></div></div>
+<p>この欠点でダメージ受けやすく、逆にカバーすることでダメージを最小限に抑えられるのがサービス障害です。</p>
 
-<h2 id="インストールメディアは単純だけど慣れるほど使わない">インストールメディアは単純だけど慣れるほど使わない</h2>
-<p>一回でも手を動かしてインストールメディアを作成してしまえば、思いの外単純だと思います。
-でもそう何回もインストールメディアを作ることはなく、必要となったときには忘れてしまいます。</p>
+<p>サービス障害はどこで誰が見つけるか分かりません。<br />
+ユーザーかもしれないし、サービス開発関係者かもしれないし、ユーザーサポートの人かもしれません。<br />
+これをサービス開発関係者、突き詰めては担当部分のエンジニアや企画者だけになってしまいます。</p>
 
-<p>こういうのは、慣れるより探せです。</p>
+<h3 id="自律は関係者の境界を曖昧にする">自律は関係者の境界を曖昧にする</h3>
+
+<p>上司は部下に担当を伝えるだけでなく、自身がサービス関係者であり、これらを自分事だと捉えさせるよう伝えることがとても重要です。<br />
+なぜなら、自律には自分の担当を中心に一歩引いた場所から周りを含めて見る視野が必要なのです。</p>
+
+<p>こうすることで、全ての人が自分の担当領域から一歩周りに手を広げると互いにカバーしあうことができます。</p>
+
+<h3 id="障害の発見報告は全員が担当">障害の発見、報告は全員が担当</h3>
+
+<p>このように自律すると報告の発見を担当者だけでなく、みんなが自分事だと感じて報告します。<br />
+また報告受ける側も、周りの立場や視座に手を広げることで報告方法を楽にしようという行動にも繋がります。</p>
+
+<h2 id="リモートワークでは指示ではなく共有が重要">リモートワークでは指示ではなく共有が重要</h2>
+
+<p>リモートワーク体制では指示や判断ではなく、情報を共有して判断を委任させることが重要です。<br />
+見えない状態であっても自律して動いてる状態にしてしまえば結果はコミットされるからです。</p>
+
+<p>操り人形のように部下に指示、管理では見えないのでうまくいきません。</p>
 
   </section>
 
