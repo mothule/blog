@@ -1,4 +1,56 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-26T03:28:26+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MySQLユーザーの一覧や権限を表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-user-and-grants" rel="alternate" type="text/html" title="MySQLユーザーの一覧や権限を表示して確認する" /><published>2021-01-26T00:00:00+09:00</published><updated>2021-01-26T02:48:33+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-user-and-grants</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-user-and-grants">&lt;p&gt;MySQLユーザーの一覧表示や、ユーザーが持つ権限を表示する方法について整理します。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-01-28T10:59:21+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">MySQLサーバからmysqldumpで論理バックアップを作成する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-logic-buckup" rel="alternate" type="text/html" title="MySQLサーバからmysqldumpで論理バックアップを作成する" /><published>2021-01-28T00:00:00+09:00</published><updated>2021-01-28T10:59:01+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-logic-buckup</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-logic-buckup">&lt;p&gt;MySQLデータベースサーバからデータベースを論理バックアップするには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysqldump&lt;/code&gt;コマンドを使います。ただ呼ぶだけでなく、いくつかオプションをつけることでより効果良くします。&lt;/p&gt;
+
+&lt;h2 id=&quot;論理バックアップとは&quot;&gt;論理バックアップとは？&lt;/h2&gt;
+
+&lt;p&gt;物理バックアップのようにデータファイルをコピーせず、テーブル構造とデータを再生成できるCREATE TABLE や INSERT などのステートメントが含まれたバックアップです。&lt;/p&gt;
+
+&lt;h3 id=&quot;物理バックアップと比べたデメリット&quot;&gt;物理バックアップと比べたデメリット&lt;/h3&gt;
+
+&lt;p&gt;データサイズが大きくなってくると、リストアに時間がかなりかかる。&lt;/p&gt;
+
+&lt;h2 id=&quot;mysqldumpコマンドで論理バックアップファイルを作成&quot;&gt;mysqldumpコマンドで論理バックアップファイルを作成&lt;/h2&gt;
+
+&lt;p&gt;バックアップファイルといってもDDLとDMLが書かれたSQLファイルです。&lt;/p&gt;
+
+&lt;p&gt;フォーマットは次のようにします。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysqldump &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &amp;lt;ユーザ名&amp;gt; &lt;span class=&quot;nt&quot;&gt;--databases&lt;/span&gt; &amp;lt;DB名&amp;gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--host&lt;/span&gt; &amp;lt;DBサーバIP&amp;gt; &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; &amp;lt;ポート番号&amp;gt; &lt;span class=&quot;nt&quot;&gt;--quick&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--single-transaction&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--quote-names&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--ignore-table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;無視テーブル名1&amp;gt; &lt;span class=&quot;nt&quot;&gt;--ignore-table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;無視テーブル2&amp;gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; 出力ファイル名.sql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;少しオプションが多いですが、いくつかオプションをが入っていることで、安全面や速度の効果を期待できます。&lt;/p&gt;
+
+&lt;p&gt;いくつかのオプションをデフォルトで動くケースではオプション数を減らせます。
+例えばlocalhostのMySQLにrootで全テーブルをバックアップする場合は次のようになります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysqldump &lt;span class=&quot;nt&quot;&gt;-uroot&lt;/span&gt; hoge_database &lt;span class=&quot;nt&quot;&gt;--quote-names&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--single-transaction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; hoge.sql
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;使用するオプション&quot;&gt;使用するオプション&lt;/h2&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt;コマンドで既に使ったことのあるオプションは省略します。&lt;/p&gt;
+
+&lt;h3 id=&quot;--quickオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--quick&lt;/code&gt;オプション&lt;/h3&gt;
+
+&lt;p&gt;テーブルのレコードをバッファせず1行ずつダンプする。デフォルトで有効なので、明示的にする目的以外では指定しなくても問題ありません。&lt;/p&gt;
+
+&lt;p&gt;なお&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--skip-quick&lt;/code&gt;を使用すれば、ダンプ前にテーブル内容をメモリにバッファリングしますが、サイズの大きいテーブルがあるとメモリ不足を起こします。&lt;/p&gt;
+
+&lt;h3 id=&quot;--single-transactionオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--single-transaction&lt;/code&gt;オプション&lt;/h3&gt;
+
+&lt;p&gt;一貫した状態でダンプする。ただし、InnoDBテーブルのみ有効。&lt;/p&gt;
+
+&lt;p&gt;MyISAMテーブルを含むDBでは効果がないですが、MySQL5.6からはデフォルトストレージエンジンはInnoDBとなってるので気にするケースは少ないかと思います。&lt;/p&gt;
+
+&lt;p&gt;なお、MyISAMテーブルを含むDBでは、–lock-tablesか–lock-all-tablesを使います。&lt;/p&gt;
+
+&lt;h3 id=&quot;--ignore-tableオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--ignore-table&lt;/code&gt;オプション&lt;/h3&gt;
+
+&lt;p&gt;指定されたテーブルはダンプの対象から外れます。
+複数テーブル指定は複数個オプションを渡します。&lt;/p&gt;
+
+&lt;h3 id=&quot;--quote-namesオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--quote-names&lt;/code&gt;オプション&lt;/h3&gt;
+
+&lt;p&gt;識別子を逆引用符文字(バックティック)で囲みます。識別に予約ワードが含まれても問題を起こさないようにします。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLデータベースサーバからデータベースを論理バックアップするには、mysqldumpコマンドを使います。ただ呼ぶだけでなく、いくつかオプションをつけることでより効果良くします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLユーザーの一覧や権限を表示して確認する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-show-user-and-grants" rel="alternate" type="text/html" title="MySQLユーザーの一覧や権限を表示して確認する" /><published>2021-01-26T00:00:00+09:00</published><updated>2021-01-26T02:48:33+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-show-user-and-grants</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-show-user-and-grants">&lt;p&gt;MySQLユーザーの一覧表示や、ユーザーが持つ権限を表示する方法について整理します。&lt;/p&gt;
 
 &lt;h2 id=&quot;mysqlユーザー情報を一覧表示する&quot;&gt;MySQLユーザー情報を一覧表示する&lt;/h2&gt;
 &lt;p&gt;MySQLのユーザー情報を表示するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt;データベースの&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt;テーブルを表示します。&lt;br /&gt;
@@ -1062,241 +1114,4 @@ TypeScriptやSCSSを使ったほうが生産的です。&lt;br /&gt;
 &lt;p&gt;アセットパイプラインは、パフォーマンス目的のためにファイル(アセット)をミニファイやファイル結合、トランスパイルするフレームワークです。&lt;/p&gt;
 
 &lt;p&gt;実際の使い方は、&lt;span&gt;&lt;a href=&quot;/ruby/rails/ruby-rails-assets-pipeline-use&quot;&gt;Railsのアセットパイプラインの使い方を最短理解する&lt;/a&gt;&lt;/span&gt;
-にまとめてあります。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="asset-pipeline" /><summary type="html">Railsのアセットパイプラインは、最先端ではないですが、現状の開発において必要な仕組みです。 最近ではフロントエンドと分離する傾向がありますが、それでもアセットパイプラインを使ったサービスはたくさんあります。 今回、手っ取り早く全体像を理解するためにまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する</title><link href="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage" rel="alternate" type="text/html" title="公開鍵認証によるSSHで使う鍵管理をssh-agentで楽する" /><published>2020-08-18T00:00:00+09:00</published><updated>2021-01-26T03:28:09+09:00</updated><id>https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage</id><content type="html" xml:base="https://blog.mothule.com/tools/ssh/tools-ssh-ssh-agent-usage">&lt;p&gt;ssh接続で使う公開鍵のパスフレーズ入力は面倒ですが、ssh-agentでパスフレーズ入力を代理してくれます。&lt;br /&gt;
-また、複数サーバを横断する場合に鍵の管理に困りますが、ssh-agentで秘密鍵をサーバに配置せずに済みます。&lt;/p&gt;
-
-&lt;h2 id=&quot;ssh-agentとは&quot;&gt;ssh-agentとは？&lt;/h2&gt;
-&lt;p&gt;ssh-agentは認証代理プログラムです。&lt;br /&gt;
-RSAやDSA、ECDSAなど公開鍵認証に使う秘密鍵をメモリ上に保持します。&lt;br /&gt;
-エージェントプロセスが生きている間は、sshログイン時のパスフレーズ入力を代理します。&lt;/p&gt;
-
-&lt;h2 id=&quot;ssh-agentの最大のメリット&quot;&gt;ssh-agentの最大のメリット&lt;/h2&gt;
-&lt;p&gt;ssh-agentはパスフレーズを代理してくれることですが、最もその効果を発揮するのは、&lt;br /&gt;
-複数サーバーを跨いだ認証で、サーバ毎に秘密鍵の配置が不要になります。&lt;br /&gt;
-インターネット上に秘密鍵を配置するリスクを負わずに、ローカル上で秘密鍵を保持しててもエージェントが認証を代理してくれます。&lt;br /&gt;
-ssh-agentを使わない場合は、踏み台サーバにサーバBへの秘密鍵を置くなどリスクまたは手間が生じます。&lt;/p&gt;
-
-&lt;p&gt;&lt;a href=&quot;/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/ssh-agent-multi-server.png&quot;&gt;&lt;img src=&quot;/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/ssh-agent-multi-server.png&quot; width=&quot;100%&quot; alt=&quot;複数サーバでのssh-agent&quot; /&gt;&lt;/a&gt;&lt;/p&gt;
-
-&lt;p&gt;ssh-agentを使うことで、認証データを他PCに保存不要で、パスフレーズがネットワークに乗りません。&lt;br /&gt;
-秘密鍵を必要とする操作をエージェントによって実行されるため、&lt;br /&gt;
-秘密鍵はエージェントを使うクライアントに公開されません。&lt;/p&gt;
-
-&lt;h2 id=&quot;ssh-agentの起動&quot;&gt;ssh-agentの起動&lt;/h2&gt;
-
-&lt;p&gt;ssh-agentを起動するには&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-agent&lt;/code&gt;コマンドを使います。&lt;br /&gt;
-実行するとシェルスクリプトが表示されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-agent
-&lt;span class=&quot;nv&quot;&gt;SSH_AUTH_SOCK&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;/var/folders/45/7f_wlrcs3xv6rmstcz2l5_000000gn/T//ssh-2tCfpXRm9s6R/agent.12199&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;SSH_AUTH_SOCK&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;SSH_AGENT_PID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;12200&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;export &lt;/span&gt;SSH_AGENT_PID&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;Agent pid 12200&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;このスクリプトを実行して環境変数を登録する必要があります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;SSH_AUTH_SOCK環境変数: unixドメインソケットの名前が入る&lt;/li&gt;
-  &lt;li&gt;SSH_AGENT_PID環境変数: エージェントのプロセスIDが入る&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;p&gt;なので、通常は起動には、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eval&lt;/code&gt;コマンドを使い、出力をそのまま実行します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eval&lt;/span&gt; &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;ssh-agent&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;
-Agent pid 12200
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ssh-agentの起動オプション一覧&quot;&gt;ssh-agentの起動オプション一覧&lt;/h3&gt;
-
-&lt;p&gt;エージェントの起動には様々なオプションを渡せます。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-agent [-c | -s] [-Dd] [-a bind_address] [-E fingerprint_hash] [-P pkcs11_whitelist] [-t life] [command [arg ...]]&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-agent&lt;/code&gt;コマンドで使えるオプションを説明します。&lt;/p&gt;
-
-&lt;h4 id=&quot;-a-bind_address-unixドメインソケットのパス指定&quot;&gt;-a bind_address: UNIXドメインソケットのパス指定&lt;/h4&gt;
-&lt;p&gt;ssh-agentを指定したUNIXドメインソケットにバインドします。&lt;br /&gt;
-デフォルトは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$TMPDIR/ssh-XXXXXXXXXX/agent.&amp;lt;ppid&amp;gt;&lt;/code&gt;です。&lt;/p&gt;
-
-&lt;h4 id=&quot;-c-cシェルでログイン&quot;&gt;-c: Cシェルでログイン&lt;/h4&gt;
-&lt;p&gt;起動時に表示するシェルをCシェルコマンドで出力します。
-SHELL環境変数の値がcsh互換性の場合は、この出力がデフォルトです。&lt;/p&gt;
-
-&lt;h4 id=&quot;-s-bourneシェルでログイン&quot;&gt;-s: Bourneシェルでログイン&lt;/h4&gt;
-&lt;p&gt;起動時に表示するシェルをBourneシェル(所謂sh)コマンドで出力します。
-SHELL環境変数の値がsh互換性の場合は、この出力がデフォルトです。&lt;/p&gt;
-
-&lt;h4 id=&quot;-d-フォアグラウンドで起動&quot;&gt;-D: フォアグラウンドで起動&lt;/h4&gt;
-&lt;p&gt;フォアグラウンドモードで起動します。&lt;br /&gt;
-このオプションを使うとssh-agentはforkを使わなくなります。&lt;/p&gt;
-
-&lt;h4 id=&quot;-d-デバッグモードで起動&quot;&gt;-d: デバッグモードで起動&lt;/h4&gt;
-&lt;p&gt;デバッグモードで起動します。&lt;br /&gt;
-このオプションを使うとssh-agentはforkを使わず、デバッグ情報を標準エラーに出力します。&lt;/p&gt;
-
-&lt;h4 id=&quot;-e-fingerprint_hash-フィンガープリントのハッシュ関数を指定&quot;&gt;-E fingerprint_hash: フィンガープリントのハッシュ関数を指定&lt;/h4&gt;
-&lt;p&gt;キーのフィンガープリントを使うハッシュ関数を指定します。&lt;br /&gt;
-オプションは、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;md5&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sha256&lt;/code&gt;で、デフォルトは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;sha256&lt;/code&gt;です。&lt;/p&gt;
-
-&lt;h4 id=&quot;-p-pkcs11_whitelist-pkcs11共有ライブラリのパス指定&quot;&gt;-P pkcs11_whitelist: PKCS#11共有ライブラリのパス指定&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ss-add&lt;/code&gt;に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-s&lt;/code&gt;オプションを使って追加できるPKCS#11共有ライブラリの受け入れ可能なパスパターンリストを指定する。&lt;br /&gt;
-デフォルトは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/lib/*&lt;/code&gt;、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/usr/local/lib/*&lt;/code&gt;からPKCS#11ライブラリをロードします。&lt;/p&gt;
-
-&lt;p&gt;渡されたホワイトリストに一致しないPKCS#11ライブラリは拒否します。&lt;/p&gt;
-
-&lt;h4 id=&quot;-t-life-追加した鍵の保持寿命設定&quot;&gt;-t life: 追加した鍵の保持寿命設定&lt;/h4&gt;
-&lt;p&gt;エージェントに追加されるIDの最大存続時間のデフォルト値を設定します。&lt;br /&gt;
-存続時間は秒単位やsshd_configで指定された時間形式で指定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add&lt;/code&gt;でIDに指定された有効期限は、この値を上書きします。&lt;br /&gt;
-このオプションがない場合の最大存続時間は無制限です。&lt;/p&gt;
-
-&lt;p&gt;保持寿命を設定することで、プロセスが起動し続けてても寿命過ぎるとエージェントから削除されるので、セキュリティ制御ができるようになります。&lt;/p&gt;
-
-&lt;h2 id=&quot;ssh-agentの終了&quot;&gt;ssh-agentの終了&lt;/h2&gt;
-
-&lt;p&gt;エージェントを終了するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-agent&lt;/code&gt;に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-k&lt;/code&gt;オプションを渡します。&lt;br /&gt;
-現在のエージェントを強制終了します。&lt;br /&gt;
-終了する対象エージェントは環境変数&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SSH_AGENT_PID&lt;/code&gt;のPIDを終了します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-agent [-c | -s] -k&lt;/code&gt;&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-c&lt;/code&gt;と&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-s&lt;/code&gt;は起動時に渡したのであれば同じように渡します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-agent &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;unset &lt;/span&gt;SSH_AUTH_SOCK&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;unset &lt;/span&gt;SSH_AGENT_PID&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;Agent pid 12200 killed&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;終了処理も起動と同じでシェルスクリプトが表示されるので、終了時は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eval&lt;/code&gt;コマンドで囲います。&lt;/p&gt;
-
-&lt;h3 id=&quot;指定のエージェントを終了&quot;&gt;指定のエージェントを終了&lt;/h3&gt;
-&lt;p&gt;起動時に環境変数&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SSH_AGENT_PID&lt;/code&gt;がセットされてるので、&lt;br /&gt;
-通常は問題になりませんが、起動時に環境変数が未登録だと、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SSH_AGENT_PID not set, cannot kill agent&lt;/code&gt;が表示されます。&lt;br /&gt;
-つまり、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SSH_AGENT_PID&lt;/code&gt;に終了したいエージェントのPIDをセットすることで、指定エージェントを終了できます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;ssh-agent
-mothule          28671   0.0  0.0  4334652    612 s002  U+    4:33AM   0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;ssh-agent
-mothule          27257   0.0  0.0  4300640    428   ??  Ss    4:33AM   0:00.00 ssh-agent
-mothule          26972   0.0  0.0  4289376    428   ??  Ss    4:33AM   0:00.00 ssh-agent
-
-&lt;span class=&quot;nv&quot;&gt;$ SSH_AGENT_PID&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;27257 ssh-agent &lt;span class=&quot;nt&quot;&gt;-k&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;unset &lt;/span&gt;SSH_AUTH_SOCK&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;unset &lt;/span&gt;SSH_AGENT_PID&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-&lt;span class=&quot;nb&quot;&gt;echo &lt;/span&gt;Agent pid 27257 killed&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;ssh-agent
-mothule          28703   0.0  0.0  4268300    704 s002  S+    4:35AM   0:00.00 &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;ssh-agent
-mothule          26972   0.0  0.0  4289376    428   ??  Ss    4:33AM   0:00.00 ssh-agent
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ssh-agentに鍵追加&quot;&gt;ssh-agentに鍵追加&lt;/h2&gt;
-&lt;p&gt;当然ながらssh-agentの起動直後は秘密鍵がありません。&lt;br /&gt;
-鍵の追加は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ssh/config&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AddKeysToAgent&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add&lt;/code&gt;で追加していきます。
-ややこしいですが、削除や確認にも&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add&lt;/code&gt;を使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;addkeystoagentで登録する&quot;&gt;AddKeysToAgentで登録する&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AddKeysToAgent&lt;/code&gt;は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ssh/config&lt;/code&gt;で使うオプションです。&lt;br /&gt;
-ホスト毎に指定できて、指定されてることで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-agent&lt;/code&gt;に秘密鍵の追加有無を設定できます。&lt;/p&gt;
-
-&lt;h4 id=&quot;addkeystoagent未指定&quot;&gt;AddKeysToAgent未指定&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AddKeysToAgent&lt;/code&gt;未指定の&lt;em&gt;~/.ssh/config&lt;/em&gt;です。&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Host github
-  HostName github.com
-  IdentityFile ~/.ssh/github
-  User git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AddKeysToAgent&lt;/code&gt;がないと、パスフレーズを求められます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh github
-Enter passphrase &lt;span class=&quot;k&quot;&gt;for &lt;/span&gt;key &lt;span class=&quot;s1&quot;&gt;'/Users/mothule/.ssh/github'&lt;/span&gt;:
-PTY allocation request failed on channel 0
-Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
-Connection to github.com closed.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;addkeystoagent指定&quot;&gt;AddKeysToAgent指定&lt;/h4&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-agent&lt;/code&gt;への鍵登録を許可するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AddKeysToAgent&lt;/code&gt;で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;yes&lt;/code&gt;が指定します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AddKeysToAgent&lt;/code&gt;が指定された&lt;em&gt;~/.ssh/config&lt;/em&gt;です。&lt;/p&gt;
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;Host github
-  HostName github.com
-  IdentityFile ~/.ssh/github
-  User git
-  AddKeysToAgent yes
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AddKeysToAgent&lt;/code&gt;があると、パスフレーズは求められません。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh github
-PTY allocation request failed on channel 0
-Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
-Connection to github.com closed.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;もし指定鍵がssh-agentから見つからない場合は、パスフレーズをユーザーから求めた後に自動でssh-agentに登録します。&lt;/p&gt;
-
-&lt;h3 id=&quot;ssh-addでキー追加する&quot;&gt;ssh-addでキー追加する&lt;/h3&gt;
-&lt;p&gt;ssh-addは認証エージェント(ssh-agent)に秘密鍵IDを追加するプログラムです。&lt;br /&gt;
-そのため、ssh-addを使うには、ssh-agentが実行されていて、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;SSH_AUTH_SOCK&lt;/code&gt;環境変数にエージェントへのソケット名が含まれてる必要があります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add 秘密鍵パス&lt;/code&gt;で秘密鍵を追加します。&lt;br /&gt;
-引数なしで実行すると、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.ssh/id_rsa&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.ssh/id_dsa&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.ssh/id_ecdsa&lt;/code&gt; &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/.ssh/id_ed25519&lt;/code&gt;の秘密鍵を追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-add .ssh/github
-Enter passphrase &lt;span class=&quot;k&quot;&gt;for&lt;/span&gt; .ssh/github:
-Identity added: .ssh/github &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;mothule@mothule.local&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-add &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt;
-3072 SHA256:Ik22naSN6JXh0HGRjifWkBDERYUy8Td2dvDYUt3wGpE mothule@mothule.local &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;RSA&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh github
-PTY allocation request failed on channel 0
-Hi mothule! You have successfully authenticated, but GitHub does not provide shell access.
-Connection to github.com closed.
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;ssh-agentの登録済み鍵の確認&quot;&gt;ssh-agentの登録済み鍵の確認&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add -l&lt;/code&gt;で登録済み鍵をフィンガープリントで一覧表示します。&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add -L&lt;/code&gt;で登録済み鍵の公開鍵を一覧表示します。&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;ssh-agentの登録済み鍵の削除&quot;&gt;ssh-agentの登録済み鍵の削除&lt;/h2&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add -d&lt;/code&gt;で指定鍵の削除&lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add -D&lt;/code&gt;で登録済み鍵の全削除&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;鍵の保持寿命を設定&quot;&gt;鍵の保持寿命を設定&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-add -t life&lt;/code&gt;で追加する鍵をエージェントが保持する期間を設定できます。&lt;br /&gt;
-未指定の場合は、エージェントのデフォルト値が期間として使われます。&lt;br /&gt;
-エージェントのデフォルト値も未指定だと期間は無制限になります。&lt;/p&gt;
-
-&lt;p&gt;無制限はセキュリティの観点からしてリスクがあるので、一定の期間を設けておくことを推奨します。&lt;/p&gt;
-
-&lt;h2 id=&quot;ssh-agentを接続先ホストでも使うssh-agent-forwarding&quot;&gt;ssh-agentを接続先ホストでも使う(SSH Agent forwarding)&lt;/h2&gt;
-&lt;p&gt;Agent forwardingで接続することで、接続先ホストでローカルのssh-agentを使うことができます。&lt;br /&gt;
-つまり、接続先ホストに秘密鍵をおかずに、秘密鍵を使うことができるようになります。&lt;/p&gt;
-
-&lt;h3 id=&quot;agent-forwardingの事前条件&quot;&gt;Agent forwardingの事前条件&lt;/h3&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;SSHサーバが&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;AllowAgentForwarding&lt;/code&gt;の許可が必要&lt;/li&gt;
-  &lt;li&gt;SSHクライアント接続時に何れかの方法で指定する
-    &lt;ul&gt;
-      &lt;li&gt;sshコマンドに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-A&lt;/code&gt;オプションを渡す(セッション毎)&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.ssh/config&lt;/code&gt;に全体またはホスト毎に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ForwardAgent yes&lt;/code&gt;を記載する(ユーザー・ホスト毎)&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/ssh/ssh_config&lt;/code&gt;に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ForwardAgent yes&lt;/code&gt;を記載する(システム全体)&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;ssh-agentのリスク&quot;&gt;ssh-agentのリスク&lt;/h2&gt;
-
-&lt;p&gt;便利なssh-agentですが、運用にはリスクが伴います。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;man ssh&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-A&lt;/code&gt;でも記載されてますが、Agent forwardingには一定のセキュリティリスクが潜在します。&lt;br /&gt;
-またssh-agentはパスフレーズを一度登録すればなしにしてしまうので、キーの保持寿命を設定するなど使用には注意が必要です。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="ssh" /><category term="ssh-agent" /><summary type="html">ssh接続で使う公開鍵のパスフレーズ入力は面倒ですが、ssh-agentでパスフレーズ入力を代理してくれます。 また、複数サーバを横断する場合に鍵の管理に困りますが、ssh-agentで秘密鍵をサーバに配置せずに済みます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2020-08-18-tools-ssh-ssh-agent-usage/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+にまとめてあります。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="asset-pipeline" /><summary type="html">Railsのアセットパイプラインは、最先端ではないですが、現状の開発において必要な仕組みです。 最近ではフロントエンドと分離する傾向がありますが、それでもアセットパイプラインを使ったサービスはたくさんあります。 今回、手っ取り早く全体像を理解するためにまとめました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
