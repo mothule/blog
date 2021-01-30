@@ -44,8 +44,10 @@ cairo				freetype			gnu-sed				jemalloc			libuv				mono				parallel			pstree				
 `-l`オプションでAZ順のリスト表示になります。  
 ブログで全部表示すると量が多いので一部となります。
 
+なおバージョン2.7.7だと、`--formula`オプションを追加しないと想定通りに表示されなくなりました。
+
 ```sh
-$ brew list -l
+$ brew list -l --formula
 total 0
 drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 apr
 drwxr-xr-x  3 mothule  admin   96 Jul  1  2018 apr-util
