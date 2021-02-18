@@ -112,13 +112,13 @@ end
 
 puts 'Analyzing...'
 
-article_count = Dir.glob('./ws/_posts/*.md').count
+article_count = Dir.glob('./ws/_posts/**/*.md').count
 
 root = Node.new(parent: nil, category: 'root')
 
 articles = []
 
-article_paths = Array.wrap(Dir.glob('./ws/_posts/*.md')) + Array.wrap(Dir.glob('./ws/_drafts/*.md'))
+article_paths = Array.wrap(Dir.glob('./ws/_posts/**/*.md')) + Array.wrap(Dir.glob('./ws/_drafts/**/*.md'))
 article_paths.each do |post_path|
   article = Article.import_from(path: post_path)
   articles << article
