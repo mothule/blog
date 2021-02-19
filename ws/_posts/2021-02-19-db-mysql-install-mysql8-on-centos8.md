@@ -181,6 +181,7 @@ Success.
 All done!
 ```
 
+なお、`mysql_secure_installation`に関しては公式リファに説明があります。
 [MySQL 5.6 リファレンスマニュアル - MySQL インストールのセキュリティー改善]([https://dev.mysql.com/doc/refman/5.6/ja/mysql-secure-installation.html](https://dev.mysql.com/doc/refman/5.6/ja/mysql-secure-installation.html))
 
 ## MySQLユーザーを作成する
