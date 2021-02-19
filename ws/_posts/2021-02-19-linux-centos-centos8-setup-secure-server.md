@@ -235,6 +235,11 @@ success
 
 サービスとして登録・管理する方法もあります。そちらに関しては「{% post_link_text 2021-02-19-linux-centos-firewalld-create-new-service %}」にまとめてあります。
 
+### firewalldが未起動でポートやサービスを登録する
+通常はfirewalldに許可するポートやサービスを登録したり削除したり編集するにはfirewalldが起動していることが必須となります。
+しかしファイルを直接編集することで、firewalldが未起動でも登録や削除が可能です。詳しくは「{% post_link_text 2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive %}」にまとめてあります。
+
+
 ### sshd_configのPortを変更
 SSHのポート番号は`/etc/ssh/sshd_config`の`Port`の数字で定義されています。
 この数字を22ではない別の番号にすることでSSHで使うポート番号を変更できます。
@@ -254,3 +259,15 @@ $ systemctl reload sshd
 ```sh
 $ ssh main@ip_address -p new_port_number
 ```
+
+これにより不正ログイン試行によるログがなくなるかと思います。
+なおログはCentOSでは`/var/log/secure`に蓄積されています。次のシェルで抽出できます。
+
+```sh
+$ sudo cat /var/log/secure | grep sshd | grep Failed
+```
+
+## 完璧・万全ではない
+冒頭の注意でも説明したように今回のセットアップを実施してもあらゆるケースをカバーできるわけではありません。
+今回のセキュリティ対策は私自身が納得できる強度となります。
+この納得できる度合いは人それぞれであるため、不足を感じたのであれば別途記事や書籍を参照することをおすすめします。

@@ -205,3 +205,7 @@ public (active)
 ```
 
 なお、くれぐれも変更したポートで接続できたのを確認してから外してください。確認を怠りSSHログインができないまま外してしまうと締め出されてしまいます。
+
+## firewalldが未起動でポートやサービスを登録する
+通常はfirewalldに許可するポートやサービスを登録したり削除したり編集するにはfirewalldが起動していることが必須となります。
+しかしファイルを直接編集することで、firewalldが未起動でも登録や削除が可能です。詳しくは「{% post_link_text 2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive %}」にまとめてあります。
