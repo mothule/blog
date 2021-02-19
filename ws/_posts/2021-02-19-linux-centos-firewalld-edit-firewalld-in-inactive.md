@@ -1,5 +1,6 @@
 ---
 title: CentOS8のfirewalldが未起動のままポート許可やサービス登録する
+description: LinuxのCentOSのfirewalldを起動せずにSSHのポート番号の変更先を許可したりサービスを登録する方法を説明します。
 categories: linux centos
 tags: linux centos firewalld
 image:
