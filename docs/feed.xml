@@ -1,372 +1,62 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-02-22T15:04:57+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos" rel="alternate" type="text/html" title="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-22T14:52:28+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">&lt;p&gt;Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-02-22T15:32:10+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">bundler(1.17.2)で–path=vendor/bundleつけたら警告出た話</title><link href="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option" rel="alternate" type="text/html" title="bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話" /><published>2021-02-22T00:00:00+09:00</published><updated>2021-02-22T15:28:59+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option">&lt;p&gt;Railsの空アプリを作りたくて、bundler(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1.17.2&lt;/code&gt;)で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path&lt;/code&gt;をつけてインストール実行したら、警告が表示されるようになってた。&lt;/p&gt;
 
-&lt;h2 id=&quot;サーバー構築やアプリのデプロイの内部イメージついてますか&quot;&gt;サーバー構築やアプリのデプロイの内部イメージついてますか？&lt;/h2&gt;
-&lt;p&gt;インフラ構築はAnsible、RailsアプリのデプロイはCapistranoを使うのが定番です。
-しかし、内部を知らずにそれら使うと、実際のインフラ構築やデプロイのオペレーションがイメージできず頭がついてこれません。
-自身の中でフローをイメージできることは、AnsibleやCapistranoを使うときに最適な処理を構築には必須です。&lt;/p&gt;
+&lt;h2 id=&quot;--pathvendorbundleで表示された警告&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path=vendor/bundle&lt;/code&gt;で表示された警告&lt;/h2&gt;
 
-&lt;p&gt;そのため、この記事ではAnsibleやCapistranoを使わない方法でインフラ構築やデプロイ作業を行いました。
-具体的にはそれぞれ次の方法で実現します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Ansibleを使わずnginx × Puma × Rails環境を手作業で構築&lt;/li&gt;
-  &lt;li&gt;Capistranoを使わずgitやSSHを使ってデプロイ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;対象読者&quot;&gt;対象読者&lt;/h3&gt;
-&lt;p&gt;Mac上でrbenvでRuby環境を構築し、Railsアプリを作ったことがあるが、
-Linuxサーバにデプロイをしたことがない、またはデプロイはあるがイマイチ腹落ちできていない。&lt;/p&gt;
-
-&lt;h3 id=&quot;この記事のゴール&quot;&gt;この記事のゴール&lt;/h3&gt;
-&lt;p&gt;Macで作ったRailsアプリをCentOS8上に展開、起動できるようにする。
-コード更新を手作業で行えるようにする。&lt;/p&gt;
-
-&lt;h3 id=&quot;この記事でやらないこと&quot;&gt;この記事でやらないこと&lt;/h3&gt;
-&lt;p&gt;インフラ構築とデプロイがテーマなので、HTTPS対応とpuma_worker_killerは対応していません。&lt;/p&gt;
-
-&lt;h2 id=&quot;linuxcentosサーバの構築は省略&quot;&gt;Linux(CentOS)サーバの構築は省略&lt;/h2&gt;
-&lt;p&gt;この記事ではVPS上にCentOS8をインストールした後の内容となっています。
-CentOS8のセットアップについては「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-centos8-setup-secure-server&quot;&gt;CentOS8で不正SSHログイン対策したLinuxサーバ構築する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。
-またCnetOS上のRuby環境については「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-build-ruby-env-on-centos&quot;&gt;MacユーザがCentOS8にRuby環境を構築する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;p&gt;なお、今回はMySQLサーバは別サーバ上に立てていますが、記事内容には直接関わらないため、同一サーバにインストールしても問題ないはずです。
-ちなみにCentOS上にMySQLサーバ構築については「&lt;span&gt;&lt;a href=&quot;/db/mysql/db-mysql-install-mysql8-on-centos8&quot;&gt;CentOS8にMySQL8をインストールして構築する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;構築するサーバ構成&quot;&gt;構築するサーバ構成&lt;/h2&gt;
-&lt;p&gt;今回構築するサーバ構成を簡単に表すとこうなります。&lt;/p&gt;
-
-&lt;p&gt;nginx → puma → rails → mysql&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;nginxはリバースプロキシとして動かす&lt;/li&gt;
-  &lt;li&gt;nginx と puma間はUNIXドメインソケットで通信する&lt;/li&gt;
-  &lt;li&gt;rails と mysql間はTCP/IPで通信する&lt;/li&gt;
-  &lt;li&gt;railsアプリのデプロイはサーバにSSHで接続して作業する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;大まかなフロー&quot;&gt;大まかなフロー&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Railsアプリ用意&lt;/li&gt;
-  &lt;li&gt;サーバにGit環境用意&lt;/li&gt;
-  &lt;li&gt;サーバにPuma×Railsをデプロイ&lt;/li&gt;
-  &lt;li&gt;nginxのリバースプロキシ設定&lt;/li&gt;
-  &lt;li&gt;Pumaのデーモン化&lt;/li&gt;
-  &lt;li&gt;コードデプロイ&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;railsアプリを用意する&quot;&gt;Railsアプリを用意する&lt;/h2&gt;
-&lt;p&gt;まずはMac上に機能は何でもいいのでRailsアプリを用意します。
-あまり凝ったアプリだと躓いたときに原因特定に時間がかかるので、トップページ1つあるだけの簡単なアプリがおすすめです。&lt;/p&gt;
-
-&lt;p&gt;用意したらGitHubにプッシュします。
-publicレポジトリでも構わないですが、万が一セキュアな情報を誤ってpushするとリスクもありますし、実際の運用を考えるとprivateレポジトリにします。&lt;/p&gt;
-
-&lt;h2 id=&quot;サーバにgit環境用意&quot;&gt;サーバにGit環境用意&lt;/h2&gt;
-&lt;p&gt;最初はサーバとGitHub間のssh通信ができるようにSSH用のキーを作成します。
-普段MacからGitHub上のprivateレポジトリをクローンしてるように、サーバにも同等の機能をもたせます。&lt;/p&gt;
-
-&lt;p&gt;まずサーバにSSH接続したら&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-keygen&lt;/code&gt;で公開鍵と秘密鍵を作成します。
-作成したら公開鍵をコピーして、&lt;a href=&quot;[https://github.com/settings/keys](https://github.com/settings/keys)&quot;&gt;GitHubのSSH keys&lt;/a&gt;に追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.ssh/id_rsa.pub
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;o&quot;&gt;[&lt;/span&gt;DEPRECATED] The &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;nt&quot;&gt;--path&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt; flag is deprecated because it relies on being remembered across bundler invocations, which bundler will no longer &lt;span class=&quot;k&quot;&gt;do in &lt;/span&gt;future versions. Instead please use &lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;bundle config &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; path &lt;span class=&quot;s1&quot;&gt;'vendor/bundle'&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;, and stop using this flag
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;最近のバージョンであれば鍵長はデフォルト値でも十分だと思いますが、そこは自己責任でお願いします。&lt;/p&gt;
+&lt;p&gt;簡単に訳すと、&lt;/p&gt;
 
-&lt;p&gt;GitHubに公開鍵の登録が終わったら疎通確認としてSSH接続をテストします。
-正しくできていれば接続成功の表示がされます。&lt;/p&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path&lt;/code&gt;フラグは全体に依存してるため、非推奨となりました。将来的に無視します。
+代わりに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle config set —-local path 'vendor/bundle'&lt;/code&gt;でセットしてください。&lt;/p&gt;
 
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;com&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Hi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hogehoge!&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;You&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;have&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;successfully&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;authenticated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;but&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GitHub&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;does&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;provide&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;access&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;p&gt;とのこと。&lt;/p&gt;
+
+&lt;p&gt;今後は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path&lt;/code&gt;オプションではなく、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle config&lt;/code&gt;として設定してほしいということですね。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle config set —-local path 'vendor/bundle'&lt;/code&gt;を実行することで、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path&lt;/code&gt;と同様に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bundle/config&lt;/code&gt;に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BUNDLE_PATH&lt;/code&gt;が追記されます。&lt;/p&gt;
+
+&lt;h2 id=&quot;localとなってるがglobalでも設定される&quot;&gt;localとなってるがglobalでも設定される&lt;/h2&gt;
+&lt;p&gt;警告文には&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;local&lt;/code&gt;になっていますが、これはglobalで設定してしまえば、毎回初回実行時に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path&lt;/code&gt;フラグの指定が不要になるようです。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config path &lt;span class=&quot;s2&quot;&gt;&quot;vendor/bundle&quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;サーバにpumarailsをデプロイ&quot;&gt;サーバにPuma×Railsをデプロイ&lt;/h2&gt;
-&lt;p&gt;サーバ上にGit環境が整ったら、GitHubからPrivateレポジトリのコードをダウンロードできるようになります。
-事前にプッシュしておいたRailsアプリをダウンロードして、サーバー起動していきます。&lt;/p&gt;
-
-&lt;h3 id=&quot;githubのコードをサーバへcloneクローン&quot;&gt;GitHubのコードをサーバへClone(クローン)&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git clone&lt;/code&gt;でコードをダウンロードします。なお、コードの展開場所ですがネット記事だと&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/&lt;/code&gt;をよく見かけますが、現場ではユーザのホームディレクトリ上に展開してたりとマチマチです。&lt;/p&gt;
-
-&lt;p&gt;今回はホームディレクトリ上に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app&lt;/code&gt;フォルダ作ってそこの中に展開します。
-下記コードのGitHubアカウント名やレポジトリ名は適宜差し替えてください。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; ~/app
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/app
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone git@github.com:your_github_name/repo_name.git
+&lt;p&gt;ホームディレクトリの&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.bundle/config&lt;/code&gt;を見たところ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;BUNDLE_PATH&lt;/code&gt;が追加されていました。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.bundle/config
+&lt;span class=&quot;nt&quot;&gt;---&lt;/span&gt;
+BUNDLE_PATH: &lt;span class=&quot;s2&quot;&gt;&quot;vendor/bundle&quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;bundle-installでgemをインストール&quot;&gt;bundle installでgemをインストール&lt;/h3&gt;
-&lt;p&gt;ダウンロード完了したら、ローカル同様&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;でgemを取得します。&lt;/p&gt;
+&lt;p&gt;個人的には &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-j4&lt;/code&gt; フラグなどジョブ数指定も同様の扱いになってくれたほうが楽だったりする。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="gem" /><category term="bundler" /><summary type="html">Railsの空アプリを作りたくて、bundler(1.17.2)で--pathをつけてインストール実行したら、警告が表示されるようになってた。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linuxサーバのホスト名をhostnamectlで変更する</title><link href="https://blog.mothule.com/linux/linux-hostnamectl" rel="alternate" type="text/html" title="Linuxサーバのホスト名をhostnamectlで変更する" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T13:51:42+09:00</updated><id>https://blog.mothule.com/linux/linux-hostnamectl</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-hostnamectl">&lt;p&gt;CentOSやUbuntuなどLinuxサーバーのホスト名を変更するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;を使います。
+なおこの動作確認はCentOS8で検証しましたが、Ubuntuでも同様のようです。&lt;/p&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; path &lt;span class=&quot;s2&quot;&gt;&quot;vendor/bundle&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt;
+&lt;p&gt;bashやzshなどのシェルを使ってターミナルでサーバにSSH接続すると、
+プロンプトは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[user_name@hoge-123-12345.vs.sakura.ne.jp ~]$&lt;/code&gt;みたいになっており、
+今どのサーバに接続してるのか分かりにくいです。
+これを例えば、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[user_name@backend-api ~]$&lt;/code&gt;みたいに分かりやすくします。&lt;/p&gt;
+
+&lt;h2 id=&quot;初期ホスト名は覚えにくい&quot;&gt;初期ホスト名は覚えにくい&lt;/h2&gt;
+&lt;p&gt;VPSなどサーバ立てると、ホスト名は適当な名前が設定されます。&lt;/p&gt;
+
+&lt;p&gt;例えばさくらVPSだと、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge-123-12345.vs.sakura.ne.jp&lt;/code&gt;みたいなURLだとしたら、ホスト名は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge-123-12345&lt;/code&gt;という名前になっています。&lt;/p&gt;
+
+&lt;p&gt;このままでも作業に支障はありませんが、ホスト名を自分が分かりやすい名前にしておくと、複数サーバに接続しててもどのサーバに接続してるターミナルなのかすぐに見分けられるようになります。&lt;/p&gt;
+
+&lt;h2 id=&quot;ホスト名を変更する&quot;&gt;ホスト名を変更する&lt;/h2&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl set-hostname&lt;/code&gt;を使うことで簡単にホスト名を変更できます。
+変更後に再接続すると名前が反映されています。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;hostnamectl set-hostname &amp;lt;HOSTNAME&amp;gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h4 id=&quot;mysql2エラーが起きた場合&quot;&gt;mysql2エラーが起きた場合&lt;/h4&gt;
-&lt;p&gt;もしこのときmysql2 gemでエラーが出た場合は、サーバー上にMySQLに関するヘッダーファイルがないのかもしれません。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql-devel&lt;/code&gt;をインストールして再実行してみてください。&lt;/p&gt;
+&lt;h2 id=&quot;現在のホスト名を確認する&quot;&gt;現在のホスト名を確認する&lt;/h2&gt;
+&lt;p&gt;なお、現在設定されているホスト名を確認する方法は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;を使うことで確認できます。&lt;/p&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; mysql-devel
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;hostnamectl | &lt;span class=&quot;nb&quot;&gt;grep hostname
+   &lt;/span&gt;Static &lt;span class=&quot;nb&quot;&gt;hostname&lt;/span&gt;: your_cool_host_name
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h3 id=&quot;ローカルのrailsアプリからmasterkeyをサーバーへコピー&quot;&gt;ローカルのRailsアプリからmaster.keyをサーバーへコピー&lt;/h3&gt;
-&lt;p&gt;ローカル環境でproduction環境を実行しても気づきにくいかと思いますが、production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;が必要です。しかし&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;はGitHubにプッシュされないようになっています。なのでサーバに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;を渡す必要があります。この情報が渡っていないとRailsは暗号ファイルを復号できずproduction環境を実行できません。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scp master.key user_name@server_address:~/app/myapp/config/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;アセットのプリコンパイル実行&quot;&gt;アセットのプリコンパイル実行&lt;/h3&gt;
-&lt;p&gt;production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;assets&lt;/code&gt;フォルダ内のリソースは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;public/assets&lt;/code&gt;へ事前コンパイルが必要です。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake assets:precompile
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;centos8--puma--rails間のアクセス疎通確認&quot;&gt;CentOS8 → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
-&lt;p&gt;PumaはRackサーバ機能も兼ねているため、nginxなしでもアクセス可能です。
-なのでnginxを立てる前にPuma×Railsだけでアプリを立ち上げて問題なく疎通できるか確認をとっておきます。&lt;/p&gt;
-
-&lt;p&gt;ここをおろそかにしてnginxの構築へ進むと、もし動かない場合どの部分が原因で動かないのか原因特定範囲が広くなります。&lt;/p&gt;
-
-&lt;p&gt;なお、単純に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;だと外部からのアクセスできない状態なので、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt;も一緒に渡します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails s &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 0.0.0.0 &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; production
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Railsアプリが起動したら、ブラウザでルートページにアクセスして正常にページが表示されるか確認します。
-URLは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;サーバのIPアドレス:Pumaで設定してるポート番号&lt;/code&gt;になります。
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;routes.rb&lt;/code&gt;でroot設定していない場合は、存在するエンドポイントにアクセスして疎通確認してください。&lt;/p&gt;
-
-&lt;h4 id=&quot;pumaで設定してるポート番号&quot;&gt;Pumaで設定してるポート番号&lt;/h4&gt;
-&lt;p&gt;Pumaで設定してるポート番号は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;に定義されています。
-デフォルトのままであれば次のように定義されているはずです。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;nginxのリバースプロキシ設定&quot;&gt;nginxのリバースプロキシ設定&lt;/h2&gt;
-&lt;p&gt;Puma × Railsが無事動くことが確認できたら、次はnginxを前段に配置します。
-具体的にはPumaのlistenをポートからUNIXドメインソケットに変更して、PumaのlistenをポートからUNIXドメインソケットに変更します。
-こうすれば、nginxのリクエストをPumaのソケットに流れるようになります。
-まずはPuma側から対応します。&lt;/p&gt;
-
-&lt;h3 id=&quot;configpumarbのlistenをポートからunixドメインソケットに変更&quot;&gt;config/puma.rbのlistenをポートからUNIXドメインソケットに変更&lt;/h3&gt;
-&lt;p&gt;前述したPumaの設定ファイル(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;)では、ポート番号でlistenする設定になっています。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをUNIXドメインソケットに変更します。
-&lt;strong&gt;このときポート設定は必ずコメントアウトか削除してください。&lt;/strong&gt;
-ポート設定が残ったままUNIXドメインソケット設定を追記してもポート設定が優先されます。&lt;/p&gt;
-
-&lt;p&gt;bindでUNIXドメインソケットのファイル場所を設定します。
-Pumaが起動するとこのパス先にソケットファイルが作成されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# port        ENV.fetch(&quot;PORT&quot;) { 3000 }&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この状態でRailsアプリを実行すると、listen先がpuma.sockに変わります。
-またソケットファイルも作成されます。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginxのリクエストをpumaのunixドメインソケットに流す&quot;&gt;nginxのリクエストをPumaのUNIXドメインソケットに流す&lt;/h3&gt;
-&lt;p&gt;次はnginx側を変更します。
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http&lt;/code&gt;コンテキスト内に次のコードを追記します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に直接アプリ固有の設定を記入せず&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブを使ってアプリ毎に設定ファイルを分離して管理する方法がありますが、今回は省略します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# ここから&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_user_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_app_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sockets&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_read_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_connect_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_redirect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Proto&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$scheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;For&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# ここまでを追加する&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;ディレクティブに渡すパスは、Pumaのsocketファイルのパスを指定してください。&lt;/p&gt;
-
-&lt;p&gt;nginxが起動中なら変更を反映させます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
-もしくは
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;nginxの基礎に関しては「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step1-on-mac&quot;&gt;Macでnginxをインストールして起動する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginx起動&quot;&gt;nginx起動&lt;/h3&gt;
-&lt;p&gt;nginxを立ち上げます。
-2行目で自動起動を有効化します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl start nginx
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;nginx--puma--rails間のアクセス疎通確認&quot;&gt;nginx → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
-&lt;p&gt;ここまで設定すれば、ポート3000にアクセスしたらnginxがPumaにリクエストを上流しRailsアプリへ到達するようになっています。
-それを確かめるために疎通確認します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://your-server-ip-address:3000&lt;/code&gt;へアクセスしてRailsアプリのルートページが表示されれば疎通成功です。&lt;/p&gt;
-
-&lt;p&gt;もしうまく行かない場合はログを確認することで原因追求に役立ちます。ログは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/log/nginx/&lt;/code&gt; にアクセスログとエラーログがあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;ログにconnect-to-pumasockでpermission-deniedが出る場合&quot;&gt;ログにconnect() to puma.sockでPermission deniedが出る場合&lt;/h3&gt;
-
-&lt;p&gt;502 Bad Gatewayが出る場合は、nginxからPumaへのつなぎでエラーが出ている可能性があります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;connect&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; to unix:///home/mothule/app/rails_sample/tmp/sockets/puma.sock failed &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;13: Permission denied&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;nginxからpuma.socketへの権限がない場合このエラーが出ます。
-nginxを誰が実行してるか確認します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;nginx
-root       22126  0.0  2.1 120088 10276 ?        Ss   15:49   0:00 nginx: master process nginx
-nginx      22131  0.0  1.9 152720  9088 ?        S    15:49   0:00 nginx: worker process
-root       22170  0.0  0.2  10284  1056 pts/1    R+   15:53   0:00 &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;auto nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx&lt;/code&gt;ユーザーで動いています。実行ユーザーがRailsアプリを動かしているユーザーと同じでないとファイルの編集権限が足りず権限エラーになります。
-なのでnginxの実行ユーザーをRailsアプリを動かしているユーザーに変更します。&lt;/p&gt;
-
-&lt;p&gt;nginxの実行ユーザーの変更は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt;を変更します。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# user nginx
-user your_user_name
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;リロードも忘れずに行います。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
-または
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;railsアプリのデーモン化&quot;&gt;Railsアプリのデーモン化&lt;/h2&gt;
-&lt;p&gt;CentOS上にnginx/puma/railsが動くようにはなりました。
-しかし、サーバにはSSH接続しており、この状態でRailsを実行してるので、SSHが終了すると、Railsアプリも終了してしまいます。&lt;/p&gt;
-
-&lt;p&gt;本番環境でそれだと困るので、SSHが終了しても動くようにPumaをデーモン化する必要があります。
-puma.rbをいじってデーモン化します。また本番のみUNIXドメインソケット通信にし、それ以外ではnginxを介さずPuma単体でポートを開いて処理できるようにします。&lt;/p&gt;
-
-&lt;p&gt;次のコード&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;の全容です。
-デフォルトコードから余計なコメント等を削除し、本番時のみデーモン化させるコードを追加したものです。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;RAILS_MAX_THREADS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;threads&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'RAILS_ENV'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'development'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'production'&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# socket&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
-
-  &lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;state_path&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'tmp'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'pids'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.state'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;stdout_redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma-error.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;daemonize&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Specifies the `environment` that Puma will run in.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;environment&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Specifies the `pidfile` that Puma will use.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pidfile&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PIDFILE&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;tmp/pids/server.pid&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;state_path
-    &lt;ul&gt;
-      &lt;li&gt;pumaの状態を表したファイルで、pumactlが使います。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;stdout_redirect
-    &lt;ul&gt;
-      &lt;li&gt;STDOUTとSTDERRを指定ファイルにリダイレクトします。&lt;/li&gt;
-      &lt;li&gt;最後のBoolean型は出力を追加するかどうかです。デフォルトはfalseです。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;daemonize
-    &lt;ul&gt;
-      &lt;li&gt;pumaをデーモン実行するかどうか&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;コードデプロイ&quot;&gt;コードデプロイ&lt;/h2&gt;
-&lt;p&gt;最後にコード変更を反映させる方法です。
-nginx/puma/railsが既に動いている状態からコードを反映させます。&lt;/p&gt;
-
-&lt;p&gt;変更後のコードはGitHubに上がっているので、git pullでとってくることでサーバ上のコードを変更します。
-その後の反映ですが、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec pumactl restart&lt;/code&gt; をすることでpumaが再起動してくれて、コードが反映されます。&lt;/p&gt;
-
-&lt;h3 id=&quot;pumaにおけるrailsアプリの起動方法&quot;&gt;PumaにおけるRailsアプリの起動方法&lt;/h3&gt;
-&lt;p&gt;PumaをRackサーバに使う場合Railsアプリを起動する方法が3つあります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;コマンドを使う
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RAILS_ENV&lt;/code&gt;または&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-e&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;production&lt;/code&gt;であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma/production.rb&lt;/code&gt;をロード試行&lt;/li&gt;
-      &lt;li&gt;ファイルなければ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma.rb&lt;/code&gt;をロードします。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma&lt;/code&gt;コマンドを使う
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RACK_ENV&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pumactl&lt;/code&gt;コマンドを使う
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-F&lt;/code&gt;で指定されたファイルをロード&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails&lt;/code&gt;をロードしないため設定ファイルに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails.root&lt;/code&gt;などが使われていると例外エラーが発生する。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;起動と再起動はrails-s-と-rails-restart&quot;&gt;起動と再起動はrails s と rails restart&lt;/h3&gt;
-&lt;p&gt;この記事では最初の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;)で起動しています。
-そしてリロードは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails restart&lt;/code&gt;を使っています。
-これはpumaのプラグイン&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tmp_restart&lt;/code&gt;を入れることで、
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails_ restart&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;touch tmp/restart.txt&lt;/code&gt;することで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;restart&lt;/code&gt;を呼べるようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;に次のコードを入れることで使えるようになり、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails new&lt;/code&gt;で作成される&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;にはデフォルトで記入されてあります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;手作業でcentos8上にnginxとpumaとrailsを構築は良い経験&quot;&gt;手作業でCentOS8上にnginxとpumaとRailsを構築は良い経験&lt;/h2&gt;
-&lt;p&gt;リンク先も含め記事を順当に進めばCentOS8上にゼロからRailsアプリが動くまでを経験できて、普段コーディングしてるRailsアプリの土台がどのようになっているのかイメージできるようになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="web" /><category term="nginx" /><category term="linux" /><category term="centos" /><summary type="html">Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linuxのグループ操作をすぐ忘れる</title><link href="https://blog.mothule.com/linux/linux-edit-group" rel="alternate" type="text/html" title="Linuxのグループ操作をすぐ忘れる" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T14:29:45+09:00</updated><id>https://blog.mothule.com/linux/linux-edit-group</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-edit-group">&lt;p&gt;CentOSやUbuntuなどLinxuのグループ編集作業時に忘れてしまっているので、備忘録としてまとめます。&lt;/p&gt;
+&lt;p&gt;直接ファイルを変更する方法もありますが、まずは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;が使えるならこれを使ったほうが楽です。&lt;/p&gt;</content><author><name></name></author><category term="linux" /><summary type="html">CentOSやUbuntuなどLinuxサーバーのホスト名を変更するには、hostnamectlを使います。 なおこの動作確認はCentOS8で検証しましたが、Ubuntuでも同様のようです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-linux-hostnamectl/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-linux-hostnamectl/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linuxのグループ操作をすぐ忘れる</title><link href="https://blog.mothule.com/linux/linux-edit-group" rel="alternate" type="text/html" title="Linuxのグループ操作をすぐ忘れる" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T14:29:45+09:00</updated><id>https://blog.mothule.com/linux/linux-edit-group</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-edit-group">&lt;p&gt;CentOSやUbuntuなどLinxuのグループ編集作業時に忘れてしまっているので、備忘録としてまとめます。&lt;/p&gt;
 
 &lt;h2 id=&quot;linuxユーザーの所属グループ確認&quot;&gt;Linuxユーザーの所属グループ確認&lt;/h2&gt;
 &lt;p&gt;user_nameにユーザー名を指定すればそのユーザー名のグループを確認します。
@@ -1412,36 +1102,375 @@ allを剥奪します。&lt;/p&gt;
 &lt;h2 id=&quot;dbはインフラの中で比較的よく触る&quot;&gt;DBはインフラの中で比較的よく触る&lt;/h2&gt;
 &lt;p&gt;これでCentOS上にMySQLをインストール、稼働させることが出来たと思います。
 ただし、構築して終わりではなくWeb開発の現場では、MySQLなどのデータベースは他のインフラと比べて、比較的触る頻度が多いです。
-理由としては、RailsなどWebアプリケーションの実装の影響を受けやすく、Webパフォーマンスに影響するため、スロークエリを調べたりEXPLAINでインデックスが効いているか確認したりと、チューニング作業が発生するためです。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><category term="linux" /><category term="centos" /><summary type="html">CentOS8にMySQLをインストールします。なお当時のバージョンは8です。 公式からインストールする方法もありますが、ここではyumにあるバージョンを使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linuxサーバのホスト名をhostnamectlで変更する</title><link href="https://blog.mothule.com/linux/linux-hostnamectl" rel="alternate" type="text/html" title="Linuxサーバのホスト名をhostnamectlで変更する" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T13:51:42+09:00</updated><id>https://blog.mothule.com/linux/linux-hostnamectl</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-hostnamectl">&lt;p&gt;CentOSやUbuntuなどLinuxサーバーのホスト名を変更するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;を使います。
-なおこの動作確認はCentOS8で検証しましたが、Ubuntuでも同様のようです。&lt;/p&gt;
+理由としては、RailsなどWebアプリケーションの実装の影響を受けやすく、Webパフォーマンスに影響するため、スロークエリを調べたりEXPLAINでインデックスが効いているか確認したりと、チューニング作業が発生するためです。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><category term="linux" /><category term="centos" /><summary type="html">CentOS8にMySQLをインストールします。なお当時のバージョンは8です。 公式からインストールする方法もありますが、ここではyumにあるバージョンを使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos" rel="alternate" type="text/html" title="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-22T14:52:28+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">&lt;p&gt;Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。&lt;/p&gt;
 
-&lt;p&gt;bashやzshなどのシェルを使ってターミナルでサーバにSSH接続すると、
-プロンプトは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[user_name@hoge-123-12345.vs.sakura.ne.jp ~]$&lt;/code&gt;みたいになっており、
-今どのサーバに接続してるのか分かりにくいです。
-これを例えば、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;[user_name@backend-api ~]$&lt;/code&gt;みたいに分かりやすくします。&lt;/p&gt;
+&lt;h2 id=&quot;サーバー構築やアプリのデプロイの内部イメージついてますか&quot;&gt;サーバー構築やアプリのデプロイの内部イメージついてますか？&lt;/h2&gt;
+&lt;p&gt;インフラ構築はAnsible、RailsアプリのデプロイはCapistranoを使うのが定番です。
+しかし、内部を知らずにそれら使うと、実際のインフラ構築やデプロイのオペレーションがイメージできず頭がついてこれません。
+自身の中でフローをイメージできることは、AnsibleやCapistranoを使うときに最適な処理を構築には必須です。&lt;/p&gt;
 
-&lt;h2 id=&quot;初期ホスト名は覚えにくい&quot;&gt;初期ホスト名は覚えにくい&lt;/h2&gt;
-&lt;p&gt;VPSなどサーバ立てると、ホスト名は適当な名前が設定されます。&lt;/p&gt;
+&lt;p&gt;そのため、この記事ではAnsibleやCapistranoを使わない方法でインフラ構築やデプロイ作業を行いました。
+具体的にはそれぞれ次の方法で実現します。&lt;/p&gt;
 
-&lt;p&gt;例えばさくらVPSだと、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge-123-12345.vs.sakura.ne.jp&lt;/code&gt;みたいなURLだとしたら、ホスト名は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hoge-123-12345&lt;/code&gt;という名前になっています。&lt;/p&gt;
+&lt;ul&gt;
+  &lt;li&gt;Ansibleを使わずnginx × Puma × Rails環境を手作業で構築&lt;/li&gt;
+  &lt;li&gt;Capistranoを使わずgitやSSHを使ってデプロイ&lt;/li&gt;
+&lt;/ul&gt;
 
-&lt;p&gt;このままでも作業に支障はありませんが、ホスト名を自分が分かりやすい名前にしておくと、複数サーバに接続しててもどのサーバに接続してるターミナルなのかすぐに見分けられるようになります。&lt;/p&gt;
+&lt;h3 id=&quot;対象読者&quot;&gt;対象読者&lt;/h3&gt;
+&lt;p&gt;Mac上でrbenvでRuby環境を構築し、Railsアプリを作ったことがあるが、
+Linuxサーバにデプロイをしたことがない、またはデプロイはあるがイマイチ腹落ちできていない。&lt;/p&gt;
 
-&lt;h2 id=&quot;ホスト名を変更する&quot;&gt;ホスト名を変更する&lt;/h2&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl set-hostname&lt;/code&gt;を使うことで簡単にホスト名を変更できます。
-変更後に再接続すると名前が反映されています。&lt;/p&gt;
+&lt;h3 id=&quot;この記事のゴール&quot;&gt;この記事のゴール&lt;/h3&gt;
+&lt;p&gt;Macで作ったRailsアプリをCentOS8上に展開、起動できるようにする。
+コード更新を手作業で行えるようにする。&lt;/p&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;hostnamectl set-hostname &amp;lt;HOSTNAME&amp;gt;
+&lt;h3 id=&quot;この記事でやらないこと&quot;&gt;この記事でやらないこと&lt;/h3&gt;
+&lt;p&gt;インフラ構築とデプロイがテーマなので、HTTPS対応とpuma_worker_killerは対応していません。&lt;/p&gt;
+
+&lt;h2 id=&quot;linuxcentosサーバの構築は省略&quot;&gt;Linux(CentOS)サーバの構築は省略&lt;/h2&gt;
+&lt;p&gt;この記事ではVPS上にCentOS8をインストールした後の内容となっています。
+CentOS8のセットアップについては「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-centos8-setup-secure-server&quot;&gt;CentOS8で不正SSHログイン対策したLinuxサーバ構築する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。
+またCnetOS上のRuby環境については「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-build-ruby-env-on-centos&quot;&gt;MacユーザがCentOS8にRuby環境を構築する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;p&gt;なお、今回はMySQLサーバは別サーバ上に立てていますが、記事内容には直接関わらないため、同一サーバにインストールしても問題ないはずです。
+ちなみにCentOS上にMySQLサーバ構築については「&lt;span&gt;&lt;a href=&quot;/db/mysql/db-mysql-install-mysql8-on-centos8&quot;&gt;CentOS8にMySQL8をインストールして構築する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;構築するサーバ構成&quot;&gt;構築するサーバ構成&lt;/h2&gt;
+&lt;p&gt;今回構築するサーバ構成を簡単に表すとこうなります。&lt;/p&gt;
+
+&lt;p&gt;nginx → puma → rails → mysql&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;nginxはリバースプロキシとして動かす&lt;/li&gt;
+  &lt;li&gt;nginx と puma間はUNIXドメインソケットで通信する&lt;/li&gt;
+  &lt;li&gt;rails と mysql間はTCP/IPで通信する&lt;/li&gt;
+  &lt;li&gt;railsアプリのデプロイはサーバにSSHで接続して作業する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;大まかなフロー&quot;&gt;大まかなフロー&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Railsアプリ用意&lt;/li&gt;
+  &lt;li&gt;サーバにGit環境用意&lt;/li&gt;
+  &lt;li&gt;サーバにPuma×Railsをデプロイ&lt;/li&gt;
+  &lt;li&gt;nginxのリバースプロキシ設定&lt;/li&gt;
+  &lt;li&gt;Pumaのデーモン化&lt;/li&gt;
+  &lt;li&gt;コードデプロイ&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;railsアプリを用意する&quot;&gt;Railsアプリを用意する&lt;/h2&gt;
+&lt;p&gt;まずはMac上に機能は何でもいいのでRailsアプリを用意します。
+あまり凝ったアプリだと躓いたときに原因特定に時間がかかるので、トップページ1つあるだけの簡単なアプリがおすすめです。&lt;/p&gt;
+
+&lt;p&gt;用意したらGitHubにプッシュします。
+publicレポジトリでも構わないですが、万が一セキュアな情報を誤ってpushするとリスクもありますし、実際の運用を考えるとprivateレポジトリにします。&lt;/p&gt;
+
+&lt;h2 id=&quot;サーバにgit環境用意&quot;&gt;サーバにGit環境用意&lt;/h2&gt;
+&lt;p&gt;最初はサーバとGitHub間のssh通信ができるようにSSH用のキーを作成します。
+普段MacからGitHub上のprivateレポジトリをクローンしてるように、サーバにも同等の機能をもたせます。&lt;/p&gt;
+
+&lt;p&gt;まずサーバにSSH接続したら&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-keygen&lt;/code&gt;で公開鍵と秘密鍵を作成します。
+作成したら公開鍵をコピーして、&lt;a href=&quot;[https://github.com/settings/keys](https://github.com/settings/keys)&quot;&gt;GitHubのSSH keys&lt;/a&gt;に追加します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.ssh/id_rsa.pub
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;h2 id=&quot;現在のホスト名を確認する&quot;&gt;現在のホスト名を確認する&lt;/h2&gt;
-&lt;p&gt;なお、現在設定されているホスト名を確認する方法は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;を使うことで確認できます。&lt;/p&gt;
+&lt;p&gt;最近のバージョンであれば鍵長はデフォルト値でも十分だと思いますが、そこは自己責任でお願いします。&lt;/p&gt;
 
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;hostnamectl | &lt;span class=&quot;nb&quot;&gt;grep hostname
-   &lt;/span&gt;Static &lt;span class=&quot;nb&quot;&gt;hostname&lt;/span&gt;: your_cool_host_name
+&lt;p&gt;GitHubに公開鍵の登録が終わったら疎通確認としてSSH接続をテストします。
+正しくできていれば接続成功の表示がされます。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;com&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;Hi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hogehoge!&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;You&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;have&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;successfully&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;authenticated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;but&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GitHub&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;does&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;provide&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;access&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;直接ファイルを変更する方法もありますが、まずは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;が使えるならこれを使ったほうが楽です。&lt;/p&gt;</content><author><name></name></author><category term="linux" /><summary type="html">CentOSやUbuntuなどLinuxサーバーのホスト名を変更するには、hostnamectlを使います。 なおこの動作確認はCentOS8で検証しましたが、Ubuntuでも同様のようです。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-linux-hostnamectl/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-linux-hostnamectl/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">リモートワーク体制よりもまず自立組織型を目指すべき</title><link href="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work" rel="alternate" type="text/html" title="リモートワーク体制よりもまず自立組織型を目指すべき" /><published>2021-01-29T00:00:00+09:00</published><updated>2021-01-29T02:35:50+09:00</updated><id>https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work</id><content type="html" xml:base="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work">&lt;p&gt;コロナ渦もあり大手のITに弱い企業でも、リモートワーク体制を整える傾向です。&lt;br /&gt;
+&lt;h2 id=&quot;サーバにpumarailsをデプロイ&quot;&gt;サーバにPuma×Railsをデプロイ&lt;/h2&gt;
+&lt;p&gt;サーバ上にGit環境が整ったら、GitHubからPrivateレポジトリのコードをダウンロードできるようになります。
+事前にプッシュしておいたRailsアプリをダウンロードして、サーバー起動していきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;githubのコードをサーバへcloneクローン&quot;&gt;GitHubのコードをサーバへClone(クローン)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git clone&lt;/code&gt;でコードをダウンロードします。なお、コードの展開場所ですがネット記事だと&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/&lt;/code&gt;をよく見かけますが、現場ではユーザのホームディレクトリ上に展開してたりとマチマチです。&lt;/p&gt;
+
+&lt;p&gt;今回はホームディレクトリ上に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app&lt;/code&gt;フォルダ作ってそこの中に展開します。
+下記コードのGitHubアカウント名やレポジトリ名は適宜差し替えてください。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; ~/app
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/app
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone git@github.com:your_github_name/repo_name.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;bundle-installでgemをインストール&quot;&gt;bundle installでgemをインストール&lt;/h3&gt;
+&lt;p&gt;ダウンロード完了したら、ローカル同様&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;でgemを取得します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; path &lt;span class=&quot;s2&quot;&gt;&quot;vendor/bundle&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;mysql2エラーが起きた場合&quot;&gt;mysql2エラーが起きた場合&lt;/h4&gt;
+&lt;p&gt;もしこのときmysql2 gemでエラーが出た場合は、サーバー上にMySQLに関するヘッダーファイルがないのかもしれません。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql-devel&lt;/code&gt;をインストールして再実行してみてください。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; mysql-devel
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ローカルのrailsアプリからmasterkeyをサーバーへコピー&quot;&gt;ローカルのRailsアプリからmaster.keyをサーバーへコピー&lt;/h3&gt;
+&lt;p&gt;ローカル環境でproduction環境を実行しても気づきにくいかと思いますが、production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;が必要です。しかし&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;はGitHubにプッシュされないようになっています。なのでサーバに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;を渡す必要があります。この情報が渡っていないとRailsは暗号ファイルを復号できずproduction環境を実行できません。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scp master.key user_name@server_address:~/app/myapp/config/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;アセットのプリコンパイル実行&quot;&gt;アセットのプリコンパイル実行&lt;/h3&gt;
+&lt;p&gt;production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;assets&lt;/code&gt;フォルダ内のリソースは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;public/assets&lt;/code&gt;へ事前コンパイルが必要です。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake assets:precompile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;centos8--puma--rails間のアクセス疎通確認&quot;&gt;CentOS8 → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
+&lt;p&gt;PumaはRackサーバ機能も兼ねているため、nginxなしでもアクセス可能です。
+なのでnginxを立てる前にPuma×Railsだけでアプリを立ち上げて問題なく疎通できるか確認をとっておきます。&lt;/p&gt;
+
+&lt;p&gt;ここをおろそかにしてnginxの構築へ進むと、もし動かない場合どの部分が原因で動かないのか原因特定範囲が広くなります。&lt;/p&gt;
+
+&lt;p&gt;なお、単純に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;だと外部からのアクセスできない状態なので、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt;も一緒に渡します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails s &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 0.0.0.0 &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; production
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Railsアプリが起動したら、ブラウザでルートページにアクセスして正常にページが表示されるか確認します。
+URLは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;サーバのIPアドレス:Pumaで設定してるポート番号&lt;/code&gt;になります。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;routes.rb&lt;/code&gt;でroot設定していない場合は、存在するエンドポイントにアクセスして疎通確認してください。&lt;/p&gt;
+
+&lt;h4 id=&quot;pumaで設定してるポート番号&quot;&gt;Pumaで設定してるポート番号&lt;/h4&gt;
+&lt;p&gt;Pumaで設定してるポート番号は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;に定義されています。
+デフォルトのままであれば次のように定義されているはずです。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;nginxのリバースプロキシ設定&quot;&gt;nginxのリバースプロキシ設定&lt;/h2&gt;
+&lt;p&gt;Puma × Railsが無事動くことが確認できたら、次はnginxを前段に配置します。
+具体的にはPumaのlistenをポートからUNIXドメインソケットに変更して、PumaのlistenをポートからUNIXドメインソケットに変更します。
+こうすれば、nginxのリクエストをPumaのソケットに流れるようになります。
+まずはPuma側から対応します。&lt;/p&gt;
+
+&lt;h3 id=&quot;configpumarbのlistenをポートからunixドメインソケットに変更&quot;&gt;config/puma.rbのlistenをポートからUNIXドメインソケットに変更&lt;/h3&gt;
+&lt;p&gt;前述したPumaの設定ファイル(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;)では、ポート番号でlistenする設定になっています。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これをUNIXドメインソケットに変更します。
+&lt;strong&gt;このときポート設定は必ずコメントアウトか削除してください。&lt;/strong&gt;
+ポート設定が残ったままUNIXドメインソケット設定を追記してもポート設定が優先されます。&lt;/p&gt;
+
+&lt;p&gt;bindでUNIXドメインソケットのファイル場所を設定します。
+Pumaが起動するとこのパス先にソケットファイルが作成されます。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# port        ENV.fetch(&quot;PORT&quot;) { 3000 }&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この状態でRailsアプリを実行すると、listen先がpuma.sockに変わります。
+またソケットファイルも作成されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;nginxのリクエストをpumaのunixドメインソケットに流す&quot;&gt;nginxのリクエストをPumaのUNIXドメインソケットに流す&lt;/h3&gt;
+&lt;p&gt;次はnginx側を変更します。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http&lt;/code&gt;コンテキスト内に次のコードを追記します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に直接アプリ固有の設定を記入せず&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブを使ってアプリ毎に設定ファイルを分離して管理する方法がありますが、今回は省略します。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ここから&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_user_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_app_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sockets&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_read_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_connect_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_redirect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Proto&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$scheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;For&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ここまでを追加する&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;ディレクティブに渡すパスは、Pumaのsocketファイルのパスを指定してください。&lt;/p&gt;
+
+&lt;p&gt;nginxが起動中なら変更を反映させます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
+もしくは
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;nginxの基礎に関しては「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step1-on-mac&quot;&gt;Macでnginxをインストールして起動する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;nginx起動&quot;&gt;nginx起動&lt;/h3&gt;
+&lt;p&gt;nginxを立ち上げます。
+2行目で自動起動を有効化します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl start nginx
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;nginx--puma--rails間のアクセス疎通確認&quot;&gt;nginx → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
+&lt;p&gt;ここまで設定すれば、ポート3000にアクセスしたらnginxがPumaにリクエストを上流しRailsアプリへ到達するようになっています。
+それを確かめるために疎通確認します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://your-server-ip-address:3000&lt;/code&gt;へアクセスしてRailsアプリのルートページが表示されれば疎通成功です。&lt;/p&gt;
+
+&lt;p&gt;もしうまく行かない場合はログを確認することで原因追求に役立ちます。ログは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/log/nginx/&lt;/code&gt; にアクセスログとエラーログがあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;ログにconnect-to-pumasockでpermission-deniedが出る場合&quot;&gt;ログにconnect() to puma.sockでPermission deniedが出る場合&lt;/h3&gt;
+
+&lt;p&gt;502 Bad Gatewayが出る場合は、nginxからPumaへのつなぎでエラーが出ている可能性があります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;connect&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; to unix:///home/mothule/app/rails_sample/tmp/sockets/puma.sock failed &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;13: Permission denied&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;nginxからpuma.socketへの権限がない場合このエラーが出ます。
+nginxを誰が実行してるか確認します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;nginx
+root       22126  0.0  2.1 120088 10276 ?        Ss   15:49   0:00 nginx: master process nginx
+nginx      22131  0.0  1.9 152720  9088 ?        S    15:49   0:00 nginx: worker process
+root       22170  0.0  0.2  10284  1056 pts/1    R+   15:53   0:00 &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;auto nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx&lt;/code&gt;ユーザーで動いています。実行ユーザーがRailsアプリを動かしているユーザーと同じでないとファイルの編集権限が足りず権限エラーになります。
+なのでnginxの実行ユーザーをRailsアプリを動かしているユーザーに変更します。&lt;/p&gt;
+
+&lt;p&gt;nginxの実行ユーザーの変更は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt;を変更します。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# user nginx
+user your_user_name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;リロードも忘れずに行います。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
+または
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;railsアプリのデーモン化&quot;&gt;Railsアプリのデーモン化&lt;/h2&gt;
+&lt;p&gt;CentOS上にnginx/puma/railsが動くようにはなりました。
+しかし、サーバにはSSH接続しており、この状態でRailsを実行してるので、SSHが終了すると、Railsアプリも終了してしまいます。&lt;/p&gt;
+
+&lt;p&gt;本番環境でそれだと困るので、SSHが終了しても動くようにPumaをデーモン化する必要があります。
+puma.rbをいじってデーモン化します。また本番のみUNIXドメインソケット通信にし、それ以外ではnginxを介さずPuma単体でポートを開いて処理できるようにします。&lt;/p&gt;
+
+&lt;p&gt;次のコード&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;の全容です。
+デフォルトコードから余計なコメント等を削除し、本番時のみデーモン化させるコードを追加したものです。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;RAILS_MAX_THREADS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;threads&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'RAILS_ENV'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'development'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'production'&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# socket&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;state_path&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'tmp'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'pids'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.state'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;stdout_redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma-error.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;daemonize&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Specifies the `environment` that Puma will run in.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;environment&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Specifies the `pidfile` that Puma will use.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pidfile&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PIDFILE&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;tmp/pids/server.pid&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;state_path
+    &lt;ul&gt;
+      &lt;li&gt;pumaの状態を表したファイルで、pumactlが使います。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;stdout_redirect
+    &lt;ul&gt;
+      &lt;li&gt;STDOUTとSTDERRを指定ファイルにリダイレクトします。&lt;/li&gt;
+      &lt;li&gt;最後のBoolean型は出力を追加するかどうかです。デフォルトはfalseです。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;daemonize
+    &lt;ul&gt;
+      &lt;li&gt;pumaをデーモン実行するかどうか&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;コードデプロイ&quot;&gt;コードデプロイ&lt;/h2&gt;
+&lt;p&gt;最後にコード変更を反映させる方法です。
+nginx/puma/railsが既に動いている状態からコードを反映させます。&lt;/p&gt;
+
+&lt;p&gt;変更後のコードはGitHubに上がっているので、git pullでとってくることでサーバ上のコードを変更します。
+その後の反映ですが、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec pumactl restart&lt;/code&gt; をすることでpumaが再起動してくれて、コードが反映されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;pumaにおけるrailsアプリの起動方法&quot;&gt;PumaにおけるRailsアプリの起動方法&lt;/h3&gt;
+&lt;p&gt;PumaをRackサーバに使う場合Railsアプリを起動する方法が3つあります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;コマンドを使う
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RAILS_ENV&lt;/code&gt;または&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-e&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;production&lt;/code&gt;であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma/production.rb&lt;/code&gt;をロード試行&lt;/li&gt;
+      &lt;li&gt;ファイルなければ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma.rb&lt;/code&gt;をロードします。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma&lt;/code&gt;コマンドを使う
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RACK_ENV&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pumactl&lt;/code&gt;コマンドを使う
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-F&lt;/code&gt;で指定されたファイルをロード&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails&lt;/code&gt;をロードしないため設定ファイルに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails.root&lt;/code&gt;などが使われていると例外エラーが発生する。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;起動と再起動はrails-s-と-rails-restart&quot;&gt;起動と再起動はrails s と rails restart&lt;/h3&gt;
+&lt;p&gt;この記事では最初の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;)で起動しています。
+そしてリロードは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails restart&lt;/code&gt;を使っています。
+これはpumaのプラグイン&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tmp_restart&lt;/code&gt;を入れることで、
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails_ restart&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;touch tmp/restart.txt&lt;/code&gt;することで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;restart&lt;/code&gt;を呼べるようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;に次のコードを入れることで使えるようになり、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails new&lt;/code&gt;で作成される&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;にはデフォルトで記入されてあります。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;手作業でcentos8上にnginxとpumaとrailsを構築は良い経験&quot;&gt;手作業でCentOS8上にnginxとpumaとRailsを構築は良い経験&lt;/h2&gt;
+&lt;p&gt;リンク先も含め記事を順当に進めばCentOS8上にゼロからRailsアプリが動くまでを経験できて、普段コーディングしてるRailsアプリの土台がどのようになっているのかイメージできるようになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="web" /><category term="nginx" /><category term="linux" /><category term="centos" /><summary type="html">Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">リモートワーク体制よりもまず自立組織型を目指すべき</title><link href="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work" rel="alternate" type="text/html" title="リモートワーク体制よりもまず自立組織型を目指すべき" /><published>2021-01-29T00:00:00+09:00</published><updated>2021-01-29T02:35:50+09:00</updated><id>https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work</id><content type="html" xml:base="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work">&lt;p&gt;コロナ渦もあり大手のITに弱い企業でも、リモートワーク体制を整える傾向です。&lt;br /&gt;
 そのためにZoomやSlackを導入するなど、設備投資する企業を目にします。&lt;/p&gt;
 
 &lt;p&gt;同時にそのようなIT弱者から金銭を得ようと、大手や縦割り組織が好むサービスを営業するのも目にします。&lt;br /&gt;
@@ -1579,56 +1608,4 @@ allを剥奪します。&lt;/p&gt;
 &lt;p&gt;リモートワーク体制では指示や判断ではなく、情報を共有して判断を委任させることが重要です。&lt;br /&gt;
 見えない状態であっても自律して動いてる状態にしてしまえば結果はコミットされるからです。&lt;/p&gt;
 
-&lt;p&gt;操り人形のように部下に指示、管理では見えないのでうまくいきません。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="org-build" /><summary type="html">コロナ渦もあり大手のITに弱い企業でも、リモートワーク体制を整える傾向です。 そのためにZoomやSlackを導入するなど、設備投資する企業を目にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">MySQLサーバからmysqldumpで論理バックアップを作成する</title><link href="https://blog.mothule.com/db/mysql/db-mysql-logic-buckup" rel="alternate" type="text/html" title="MySQLサーバからmysqldumpで論理バックアップを作成する" /><published>2021-01-28T00:00:00+09:00</published><updated>2021-01-28T10:59:01+09:00</updated><id>https://blog.mothule.com/db/mysql/db-mysql-logic-buckup</id><content type="html" xml:base="https://blog.mothule.com/db/mysql/db-mysql-logic-buckup">&lt;p&gt;MySQLデータベースサーバからデータベースを論理バックアップするには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysqldump&lt;/code&gt;コマンドを使います。ただ呼ぶだけでなく、いくつかオプションをつけることでより効果良くします。&lt;/p&gt;
-
-&lt;h2 id=&quot;論理バックアップとは&quot;&gt;論理バックアップとは？&lt;/h2&gt;
-
-&lt;p&gt;物理バックアップのようにデータファイルをコピーせず、テーブル構造とデータを再生成できるCREATE TABLE や INSERT などのステートメントが含まれたバックアップです。&lt;/p&gt;
-
-&lt;h3 id=&quot;物理バックアップと比べたデメリット&quot;&gt;物理バックアップと比べたデメリット&lt;/h3&gt;
-
-&lt;p&gt;データサイズが大きくなってくると、リストアに時間がかなりかかる。&lt;/p&gt;
-
-&lt;h2 id=&quot;mysqldumpコマンドで論理バックアップファイルを作成&quot;&gt;mysqldumpコマンドで論理バックアップファイルを作成&lt;/h2&gt;
-
-&lt;p&gt;バックアップファイルといってもDDLとDMLが書かれたSQLファイルです。&lt;/p&gt;
-
-&lt;p&gt;フォーマットは次のようにします。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysqldump &lt;span class=&quot;nt&quot;&gt;-u&lt;/span&gt; &amp;lt;ユーザ名&amp;gt; &lt;span class=&quot;nt&quot;&gt;--databases&lt;/span&gt; &amp;lt;DB名&amp;gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--host&lt;/span&gt; &amp;lt;DBサーバIP&amp;gt; &lt;span class=&quot;nt&quot;&gt;-P&lt;/span&gt; &amp;lt;ポート番号&amp;gt; &lt;span class=&quot;nt&quot;&gt;--quick&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--single-transaction&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--quote-names&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--ignore-table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;無視テーブル名1&amp;gt; &lt;span class=&quot;nt&quot;&gt;--ignore-table&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&amp;lt;無視テーブル2&amp;gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; 出力ファイル名.sql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;少しオプションが多いですが、いくつかオプションをが入っていることで、安全面や速度の効果を期待できます。&lt;/p&gt;
-
-&lt;p&gt;いくつかのオプションをデフォルトで動くケースではオプション数を減らせます。
-例えばlocalhostのMySQLにrootで全テーブルをバックアップする場合は次のようになります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;mysqldump &lt;span class=&quot;nt&quot;&gt;-uroot&lt;/span&gt; hoge_database &lt;span class=&quot;nt&quot;&gt;--quote-names&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--single-transaction&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt; hoge.sql
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;使用するオプション&quot;&gt;使用するオプション&lt;/h2&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql&lt;/code&gt;コマンドで既に使ったことのあるオプションは省略します。&lt;/p&gt;
-
-&lt;h3 id=&quot;--quickオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--quick&lt;/code&gt;オプション&lt;/h3&gt;
-
-&lt;p&gt;テーブルのレコードをバッファせず1行ずつダンプする。デフォルトで有効なので、明示的にする目的以外では指定しなくても問題ありません。&lt;/p&gt;
-
-&lt;p&gt;なお&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--skip-quick&lt;/code&gt;を使用すれば、ダンプ前にテーブル内容をメモリにバッファリングしますが、サイズの大きいテーブルがあるとメモリ不足を起こします。&lt;/p&gt;
-
-&lt;h3 id=&quot;--single-transactionオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--single-transaction&lt;/code&gt;オプション&lt;/h3&gt;
-
-&lt;p&gt;一貫した状態でダンプする。ただし、InnoDBテーブルのみ有効。&lt;/p&gt;
-
-&lt;p&gt;MyISAMテーブルを含むDBでは効果がないですが、MySQL5.6からはデフォルトストレージエンジンはInnoDBとなってるので気にするケースは少ないかと思います。&lt;/p&gt;
-
-&lt;p&gt;なお、MyISAMテーブルを含むDBでは、–lock-tablesか–lock-all-tablesを使います。&lt;/p&gt;
-
-&lt;h3 id=&quot;--ignore-tableオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--ignore-table&lt;/code&gt;オプション&lt;/h3&gt;
-
-&lt;p&gt;指定されたテーブルはダンプの対象から外れます。
-複数テーブル指定は複数個オプションを渡します。&lt;/p&gt;
-
-&lt;h3 id=&quot;--quote-namesオプション&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--quote-names&lt;/code&gt;オプション&lt;/h3&gt;
-
-&lt;p&gt;識別子を逆引用符文字(バックティック)で囲みます。識別に予約ワードが含まれても問題を起こさないようにします。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><summary type="html">MySQLデータベースサーバからデータベースを論理バックアップするには、mysqldumpコマンドを使います。ただ呼ぶだけでなく、いくつかオプションをつけることでより効果良くします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-28-db-mysql-logic-buckup/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+&lt;p&gt;操り人形のように部下に指示、管理では見えないのでうまくいきません。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="org-build" /><summary type="html">コロナ渦もあり大手のITに弱い企業でも、リモートワーク体制を整える傾向です。 そのためにZoomやSlackを導入するなど、設備投資する企業を目にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
