@@ -151,3 +151,10 @@ hello world
 ```
 
 ここまで通ればCentOSにrbenvとRubyのインストールは完了です。
+
+## CentOS8上にnginxとPumaとRailsアプリを構築する
+Ruby環境が整ったら、次のステップとしてはRailsアプリをCentOS8上にデプロイして動かしてみることです。
+また実際のアプリではPumaがWebサーバとして動くのではなくnginxを前段においてリバースプロキシが一般的です。
+それらをAnsibleやCapistranoを使わずgitとSSHなど手作業で構築することは体系的な知識構築に大いに貢献できます。
+
+それらに関する記事を「{% post_link_text 2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos %}」にまとめてあります。
