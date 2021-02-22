@@ -11,35 +11,35 @@
 
 
 
-  <title>rails updateでgemバージョン依存を解決してみる - もちゅろぐ</title>
+  <title>bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話 - もちゅろぐ</title>
 
 
 <!-- Begin Jekyll SEO tag v2.6.1 -->
 <meta name="generator" content="Jekyll v3.9.0" />
-<meta property="og:title" content="rails updateでgemバージョン依存を解決してみる" />
+<meta property="og:title" content="bundler(1.17.2)で–path=vendor/bundleつけたら警告出た話" />
 <meta property="og:locale" content="ja_JP" />
-<meta name="description" content="他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。" />
-<meta property="og:description" content="他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。" />
-<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version" />
-<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version" />
+<meta name="description" content="Railsの空アプリを作りたくて、bundler(1.17.2)で--pathをつけてインストール実行したら、警告が表示されるようになってた。" />
+<meta property="og:description" content="Railsの空アプリを作りたくて、bundler(1.17.2)で--pathをつけてインストール実行したら、警告が表示されるようになってた。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option" />
 <meta property="og:site_name" content="もちゅろぐ" />
-<meta property="og:image" content="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" />
 <meta property="og:type" content="article" />
-<meta property="article:published_time" content="2019-11-13T00:00:00+09:00" />
+<meta property="article:published_time" content="2021-02-22T00:00:00+09:00" />
 <meta name="twitter:card" content="summary_large_image" />
-<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png" />
-<meta property="twitter:title" content="rails updateでgemバージョン依存を解決してみる" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" />
+<meta property="twitter:title" content="bundler(1.17.2)で–path=vendor/bundleつけたら警告出た話" />
 <meta name="twitter:site" content="@mothule" />
 <script type="application/ld+json">
-{"@type":"BlogPosting","description":"他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。","headline":"rails updateでgemバージョン依存を解決してみる","datePublished":"2019-11-13T00:00:00+09:00","dateModified":"2021-01-26T03:28:09+09:00","image":"https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version"},"url":"https://blog.mothule.com/ruby/rails/ruby-rails-update-rails-version","@context":"https://schema.org"}</script>
+{"@type":"BlogPosting","description":"Railsの空アプリを作りたくて、bundler(1.17.2)で--pathをつけてインストール実行したら、警告が表示されるようになってた。","headline":"bundler(1.17.2)で–path=vendor/bundleつけたら警告出た話","datePublished":"2021-02-22T00:00:00+09:00","dateModified":"2021-02-22T15:28:59+09:00","image":"https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option"},"url":"https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option","@context":"https://schema.org"}</script>
 <!-- End Jekyll SEO tag -->
 
 
 
 
-<meta name="twitter:title" content="rails updateでgemバージョン依存を解決してみる">
-<meta name="twitter:description" content="他愛もないネタですが、 gemのバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。">
-<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2019-11-13-ruby-rails-update-rails-version.png">
+<meta name="twitter:title" content="bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話">
+<meta name="twitter:description" content="Railsの空アプリを作りたくて、bundler(1.17.2)で--pathをつけてインストール実行したら、警告が表示されるようになってた。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png">
 
 <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
       rel="stylesheet"
@@ -142,8 +142,8 @@
         
         
           <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-            <a href="/tags#rails" itemprop="item">
-              <span itemprop="name">Rails</span>
+            <a href="/tags#bundler" itemprop="item">
+              <span itemprop="name">Bundler</span>
             </a>
             <meta itemprop="position" content="3">
           </li>
@@ -152,7 +152,7 @@
         
         
           <li>
-            rails updateでgemバージョン依存を解決してみる
+            bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話
           </li>
         
       
@@ -164,12 +164,12 @@
 
   
     <div class="eye-catch">
-      <img style="width: 100%; object-fix: contain;" src="/assets/images/2019-11-13-ruby-rails-update-rails-version.png" alt="rails updateでgemバージョン依存を解決してみる">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" alt="bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話">
     </div>
   
 
   <header class="post-content-title border-bottom mb-4">
-    <h1>rails updateでgemバージョン依存を解決してみる</h1>
+    <h1>bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話</h1>
 
     <div class="row">
       <div class="col-sm-10 post-content-tags">
@@ -177,12 +177,14 @@
           
             <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
           
-            <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+            <li class="list-inline-item"><a href="/tags#gem">gem</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
           
         </ul>
       </div>
       <div class="col-sm-2 text-right">
-        <span"><time class="post-date">2019-11-13</time></span>
+        <span"><time class="post-date">2021-2-22</time></span>
       </div>
     </div>
   </header>
@@ -190,9 +192,8 @@
   <p>Table of Contents</p>
   <div class="post-content-toc">
     <ul>
-  <li><a href="#バージョン衝突を再現する">バージョン衝突を再現する</a></li>
-  <li><a href="#ログはgemの依存関係を表している">ログはgemの依存関係を表している</a></li>
-  <li><a href="#地道に見ていく">地道に見ていく</a></li>
+  <li><a href="#--pathvendorbundleで表示された警告"><code class="language-plaintext highlighter-rouge">--path=vendor/bundle</code>で表示された警告</a></li>
+  <li><a href="#localとなってるがglobalでも設定される">localとなってるがglobalでも設定される</a></li>
 </ul>
   </div>
 
@@ -212,118 +213,36 @@
   
 
   <section>
-  <p>他愛もないネタですが、 <code class="language-plaintext highlighter-rouge">gem</code>のバージョン依存の解決って最初見方を分からないと萎えるのでどう読み解くか1ケースとして記事にします。</p>
+  <p>Railsの空アプリを作りたくて、bundler(<code class="language-plaintext highlighter-rouge">1.17.2</code>)で<code class="language-plaintext highlighter-rouge">--path</code>をつけてインストール実行したら、警告が表示されるようになってた。</p>
 
-<p>題材としてRailsのバージョンを4系から5系にアップデートします。</p>
+<h2 id="--pathvendorbundleで表示された警告"><code class="language-plaintext highlighter-rouge">--path=vendor/bundle</code>で表示された警告</h2>
 
-<h2 id="バージョン衝突を再現する">バージョン衝突を再現する</h2>
-<p><code class="language-plaintext highlighter-rouge">bundle update rails</code> を実行すると</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle update rails
-Fetching gem metadata from https://rubygems.org/.........
-Fetching gem metadata from https://rubygems.org/.
-Resolving dependencies....
-Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"activesupport"</span>:
-  In Gemfile:
-    bullet was resolved to 5.9.0, which depends on
-      activesupport <span class="o">(&gt;=</span> 3.0.0<span class="o">)</span>
-
-    haml-rails was resolved to 1.0.0, which depends on
-      activesupport <span class="o">(&gt;=</span> 4.0.1<span class="o">)</span>
-
-    jbuilder <span class="o">(</span>~&gt; 2.0<span class="o">)</span> was resolved to 2.8.0, which depends on
-      activesupport <span class="o">(&gt;=</span> 4.2.0<span class="o">)</span>
-
-    rails <span class="o">(=</span> 5.0.0<span class="o">)</span> was resolved to 5.0.0, which depends on
-      activesupport <span class="o">(=</span> 5.0.0<span class="o">)</span>
-
-    rspec-rails was resolved to 3.8.1, which depends on
-      activesupport <span class="o">(&gt;=</span> 3.0<span class="o">)</span>
-
-    spring was resolved to 2.0.2, which depends on
-      activesupport <span class="o">(&gt;=</span> 4.2<span class="o">)</span>
-
-Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"rails"</span>:
-  In Gemfile:
-    rails <span class="o">(=</span> 5.0.0<span class="o">)</span>
-
-    rails-flog was resolved to 1.5.0, which depends on
-      rails <span class="o">(&gt;=</span> 4.2.0<span class="o">)</span>
-
-Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"railties"</span>:
-  In Gemfile:
-    devise was resolved to 4.5.0, which depends on
-      railties <span class="o">(</span>&lt; 6.0, <span class="o">&gt;=</span> 4.1.0<span class="o">)</span>
-
-    factory_bot_rails was resolved to 4.11.1, which depends on
-      railties <span class="o">(&gt;=</span> 3.0.0<span class="o">)</span>
-
-    haml-rails was resolved to 1.0.0, which depends on
-      railties <span class="o">(&gt;=</span> 4.0.1<span class="o">)</span>
-
-    jquery-rails was resolved to 4.3.3, which depends on
-      railties <span class="o">(&gt;=</span> 4.2.0<span class="o">)</span>
-
-    rails <span class="o">(=</span> 5.0.0<span class="o">)</span> was resolved to 5.0.0, which depends on
-      railties <span class="o">(=</span> 5.0.0<span class="o">)</span>
-
-    devise was resolved to 4.5.0, which depends on
-      responders was resolved to 2.4.0, which depends on
-        railties <span class="o">(</span>&lt; 5.3, <span class="o">&gt;=</span> 4.2.0<span class="o">)</span>
-
-    rspec-rails was resolved to 3.8.1, which depends on
-      railties <span class="o">(&gt;=</span> 3.0<span class="o">)</span>
-
-    sass-rails <span class="o">(</span>~&gt; 4.0.3<span class="o">)</span> was resolved to 4.0.5, which depends on
-      railties <span class="o">(</span>&lt; 5.0, <span class="o">&gt;=</span> 4.0.0<span class="o">)</span>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="o">[</span>DEPRECATED] The <span class="sb">`</span><span class="nt">--path</span><span class="sb">`</span> flag is deprecated because it relies on being remembered across bundler invocations, which bundler will no longer <span class="k">do in </span>future versions. Instead please use <span class="sb">`</span>bundle config <span class="nb">set</span> <span class="nt">--local</span> path <span class="s1">'vendor/bundle'</span><span class="sb">`</span>, and stop using this flag
 </code></pre></div></div>
 
-<p>とgem依存エラーが表示される。</p>
+<p>簡単に訳すと、</p>
 
-<p>赤く大量に表示されてこの時点でやる気なくすが、何がをどう解決すればいいかを読み解いてみる。</p>
+<p><code class="language-plaintext highlighter-rouge">--path</code>フラグは全体に依存してるため、非推奨となりました。将来的に無視します。
+代わりに<code class="language-plaintext highlighter-rouge">bundle config set —-local path 'vendor/bundle'</code>でセットしてください。</p>
 
-<h2 id="ログはgemの依存関係を表している">ログはgemの依存関係を表している</h2>
+<p>とのこと。</p>
 
-<p>このログはどの gem が どの gem に依存しているかを表してます。
-一部抜粋します。</p>
+<p>今後は、<code class="language-plaintext highlighter-rouge">--path</code>オプションではなく、<code class="language-plaintext highlighter-rouge">bundle config</code>として設定してほしいということですね。
+<code class="language-plaintext highlighter-rouge">bundle config set —-local path 'vendor/bundle'</code>を実行することで、<code class="language-plaintext highlighter-rouge">--path</code>と同様に<code class="language-plaintext highlighter-rouge">.bundle/config</code>に<code class="language-plaintext highlighter-rouge">BUNDLE_PATH</code>が追記されます。</p>
 
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Bundler could not find compatible versions <span class="k">for </span>gem <span class="s2">"activesupport"</span>:
-  In Gemfile:
-    bullet was resolved to 5.9.0, which depends on
-      activesupport <span class="o">(&gt;=</span> 3.0.0<span class="o">)</span>
+<h2 id="localとなってるがglobalでも設定される">localとなってるがglobalでも設定される</h2>
+<p>警告文には<code class="language-plaintext highlighter-rouge">local</code>になっていますが、これはglobalで設定してしまえば、毎回初回実行時に<code class="language-plaintext highlighter-rouge">--path</code>フラグの指定が不要になるようです。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config path <span class="s2">"vendor/bundle"</span>
 </code></pre></div></div>
 
-<p>この場合 <code class="language-plaintext highlighter-rouge">bullet</code> gem が <code class="language-plaintext highlighter-rouge">activesupport</code> gem に依存してることを表します。<br />
-<code class="language-plaintext highlighter-rouge">activesupport</code> のバージョンが <code class="language-plaintext highlighter-rouge">3.0.0以上</code> であれば問題ありません。<br />
-つまり問題ないライブラリ組み合わせです。</p>
-
-<p>他のライブラリもバージョン上問題ない組み合わせばかりです。</p>
-
-<p>つまり問題のない組み合わせもログとして出力されます。</p>
-
-<h2 id="地道に見ていく">地道に見ていく</h2>
-
-<p>最後まで見ると <code class="language-plaintext highlighter-rouge">sass-rails</code> が怪しいです。</p>
-
-<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>sass-rails <span class="o">(</span>~&gt; 4.0.3<span class="o">)</span> was resolved to 4.0.5, which depends on
-  railties <span class="o">(</span>&lt; 5.0, <span class="o">&gt;=</span> 4.0.0<span class="o">)</span>
+<p>ホームディレクトリの<code class="language-plaintext highlighter-rouge">.bundle/config</code>を見たところ<code class="language-plaintext highlighter-rouge">BUNDLE_PATH</code>が追加されていました。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">cat</span> ~/.bundle/config
+<span class="nt">---</span>
+BUNDLE_PATH: <span class="s2">"vendor/bundle"</span>
 </code></pre></div></div>
 
-<p><code class="language-plaintext highlighter-rouge">railties</code> は 5.0未満でなければいけませんが、 <code class="language-plaintext highlighter-rouge">rails</code> は <code class="language-plaintext highlighter-rouge">5.0.0</code> なので
-<code class="language-plaintext highlighter-rouge">railties</code> は <code class="language-plaintext highlighter-rouge">5.0.0</code> になります。
-これは <a href="https://rubygems.org/gems/rails/versions/5.0.0">rubygems.org</a> で確認できます。</p>
-
-<p><code class="language-plaintext highlighter-rouge">sass-rails</code> について調べてみると次のような記事を見つけます。
-https://techracho.bpsinc.jp/hachi8833/2018_04_06/54793#2-1</p>
-
-<p>どうやら<code class="language-plaintext highlighter-rouge">sass</code>は非推奨になるようです。つまり <code class="language-plaintext highlighter-rouge">rails</code> では <code class="language-plaintext highlighter-rouge">sass-rails</code> から <code class="language-plaintext highlighter-rouge">sassc-rails</code> に乗り換えないといけないようです。
-Gemfile を次のように書き換えます。</p>
-
-<div class="language-diff highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="gd">-gem 'sass-rails', '~&gt; 4.0.3'
-</span><span class="gi">+gem 'sassc-rails', '~&gt; 2.1.2'
-</span></code></pre></div></div>
-
-<p>これで再度 <code class="language-plaintext highlighter-rouge">bundle update rails</code> を実行すると成功しました。</p>
+<p>個人的には <code class="language-plaintext highlighter-rouge">-j4</code> フラグなどジョブ数指定も同様の扱いになってくれたほうが楽だったりする。</p>
 
   </section>
 
@@ -360,545 +279,493 @@ Gemfile を次のように書き換えます。</p>
                 
                 
 
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
                     <li class="related-post-item">
                       <div class="row pb-4">
   <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">
-      <img src="/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" alt="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" style="width: 100%; object-fit: contain;">
+    <a href="/ruby/ruby-script-basic">
+      <img src="/assets/images/2020-02-08-ruby-script-basic.png" alt="iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業" style="width: 100%; object-fit: contain;">
     </a>
   </div>
   <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">
-      <h3>CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</h3>
+    <a href="/ruby/ruby-script-basic">
+      <h3>iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</h3>
     </a>
 
     <ul class="list-inline">
       
         <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
       
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
       
-        <li class="list-inline-item"><a href="/tags#web">Web</a></li>
+        <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
       
-        <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-use">
-      <img src="/assets/images/2021-01-06-ruby-rails-assets-pipeline-use/eyecatch.png" alt="Railsのアセットパイプラインの使い方を最短理解する" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-use">
-      <h3>Railsのアセットパイプラインの使い方を最短理解する</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#asset-pipeline">Asset Pipeline</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-brief">
-      <img src="/assets/images/2021-01-05-ruby-rails-assets-pipeline-brief/eyecatch.png" alt="Railsのアセットパイプラインの概要を最短理解する" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-assets-pipeline-brief">
-      <h3>Railsのアセットパイプラインの概要を最短理解する</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#asset-pipeline">Asset Pipeline</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/ruby/rails/ruby-rails-rabl-basic">
-      <img src="/assets/images/2020-05-05-ruby-rails-rabl-basic/rabl-eyecatch.png" alt="RABLの使い方を丁寧に説明" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/ruby/rails/ruby-rails-rabl-basic">
-      <h3>RABLの使い方を丁寧に説明</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
-      
-    </ul>
-  </div>
-</div>
-
-                    </li>
-
-                    
-                    
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-
-            
-                
-                
-                
-
-                    <li class="related-post-item">
-                      <div class="row pb-4">
-  <div class="col-sm-4">
-    <a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">
-      <img src="/assets/images/2020-03-29-tools-rubymine-debugging-unix-socket-server/0.png" alt="RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法" style="width: 100%; object-fit: contain;">
-    </a>
-  </div>
-  <div class="col-sm-8">
-    <a href="/tools/rubymine/tools-rubymine-debugging-unix-socket-server">
-      <h3>RubyMineでUNIXドメインソケット通信なRailsアプリをデバッグする方法</h3>
-    </a>
-
-    <ul class="list-inline">
-      
-        <li class="list-inline-item"><a href="/tags#mac">Mac</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rubymine">RubyMine</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+        <li class="list-inline-item"><a href="/tags#shellscript">シェルスクリプト</a></li>
       
         <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
       
-        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
-      
-        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+        <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
       
     </ul>
   </div>
@@ -908,7 +775,618 @@ Gemfile を次のように書き換えます。</p>
 
                     
                     
-                      
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/ruby/bundler/ruby-use-bundler-outside-of-rails">
+      <img src="/assets/images/2020-02-01-ruby-use-bundler-outside-of-rails.png" alt="Rails以外でBundlerを使う方法" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/ruby/bundler/ruby-use-bundler-outside-of-rails">
+      <h3>Rails以外でBundlerを使う方法</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/ruby/gem/ruby-gem-specify-version">
+      <img src="/assets/images/2020-01-29-ruby-gem-specify-version.png" alt="Gemで指定バージョンをインストール" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/ruby/gem/ruby-gem-specify-version">
+      <h3>Gemで指定バージョンをインストール</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#gem">gem</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
 
             
               <li class="related-post-item">
