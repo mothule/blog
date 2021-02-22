@@ -1,0 +1,966 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+
+
+  <title>CentOS8のfirewalldが未起動のままポート許可やサービス登録する - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="CentOS8のfirewalldが未起動のままポート許可やサービス登録する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="LinuxのCentOSのfirewalldを起動せずにSSHのポート番号の変更先を許可したりサービスを登録する方法を説明します。" />
+<meta property="og:description" content="LinuxのCentOSのfirewalldを起動せずにSSHのポート番号の変更先を許可したりサービスを登録する方法を説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive" />
+<meta property="og:url" content="https://blog.mothule.com/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive/eyecatch.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-19T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive/eyecatch.png" />
+<meta property="twitter:title" content="CentOS8のfirewalldが未起動のままポート許可やサービス登録する" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","description":"LinuxのCentOSのfirewalldを起動せずにSSHのポート番号の変更先を許可したりサービスを登録する方法を説明します。","headline":"CentOS8のfirewalldが未起動のままポート許可やサービス登録する","datePublished":"2021-02-19T00:00:00+09:00","dateModified":"2021-02-19T11:45:49+09:00","image":"https://blog.mothule.com/assets/images/2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive"},"url":"https://blog.mothule.com/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:title" content="CentOS8のfirewalldが未起動のままポート許可やサービス登録する">
+<meta name="twitter:description" content="LinuxのCentOSのfirewalldを起動せずにSSHのポート番号の変更先を許可したりサービスを登録する方法を説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive/eyecatch.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script data-ad-client="ca-pub-5156339577835247" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <main class="row" style="margin-bottom: 32px;">
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<div class="post-content">
+  <div class="breadcrumbs">
+    <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#linux" itemprop="item">
+              <span itemprop="name">Linux</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#centos" itemprop="item">
+              <span itemprop="name">CentOS</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            CentOS8のfirewalldが未起動のままポート許可やサービス登録する
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+  </div>
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive/eyecatch.png" alt="CentOS8のfirewalldが未起動のままポート許可やサービス登録する">
+    </div>
+  
+
+  <header class="post-content-title border-bottom mb-4">
+    <h1>CentOS8のfirewalldが未起動のままポート許可やサービス登録する</h1>
+
+    <div class="row">
+      <div class="col-sm-10 post-content-tags">
+        <ul class="list-inline">
+          
+            <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#firewalld">firewalld</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-sm-2 text-right">
+        <span"><time class="post-date">2021-2-19</time></span>
+      </div>
+    </div>
+  </header>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#注意-自己責任です">注意: 自己責任です</a></li>
+  <li><a href="#firewalldとは">firewalldとは</a></li>
+  <li><a href="#sshを先にセットアップしたい">SSHを先にセットアップしたい</a></li>
+  <li><a href="#firewalldの設定情報を直接変更する">firewalldの設定情報を直接変更する</a>
+    <ul>
+      <li><a href="#firewalldの設定情報ファイルを確認する">firewalldの設定情報ファイルを確認する</a></li>
+      <li><a href="#xmlファイルに直接許可ポートを追加する">xmlファイルに直接許可ポートを追加する</a></li>
+    </ul>
+  </li>
+</ul>
+  </div>
+
+  
+  <div class="mb-4">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-layout="in-article"
+         data-ad-format="fluid"
+         data-ad-client="ca-pub-5156339577835247"
+         data-ad-slot="6747769462"></ins>
+    <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+  
+
+  <section>
+  <p><strong>SSHの使用ポートをデフォルトの22番から別番号に変更</strong>はセキュリティを改善できます。
+しかし、そのあと<strong>何の対応もせずfirewalldを起動するとアクセスが遮断</strong>されます。
+そしてそれ以降SSHでのアクセス手段が詰みます。
+しかも、<strong>firewalldのポート登録は起動していないと登録できません。</strong></p>
+
+<p>この記事は<strong>firewalldが未起動のままポート登録する方法</strong>を説明します。</p>
+
+<h2 id="注意-自己責任です">注意: 自己責任です</h2>
+<p>今回説明する方法は自己責任でお願いします。この方法がどの環境やバージョンでも適用できるとは限らないためです。</p>
+
+<p>もし試す場合は、必ず回復が可能な状態にしてください。もしfirewalldに追い出されてsshでログインできなくなっても責任は持てません。</p>
+
+<h2 id="firewalldとは">firewalldとは</h2>
+<p>Linux用ファイアウォール管理ツールです。指定したポートをサービス単位で指定できたり直接ポート番号指定し、ポートへのアクセス制限を管理できます。以前のバージョンでは<code class="language-plaintext highlighter-rouge">iptables</code>がその役割でしたが、最近のバージョンではこちらに変わりました。</p>
+
+<h2 id="sshを先にセットアップしたい">SSHを先にセットアップしたい</h2>
+<p>CentOSでLinuxサーバーをセットアップすると、まず最初はrootアクセス制限や公開鍵認証など、firewalldよりもSSH周りのセキュリティ強化を進めるかと思います。その流れでSSHのポート番号を変更もしてしまいたいです。
+でもポート番号が変わってしまうと、firewalldでは許可していないポート番号となるため、起動した瞬間にアクセス遮断されます。</p>
+
+<p>「起動する前にポート許可をすれば？」と思うかもしれませんが、firewalldは起動していないとポート許可ができません。<br />
+未起動のまま登録を試しても次のようにエラーとなってしまいます。</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>firewall-cmd <span class="nt">--permanent</span> <span class="nt">--add-port</span><span class="o">=</span>22444/tcp
+FirewallD is not running
+</code></pre></div></div>
+
+<p>そのため通常であれば、一度SSHのポート番号を元の22に戻した後firewalldを起動し、ポート番号を登録するといった手間が発生します。</p>
+
+<h2 id="firewalldの設定情報を直接変更する">firewalldの設定情報を直接変更する</h2>
+<p>通常大抵のサービスは永続性のある情報は何らかの形で再起動しても残ります。firewalldも永続性のある情報をファイルとしてサーバー内に保存しています。</p>
+
+<h3 id="firewalldの設定情報ファイルを確認する">firewalldの設定情報ファイルを確認する</h3>
+<p>CentOS8だと<code class="language-plaintext highlighter-rouge">/etc/firewalld/zones</code>にzone毎に<strong>xmlファイル</strong>で保存されてます。
+例えばpublic zoneのxmlファイルだと次のように構造です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>su -
+<span class="nv">$ </span><span class="nb">cat</span> /etc/firewalld/zones/public.xml
+&lt;?xml <span class="nv">version</span><span class="o">=</span><span class="s2">"1.0"</span> <span class="nv">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span>?&gt;
+&lt;zone&gt;
+  &lt;short&gt;Public&lt;/short&gt;
+  &lt;description&gt;For use <span class="k">in </span>public areas. You <span class="k">do </span>not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.&lt;/description&gt;
+  &lt;service <span class="nv">name</span><span class="o">=</span><span class="s2">"ssh"</span>/&gt;
+  &lt;service <span class="nv">name</span><span class="o">=</span><span class="s2">"dhcpv6-client"</span>/&gt;
+  &lt;service <span class="nv">name</span><span class="o">=</span><span class="s2">"cockpit"</span>/&gt;
+&lt;/zone&gt;
+
+</code></pre></div></div>
+
+<h3 id="xmlファイルに直接許可ポートを追加する">xmlファイルに直接許可ポートを追加する</h3>
+<p>このxmlを直接編集すればfirewalldを起動せずポートやサービスを追加できます。例えば22444/TCPを許可する場合は、次の1行を追加します。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nt">&lt;port</span> <span class="na">port=</span><span class="s">"22444"</span> <span class="na">protocol=</span><span class="s">"tcp"</span><span class="nt">/&gt;</span>
+</code></pre></div></div>
+
+<p>追加はzoneタグ内であれば問題ありません。</p>
+
+<div class="language-xml highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="cp">&lt;?xml version="1.0" encoding="utf-8"?&gt;</span>
+<span class="nt">&lt;zone&gt;</span>
+  <span class="nt">&lt;short&gt;</span>Public<span class="nt">&lt;/short&gt;</span>
+  <span class="nt">&lt;description&gt;</span>For use in public areas. You do not trust the other computers on networks to not harm your computer. Only selected incoming connections are accepted.<span class="nt">&lt;/description&gt;</span>
+  <span class="nt">&lt;service</span> <span class="na">name=</span><span class="s">"ssh"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;service</span> <span class="na">name=</span><span class="s">"dhcpv6-client"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;service</span> <span class="na">name=</span><span class="s">"cockpit"</span><span class="nt">/&gt;</span>
+  <span class="nt">&lt;port</span> <span class="na">port=</span><span class="s">"22444"</span> <span class="na">protocol=</span><span class="s">"tcp"</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;/zone&gt;</span>
+</code></pre></div></div>
+
+<p>これでfirewalldを起動するとポート22444/tcpが追加された状態で起動します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>firewall-cmd <span class="nt">--list-all</span>
+public <span class="o">(</span>active<span class="o">)</span>
+  target: default
+  icmp-block-inversion: no
+  interfaces: ens3
+  sources:
+  services: cockpit dhcpv6-client ssh
+  ports: 22444/tcp
+  protocols:
+  masquerade: no
+  forward-ports:
+  source-ports:
+  icmp-blocks:
+  rich rules:
+</code></pre></div></div>
+
+<p>もちろんポートだけでなくサービスも事前に登録は可能です。
+ポート番号がデフォルト22ではないSSHサービスを用意して、xmlに追加するとポートのときと同じように追加したサービスを許可します。</p>
+
+<p>なお、ポート番号の異なるSSHサービスを用意する方法は「 <span><a href="/linux/centos/linux-centos-firewalld-create-new-service">CentOSのfirewalldにポート番号変更したSSHのサービスを自作して登録する</a></span>
+ 」にまとめてあります。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+
+    <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">
+      <img src="/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" alt="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">
+      <h3>CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#web">Web</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-firewalld-create-new-service">
+      <img src="/assets/images/2021-02-19-linux-centos-firewalld-create-new-service/eyecatch.png" alt="CentOSのfirewalldにポート番号変更したSSHのサービスを自作して登録する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-firewalld-create-new-service">
+      <h3>CentOSのfirewalldにポート番号変更したSSHのサービスを自作して登録する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#firewalld">firewalld</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-centos8-setup-secure-server">
+      <img src="/assets/images/2021-02-19-linux-centos-centos8-setup-secure-server/eyecatch.png" alt="CentOS8で不正SSHログイン対策したLinuxサーバ構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-centos8-setup-secure-server">
+      <h3>CentOS8で不正SSHログイン対策したLinuxサーバ構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-build-ruby-env-on-centos">
+      <img src="/assets/images/2021-02-19-linux-centos-build-ruby-env-on-centos/eyecatch.png" alt="MacユーザがCentOS8にRuby環境を構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-build-ruby-env-on-centos">
+      <h3>MacユーザがCentOS8にRuby環境を構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/db-mysql-install-mysql8-on-centos8">
+      <img src="/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" alt="CentOS8にMySQL8をインストールして構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/db-mysql-install-mysql8-on-centos8">
+      <h3>CentOS8にMySQL8をインストールして構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                      
+
+            
+              <li class="related-post-item">
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-format="fluid"
+                   data-ad-layout-key="-ga-4d+ii+16-1f4"
+                   data-ad-client="ca-pub-5156339577835247"
+                   data-ad-slot="9550753128"></ins>
+              <script>
+                   (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+              </li>
+            
+
+      </div>
+    </ul>
+</div>
+
+
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+<script src="/assets/js/shared/post.js" defer></script>
+
+  </article>
+
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-xcassets-basic">【初心者向け】Assets.xcassetsを理解して使う</a>
+            </li>
+            
+            <li>
+                <a href="/db/mysql/mysql-find-mycnf">MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</a>
+            </li>
+            
+            <li>
+                <a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">【初心者向け】UITableViewCellをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+        
+        <a href="/tags#google-japanese-input">Google日本語入力</a>
+      
+        
+        <a href="/tags#ln">lnコマンド</a>
+      
+        
+        <a href="/tags#xcode">Xcode</a>
+      
+        
+        <a href="/tags#xcodegen">XcodeGen</a>
+      
+        
+        <a href="/tags#xcconfig">xcconfig</a>
+      
+        
+        <a href="/tags#quick">Quick</a>
+      
+        
+        <a href="/tags#swiftlint">SwiftLint</a>
+      
+        
+        <a href="/tags#bitrise">Bitrise</a>
+      
+        
+        <a href="/tags#fastlane">Fastlane</a>
+      
+        
+        <a href="/tags#ssh-keygen">ssh-keygen</a>
+      
+        
+        <a href="/tags#ssh-agent">ssh-agent</a>
+      
+        
+        <a href="/tags#asset-pipeline">Asset Pipeline</a>
+      
+        
+        <a href="/tags#selenium">Selenium</a>
+      
+        
+        <a href="/tags#capybara">Capybara</a>
+      
+        
+        <a href="/tags#webkit">WebKit</a>
+      
+        
+        <a href="/tags#web_driver">WebDriver</a>
+      
+        
+        <a href="/tags#chrome_driver">ChromeDriver</a>
+      
+        
+        <a href="/tags#org-build">組織作り</a>
+      
+        
+        <a href="/tags#firewalld">firewalld</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-sticky">
+    <!-- TOC -->
+    <div class="side-toc" id="side-toc-id">
+    </div>
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
+      
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li><a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+</li>
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+  </aside>
+</main>
+
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+  </body>
+</html>

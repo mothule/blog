@@ -1,0 +1,1282 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+
+
+  <title>CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="LinuxディストリビューションCentOS8上にWebサーバであるnginxとRackサーバであるPuma、そしてWebアプリサーバとなるRailsをAnsibleやCapistranoを使わずに構築して、コードデプロイする流れを説明します。" />
+<meta property="og:description" content="LinuxディストリビューションCentOS8上にWebサーバであるnginxとRackサーバであるPuma、そしてWebアプリサーバとなるRailsをAnsibleやCapistranoを使わずに構築して、コードデプロイする流れを説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos" />
+<meta property="og:url" content="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-19T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" />
+<meta property="twitter:title" content="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","description":"LinuxディストリビューションCentOS8上にWebサーバであるnginxとRackサーバであるPuma、そしてWebアプリサーバとなるRailsをAnsibleやCapistranoを使わずに構築して、コードデプロイする流れを説明します。","headline":"CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする","datePublished":"2021-02-19T00:00:00+09:00","dateModified":"2021-02-22T14:52:28+09:00","image":"https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos"},"url":"https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:title" content="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする">
+<meta name="twitter:description" content="LinuxディストリビューションCentOS8上にWebサーバであるnginxとRackサーバであるPuma、そしてWebアプリサーバとなるRailsをAnsibleやCapistranoを使わずに構築して、コードデプロイする流れを説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script data-ad-client="ca-pub-5156339577835247" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <main class="row" style="margin-bottom: 32px;">
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<div class="post-content">
+  <div class="breadcrumbs">
+    <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#ruby" itemprop="item">
+              <span itemprop="name">Ruby</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#rails" itemprop="item">
+              <span itemprop="name">Rails</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+  </div>
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" alt="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする">
+    </div>
+  
+
+  <header class="post-content-title border-bottom mb-4">
+    <h1>CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</h1>
+
+    <div class="row">
+      <div class="col-sm-10 post-content-tags">
+        <ul class="list-inline">
+          
+            <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#web">Web</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-sm-2 text-right">
+        <span"><time class="post-date">2021-2-19</time></span>
+      </div>
+    </div>
+  </header>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#サーバー構築やアプリのデプロイの内部イメージついてますか">サーバー構築やアプリのデプロイの内部イメージついてますか？</a>
+    <ul>
+      <li><a href="#対象読者">対象読者</a></li>
+      <li><a href="#この記事のゴール">この記事のゴール</a></li>
+      <li><a href="#この記事でやらないこと">この記事でやらないこと</a></li>
+    </ul>
+  </li>
+  <li><a href="#linuxcentosサーバの構築は省略">Linux(CentOS)サーバの構築は省略</a></li>
+  <li><a href="#構築するサーバ構成">構築するサーバ構成</a></li>
+  <li><a href="#大まかなフロー">大まかなフロー</a></li>
+  <li><a href="#railsアプリを用意する">Railsアプリを用意する</a></li>
+  <li><a href="#サーバにgit環境用意">サーバにGit環境用意</a></li>
+  <li><a href="#サーバにpumarailsをデプロイ">サーバにPuma×Railsをデプロイ</a>
+    <ul>
+      <li><a href="#githubのコードをサーバへcloneクローン">GitHubのコードをサーバへClone(クローン)</a></li>
+      <li><a href="#bundle-installでgemをインストール">bundle installでgemをインストール</a>
+        <ul>
+          <li><a href="#mysql2エラーが起きた場合">mysql2エラーが起きた場合</a></li>
+        </ul>
+      </li>
+      <li><a href="#ローカルのrailsアプリからmasterkeyをサーバーへコピー">ローカルのRailsアプリからmaster.keyをサーバーへコピー</a></li>
+      <li><a href="#アセットのプリコンパイル実行">アセットのプリコンパイル実行</a></li>
+      <li><a href="#centos8--puma--rails間のアクセス疎通確認">CentOS8 → Puma → Rails間のアクセス疎通確認</a>
+        <ul>
+          <li><a href="#pumaで設定してるポート番号">Pumaで設定してるポート番号</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#nginxのリバースプロキシ設定">nginxのリバースプロキシ設定</a>
+    <ul>
+      <li><a href="#configpumarbのlistenをポートからunixドメインソケットに変更">config/puma.rbのlistenをポートからUNIXドメインソケットに変更</a></li>
+      <li><a href="#nginxのリクエストをpumaのunixドメインソケットに流す">nginxのリクエストをPumaのUNIXドメインソケットに流す</a></li>
+      <li><a href="#nginx起動">nginx起動</a></li>
+      <li><a href="#nginx--puma--rails間のアクセス疎通確認">nginx → Puma → Rails間のアクセス疎通確認</a></li>
+      <li><a href="#ログにconnect-to-pumasockでpermission-deniedが出る場合">ログにconnect() to puma.sockでPermission deniedが出る場合</a></li>
+    </ul>
+  </li>
+  <li><a href="#railsアプリのデーモン化">Railsアプリのデーモン化</a></li>
+  <li><a href="#コードデプロイ">コードデプロイ</a>
+    <ul>
+      <li><a href="#pumaにおけるrailsアプリの起動方法">PumaにおけるRailsアプリの起動方法</a></li>
+      <li><a href="#起動と再起動はrails-s-と-rails-restart">起動と再起動はrails s と rails restart</a></li>
+    </ul>
+  </li>
+  <li><a href="#手作業でcentos8上にnginxとpumaとrailsを構築は良い経験">手作業でCentOS8上にnginxとpumaとRailsを構築は良い経験</a></li>
+</ul>
+  </div>
+
+  
+  <div class="mb-4">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-layout="in-article"
+         data-ad-format="fluid"
+         data-ad-client="ca-pub-5156339577835247"
+         data-ad-slot="6747769462"></ins>
+    <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+  
+
+  <section>
+  <p>Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。</p>
+
+<h2 id="サーバー構築やアプリのデプロイの内部イメージついてますか">サーバー構築やアプリのデプロイの内部イメージついてますか？</h2>
+<p>インフラ構築はAnsible、RailsアプリのデプロイはCapistranoを使うのが定番です。
+しかし、内部を知らずにそれら使うと、実際のインフラ構築やデプロイのオペレーションがイメージできず頭がついてこれません。
+自身の中でフローをイメージできることは、AnsibleやCapistranoを使うときに最適な処理を構築には必須です。</p>
+
+<p>そのため、この記事ではAnsibleやCapistranoを使わない方法でインフラ構築やデプロイ作業を行いました。
+具体的にはそれぞれ次の方法で実現します。</p>
+
+<ul>
+  <li>Ansibleを使わずnginx × Puma × Rails環境を手作業で構築</li>
+  <li>Capistranoを使わずgitやSSHを使ってデプロイ</li>
+</ul>
+
+<h3 id="対象読者">対象読者</h3>
+<p>Mac上でrbenvでRuby環境を構築し、Railsアプリを作ったことがあるが、
+Linuxサーバにデプロイをしたことがない、またはデプロイはあるがイマイチ腹落ちできていない。</p>
+
+<h3 id="この記事のゴール">この記事のゴール</h3>
+<p>Macで作ったRailsアプリをCentOS8上に展開、起動できるようにする。
+コード更新を手作業で行えるようにする。</p>
+
+<h3 id="この記事でやらないこと">この記事でやらないこと</h3>
+<p>インフラ構築とデプロイがテーマなので、HTTPS対応とpuma_worker_killerは対応していません。</p>
+
+<h2 id="linuxcentosサーバの構築は省略">Linux(CentOS)サーバの構築は省略</h2>
+<p>この記事ではVPS上にCentOS8をインストールした後の内容となっています。
+CentOS8のセットアップについては「<span><a href="/linux/centos/linux-centos-centos8-setup-secure-server">CentOS8で不正SSHログイン対策したLinuxサーバ構築する</a></span>
+」にまとめてあります。
+またCnetOS上のRuby環境については「<span><a href="/linux/centos/linux-centos-build-ruby-env-on-centos">MacユーザがCentOS8にRuby環境を構築する</a></span>
+」にまとめてあります。</p>
+
+<p>なお、今回はMySQLサーバは別サーバ上に立てていますが、記事内容には直接関わらないため、同一サーバにインストールしても問題ないはずです。
+ちなみにCentOS上にMySQLサーバ構築については「<span><a href="/db/mysql/db-mysql-install-mysql8-on-centos8">CentOS8にMySQL8をインストールして構築する</a></span>
+」にまとめてあります。</p>
+
+<h2 id="構築するサーバ構成">構築するサーバ構成</h2>
+<p>今回構築するサーバ構成を簡単に表すとこうなります。</p>
+
+<p>nginx → puma → rails → mysql</p>
+
+<ul>
+  <li>nginxはリバースプロキシとして動かす</li>
+  <li>nginx と puma間はUNIXドメインソケットで通信する</li>
+  <li>rails と mysql間はTCP/IPで通信する</li>
+  <li>railsアプリのデプロイはサーバにSSHで接続して作業する</li>
+</ul>
+
+<h2 id="大まかなフロー">大まかなフロー</h2>
+
+<ol>
+  <li>Railsアプリ用意</li>
+  <li>サーバにGit環境用意</li>
+  <li>サーバにPuma×Railsをデプロイ</li>
+  <li>nginxのリバースプロキシ設定</li>
+  <li>Pumaのデーモン化</li>
+  <li>コードデプロイ</li>
+</ol>
+
+<h2 id="railsアプリを用意する">Railsアプリを用意する</h2>
+<p>まずはMac上に機能は何でもいいのでRailsアプリを用意します。
+あまり凝ったアプリだと躓いたときに原因特定に時間がかかるので、トップページ1つあるだけの簡単なアプリがおすすめです。</p>
+
+<p>用意したらGitHubにプッシュします。
+publicレポジトリでも構わないですが、万が一セキュアな情報を誤ってpushするとリスクもありますし、実際の運用を考えるとprivateレポジトリにします。</p>
+
+<h2 id="サーバにgit環境用意">サーバにGit環境用意</h2>
+<p>最初はサーバとGitHub間のssh通信ができるようにSSH用のキーを作成します。
+普段MacからGitHub上のprivateレポジトリをクローンしてるように、サーバにも同等の機能をもたせます。</p>
+
+<p>まずサーバにSSH接続したら<code class="language-plaintext highlighter-rouge">ssh-keygen</code>で公開鍵と秘密鍵を作成します。
+作成したら公開鍵をコピーして、<a href="[https://github.com/settings/keys](https://github.com/settings/keys)">GitHubのSSH keys</a>に追加します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ssh-keygen
+<span class="nv">$ </span><span class="nb">cat</span> ~/.ssh/id_rsa.pub
+</code></pre></div></div>
+
+<p>最近のバージョンであれば鍵長はデフォルト値でも十分だと思いますが、そこは自己責任でお願いします。</p>
+
+<p>GitHubに公開鍵の登録が終わったら疎通確認としてSSH接続をテストします。
+正しくできていれば接続成功の表示がされます。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">ssh</span> <span class="o">-</span><span class="no">T</span> <span class="n">git</span><span class="vi">@github</span><span class="p">.</span><span class="nf">com</span>
+<span class="no">Hi</span> <span class="n">hogehoge!</span> <span class="no">You</span> <span class="n">have</span> <span class="n">successfully</span> <span class="n">authenticated</span><span class="p">,</span> <span class="n">but</span> <span class="no">GitHub</span> <span class="n">does</span> <span class="n">not</span> <span class="n">provide</span> <span class="n">shell</span> <span class="n">access</span><span class="o">.</span>
+</code></pre></div></div>
+
+<h2 id="サーバにpumarailsをデプロイ">サーバにPuma×Railsをデプロイ</h2>
+<p>サーバ上にGit環境が整ったら、GitHubからPrivateレポジトリのコードをダウンロードできるようになります。
+事前にプッシュしておいたRailsアプリをダウンロードして、サーバー起動していきます。</p>
+
+<h3 id="githubのコードをサーバへcloneクローン">GitHubのコードをサーバへClone(クローン)</h3>
+<p><code class="language-plaintext highlighter-rouge">git clone</code>でコードをダウンロードします。なお、コードの展開場所ですがネット記事だと<code class="language-plaintext highlighter-rouge">/var/www/</code>をよく見かけますが、現場ではユーザのホームディレクトリ上に展開してたりとマチマチです。</p>
+
+<p>今回はホームディレクトリ上に<code class="language-plaintext highlighter-rouge">app</code>フォルダ作ってそこの中に展開します。
+下記コードのGitHubアカウント名やレポジトリ名は適宜差し替えてください。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">mkdir</span> ~/app
+<span class="nv">$ </span><span class="nb">cd</span> ~/app
+<span class="nv">$ </span>git clone git@github.com:your_github_name/repo_name.git
+</code></pre></div></div>
+
+<h3 id="bundle-installでgemをインストール">bundle installでgemをインストール</h3>
+<p>ダウンロード完了したら、ローカル同様<code class="language-plaintext highlighter-rouge">bundle install</code>でgemを取得します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle config <span class="nb">set</span> <span class="nt">--local</span> path <span class="s2">"vendor/bundle"</span>
+<span class="nv">$ </span>bundle <span class="nb">install</span> <span class="nt">-j4</span>
+</code></pre></div></div>
+
+<h4 id="mysql2エラーが起きた場合">mysql2エラーが起きた場合</h4>
+<p>もしこのときmysql2 gemでエラーが出た場合は、サーバー上にMySQLに関するヘッダーファイルがないのかもしれません。<code class="language-plaintext highlighter-rouge">mysql-devel</code>をインストールして再実行してみてください。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>yum <span class="nt">-y</span> mysql-devel
+</code></pre></div></div>
+
+<h3 id="ローカルのrailsアプリからmasterkeyをサーバーへコピー">ローカルのRailsアプリからmaster.keyをサーバーへコピー</h3>
+<p>ローカル環境でproduction環境を実行しても気づきにくいかと思いますが、production環境では<code class="language-plaintext highlighter-rouge">master.key</code>が必要です。しかし<code class="language-plaintext highlighter-rouge">master.key</code>はGitHubにプッシュされないようになっています。なのでサーバに<code class="language-plaintext highlighter-rouge">master.key</code>を渡す必要があります。この情報が渡っていないとRailsは暗号ファイルを復号できずproduction環境を実行できません。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>scp master.key user_name@server_address:~/app/myapp/config/
+</code></pre></div></div>
+
+<h3 id="アセットのプリコンパイル実行">アセットのプリコンパイル実行</h3>
+<p>production環境では<code class="language-plaintext highlighter-rouge">assets</code>フォルダ内のリソースは<code class="language-plaintext highlighter-rouge">public/assets</code>へ事前コンパイルが必要です。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ RAILS_ENV</span><span class="o">=</span>production bundle <span class="nb">exec </span>rake assets:precompile
+</code></pre></div></div>
+
+<h3 id="centos8--puma--rails間のアクセス疎通確認">CentOS8 → Puma → Rails間のアクセス疎通確認</h3>
+<p>PumaはRackサーバ機能も兼ねているため、nginxなしでもアクセス可能です。
+なのでnginxを立てる前にPuma×Railsだけでアプリを立ち上げて問題なく疎通できるか確認をとっておきます。</p>
+
+<p>ここをおろそかにしてnginxの構築へ進むと、もし動かない場合どの部分が原因で動かないのか原因特定範囲が広くなります。</p>
+
+<p>なお、単純に<code class="language-plaintext highlighter-rouge">rails s</code>だと外部からのアクセスできない状態なので、<code class="language-plaintext highlighter-rouge">-b 0.0.0.0</code>も一緒に渡します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>bundle <span class="nb">exec </span>rails s <span class="nt">-b</span> 0.0.0.0 <span class="nt">-e</span> production
+</code></pre></div></div>
+
+<p>Railsアプリが起動したら、ブラウザでルートページにアクセスして正常にページが表示されるか確認します。
+URLは<code class="language-plaintext highlighter-rouge">サーバのIPアドレス:Pumaで設定してるポート番号</code>になります。
+<code class="language-plaintext highlighter-rouge">routes.rb</code>でroot設定していない場合は、存在するエンドポイントにアクセスして疎通確認してください。</p>
+
+<h4 id="pumaで設定してるポート番号">Pumaで設定してるポート番号</h4>
+<p>Pumaで設定してるポート番号は、<code class="language-plaintext highlighter-rouge">~/app/myapp/config/puma.rb</code>に定義されています。
+デフォルトのままであれば次のように定義されているはずです。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Specifies the `port` that Puma will listen on to receive requests; default is 3000.</span>
+<span class="n">port</span>        <span class="no">ENV</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="p">{</span> <span class="mi">3000</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<h2 id="nginxのリバースプロキシ設定">nginxのリバースプロキシ設定</h2>
+<p>Puma × Railsが無事動くことが確認できたら、次はnginxを前段に配置します。
+具体的にはPumaのlistenをポートからUNIXドメインソケットに変更して、PumaのlistenをポートからUNIXドメインソケットに変更します。
+こうすれば、nginxのリクエストをPumaのソケットに流れるようになります。
+まずはPuma側から対応します。</p>
+
+<h3 id="configpumarbのlistenをポートからunixドメインソケットに変更">config/puma.rbのlistenをポートからUNIXドメインソケットに変更</h3>
+<p>前述したPumaの設定ファイル(<code class="language-plaintext highlighter-rouge">~/app/myapp/config/puma.rb</code>)では、ポート番号でlistenする設定になっています。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">port</span>        <span class="no">ENV</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="p">{</span> <span class="mi">3000</span> <span class="p">}</span>
+</code></pre></div></div>
+
+<p>これをUNIXドメインソケットに変更します。
+<strong>このときポート設定は必ずコメントアウトか削除してください。</strong>
+ポート設定が残ったままUNIXドメインソケット設定を追記してもポート設定が優先されます。</p>
+
+<p>bindでUNIXドメインソケットのファイル場所を設定します。
+Pumaが起動するとこのパス先にソケットファイルが作成されます。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># port        ENV.fetch("PORT") { 3000 }</span>
+<span class="n">bind</span> <span class="s2">"unix://</span><span class="si">#{</span><span class="no">Rails</span><span class="p">.</span><span class="nf">root</span><span class="si">}</span><span class="s2">/tmp/sockets/puma.sock"</span>
+</code></pre></div></div>
+
+<p>この状態でRailsアプリを実行すると、listen先がpuma.sockに変わります。
+またソケットファイルも作成されます。</p>
+
+<h3 id="nginxのリクエストをpumaのunixドメインソケットに流す">nginxのリクエストをPumaのUNIXドメインソケットに流す</h3>
+<p>次はnginx側を変更します。
+<code class="language-plaintext highlighter-rouge">/etc/nginx/nginx.conf</code>の<code class="language-plaintext highlighter-rouge">http</code>コンテキスト内に次のコードを追記します。</p>
+
+<p><code class="language-plaintext highlighter-rouge">nginx.conf</code>に直接アプリ固有の設定を記入せず<code class="language-plaintext highlighter-rouge">include</code>ディレクティブを使ってアプリ毎に設定ファイルを分離して管理する方法がありますが、今回は省略します。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">http</span> <span class="p">{</span>
+  <span class="c1"># ここから</span>
+  <span class="n">upstream</span> <span class="n">puma</span> <span class="p">{</span>
+    <span class="n">server</span> <span class="n">unix</span><span class="ss">:/</span><span class="o">/</span><span class="sr">/home/</span><span class="n">your_user_name</span><span class="o">/</span><span class="n">app</span><span class="o">/</span><span class="n">your_app_name</span><span class="o">/</span><span class="n">tmp</span><span class="o">/</span><span class="n">sockets</span><span class="o">/</span><span class="n">puma</span><span class="p">.</span><span class="nf">sock</span><span class="p">;</span>
+  <span class="p">}</span>
+  <span class="n">server</span> <span class="p">{</span>
+    <span class="n">listen</span> <span class="mi">3000</span> <span class="n">default_server</span><span class="p">;</span>
+    <span class="n">server_name</span> <span class="n">puma</span><span class="p">;</span>
+    <span class="n">location</span> <span class="o">/</span> <span class="p">{</span>
+      <span class="n">proxy_read_timeout</span> <span class="mi">300</span><span class="p">;</span>
+      <span class="n">proxy_connect_timeout</span> <span class="mi">300</span><span class="p">;</span>
+      <span class="n">proxy_redirect</span> <span class="n">off</span><span class="p">;</span>
+      <span class="n">proxy_set_header</span> <span class="no">Host</span> <span class="vg">$host</span><span class="p">;</span>
+      <span class="n">proxy_set_header</span> <span class="no">X</span><span class="o">-</span><span class="no">Forwarded</span><span class="o">-</span><span class="no">Proto</span> <span class="vg">$scheme</span><span class="p">;</span>
+      <span class="n">proxy_set_header</span> <span class="no">X</span><span class="o">-</span><span class="no">Forwarded</span><span class="o">-</span><span class="no">For</span> <span class="vg">$proxy_add_x_forwarded_for</span><span class="p">;</span>
+      <span class="n">proxy_pass</span> <span class="n">http</span><span class="ss">:/</span><span class="o">/</span><span class="n">puma</span><span class="p">;</span>
+    <span class="p">}</span>
+  <span class="p">}</span>
+  <span class="c1"># ここまでを追加する</span>
+<span class="p">}</span>
+</code></pre></div></div>
+<p><code class="language-plaintext highlighter-rouge">server</code>ディレクティブに渡すパスは、Pumaのsocketファイルのパスを指定してください。</p>
+
+<p>nginxが起動中なら変更を反映させます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>systemctl reload nginx
+もしくは
+<span class="nv">$ </span>nginx <span class="nt">-s</span> reload
+</code></pre></div></div>
+
+<p>nginxの基礎に関しては「<span><a href="/web/nginx/web-nginx-getting-started-step1-on-mac">Macでnginxをインストールして起動する</a></span>
+」にまとめてあります。</p>
+
+<h3 id="nginx起動">nginx起動</h3>
+<p>nginxを立ち上げます。
+2行目で自動起動を有効化します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>systemctl start nginx
+<span class="nv">$ </span>systemctl <span class="nb">enable </span>nginx
+</code></pre></div></div>
+
+<h3 id="nginx--puma--rails間のアクセス疎通確認">nginx → Puma → Rails間のアクセス疎通確認</h3>
+<p>ここまで設定すれば、ポート3000にアクセスしたらnginxがPumaにリクエストを上流しRailsアプリへ到達するようになっています。
+それを確かめるために疎通確認します。</p>
+
+<p><code class="language-plaintext highlighter-rouge">http://your-server-ip-address:3000</code>へアクセスしてRailsアプリのルートページが表示されれば疎通成功です。</p>
+
+<p>もしうまく行かない場合はログを確認することで原因追求に役立ちます。ログは<code class="language-plaintext highlighter-rouge">/var/log/nginx/</code> にアクセスログとエラーログがあります。</p>
+
+<h3 id="ログにconnect-to-pumasockでpermission-deniedが出る場合">ログにconnect() to puma.sockでPermission deniedが出る場合</h3>
+
+<p>502 Bad Gatewayが出る場合は、nginxからPumaへのつなぎでエラーが出ている可能性があります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>connect<span class="o">()</span> to unix:///home/mothule/app/rails_sample/tmp/sockets/puma.sock failed <span class="o">(</span>13: Permission denied<span class="o">)</span>
+</code></pre></div></div>
+
+<p>nginxからpuma.socketへの権限がない場合このエラーが出ます。
+nginxを誰が実行してるか確認します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>ps aux | <span class="nb">grep </span>nginx
+root       22126  0.0  2.1 120088 10276 ?        Ss   15:49   0:00 nginx: master process nginx
+nginx      22131  0.0  1.9 152720  9088 ?        S    15:49   0:00 nginx: worker process
+root       22170  0.0  0.2  10284  1056 pts/1    R+   15:53   0:00 <span class="nb">grep</span> <span class="nt">--color</span><span class="o">=</span>auto nginx
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">nginx</code>ユーザーで動いています。実行ユーザーがRailsアプリを動かしているユーザーと同じでないとファイルの編集権限が足りず権限エラーになります。
+なのでnginxの実行ユーザーをRailsアプリを動かしているユーザーに変更します。</p>
+
+<p>nginxの実行ユーザーの変更は<code class="language-plaintext highlighter-rouge">/etc/nginx/nginx.conf</code>の<code class="language-plaintext highlighter-rouge">user</code>を変更します。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code># user nginx
+user your_user_name
+</code></pre></div></div>
+
+<p>リロードも忘れずに行います。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>nginx <span class="nt">-s</span> reload
+または
+<span class="nv">$ </span>systemctl reload nginx
+</code></pre></div></div>
+
+<h2 id="railsアプリのデーモン化">Railsアプリのデーモン化</h2>
+<p>CentOS上にnginx/puma/railsが動くようにはなりました。
+しかし、サーバにはSSH接続しており、この状態でRailsを実行してるので、SSHが終了すると、Railsアプリも終了してしまいます。</p>
+
+<p>本番環境でそれだと困るので、SSHが終了しても動くようにPumaをデーモン化する必要があります。
+puma.rbをいじってデーモン化します。また本番のみUNIXドメインソケット通信にし、それ以外ではnginxを介さずPuma単体でポートを開いて処理できるようにします。</p>
+
+<p>次のコード<code class="language-plaintext highlighter-rouge">puma.rb</code>の全容です。
+デフォルトコードから余計なコメント等を削除し、本番時のみデーモン化させるコードを追加したものです。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">threads_count</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="s2">"RAILS_MAX_THREADS"</span><span class="p">)</span> <span class="p">{</span> <span class="mi">5</span> <span class="p">}</span>
+<span class="n">threads</span> <span class="n">threads_count</span><span class="p">,</span> <span class="n">threads_count</span>
+
+<span class="n">rails_env</span> <span class="o">=</span> <span class="no">ENV</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="s1">'RAILS_ENV'</span><span class="p">)</span> <span class="p">{</span> <span class="s1">'development'</span> <span class="p">}</span>
+<span class="k">if</span> <span class="n">rails_env</span> <span class="o">==</span> <span class="s1">'production'</span>
+  <span class="c1"># socket</span>
+  <span class="n">bind</span> <span class="s2">"unix://</span><span class="si">#{</span><span class="no">Rails</span><span class="p">.</span><span class="nf">root</span><span class="si">}</span><span class="s2">/tmp/sockets/puma.sock"</span>
+
+  <span class="n">rails_root</span> <span class="o">=</span> <span class="no">Rails</span><span class="p">.</span><span class="nf">root</span>
+  <span class="n">state_path</span> <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">rails_root</span><span class="p">,</span> <span class="s1">'tmp'</span><span class="p">,</span> <span class="s1">'pids'</span><span class="p">,</span> <span class="s1">'puma.state'</span><span class="p">)</span>
+  <span class="n">stdout_redirect</span><span class="p">(</span>
+    <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">rails_root</span><span class="p">,</span> <span class="s1">'log'</span><span class="p">,</span> <span class="s1">'puma.log'</span><span class="p">),</span>
+    <span class="no">File</span><span class="p">.</span><span class="nf">join</span><span class="p">(</span><span class="n">rails_root</span><span class="p">,</span> <span class="s1">'log'</span><span class="p">,</span> <span class="s1">'puma-error.log'</span><span class="p">),</span>
+    <span class="kp">true</span>
+  <span class="p">)</span>
+  <span class="n">daemonize</span>
+
+<span class="k">else</span>
+  <span class="c1"># Specifies the `port` that Puma will listen on to receive requests; default is 3000.</span>
+  <span class="n">port</span>        <span class="no">ENV</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="s2">"PORT"</span><span class="p">)</span> <span class="p">{</span> <span class="mi">3000</span> <span class="p">}</span>
+<span class="k">end</span>
+
+<span class="c1"># Specifies the `environment` that Puma will run in.</span>
+<span class="n">environment</span> <span class="n">rails_env</span>
+
+<span class="c1"># Specifies the `pidfile` that Puma will use.</span>
+<span class="n">pidfile</span> <span class="no">ENV</span><span class="p">.</span><span class="nf">fetch</span><span class="p">(</span><span class="s2">"PIDFILE"</span><span class="p">)</span> <span class="p">{</span> <span class="s2">"tmp/pids/server.pid"</span> <span class="p">}</span>
+
+<span class="c1"># Allow puma to be restarted by `rails restart` command.</span>
+<span class="n">plugin</span> <span class="ss">:tmp_restart</span>
+</code></pre></div></div>
+
+<ul>
+  <li>state_path
+    <ul>
+      <li>pumaの状態を表したファイルで、pumactlが使います。</li>
+    </ul>
+  </li>
+  <li>stdout_redirect
+    <ul>
+      <li>STDOUTとSTDERRを指定ファイルにリダイレクトします。</li>
+      <li>最後のBoolean型は出力を追加するかどうかです。デフォルトはfalseです。</li>
+    </ul>
+  </li>
+  <li>daemonize
+    <ul>
+      <li>pumaをデーモン実行するかどうか</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="コードデプロイ">コードデプロイ</h2>
+<p>最後にコード変更を反映させる方法です。
+nginx/puma/railsが既に動いている状態からコードを反映させます。</p>
+
+<p>変更後のコードはGitHubに上がっているので、git pullでとってくることでサーバ上のコードを変更します。
+その後の反映ですが、<code class="language-plaintext highlighter-rouge">bundle exec pumactl restart</code> をすることでpumaが再起動してくれて、コードが反映されます。</p>
+
+<h3 id="pumaにおけるrailsアプリの起動方法">PumaにおけるRailsアプリの起動方法</h3>
+<p>PumaをRackサーバに使う場合Railsアプリを起動する方法が3つあります。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">rails server</code>コマンドを使う
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">RAILS_ENV</code>または<code class="language-plaintext highlighter-rouge">-e</code>で環境と一致するファイルをロード</li>
+      <li><code class="language-plaintext highlighter-rouge">production</code>であれば<code class="language-plaintext highlighter-rouge">config/puma/production.rb</code>をロード試行</li>
+      <li>ファイルなければ<code class="language-plaintext highlighter-rouge">config/puma.rb</code>をロードします。</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">puma</code>コマンドを使う
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">RACK_ENV</code>で環境と一致するファイルをロード</li>
+    </ul>
+  </li>
+  <li><code class="language-plaintext highlighter-rouge">pumactl</code>コマンドを使う
+    <ul>
+      <li><code class="language-plaintext highlighter-rouge">-F</code>で指定されたファイルをロード</li>
+      <li><code class="language-plaintext highlighter-rouge">Rails</code>をロードしないため設定ファイルに<code class="language-plaintext highlighter-rouge">Rails.root</code>などが使われていると例外エラーが発生する。</li>
+    </ul>
+  </li>
+</ul>
+
+<h3 id="起動と再起動はrails-s-と-rails-restart">起動と再起動はrails s と rails restart</h3>
+<p>この記事では最初の<code class="language-plaintext highlighter-rouge">rails server</code>(<code class="language-plaintext highlighter-rouge">rails s</code>)で起動しています。
+そしてリロードは<code class="language-plaintext highlighter-rouge">rails restart</code>を使っています。
+これはpumaのプラグイン<code class="language-plaintext highlighter-rouge">tmp_restart</code>を入れることで、
+<code class="language-plaintext highlighter-rouge">rails_ restart</code>か<code class="language-plaintext highlighter-rouge">touch tmp/restart.txt</code>することで<code class="language-plaintext highlighter-rouge">restart</code>を呼べるようになります。</p>
+
+<p><code class="language-plaintext highlighter-rouge">puma.rb</code>に次のコードを入れることで使えるようになり、<code class="language-plaintext highlighter-rouge">rails new</code>で作成される<code class="language-plaintext highlighter-rouge">puma.rb</code>にはデフォルトで記入されてあります。</p>
+
+<div class="language-ruby highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="c1"># Allow puma to be restarted by `rails restart` command.</span>
+<span class="n">plugin</span> <span class="ss">:tmp_restart</span>
+</code></pre></div></div>
+
+<h2 id="手作業でcentos8上にnginxとpumaとrailsを構築は良い経験">手作業でCentOS8上にnginxとpumaとRailsを構築は良い経験</h2>
+<p>リンク先も含め記事を順当に進めばCentOS8上にゼロからRailsアプリが動くまでを経験できて、普段コーディングしてるRailsアプリの土台がどのようになっているのかイメージできるようになると思います。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+
+    <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive">
+      <img src="/assets/images/2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive/eyecatch.png" alt="CentOS8のfirewalldが未起動のままポート許可やサービス登録する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive">
+      <h3>CentOS8のfirewalldが未起動のままポート許可やサービス登録する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#firewalld">firewalld</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-firewalld-create-new-service">
+      <img src="/assets/images/2021-02-19-linux-centos-firewalld-create-new-service/eyecatch.png" alt="CentOSのfirewalldにポート番号変更したSSHのサービスを自作して登録する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-firewalld-create-new-service">
+      <h3>CentOSのfirewalldにポート番号変更したSSHのサービスを自作して登録する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#firewalld">firewalld</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-centos8-setup-secure-server">
+      <img src="/assets/images/2021-02-19-linux-centos-centos8-setup-secure-server/eyecatch.png" alt="CentOS8で不正SSHログイン対策したLinuxサーバ構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-centos8-setup-secure-server">
+      <h3>CentOS8で不正SSHログイン対策したLinuxサーバ構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-build-ruby-env-on-centos">
+      <img src="/assets/images/2021-02-19-linux-centos-build-ruby-env-on-centos/eyecatch.png" alt="MacユーザがCentOS8にRuby環境を構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-build-ruby-env-on-centos">
+      <h3>MacユーザがCentOS8にRuby環境を構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/db/mysql/db-mysql-install-mysql8-on-centos8">
+      <img src="/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" alt="CentOS8にMySQL8をインストールして構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/db/mysql/db-mysql-install-mysql8-on-centos8">
+      <h3>CentOS8にMySQL8をインストールして構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                      
+
+            
+              <li class="related-post-item">
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-format="fluid"
+                   data-ad-layout-key="-ga-4d+ii+16-1f4"
+                   data-ad-client="ca-pub-5156339577835247"
+                   data-ad-slot="9550753128"></ins>
+              <script>
+                   (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+              </li>
+            
+
+      </div>
+    </ul>
+</div>
+
+
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+<script src="/assets/js/shared/post.js" defer></script>
+
+  </article>
+
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-xcassets-basic">【初心者向け】Assets.xcassetsを理解して使う</a>
+            </li>
+            
+            <li>
+                <a href="/db/mysql/mysql-find-mycnf">MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</a>
+            </li>
+            
+            <li>
+                <a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">【初心者向け】UITableViewCellをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+        
+        <a href="/tags#google-japanese-input">Google日本語入力</a>
+      
+        
+        <a href="/tags#ln">lnコマンド</a>
+      
+        
+        <a href="/tags#xcode">Xcode</a>
+      
+        
+        <a href="/tags#xcodegen">XcodeGen</a>
+      
+        
+        <a href="/tags#xcconfig">xcconfig</a>
+      
+        
+        <a href="/tags#quick">Quick</a>
+      
+        
+        <a href="/tags#swiftlint">SwiftLint</a>
+      
+        
+        <a href="/tags#bitrise">Bitrise</a>
+      
+        
+        <a href="/tags#fastlane">Fastlane</a>
+      
+        
+        <a href="/tags#ssh-keygen">ssh-keygen</a>
+      
+        
+        <a href="/tags#ssh-agent">ssh-agent</a>
+      
+        
+        <a href="/tags#asset-pipeline">Asset Pipeline</a>
+      
+        
+        <a href="/tags#selenium">Selenium</a>
+      
+        
+        <a href="/tags#capybara">Capybara</a>
+      
+        
+        <a href="/tags#webkit">WebKit</a>
+      
+        
+        <a href="/tags#web_driver">WebDriver</a>
+      
+        
+        <a href="/tags#chrome_driver">ChromeDriver</a>
+      
+        
+        <a href="/tags#org-build">組織作り</a>
+      
+        
+        <a href="/tags#firewalld">firewalld</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-sticky">
+    <!-- TOC -->
+    <div class="side-toc" id="side-toc-id">
+    </div>
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
+      
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li><a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+</li>
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+  </aside>
+</main>
+
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+  </body>
+</html>

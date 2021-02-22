@@ -1,0 +1,1205 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+
+
+  <title>CentOS8にMySQL8をインストールして構築する - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="CentOS8にMySQL8をインストールして構築する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="Linuxディストリビューションの1つであるCentOSのバージョン8にMySQLバージョン8をインストールしたときの手順を説明します。" />
+<meta property="og:description" content="Linuxディストリビューションの1つであるCentOSのバージョン8にMySQLバージョン8をインストールしたときの手順を説明します。" />
+<link rel="canonical" href="https://blog.mothule.com/db/mysql/db-mysql-install-mysql8-on-centos8" />
+<meta property="og:url" content="https://blog.mothule.com/db/mysql/db-mysql-install-mysql8-on-centos8" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-02-19T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" />
+<meta property="twitter:title" content="CentOS8にMySQL8をインストールして構築する" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"@type":"BlogPosting","description":"Linuxディストリビューションの1つであるCentOSのバージョン8にMySQLバージョン8をインストールしたときの手順を説明します。","headline":"CentOS8にMySQL8をインストールして構築する","datePublished":"2021-02-19T00:00:00+09:00","dateModified":"2021-02-19T17:07:10+09:00","image":"https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/db/mysql/db-mysql-install-mysql8-on-centos8"},"url":"https://blog.mothule.com/db/mysql/db-mysql-install-mysql8-on-centos8","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:title" content="CentOS8にMySQL8をインストールして構築する">
+<meta name="twitter:description" content="Linuxディストリビューションの1つであるCentOSのバージョン8にMySQLバージョン8をインストールしたときの手順を説明します。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script data-ad-client="ca-pub-5156339577835247" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <main class="row" style="margin-bottom: 32px;">
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<div class="post-content">
+  <div class="breadcrumbs">
+    <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#db" itemprop="item">
+              <span itemprop="name">DB</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#mysql" itemprop="item">
+              <span itemprop="name">MySQL</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            CentOS8にMySQL8をインストールして構築する
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+  </div>
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" alt="CentOS8にMySQL8をインストールして構築する">
+    </div>
+  
+
+  <header class="post-content-title border-bottom mb-4">
+    <h1>CentOS8にMySQL8をインストールして構築する</h1>
+
+    <div class="row">
+      <div class="col-sm-10 post-content-tags">
+        <ul class="list-inline">
+          
+            <li class="list-inline-item"><a href="/tags#db">DB</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#mysql">MySQL</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-sm-2 text-right">
+        <span"><time class="post-date">2021-2-19</time></span>
+      </div>
+    </div>
+  </header>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#linux自体の初期セットアップは済ませておく">Linux自体の初期セットアップは済ませておく</a></li>
+  <li><a href="#mysql-serverをインストールする">MySQL Serverをインストールする</a></li>
+  <li><a href="#mysqlの起動と自動起動を有効化する">MySQLの起動と自動起動を有効化する</a></li>
+  <li><a href="#mysql_secure_installationでセキュリティ改善する">mysql_secure_installationでセキュリティ改善する</a>
+    <ul>
+      <li><a href="#要約-パスワード強化しますか">要約: パスワード強化しますか？</a></li>
+      <li><a href="#要約-パスワード強度のポリシーを選んでください">要約: パスワード強度のポリシーを選んでください</a></li>
+      <li><a href="#もしパスワードがポリシーの定める強さより脆弱な場合">もしパスワードがポリシーの定める強さより脆弱な場合</a></li>
+      <li><a href="#要約-匿名ユーザーを削除しますか">要約: 匿名ユーザーを削除しますか？</a></li>
+      <li><a href="#要約localhost外からのログインを禁止しますか">要約：localhost外からのログインを禁止しますか？</a></li>
+      <li><a href="#要約テストdbを削除しますか">要約：テストDBを削除しますか？</a></li>
+      <li><a href="#要約-この結果を確定しますか">要約: この結果を確定しますか？</a></li>
+    </ul>
+  </li>
+  <li><a href="#mysqlユーザーを作成する">MySQLユーザーを作成する</a>
+    <ul>
+      <li><a href="#ユーザーパスワードが脆弱な場合">ユーザーパスワードが脆弱な場合</a></li>
+    </ul>
+  </li>
+  <li><a href="#mysqlユーザーに権限付与する">MySQLユーザーに権限付与する</a>
+    <ul>
+      <li><a href="#権限設計をどうするか">権限設計をどうするか？</a></li>
+      <li><a href="#flush-privilegesの有無">FLUSH PRIVILEGESの有無</a></li>
+    </ul>
+  </li>
+  <li><a href="#作成したmysqlユーザーで接続確認する">作成したMySQLユーザーで接続確認する</a>
+    <ul>
+      <li><a href="#接続エラーは要因が多い">接続エラーは要因が多い</a></li>
+    </ul>
+  </li>
+  <li><a href="#dbはインフラの中で比較的よく触る">DBはインフラの中で比較的よく触る</a></li>
+</ul>
+  </div>
+
+  
+  <div class="mb-4">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-layout="in-article"
+         data-ad-format="fluid"
+         data-ad-client="ca-pub-5156339577835247"
+         data-ad-slot="6747769462"></ins>
+    <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+  
+
+  <section>
+  <p>CentOS8にMySQLをインストールします。なお当時のバージョンは8です。
+公式からインストールする方法もありますが、ここではyumにあるバージョンを使います。</p>
+
+<h2 id="linux自体の初期セットアップは済ませておく">Linux自体の初期セットアップは済ませておく</h2>
+<p>ローカルPCであれば問題はないですが、VPSなど外部にLinuxサーバを立てた場合は、MySQL環境の前にLinux自体のセキュリティセットアップを実施することをおすすめします。</p>
+
+<p>セットアップに関しては、「<span><a href="/linux/centos/linux-centos-centos8-setup-secure-server">CentOS8で不正SSHログイン対策したLinuxサーバ構築する</a></span>
+」にまとめてあります。</p>
+
+<h2 id="mysql-serverをインストールする">MySQL Serverをインストールする</h2>
+<p>yumパッケージを更新したのちにMySQLをインストールします。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span><span class="nb">sudo </span>yum <span class="nt">-y</span> upgrade
+<span class="nv">$ </span><span class="nb">sudo </span>yum <span class="nt">-y</span> <span class="nb">install </span>mysql mysql.server
+<span class="nv">$ </span>mysql <span class="nt">--version</span>
+mysql  Ver 8.0.21 <span class="k">for </span>Linux on x86_64 <span class="o">(</span>Source distribution<span class="o">)</span>
+<span class="nv">$ </span>systemctl status mysqld.service
+● mysqld.service - MySQL 8.0 database server
+   Loaded: loaded <span class="o">(</span>/usr/lib/systemd/system/mysqld.service<span class="p">;</span> disabled<span class="p">;</span> vendor preset: disabled<span class="o">)</span>
+   Active: inactive <span class="o">(</span>dead<span class="o">)</span>
+</code></pre></div></div>
+
+<p>カーネル更新は避けたい人は<code class="language-plaintext highlighter-rouge">upgrade</code>の代わりに<code class="language-plaintext highlighter-rouge">yum -y update --exclude=kernel*</code>を実行します。</p>
+
+<p>OSパッケージによってはMariaDBがインストール済みの可能性があります。
+その場合は事前にアンインストールしてからMySQLをインストールしてください。</p>
+
+<h2 id="mysqlの起動と自動起動を有効化する">MySQLの起動と自動起動を有効化する</h2>
+
+<p>インストール完了したら起動します。
+起動が確認できたら自動起動を有効化します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>systemctl start mysqld.service
+<span class="nv">$ </span>systemctl <span class="nb">enable </span>mysqld
+</code></pre></div></div>
+
+<p>なお起動の確認方法は、<code class="language-plaintext highlighter-rouge">$ mysql -uroot -p</code>でlocalhostからrootに接続できれば起動しています。</p>
+
+<h2 id="mysql_secure_installationでセキュリティ改善する">mysql_secure_installationでセキュリティ改善する</h2>
+
+<p><code class="language-plaintext highlighter-rouge">mysql_secure_installation</code>とはMySQLのセキュリティを改善させるスクリプトです。
+MySQLのインストール後に実行します。</p>
+
+<p>英語でのウィザードになりますが、このスクリプトで実施するのは次の項目です。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">root</code> のパスワード設定</li>
+  <li>localhost以外からの<code class="language-plaintext highlighter-rouge">root</code>ログインを禁止</li>
+  <li>匿名ユーザーアカウントの削除</li>
+  <li><code class="language-plaintext highlighter-rouge">test</code> DBの削除と<code class="language-plaintext highlighter-rouge">test_</code>プリフィックスのDBへのアクセス権削除</li>
+</ul>
+
+<p>セキュリティ強度の方向性が分からない場合は、本番運用想定し英数字記号大文字小文字混じりの超長いパスワードを設定して、localhost外からの<code class="language-plaintext highlighter-rouge">root</code>ログイン禁止、匿名ユーザー削除、テストDBの削除にしておいたほうが無難です。</p>
+
+<p>実際の実行結果を質問別＆コメント付きで掲載します。</p>
+
+<h3 id="要約-パスワード強化しますか">要約: パスワード強化しますか？</h3>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>mysql_secure_installation
+
+Securing the MySQL server deployment.
+
+Connecting to MySQL using a blank password.
+
+VALIDATE PASSWORD COMPONENT can be used to <span class="nb">test </span>passwords
+and improve security. It checks the strength of password
+and allows the <span class="nb">users </span>to <span class="nb">set </span>only those passwords which are
+secure enough. Would you like to setup VALIDATE PASSWORD component?
+
+Press y|Y <span class="k">for </span>Yes, any other key <span class="k">for </span>No: y
+</code></pre></div></div>
+
+<h3 id="要約-パスワード強度のポリシーを選んでください">要約: パスワード強度のポリシーを選んでください</h3>
+
+<p>パスワードを設定する前にどのぐらいの強度にしたいのか強さをLOW, MEDIUM, STRONGから設定します。
+設定したらそのまま希望するパスワードを入力します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>There are three levels of password validation policy:
+
+LOW    Length <span class="o">&gt;=</span> 8
+MEDIUM Length <span class="o">&gt;=</span> 8, numeric, mixed <span class="k">case</span>, and special characters
+STRONG Length <span class="o">&gt;=</span> 8, numeric, mixed <span class="k">case</span>, special characters and dictionary                  file
+
+Please enter 0 <span class="o">=</span> LOW, 1 <span class="o">=</span> MEDIUM and 2 <span class="o">=</span> STRONG: 2
+Please <span class="nb">set </span>the password <span class="k">for </span>root here.
+
+New password:
+
+Re-enter new password:
+
+Estimated strength of the password: 100
+Do you wish to <span class="k">continue </span>with the password provided?<span class="o">(</span>Press y|Y <span class="k">for </span>Yes, any other key <span class="k">for </span>No<span class="p">)</span> : y
+
+</code></pre></div></div>
+
+<h3 id="もしパスワードがポリシーの定める強さより脆弱な場合">もしパスワードがポリシーの定める強さより脆弱な場合</h3>
+
+<p>入力したパスワードが前に設定したパスワードポリシーが定める強さより脆弱な場合は、エラーとなり再入力となります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Estimated strength of the password: 50
+Do you wish to <span class="k">continue </span>with the password provided?<span class="o">(</span>Press y|Y <span class="k">for </span>Yes, any other key <span class="k">for </span>No<span class="o">)</span> : y
+ ... Failed! Error: Your password does not satisfy the current policy requirements
+
+New password:
+
+Re-enter new password:
+
+</code></pre></div></div>
+
+<h3 id="要約-匿名ユーザーを削除しますか">要約: 匿名ユーザーを削除しますか？</h3>
+
+<p>MySQLではテストやインストールを円滑にすすめるために簡易にMySQLにアクセスできる匿名ユーザーが作成されてあります。</p>
+
+<p>このユーザーは本番では当然不要なので削除します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>By default, a MySQL installation has an anonymous user,
+allowing anyone to log into MySQL without having to have
+a user account created <span class="k">for </span>them. This is intended only <span class="k">for
+</span>testing, and to make the installation go a bit smoother.
+You should remove them before moving into a production
+environment.
+
+Remove anonymous <span class="nb">users</span>? <span class="o">(</span>Press y|Y <span class="k">for </span>Yes, any other key <span class="k">for </span>No<span class="o">)</span> : y
+Success.
+</code></pre></div></div>
+
+<h3 id="要約localhost外からのログインを禁止しますか">要約：localhost外からのログインを禁止しますか？</h3>
+
+<p>デフォルトでは、外部環境からrootアカウントにログインできます。しかしこれは危険なため禁止します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Normally, root should only be allowed to connect from
+<span class="s1">'localhost'</span><span class="nb">.</span> This ensures that someone cannot guess at
+the root password from the network.
+
+Disallow root login remotely? <span class="o">(</span>Press y|Y <span class="k">for </span>Yes, any other key <span class="k">for </span>No<span class="o">)</span> : y
+Success.
+</code></pre></div></div>
+
+<h3 id="要約テストdbを削除しますか">要約：テストDBを削除しますか？</h3>
+
+<p>匿名ユーザー同様にテスト用途としてテストDBがあります。これも本番環境では不要なので削除します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>By default, MySQL comes with a database named <span class="s1">'test'</span> that
+anyone can access. This is also intended only <span class="k">for </span>testing,
+and should be removed before moving into a production
+environment.
+
+Remove <span class="nb">test </span>database and access to it? <span class="o">(</span>Press y|Y <span class="k">for </span>Yes, any other key <span class="k">for </span>No<span class="o">)</span> : y
+ - Dropping <span class="nb">test </span>database...
+Success.
+
+ - Removing privileges on <span class="nb">test </span>database...
+Success.
+</code></pre></div></div>
+
+<h3 id="要約-この結果を確定しますか">要約: この結果を確定しますか？</h3>
+
+<p>最後にこのスクリプトでの変更を反映させるかの確認です。
+特に問題なければ確定し反映させます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>Reloading the privilege tables will ensure that all changes
+made so far will take effect immediately.
+
+Reload privilege tables now? <span class="o">(</span>Press y|Y <span class="k">for </span>Yes, any other key <span class="k">for </span>No<span class="o">)</span> : y
+Success.
+
+All <span class="k">done</span><span class="o">!</span>
+</code></pre></div></div>
+
+<p>なお、<code class="language-plaintext highlighter-rouge">mysql_secure_installation</code>に関しては公式リファに説明があります。
+<a href="[https://dev.mysql.com/doc/refman/5.6/ja/mysql-secure-installation.html](https://dev.mysql.com/doc/refman/5.6/ja/mysql-secure-installation.html)">MySQL 5.6 リファレンスマニュアル - MySQL インストールのセキュリティー改善</a></p>
+
+<h2 id="mysqlユーザーを作成する">MySQLユーザーを作成する</h2>
+<p>Linuxユーザー同様にMySQLでの操作にrootアカウントは使いません。
+権限やアクセス領域を絞ったユーザーを作成します。</p>
+
+<p>なおIPアドレスは接続元のホスト情報です。
+未指定だと<code class="language-plaintext highlighter-rouge">%</code>となりどのホストからもアクセスできるユーザーとなります。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">create</span> <span class="k">user</span> <span class="s1">'user'</span><span class="o">@</span><span class="s1">'123.456.789.012'</span> <span class="n">identified</span> <span class="k">by</span> <span class="s1">'strong_password'</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="k">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">01</span> <span class="n">sec</span><span class="p">)</span>
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">select</span> <span class="k">user</span><span class="p">,</span> <span class="k">host</span> <span class="k">from</span> <span class="n">mysql</span><span class="p">.</span><span class="k">user</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">------------------+-----------------+</span>
+<span class="o">|</span> <span class="k">user</span>             <span class="o">|</span> <span class="k">host</span>            <span class="o">|</span>
+<span class="o">+</span><span class="c1">------------------+-----------------+</span>
+<span class="o">|</span> <span class="k">user</span>             <span class="o">|</span> <span class="mi">123</span><span class="p">.</span><span class="mi">456</span><span class="p">.</span><span class="mi">789</span><span class="p">.</span><span class="mi">012</span> <span class="o">|</span>
+<span class="o">|</span> <span class="n">mysql</span><span class="p">.</span><span class="n">infoschema</span> <span class="o">|</span> <span class="n">localhost</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">mysql</span><span class="p">.</span><span class="k">session</span>    <span class="o">|</span> <span class="n">localhost</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">mysql</span><span class="p">.</span><span class="n">sys</span>        <span class="o">|</span> <span class="n">localhost</span>       <span class="o">|</span>
+<span class="o">|</span> <span class="n">root</span>             <span class="o">|</span> <span class="n">localhost</span>       <span class="o">|</span>
+<span class="o">+</span><span class="c1">------------------+-----------------+</span>
+<span class="mi">5</span> <span class="k">rows</span> <span class="k">in</span> <span class="k">set</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="ユーザーパスワードが脆弱な場合">ユーザーパスワードが脆弱な場合</h3>
+
+<p>作成するユーザーのパスワードは、<code class="language-plaintext highlighter-rouge">mysql_secure_installation</code>で定めたパスワードポリシーにジュンクする必要があります。そのため脆弱だとエラーとなります。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; create user <span class="s1">'user'</span>@<span class="s1">'host'</span> identified by <span class="s1">'hogehoge'</span><span class="p">;</span>
+ERROR 1819 <span class="o">(</span>HY000<span class="o">)</span>: Your password does not satisfy the current policy requirements
+</code></pre></div></div>
+
+<h2 id="mysqlユーザーに権限付与する">MySQLユーザーに権限付与する</h2>
+
+<p>作成したMySQLユーザーに権限を付与します。
+ユーザーを作成しただけでは権限を持っていないため、何もできません。</p>
+
+<p>構文：<code class="language-plaintext highlighter-rouge">grant 権限 on DB.テーブル to ユーザー</code></p>
+
+<p>次の例は<code class="language-plaintext highlighter-rouge">your_db_name</code> DBの全テーブルに対する全権限を<code class="language-plaintext highlighter-rouge">'user'@'123.456.789.012'</code>に付与してます。ちなみに存在しないDB名でも権限付与できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; grant all on your_db_name.<span class="k">*</span> to <span class="s1">'user'</span>@<span class="s1">'123.456.789.012'</span><span class="p">;</span>
+Query OK, 0 rows affected <span class="o">(</span>0.00 sec<span class="o">)</span>
+</code></pre></div></div>
+
+<p>なお構文を間違えてたり指定が無効だったりするとエラーが起きます。
+ちなみに次のエラーは付与先のユーザー指定がミスってます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>mysql&gt; grant all on your_db_name.<span class="k">*</span> to <span class="s1">'user@123.456.789.012'</span><span class="p">;</span>
+ERROR 1410 <span class="o">(</span>42000<span class="o">)</span>: You are not allowed to create a user with GRANT
+</code></pre></div></div>
+
+<p><code class="language-plaintext highlighter-rouge">show grants</code>を使えば権限を確認できます。
+先程付与した権限とは別に<code class="language-plaintext highlighter-rouge">USAGE</code>という権限があります。
+これは「権限なし」という意味です。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">show</span> <span class="n">grants</span> <span class="k">for</span> <span class="k">user</span><span class="o">@</span><span class="mi">123</span><span class="p">.</span><span class="mi">456</span><span class="p">.</span><span class="mi">789</span><span class="p">.</span><span class="mi">012</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------------------------------------+</span>
+<span class="o">|</span> <span class="n">Grants</span> <span class="k">for</span> <span class="k">user</span><span class="o">@</span><span class="mi">123</span><span class="p">.</span><span class="mi">456</span><span class="p">.</span><span class="mi">789</span><span class="p">.</span><span class="mi">012</span>                                                 <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------------------------------------+</span>
+<span class="o">|</span> <span class="k">GRANT</span> <span class="k">USAGE</span> <span class="k">ON</span> <span class="o">*</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="nv">`user@123.456.789.012`</span>                                    <span class="o">|</span>
+<span class="o">|</span> <span class="k">GRANT</span> <span class="k">ALL</span> <span class="k">PRIVILEGES</span> <span class="k">ON</span> <span class="nv">`your_db_name`</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="nv">`user@123.456.789.012`</span>              <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------------------------------------+</span>
+<span class="mi">2</span> <span class="k">rows</span> <span class="k">in</span> <span class="k">set</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+</code></pre></div></div>
+
+<p>を使えば権限を剥奪できます。
+allを剥奪します。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="n">mysql</span><span class="o">&gt;</span> <span class="k">revoke</span> <span class="k">all</span> <span class="k">on</span> <span class="n">your_db_name</span><span class="p">.</span><span class="o">*</span> <span class="k">from</span> <span class="s1">'user'</span><span class="o">@</span><span class="s1">'123.456.789.012'</span><span class="p">;</span>
+<span class="n">Query</span> <span class="n">OK</span><span class="p">,</span> <span class="mi">0</span> <span class="k">rows</span> <span class="n">affected</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+
+<span class="n">mysql</span><span class="o">&gt;</span> <span class="k">show</span> <span class="n">grants</span> <span class="k">for</span> <span class="k">user</span><span class="o">@</span><span class="mi">123</span><span class="p">.</span><span class="mi">456</span><span class="p">.</span><span class="mi">789</span><span class="p">.</span><span class="mi">012</span><span class="p">;</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------+</span>
+<span class="o">|</span> <span class="n">Grants</span> <span class="k">for</span> <span class="k">user</span><span class="o">@</span><span class="mi">123</span><span class="p">.</span><span class="mi">456</span><span class="p">.</span><span class="mi">789</span><span class="p">.</span><span class="mi">012</span><span class="p">;</span>                  <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------+</span>
+<span class="o">|</span> <span class="k">GRANT</span> <span class="k">USAGE</span> <span class="k">ON</span> <span class="o">*</span><span class="p">.</span><span class="o">*</span> <span class="k">TO</span> <span class="nv">`user`</span><span class="o">@</span><span class="nv">`123.456.789.012`</span>    <span class="o">|</span>
+<span class="o">+</span><span class="c1">---------------------------------------------------+</span>
+<span class="mi">1</span> <span class="k">row</span> <span class="k">in</span> <span class="k">set</span> <span class="p">(</span><span class="mi">0</span><span class="p">.</span><span class="mi">00</span> <span class="n">sec</span><span class="p">)</span>
+</code></pre></div></div>
+
+<h3 id="権限設計をどうするか">権限設計をどうするか？</h3>
+
+<p>権限が細かすぎてALLにしたくなる気持ちがありますが、Railsからアクセスなどシステムによるアクセスの場合は、Railsでよく使う権限を付与しておきシステム特性に合わせて随時追加する形が楽だと思います。</p>
+
+<p>またマーケティング部署など非エンジニアやDBスキルの低い人がSQLを叩く場合は、SELECTなど読み取り系の権限で構成になると思います。</p>
+
+<p>権限はたくさんあります。詳しくは<a href="[https://dev.mysql.com/doc/refman/5.6/ja/grant.html#grant-privileges](https://dev.mysql.com/doc/refman/5.6/ja/grant.html#grant-privileges)">公式のGRANT および REVOKE に対して許容可能な権限</a>を確認してください。</p>
+
+<h3 id="flush-privilegesの有無">FLUSH PRIVILEGESの有無</h3>
+
+<p>ネット記事によっては、grantの後に<code class="language-plaintext highlighter-rouge">FLUSH PRIVILEGES;</code> を実行してるのをよく見かけます。
+ただ、<a href="[https://dev.mysql.com/doc/refman/5.6/ja/privilege-changes.html](https://dev.mysql.com/doc/refman/5.6/ja/privilege-changes.html)">公式</a>の説明を見ると分かりますが、<code class="language-plaintext highlighter-rouge">GRANT、REVOKE、SET PASSWORD、RENAME USER</code>などのアカウント管理ステートメントの場合は、自動でリロードするので不要です。</p>
+
+<p>必要なタイミングは、<code class="language-plaintext highlighter-rouge">INSERT、UPDATE、DELETE</code>ステートメントで直接権限テーブルを更新したときです。</p>
+
+<h2 id="作成したmysqlユーザーで接続確認する">作成したMySQLユーザーで接続確認する</h2>
+
+<p>MySQLユーザーを作成したら実際にアクセスして疎通確認します。
+例えばMySQLサーバを立てたサーバのIPが<code class="language-plaintext highlighter-rouge">123.123.123.123</code>だとします。</p>
+
+<div class="language-sql highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="err">$</span> <span class="n">mysql</span> <span class="o">-</span><span class="n">u</span> <span class="k">user</span> <span class="o">-</span><span class="n">h</span> <span class="mi">123</span><span class="p">.</span><span class="mi">123</span><span class="p">.</span><span class="mi">123</span><span class="p">.</span><span class="mi">123</span> <span class="o">-</span><span class="n">p</span>
+</code></pre></div></div>
+
+<h3 id="接続エラーは要因が多い">接続エラーは要因が多い</h3>
+
+<p>MySQLの接続エラーは特定が困難です。何らかの原因で接続エラーが起きると接続失敗の旨のみ表示されます。</p>
+
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ERROR 2003 (HY000): Can't connect to MySQL server on '123.123.123.123' (113)
+</code></pre></div></div>
+
+<p>ここではすべてのパターンは掲載しませんが、一部掲載します。</p>
+
+<ul>
+  <li>ユーザーが異なる
+    <ul>
+      <li>接続しようとしてるMySQLユーザーが間違っていないか？</li>
+      <li>ユーザー名は合っててもホストがあっているか？</li>
+    </ul>
+  </li>
+  <li>ホスト(IPアドレス)が異なる
+    <ul>
+      <li>接続先DBサーバのホスト(IP)があっているか？</li>
+    </ul>
+  </li>
+  <li>firewalldで許可されてない
+    <ul>
+      <li>MySQLサービスまたは使用ポートが許可されてるか？</li>
+      <li>firewalldの許可サービスに<code class="language-plaintext highlighter-rouge">mysql</code>またはポート(3306/tcp)が含まれているか？</li>
+    </ul>
+  </li>
+  <li>ポート番号が異なる
+    <ul>
+      <li>デフォルト3306から変更してるなら<code class="language-plaintext highlighter-rouge">-P</code>オプションで指定してるか？</li>
+      <li>指定したポートが間違っていないか？</li>
+    </ul>
+  </li>
+</ul>
+
+<h2 id="dbはインフラの中で比較的よく触る">DBはインフラの中で比較的よく触る</h2>
+<p>これでCentOS上にMySQLをインストール、稼働させることが出来たと思います。
+ただし、構築して終わりではなくWeb開発の現場では、MySQLなどのデータベースは他のインフラと比べて、比較的触る頻度が多いです。
+理由としては、RailsなどWebアプリケーションの実装の影響を受けやすく、Webパフォーマンスに影響するため、スロークエリを調べたりEXPLAINでインデックスが効いているか確認したりと、チューニング作業が発生するためです。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+
+    <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">
+      <img src="/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" alt="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">
+      <h3>CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#rails">Rails</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#web">Web</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#nginx">nginx</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive">
+      <img src="/assets/images/2021-02-19-linux-centos-firewalld-edit-firewalld-in-inactive/eyecatch.png" alt="CentOS8のfirewalldが未起動のままポート許可やサービス登録する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-firewalld-edit-firewalld-in-inactive">
+      <h3>CentOS8のfirewalldが未起動のままポート許可やサービス登録する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#firewalld">firewalld</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-firewalld-create-new-service">
+      <img src="/assets/images/2021-02-19-linux-centos-firewalld-create-new-service/eyecatch.png" alt="CentOSのfirewalldにポート番号変更したSSHのサービスを自作して登録する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-firewalld-create-new-service">
+      <h3>CentOSのfirewalldにポート番号変更したSSHのサービスを自作して登録する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#firewalld">firewalld</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-centos8-setup-secure-server">
+      <img src="/assets/images/2021-02-19-linux-centos-centos8-setup-secure-server/eyecatch.png" alt="CentOS8で不正SSHログイン対策したLinuxサーバ構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-centos8-setup-secure-server">
+      <h3>CentOS8で不正SSHログイン対策したLinuxサーバ構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/linux/centos/linux-centos-build-ruby-env-on-centos">
+      <img src="/assets/images/2021-02-19-linux-centos-build-ruby-env-on-centos/eyecatch.png" alt="MacユーザがCentOS8にRuby環境を構築する" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/linux/centos/linux-centos-build-ruby-env-on-centos">
+      <h3>MacユーザがCentOS8にRuby環境を構築する</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#linux">Linux</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#centos">CentOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                      
+
+            
+              <li class="related-post-item">
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-format="fluid"
+                   data-ad-layout-key="-ga-4d+ii+16-1f4"
+                   data-ad-client="ca-pub-5156339577835247"
+                   data-ad-slot="9550753128"></ins>
+              <script>
+                   (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+              </li>
+            
+
+      </div>
+    </ul>
+</div>
+
+
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+<script src="/assets/js/shared/post.js" defer></script>
+
+  </article>
+
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-xcassets-basic">【初心者向け】Assets.xcassetsを理解して使う</a>
+            </li>
+            
+            <li>
+                <a href="/db/mysql/mysql-find-mycnf">MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</a>
+            </li>
+            
+            <li>
+                <a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">【初心者向け】UITableViewCellをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+        
+        <a href="/tags#google-japanese-input">Google日本語入力</a>
+      
+        
+        <a href="/tags#ln">lnコマンド</a>
+      
+        
+        <a href="/tags#xcode">Xcode</a>
+      
+        
+        <a href="/tags#xcodegen">XcodeGen</a>
+      
+        
+        <a href="/tags#xcconfig">xcconfig</a>
+      
+        
+        <a href="/tags#quick">Quick</a>
+      
+        
+        <a href="/tags#swiftlint">SwiftLint</a>
+      
+        
+        <a href="/tags#bitrise">Bitrise</a>
+      
+        
+        <a href="/tags#fastlane">Fastlane</a>
+      
+        
+        <a href="/tags#ssh-keygen">ssh-keygen</a>
+      
+        
+        <a href="/tags#ssh-agent">ssh-agent</a>
+      
+        
+        <a href="/tags#asset-pipeline">Asset Pipeline</a>
+      
+        
+        <a href="/tags#selenium">Selenium</a>
+      
+        
+        <a href="/tags#capybara">Capybara</a>
+      
+        
+        <a href="/tags#webkit">WebKit</a>
+      
+        
+        <a href="/tags#web_driver">WebDriver</a>
+      
+        
+        <a href="/tags#chrome_driver">ChromeDriver</a>
+      
+        
+        <a href="/tags#org-build">組織作り</a>
+      
+        
+        <a href="/tags#firewalld">firewalld</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-sticky">
+    <!-- TOC -->
+    <div class="side-toc" id="side-toc-id">
+    </div>
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
+      
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li><a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+</li>
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+  </aside>
+</main>
+
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+  </body>
+</html>
