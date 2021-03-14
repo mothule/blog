@@ -1,4 +1,303 @@
-<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-02-22T15:32:10+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">bundler(1.17.2)で–path=vendor/bundleつけたら警告出た話</title><link href="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option" rel="alternate" type="text/html" title="bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話" /><published>2021-02-22T00:00:00+09:00</published><updated>2021-02-22T15:28:59+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option">&lt;p&gt;Railsの空アプリを作りたくて、bundler(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1.17.2&lt;/code&gt;)で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path&lt;/code&gt;をつけてインストール実行したら、警告が表示されるようになってた。&lt;/p&gt;
+<?xml version="1.0" encoding="utf-8"?><feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja-JP"><generator uri="https://jekyllrb.com/" version="3.9.0">Jekyll</generator><link href="https://blog.mothule.com/feed.xml" rel="self" type="application/atom+xml" /><link href="https://blog.mothule.com/" rel="alternate" type="text/html" hreflang="ja-JP" /><updated>2021-03-14T20:01:21+09:00</updated><id>https://blog.mothule.com/feed.xml</id><title type="html">もちゅろぐ</title><subtitle>iOSやSwift,RubyやRailsなどiPhoneアプリ開発とサーバーサイド開発を中心に綴っている技術ブログ</subtitle><entry><title type="html">getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する</title><link href="https://blog.mothule.com/tools/shellscript/shellscript-upload-symbols-script-using-getopt" rel="alternate" type="text/html" title="getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する" /><published>2021-03-14T00:00:00+09:00</published><updated>2021-03-14T19:55:51+09:00</updated><id>https://blog.mothule.com/tools/shellscript/shellscript-upload-symbols-script-using-getopt</id><content type="html" xml:base="https://blog.mothule.com/tools/shellscript/shellscript-upload-symbols-script-using-getopt">&lt;p&gt;iOSエンジニアいえど、避けては通れないシェルスクリプト。でもちょっと凝ろうとするとその慣れない構文やスタイルにすぐ折れます。&lt;/p&gt;
+
+&lt;p&gt;今回はシェルスクリプトでgetoptを使ったオプション対応する方法について、実際に動くコードを使って説明します。
+また、処理自体もiOSエンジニアには馴染みのあるFirebase Crashlyticsの&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload-symbols&lt;/code&gt;コマンドを使うので読みやすいと思います。&lt;/p&gt;
+
+&lt;h2 id=&quot;概要&quot;&gt;概要&lt;/h2&gt;
+
+&lt;h3 id=&quot;背景&quot;&gt;背景&lt;/h3&gt;
+&lt;p&gt;今回スクリプト書いた経緯は、シェルスクリプトには必ずと言っていいほどオプション機能が備わっています。
+Rubyではgemを使えばパースをいい感じにやってくれますが、シェルスクリプトではどのように実現しているのか仕組みを知っておこうと思いました。&lt;/p&gt;
+
+&lt;h3 id=&quot;読者対象&quot;&gt;読者対象&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;iOSやAndroidエンジニアなどシェルスクリプトと正面から向かい合う機会が少ない人&lt;/li&gt;
+  &lt;li&gt;ちょっと凝ったシェルスクリプトを書きたい人&lt;/li&gt;
+  &lt;li&gt;念の為シェルスクリプトの読むスキルを向上させときたい人&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;この記事で得られる内容&quot;&gt;この記事で得られる内容&lt;/h3&gt;
+&lt;ul&gt;
+  &lt;li&gt;getoptの使い方やMacの標準搭載したgetoptの注意点&lt;/li&gt;
+  &lt;li&gt;getoptを使ったオプション対応&lt;/li&gt;
+  &lt;li&gt;シェルのcase文の使い方&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;作ったスクリプトの使い方&quot;&gt;作ったスクリプトの使い方&lt;/h2&gt;
+&lt;p&gt;説明するスクリプトの動作について説明します。&lt;/p&gt;
+
+&lt;p&gt;Firebase Crashlyticsに入っている&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload-symbols&lt;/code&gt;コマンドを使う機能のみです。
+これにコマンドに必要な引数をオプションで変更可能にしてあります。&lt;/p&gt;
+
+&lt;p&gt;アップロードしたいdSYMを次の方法で指定できます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;アーカイブされた&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*.dSYM&lt;/code&gt;ファイル&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*.dSYM&lt;/code&gt;ファイルの入ったディレクトリ&lt;/li&gt;
+  &lt;li&gt;直接&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*.dSYM&lt;/code&gt;ファイル指定&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3.zip
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3/
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3/hogehoge.dSYM
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;オプションを渡して処理に使うパス先を変更できます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3.zip &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; ~/workspace/hogehoge/Pods/FirebaseCrashlytics/upload-symbols &lt;span class=&quot;se&quot;&gt;\&lt;/span&gt;
+&lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ~/workspace/hogehoge/GoogleService-Info-release.plist
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ロングオプションにも対応します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3.zip &lt;span class=&quot;nt&quot;&gt;--dry-run&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;ヘルプを出すとそれっぽいヘルププリントが出力されます。&lt;/p&gt;
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;$ ./dsyms-uploade.sh --help
+Usage: ./dsyms-uploade.sh &amp;lt;dSYM&amp;gt; [-c, --upload-symbols-command-path path] [-p, --google-service-plist-path path] [-d, --dry-run] [-h, --help]
+
+
+  dSYM			dSYMファイルまたはアーカイブされた複数のdSYM、dSYMファイルが含まれたディレクトリを指定します。
+			ディレクトリの場合は *.dSYM で一致するファイルが対象となります。
+
+Options:
+  --upload-symbols-command-path &amp;lt;path&amp;gt;
+			upload-symbolsコマンドのパスを指定します。
+  -c			--upload-symbols-command-pathのエイリアス
+  --google-service-plist-path &amp;lt;path&amp;gt;
+			GoogleService-Info.plistのパスを指定します。
+  -p			--google-service-plist-pathのエイリアス
+  --help		このヘルプ画面を表示します
+  -h			--helpのエイリアス
+  -d,--dry-run		実行の代わりに実行するコマンドラインを表示します。
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;getoptとは&quot;&gt;getoptとは&lt;/h2&gt;
+&lt;p&gt;getoptの役割はとても単純で、コマンドオプションをパースするシェルコマンドです。&lt;/p&gt;
+
+&lt;h3 id=&quot;getoptsとの違い&quot;&gt;getoptsとの違い&lt;/h3&gt;
+&lt;p&gt;こちらも同様にコマンドオプションですが、bashのビルドインコマンドの一つとなります。
+getoptsではロングオプションの対応が少し面倒そうだったためgetoptにしました。&lt;/p&gt;
+
+&lt;h3 id=&quot;getoptにはgnu版とbsd版がある&quot;&gt;getoptにはGNU版とBSD版がある&lt;/h3&gt;
+&lt;p&gt;getoptには出どころが複数あり、出どころによって挙動が異なります。
+大きく分けるとGNU版とBSD版になります。&lt;/p&gt;
+
+&lt;h2 id=&quot;gnu版getoptを使う理由&quot;&gt;GNU版getoptを使う理由&lt;/h2&gt;
+&lt;p&gt;今回使うgetoptはGNU版を使います。理由は次の通りです。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;strong&gt;ロングオプション&lt;/strong&gt;が使える&lt;/li&gt;
+  &lt;li&gt;&lt;strong&gt;Bitrise&lt;/strong&gt;がgnu版をインストールしてた&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;ロングオプションを使いたい理由は、スクリプト利用時の可読性もありますが、単純によく見かけるよくできたオプションにはロングオプションが使われているからです。&lt;/p&gt;
+
+&lt;p&gt;また、このスクリプトの処理内容はFirebase CrashlyticsへdSYMをアップロードすることです。
+アーカイブしてApp Store Connectでそのビルドを使うなら、そのビルドのdSYMをアップロードする必要があります。
+そのためCIサービスからアーカイブするようなことも考慮します。&lt;/p&gt;
+
+&lt;p&gt;自分がよく使っているCIサービスはBitriseで、&lt;a href=&quot;https://github.com/bitrise-io/bitrise.io/blob/master/system_reports/osx-xcode-12.5.x.log&quot;&gt;BitriseのシステムレポートでGNU版getoptがインストールされていた&lt;/a&gt;という理由もあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;gnu版getoptをmacにインストール&quot;&gt;GNU版getoptをMacにインストール&lt;/h3&gt;
+&lt;p&gt;MacでGNU版getoptを使うには、Homebrewからインストールします。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;brew &lt;span class=&quot;nb&quot;&gt;install &lt;/span&gt;gnu-getopt
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;インストールは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;keg-only&lt;/code&gt;となっていので、インストール後に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;gnu-getopt&lt;/code&gt;が優先して使われるようにパス変更します。&lt;/p&gt;
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'export PATH=&quot;/usr/local/opt/gnu-getopt/bin:$PATH&quot;'&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&amp;gt;&lt;/span&gt; ~/.zshrc
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;コード全容&quot;&gt;コード全容&lt;/h2&gt;
+&lt;p&gt;コードはGistに上げてあります。このコードから抜粋して説明します。&lt;/p&gt;
+
+&lt;script src=&quot;https://gist.github.com/mothule/391e64e936bfc9593a17e57803a74c12.js&quot;&gt;&lt;/script&gt;
+
+&lt;h3 id=&quot;コードの流れ&quot;&gt;コードの流れ&lt;/h3&gt;
+&lt;p&gt;スクリプトは1ファイルで構成されてます。
+この1ファイルを上から見たとき次の順序で処理構成してます。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;関数定義&lt;/li&gt;
+  &lt;li&gt;スクリプト前提条件の検証&lt;/li&gt;
+  &lt;li&gt;引数で受け取る変数宣言&lt;/li&gt;
+  &lt;li&gt;getoptで引数からオプションへ変換&lt;/li&gt;
+  &lt;li&gt;オプション毎のハンドリング&lt;/li&gt;
+  &lt;li&gt;受け取った変数の検証&lt;/li&gt;
+  &lt;li&gt;upload-symbolsコマンドの実行&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;関数定義&quot;&gt;関数定義&lt;/h2&gt;
+&lt;p&gt;ヘルプ用表示関数(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;usage()&lt;/code&gt;)と引数を検証する関数(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;validate_arg&lt;/code&gt;)の2つが定義されてます。&lt;/p&gt;
+
+&lt;h3 id=&quot;引数を検証する関数&quot;&gt;引数を検証する関数&lt;/h3&gt;
+
+&lt;p&gt;オプションには値も一緒に渡すタイプもあります。
+その場合に値が正しいか検証する関数です。&lt;/p&gt;
+
+&lt;p&gt;渡された引数が「文字列としての長さが0」または「文字先頭がハイフン(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-&lt;/code&gt;)から始まる場合は、ヘルプを表示します。
+ヘルプは最後に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;exit 1&lt;/code&gt;を出しているのでそのままスクリプトは終了します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;validate_arg&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;nb&quot;&gt;local &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;value&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;
+  &lt;span class=&quot;c&quot;&gt;# valueの長さが0 or valueがとマッチ&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-z&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;||&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$value&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;~ ^-+ &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;usage
+  &lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;span class=&quot;o&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この関数は値やオプション値の検証時に呼ばれています。&lt;/p&gt;
+
+&lt;h2 id=&quot;スクリプト前提条件の検証&quot;&gt;スクリプト前提条件の検証&lt;/h2&gt;
+&lt;p&gt;先程までは関数でしたので処理としてはここが最初に実行されます。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;getopt&lt;/code&gt;がBSD版ではなくGNU版を使っているかを検証します。
+ここでBSD版だと後のgetoptの処理が正しくされず変な挙動となるためです。&lt;/p&gt;
+
+&lt;p&gt;なぜ、GNU版かどうかをこの方法で判断してるのかは、実際に双方のコマンドを見比べて決めました。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;getopt &lt;span class=&quot;nt&quot;&gt;--version&lt;/span&gt; | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;linux&lt;span class=&quot;sb&quot;&gt;`&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;利用にはgnu-getoptが必要です。&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&amp;amp;2
+  &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$# &lt;/span&gt;&lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; 0 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;usage
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;引数で受け取る変数宣言&quot;&gt;引数で受け取る変数宣言&lt;/h2&gt;
+
+&lt;p&gt;上から順番に次の役割を持っています。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload_command&lt;/code&gt;: &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload-symbols&lt;/code&gt;コマンドのパス&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;google_service_plist&lt;/code&gt;: Firebaseで受け取るplistのパス&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dsym_path&lt;/code&gt;: dSYMのパス&lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;dry_run&lt;/code&gt;: Dry実行するかどうか&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;upload_command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;Pods/FirebaseCrashlytics/upload-symbols
+&lt;span class=&quot;nv&quot;&gt;google_service_plist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;./GoogleService-Info.plist
+&lt;span class=&quot;nv&quot;&gt;dsym_path&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;dry_run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;false&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;getoptで引数からオプションへ変換&quot;&gt;getoptで引数からオプションへ変換&lt;/h2&gt;
+
+&lt;p&gt;getoptコマンドを使って渡された引数から有効なオプションを&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;opt&lt;/code&gt;へ抜き出します。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-o&lt;/code&gt;でオプションで使う文字列で、値付きはコロンを文字後ろにつけます。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-l&lt;/code&gt;でロングオプションで使う文字列で値付きはコロンを文字列後ろにつけます。カンマで区切ります。
+最後の &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;eval set&lt;/code&gt;で位置パラメータを再構成します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;opt&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;$(&lt;/span&gt;getopt &lt;span class=&quot;nt&quot;&gt;-o&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;c:p:hd&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-l&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;upload-symbols-command-path:,google-service-plist-path:,help,dry-run&quot;&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$@&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;)&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$?&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!=&lt;/span&gt; 0 &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;getopt実行にエラーが発生しました。&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&amp;amp;2
+  &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;fi
+&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;eval set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$opt&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;オプション毎のハンドリング&quot;&gt;オプション毎のハンドリング&lt;/h2&gt;
+
+&lt;p&gt;シェルスクリプトのオプションのハンドリングは、引数を先頭からキューのように取り出して破棄しながら進めます。
+そのためオプションを1つハンドリングすると&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shift&lt;/code&gt;して次の引数を&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$1&lt;/code&gt;として取り出します。
+オプションに値があるオプションの場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;$2&lt;/code&gt;も値として使い、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;shift 2&lt;/code&gt;でオプション名とオプション値2つを履きします。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;while &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
+&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;do
+  case&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$1&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;in&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-c&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--upload-symbols-command-path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    validate_arg &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;upload_command&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;shift &lt;/span&gt;2 &lt;span class=&quot;c&quot;&gt;# 値付きなので2つ分ずらす&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--google-service-plist-path&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    validate_arg &lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;google_service_plist&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$2&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;shift &lt;/span&gt;2
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-h&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--help&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# -h または --help&lt;/span&gt;
+    usage
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;|&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--dry-run&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;dry_run&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;true
+    shift&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;nt&quot;&gt;--&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# -- の場合何もしない&lt;/span&gt;
+    &lt;span class=&quot;nb&quot;&gt;shift
+    break&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;*&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# それ以外&lt;/span&gt;
+    usage
+    &lt;span class=&quot;p&quot;&gt;;;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;esac&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;done&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;受け取った変数の検証&quot;&gt;受け取った変数の検証&lt;/h2&gt;
+&lt;p&gt;オプションのハンドリングが済んだら、
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload-symbols&lt;/code&gt;コマンドを使う前に関係する変数が有効か検証します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$upload_command&lt;/span&gt;  &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;upload_command_pathが有効なパスではありません。&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;upload_command&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&amp;amp;2
+  &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;fi
+
+if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$google_service_plist&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;google_service_plistが有効なパスではありません。&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;google_service_plist&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&amp;amp;2
+  &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;fi
+
+if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;!&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$dsym_path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;dsym_pathが有効なパスではありません。&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dsym_path&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&amp;amp;2
+  &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;upload-symbolsコマンドの実行&quot;&gt;upload-symbolsコマンドの実行&lt;/h2&gt;
+
+&lt;p&gt;最後に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload-symbols&lt;/code&gt;コマンドを実行します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--dry-run&lt;/code&gt;や&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-d&lt;/code&gt;でドライランが有効な場合は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload-symbols&lt;/code&gt;コマンドは実行せずに
+echoコマンドで実行予定のコマンドを文字列として表示して終了します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-f&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$dsym_path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# path is file.&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$dry_run&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$upload_command&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; -gsp &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$google_service_plist&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt; -p ios &lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;$dsym_path&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+    &lt;span class=&quot;nv&quot;&gt;$upload_command&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-gsp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$google_service_plist&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ios &lt;span class=&quot;nv&quot;&gt;$dsym_path&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;fi
+
+elif&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-d&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$dsym_path&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then&lt;/span&gt; &lt;span class=&quot;c&quot;&gt;# path is directory&lt;/span&gt;
+  &lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;[[&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$dry_run&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;nb&quot;&gt;true&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;]]&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt; &lt;span class=&quot;k&quot;&gt;then
+    &lt;/span&gt;find &lt;span class=&quot;nv&quot;&gt;$dsym_path&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;*.dSYM&quot;&lt;/span&gt; | xargs &lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt; FILE &lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$upload_command&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-gsp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$google_service_plist&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ios FILE
+  &lt;span class=&quot;k&quot;&gt;else
+    &lt;/span&gt;find &lt;span class=&quot;nv&quot;&gt;$dsym_path&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-name&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;*.dSYM&quot;&lt;/span&gt; | xargs &lt;span class=&quot;nt&quot;&gt;-I&lt;/span&gt; FILE &lt;span class=&quot;nv&quot;&gt;$upload_command&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-gsp&lt;/span&gt; &lt;span class=&quot;nv&quot;&gt;$google_service_plist&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-p&lt;/span&gt; ios FILE
+  &lt;span class=&quot;k&quot;&gt;fi
+
+else
+  &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;echo&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;dsym_pathはファイルかディレクトリのみ有効です。&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;${&lt;/span&gt;&lt;span class=&quot;nv&quot;&gt;dsym_path&lt;/span&gt;&lt;span class=&quot;k&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;&amp;gt;&lt;/span&gt;&amp;amp;2
+  &lt;span class=&quot;nb&quot;&gt;exit &lt;/span&gt;1
+&lt;span class=&quot;k&quot;&gt;fi&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ディレクトリ指定の動きについて&quot;&gt;ディレクトリ指定の動きについて&lt;/h3&gt;
+&lt;p&gt;ファイル指定の場合は挙動はシンプルなため説明なく読み取れると思います。
+ディレクトリ指定の場合は、指定ディレクトリ内を&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*.dSYM&lt;/code&gt;で検索し、一致するパス全部に対し、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;upload-symbols&lt;/code&gt;コマンドを実行します。&lt;/p&gt;
+
+&lt;h4 id=&quot;dsymをファイルを探す&quot;&gt;.dSYMをファイルを探す&lt;/h4&gt;
+&lt;p&gt;コマンドライン前半の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find $dsym_path -name &quot;*.dSYM&quot;&lt;/code&gt;では、指定ディレクトリ内から&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;*.dSYM&lt;/code&gt;を探します。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;find&lt;/code&gt;コマンドの結果を次の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xargs&lt;/code&gt;コマンドへパイプで渡します。&lt;/p&gt;
+
+&lt;p&gt;コマンドライン後半の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;xargs -I FILE $upload_command -gsp $google_service_plist -p ios FILE&lt;/code&gt;では、
+前半から受け取った文字列を指定位置に配置して、実行します。この場合&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;FILE&lt;/code&gt;が前半から受け取った文字列、つまり&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;.dSYM&lt;/code&gt;のパスになります。&lt;/p&gt;
+
+&lt;h2 id=&quot;このスクリプトの使い所&quot;&gt;このスクリプトの使い所&lt;/h2&gt;
+&lt;p&gt;今回はgetoptを使ってオプション対応する方法がメインですが、このスクリプト自体にも一応活用ケースはあります。&lt;/p&gt;
+
+&lt;p&gt;元々これを書こうと思った理由として、「使用頻度高いのに毎回ネットからアップロードシェルコマンド確認するのが面倒」が一番でした。他にもdSYMが必ずしも手元PCにあるとは限らない環境だったりです。&lt;/p&gt;</content><author><name></name></author><category term="tools" /><category term="shellscript" /><category term="ios" /><category term="firebase" /><category term="crashlytics" /><summary type="html">iOSエンジニアいえど、避けては通れないシェルスクリプト。でもちょっと凝ろうとするとその慣れない構文やスタイルにすぐ折れます。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-03-14-shellscript-upload-symbols-script-using-getopt/eyecathc.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-03-14-shellscript-upload-symbols-script-using-getopt/eyecathc.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">bundler(1.17.2)で–path=vendor/bundleつけたら警告出た話</title><link href="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option" rel="alternate" type="text/html" title="bundler(1.17.2)で--path=vendor/bundleつけたら警告出た話" /><published>2021-02-22T00:00:00+09:00</published><updated>2021-02-22T15:28:59+09:00</updated><id>https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option</id><content type="html" xml:base="https://blog.mothule.com/ruby/bundler/ruby-bundler-warning-path-option">&lt;p&gt;Railsの空アプリを作りたくて、bundler(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;1.17.2&lt;/code&gt;)で&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path&lt;/code&gt;をつけてインストール実行したら、警告が表示されるようになってた。&lt;/p&gt;
 
 &lt;h2 id=&quot;--pathvendorbundleで表示された警告&quot;&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;--path=vendor/bundle&lt;/code&gt;で表示された警告&lt;/h2&gt;
 
@@ -27,7 +326,375 @@
 BUNDLE_PATH: &lt;span class=&quot;s2&quot;&gt;&quot;vendor/bundle&quot;&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
 
-&lt;p&gt;個人的には &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-j4&lt;/code&gt; フラグなどジョブ数指定も同様の扱いになってくれたほうが楽だったりする。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="gem" /><category term="bundler" /><summary type="html">Railsの空アプリを作りたくて、bundler(1.17.2)で--pathをつけてインストール実行したら、警告が表示されるようになってた。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linuxサーバのホスト名をhostnamectlで変更する</title><link href="https://blog.mothule.com/linux/linux-hostnamectl" rel="alternate" type="text/html" title="Linuxサーバのホスト名をhostnamectlで変更する" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T13:51:42+09:00</updated><id>https://blog.mothule.com/linux/linux-hostnamectl</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-hostnamectl">&lt;p&gt;CentOSやUbuntuなどLinuxサーバーのホスト名を変更するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;を使います。
+&lt;p&gt;個人的には &lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-j4&lt;/code&gt; フラグなどジョブ数指定も同様の扱いになってくれたほうが楽だったりする。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="gem" /><category term="bundler" /><summary type="html">Railsの空アプリを作りたくて、bundler(1.17.2)で--pathをつけてインストール実行したら、警告が表示されるようになってた。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-22-ruby-bundler-warning-path-option/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos" rel="alternate" type="text/html" title="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-22T14:52:28+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">&lt;p&gt;Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。&lt;/p&gt;
+
+&lt;h2 id=&quot;サーバー構築やアプリのデプロイの内部イメージついてますか&quot;&gt;サーバー構築やアプリのデプロイの内部イメージついてますか？&lt;/h2&gt;
+&lt;p&gt;インフラ構築はAnsible、RailsアプリのデプロイはCapistranoを使うのが定番です。
+しかし、内部を知らずにそれら使うと、実際のインフラ構築やデプロイのオペレーションがイメージできず頭がついてこれません。
+自身の中でフローをイメージできることは、AnsibleやCapistranoを使うときに最適な処理を構築には必須です。&lt;/p&gt;
+
+&lt;p&gt;そのため、この記事ではAnsibleやCapistranoを使わない方法でインフラ構築やデプロイ作業を行いました。
+具体的にはそれぞれ次の方法で実現します。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;Ansibleを使わずnginx × Puma × Rails環境を手作業で構築&lt;/li&gt;
+  &lt;li&gt;Capistranoを使わずgitやSSHを使ってデプロイ&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;対象読者&quot;&gt;対象読者&lt;/h3&gt;
+&lt;p&gt;Mac上でrbenvでRuby環境を構築し、Railsアプリを作ったことがあるが、
+Linuxサーバにデプロイをしたことがない、またはデプロイはあるがイマイチ腹落ちできていない。&lt;/p&gt;
+
+&lt;h3 id=&quot;この記事のゴール&quot;&gt;この記事のゴール&lt;/h3&gt;
+&lt;p&gt;Macで作ったRailsアプリをCentOS8上に展開、起動できるようにする。
+コード更新を手作業で行えるようにする。&lt;/p&gt;
+
+&lt;h3 id=&quot;この記事でやらないこと&quot;&gt;この記事でやらないこと&lt;/h3&gt;
+&lt;p&gt;インフラ構築とデプロイがテーマなので、HTTPS対応とpuma_worker_killerは対応していません。&lt;/p&gt;
+
+&lt;h2 id=&quot;linuxcentosサーバの構築は省略&quot;&gt;Linux(CentOS)サーバの構築は省略&lt;/h2&gt;
+&lt;p&gt;この記事ではVPS上にCentOS8をインストールした後の内容となっています。
+CentOS8のセットアップについては「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-centos8-setup-secure-server&quot;&gt;CentOS8で不正SSHログイン対策したLinuxサーバ構築する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。
+またCnetOS上のRuby環境については「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-build-ruby-env-on-centos&quot;&gt;MacユーザがCentOS8にRuby環境を構築する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;p&gt;なお、今回はMySQLサーバは別サーバ上に立てていますが、記事内容には直接関わらないため、同一サーバにインストールしても問題ないはずです。
+ちなみにCentOS上にMySQLサーバ構築については「&lt;span&gt;&lt;a href=&quot;/db/mysql/db-mysql-install-mysql8-on-centos8&quot;&gt;CentOS8にMySQL8をインストールして構築する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h2 id=&quot;構築するサーバ構成&quot;&gt;構築するサーバ構成&lt;/h2&gt;
+&lt;p&gt;今回構築するサーバ構成を簡単に表すとこうなります。&lt;/p&gt;
+
+&lt;p&gt;nginx → puma → rails → mysql&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;nginxはリバースプロキシとして動かす&lt;/li&gt;
+  &lt;li&gt;nginx と puma間はUNIXドメインソケットで通信する&lt;/li&gt;
+  &lt;li&gt;rails と mysql間はTCP/IPで通信する&lt;/li&gt;
+  &lt;li&gt;railsアプリのデプロイはサーバにSSHで接続して作業する&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;大まかなフロー&quot;&gt;大まかなフロー&lt;/h2&gt;
+
+&lt;ol&gt;
+  &lt;li&gt;Railsアプリ用意&lt;/li&gt;
+  &lt;li&gt;サーバにGit環境用意&lt;/li&gt;
+  &lt;li&gt;サーバにPuma×Railsをデプロイ&lt;/li&gt;
+  &lt;li&gt;nginxのリバースプロキシ設定&lt;/li&gt;
+  &lt;li&gt;Pumaのデーモン化&lt;/li&gt;
+  &lt;li&gt;コードデプロイ&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;h2 id=&quot;railsアプリを用意する&quot;&gt;Railsアプリを用意する&lt;/h2&gt;
+&lt;p&gt;まずはMac上に機能は何でもいいのでRailsアプリを用意します。
+あまり凝ったアプリだと躓いたときに原因特定に時間がかかるので、トップページ1つあるだけの簡単なアプリがおすすめです。&lt;/p&gt;
+
+&lt;p&gt;用意したらGitHubにプッシュします。
+publicレポジトリでも構わないですが、万が一セキュアな情報を誤ってpushするとリスクもありますし、実際の運用を考えるとprivateレポジトリにします。&lt;/p&gt;
+
+&lt;h2 id=&quot;サーバにgit環境用意&quot;&gt;サーバにGit環境用意&lt;/h2&gt;
+&lt;p&gt;最初はサーバとGitHub間のssh通信ができるようにSSH用のキーを作成します。
+普段MacからGitHub上のprivateレポジトリをクローンしてるように、サーバにも同等の機能をもたせます。&lt;/p&gt;
+
+&lt;p&gt;まずサーバにSSH接続したら&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-keygen&lt;/code&gt;で公開鍵と秘密鍵を作成します。
+作成したら公開鍵をコピーして、&lt;a href=&quot;[https://github.com/settings/keys](https://github.com/settings/keys)&quot;&gt;GitHubのSSH keys&lt;/a&gt;に追加します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.ssh/id_rsa.pub
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;最近のバージョンであれば鍵長はデフォルト値でも十分だと思いますが、そこは自己責任でお願いします。&lt;/p&gt;
+
+&lt;p&gt;GitHubに公開鍵の登録が終わったら疎通確認としてSSH接続をテストします。
+正しくできていれば接続成功の表示がされます。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;com&lt;/span&gt;
+&lt;span class=&quot;no&quot;&gt;Hi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hogehoge!&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;You&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;have&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;successfully&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;authenticated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;but&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GitHub&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;does&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;provide&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;access&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;サーバにpumarailsをデプロイ&quot;&gt;サーバにPuma×Railsをデプロイ&lt;/h2&gt;
+&lt;p&gt;サーバ上にGit環境が整ったら、GitHubからPrivateレポジトリのコードをダウンロードできるようになります。
+事前にプッシュしておいたRailsアプリをダウンロードして、サーバー起動していきます。&lt;/p&gt;
+
+&lt;h3 id=&quot;githubのコードをサーバへcloneクローン&quot;&gt;GitHubのコードをサーバへClone(クローン)&lt;/h3&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git clone&lt;/code&gt;でコードをダウンロードします。なお、コードの展開場所ですがネット記事だと&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/&lt;/code&gt;をよく見かけますが、現場ではユーザのホームディレクトリ上に展開してたりとマチマチです。&lt;/p&gt;
+
+&lt;p&gt;今回はホームディレクトリ上に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app&lt;/code&gt;フォルダ作ってそこの中に展開します。
+下記コードのGitHubアカウント名やレポジトリ名は適宜差し替えてください。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; ~/app
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/app
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone git@github.com:your_github_name/repo_name.git
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;bundle-installでgemをインストール&quot;&gt;bundle installでgemをインストール&lt;/h3&gt;
+&lt;p&gt;ダウンロード完了したら、ローカル同様&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;でgemを取得します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; path &lt;span class=&quot;s2&quot;&gt;&quot;vendor/bundle&quot;&lt;/span&gt;
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h4 id=&quot;mysql2エラーが起きた場合&quot;&gt;mysql2エラーが起きた場合&lt;/h4&gt;
+&lt;p&gt;もしこのときmysql2 gemでエラーが出た場合は、サーバー上にMySQLに関するヘッダーファイルがないのかもしれません。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql-devel&lt;/code&gt;をインストールして再実行してみてください。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; mysql-devel
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;ローカルのrailsアプリからmasterkeyをサーバーへコピー&quot;&gt;ローカルのRailsアプリからmaster.keyをサーバーへコピー&lt;/h3&gt;
+&lt;p&gt;ローカル環境でproduction環境を実行しても気づきにくいかと思いますが、production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;が必要です。しかし&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;はGitHubにプッシュされないようになっています。なのでサーバに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;を渡す必要があります。この情報が渡っていないとRailsは暗号ファイルを復号できずproduction環境を実行できません。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scp master.key user_name@server_address:~/app/myapp/config/
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;アセットのプリコンパイル実行&quot;&gt;アセットのプリコンパイル実行&lt;/h3&gt;
+&lt;p&gt;production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;assets&lt;/code&gt;フォルダ内のリソースは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;public/assets&lt;/code&gt;へ事前コンパイルが必要です。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake assets:precompile
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;centos8--puma--rails間のアクセス疎通確認&quot;&gt;CentOS8 → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
+&lt;p&gt;PumaはRackサーバ機能も兼ねているため、nginxなしでもアクセス可能です。
+なのでnginxを立てる前にPuma×Railsだけでアプリを立ち上げて問題なく疎通できるか確認をとっておきます。&lt;/p&gt;
+
+&lt;p&gt;ここをおろそかにしてnginxの構築へ進むと、もし動かない場合どの部分が原因で動かないのか原因特定範囲が広くなります。&lt;/p&gt;
+
+&lt;p&gt;なお、単純に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;だと外部からのアクセスできない状態なので、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt;も一緒に渡します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails s &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 0.0.0.0 &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; production
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;Railsアプリが起動したら、ブラウザでルートページにアクセスして正常にページが表示されるか確認します。
+URLは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;サーバのIPアドレス:Pumaで設定してるポート番号&lt;/code&gt;になります。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;routes.rb&lt;/code&gt;でroot設定していない場合は、存在するエンドポイントにアクセスして疎通確認してください。&lt;/p&gt;
+
+&lt;h4 id=&quot;pumaで設定してるポート番号&quot;&gt;Pumaで設定してるポート番号&lt;/h4&gt;
+&lt;p&gt;Pumaで設定してるポート番号は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;に定義されています。
+デフォルトのままであれば次のように定義されているはずです。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;nginxのリバースプロキシ設定&quot;&gt;nginxのリバースプロキシ設定&lt;/h2&gt;
+&lt;p&gt;Puma × Railsが無事動くことが確認できたら、次はnginxを前段に配置します。
+具体的にはPumaのlistenをポートからUNIXドメインソケットに変更して、PumaのlistenをポートからUNIXドメインソケットに変更します。
+こうすれば、nginxのリクエストをPumaのソケットに流れるようになります。
+まずはPuma側から対応します。&lt;/p&gt;
+
+&lt;h3 id=&quot;configpumarbのlistenをポートからunixドメインソケットに変更&quot;&gt;config/puma.rbのlistenをポートからUNIXドメインソケットに変更&lt;/h3&gt;
+&lt;p&gt;前述したPumaの設定ファイル(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;)では、ポート番号でlistenする設定になっています。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;これをUNIXドメインソケットに変更します。
+&lt;strong&gt;このときポート設定は必ずコメントアウトか削除してください。&lt;/strong&gt;
+ポート設定が残ったままUNIXドメインソケット設定を追記してもポート設定が優先されます。&lt;/p&gt;
+
+&lt;p&gt;bindでUNIXドメインソケットのファイル場所を設定します。
+Pumaが起動するとこのパス先にソケットファイルが作成されます。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# port        ENV.fetch(&quot;PORT&quot;) { 3000 }&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;この状態でRailsアプリを実行すると、listen先がpuma.sockに変わります。
+またソケットファイルも作成されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;nginxのリクエストをpumaのunixドメインソケットに流す&quot;&gt;nginxのリクエストをPumaのUNIXドメインソケットに流す&lt;/h3&gt;
+&lt;p&gt;次はnginx側を変更します。
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http&lt;/code&gt;コンテキスト内に次のコードを追記します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に直接アプリ固有の設定を記入せず&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブを使ってアプリ毎に設定ファイルを分離して管理する方法がありますが、今回は省略します。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ここから&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_user_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_app_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sockets&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_read_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_connect_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_redirect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Proto&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$scheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;For&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+      &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
+    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# ここまでを追加する&lt;/span&gt;
+&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;ディレクティブに渡すパスは、Pumaのsocketファイルのパスを指定してください。&lt;/p&gt;
+
+&lt;p&gt;nginxが起動中なら変更を反映させます。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
+もしくは
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;nginxの基礎に関しては「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step1-on-mac&quot;&gt;Macでnginxをインストールして起動する&lt;/a&gt;&lt;/span&gt;
+」にまとめてあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;nginx起動&quot;&gt;nginx起動&lt;/h3&gt;
+&lt;p&gt;nginxを立ち上げます。
+2行目で自動起動を有効化します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl start nginx
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h3 id=&quot;nginx--puma--rails間のアクセス疎通確認&quot;&gt;nginx → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
+&lt;p&gt;ここまで設定すれば、ポート3000にアクセスしたらnginxがPumaにリクエストを上流しRailsアプリへ到達するようになっています。
+それを確かめるために疎通確認します。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://your-server-ip-address:3000&lt;/code&gt;へアクセスしてRailsアプリのルートページが表示されれば疎通成功です。&lt;/p&gt;
+
+&lt;p&gt;もしうまく行かない場合はログを確認することで原因追求に役立ちます。ログは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/log/nginx/&lt;/code&gt; にアクセスログとエラーログがあります。&lt;/p&gt;
+
+&lt;h3 id=&quot;ログにconnect-to-pumasockでpermission-deniedが出る場合&quot;&gt;ログにconnect() to puma.sockでPermission deniedが出る場合&lt;/h3&gt;
+
+&lt;p&gt;502 Bad Gatewayが出る場合は、nginxからPumaへのつなぎでエラーが出ている可能性があります。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;connect&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; to unix:///home/mothule/app/rails_sample/tmp/sockets/puma.sock failed &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;13: Permission denied&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;nginxからpuma.socketへの権限がない場合このエラーが出ます。
+nginxを誰が実行してるか確認します。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;nginx
+root       22126  0.0  2.1 120088 10276 ?        Ss   15:49   0:00 nginx: master process nginx
+nginx      22131  0.0  1.9 152720  9088 ?        S    15:49   0:00 nginx: worker process
+root       22170  0.0  0.2  10284  1056 pts/1    R+   15:53   0:00 &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;auto nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx&lt;/code&gt;ユーザーで動いています。実行ユーザーがRailsアプリを動かしているユーザーと同じでないとファイルの編集権限が足りず権限エラーになります。
+なのでnginxの実行ユーザーをRailsアプリを動かしているユーザーに変更します。&lt;/p&gt;
+
+&lt;p&gt;nginxの実行ユーザーの変更は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt;を変更します。&lt;/p&gt;
+
+&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# user nginx
+user your_user_name
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;p&gt;リロードも忘れずに行います。&lt;/p&gt;
+
+&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
+または
+&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;railsアプリのデーモン化&quot;&gt;Railsアプリのデーモン化&lt;/h2&gt;
+&lt;p&gt;CentOS上にnginx/puma/railsが動くようにはなりました。
+しかし、サーバにはSSH接続しており、この状態でRailsを実行してるので、SSHが終了すると、Railsアプリも終了してしまいます。&lt;/p&gt;
+
+&lt;p&gt;本番環境でそれだと困るので、SSHが終了しても動くようにPumaをデーモン化する必要があります。
+puma.rbをいじってデーモン化します。また本番のみUNIXドメインソケット通信にし、それ以外ではnginxを介さずPuma単体でポートを開いて処理できるようにします。&lt;/p&gt;
+
+&lt;p&gt;次のコード&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;の全容です。
+デフォルトコードから余計なコメント等を削除し、本番時のみデーモン化させるコードを追加したものです。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;RAILS_MAX_THREADS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;threads&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;
+
+&lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'RAILS_ENV'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'development'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'production'&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# socket&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
+
+  &lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;state_path&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'tmp'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'pids'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.state'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;stdout_redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma-error.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
+    &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
+  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;daemonize&lt;/span&gt;
+
+&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
+  &lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
+  &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Specifies the `environment` that Puma will run in.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;environment&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Specifies the `pidfile` that Puma will use.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;pidfile&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PIDFILE&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;tmp/pids/server.pid&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
+
+&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;state_path
+    &lt;ul&gt;
+      &lt;li&gt;pumaの状態を表したファイルで、pumactlが使います。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;stdout_redirect
+    &lt;ul&gt;
+      &lt;li&gt;STDOUTとSTDERRを指定ファイルにリダイレクトします。&lt;/li&gt;
+      &lt;li&gt;最後のBoolean型は出力を追加するかどうかです。デフォルトはfalseです。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;daemonize
+    &lt;ul&gt;
+      &lt;li&gt;pumaをデーモン実行するかどうか&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h2 id=&quot;コードデプロイ&quot;&gt;コードデプロイ&lt;/h2&gt;
+&lt;p&gt;最後にコード変更を反映させる方法です。
+nginx/puma/railsが既に動いている状態からコードを反映させます。&lt;/p&gt;
+
+&lt;p&gt;変更後のコードはGitHubに上がっているので、git pullでとってくることでサーバ上のコードを変更します。
+その後の反映ですが、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec pumactl restart&lt;/code&gt; をすることでpumaが再起動してくれて、コードが反映されます。&lt;/p&gt;
+
+&lt;h3 id=&quot;pumaにおけるrailsアプリの起動方法&quot;&gt;PumaにおけるRailsアプリの起動方法&lt;/h3&gt;
+&lt;p&gt;PumaをRackサーバに使う場合Railsアプリを起動する方法が3つあります。&lt;/p&gt;
+
+&lt;ul&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;コマンドを使う
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RAILS_ENV&lt;/code&gt;または&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-e&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;production&lt;/code&gt;であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma/production.rb&lt;/code&gt;をロード試行&lt;/li&gt;
+      &lt;li&gt;ファイルなければ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma.rb&lt;/code&gt;をロードします。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma&lt;/code&gt;コマンドを使う
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RACK_ENV&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pumactl&lt;/code&gt;コマンドを使う
+    &lt;ul&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-F&lt;/code&gt;で指定されたファイルをロード&lt;/li&gt;
+      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails&lt;/code&gt;をロードしないため設定ファイルに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails.root&lt;/code&gt;などが使われていると例外エラーが発生する。&lt;/li&gt;
+    &lt;/ul&gt;
+  &lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;h3 id=&quot;起動と再起動はrails-s-と-rails-restart&quot;&gt;起動と再起動はrails s と rails restart&lt;/h3&gt;
+&lt;p&gt;この記事では最初の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;)で起動しています。
+そしてリロードは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails restart&lt;/code&gt;を使っています。
+これはpumaのプラグイン&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tmp_restart&lt;/code&gt;を入れることで、
+&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails_ restart&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;touch tmp/restart.txt&lt;/code&gt;することで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;restart&lt;/code&gt;を呼べるようになります。&lt;/p&gt;
+
+&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;に次のコードを入れることで使えるようになり、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails new&lt;/code&gt;で作成される&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;にはデフォルトで記入されてあります。&lt;/p&gt;
+
+&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
+&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
+
+&lt;h2 id=&quot;手作業でcentos8上にnginxとpumaとrailsを構築は良い経験&quot;&gt;手作業でCentOS8上にnginxとpumaとRailsを構築は良い経験&lt;/h2&gt;
+&lt;p&gt;リンク先も含め記事を順当に進めばCentOS8上にゼロからRailsアプリが動くまでを経験できて、普段コーディングしてるRailsアプリの土台がどのようになっているのかイメージできるようになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="web" /><category term="nginx" /><category term="linux" /><category term="centos" /><summary type="html">Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">Linuxサーバのホスト名をhostnamectlで変更する</title><link href="https://blog.mothule.com/linux/linux-hostnamectl" rel="alternate" type="text/html" title="Linuxサーバのホスト名をhostnamectlで変更する" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-19T13:51:42+09:00</updated><id>https://blog.mothule.com/linux/linux-hostnamectl</id><content type="html" xml:base="https://blog.mothule.com/linux/linux-hostnamectl">&lt;p&gt;CentOSやUbuntuなどLinuxサーバーのホスト名を変更するには、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;hostnamectl&lt;/code&gt;を使います。
 なおこの動作確認はCentOS8で検証しましたが、Ubuntuでも同様のようです。&lt;/p&gt;
 
 &lt;p&gt;bashやzshなどのシェルを使ってターミナルでサーバにSSH接続すると、
@@ -1102,510 +1769,4 @@ allを剥奪します。&lt;/p&gt;
 &lt;h2 id=&quot;dbはインフラの中で比較的よく触る&quot;&gt;DBはインフラの中で比較的よく触る&lt;/h2&gt;
 &lt;p&gt;これでCentOS上にMySQLをインストール、稼働させることが出来たと思います。
 ただし、構築して終わりではなくWeb開発の現場では、MySQLなどのデータベースは他のインフラと比べて、比較的触る頻度が多いです。
-理由としては、RailsなどWebアプリケーションの実装の影響を受けやすく、Webパフォーマンスに影響するため、スロークエリを調べたりEXPLAINでインデックスが効いているか確認したりと、チューニング作業が発生するためです。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><category term="linux" /><category term="centos" /><summary type="html">CentOS8にMySQLをインストールします。なお当時のバージョンは8です。 公式からインストールする方法もありますが、ここではyumにあるバージョンを使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする</title><link href="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos" rel="alternate" type="text/html" title="CentOS8上にnginxとpumaとRailsを手作業で構築した後に手動でデプロイする" /><published>2021-02-19T00:00:00+09:00</published><updated>2021-02-22T14:52:28+09:00</updated><id>https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos</id><content type="html" xml:base="https://blog.mothule.com/ruby/rails/ruby-rails-build-nginx-puma-rails-on-centos">&lt;p&gt;Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。&lt;/p&gt;
-
-&lt;h2 id=&quot;サーバー構築やアプリのデプロイの内部イメージついてますか&quot;&gt;サーバー構築やアプリのデプロイの内部イメージついてますか？&lt;/h2&gt;
-&lt;p&gt;インフラ構築はAnsible、RailsアプリのデプロイはCapistranoを使うのが定番です。
-しかし、内部を知らずにそれら使うと、実際のインフラ構築やデプロイのオペレーションがイメージできず頭がついてこれません。
-自身の中でフローをイメージできることは、AnsibleやCapistranoを使うときに最適な処理を構築には必須です。&lt;/p&gt;
-
-&lt;p&gt;そのため、この記事ではAnsibleやCapistranoを使わない方法でインフラ構築やデプロイ作業を行いました。
-具体的にはそれぞれ次の方法で実現します。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;Ansibleを使わずnginx × Puma × Rails環境を手作業で構築&lt;/li&gt;
-  &lt;li&gt;Capistranoを使わずgitやSSHを使ってデプロイ&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;対象読者&quot;&gt;対象読者&lt;/h3&gt;
-&lt;p&gt;Mac上でrbenvでRuby環境を構築し、Railsアプリを作ったことがあるが、
-Linuxサーバにデプロイをしたことがない、またはデプロイはあるがイマイチ腹落ちできていない。&lt;/p&gt;
-
-&lt;h3 id=&quot;この記事のゴール&quot;&gt;この記事のゴール&lt;/h3&gt;
-&lt;p&gt;Macで作ったRailsアプリをCentOS8上に展開、起動できるようにする。
-コード更新を手作業で行えるようにする。&lt;/p&gt;
-
-&lt;h3 id=&quot;この記事でやらないこと&quot;&gt;この記事でやらないこと&lt;/h3&gt;
-&lt;p&gt;インフラ構築とデプロイがテーマなので、HTTPS対応とpuma_worker_killerは対応していません。&lt;/p&gt;
-
-&lt;h2 id=&quot;linuxcentosサーバの構築は省略&quot;&gt;Linux(CentOS)サーバの構築は省略&lt;/h2&gt;
-&lt;p&gt;この記事ではVPS上にCentOS8をインストールした後の内容となっています。
-CentOS8のセットアップについては「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-centos8-setup-secure-server&quot;&gt;CentOS8で不正SSHログイン対策したLinuxサーバ構築する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。
-またCnetOS上のRuby環境については「&lt;span&gt;&lt;a href=&quot;/linux/centos/linux-centos-build-ruby-env-on-centos&quot;&gt;MacユーザがCentOS8にRuby環境を構築する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;p&gt;なお、今回はMySQLサーバは別サーバ上に立てていますが、記事内容には直接関わらないため、同一サーバにインストールしても問題ないはずです。
-ちなみにCentOS上にMySQLサーバ構築については「&lt;span&gt;&lt;a href=&quot;/db/mysql/db-mysql-install-mysql8-on-centos8&quot;&gt;CentOS8にMySQL8をインストールして構築する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h2 id=&quot;構築するサーバ構成&quot;&gt;構築するサーバ構成&lt;/h2&gt;
-&lt;p&gt;今回構築するサーバ構成を簡単に表すとこうなります。&lt;/p&gt;
-
-&lt;p&gt;nginx → puma → rails → mysql&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;nginxはリバースプロキシとして動かす&lt;/li&gt;
-  &lt;li&gt;nginx と puma間はUNIXドメインソケットで通信する&lt;/li&gt;
-  &lt;li&gt;rails と mysql間はTCP/IPで通信する&lt;/li&gt;
-  &lt;li&gt;railsアプリのデプロイはサーバにSSHで接続して作業する&lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;大まかなフロー&quot;&gt;大まかなフロー&lt;/h2&gt;
-
-&lt;ol&gt;
-  &lt;li&gt;Railsアプリ用意&lt;/li&gt;
-  &lt;li&gt;サーバにGit環境用意&lt;/li&gt;
-  &lt;li&gt;サーバにPuma×Railsをデプロイ&lt;/li&gt;
-  &lt;li&gt;nginxのリバースプロキシ設定&lt;/li&gt;
-  &lt;li&gt;Pumaのデーモン化&lt;/li&gt;
-  &lt;li&gt;コードデプロイ&lt;/li&gt;
-&lt;/ol&gt;
-
-&lt;h2 id=&quot;railsアプリを用意する&quot;&gt;Railsアプリを用意する&lt;/h2&gt;
-&lt;p&gt;まずはMac上に機能は何でもいいのでRailsアプリを用意します。
-あまり凝ったアプリだと躓いたときに原因特定に時間がかかるので、トップページ1つあるだけの簡単なアプリがおすすめです。&lt;/p&gt;
-
-&lt;p&gt;用意したらGitHubにプッシュします。
-publicレポジトリでも構わないですが、万が一セキュアな情報を誤ってpushするとリスクもありますし、実際の運用を考えるとprivateレポジトリにします。&lt;/p&gt;
-
-&lt;h2 id=&quot;サーバにgit環境用意&quot;&gt;サーバにGit環境用意&lt;/h2&gt;
-&lt;p&gt;最初はサーバとGitHub間のssh通信ができるようにSSH用のキーを作成します。
-普段MacからGitHub上のprivateレポジトリをクローンしてるように、サーバにも同等の機能をもたせます。&lt;/p&gt;
-
-&lt;p&gt;まずサーバにSSH接続したら&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;ssh-keygen&lt;/code&gt;で公開鍵と秘密鍵を作成します。
-作成したら公開鍵をコピーして、&lt;a href=&quot;[https://github.com/settings/keys](https://github.com/settings/keys)&quot;&gt;GitHubのSSH keys&lt;/a&gt;に追加します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ssh-keygen
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cat&lt;/span&gt; ~/.ssh/id_rsa.pub
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;最近のバージョンであれば鍵長はデフォルト値でも十分だと思いますが、そこは自己責任でお願いします。&lt;/p&gt;
-
-&lt;p&gt;GitHubに公開鍵の登録が終わったら疎通確認としてSSH接続をテストします。
-正しくできていれば接続成功の表示がされます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;err&quot;&gt;$&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;ssh&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;T&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;git&lt;/span&gt;&lt;span class=&quot;vi&quot;&gt;@github&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;com&lt;/span&gt;
-&lt;span class=&quot;no&quot;&gt;Hi&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;hogehoge!&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;You&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;have&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;successfully&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;authenticated&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;but&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;GitHub&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;does&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;not&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;provide&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;shell&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;access&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;.&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;サーバにpumarailsをデプロイ&quot;&gt;サーバにPuma×Railsをデプロイ&lt;/h2&gt;
-&lt;p&gt;サーバ上にGit環境が整ったら、GitHubからPrivateレポジトリのコードをダウンロードできるようになります。
-事前にプッシュしておいたRailsアプリをダウンロードして、サーバー起動していきます。&lt;/p&gt;
-
-&lt;h3 id=&quot;githubのコードをサーバへcloneクローン&quot;&gt;GitHubのコードをサーバへClone(クローン)&lt;/h3&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;git clone&lt;/code&gt;でコードをダウンロードします。なお、コードの展開場所ですがネット記事だと&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/www/&lt;/code&gt;をよく見かけますが、現場ではユーザのホームディレクトリ上に展開してたりとマチマチです。&lt;/p&gt;
-
-&lt;p&gt;今回はホームディレクトリ上に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;app&lt;/code&gt;フォルダ作ってそこの中に展開します。
-下記コードのGitHubアカウント名やレポジトリ名は適宜差し替えてください。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;mkdir&lt;/span&gt; ~/app
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;cd&lt;/span&gt; ~/app
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;git clone git@github.com:your_github_name/repo_name.git
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;bundle-installでgemをインストール&quot;&gt;bundle installでgemをインストール&lt;/h3&gt;
-&lt;p&gt;ダウンロード完了したら、ローカル同様&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle install&lt;/code&gt;でgemを取得します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle config &lt;span class=&quot;nb&quot;&gt;set&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--local&lt;/span&gt; path &lt;span class=&quot;s2&quot;&gt;&quot;vendor/bundle&quot;&lt;/span&gt;
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;install&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;-j4&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h4 id=&quot;mysql2エラーが起きた場合&quot;&gt;mysql2エラーが起きた場合&lt;/h4&gt;
-&lt;p&gt;もしこのときmysql2 gemでエラーが出た場合は、サーバー上にMySQLに関するヘッダーファイルがないのかもしれません。&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;mysql-devel&lt;/code&gt;をインストールして再実行してみてください。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;yum &lt;span class=&quot;nt&quot;&gt;-y&lt;/span&gt; mysql-devel
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;ローカルのrailsアプリからmasterkeyをサーバーへコピー&quot;&gt;ローカルのRailsアプリからmaster.keyをサーバーへコピー&lt;/h3&gt;
-&lt;p&gt;ローカル環境でproduction環境を実行しても気づきにくいかと思いますが、production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;が必要です。しかし&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;はGitHubにプッシュされないようになっています。なのでサーバに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;master.key&lt;/code&gt;を渡す必要があります。この情報が渡っていないとRailsは暗号ファイルを復号できずproduction環境を実行できません。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;scp master.key user_name@server_address:~/app/myapp/config/
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;アセットのプリコンパイル実行&quot;&gt;アセットのプリコンパイル実行&lt;/h3&gt;
-&lt;p&gt;production環境では&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;assets&lt;/code&gt;フォルダ内のリソースは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;public/assets&lt;/code&gt;へ事前コンパイルが必要です。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ RAILS_ENV&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;production bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rake assets:precompile
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;centos8--puma--rails間のアクセス疎通確認&quot;&gt;CentOS8 → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
-&lt;p&gt;PumaはRackサーバ機能も兼ねているため、nginxなしでもアクセス可能です。
-なのでnginxを立てる前にPuma×Railsだけでアプリを立ち上げて問題なく疎通できるか確認をとっておきます。&lt;/p&gt;
-
-&lt;p&gt;ここをおろそかにしてnginxの構築へ進むと、もし動かない場合どの部分が原因で動かないのか原因特定範囲が広くなります。&lt;/p&gt;
-
-&lt;p&gt;なお、単純に&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;だと外部からのアクセスできない状態なので、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-b 0.0.0.0&lt;/code&gt;も一緒に渡します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;bundle &lt;span class=&quot;nb&quot;&gt;exec &lt;/span&gt;rails s &lt;span class=&quot;nt&quot;&gt;-b&lt;/span&gt; 0.0.0.0 &lt;span class=&quot;nt&quot;&gt;-e&lt;/span&gt; production
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;Railsアプリが起動したら、ブラウザでルートページにアクセスして正常にページが表示されるか確認します。
-URLは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;サーバのIPアドレス:Pumaで設定してるポート番号&lt;/code&gt;になります。
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;routes.rb&lt;/code&gt;でroot設定していない場合は、存在するエンドポイントにアクセスして疎通確認してください。&lt;/p&gt;
-
-&lt;h4 id=&quot;pumaで設定してるポート番号&quot;&gt;Pumaで設定してるポート番号&lt;/h4&gt;
-&lt;p&gt;Pumaで設定してるポート番号は、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;に定義されています。
-デフォルトのままであれば次のように定義されているはずです。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;nginxのリバースプロキシ設定&quot;&gt;nginxのリバースプロキシ設定&lt;/h2&gt;
-&lt;p&gt;Puma × Railsが無事動くことが確認できたら、次はnginxを前段に配置します。
-具体的にはPumaのlistenをポートからUNIXドメインソケットに変更して、PumaのlistenをポートからUNIXドメインソケットに変更します。
-こうすれば、nginxのリクエストをPumaのソケットに流れるようになります。
-まずはPuma側から対応します。&lt;/p&gt;
-
-&lt;h3 id=&quot;configpumarbのlistenをポートからunixドメインソケットに変更&quot;&gt;config/puma.rbのlistenをポートからUNIXドメインソケットに変更&lt;/h3&gt;
-&lt;p&gt;前述したPumaの設定ファイル(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;~/app/myapp/config/puma.rb&lt;/code&gt;)では、ポート番号でlistenする設定になっています。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;これをUNIXドメインソケットに変更します。
-&lt;strong&gt;このときポート設定は必ずコメントアウトか削除してください。&lt;/strong&gt;
-ポート設定が残ったままUNIXドメインソケット設定を追記してもポート設定が優先されます。&lt;/p&gt;
-
-&lt;p&gt;bindでUNIXドメインソケットのファイル場所を設定します。
-Pumaが起動するとこのパス先にソケットファイルが作成されます。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# port        ENV.fetch(&quot;PORT&quot;) { 3000 }&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;この状態でRailsアプリを実行すると、listen先がpuma.sockに変わります。
-またソケットファイルも作成されます。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginxのリクエストをpumaのunixドメインソケットに流す&quot;&gt;nginxのリクエストをPumaのUNIXドメインソケットに流す&lt;/h3&gt;
-&lt;p&gt;次はnginx側を変更します。
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http&lt;/code&gt;コンテキスト内に次のコードを追記します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx.conf&lt;/code&gt;に直接アプリ固有の設定を記入せず&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;include&lt;/code&gt;ディレクティブを使ってアプリ毎に設定ファイルを分離して管理する方法がありますが、今回は省略します。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;http&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# ここから&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;upstream&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;unix&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;sr&quot;&gt;/home/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_user_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;app&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;your_app_name&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;tmp&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;sockets&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;sock&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;server&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;listen&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;default_server&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;server_name&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;n&quot;&gt;location&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;/&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_read_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_connect_timeout&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;300&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_redirect&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;off&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Host&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$host&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Proto&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$scheme&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_set_header&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;X&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Forwarded&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;-&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;For&lt;/span&gt; &lt;span class=&quot;vg&quot;&gt;$proxy_add_x_forwarded_for&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-      &lt;span class=&quot;n&quot;&gt;proxy_pass&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;http&lt;/span&gt;&lt;span class=&quot;ss&quot;&gt;:/&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;/&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;puma&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;;&lt;/span&gt;
-    &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# ここまでを追加する&lt;/span&gt;
-&lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;server&lt;/code&gt;ディレクティブに渡すパスは、Pumaのsocketファイルのパスを指定してください。&lt;/p&gt;
-
-&lt;p&gt;nginxが起動中なら変更を反映させます。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
-もしくは
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;nginxの基礎に関しては「&lt;span&gt;&lt;a href=&quot;/web/nginx/web-nginx-getting-started-step1-on-mac&quot;&gt;Macでnginxをインストールして起動する&lt;/a&gt;&lt;/span&gt;
-」にまとめてあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;nginx起動&quot;&gt;nginx起動&lt;/h3&gt;
-&lt;p&gt;nginxを立ち上げます。
-2行目で自動起動を有効化します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl start nginx
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl &lt;span class=&quot;nb&quot;&gt;enable &lt;/span&gt;nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h3 id=&quot;nginx--puma--rails間のアクセス疎通確認&quot;&gt;nginx → Puma → Rails間のアクセス疎通確認&lt;/h3&gt;
-&lt;p&gt;ここまで設定すれば、ポート3000にアクセスしたらnginxがPumaにリクエストを上流しRailsアプリへ到達するようになっています。
-それを確かめるために疎通確認します。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;http://your-server-ip-address:3000&lt;/code&gt;へアクセスしてRailsアプリのルートページが表示されれば疎通成功です。&lt;/p&gt;
-
-&lt;p&gt;もしうまく行かない場合はログを確認することで原因追求に役立ちます。ログは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/var/log/nginx/&lt;/code&gt; にアクセスログとエラーログがあります。&lt;/p&gt;
-
-&lt;h3 id=&quot;ログにconnect-to-pumasockでpermission-deniedが出る場合&quot;&gt;ログにconnect() to puma.sockでPermission deniedが出る場合&lt;/h3&gt;
-
-&lt;p&gt;502 Bad Gatewayが出る場合は、nginxからPumaへのつなぎでエラーが出ている可能性があります。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;connect&lt;span class=&quot;o&quot;&gt;()&lt;/span&gt; to unix:///home/mothule/app/rails_sample/tmp/sockets/puma.sock failed &lt;span class=&quot;o&quot;&gt;(&lt;/span&gt;13: Permission denied&lt;span class=&quot;o&quot;&gt;)&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;nginxからpuma.socketへの権限がない場合このエラーが出ます。
-nginxを誰が実行してるか確認します。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;ps aux | &lt;span class=&quot;nb&quot;&gt;grep &lt;/span&gt;nginx
-root       22126  0.0  2.1 120088 10276 ?        Ss   15:49   0:00 nginx: master process nginx
-nginx      22131  0.0  1.9 152720  9088 ?        S    15:49   0:00 nginx: worker process
-root       22170  0.0  0.2  10284  1056 pts/1    R+   15:53   0:00 &lt;span class=&quot;nb&quot;&gt;grep&lt;/span&gt; &lt;span class=&quot;nt&quot;&gt;--color&lt;/span&gt;&lt;span class=&quot;o&quot;&gt;=&lt;/span&gt;auto nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;nginx&lt;/code&gt;ユーザーで動いています。実行ユーザーがRailsアプリを動かしているユーザーと同じでないとファイルの編集権限が足りず権限エラーになります。
-なのでnginxの実行ユーザーをRailsアプリを動かしているユーザーに変更します。&lt;/p&gt;
-
-&lt;p&gt;nginxの実行ユーザーの変更は&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;/etc/nginx/nginx.conf&lt;/code&gt;の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;user&lt;/code&gt;を変更します。&lt;/p&gt;
-
-&lt;div class=&quot;language-plaintext highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;# user nginx
-user your_user_name
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;p&gt;リロードも忘れずに行います。&lt;/p&gt;
-
-&lt;div class=&quot;language-sh highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;&lt;span class=&quot;nb&quot;&gt;sudo &lt;/span&gt;nginx &lt;span class=&quot;nt&quot;&gt;-s&lt;/span&gt; reload
-または
-&lt;span class=&quot;nv&quot;&gt;$ &lt;/span&gt;systemctl reload nginx
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;railsアプリのデーモン化&quot;&gt;Railsアプリのデーモン化&lt;/h2&gt;
-&lt;p&gt;CentOS上にnginx/puma/railsが動くようにはなりました。
-しかし、サーバにはSSH接続しており、この状態でRailsを実行してるので、SSHが終了すると、Railsアプリも終了してしまいます。&lt;/p&gt;
-
-&lt;p&gt;本番環境でそれだと困るので、SSHが終了しても動くようにPumaをデーモン化する必要があります。
-puma.rbをいじってデーモン化します。また本番のみUNIXドメインソケット通信にし、それ以外ではnginxを介さずPuma単体でポートを開いて処理できるようにします。&lt;/p&gt;
-
-&lt;p&gt;次のコード&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;の全容です。
-デフォルトコードから余計なコメント等を削除し、本番時のみデーモン化させるコードを追加したものです。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;RAILS_MAX_THREADS&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;5&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;threads&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;threads_count&lt;/span&gt;
-
-&lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s1&quot;&gt;'RAILS_ENV'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'development'&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;if&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;==&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'production'&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# socket&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;bind&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;unix://&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;#{&lt;/span&gt;&lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;&lt;span class=&quot;si&quot;&gt;}&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;/tmp/sockets/puma.sock&quot;&lt;/span&gt;
-
-  &lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt; &lt;span class=&quot;o&quot;&gt;=&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;Rails&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;root&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;state_path&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'tmp'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'pids'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.state'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;stdout_redirect&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;no&quot;&gt;File&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;join&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;n&quot;&gt;rails_root&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;,&lt;/span&gt; &lt;span class=&quot;s1&quot;&gt;'puma-error.log'&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;),&lt;/span&gt;
-    &lt;span class=&quot;kp&quot;&gt;true&lt;/span&gt;
-  &lt;span class=&quot;p&quot;&gt;)&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;daemonize&lt;/span&gt;
-
-&lt;span class=&quot;k&quot;&gt;else&lt;/span&gt;
-  &lt;span class=&quot;c1&quot;&gt;# Specifies the `port` that Puma will listen on to receive requests; default is 3000.&lt;/span&gt;
-  &lt;span class=&quot;n&quot;&gt;port&lt;/span&gt;        &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PORT&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;mi&quot;&gt;3000&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-&lt;span class=&quot;k&quot;&gt;end&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Specifies the `environment` that Puma will run in.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;environment&lt;/span&gt; &lt;span class=&quot;n&quot;&gt;rails_env&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Specifies the `pidfile` that Puma will use.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;pidfile&lt;/span&gt; &lt;span class=&quot;no&quot;&gt;ENV&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;.&lt;/span&gt;&lt;span class=&quot;nf&quot;&gt;fetch&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;(&lt;/span&gt;&lt;span class=&quot;s2&quot;&gt;&quot;PIDFILE&quot;&lt;/span&gt;&lt;span class=&quot;p&quot;&gt;)&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;{&lt;/span&gt; &lt;span class=&quot;s2&quot;&gt;&quot;tmp/pids/server.pid&quot;&lt;/span&gt; &lt;span class=&quot;p&quot;&gt;}&lt;/span&gt;
-
-&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;state_path
-    &lt;ul&gt;
-      &lt;li&gt;pumaの状態を表したファイルで、pumactlが使います。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;stdout_redirect
-    &lt;ul&gt;
-      &lt;li&gt;STDOUTとSTDERRを指定ファイルにリダイレクトします。&lt;/li&gt;
-      &lt;li&gt;最後のBoolean型は出力を追加するかどうかです。デフォルトはfalseです。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;daemonize
-    &lt;ul&gt;
-      &lt;li&gt;pumaをデーモン実行するかどうか&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h2 id=&quot;コードデプロイ&quot;&gt;コードデプロイ&lt;/h2&gt;
-&lt;p&gt;最後にコード変更を反映させる方法です。
-nginx/puma/railsが既に動いている状態からコードを反映させます。&lt;/p&gt;
-
-&lt;p&gt;変更後のコードはGitHubに上がっているので、git pullでとってくることでサーバ上のコードを変更します。
-その後の反映ですが、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;bundle exec pumactl restart&lt;/code&gt; をすることでpumaが再起動してくれて、コードが反映されます。&lt;/p&gt;
-
-&lt;h3 id=&quot;pumaにおけるrailsアプリの起動方法&quot;&gt;PumaにおけるRailsアプリの起動方法&lt;/h3&gt;
-&lt;p&gt;PumaをRackサーバに使う場合Railsアプリを起動する方法が3つあります。&lt;/p&gt;
-
-&lt;ul&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;コマンドを使う
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RAILS_ENV&lt;/code&gt;または&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-e&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;production&lt;/code&gt;であれば&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma/production.rb&lt;/code&gt;をロード試行&lt;/li&gt;
-      &lt;li&gt;ファイルなければ&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;config/puma.rb&lt;/code&gt;をロードします。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma&lt;/code&gt;コマンドを使う
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;RACK_ENV&lt;/code&gt;で環境と一致するファイルをロード&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-  &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;pumactl&lt;/code&gt;コマンドを使う
-    &lt;ul&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;-F&lt;/code&gt;で指定されたファイルをロード&lt;/li&gt;
-      &lt;li&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails&lt;/code&gt;をロードしないため設定ファイルに&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;Rails.root&lt;/code&gt;などが使われていると例外エラーが発生する。&lt;/li&gt;
-    &lt;/ul&gt;
-  &lt;/li&gt;
-&lt;/ul&gt;
-
-&lt;h3 id=&quot;起動と再起動はrails-s-と-rails-restart&quot;&gt;起動と再起動はrails s と rails restart&lt;/h3&gt;
-&lt;p&gt;この記事では最初の&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails server&lt;/code&gt;(&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails s&lt;/code&gt;)で起動しています。
-そしてリロードは&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails restart&lt;/code&gt;を使っています。
-これはpumaのプラグイン&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;tmp_restart&lt;/code&gt;を入れることで、
-&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails_ restart&lt;/code&gt;か&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;touch tmp/restart.txt&lt;/code&gt;することで&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;restart&lt;/code&gt;を呼べるようになります。&lt;/p&gt;
-
-&lt;p&gt;&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;に次のコードを入れることで使えるようになり、&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;rails new&lt;/code&gt;で作成される&lt;code class=&quot;language-plaintext highlighter-rouge&quot;&gt;puma.rb&lt;/code&gt;にはデフォルトで記入されてあります。&lt;/p&gt;
-
-&lt;div class=&quot;language-ruby highlighter-rouge&quot;&gt;&lt;div class=&quot;highlight&quot;&gt;&lt;pre class=&quot;highlight&quot;&gt;&lt;code&gt;&lt;span class=&quot;c1&quot;&gt;# Allow puma to be restarted by `rails restart` command.&lt;/span&gt;
-&lt;span class=&quot;n&quot;&gt;plugin&lt;/span&gt; &lt;span class=&quot;ss&quot;&gt;:tmp_restart&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;/div&gt;
-
-&lt;h2 id=&quot;手作業でcentos8上にnginxとpumaとrailsを構築は良い経験&quot;&gt;手作業でCentOS8上にnginxとpumaとRailsを構築は良い経験&lt;/h2&gt;
-&lt;p&gt;リンク先も含め記事を順当に進めばCentOS8上にゼロからRailsアプリが動くまでを経験できて、普段コーディングしてるRailsアプリの土台がどのようになっているのかイメージできるようになると思います。&lt;/p&gt;</content><author><name></name></author><category term="ruby" /><category term="rails" /><category term="web" /><category term="nginx" /><category term="linux" /><category term="centos" /><summary type="html">Ansibleでインフラ構築したり、Capistranoでデプロイが自動化したり、内部のフローがイメージつかないので、それらを使わずに手動で構築してデプロイを試してみました。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-ruby-rails-build-nginx-puma-rails-on-centos/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry><entry><title type="html">リモートワーク体制よりもまず自立組織型を目指すべき</title><link href="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work" rel="alternate" type="text/html" title="リモートワーク体制よりもまず自立組織型を目指すべき" /><published>2021-01-29T00:00:00+09:00</published><updated>2021-01-29T02:35:50+09:00</updated><id>https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work</id><content type="html" xml:base="https://blog.mothule.com/notebook/org-build/notebook-org-build-build-self-org-sys-for-remote-work">&lt;p&gt;コロナ渦もあり大手のITに弱い企業でも、リモートワーク体制を整える傾向です。&lt;br /&gt;
-そのためにZoomやSlackを導入するなど、設備投資する企業を目にします。&lt;/p&gt;
-
-&lt;p&gt;同時にそのようなIT弱者から金銭を得ようと、大手や縦割り組織が好むサービスを営業するのも目にします。&lt;br /&gt;
-どちらもニーズを叶えているから契約数が増えそういった事業が成長するのは事実ですが、&lt;br /&gt;
-中には従業員を奴隷か何かと勘違いしたサービスがあったり、自身の業務や方法が重要で効果があると勘違いしている管理職がいるのも多かれ少なかれ事実です。&lt;/p&gt;
-
-&lt;p&gt;私は5年近く長年リモートワークで働いてきた中で、たどり着いた考えに「リモートワーク体制整備よりも従業員や管理職のマインド改革が先」があります。&lt;/p&gt;
-
-&lt;p&gt;何故マインド改革が先なのか？何故自律型組織なのか？について業務レベルを交えて書いていきます。&lt;/p&gt;
-
-&lt;h2 id=&quot;自律とは&quot;&gt;自律とは？&lt;/h2&gt;
-
-&lt;p&gt;まず自律とは国語辞書では次のように定義されてます。&lt;/p&gt;
-
-&lt;blockquote&gt;
-  &lt;p&gt;他からの支配・制約などを受けずに、自分自身で立てた規範に従って行動すること。
-&lt;a href=&quot;https://dictionary.goo.ne.jp/word/%E8%87%AA%E5%BE%8B/&quot;&gt;https://dictionary.goo.ne.jp/word/自律&lt;/a&gt; より引用&lt;/p&gt;
-&lt;/blockquote&gt;
-
-&lt;p&gt;要は自分で考え動けることです。&lt;/p&gt;
-
-&lt;h3 id=&quot;自立との違い&quot;&gt;自立との違い&lt;/h3&gt;
-
-&lt;p&gt;ちなみに、似た言葉に自立がありますが、こっちは他に頼らず自身で問題を解決することです。&lt;/p&gt;
-
-&lt;h2 id=&quot;自律型組織とは&quot;&gt;自律型組織とは？&lt;/h2&gt;
-
-&lt;p&gt;では、自律の字を使った自律型組織とは何か？&lt;/p&gt;
-
-&lt;p&gt;それは、縦割り組織の上司からの指示系統・意思決定のプロセスを持たず、各従業員が自ら思考し、自ら最適な行動を選択している組織です。&lt;/p&gt;
-
-&lt;h2 id=&quot;何故自律が良いのか&quot;&gt;何故自律が良いのか？&lt;/h2&gt;
-
-&lt;p&gt;なぜ従来の上司からの指示や意思決定を貰うプロセスよりも、各従業員が自分で考え行動する組織がいいのか？&lt;br /&gt;
-それは人は思ったより無能だからです。一人の能力が優れていても大勢の人的リソースには敵いません。&lt;/p&gt;
-
-&lt;h3 id=&quot;一人の上司より複数の部下&quot;&gt;一人の上司より複数の部下&lt;/h3&gt;
-
-&lt;p&gt;指示系統を上司に集約すれば、上司による集中管理ができると思いますが、それは机上の空論です。&lt;/p&gt;
-
-&lt;p&gt;大抵の会社において「上司が自分の部下全員と比較してら上司の方が優れていて、観点漏れやミスは起こさない」わけがありません。&lt;/p&gt;
-
-&lt;p&gt;実際は上司は伝達内容が欠落したり、返答が遅いし、忘れてることもあるし、業務毎のコンテキストを覚えてるわけないので、それぞれ報告から最適な手段を常に出せるわけがありません。&lt;/p&gt;
-
-&lt;p&gt;つまり、自律型組織とか比較せずとも、そもそも上司集中管理は限界があるのです。&lt;/p&gt;
-
-&lt;h3 id=&quot;部下全員に情報を渡して自分で考えさせる&quot;&gt;部下全員に情報を渡して自分で考えさせる&lt;/h3&gt;
-
-&lt;p&gt;一方で部下が自律すれば、意思決定を上司に仰がず自分で考え決めて行動します。&lt;br /&gt;
-これにより上司からの返答を待つ時間を短縮できますし、取り掛かっている部下がコンテキストを最も理解してるため最適手段を選べます。&lt;/p&gt;
-
-&lt;p&gt;しかし、これもやはり机上の空論や前提条件が多くあります。&lt;br /&gt;
-部下が常に最適な手段を選べる保証は上司同様にありえません。&lt;/p&gt;
-
-&lt;p&gt;しかし、部下に判断に必要な情報を渡すことで判断ミスを減らすことはできます。&lt;/p&gt;
-
-&lt;h3 id=&quot;考えるとは手持ちの情報から予測すること&quot;&gt;考えるとは手持ちの情報から予測すること&lt;/h3&gt;
-
-&lt;p&gt;必要な情報が揃っていれば最適な手段を選ぶ確率が上がります。&lt;br /&gt;
-そして、部下メンバーの人数分が自律するだけで全体の伝達時間の短縮に繋がり、業務効率は向上します。&lt;/p&gt;
-
-&lt;h3 id=&quot;どっちもミスするならそれ以外で良い方を選ぶ&quot;&gt;どっちもミスするならそれ以外で良い方を選ぶ&lt;/h3&gt;
-
-&lt;p&gt;どちらにせよミスする確率があるならば、上司は情報を適切に部下に提供し、あとの判断は部下に任せてしまったほうが業務速度の差で軍配が上がります。&lt;/p&gt;
-
-&lt;p&gt;当然ながら自律にもリスクは生じますし、銀の弾丸では絶対にないです。&lt;br /&gt;
-でも今の環境に適してるのは自律型組織に近づいてます。&lt;/p&gt;
-
-&lt;p&gt;つまり自律が良いというよりは、上司集中管理が時代に合わなくなってきたのです。&lt;/p&gt;
-
-&lt;h3 id=&quot;オフィスワーク体制でも不完全&quot;&gt;オフィスワーク体制でも不完全&lt;/h3&gt;
-
-&lt;p&gt;そもそもオフィスワーク体制であっても上司集中管理の欠点は存在します。ただそれを上司に直接出向き差し込むように指示や意思決定を仰ぐことでゴリ押しで解決できることでカバーされてました。&lt;/p&gt;
-
-&lt;p&gt;しかしリモートワーク体制となると、指示系統など伝達速度がより低下します。&lt;br /&gt;
-上司の元へ直接出向くこともできません。逆に上司が部下に伝達するケースも同様です。&lt;/p&gt;
-
-&lt;p&gt;この欠点がより顕在化したことでリモートワークを悪と捉えたり、オフィスワークマインドのままリモートワーク体制を整えようと上司は動きます。&lt;/p&gt;
-
-&lt;h2 id=&quot;何故マインド改革が大事なのか&quot;&gt;何故マインド改革が大事なのか？&lt;/h2&gt;
-
-&lt;p&gt;ただでさえ完全ではない管理体制を現状の構造のまま不足を補おうとするため、管理体制強化が行われ、それを謳うようなサービスが営業されるわけです。&lt;/p&gt;
-
-&lt;p&gt;そもそも管理業務はトヨタウェイのムダ、正味作業、付帯作業でいう付帯作業です。&lt;br /&gt;
-そして指示系統や意思決定の伝達は7つの無駄で言う運搬または動作のムダです。&lt;/p&gt;
-
-&lt;p&gt;そこに力を入れる上司はそもそもそのポストに相応しい仕事をしてると言えるでしょうか？&lt;/p&gt;
-
-&lt;p&gt;部下も自律せず指示を待つ姿勢を続けていれば、上司からすれば「自分が動かさないと仕事が回らない」と思ってしまうのも無理ありません。&lt;/p&gt;
-
-&lt;h3 id=&quot;リモートワーク体制に最も必要なのは設備ではない&quot;&gt;リモートワーク体制に最も必要なのは設備ではない&lt;/h3&gt;
-
-&lt;p&gt;ここまで読むとリモートワーク体制に「最も」必要なのは設備ではないことが分かると思います。&lt;/p&gt;
-
-&lt;h3 id=&quot;縦割り組織が生み出す利点と欠点&quot;&gt;縦割り組織が生み出す利点と欠点&lt;/h3&gt;
-
-&lt;p&gt;組織化された体制の全てが悪いわけではありません。&lt;br /&gt;
-業務設計がされて、役割毎に部署が分かれ、業務オペレーションも整備されるなど、決まった業務に関しては効果を発揮します。役割の範囲内においては非常に効率が良いと思います。&lt;br /&gt;
-たとえ多少ムダがあっても人リソースと資金力とシェア獲得率でコスパ悪ながらも黒字経営が成り立ちます。&lt;/p&gt;
-
-&lt;p&gt;一方、スタートアップや中小企業では人リソースは少なくタスクが溢れかえっています。&lt;br /&gt;
-そのため、人リソースをなるべく使わずムダのなく効率良く経営しないとあっという間に赤字や資金が底をついてしまいます。&lt;/p&gt;
-
-&lt;h4 id=&quot;役割が柔軟な対応を縛る&quot;&gt;役割が柔軟な対応を縛る&lt;/h4&gt;
-
-&lt;p&gt;しかし、欠点は役割の範囲外になると途端に動きが鈍くなることです。&lt;br /&gt;
-なぜなら、意思決定が上司に仰がないといけないためです。&lt;br /&gt;
-またそれだけでなく「これ自分の担当外だ」と決め、そもそも上司に相談すらしなくなります。&lt;br /&gt;
-しなくても自分に課せられた業務外だからやらなくても怒られない、悪くないと自信を持っているからです。&lt;/p&gt;
-
-&lt;p&gt;最もこれらが顕著に現れるのはチーム間連携や部署間連携など連携作業となります。&lt;/p&gt;
-
-&lt;h3 id=&quot;組織化された体制のサービス障害検知は一部の人しかしてない&quot;&gt;組織化された体制のサービス障害検知は一部の人しかしてない&lt;/h3&gt;
-
-&lt;p&gt;この欠点でダメージ受けやすく、逆にカバーすることでダメージを最小限に抑えられるのがサービス障害です。&lt;/p&gt;
-
-&lt;p&gt;サービス障害はどこで誰が見つけるか分かりません。&lt;br /&gt;
-ユーザーかもしれないし、サービス開発関係者かもしれないし、ユーザーサポートの人かもしれません。&lt;br /&gt;
-これをサービス開発関係者、突き詰めては担当部分のエンジニアや企画者だけになってしまいます。&lt;/p&gt;
-
-&lt;h3 id=&quot;自律は関係者の境界を曖昧にする&quot;&gt;自律は関係者の境界を曖昧にする&lt;/h3&gt;
-
-&lt;p&gt;上司は部下に担当を伝えるだけでなく、自身がサービス関係者であり、これらを自分事だと捉えさせるよう伝えることがとても重要です。&lt;br /&gt;
-なぜなら、自律には自分の担当を中心に一歩引いた場所から周りを含めて見る視野が必要なのです。&lt;/p&gt;
-
-&lt;p&gt;こうすることで、全ての人が自分の担当領域から一歩周りに手を広げると互いにカバーしあうことができます。&lt;/p&gt;
-
-&lt;h3 id=&quot;障害の発見報告は全員が担当&quot;&gt;障害の発見、報告は全員が担当&lt;/h3&gt;
-
-&lt;p&gt;このように自律すると報告の発見を担当者だけでなく、みんなが自分事だと感じて報告します。&lt;br /&gt;
-また報告受ける側も、周りの立場や視座に手を広げることで報告方法を楽にしようという行動にも繋がります。&lt;/p&gt;
-
-&lt;h2 id=&quot;リモートワークでは指示ではなく共有が重要&quot;&gt;リモートワークでは指示ではなく共有が重要&lt;/h2&gt;
-
-&lt;p&gt;リモートワーク体制では指示や判断ではなく、情報を共有して判断を委任させることが重要です。&lt;br /&gt;
-見えない状態であっても自律して動いてる状態にしてしまえば結果はコミットされるからです。&lt;/p&gt;
-
-&lt;p&gt;操り人形のように部下に指示、管理では見えないのでうまくいきません。&lt;/p&gt;</content><author><name></name></author><category term="notebook" /><category term="org-build" /><summary type="html">コロナ渦もあり大手のITに弱い企業でも、リモートワーク体制を整える傾向です。 そのためにZoomやSlackを導入するなど、設備投資する企業を目にします。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-01-29-notebook-org-build-build-self-org-sys-for-remote-work/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
+理由としては、RailsなどWebアプリケーションの実装の影響を受けやすく、Webパフォーマンスに影響するため、スロークエリを調べたりEXPLAINでインデックスが効いているか確認したりと、チューニング作業が発生するためです。&lt;/p&gt;</content><author><name></name></author><category term="db" /><category term="mysql" /><category term="linux" /><category term="centos" /><summary type="html">CentOS8にMySQLをインストールします。なお当時のバージョンは8です。 公式からインストールする方法もありますが、ここではyumにあるバージョンを使います。</summary><media:thumbnail xmlns:media="http://search.yahoo.com/mrss/" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" /><media:content medium="image" url="https://blog.mothule.com/assets/images/2021-02-19-db-mysql-install-mysql8-on-centos8/eyecatch.png" xmlns:media="http://search.yahoo.com/mrss/" /></entry></feed>
