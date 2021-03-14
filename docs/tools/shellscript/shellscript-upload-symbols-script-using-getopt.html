@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+
+
+
+
+
+
+
+  <title>getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する - もちゅろぐ</title>
+
+
+<!-- Begin Jekyll SEO tag v2.6.1 -->
+<meta name="generator" content="Jekyll v3.9.0" />
+<meta property="og:title" content="getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する" />
+<meta property="og:locale" content="ja_JP" />
+<meta name="description" content="getoptでのオプション対応をiOSエンジニアでも理解できるようFirebase Crashlyticsのコマンドを使ったスクリプトを用意して説明します。iOSエンジニアいえど、避けては通れないシェルスクリプト。でもちょっと凝ろうとするとその慣れない構文やスタイルにすぐ折れます。" />
+<meta property="og:description" content="getoptでのオプション対応をiOSエンジニアでも理解できるようFirebase Crashlyticsのコマンドを使ったスクリプトを用意して説明します。iOSエンジニアいえど、避けては通れないシェルスクリプト。でもちょっと凝ろうとするとその慣れない構文やスタイルにすぐ折れます。" />
+<link rel="canonical" href="https://blog.mothule.com/tools/shellscript/shellscript-upload-symbols-script-using-getopt" />
+<meta property="og:url" content="https://blog.mothule.com/tools/shellscript/shellscript-upload-symbols-script-using-getopt" />
+<meta property="og:site_name" content="もちゅろぐ" />
+<meta property="og:image" content="https://blog.mothule.com/assets/images/2021-03-14-shellscript-upload-symbols-script-using-getopt/eyecathc.png" />
+<meta property="og:type" content="article" />
+<meta property="article:published_time" content="2021-03-14T00:00:00+09:00" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta property="twitter:image" content="https://blog.mothule.com/assets/images/2021-03-14-shellscript-upload-symbols-script-using-getopt/eyecathc.png" />
+<meta property="twitter:title" content="getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する" />
+<meta name="twitter:site" content="@mothule" />
+<script type="application/ld+json">
+{"headline":"getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する","dateModified":"2021-03-14T19:55:51+09:00","datePublished":"2021-03-14T00:00:00+09:00","image":"https://blog.mothule.com/assets/images/2021-03-14-shellscript-upload-symbols-script-using-getopt/eyecathc.png","mainEntityOfPage":{"@type":"WebPage","@id":"https://blog.mothule.com/tools/shellscript/shellscript-upload-symbols-script-using-getopt"},"@type":"BlogPosting","description":"getoptでのオプション対応をiOSエンジニアでも理解できるようFirebase Crashlyticsのコマンドを使ったスクリプトを用意して説明します。iOSエンジニアいえど、避けては通れないシェルスクリプト。でもちょっと凝ろうとするとその慣れない構文やスタイルにすぐ折れます。","url":"https://blog.mothule.com/tools/shellscript/shellscript-upload-symbols-script-using-getopt","@context":"https://schema.org"}</script>
+<!-- End Jekyll SEO tag -->
+
+
+
+
+<meta name="twitter:title" content="getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する">
+<meta name="twitter:description" content="getoptでのオプション対応をiOSエンジニアでも理解できるようFirebase Crashlyticsのコマンドを使ったスクリプトを用意して説明します。iOSエンジニアいえど、避けては通れないシェルスクリプト。でもちょっと凝ろうとするとその慣れない構文やスタイルにすぐ折れます。">
+<meta name="twitter:image:src" content="https://blog.mothule.com/assets/images/2021-03-14-shellscript-upload-symbols-script-using-getopt/eyecathc.png">
+
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+      crossorigin="anonymous">
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/styles.css>
+<link rel="stylesheet" href=https://blog.mothule.com/assets/css/syntax.css>
+<link rel="apple-touch-icon" sizes="180x180" href=https://blog.mothule.com/assets/images/apple-touch-icon.png>
+
+  <!-- Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-18620984-3"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-18620984-3');
+  </script>
+
+
+<link type="application/atom+xml" rel="alternate" href="https://blog.mothule.com/feed.xml" title="もちゅろぐ" />
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" defer integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" defer integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" defer integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+<script data-ad-client="ca-pub-5156339577835247" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+
+  </head>
+  <body>
+    <div class="container">
+      <!-- Haeder -->
+      <div class="row">
+        <div class="col-sm-12" style="padding-left: 0; padding-right: 0">
+          <header style="margin-bottom: 32px;">
+  <div class="jumbotron text-center" style="margin-bottom:0;">
+    <div class="title"><a href="/">もちゅろぐ</a></div>
+    <p><small>Ruby/Rails/iOS/Swift/UI/UX</small></p>
+  </div>
+
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+  <button class="navbar-toggler"
+    type="button"
+    data-toggle="collapse"
+    data-target="#navbarNavAltMarkup"
+    aria-controls="navbarNavAltMarkup"
+    aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+    <div class="navbar-nav">
+      
+        <a class="nav-item nav-link " href="/">Top</a>
+      
+        <a class="nav-item nav-link " href="/categories/ios">iOS</a>
+      
+        <a class="nav-item nav-link " href="/categories/rails">Rails</a>
+      
+        <a class="nav-item nav-link " href="/about">About</a>
+      
+    </div>
+  </div>
+</nav>
+
+</header>
+
+        </div>
+      </div>
+
+      <main class="row" style="margin-bottom: 32px;">
+  <!-- Content -->
+  <article class="col-sm-9 root-article">
+    <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+
+<div class="post-content">
+  <div class="breadcrumbs">
+    <div id="breadcrumbs">
+  
+  
+    <ul itemscope itemtype="https://schema.org/BreadcrumbList">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a href="/" itemprop="item" >
+          <span itemprop="name">もちゅろぐ</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+
+      
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#tools" itemprop="item">
+              <span itemprop="name">ツール</span>
+            </a>
+            <meta itemprop="position" content="2">
+          </li>
+        
+      
+        
+        
+          <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+            <a href="/tags#shellscript" itemprop="item">
+              <span itemprop="name">シェルスクリプト</span>
+            </a>
+            <meta itemprop="position" content="3">
+          </li>
+        
+      
+        
+        
+          <li>
+            getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する
+          </li>
+        
+      
+    </ul>
+  
+</div>
+
+  </div>
+
+  
+    <div class="eye-catch">
+      <img style="width: 100%; object-fix: contain;" src="/assets/images/2021-03-14-shellscript-upload-symbols-script-using-getopt/eyecathc.png" alt="getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する">
+    </div>
+  
+
+  <header class="post-content-title border-bottom mb-4">
+    <h1>getoptによるオプション対応をiOSエンジニアでも分かるCrashlyticsへdSYMアップを使って説明する</h1>
+
+    <div class="row">
+      <div class="col-sm-10 post-content-tags">
+        <ul class="list-inline">
+          
+            <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#shellscript">シェルスクリプト</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#firebase">Firebase</a></li>
+          
+            <li class="list-inline-item"><a href="/tags#crashlytics">Firebase Crashlytics</a></li>
+          
+        </ul>
+      </div>
+      <div class="col-sm-2 text-right">
+        <span"><time class="post-date">2021-3-14</time></span>
+      </div>
+    </div>
+  </header>
+
+  <p>Table of Contents</p>
+  <div class="post-content-toc">
+    <ul>
+  <li><a href="#概要">概要</a>
+    <ul>
+      <li><a href="#背景">背景</a></li>
+      <li><a href="#読者対象">読者対象</a></li>
+      <li><a href="#この記事で得られる内容">この記事で得られる内容</a></li>
+    </ul>
+  </li>
+  <li><a href="#作ったスクリプトの使い方">作ったスクリプトの使い方</a></li>
+  <li><a href="#getoptとは">getoptとは</a>
+    <ul>
+      <li><a href="#getoptsとの違い">getoptsとの違い</a></li>
+      <li><a href="#getoptにはgnu版とbsd版がある">getoptにはGNU版とBSD版がある</a></li>
+    </ul>
+  </li>
+  <li><a href="#gnu版getoptを使う理由">GNU版getoptを使う理由</a>
+    <ul>
+      <li><a href="#gnu版getoptをmacにインストール">GNU版getoptをMacにインストール</a></li>
+    </ul>
+  </li>
+  <li><a href="#コード全容">コード全容</a>
+    <ul>
+      <li><a href="#コードの流れ">コードの流れ</a></li>
+    </ul>
+  </li>
+  <li><a href="#関数定義">関数定義</a>
+    <ul>
+      <li><a href="#引数を検証する関数">引数を検証する関数</a></li>
+    </ul>
+  </li>
+  <li><a href="#スクリプト前提条件の検証">スクリプト前提条件の検証</a></li>
+  <li><a href="#引数で受け取る変数宣言">引数で受け取る変数宣言</a></li>
+  <li><a href="#getoptで引数からオプションへ変換">getoptで引数からオプションへ変換</a></li>
+  <li><a href="#オプション毎のハンドリング">オプション毎のハンドリング</a></li>
+  <li><a href="#受け取った変数の検証">受け取った変数の検証</a></li>
+  <li><a href="#upload-symbolsコマンドの実行">upload-symbolsコマンドの実行</a>
+    <ul>
+      <li><a href="#ディレクトリ指定の動きについて">ディレクトリ指定の動きについて</a>
+        <ul>
+          <li><a href="#dsymをファイルを探す">.dSYMをファイルを探す</a></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li><a href="#このスクリプトの使い所">このスクリプトの使い所</a></li>
+</ul>
+  </div>
+
+  
+  <div class="mb-4">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+    <ins class="adsbygoogle"
+         style="display:block; text-align:center;"
+         data-ad-layout="in-article"
+         data-ad-format="fluid"
+         data-ad-client="ca-pub-5156339577835247"
+         data-ad-slot="6747769462"></ins>
+    <script>
+     (adsbygoogle = window.adsbygoogle || []).push({});
+    </script>
+  </div>
+  
+
+  <section>
+  <p>iOSエンジニアいえど、避けては通れないシェルスクリプト。でもちょっと凝ろうとするとその慣れない構文やスタイルにすぐ折れます。</p>
+
+<p>今回はシェルスクリプトでgetoptを使ったオプション対応する方法について、実際に動くコードを使って説明します。
+また、処理自体もiOSエンジニアには馴染みのあるFirebase Crashlyticsの<code class="language-plaintext highlighter-rouge">upload-symbols</code>コマンドを使うので読みやすいと思います。</p>
+
+<h2 id="概要">概要</h2>
+
+<h3 id="背景">背景</h3>
+<p>今回スクリプト書いた経緯は、シェルスクリプトには必ずと言っていいほどオプション機能が備わっています。
+Rubyではgemを使えばパースをいい感じにやってくれますが、シェルスクリプトではどのように実現しているのか仕組みを知っておこうと思いました。</p>
+
+<h3 id="読者対象">読者対象</h3>
+<ul>
+  <li>iOSやAndroidエンジニアなどシェルスクリプトと正面から向かい合う機会が少ない人</li>
+  <li>ちょっと凝ったシェルスクリプトを書きたい人</li>
+  <li>念の為シェルスクリプトの読むスキルを向上させときたい人</li>
+</ul>
+
+<h3 id="この記事で得られる内容">この記事で得られる内容</h3>
+<ul>
+  <li>getoptの使い方やMacの標準搭載したgetoptの注意点</li>
+  <li>getoptを使ったオプション対応</li>
+  <li>シェルのcase文の使い方</li>
+</ul>
+
+<h2 id="作ったスクリプトの使い方">作ったスクリプトの使い方</h2>
+<p>説明するスクリプトの動作について説明します。</p>
+
+<p>Firebase Crashlyticsに入っている<code class="language-plaintext highlighter-rouge">upload-symbols</code>コマンドを使う機能のみです。
+これにコマンドに必要な引数をオプションで変更可能にしてあります。</p>
+
+<p>アップロードしたいdSYMを次の方法で指定できます。</p>
+
+<ul>
+  <li>アーカイブされた<code class="language-plaintext highlighter-rouge">*.dSYM</code>ファイル</li>
+  <li><code class="language-plaintext highlighter-rouge">*.dSYM</code>ファイルの入ったディレクトリ</li>
+  <li>直接<code class="language-plaintext highlighter-rouge">*.dSYM</code>ファイル指定</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3.zip
+<span class="nv">$ </span>./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3/
+<span class="nv">$ </span>./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3/hogehoge.dSYM
+</code></pre></div></div>
+
+<p>オプションを渡して処理に使うパス先を変更できます。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3.zip <span class="se">\</span>
+<span class="nt">-c</span> ~/workspace/hogehoge/Pods/FirebaseCrashlytics/upload-symbols <span class="se">\</span>
+<span class="nt">-p</span> ~/workspace/hogehoge/GoogleService-Info-release.plist
+</code></pre></div></div>
+
+<p>ロングオプションにも対応します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>./dsyms-uploade.sh ~/Downloads/hogehoge-1.2.3.zip <span class="nt">--dry-run</span>
+</code></pre></div></div>
+
+<p>ヘルプを出すとそれっぽいヘルププリントが出力されます。</p>
+<div class="language-plaintext highlighter-rouge"><div class="highlight"><pre class="highlight"><code>$ ./dsyms-uploade.sh --help
+Usage: ./dsyms-uploade.sh &lt;dSYM&gt; [-c, --upload-symbols-command-path path] [-p, --google-service-plist-path path] [-d, --dry-run] [-h, --help]
+
+
+  dSYM			dSYMファイルまたはアーカイブされた複数のdSYM、dSYMファイルが含まれたディレクトリを指定します。
+			ディレクトリの場合は *.dSYM で一致するファイルが対象となります。
+
+Options:
+  --upload-symbols-command-path &lt;path&gt;
+			upload-symbolsコマンドのパスを指定します。
+  -c			--upload-symbols-command-pathのエイリアス
+  --google-service-plist-path &lt;path&gt;
+			GoogleService-Info.plistのパスを指定します。
+  -p			--google-service-plist-pathのエイリアス
+  --help		このヘルプ画面を表示します
+  -h			--helpのエイリアス
+  -d,--dry-run		実行の代わりに実行するコマンドラインを表示します。
+</code></pre></div></div>
+
+<h2 id="getoptとは">getoptとは</h2>
+<p>getoptの役割はとても単純で、コマンドオプションをパースするシェルコマンドです。</p>
+
+<h3 id="getoptsとの違い">getoptsとの違い</h3>
+<p>こちらも同様にコマンドオプションですが、bashのビルドインコマンドの一つとなります。
+getoptsではロングオプションの対応が少し面倒そうだったためgetoptにしました。</p>
+
+<h3 id="getoptにはgnu版とbsd版がある">getoptにはGNU版とBSD版がある</h3>
+<p>getoptには出どころが複数あり、出どころによって挙動が異なります。
+大きく分けるとGNU版とBSD版になります。</p>
+
+<h2 id="gnu版getoptを使う理由">GNU版getoptを使う理由</h2>
+<p>今回使うgetoptはGNU版を使います。理由は次の通りです。</p>
+
+<ul>
+  <li><strong>ロングオプション</strong>が使える</li>
+  <li><strong>Bitrise</strong>がgnu版をインストールしてた</li>
+</ul>
+
+<p>ロングオプションを使いたい理由は、スクリプト利用時の可読性もありますが、単純によく見かけるよくできたオプションにはロングオプションが使われているからです。</p>
+
+<p>また、このスクリプトの処理内容はFirebase CrashlyticsへdSYMをアップロードすることです。
+アーカイブしてApp Store Connectでそのビルドを使うなら、そのビルドのdSYMをアップロードする必要があります。
+そのためCIサービスからアーカイブするようなことも考慮します。</p>
+
+<p>自分がよく使っているCIサービスはBitriseで、<a href="https://github.com/bitrise-io/bitrise.io/blob/master/system_reports/osx-xcode-12.5.x.log">BitriseのシステムレポートでGNU版getoptがインストールされていた</a>という理由もあります。</p>
+
+<h3 id="gnu版getoptをmacにインストール">GNU版getoptをMacにインストール</h3>
+<p>MacでGNU版getoptを使うには、Homebrewからインストールします。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">$ </span>brew <span class="nb">install </span>gnu-getopt
+</code></pre></div></div>
+
+<p>インストールは<code class="language-plaintext highlighter-rouge">keg-only</code>となっていので、インストール後に<code class="language-plaintext highlighter-rouge">gnu-getopt</code>が優先して使われるようにパス変更します。</p>
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nb">echo</span> <span class="s1">'export PATH="/usr/local/opt/gnu-getopt/bin:$PATH"'</span> <span class="o">&gt;&gt;</span> ~/.zshrc
+</code></pre></div></div>
+
+<h2 id="コード全容">コード全容</h2>
+<p>コードはGistに上げてあります。このコードから抜粋して説明します。</p>
+
+<script src="https://gist.github.com/mothule/391e64e936bfc9593a17e57803a74c12.js"></script>
+
+<h3 id="コードの流れ">コードの流れ</h3>
+<p>スクリプトは1ファイルで構成されてます。
+この1ファイルを上から見たとき次の順序で処理構成してます。</p>
+
+<ul>
+  <li>関数定義</li>
+  <li>スクリプト前提条件の検証</li>
+  <li>引数で受け取る変数宣言</li>
+  <li>getoptで引数からオプションへ変換</li>
+  <li>オプション毎のハンドリング</li>
+  <li>受け取った変数の検証</li>
+  <li>upload-symbolsコマンドの実行</li>
+</ul>
+
+<h2 id="関数定義">関数定義</h2>
+<p>ヘルプ用表示関数(<code class="language-plaintext highlighter-rouge">usage()</code>)と引数を検証する関数(<code class="language-plaintext highlighter-rouge">validate_arg</code>)の2つが定義されてます。</p>
+
+<h3 id="引数を検証する関数">引数を検証する関数</h3>
+
+<p>オプションには値も一緒に渡すタイプもあります。
+その場合に値が正しいか検証する関数です。</p>
+
+<p>渡された引数が「文字列としての長さが0」または「文字先頭がハイフン(<code class="language-plaintext highlighter-rouge">-</code>)から始まる場合は、ヘルプを表示します。
+ヘルプは最後に<code class="language-plaintext highlighter-rouge">exit 1</code>を出しているのでそのままスクリプトは終了します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code>validate_arg<span class="o">()</span> <span class="o">{</span>
+  <span class="nb">local </span><span class="nv">value</span><span class="o">=</span><span class="nv">$1</span>
+  <span class="c"># valueの長さが0 or valueがとマッチ</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="nt">-z</span> <span class="nv">$value</span> <span class="o">]]</span> <span class="o">||</span> <span class="o">[[</span> <span class="nv">$value</span> <span class="o">=</span>~ ^-+ <span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span>usage
+  <span class="k">fi</span>
+<span class="o">}</span>
+</code></pre></div></div>
+
+<p>この関数は値やオプション値の検証時に呼ばれています。</p>
+
+<h2 id="スクリプト前提条件の検証">スクリプト前提条件の検証</h2>
+<p>先程までは関数でしたので処理としてはここが最初に実行されます。
+<code class="language-plaintext highlighter-rouge">getopt</code>がBSD版ではなくGNU版を使っているかを検証します。
+ここでBSD版だと後のgetoptの処理が正しくされず変な挙動となるためです。</p>
+
+<p>なぜ、GNU版かどうかをこの方法で判断してるのかは、実際に双方のコマンドを見比べて決めました。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[[</span> <span class="o">!</span> <span class="s2">"</span><span class="sb">`</span>getopt <span class="nt">--version</span> | <span class="nb">grep </span>linux<span class="sb">`</span><span class="s2">"</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"利用にはgnu-getoptが必要です。"</span> <span class="o">&gt;</span>&amp;2
+  <span class="nb">exit </span>1
+<span class="k">elif</span> <span class="o">[[</span> <span class="nv">$# </span><span class="o">==</span> 0 <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  </span>usage
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<h2 id="引数で受け取る変数宣言">引数で受け取る変数宣言</h2>
+
+<p>上から順番に次の役割を持っています。</p>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">upload_command</code>: <code class="language-plaintext highlighter-rouge">upload-symbols</code>コマンドのパス</li>
+  <li><code class="language-plaintext highlighter-rouge">google_service_plist</code>: Firebaseで受け取るplistのパス</li>
+  <li><code class="language-plaintext highlighter-rouge">dsym_path</code>: dSYMのパス</li>
+  <li><code class="language-plaintext highlighter-rouge">dry_run</code>: Dry実行するかどうか</li>
+</ul>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">upload_command</span><span class="o">=</span>Pods/FirebaseCrashlytics/upload-symbols
+<span class="nv">google_service_plist</span><span class="o">=</span>./GoogleService-Info.plist
+<span class="nv">dsym_path</span><span class="o">=</span>
+<span class="nv">dry_run</span><span class="o">=</span><span class="nb">false</span>
+</code></pre></div></div>
+
+<h2 id="getoptで引数からオプションへ変換">getoptで引数からオプションへ変換</h2>
+
+<p>getoptコマンドを使って渡された引数から有効なオプションを<code class="language-plaintext highlighter-rouge">opt</code>へ抜き出します。
+<code class="language-plaintext highlighter-rouge">-o</code>でオプションで使う文字列で、値付きはコロンを文字後ろにつけます。
+<code class="language-plaintext highlighter-rouge">-l</code>でロングオプションで使う文字列で値付きはコロンを文字列後ろにつけます。カンマで区切ります。
+最後の <code class="language-plaintext highlighter-rouge">eval set</code>で位置パラメータを再構成します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="nv">opt</span><span class="o">=</span><span class="si">$(</span>getopt <span class="nt">-o</span> <span class="s2">"c:p:hd"</span> <span class="nt">-l</span> <span class="s2">"upload-symbols-command-path:,google-service-plist-path:,help,dry-run"</span> <span class="nt">--</span> <span class="s2">"</span><span class="nv">$@</span><span class="s2">"</span><span class="si">)</span>
+<span class="k">if</span> <span class="o">[[</span> <span class="nv">$?</span> <span class="o">!=</span> 0 <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"getopt実行にエラーが発生しました。"</span> <span class="o">&gt;</span>&amp;2
+  <span class="nb">exit </span>1
+<span class="k">fi
+</span><span class="nb">eval set</span> <span class="nt">--</span> <span class="s2">"</span><span class="nv">$opt</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<h2 id="オプション毎のハンドリング">オプション毎のハンドリング</h2>
+
+<p>シェルスクリプトのオプションのハンドリングは、引数を先頭からキューのように取り出して破棄しながら進めます。
+そのためオプションを1つハンドリングすると<code class="language-plaintext highlighter-rouge">shift</code>して次の引数を<code class="language-plaintext highlighter-rouge">$1</code>として取り出します。
+オプションに値があるオプションの場合は、<code class="language-plaintext highlighter-rouge">$2</code>も値として使い、<code class="language-plaintext highlighter-rouge">shift 2</code>でオプション名とオプション値2つを履きします。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">while </span><span class="nb">true
+</span><span class="k">do
+  case</span> <span class="s2">"</span><span class="nv">$1</span><span class="s2">"</span> <span class="k">in</span>
+  <span class="nt">-c</span> <span class="p">|</span> <span class="nt">--upload-symbols-command-path</span><span class="p">)</span>
+    validate_arg <span class="nv">$2</span>
+    <span class="nv">upload_command</span><span class="o">=</span><span class="nv">$2</span>
+    <span class="nb">shift </span>2 <span class="c"># 値付きなので2つ分ずらす</span>
+    <span class="p">;;</span>
+  <span class="nt">-p</span> <span class="p">|</span> <span class="nt">--google-service-plist-path</span><span class="p">)</span>
+    validate_arg <span class="nv">$2</span>
+    <span class="nv">google_service_plist</span><span class="o">=</span><span class="nv">$2</span>
+    <span class="nb">shift </span>2
+    <span class="p">;;</span>
+  <span class="nt">-h</span> <span class="p">|</span> <span class="nt">--help</span><span class="p">)</span> <span class="c"># -h または --help</span>
+    usage
+    <span class="p">;;</span>
+  <span class="nt">-d</span> <span class="p">|</span> <span class="nt">--dry-run</span><span class="p">)</span>
+    <span class="nv">dry_run</span><span class="o">=</span><span class="nb">true
+    shift</span>
+    <span class="p">;;</span>
+  <span class="nt">--</span><span class="p">)</span> <span class="c"># -- の場合何もしない</span>
+    <span class="nb">shift
+    break</span>
+    <span class="p">;;</span>
+  <span class="k">*</span><span class="p">)</span> <span class="c"># それ以外</span>
+    usage
+    <span class="p">;;</span>
+  <span class="k">esac</span>
+<span class="k">done</span>
+</code></pre></div></div>
+
+<h2 id="受け取った変数の検証">受け取った変数の検証</h2>
+<p>オプションのハンドリングが済んだら、
+<code class="language-plaintext highlighter-rouge">upload-symbols</code>コマンドを使う前に関係する変数が有効か検証します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-e</span> <span class="nv">$upload_command</span>  <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"upload_command_pathが有効なパスではありません。</span><span class="k">${</span><span class="nv">upload_command</span><span class="k">}</span><span class="s2">"</span> <span class="o">&gt;</span>&amp;2
+  <span class="nb">exit </span>1
+<span class="k">fi
+
+if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-e</span> <span class="nv">$google_service_plist</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"google_service_plistが有効なパスではありません。</span><span class="k">${</span><span class="nv">google_service_plist</span><span class="k">}</span><span class="s2">"</span> <span class="o">&gt;</span>&amp;2
+  <span class="nb">exit </span>1
+<span class="k">fi
+
+if</span> <span class="o">[[</span> <span class="o">!</span> <span class="nt">-e</span> <span class="nv">$dsym_path</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+  </span><span class="nb">echo</span> <span class="s2">"dsym_pathが有効なパスではありません。</span><span class="k">${</span><span class="nv">dsym_path</span><span class="k">}</span><span class="s2">"</span> <span class="o">&gt;</span>&amp;2
+  <span class="nb">exit </span>1
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<h2 id="upload-symbolsコマンドの実行">upload-symbolsコマンドの実行</h2>
+
+<p>最後に<code class="language-plaintext highlighter-rouge">upload-symbols</code>コマンドを実行します。</p>
+
+<p><code class="language-plaintext highlighter-rouge">--dry-run</code>や<code class="language-plaintext highlighter-rouge">-d</code>でドライランが有効な場合は、<code class="language-plaintext highlighter-rouge">upload-symbols</code>コマンドは実行せずに
+echoコマンドで実行予定のコマンドを文字列として表示して終了します。</p>
+
+<div class="language-sh highlighter-rouge"><div class="highlight"><pre class="highlight"><code><span class="k">if</span> <span class="o">[[</span> <span class="nt">-f</span> <span class="nv">$dsym_path</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span> <span class="c"># path is file.</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$dry_run</span> <span class="o">==</span> <span class="nb">true</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span><span class="nb">echo</span> <span class="s2">"</span><span class="nv">$upload_command</span><span class="s2"> -gsp </span><span class="nv">$google_service_plist</span><span class="s2"> -p ios </span><span class="nv">$dsym_path</span><span class="s2">"</span>
+  <span class="k">else</span>
+    <span class="nv">$upload_command</span> <span class="nt">-gsp</span> <span class="nv">$google_service_plist</span> <span class="nt">-p</span> ios <span class="nv">$dsym_path</span>
+  <span class="k">fi
+
+elif</span> <span class="o">[[</span> <span class="nt">-d</span> <span class="nv">$dsym_path</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then</span> <span class="c"># path is directory</span>
+  <span class="k">if</span> <span class="o">[[</span> <span class="nv">$dry_run</span> <span class="o">==</span> <span class="nb">true</span> <span class="o">]]</span><span class="p">;</span> <span class="k">then
+    </span>find <span class="nv">$dsym_path</span> <span class="nt">-name</span> <span class="s2">"*.dSYM"</span> | xargs <span class="nt">-I</span> FILE <span class="nb">echo</span> <span class="nv">$upload_command</span> <span class="nt">-gsp</span> <span class="nv">$google_service_plist</span> <span class="nt">-p</span> ios FILE
+  <span class="k">else
+    </span>find <span class="nv">$dsym_path</span> <span class="nt">-name</span> <span class="s2">"*.dSYM"</span> | xargs <span class="nt">-I</span> FILE <span class="nv">$upload_command</span> <span class="nt">-gsp</span> <span class="nv">$google_service_plist</span> <span class="nt">-p</span> ios FILE
+  <span class="k">fi
+
+else
+  </span><span class="nb">echo</span> <span class="s2">"dsym_pathはファイルかディレクトリのみ有効です。</span><span class="k">${</span><span class="nv">dsym_path</span><span class="k">}</span><span class="s2">"</span> <span class="o">&gt;</span>&amp;2
+  <span class="nb">exit </span>1
+<span class="k">fi</span>
+</code></pre></div></div>
+
+<h3 id="ディレクトリ指定の動きについて">ディレクトリ指定の動きについて</h3>
+<p>ファイル指定の場合は挙動はシンプルなため説明なく読み取れると思います。
+ディレクトリ指定の場合は、指定ディレクトリ内を<code class="language-plaintext highlighter-rouge">*.dSYM</code>で検索し、一致するパス全部に対し、<code class="language-plaintext highlighter-rouge">upload-symbols</code>コマンドを実行します。</p>
+
+<h4 id="dsymをファイルを探す">.dSYMをファイルを探す</h4>
+<p>コマンドライン前半の<code class="language-plaintext highlighter-rouge">find $dsym_path -name "*.dSYM"</code>では、指定ディレクトリ内から<code class="language-plaintext highlighter-rouge">*.dSYM</code>を探します。
+<code class="language-plaintext highlighter-rouge">find</code>コマンドの結果を次の<code class="language-plaintext highlighter-rouge">xargs</code>コマンドへパイプで渡します。</p>
+
+<p>コマンドライン後半の<code class="language-plaintext highlighter-rouge">xargs -I FILE $upload_command -gsp $google_service_plist -p ios FILE</code>では、
+前半から受け取った文字列を指定位置に配置して、実行します。この場合<code class="language-plaintext highlighter-rouge">FILE</code>が前半から受け取った文字列、つまり<code class="language-plaintext highlighter-rouge">.dSYM</code>のパスになります。</p>
+
+<h2 id="このスクリプトの使い所">このスクリプトの使い所</h2>
+<p>今回はgetoptを使ってオプション対応する方法がメインですが、このスクリプト自体にも一応活用ケースはあります。</p>
+
+<p>元々これを書こうと思った理由として、「使用頻度高いのに毎回ネットからアップロードシェルコマンド確認するのが面倒」が一番でした。他にもdSYMが必ずしも手元PCにあるとは限らない環境だったりです。</p>
+
+  </section>
+
+  <div class="post-content-share">
+    <a href="https://twitter.com/share?ref_src=twsrc%5Etfw" class="twitter-share-button" data-related="mothule" data-show-count="false">Tweet</a><script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+    <a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+
+    <span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+
+  </div>
+
+</div>
+
+
+<div class="related">
+    <ul class="related-posts">
+        <div class="related-posts-title">
+            <h2>関連記事</h2>
+        </div>
+
+        <div class="related-posts-body">
+            
+            
+            
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/ruby/ruby-script-basic">
+      <img src="/assets/images/2020-02-08-ruby-script-basic.png" alt="iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/ruby/ruby-script-basic">
+      <h3>iOSエンジニアでもRubyでスクリプトを書いて時間のかかる手作業からの卒業</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#ruby">Ruby</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#bundler">Bundler</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#shellscript">シェルスクリプト</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#rbenv">rbenv</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">
+      <img src="/assets/images/2020-02-05-shellscript-basic-for-mobile-enginner.png" alt="iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/tools/shellscript/shellscript-basic-for-mobile-enginner">
+      <h3>iOSエンジニアが開発効率のために最低限知るべきシェルスクリプト入門</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#tools">ツール</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#shellscript">シェルスクリプト</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+                    <li class="related-post-item">
+                      <div class="row pb-4">
+  <div class="col-sm-4">
+    <a href="/ios/firebase/firebase-performance-monitoring-basic">
+      <img src="/assets/images/2019-10-23-firebase-performance-monitoring-basic/0.png" alt="Firebase Performance Monitoringの基本の概念と実装について整理した" style="width: 100%; object-fit: contain;">
+    </a>
+  </div>
+  <div class="col-sm-8">
+    <a href="/ios/firebase/firebase-performance-monitoring-basic">
+      <h3>Firebase Performance Monitoringの基本の概念と実装について整理した</h3>
+    </a>
+
+    <ul class="list-inline">
+      
+        <li class="list-inline-item"><a href="/tags#ios">iOS</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#firebase">Firebase</a></li>
+      
+        <li class="list-inline-item"><a href="/tags#performance-monitoring">Firebase Performance Monitoring</a></li>
+      
+    </ul>
+  </div>
+</div>
+
+                    </li>
+
+                    
+                    
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+                
+                
+                
+
+
+            
+
+            
+              <li class="related-post-item">
+              <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+              <ins class="adsbygoogle"
+                   style="display:block"
+                   data-ad-format="fluid"
+                   data-ad-layout-key="-ga-4d+ii+16-1f4"
+                   data-ad-client="ca-pub-5156339577835247"
+                   data-ad-slot="9550753128"></ins>
+              <script>
+                   (adsbygoogle = window.adsbygoogle || []).push({});
+              </script>
+              </li>
+            
+
+      </div>
+    </ul>
+</div>
+
+
+
+<script type="text/javascript">!function(d,i){if(!d.getElementById(i)){var j=d.createElement("script");j.id=i;j.src="https://widgets.getpocket.com/v1/j/btn.js?v=1";var w=d.getElementById(i);d.body.appendChild(j);}}(document,"pocket-btn-js");</script>
+<script src="/assets/js/shared/post.js" defer></script>
+
+  </article>
+
+  <!-- Side menu -->
+  <aside class="col-sm-3">
+    <div class="sidebar">
+  
+    <div class="profile">
+  <div class="profile-title">
+    Profile
+  </div>
+  <div class="profile-body">
+    <img src="/assets/images/user-profile.jpg" class="profile-image float-sm-left">
+    <p class="clearfix">Rails/Swift/iOSのCX/UXデザイン/UIデザイン 3児の父 過去Demon's SoulsとDark Souls作ってた | Twitterでは技術屋兼パパとして発言</p>
+  </div>
+  <div class="profile-twitter">
+    <a href="https://twitter.com/mothule?ref_src=twsrc%5Etfw" class="twitter-follow-button" data-show-count="false">
+      Follow @mothule
+    </a>
+    <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+  </div>
+</div>
+
+    <div class="ranking-article-frame">
+    <div class="ranking-article-title">
+        人気記事
+    </div>
+    <div>
+        <ol>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-reload-basic">【初心者向け】UITableView(テーブル)の更新方法の基本と注意点</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-edit-mode">【初心者向け】UITableViewのセルの編集制御を極める</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-section-header-customize">【初心者向け】UITableViewのヘッダーをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-height-customize">【初心者向け】UITableViewCellの高さを可変にする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/ios-xcassets-basic">【初心者向け】Assets.xcassetsを理解して使う</a>
+            </li>
+            
+            <li>
+                <a href="/db/mysql/mysql-find-mycnf">MySQLの複数あるmy.cnfの場所全部を覚えず調べる方法</a>
+            </li>
+            
+            <li>
+                <a href="/mac/homebrew/mac-homebrew-how-to-downgrade">Homebrewで過去バージョンにダウングレードする2つの方法</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-uitableviewcell-customize">【初心者向け】UITableViewCellをカスタマイズする</a>
+            </li>
+            
+            <li>
+                <a href="/ios/uitableview/ios-uitableview-lifecycle">【初心者向け】UITableViewCellの再利用を理解する</a>
+            </li>
+            
+            <li>
+                <a href="/tools/rbenv/tools-rbenv-ssl-load-error">OpenSSL Library not loadedが出たら疑う場所</a>
+            </li>
+            
+        </ol>
+    </div>
+</div>
+
+    <div class="tag-cloud">
+  <div class="tag-cloud-title">
+    Tag list
+  </div>
+  <div>
+      
+        
+        <a href="/tags#notebook">雑記</a>
+      
+        
+        <a href="/tags#program-design">プログラム設計</a>
+      
+        
+        <a href="/tags#remote-work">リモートワーク</a>
+      
+        
+        <a href="/tags#ios">iOS</a>
+      
+        
+        <a href="/tags#swift">Swift</a>
+      
+        
+        <a href="/tags#uitableview">UITableView</a>
+      
+        
+        <a href="/tags#rails">Rails</a>
+      
+        
+        <a href="/tags#rails-controller">Rails Controller</a>
+      
+        
+        <a href="/tags#ruby">Ruby</a>
+      
+        
+        <a href="/tags#circleci">CircleCI</a>
+      
+        
+        <a href="/tags#ci">CI</a>
+      
+        
+        <a href="/tags#ssh">SSH</a>
+      
+        
+        <a href="/tags#linux">Linux</a>
+      
+        
+        <a href="/tags#centos">CentOS</a>
+      
+        
+        <a href="/tags#printer">Printer</a>
+      
+        
+        <a href="/tags#uiview">UIView</a>
+      
+        
+        <a href="/tags#ios-safearea">iOS SafeArea</a>
+      
+        
+        <a href="/tags#service-design">サービス設計</a>
+      
+        
+        <a href="/tags#design">Design</a>
+      
+        
+        <a href="/tags#tools">ツール</a>
+      
+        
+        <a href="/tags#httpie">HTTPie</a>
+      
+        
+        <a href="/tags#mysql">MySQL</a>
+      
+        
+        <a href="/tags#rspec">RSpec</a>
+      
+        
+        <a href="/tags#git">Git</a>
+      
+        
+        <a href="/tags#tig">tig</a>
+      
+        
+        <a href="/tags#homebrew">Homebrew</a>
+      
+        
+        <a href="/tags#active-record">ActiveRecord</a>
+      
+        
+        <a href="/tags#mac">Mac</a>
+      
+        
+        <a href="/tags#db">DB</a>
+      
+        
+        <a href="/tags#ngrok">ngrok</a>
+      
+        
+        <a href="/tags#ats">App Transport Security</a>
+      
+        
+        <a href="/tags#regexp">正規表現</a>
+      
+        
+        <a href="/tags#cocoapods">CocoaPods</a>
+      
+        
+        <a href="/tags#rbenv">rbenv</a>
+      
+        
+        <a href="/tags#bundler">Bundler</a>
+      
+        
+        <a href="/tags#jekyll">Jekyll</a>
+      
+        
+        <a href="/tags#github-pages">GitHub Pages</a>
+      
+        
+        <a href="/tags#rack">Rack</a>
+      
+        
+        <a href="/tags#rack-middleware">Rack Middleware</a>
+      
+        
+        <a href="/tags#p4merge">p4merge</a>
+      
+        
+        <a href="/tags#report">レポート</a>
+      
+        
+        <a href="/tags#scene-kit">SceneKit</a>
+      
+        
+        <a href="/tags#test">Test</a>
+      
+        
+        <a href="/tags#nimble">Nimble</a>
+      
+        
+        <a href="/tags#carthage">Carthage</a>
+      
+        
+        <a href="/tags#rubocop">Rubocop</a>
+      
+        
+        <a href="/tags#rxswift">RxSwift</a>
+      
+        
+        <a href="/tags#uitableviewcell">UITableViewCell</a>
+      
+        
+        <a href="/tags#uitableviewdelegate">UITableViewDelegate</a>
+      
+        
+        <a href="/tags#uicollectionview">UICollectionView</a>
+      
+        
+        <a href="/tags#uitableviewdatasource">UITableViewDataSource</a>
+      
+        
+        <a href="/tags#firebase">Firebase</a>
+      
+        
+        <a href="/tags#performance-monitoring">Firebase Performance Monitoring</a>
+      
+        
+        <a href="/tags#xcuitest">XCUITest</a>
+      
+        
+        <a href="/tags#github">GitHub</a>
+      
+        
+        <a href="/tags#gem">gem</a>
+      
+        
+        <a href="/tags#google-analytics">Google Analytics</a>
+      
+        
+        <a href="/tags#kiji">kiji</a>
+      
+        
+        <a href="/tags#shellscript">シェルスクリプト</a>
+      
+        
+        <a href="/tags#lsof">lsof</a>
+      
+        
+        <a href="/tags#web">Web</a>
+      
+        
+        <a href="/tags#nginx">nginx</a>
+      
+        
+        <a href="/tags#rubymine">RubyMine</a>
+      
+        
+        <a href="/tags#cron">cron</a>
+      
+        
+        <a href="/tags#ffmpeg">FFmpeg</a>
+      
+        
+        <a href="/tags#quicktime-player">QuickTime Player</a>
+      
+        
+        <a href="/tags#mint">Mint</a>
+      
+        
+        <a href="/tags#ag">The Silver Searcher</a>
+      
+        
+        <a href="/tags#google-japanese-input">Google日本語入力</a>
+      
+        
+        <a href="/tags#ln">lnコマンド</a>
+      
+        
+        <a href="/tags#xcode">Xcode</a>
+      
+        
+        <a href="/tags#xcodegen">XcodeGen</a>
+      
+        
+        <a href="/tags#xcconfig">xcconfig</a>
+      
+        
+        <a href="/tags#quick">Quick</a>
+      
+        
+        <a href="/tags#swiftlint">SwiftLint</a>
+      
+        
+        <a href="/tags#bitrise">Bitrise</a>
+      
+        
+        <a href="/tags#fastlane">Fastlane</a>
+      
+        
+        <a href="/tags#ssh-keygen">ssh-keygen</a>
+      
+        
+        <a href="/tags#ssh-agent">ssh-agent</a>
+      
+        
+        <a href="/tags#asset-pipeline">Asset Pipeline</a>
+      
+        
+        <a href="/tags#selenium">Selenium</a>
+      
+        
+        <a href="/tags#capybara">Capybara</a>
+      
+        
+        <a href="/tags#webkit">WebKit</a>
+      
+        
+        <a href="/tags#web_driver">WebDriver</a>
+      
+        
+        <a href="/tags#chrome_driver">ChromeDriver</a>
+      
+        
+        <a href="/tags#org-build">組織作り</a>
+      
+        
+        <a href="/tags#firewalld">firewalld</a>
+      
+        
+        <a href="/tags#crashlytics">Firebase Crashlytics</a>
+      
+  </div>
+</div>
+
+    <div class="twitter-timeline">
+  <a class="twitter-timeline"
+    data-lang="ja"
+    data-height="400"
+    data-theme="light"
+    href="https://twitter.com/mothule?ref_src=twsrc%5Etfw">
+    Tweets by mothule
+  </a>
+  <script async src="https://platform.twitter.com/widgets.js"
+    charset="utf-8"></script>
+</div>
+
+  
+  <div class="side-sticky">
+    <!-- TOC -->
+    <div class="side-toc" id="side-toc-id">
+    </div>
+
+    <!-- SNS Share -->
+    <div class="side-share" id="side-share-id", style="display: none;">
+      
+      <div class="side-share-title">
+        この記事を後で読む
+      </div>
+      <ul id="side-share-list">
+        <li><a href="https://b.hatena.ne.jp/entry/" class="hatena-bookmark-button" data-hatena-bookmark-layout="basic-label-counter" data-hatena-bookmark-lang="ja" title="このエントリーをはてなブックマークに追加"><img src="https://b.st-hatena.com/images/v4/public/entry-button/button-only@2x.png" alt="このエントリーをはてなブックマークに追加" width="20" height="20" style="border: none;" /></a>
+</li>
+        <li><span style="display: inline-block;"><a data-pocket-label="pocket" data-pocket-count="horizontal" class="pocket-btn" data-lang="en"></a></span>
+</li>
+      </ul>
+      
+    </div>
+  </div>
+</div>
+
+  </aside>
+</main>
+
+
+      <!-- Footer -->
+      <div class="row">
+        <footer>
+  <div class="col-sm-4" style="padding: 16px;">
+    <p>
+      このページはmothuleの技術ブログになります。
+      しかし、個人の考えや判断による品質によるものであるため、
+      当サイトに記載された情報により損害が発生しましても、責任は致しかねません。
+      ご了承ください。
+    </p>
+  </div>
+  <div class="col-sm-12">
+    <p class="text-right">Copyright mothule</p>
+  </div>
+</footer>
+
+      </div>
+    </div>
+  </body>
+</html>
